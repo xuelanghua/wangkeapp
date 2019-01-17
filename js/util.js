@@ -6,6 +6,5 @@ var getUserInfo = function() {
 function updateUserInfo(userInfo) {
 	mui.post($ajaxUrl + 'member&action=info', {token: userInfo.token}, function(res) {
 		localStorage.setItem('user', JSON.stringify(res.data));
-		console.log(JSON.stringify(res));
 	})
 }
