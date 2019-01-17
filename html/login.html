@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/mui.min.css" rel="stylesheet" />
 		<style>
 			canvas{
 				display: block;
@@ -91,7 +91,7 @@
 			
 		</div>
 	</body>
-	<script src="../js/mui.js"></script>
+	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/modernizr-2.6.2.min.js"></script>
 	<script type="text/javascript" src="../js/starbg.js"></script>
@@ -117,42 +117,47 @@
 				if (isWeixinInstalled) {
 					var waiting = plus.nativeUI.showWaiting();
 					plus.oauth.getServices(function(services) {
-//						console.log(JSON.stringify(services));
+						console.log(JSON.stringify(services));
 				        for (var i in services) {
 				            var service = services[i];
-			            	service.login(function(e) { 
-				                var openid = e.target.userInfo.openid;
-				                var unionid = e.target.userInfo.unionid;
-				                var nickname = e.target.userInfo.nickname;
-				                var headimgurl = e.target.userInfo.headimgurl;
-				                var client = mui.os.ios ? 'ios' : (mui.os.android ? 'android' : 'other');
-				                var deviceid = plus.device.uuid;
-				                mui.post($ajaxUrl + 'member&action=login', {openid: openid, unionid: unionid, nickname: nickname, headimgurl: headimgurl, deviceid: deviceid, client: client}, function(res) {
-//				                	console.log(JSON.stringify(res));
-				                	if (res.errno == 0) {
-				                		mui.toast('登录成功!');
-				                		localStorage.setItem('user', JSON.stringify(res.data));
-				                		if (res.data.is_staff == 1) {
-				                			mui.back();
-				                			plus.navigator.setStatusBarStyle('dark');
-				                		} else {
-				                			if (res.data.mobile.length == 0) {
-				                				mui.openWindow({
-					                				id: 'mobile_bind',
-					                				url: 'mobile_bind.html'
-					                			})
-				                			} else if (res.data.is_staff == 0) {
-				                				mui.openWindow({
-					                				id: 'activation',
-					                				url: 'activation.html'
-					                			})
-				                			}
-				                		}
-				                	} else {
-				                		mui.toast(res.message);
-				                	}
-				                	waiting.close();
-				                }, 'json');
+			            	service.login(function(e) {
+			            		service.getUserInfo(function(e) {
+			            			var openid = e.target.userInfo.openid;
+					                var unionid = e.target.userInfo.unionid;
+					                var nickname = e.target.userInfo.nickname;
+					                var headimgurl = e.target.userInfo.headimgurl;
+					                var client = mui.os.ios ? 'ios' : (mui.os.android ? 'android' : 'other');
+					                var deviceid = plus.device.uuid;
+					                mui.post($ajaxUrl + 'member&action=login', {openid: openid, unionid: unionid, nickname: nickname, headimgurl: headimgurl, deviceid: deviceid, client: client}, function(res) {
+	//				                	console.log(JSON.stringify(res));
+					                	if (res.errno == 0) {
+					                		mui.toast('登录成功!');
+					                		localStorage.setItem('user', JSON.stringify(res.data));
+					                		if (res.data.is_staff == 1) {
+					                			mui.back();
+					                			plus.navigator.setStatusBarStyle('dark');
+					                		} else {
+					                			if (res.data.mobile.length == 0) {
+					                				mui.openWindow({
+						                				id: 'mobile_bind',
+						                				url: 'mobile_bind.html'
+						                			})
+					                			} else if (res.data.is_staff == 0) {
+					                				mui.openWindow({
+						                				id: 'activation',
+						                				url: 'activation.html'
+						                			})
+					                			}
+					                		}
+					                	} else {
+					                		mui.toast(res.message);
+					                	}
+					                	waiting.close();
+					                }, 'json');
+			            		}, function(e) {
+			            			waiting.close();
+				                	plus.nativeUI.toast("获取用户信息失败：" + e.message);
+			            		})
 				            }, function(e) {
 				                waiting.close();
 				                plus.nativeUI.toast("登录认证失败：" + e.message);

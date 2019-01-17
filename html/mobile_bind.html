@@ -102,7 +102,7 @@
 			</div>
 		</div>
 	</body>
-	<script src="../js/mui.js"></script>
+	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
 	<script type="text/javascript">
 		mui.init({
@@ -121,7 +121,7 @@
 			})
 			
 			mui('.sk').on('tap', '.Opening', function() {
-				
+				mobileBind();
 			})
 		})
 		
@@ -165,8 +165,36 @@
 		}
 		
 		function mobileBind() {
-			var mobile = mui('input[name=mobile]')[0].value;
-			var mobile = mui('input[name=mobile]')[0].value;
+			var vmobile = mui('input[name=mobile]')[0].value;
+			var vcode = mui('input[name=code]')[0].value;
+			if (vmobile.length == 0) {
+	            mui.toast('请输入手机号码!');
+	            return;
+	        } else if (!phoneNumber.test(vmobile)) {
+	            mui.toast('手机号码格式错误!');
+	            return;
+	        }
+	        if (vcode.length == 0) {
+	        	mui.toast('请输入验证码!');
+	        	return;
+	        } else if (vcode.length != 6) {
+	        	mui.toast('验证码位数输入错误!');
+	        	return;
+	        }
+	        
+	        mui.post($ajaxUrl + 'member&action=bind', {mobile: vmobile, code: vcode, token: userInfo.token}, function(res) {
+	        	console.log(JSON.stringify(res));
+	        	if (res.errno == 0) {
+	        		mui.toast(res.message);
+	        		mui.openWindow({
+	        			id: 'activation',
+	        			url: 'activation.html',
+	        		})
+	        	} else {
+	        		mui.toast(res.message);
+	        		return;
+	        	}
+	        }, 'json');
 		}
 	</script>
 </html>

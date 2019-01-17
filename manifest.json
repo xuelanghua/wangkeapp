@@ -34,25 +34,26 @@
 			"description": "应用扩展事件"
 		},
 
-		"Maps": {
-			"description": "管理地图插件"
-		},
+
 		"Speech": {},
 		"Share": {},
 		"OAuth": {
-			"description": "登录授权" 
+			"description": "登录授权"
+		},
+		"Payment": {
+			"description": "管理支付插件"
 		}
 	},
 	"plus": {
 		"launchwebview": {
-            "statusbar": {
-                "background": "#FFF"
-            }
-        },
-        "statusbar": {
-            "immersed": "supportedDevice",
-            "style": "dark"
-        },
+			"statusbar": {
+				"background": "#FFF"
+			}
+		},
+		"statusbar": {
+			"immersed": "supportedDevice",
+			"style": "dark"
+		},
 		"splashscreen": {
 			"autoclose": true,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
 			"waiting": true,
@@ -62,6 +63,12 @@
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
 		"distribute": {
 			"plugins": {
+				"payment": {
+					"weixin": {
+						"description": "微信支付",
+						"appid": "wx89ad5438f4348402"
+					}
+				},
 				"oauth": {
 					"weixin": {
 						"appid": "wx89ad5438f4348402",
@@ -91,33 +98,30 @@
 				"password": "",/*Android应用打包使用密钥库中证书的密码*/
 				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
 				"permissions": [
+					"<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+					"<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
 					"<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>",
+					"<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
 					"<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
-					"<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+					"<uses-permission android:name=\"android.permission.INTERNET\"/>",
+					"<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
 					"<uses-permission android:name=\"android.permission.VIBRATE\"/>",
-					"<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+					"<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+					"<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+					"<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
 					"<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
 					"<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
 					"<uses-permission  android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
-					"<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
-					"<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
-					"<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>",
-					"<uses-permission android:name=\"android.permission.CAMERA\"/>",
-					"<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
-					"<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
-					"<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
-					"<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>",
-					"<uses-permission android:name=\"android.permission.INTERNET\"/>",
-					"<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
-					"<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
-					"<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
-					"<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
-					"<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
-					"<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
 					"<uses-feature android:name=\"android.hardware.camera\"/>",
+					"<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
 					"<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
 					"<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
-					"<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+					"<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>",
+					"<uses-permission android:name=\"android.permission.CAMERA\"/>"
 				]
 			},
 			"orientation": [
@@ -181,7 +185,9 @@
 					"iphone": {
 						"default": "", /*iPhone3启动图片选，分辨率：320x480*/
 						"retina35": "",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
-						"retina40": "","retina47":"C:/Users/liuyu/Desktop/旺客/app启动图标/start.png"
+						"retina40": "",
+						"retina47": "C:/Users/liuyu/Desktop/旺客/app启动图标/start.png",
+						"retina55": "C:/Users/liuyu/Desktop/旺客/app启动图标/start.png"
 					},
 					"ipad": {
 						"portrait": "", /*iPad竖屏启动图片，分辨率：768x1004*/
@@ -198,10 +204,11 @@
 					"mdpi": "", /*普通屏启动图片，分辨率：240x282*/
 					"ldpi": "", /*大屏启动图片，分辨率：320x442*/
 					"hdpi": "", /*高分屏启动图片，分辨率：480x762*/
-					 /*720P高分屏启动图片，分辨率：720x1242*/
+					/*720P高分屏启动图片，分辨率：720x1242*/
 					"xxhdpi": "C:/Users/liuyu/Desktop/旺客/app启动图标/start.png"
 				}
-			}
+			},
+			"debug": true
 		},
 		"adid": "123996070701"
 	},
