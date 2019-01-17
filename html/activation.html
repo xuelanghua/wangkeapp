@@ -193,11 +193,24 @@
                 plus.nativeUI.alert("不支持此支付通道！", null, "提示");
                 return;
             }
-            console.log(PAYSERVER);
+
+            var waiting = plus.nativeUI.showWaiting();
             mui.post(PAYSERVER, {year: payYear, price: price, fee: fee, pay_type: payType, token: userInfo.token}, function(res) {
-            	console.log(JSON.stringify(res));return;
+            	console.log(JSON.stringify(res));
+            	waiting.close();
             	if(res.errno == 0){
-                    plus.payment.request(channel, res.data, function(result){
+            		var data = res.data;
+            		var param = {
+						appid: data.appid,
+						noncestr: data.nonce_str,
+						package: 'Sign=WXPay',
+						partnerid: data.mch_id,
+						prepayid: data.prepay_id,
+						timestamp: data.timeStamp,
+						sign: data.paySign
+					};
+					console.log(JSON.stringify(param));
+                    plus.payment.request(channel, param, function(result){
                     	console.log(JSON.stringify(result));
                         plus.nativeUI.alert("支付成功！",function(){
                         	back();
@@ -206,10 +219,10 @@
                     	console.log(JSON.stringify(error));
                         plus.nativeUI.alert("支付失败：" + error.code);
                     });
-                } else {  
+                } else { 
                     plus.nativeUI.alert(res.message, null, '提示');
                 }
-            })
+            }, 'json')
             
             
 //          var xhr = new XMLHttpRequest();
