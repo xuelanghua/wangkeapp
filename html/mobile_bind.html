@@ -186,10 +186,15 @@
 	        	console.log(JSON.stringify(res));
 	        	if (res.errno == 0) {
 	        		mui.toast(res.message);
-	        		mui.openWindow({
-	        			id: 'activation',
-	        			url: 'activation.html',
-	        		})
+	        		if ((userInfo.is_staff == 0) || (userInfo.expire_time < parseInt(new Date().getTime()/1000))) {
+	        			mui.openWindow({
+		        			id: 'activation',
+		        			url: 'activation.html',
+		        		})
+	        		} else {
+	                	plus.webview.close('login');
+	                	plus.webview.close('mobile_bind');
+	        		}
 	        	} else {
 	        		mui.toast(res.message);
 	        		return;

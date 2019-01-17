@@ -138,6 +138,8 @@
         var ALIPAYSERVER = $ajaxUrl + 'member&action=activation';
         var WXPAYSERVER = $ajaxUrl + 'member&action=activation';;
 		mui.plusReady(function() {
+//			var webviews = plus.webview.all();
+//			console.log(JSON.stringify(webviews));
 			userInfo = getUserInfo();
 			// 获取支付通道  
             plus.payment.getChannels(function(channels){  
@@ -209,11 +211,17 @@
 						timestamp: data.timeStamp,
 						sign: data.paySign
 					};
-					console.log(JSON.stringify(param));
+
                     plus.payment.request(channel, param, function(result){
-                    	console.log(JSON.stringify(result));
+//                  	console.log(JSON.stringify(result));
                         plus.nativeUI.alert("支付成功！",function(){
-                        	back();
+                        	plus.navigator.setStatusBarStyle('dark');
+                        	updateUserInfo(userInfo);
+                        	plus.webview.close('login');
+                        	plus.webview.close('mobile_bind');
+                        	plus.webview.close('activation');
+//                      	mui.fire('index')
+//                      	mui.back();
                     	});
                     }, function(error){
                     	console.log(JSON.stringify(error));
@@ -223,35 +231,6 @@
                     plus.nativeUI.alert(res.message, null, '提示');
                 }
             }, 'json')
-            
-            
-//          var xhr = new XMLHttpRequest();
-//          
-//          xhr.onreadystatechange = function(){
-//              switch(xhr.readyState){
-//                  case 4:
-//                      if(xhr.status == 200){
-//                          plus.payment.request(channel, xhr.responseText, function(result){
-//                          	console.log(JSON.stringify(result));
-//                              plus.nativeUI.alert("支付成功！",function(){
-//                              	back();
-//                          	});
-//                          }, function(error){
-//                          	console.log(JSON.stringify(error));
-//                              plus.nativeUI.alert("支付失败：" + error.code);
-//                          });
-//                      } else {  
-//                          plus.nativeUI.alert("获取订单信息失败！", null, '提示');
-//                      }
-//                  	break;
-//                  default:
-//                  	break;  
-//              }  
-//       	}
-//         var ajaxUrl = PAYSERVER + "&year=" + payYear + "&price=" + price + "&fee=" + fee + "&pay_type=" + payType + "&token=" + userInfo.token;
-//          console.log(ajaxUrl);
-//          xhr.open('GET', ajaxUrl);
-//          xhr.send();
-    	}
+        }
 	</script>
 </html>

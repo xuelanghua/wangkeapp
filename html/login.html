@@ -133,21 +133,19 @@
 					                	if (res.errno == 0) {
 					                		mui.toast('登录成功!');
 					                		localStorage.setItem('user', JSON.stringify(res.data));
-					                		if (res.data.is_staff == 1) {
+					                		if (res.data.mobile.length == 0) {
+					                			mui.openWindow({
+					                				id: 'mobile_bind',
+					                				url: 'mobile_bind.html'
+					                			})
+					                		} else if ((res.data.is_staff == 0) || (res.data.expire_time < parseInt(new Date().getTime()/1000))) {
+					                			mui.openWindow({
+					                				id: 'activation',
+					                				url: 'activation.html'
+					                			})
+					                		} else if ((res.data.is_staff == 1) && (res.data.expire_time > parseInt(new Date().getTime()/1000))) {
 					                			mui.back();
 					                			plus.navigator.setStatusBarStyle('dark');
-					                		} else {
-					                			if (res.data.mobile.length == 0) {
-					                				mui.openWindow({
-						                				id: 'mobile_bind',
-						                				url: 'mobile_bind.html'
-						                			})
-					                			} else if (res.data.is_staff == 0) {
-					                				mui.openWindow({
-						                				id: 'activation',
-						                				url: 'activation.html'
-						                			})
-					                			}
 					                		}
 					                	} else {
 					                		mui.toast(res.message);
