@@ -252,147 +252,81 @@
 	</style>
 </head>
 <body>
- 	<div id="back" onclick="yc(),quick()"></div>
-	<nav class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;">
-		<div>
-			<a class="mui-tab-item mui-active tab-item">
+	<div id="back"></div>
+<div class="mui-content">
+		<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;">
+			<a class="mui-tab-item mui-active" href="html/home.html" data-id="main">
 				<span class="mui-icon icon-home-page" style="font-size: 18px;margin-top: 2px;"></span>
-				<span class="mui-tab-label" style="margin-top: -2px;">首页</span>
+				<span class="mui-tab-label">首页</span>
 			</a>
-			<a class="mui-tab-item tab-item">
+			<a class="mui-tab-item" href="" data-id="message">
 				<span class="mui-icon icon-chat" style="font-size: 18px;margin-top: 2px;"></span>
-				<span class="mui-tab-label" style="margin-top: -2px;">聊天</span>
+				<span class="mui-tab-label">聊天</span>
 			</a>
-			<a class="mui-tab-item" id="guan" onclick="ycit(),quick()">
+			<a class="mui-tab-item" data-id="quick">
 				<span class="mui-icon icon-Quick" style="font-size: 18px;margin-top: 2px;"></span>
-				<span class="mui-tab-label" style="margin-top: -2px;">快捷</span>
+				<span class="mui-tab-label">快捷</span>
 			</a>
-			<a class="mui-tab-item tab-item">
+			<a class="mui-tab-item" href="html/self_media.html" data-id="contact">
 				<span class="mui-icon icon-Selfmedia" style="font-size: 18px;margin-top: 2px;"></span>
-				<span class="mui-tab-label" style="margin-top: -2px;">自媒体</span>
+				<span class="mui-tab-label">自媒体</span>
 			</a>
-			<a class="mui-tab-item tab-item" href="examples/my.html">
+			<a class="mui-tab-item" href="html/my.html" data-id="setting">
 				<span class="mui-icon icon-my" style="font-size: 18px;margin-top: 2px;"></span>
-				<span class="mui-tab-label" style="margin-top: -2px;">我的</span>
+				<span class="mui-tab-label">我的</span>
 			</a>
-		</div>
-		<div id="quick">
-			<li>
-				<img src="image/entry-customer.png" >
-				<p>录入客户</p>
-			</li>
-			<li>
-				<img src="image/Targetmanagement.png" >
-				<p>目标管理</p>
-			</li>
-			<li>
-				<img src="image/fast_tracking.png" >
-				<p>快速跟进</p>
-			</li>
-			<li>
-				<img src="image/quick-collection.png" >
-				<p>快速收款</p>
-			</li>
-			<div class="clearfix"></div>
-			<img class="jiandou" src="image/quickxia.png" >
-		</div>
-	</nav>
+		</nav>
+ </div>
+ 	
+	<div id="quick">
+		<li>
+			<img src="image/entry-customer.png" >
+			<p>录入客户</p>
+		</li>
+		<li>
+			<img src="image/Targetmanagement.png" >
+			<p>目标管理</p>
+		</li>
+		<li>
+			<img src="image/fast_tracking.png" >
+			<p>快速跟进</p>
+		</li>
+		<li>
+			<img src="image/quick-collection.png" >
+			<p>快速收款</p>
+		</li>
+		<div class="clearfix"></div>
+		<img class="jiandou" src="image/quickxia.png" >
+	</div>
 </body>
 <script src="js/mui.min.js"></script>
 <script src="js/util.js"></script>
-<script type="text/javascript">
-	mui.init({
-		swipeBack: false
-	});
-	
-	var navTitle;
-	var mainWebview;
-	var curBarItemWebview;
-	
-	var barItemWebviewArray = [];
-	var barItemArray = ['html/home.html','html/category.html','html/wishList.html','html/cart.html','barItem/mine.html'];
-	mui.plusReady(function(){
-		//获取当前title和当前webview
-		navTitle = document.querySelector('.mui-title');
-		mainWebview = plus.webview.currentWebview();
-		
-		plus.navigator.setStatusBarBackground( "#41cea9" );
-		
-		//设置只支持竖屏幕显示
-		plus.screen.lockOrientation("portrait-primary");
-		//初始化与index有关的页面
-		initIndexView();
-		
-		//判断是否已经登陆,若没有登陆将预加载登陆页面
-		judgelogin();
-		
-		//预加载父子模版
-		initTemplate();
-	});
-	
-	
-	//初始化
-	function initIndexView(){
-		//初始化所有bar页面
-		initTabitemWebviews();
-		//添加bar点击事件接受
-		tapBaritem();
-	}
-	
-	//初始化所有bar页面
-	function initTabitemWebviews(){
-		for (var i = 0; i < barItemArray.length; i++) {
-			barItemWebviewArray[i] = mui.preload({
-				id: barItemArray[i],
-				url: barItemArray[i],
-				styles: {
-					top: 0,
-					bottom: '51px',
-					left: '0px',
-					bounce: 'vertical',
-					bounceBackground: '#f8f8f8'
-				},
-				waiting: {
-					autoShow:false
-				}
-			});
-			barItemWebviewArray[i].hide();
-			mainWebview.append(barItemWebviewArray[i]);
-		}
-		barItemWebviewArray[0].show();
-		curBarItemWebview = barItemWebviewArray[0];
-	}
-	
-	
-	//添加点击事件
-	function tapBaritem(){
-		mui('.mui-bar-tab').on('tap','.tab-item',function(){
-			var baritem = this;
-			var baritemurl = baritem.getAttribute('href'); 
-//				indexof()如果为false返回－1所以前面加上~
-			if (!~curBarItemWebview.getURL().indexOf(baritemurl)) {
-				for (var i = 0; i < barItemArray.length; i++) {
-					if (barItemArray[i] == baritemurl) {
-						//更改头部名字
-						navTitle.innerText = baritem.children[baritem.children.length-1].innerText;
-						//切换baritemwebview
-						barItemWebviewArray[i].show();
-						curBarItemWebview = barItemWebviewArray[i];
-						break;
-					}
-				}
-			}
-		});
-	}
-	
-	
-	//预加载template
-	function initTemplate(){
-		var webview =  mui.preload({
-			id:'template',
-			url:'template.html',
-			styles:{
-				top: '-1000px',
+<script>
+	mui.init();
+	mui.plusReady(function() {
+		var self = plus.webview.currentWebview();
+		var current = '';
+		var styles = {
+			top: '0',
+			bottom: '51px'
+		};
+		var tabsConfig = {
+			main: {
+				url: 'html/home.html',
+				styles: styles,
+				default: true
+			},
+			message: {
+				url: 'tab-message.html',
+				styles: styles
+			},
+			contact: {
+				url: 'html/self_media.html',
+				styles: styles
+			},
+			setting: {
+				url: 'html/my.html',
+				styles: styles
 			}
 		});
 		webview.show();
@@ -429,43 +363,25 @@
                 document.getElementById("back").style.display = "none";
             }else{
 				document.getElementById("back").style.display = "block";
+		};
+		var tabs = {};
+		for (id in tabsConfig) {
+			tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
+			if (tabsConfig[id]['default']) {
+				self.append(tabs[id]);
+				current = id;
 			}
-			if (zt == "block"){
-				document.getElementById("quick").style.display = "none";
-			}else{
-				document.getElementById("quick").style.display = "block";
-			}   
-        }
-		
-		function yc(){
-			var zt = document.getElementById("back").style.display;
-			var zt = document.getElementById("quick").style.display;
-			if (zt == "block"){
-				document.getElementById("back").style.display = "none";
-			}else{
-				document.getElementById("back").style.display = "block";
-			}
-			if (zt == "block"){
-				document.getElementById("quick").style.display = "none";
-			}else{
-				document.getElementById("quick").style.display = "block";
-			}   
 		}
-		
-		function jiaoyi(){
-			var jy = document.getElementById("cover").style.display;
-			var jy = document.getElementById("QR-code").style.display;
-			if (jy == "block"){
-				document.getElementById("cover").style.display = "none";
-			}else{
-				document.getElementById("cover").style.display = "block";
+		mui('#bar').on('tap', 'a', function(e) {
+			alert(current);
+			if (current == this.dataset.id) {
+				mui.fire(tabs[current], 'scroll2top');
+				return;
 			}
-			if (jy == "block"){
-				document.getElementById("QR-code").style.display = "none";
-			}else{
-				document.getElementById("QR-code").style.display = "block";
-			}   
-		}
+			tabs[this.dataset.id].show();
+			tabs[current].hide();
+			current = this.dataset.id;
+		});
 		
 		function guanb(){
 			var jy = document.getElementById("cover").style.display;
@@ -481,5 +397,6 @@
 				document.getElementById("QR-code").style.display = "block";
 			}
 		}
+	});
 </script>
 </html>
