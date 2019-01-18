@@ -8,3 +8,8 @@ function updateUserInfo(userInfo) {
 		localStorage.setItem('user', JSON.stringify(res.data));
 	})
 }
+
+function setStatusBar(color, style) {
+	plus.navigator.setStatusBarBackground(color);
+	plus.navigator.setStatusBarStyle(style);
+}

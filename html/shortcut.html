@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>首页</title>
+    <link href="../css/mui.min.css" rel="stylesheet"/>
+    <link href="../css/index.css" rel="stylesheet"/>
+	<style>
+		body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			background-color: transparent;
+			
+		}
+		.clearfix {
+			clear: both;
+		}
+		#shortcut{
+			position: fixed;
+			left: 10%;
+			bottom: 9px;
+			width: 80%;
+			box-shadow: 0 0 15px 3px #D1D1D3;
+			border-radius: 20px;
+			background-color: #fff;
+			/* display: none; */
+			margin-top: -133px;
+			z-index: 9999;
+		}
+		#shortcut li{
+			width: 25%;
+			float: left;
+			margin-top: 15px;
+		}
+		#shortcut li img{
+			height: 22px;
+		}
+		#shortcut li p{
+			font-size: 10px;
+			color: #000000;
+		}
+		.jiandou{
+			width: 19px;
+			position: absolute;
+			margin-left: -12px;
+		}
+	</style>
+</head>
+<body>
+	<div class="mui-content">
+		<div id="shortcut">
+			<li>
+				<img src="../image/entry-customer.png" >
+				<p>录入客户</p>
+			</li>
+			<li>
+				<img src="../image/Targetmanagement.png" >
+				<p>目标管理</p>
+			</li>
+			<li>
+				<img src="../image/fast_tracking.png" >
+				<p>快速跟进</p>
+			</li>
+			<li>
+				<img src="../image/quick-collection.png" >
+				<p>快速收款</p>
+			</li>
+			<div class="clearfix"></div>
+			<img class="jiandou" src="../image/quickxia.png" >
+		</div>
+	</div>
+</body>
+<script src="../js/mui.min.js"></script>
+<script src="../js/util.js"></script>
+<script>
+	mui.init({
+		swipeBack: false
+	});
+	
+	
+	mui.plusReady(function() {
+		
+	});
+	
+	//初始化
+	function initIndexView(){
+		//初始化所有bar页面
+		initTabitemWebviews();
+		//添加bar点击事件接受
+		tapBaritem();
+	}
+	
+	//初始化所有bar页面
+	function initTabitemWebviews() {
+		for (var id in tabsConfig) {
+			tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
+			if (tabsConfig[id]['default']) {
+				self.append(tabs[id]);
+				current = id;
+				setStatusBar(tabsConfig[id].background, tabsConfig[id].style);
+			}
+		}
+	}
+	
+	//底部导航点击
+	function tapBaritem() {
+		mui('#bar').on('tap', '#short_cut', function(event) {
+			var shortcutObj = document.getElementById('shortcut');
+			var isDisplay = shortcutObj.style.display;
+			// var isDisplay = document.getElementById('shortcut').style.display;
+			console.log(isDisplay);
+// 			if (is_display == 'block') {
+// 				shortcutObj.style.display = 'none';
+// 			} else {
+// 				shortcutObj.style.display = 'block';
+// 			}
+		});
+		
+		mui('#bar').on('tap', '.tab-item', function(e) {
+			if (current == this.dataset.id) {
+				mui.fire(tabs[current], 'scrollTop');
+				return;
+			}
+			tabs[this.dataset.id].show();
+			setStatusBar(tabsConfig[this.dataset.id].background, tabsConfig[this.dataset.id].style);
+			this.children[0].classList.remove(tabsConfig[this.dataset.id].icon);
+			this.children[0].classList.add(tabsConfig[this.dataset.id].selected)
+			tabs[current].hide();
+			curentTab.children[0].classList.remove(tabsConfig[current].selected);
+			curentTab.children[0].classList.add(tabsConfig[current].icon);
+			current = this.dataset.id;
+			curentTab = this;
+		});
+	}
+	
+	function judgeLogin() {
+		// localStorage.removeItem('user');
+		//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
+		if (!localStorage.getItem('user')) {
+			mui.preload({
+				url:'html/login.html',
+				id:'login',
+				styles:{
+					top: '0px',
+					bottom: '0px'
+				}
+			});
+			mui.openWindow({
+			    url: 'html/login.html',
+			    id: 'login',
+			    show:{
+			      	autoShow: true,
+			      	aniShow: 'slide-in-bottom'
+			    }
+			});
+		}
+	}
+	
+	function guanb(){
+		var jy = document.getElementById("cover").style.display;
+		var jy = document.getElementById("QR-code").style.display;
+		if (jy == "block"){
+			document.getElementById("cover").style.display = "none";
+		}else{
+			document.getElementById("cover").style.display = "block";
+		}
+		if (jy == "block"){
+			document.getElementById("QR-code").style.display = "none";
+		}else{
+			document.getElementById("QR-code").style.display = "block";
+		}
+	}
+</script>
+</html>
