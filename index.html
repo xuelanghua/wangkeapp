@@ -171,25 +171,25 @@
 			display: block;
 			margin-top: -8px;
 		}
-		#quick{
+		#shortcut{
 			width: 80%;
 			margin: 0 auto;
 			box-shadow: 0 0 15px 3px #D1D1D3;
 			border-radius: 20px;
 			background-color: #fff;
-			display:none;
+			/* display:none; */
 			margin-top: -133px;
 			z-index: 9999;
 		}
-		#quick li{
+		#shortcut li{
 			width: 25%;
 			float: left;
 			margin-top: 15px;
 		}
-		#quick li img{
+		#shortcut li img{
 			height: 22px;
 		}
-		#quick li p{
+		#shortcut li p{
 			font-size: 10px;
 			color: #000000;
 		}
@@ -252,7 +252,6 @@
 	</style>
 </head>
 <body>
-	<div id="back"></div>
 <div class="mui-content">
 		<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;">
 			<a class="mui-tab-item mui-active" href="html/home.html" data-id="main">
@@ -264,11 +263,11 @@
 				<span class="mui-tab-label">聊天</span>
 			</a>
 			<a class="mui-tab-item" data-id="quick">
-				<span class="mui-icon icon-Quick" style="font-size: 18px;margin-top: 2px;"></span>
+				<span class="mui-icon icon-quick" style="font-size: 18px;margin-top: 2px;"></span>
 				<span class="mui-tab-label">快捷</span>
 			</a>
 			<a class="mui-tab-item" href="html/self_media.html" data-id="contact">
-				<span class="mui-icon icon-Selfmedia" style="font-size: 18px;margin-top: 2px;"></span>
+				<span class="mui-icon icon-selfmedia" style="font-size: 18px;margin-top: 2px;"></span>
 				<span class="mui-tab-label">自媒体</span>
 			</a>
 			<a class="mui-tab-item" href="html/my.html" data-id="setting">
@@ -278,7 +277,7 @@
 		</nav>
  </div>
  	
-	<div id="quick">
+	<div id="shortcut">
 		<li>
 			<img src="image/entry-customer.png" >
 			<p>录入客户</p>
@@ -302,39 +301,62 @@
 <script src="js/mui.min.js"></script>
 <script src="js/util.js"></script>
 <script>
-	mui.init();
+	mui.init({
+		swipeBack: false
+	});
 	mui.plusReady(function() {
+		judgeLogin();
 		var self = plus.webview.currentWebview();
 		var current = '';
 		var styles = {
 			top: '0',
 			bottom: '51px'
 		};
+		
 		var tabsConfig = {
-			main: {
+			home: {
 				url: 'html/home.html',
 				styles: styles,
 				default: true
 			},
-			message: {
-				url: 'tab-message.html',
+			chat: {
+				url: 'html/chat.html',
 				styles: styles
 			},
-			contact: {
+			media: {
 				url: 'html/self_media.html',
 				styles: styles
 			},
-			setting: {
+			user: {
 				url: 'html/my.html',
 				styles: styles
 			}
+		};
+		
+		// webview.show();
+		
+		var tabs = {};
+		for (id in tabsConfig) {
+			tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
+			if (tabsConfig[id]['default']) {
+				self.append(tabs[id]);
+				current = id;
+			}
+		}
+		
+		mui('#bar').on('tap', 'a', function(e) {
+			alert(current);
+			if (current == this.dataset.id) {
+				mui.fire(tabs[current], 'scroll2top');
+				return;
+			}
+			tabs[this.dataset.id].show();
+			tabs[current].hide();
+			current = this.dataset.id;
 		});
-		webview.show();
-	};
+	});
 	
-	function judgelogin() {
-//		localStorage.setItem('user', {name: 'xuelang'});
-//		localStorage.removeItem('user');
+	function judgeLogin() {
 		//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
 		if (!localStorage.getItem('user')) {
 			mui.preload({
@@ -356,47 +378,29 @@
 		}
 	}
 	
+	
 	function ycit(){
-            var zt = document.getElementById("back").style.display;
-			var zt = document.getElementById("quick").style.display;
-            if (zt == "block"){
-                document.getElementById("back").style.display = "none";
-            }else{
-				document.getElementById("back").style.display = "block";
-		};
-		var tabs = {};
-		for (id in tabsConfig) {
-			tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
-			if (tabsConfig[id]['default']) {
-				self.append(tabs[id]);
-				current = id;
-			}
+		var zt = document.getElementById("back").style.display;
+		var zt = document.getElementById("quick").style.display;
+		if (zt == "block"){
+			document.getElementById("back").style.display = "none";
+			document.getElementById("back").style.display = "block";
 		}
-		mui('#bar').on('tap', 'a', function(e) {
-			alert(current);
-			if (current == this.dataset.id) {
-				mui.fire(tabs[current], 'scroll2top');
-				return;
-			}
-			tabs[this.dataset.id].show();
-			tabs[current].hide();
-			current = this.dataset.id;
-		});
+	}
 		
-		function guanb(){
-			var jy = document.getElementById("cover").style.display;
-			var jy = document.getElementById("QR-code").style.display;
-			if (jy == "block"){
-				document.getElementById("cover").style.display = "none";
-			}else{
-				document.getElementById("cover").style.display = "block";
-			}
-			if (jy == "block"){
-				document.getElementById("QR-code").style.display = "none";
-			}else{
-				document.getElementById("QR-code").style.display = "block";
-			}
+	function guanb(){
+		var jy = document.getElementById("cover").style.display;
+		var jy = document.getElementById("QR-code").style.display;
+		if (jy == "block"){
+			document.getElementById("cover").style.display = "none";
+		}else{
+			document.getElementById("cover").style.display = "block";
 		}
-	});
+		if (jy == "block"){
+			document.getElementById("QR-code").style.display = "none";
+		}else{
+			document.getElementById("QR-code").style.display = "block";
+		}
+	}
 </script>
 </html>
