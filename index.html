@@ -10,11 +10,11 @@
 <body>
 	<div class="mui-content">
 		<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;">
-			<div class="mui-tab-item mui-active tab-item" href="#" data-id="home">
+			<div class="mui-tab-item mui-active tab-item" data-id="home">
 				<span class="mui-icon icon-home-page-s" style="font-size: 18px;margin-top: 2px;"></span>
 				<span class="mui-tab-label">首页</span>
 			</div>
-			<div class="mui-tab-item tab-item" href="#" data-id="chat">
+			<div class="mui-tab-item tab-item" data-id="chat" id="chat">
 				<span class="mui-icon icon-chat" style="font-size: 18px;margin-top: 2px;"></span>
 				<span class="mui-tab-label">聊天</span>
 			</div>
@@ -22,11 +22,11 @@
 				<span class="mui-icon icon-quick" style="font-size: 18px;margin-top: 2px;"></span>
 				<span class="mui-tab-label">快捷</span>
 			</div>
-			<div class="mui-tab-item tab-item" href="#" data-id="media">
+			<div class="mui-tab-item tab-item" data-id="media">
 				<span class="mui-icon icon-selfmedia" style="font-size: 18px;margin-top: 2px;"></span>
 				<span class="mui-tab-label">自媒体</span>
 			</div>
-			<div class="mui-tab-item tab-item" href="#" data-id="user">
+			<div class="mui-tab-item tab-item" data-id="user" id="user">
 				<span class="mui-icon icon-my" style="font-size: 18px;margin-top: 2px;"></span>
 				<span class="mui-tab-label">我的</span>
 			</div>
@@ -42,7 +42,7 @@
 	
 	var self = plus.webview.currentWebview();
 	var shortcutWebview = null;
-	var curentTab = null;
+	var currentTab = null;
 	var current = '';
 	var tabs = {};
 	var styles = {
@@ -107,8 +107,18 @@
 	};
 	
 	mui.plusReady(function() {
-		//设置curentTab
-		curentTab = mui('#bar .tab-item')[0];
+		//自定义事件监听快捷菜单页面点击
+		window.addEventListener('closeShortcut', function() {
+			document.getElementById('short_cut').dataset.status = 0;
+			shortcutWebview.hide();
+			//修改选中颜色样式
+			mui.trigger(currentTab, 'tap');
+			document.getElementById('short_cut').classList.remove('mui-active');
+			currentTab.classList.add('mui-active');
+		})
+		
+		//设置currentTab
+		currentTab = mui('#bar .tab-item')[0];
 		//设置只支持竖屏幕显示
 		plus.screen.lockOrientation("portrait-primary");
 		//初始化与index有关的页面
@@ -145,14 +155,29 @@
 			if (status == 0) {
 				this.dataset.status = 1;
 				shortcutWebview.show();
-			} else {
-				mui.trigger(curentTab, 'tap');
-				this.dataset.status = 0;
-				shortcutWebview.hide();
-			}
+				this.children[0].classList.remove('icon-quick');
+				this.children[0].classList.add('icon-quick-s');
+				currentTab.children[0].classList.remove(tabsConfig[current].selected);
+				currentTab.children[0].classList.add(tabsConfig[current].icon);
+			} 
+// 			else {
+// 				mui.trigger(currentTab, 'tap');
+// 				this.classList.remove('mui-active');
+// 				this.children[0].classList.remove('icon-quick-s');
+// 				this.children[0].classList.add('icon-quick');
+// 				currentTab.children[0].classList.remove(tabsConfig[current].icon);
+// 				currentTab.children[0].classList.add(tabsConfig[current].selected);
+// 				currentTab.classList.add('mui-active');
+// 				this.dataset.status = 0;
+// 				shortcutWebview.hide();
+// 			}
 		});
 		
 		mui('#bar').on('tap', '.tab-item', function(e) {
+			document.getElementById('short_cut').children[0].classList.remove('icon-quick-s');
+			document.getElementById('short_cut').children[0].classList.add('icon-quick');
+			this.children[0].classList.remove(tabsConfig[this.dataset.id].icon);
+			this.children[0].classList.add(tabsConfig[this.dataset.id].selected);
 			document.getElementById('short_cut').dataset.status = 0;
 			shortcutWebview.hide();
 			if (current == this.dataset.id) {
@@ -161,13 +186,11 @@
 			}
 			tabs[this.dataset.id].show();
 			setStatusBar(tabsConfig[this.dataset.id].background, tabsConfig[this.dataset.id].style);
-			this.children[0].classList.remove(tabsConfig[this.dataset.id].icon);
-			this.children[0].classList.add(tabsConfig[this.dataset.id].selected);
 			tabs[current].hide();
-			curentTab.children[0].classList.remove(tabsConfig[current].selected);
-			curentTab.children[0].classList.add(tabsConfig[current].icon);
+			currentTab.children[0].classList.remove(tabsConfig[current].selected);
+			currentTab.children[0].classList.add(tabsConfig[current].icon);
 			current = this.dataset.id;
-			curentTab = this;
+			currentTab = this;
 		});
 	}
 	
@@ -191,21 +214,6 @@
 			      	aniShow: 'slide-in-bottom'
 			    }
 			});
-		}
-	}
-	
-	function guanb(){
-		var jy = document.getElementById("cover").style.display;
-		var jy = document.getElementById("QR-code").style.display;
-		if (jy == "block"){
-			document.getElementById("cover").style.display = "none";
-		}else{
-			document.getElementById("cover").style.display = "block";
-		}
-		if (jy == "block"){
-			document.getElementById("QR-code").style.display = "none";
-		}else{
-			document.getElementById("QR-code").style.display = "block";
 		}
 	}
 </script>
