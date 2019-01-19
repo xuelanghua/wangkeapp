@@ -40,7 +40,7 @@
 		swipeBack: false
 	});
 	
-	var self = plus.webview.currentWebview();
+	var self = null;
 	var shortcutWebview = null;
 	var currentTab = null;
 	var current = '';
@@ -119,6 +119,8 @@
 		
 		//设置currentTab
 		currentTab = mui('#bar .tab-item')[0];
+		//获取当前webview
+		self = plus.webview.currentWebview();
 		//设置只支持竖屏幕显示
 		plus.screen.lockOrientation("portrait-primary");
 		//初始化与index有关的页面
