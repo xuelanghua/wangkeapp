@@ -6,19 +6,24 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>扫码</title>
 		<link href="../icomoon/style.css" rel="stylesheet" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
-			.close{
-				height: 20%;
+			.close {
+				height: 55px;
 				width: 100%;
 				position: absolute;
-				top: 0px;
+				top: 30px;
+				left: 0px;
 				background: #000000;
+				z-index: 999999;
+				color: #fff;
 			}
 			.mask {
-				height: 78%;
+				height: 85%;
 				width: 100%;
 				position: absolute;
-				top: 20px;
+				top: 50px;
 				background: #000000;
 			}
 			
@@ -57,7 +62,7 @@
 	</head>
 
 	<body>
-		<span class="close">关闭</span>
+		<div class="close" id="colse"><span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;margin-left: 10px;"></span></div>
 		<div class="mask" id="mask"></div>
 		<div class="mask2" id="mask2">
 			<div id="scan1" class="scan">
@@ -121,6 +126,10 @@
 				}, function(err) {
 					plus.nativeUI.alert('Failed: ' + err.message);
 				});
+			})
+			var close=document.getElementById('colse');
+			close.addEventListener('click', function() {
+				plus.webview.currentWebview().close();
 			})
 		</script>
 	</body>

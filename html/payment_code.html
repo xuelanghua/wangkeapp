@@ -71,13 +71,8 @@
 	</head>
 
 	<body style="background-color: #2289FF;">
-		<script src="js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
-		
 		<header class="mui-bar mui-bar-nav"style="background-color: #2289FF;box-shadow: none;">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #FFFFFF;"></a>
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;" id="colsed"></span>
 			<h1 class="mui-title"style="color: #FFFFFF;">收款码</h1>
 		</header>
 		
@@ -108,3 +103,19 @@
 	</body>
 
 </html>
+<script src="../js/mui.min.js"></script>
+<script src="../js/util.js"></script>
+<script type="text/javascript">
+	(function($, doc) {
+		$.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		$.plusReady(function() {
+			var colsed = doc.getElementById('colsed');
+			colsed.addEventListener('click', function() {
+					$.back();
+			});
+		})
+	}(mui, document));
+	
+</script>

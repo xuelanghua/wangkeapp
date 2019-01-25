@@ -64,6 +64,7 @@
 				margin-top: 10px;
 				margin-left: 10px;
 				font-size: 12px;
+				margin-right: 10px;
 			}
 
 			.titlecontent p {
@@ -329,14 +330,13 @@
 							</div>
 							<div class="rain"></div>
 						</div> -->
-						<div class="icon sun-shower">
-							<!-- <div class="cloud"></div> -->
-							<div class="sun">
-								<div class="rays"></div>
-							</div>
-							<!-- <div class="rain"></div> -->
+						<div id="weather_img" style="margin-left: 10px;">
+								
 						</div>
-						<span style=" width: 40px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -55px;">今天<font id="temperature">1°~7°</font><font id="weather">晴</font></span>
+						<span style=" width: 40px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -55px;">今天</span>
+						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -35px;"><font id="temperature">1°~7°</font></span>
+						<span style=" width: 40px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -15px;"><font id="weather">晴</font></span>
+						
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -486,12 +486,36 @@
 				type: 'get',
 				//timeout: 10000,
 				success: function(data) {
+					
 					if(data.status == "success") {
 						//alert(JSON.stringify(data.results[0].weather_data));
 						//console.log(JSON.stringify(data));
 						document.getElementById('city').innerHTML=data.results[0].currentCity;
 						document.getElementById('temperature').innerHTML=data.results[0].weather_data[0].temperature;
 						document.getElementById('weather').innerHTML=data.results[0].weather_data[0].weather;
+						var weather=data.results[0].weather_data[0].weather;
+						var str='';
+						if(weather.indexOf("晴")!=-1){
+							if(weather.indexOf("云")!=-1){
+								str+='<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div>';
+							}else if(weather.indexOf("雨")!=-1){
+								str+='<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>';
+							}else{
+								str+='<div class="icon sun-shower"><div class="sun"><div class="rays"></div></div></div>';
+							}
+						}else{
+							if(weather.indexOf("云")!=-1){
+								if(weather.indexOf("雨")!=-1){
+									str+='<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
+								}else{
+									str+='<div class="icon cloudy"><div class="cloud"></div><div class="cloud"></div></div>';
+								}
+							}
+							if(weather.indexOf("雪")!=-1){
+								str+='<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
+							}
+						}
+						document.getElementById('weather_img').innerHTML=str;
 					}
 				},
 				error: function(xhr, type, error) {
