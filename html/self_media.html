@@ -176,6 +176,12 @@
 	<div class="mui-content">
 		<div id="slider" class="mui-slider">
 			<div class="mui-slider-group mui-slider-loop">
+				<!-- <div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="#">
+						<img src="../image//rotation_chart.png" alt="">
+						<p class="mui-slider-title">幸福就是可以一起睡觉</p>
+					</a>
+				</div>
 				<div class="mui-slider-item mui-slider-item-duplicate">
 					<a href="#">
 						<img src="../image//rotation_chart.png" alt="">
@@ -211,14 +217,14 @@
 						<img src="../image//rotation_chart.png" alt="">
 						<p class="mui-slider-title">幸福就是可以一起睡觉</p>
 					</a>
-				</div>
+				</div> -->
 			</div>
-			<div class="mui-slider-indicator mui-text-right">
+			<!-- <div class="mui-slider-indicator mui-text-right">
                 <div class="mui-indicator mui-active"></div>
                 <div class="mui-indicator"></div>
                 <div class="mui-indicator"></div>
                 <div class="mui-indicator"></div>
-            </div>
+            </div> -->
 		</div>
 		<div class="subMenu">
 			<div class=" inner mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted"style="background-color: #F5F6F8;">
@@ -360,6 +366,8 @@
 	</div>
  </div>
 </body>
+	<script src="../js/mui.js"></script>
+	<script src="../js/util.js"></script>
 	<script>
 		mui.init({
             swipeBack: false //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
@@ -368,10 +376,41 @@
 			window.addEventListener('scrollTop', function(event) {
 				window.scrollTo(0, 0);
 			});
+			slideReady();
 		})
         var slider = mui("#slider");
         slider.slider({
             interval: 1000
         });
+		function slideReady(){
+			mui.ajax({
+				url: $ajaxUrl + 'carousel',
+				data: {
+					position:1
+				},
+				//async: true || false, // 异步 || 同步
+				async: true,
+				dataType: 'json',
+				type: 'post',
+				timeout: 10000,
+				success: function(data) {
+					if(data.errno=='0'){
+						var str='';
+						if(data.data==''){
+							str+='<div class="mui-slider-group"><div class="mui-slider-item"><a href="#"><img src="../image/bj.jpg" alt=""><p class="mui-slider-title">只是精神不滑坡，办法总比困难多</p></a></div></div>';
+						}else if(data.data.length==1){
+									str+='<div class="mui-slider-group"><div class="mui-slider-item"><a href="#"><img src="'+data.data[0].pic+'" alt=""><p class="mui-slider-title">'+data.data[0].title+'</p></a></div></div>';
+						}else if(data.data.lenth>1){
+							str+='';
+						}
+					}
+					console.log(JSON.stringify(data));
+					document.getElementById('slider').innerHTML=str;
+				},
+				error: function(xhr, type, errorThrown) {
+					// 请求失败
+				}
+			});
+		}
 	</script>
 </html>
