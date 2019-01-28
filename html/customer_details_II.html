@@ -1,0 +1,377 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			.mui-title{
+				color: #FFFFFF;
+			}
+			.mui-bar{
+				box-shadow: none;
+			}
+			.title{
+				height: 60px;
+				background-color: #2289FF;
+			}
+			.info{
+				box-shadow: 0 0 5px 0 #DDDEDE;
+				padding: 0 10px 15px 10px;
+				color: #999999;
+				background-color: #FFFFFF;
+			}
+			.head{
+				width: 40%;
+				text-align: center;
+				margin: 0 auto;
+			}
+			.chart{
+				width: 70px;
+				height: 70px;
+				margin: 0 auto;
+				border-radius: 50%;
+			}
+			.chart img{
+				width: 100%;
+				height: 100%;
+				margin-top: -30px;
+				border-radius: 50%;
+			}
+			.name{
+				font-size: 17px;
+				color: #333333;
+				margin-top: -15px;
+			}
+			.company{
+				width: 60%;
+				overflow: hidden;
+				text-overflow:ellipsis;
+				white-space: nowrap;
+				padding: 0 10px;
+				display: block;
+				border-radius: 10px;
+				background-color: #68B0FF;
+			}
+			.position{
+				padding: 0 10px;
+				border-radius: 10px;
+				margin-left: 15px;
+				background-color: #F9D05E;
+			}
+			.function{
+				padding: 26px 10px;
+				font-size: 12px;
+				color: #999999;
+				background-color: #FFFFFF;
+			}
+			.button{
+				width: 100%;
+				color: #2188FF;
+				margin-top: 25px;
+				padding: 10px 0;
+				border: 1px solid #2188FF;
+			}
+			
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			.example{
+				padding-bottom: 20px;
+				margin-top: 8px;
+				background-color: #FFFFFF;
+			}
+			.example_title{
+				padding: 20px 10px 10px 10px;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.example_title p{
+				width: 5px;
+				height: 15px;
+				margin-right: 10px;
+				background-color: #2188FF;
+			}
+			
+			.comment-input{
+				width: 100%;
+				position: fixed;
+				bottom: 0;
+				padding: 10px 15px 8px 15px;
+				border-top: 1px solid #F2F2F2;
+				background-color: #FFFFFF;
+			}
+			.input{
+				width: 50%;
+				background-color: #F5F6F8;
+				padding: 7px 0 7px 11px;
+				color: #999999;
+				font-size: 15px;
+				margin-top: 4px;
+				border-radius: 25px;
+			}
+			.input img{
+				width: 17px;
+				height: 18px;
+			}
+			.comment-inputr{
+				width: 50%;
+				font-size: 12px;
+			}
+			.comment-inputr div{
+				width: 33.33%;
+				float: left;
+				text-align: center;
+			}
+			.comment-inputr button{
+				color: #FFFFFF;
+				border: none;
+				font-size: 15px;
+				border-radius: 5px;
+				margin-top: 5px;
+				background-color: #2289FF;
+			}
+			.comment-inputr img{
+				height: 21px;
+			}
+			.comment-inputr span{
+				display: block;
+				color: #999999;
+				margin-top: -5px;
+			}
+			.comment-content{
+				margin-bottom: 50px;
+				padding-bottom: 20px;
+			}
+			
+			.guaih{
+				border-radius: 8px;
+				background-color: #FFFFFF;
+				position: fixed;
+				z-index: 99999;
+				width: 92%;
+				top: 25%;
+				left: 4%;
+				right: 4%;
+				display: none;
+			}
+			.tanchu-title{
+				text-align: center;
+				padding: 15px 0;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.tanchu_content{
+				font-size: 14px;
+				padding: 20px 10px 40px 10px;
+				color: #999999;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.tanchu_content p{
+				width: 4px;
+				height: 4px;
+				margin-top: 8px;
+				border-radius: 50%;
+				margin-right: 10px;
+				background-color: #2289FF;
+			}
+			.tibu{
+				padding: 15px 0;
+			}
+			.tibu button{
+				width: 40%;
+				text-align: center;
+			}
+			.buttonL{
+				color: #2289FF;
+				margin-left: 5%;
+				border: 1px solid #2289FF;
+			}
+			.buttonR{
+				background-color: #2289FF;
+				color: #FFFFFF;
+				margin-right: 5%;
+				border: 1px solid #2289FF;
+			}
+			#cover{
+			    position: fixed;
+				z-index: 9999;
+				top: 0;
+				left: 0;
+				display: none;
+				width: 100%;
+				height: 100%;
+				opacity: 0.5;
+				background: #333333 none repeat scroll 0% 0%;
+			}
+			
+			.tanchu{
+				padding: 19px;
+				border-radius: 8px;
+				background-color: #FFFFFF;
+				position: fixed;
+				z-index: 99999;
+				width: 92%;
+				top: 25%;
+				left: 4%;
+				right: 4%;
+				display: none;
+			}
+			.tanchu textarea{
+				border: none;
+				font-size: 15px;
+				background-color: #F5F6F8;
+			}
+			.tanchu button{
+				width: 30%;
+				background-color: #2289FF;
+				color: #FFFFFF;
+				border: none;
+				margin: 0 auto;
+				display: block;
+				font-size: 15px;
+				border-radius: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		
+		<header class="mui-bar mui-bar-nav"style="background-color: #2289FF;color: #FFFFFF;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #FFFFFF;"></a>
+			<h1 class="mui-title">客户详情</h1>
+			<div class="mui-pull-right"style="margin-top: 10px;font-size: 15px;">编辑</div>
+		</header>
+		
+		<div class="mui-content">
+			<div class="title"></div>
+			<div class="info">
+				<div class="head">
+					<div class="chart">
+						<img src="../image/touxiang.png" >
+					</div>
+					<div class="name">
+						购多少
+					</div>
+				</div>
+				<div class="function">
+					<div>
+						<span>电话</span>
+						<span style="color: #000000;margin-left: 62px;">13888888888</span>
+					</div>
+					<div style="margin-top: 15px;">
+						<span class="mui-pull-left">公司&职位</span>
+						<span class="mui-pull-left" style="margin-left: 32px;color: #FFFFFF;font-size: 10px;">
+							<span class="company mui-pull-left">云南万贤科技有限公司</span>
+							<span class="position mui-pull-left">总经理</span>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+					<div style="margin-top: 15px;">
+						<span>设置标签</span>
+						<span style="margin-left: 40px;color: #2289FF;">[朋友]</span>
+					</div>
+					<button class="button">客情关怀</button>
+				</div>
+			</div>
+			
+			<div class="example">
+				<div class="example_title">
+					<p class="mui-pull-left"></p>
+					<span class="mui-pull-left">跟进记录</span>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			
+			<div class="comment-input">
+				<div class="input mui-pull-left">
+					<img src="../image/shuru.png" >
+					<span style="margin-left: 10px;">跟进记录...</span>
+				</div>
+				<div class="comment-inputr mui-pull-right">
+					<div style="margin-left: 10px;">
+						<img src="../image/wdeal.png">
+						<span>未成交</span>
+					</div>
+					<button class="mui-pull-right">电话</button>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			
+			<!-- 客情关怀 弹出框 -->
+			<div id="cover"></div>
+			<div class="guaih">
+				<div class="tanchu-title">
+					客情关怀
+				</div>
+				<div class="tanchu_content">
+					<div style="color: #000000;margin-bottom: 10px;">开启客情关怀将在以下特定日期进行消息提示</div>
+					<div>
+						<p class="mui-pull-left"></p>
+						<span class="mui-pull-left">
+							<span>生日：</span>
+							<span>12-28</span>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+					<div>
+						<p class="mui-pull-left"></p>
+						<span class="mui-pull-left">
+							<span>纪念日：</span>
+							<span>12-28</span>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="tibu">
+					<button class="buttonL mui-pull-left">放弃</button>
+					<button class="buttonR mui-pull-right">开启</button>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			
+			<!-- 跟进记录弹出框 -->
+			<div class="tanchu">
+				<textarea rows="8" placeholder="说说你的看法..."/></textarea>
+				<button class="button">发 布</button>
+			</div>
+			
+		</div>
+	</body>
+	<script src="../js/jquery.min.js"></script>
+	<script>
+		  $(document).ready(function(){
+					$("#cover").click(function(){
+						$(".guaih").hide();
+						$(this).hide;
+						$("#cover").hide();
+					});
+					$(".button").click(function(){
+						$(".guaih").show();
+						$(this).show;
+						$("#cover").show();
+					});
+		  });
+		  
+		  $(document).ready(function(){
+		  	$("#cover").click(function(){
+		  		$(".tanchu").hide();
+		  		$(this).hide;
+		  		$("#cover").hide();
+		  	});
+		  	$(".input").click(function(){
+		  		$(".tanchu").show();
+		  		$(this).show;
+		  		$("#cover").show();
+		  	});
+		  });
+  </script>
+</html>

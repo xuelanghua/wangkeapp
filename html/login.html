@@ -117,11 +117,12 @@
 				if (isWeixinInstalled) {
 					var waiting = plus.nativeUI.showWaiting();
 					plus.oauth.getServices(function(services) {
-						console.log(JSON.stringify(services));
+						// console.log(JSON.stringify(services));
 				        for (var i in services) {
 				            var service = services[i];
 			            	service.login(function(e) {
 			            		service.getUserInfo(function(e) {
+									console.log(JSON.stringify(e));
 			            			var openid = e.target.userInfo.openid;
 					                var unionid = e.target.userInfo.unionid;
 					                var nickname = e.target.userInfo.nickname;
@@ -129,7 +130,7 @@
 					                var client = mui.os.ios ? 'ios' : (mui.os.android ? 'android' : 'other');
 					                var deviceid = plus.device.uuid;
 					                mui.post($ajaxUrl + 'member&action=login', {openid: openid, unionid: unionid, nickname: nickname, headimgurl: headimgurl, deviceid: deviceid, client: client}, function(res) {
-	//				                	console.log(JSON.stringify(res));
+					                	console.log(JSON.stringify(res));
 					                	if (res.errno == 0) {
 					                		mui.toast('登录成功!');
 					                		localStorage.setItem('user', JSON.stringify(res.data));

@@ -33,7 +33,7 @@
 		</nav>
 	</div>
 </body>
-<script src="js/mui.min.js"></script>
+<script src="js/mui.js"></script>
 <script src="js/util.js"></script>
 <script>
 	mui.init({
@@ -199,15 +199,17 @@
 	function judgeLogin() {
 		// localStorage.removeItem('user');
 		//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
-		if (!localStorage.getItem('user')) {
-			mui.preload({
-				url:'html/login.html',
-				id:'login',
-				styles:{
-					top: '0px',
-					bottom: '0px'
-				}
-			});
+		var userInfo = localStorage.getItem('user');
+		console.log(JSON.stringify(userInfo));
+		if (!userInfo) {
+// 			mui.preload({
+// 				url:'html/login.html',
+// 				id:'login',
+// 				styles:{
+// 					top: '0px',
+// 					bottom: '0px'
+// 				}
+// 			});
 			mui.openWindow({
 			    url: 'html/login.html',
 			    id: 'login',
@@ -216,6 +218,16 @@
 			      	aniShow: 'slide-in-bottom'
 			    }
 			});
+		} else if (userInfo.mobile.length == 0) {
+			mui.openWindow({
+				id: 'mobile_bind',
+				url: 'html/mobile_bind.html'
+			})
+		} else if ((userInfo.is_staff == 0) || (userInfo.expire_time < parseInt(new Date().getTime()/1000))) {
+			mui.openWindow({
+				id: 'activation',
+				url: 'html/activation.html'
+			})
 		}
 	}
 </script>
