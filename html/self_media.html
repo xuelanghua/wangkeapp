@@ -175,13 +175,8 @@
 	</header>
 	<div class="mui-content">
 		<div id="slider" class="mui-slider">
-			<div class="mui-slider-group mui-slider-loop">
-				<!-- <div class="mui-slider-item mui-slider-item-duplicate">
-					<a href="#">
-						<img src="../image//rotation_chart.png" alt="">
-						<p class="mui-slider-title">幸福就是可以一起睡觉</p>
-					</a>
-				</div>
+			<!-- <div class="mui-slider-group mui-slider-loop">
+				
 				<div class="mui-slider-item mui-slider-item-duplicate">
 					<a href="#">
 						<img src="../image//rotation_chart.png" alt="">
@@ -190,26 +185,8 @@
 				</div>
 				<div class="mui-slider-item">
 					<a href="#">
-						<img src="../image//rotation_chart.png" alt="">
-						<p class="mui-slider-title">静静的看世界</p>
-					</a>
-				</div>
-				<div class="mui-slider-item">
-					<a href="#">
-						<img src="../image//rotation_chart.png" alt="">
-						<p class="mui-slider-title">想要一间这样的木屋，静静的喝咖啡</p>
-					</a>
-				</div>
-				<div class="mui-slider-item">
-					<a href="#">
-						<img src="../image//rotation_chart.png" alt="">
-						<p class="mui-slider-title">Color of SIP CBD</p>
-					</a>
-				</div>
-				<div class="mui-slider-item">
-					<a href="#">
-						<img src="../image//rotation_chart.png" alt="">
-						<p class="mui-slider-title">精进的机器人</p>
+						<img src="../image/bj.jpg" alt="">
+						<p class="mui-slider-title">静静的看世界1</p>
 					</a>
 				</div>
 				<div class="mui-slider-item mui-slider-item-duplicate">
@@ -217,12 +194,16 @@
 						<img src="../image//rotation_chart.png" alt="">
 						<p class="mui-slider-title">幸福就是可以一起睡觉</p>
 					</a>
-				</div> -->
+				</div>
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="#">
+						<img src="../image/bj.jpg" alt="">
+						<p class="mui-slider-title">静静的看世界1</p>
+					</a>
+				</div>
 			</div>
-			<!-- <div class="mui-slider-indicator mui-text-right">
+			<div class="mui-slider-indicator mui-text-right">
                 <div class="mui-indicator mui-active"></div>
-                <div class="mui-indicator"></div>
-                <div class="mui-indicator"></div>
                 <div class="mui-indicator"></div>
             </div> -->
 		</div>
@@ -372,21 +353,21 @@
 		mui.init({
             swipeBack: false //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
         });
+		/* var gallery = mui('.mui-slider');
+		gallery.slider({
+		interval:1000//自动轮播周期，若为0则不自动播放，默认为0；
+		}); */
 		mui.plusReady(function() {
 			window.addEventListener('scrollTop', function(event) {
 				window.scrollTo(0, 0);
 			});
 			slideReady();
 		})
-        var slider = mui("#slider");
-        slider.slider({
-            interval: 1000
-        });
 		function slideReady(){
 			mui.ajax({
 				url: $ajaxUrl + 'carousel',
 				data: {
-					position:1
+					position:2
 				},
 				//async: true || false, // 异步 || 同步
 				async: true,
@@ -400,16 +381,42 @@
 							str+='<div class="mui-slider-group"><div class="mui-slider-item"><a href="#"><img src="../image/bj.jpg" alt=""><p class="mui-slider-title">只是精神不滑坡，办法总比困难多</p></a></div></div>';
 						}else if(data.data.length==1){
 									str+='<div class="mui-slider-group"><div class="mui-slider-item"><a href="#"><img src="'+data.data[0].pic+'" alt=""><p class="mui-slider-title">'+data.data[0].title+'</p></a></div></div>';
-						}else if(data.data.lenth>1){
-							str+='';
+						}else if(data.data.length>1){
+							str+='<div class="mui-slider-group mui-slider-loop">';
+							var k=data.data.length-1;
+							str+='<div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="'+data.data[k].pic+'" alt=""><p class="mui-slider-title">'+data.data[k].title+'</p></a></div>';
+							var i=0;
+							for(i in data.data){
+									str+='<div class="mui-slider-item"><a href="#"><img src="'+data.data[i].pic+'" alt=""><p class="mui-slider-title">'+data.data[i].title+'</p></a></div>';
+							}
+							str+='<div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="'+data.data[0].pic+'" alt=""><p class="mui-slider-title">'+data.data[0].title+'</p></a></div>';
+							str+='</div>';
+							str+='<div class="mui-slider-indicator mui-text-right">';
+							var j=0;
+							for(j in data.data){
+								if(j==0){
+									str+='<div class="mui-indicator mui-active"></div>';
+								}else{
+									str+='<div class="mui-indicator"></div>';
+								}
+							}
+							str+='</div>';
 						}
 					}
-					console.log(JSON.stringify(data));
+					//console.log(str);
+					//console.log(JSON.stringify(data));
 					document.getElementById('slider').innerHTML=str;
+					slider_play();
 				},
 				error: function(xhr, type, errorThrown) {
 					// 请求失败
 				}
+			});
+		}
+		function slider_play(){
+			var gallery = mui('.mui-slider');
+			gallery.slider({
+			  interval:1000//自动轮播周期，若为0则不自动播放，默认为0；
 			});
 		}
 	</script>
