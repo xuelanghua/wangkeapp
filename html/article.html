@@ -197,23 +197,19 @@
 	</head>
 
 	<body>
-		<script src="js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
 		
-		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">腾讯悄然上线“微信支付分士大夫萨芬撒打发啊手动阀是”...</h1>
+		<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title" id="article_top">腾讯悄然上线“微信支付分士大夫萨芬撒打发啊手动阀是”...</h1>
 		</header>
 		
 		<div class="mui-content">
 			<div class="article">
 				<div class="article-title">
-					<h1 style="margin-top: 20px;">腾讯悄然上线“微信支付分”，誓要与芝麻信用分一较高下？</h1>
+					<h1 style="margin-top: 20px;" id="article_title">腾讯悄然上线“微信支付分”，誓要与芝麻信用分一较高下？</h1>
 					<div class="author">
-						<span>托尼.斯塔克</span>
-						<span style="margin-left: 10px;">2018-11-09</span>
+						<span id="article_author">托尼.斯塔克</span>
+						<span style="margin-left: 10px;" id="article_addtime">2018-11-09</span>
 					</div>
 					<a href="visitor.html">
 						<div class="visit">
@@ -248,7 +244,7 @@
 							</div>
 							<div class="visitr mui-pull-right">
 								<span>阅读：</span>
-								<span>520</span>
+								<span id="article_click">520</span>
 							</div>
 							<div class="clearfix"></div>
 						</div>
@@ -258,12 +254,14 @@
 					<div class="chart">
 						<img src="../image//guangao.jpg" alt="">
 					</div>
-					<p>
-						或许大家看到这个标题会联想到市面上的一些远程控制软件，诸如：TeamViewer、AnyDesk等。这一次笔者想推荐的并不是一
-					</p>
-					<p>
-						或许大家看到这个标题会联想到市面上的一些远程控制软件，诸如：TeamViewer、AnyDesk等。这一次笔者想推荐的并不是一
-					</p>
+					<div id="article_content">
+							<p>
+								或许大家看到这个标题会联想到市面上的一些远程控制软件，诸如：TeamViewer、AnyDesk等。这一次笔者想推荐的并不是一
+							</p>
+							<p>
+								或许大家看到这个标题会联想到市面上的一些远程控制软件，诸如：TeamViewer、AnyDesk等。这一次笔者想推荐的并不是一
+							</p>
+					</div>
 					<div class="chart">
 						<img src="../image//guangao.jpg" alt="">
 					</div>
@@ -352,7 +350,9 @@
 		
 	</body>
 	  <script src="js/jquery.min.js"></script>
-		<script>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<!-- <script>
 			$(document).ready(function(){
 			$("#cover").click(function(){
 				$(".tanchu").hide();
@@ -365,5 +365,41 @@
 				$("#cover").show();
 			});
 		  });
-		</script>
+		</script> -->
+		
 </html>
+<script>
+	mui.init();
+	mui.plusReady(function() {
+		var article_id=plus.webview.currentWebview().article_id;
+		article_info(article_id);
+		
+});
+function article_info(article_id){
+		var str = '';
+		var url = $ajaxUrl + 'article';
+		mui.post(url, {
+			token: 'eaa3242cd05ca923b66b60cbb10d01ad',
+			action: 'article_info',
+			id:article_id
+		}, function(data) {
+			//console.log(JSON.stringify(data));
+			//document.write(JSON.stringify(data));
+			if(data.errno=='0'){
+					document.getElementById('article_top').innerHTML = data.data.title;
+					document.getElementById('article_title').innerHTML = data.data.title;
+					document.getElementById('article_author').innerHTML = data.data.author;
+					document.getElementById('article_addtime').innerHTML = data.data.add_time;
+					document.getElementById('article_content').innerHTML = data.data.content;
+					document.getElementById('article_click').innerHTML = data.data.click;
+					
+			}else{
+					mui.toast(data.message,{ duration:'long', type:'div' });
+					setTimeout(function(){
+						var ws=plus.webview.currentWebview();
+						plus.webview.close(ws);
+					},2000);
+			}
+		}, 'json');
+}
+</script>

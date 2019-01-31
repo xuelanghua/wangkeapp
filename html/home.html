@@ -553,6 +553,7 @@
 				noticeDeail();
 			})
 			
+			//设置二维码
 			document.getElementById('qrcode_setting').addEventListener('tap', function() {
 				qrcodeTypeSetting(qrType);
 			})
@@ -656,7 +657,6 @@
 		//展示二维码
 		function showQrcode(type) {
 			mui.post($ajaxUrl + 'userqrcode&action=make_url', {type: type, token: userInfo.token}, function(res) {
-				console.log(JSON.stringify(res));
 				if (res.errno == 0) {
 					var qrcodeType = {
 						'redpacket': '红包',
@@ -744,4 +744,4 @@
 			console.log(type);
 		}
 	</script>
-</html>
+</html> 
