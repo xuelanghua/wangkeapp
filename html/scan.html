@@ -68,16 +68,18 @@
 			<div id="scan1" class="scan">
 				<img src="../image/click.png" />
 				<span id="">
-						手动选择本地图片
+					手动选择本地图片
 				</span>
 			</div>
 			<div id="scan2" class="scan">
 				<img src="../image/scan_off.png" />
 				<span id="">
-						手电筒
+					手电筒
 				</span>
 			</div>
 		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			var scan;
 			if(window.plus) {
@@ -106,7 +108,7 @@
 				})
 			}
 			//闪光灯
-			document.querySelector('#scan2 img').addEventListener('click', function() {
+			document.querySelector('#scan2 img').addEventListener('tap', function() {
 				if(/scan_off.png/.test(this.src)) {
 					this.src = "../image/scan_on.png";
 					scan.setFlash(true);
@@ -116,7 +118,7 @@
 				}
 			})
 			//添加本地图片
-			document.querySelector('#scan1 img').addEventListener('click', function() {
+			document.querySelector('#scan1 img').addEventListener('tap', function() {
 				plus.gallery.pick(function(path) {
 					console.log(path);
 					console.log(JSON.stringify(path));
@@ -128,7 +130,8 @@
 				});
 			})
 			var close=document.getElementById('colse');
-			close.addEventListener('click', function() {
+			close.addEventListener('tap', function() {
+				setStatusBar('#FFF', 'dark');
 				plus.webview.currentWebview().close();
 			})
 		</script>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style>
+			body{
+				background-color: #FFFFFF;
+			}
+			.clearfix {
+				clear: both;
+			}
+			ul,li{
+				list-style: none;
+			}
+			.mui-content{
+				background-color: #FFFFFF;
+			}
+			.article{
+				padding: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">公告标题</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="article">
+				
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../js/mui.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script>
+		mui.init({
+			swipeBack: true
+		})
+		
+		var noticeId = 0;
+		mui.plusReady(function() {
+			waiting = plus.nativeUI.showWaiting();
+			var self = plus.webview.currentWebview();
+			document.getElementsByClassName('mui-title')[0].innerHTML = self.notice.title;
+			noticeId = self.notice.id;
+			
+			noticeDetail();
+		})
+		
+		function noticeDetail() {
+			mui.post($ajaxUrl + 'notice', {action: 'detail', id: noticeId}, function(res) {
+				if (res.errno == 0) {
+					var detail = res.data;
+					document.getElementsByClassName('article')[0].innerHTML = detail.content;
+					console.log(JSON.stringify(detail));
+				} else {
+					console.log(res.message);
+				}
+				waiting.close();
+			}, 'json')
+		}
+	</script>
+</html>

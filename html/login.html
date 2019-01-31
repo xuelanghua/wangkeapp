@@ -97,7 +97,10 @@
 	<script type="text/javascript" src="../js/starbg.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			swipeBack: false
+			swipeBack: false,
+			beforeback: function() {
+				return false;
+			}
 		});
 		
 		var oauths = [];
@@ -130,7 +133,7 @@
 					                var client = mui.os.ios ? 'ios' : (mui.os.android ? 'android' : 'other');
 					                var deviceid = plus.device.uuid;
 					                mui.post($ajaxUrl + 'member&action=login', {openid: openid, unionid: unionid, nickname: nickname, headimgurl: headimgurl, deviceid: deviceid, client: client}, function(res) {
-					                	console.log(JSON.stringify(res));
+					                	// console.log(JSON.stringify(res));
 					                	if (res.errno == 0) {
 					                		mui.toast('登录成功!');
 					                		localStorage.setItem('user', JSON.stringify(res.data));

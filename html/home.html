@@ -7,6 +7,7 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/index.css" rel="stylesheet" />
 		<link href="../icomoon/style.css" rel="stylesheet" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
 		<style>
 			.clearfix {
 				clear: both;
@@ -72,11 +73,14 @@
 			}
 
 			.Notice {
+				height: 41px;
+				overflow: hidden;
 				margin-top: 77px;
 				padding: 10px;
 				font-size: 12px;
 				color: #000000;
 				background-color: #DDDEDE;
+				display: none;
 			}
 
 			.Notice-title {
@@ -256,12 +260,22 @@
 				opacity: 0.5;
 				background: #484848 none repeat scroll 0% 0%;
 			}
-
+			
+			.code_container {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.5)!important;
+				z-index: 99998;
+				display: none;
+			}
+			
 			#QR-code {
-				width: 288px;
+				width: 74%;
 				height: 335px;
 				background-color: #fff;
-				display: none;
 				z-index: 99999;
 				position: fixed;
 				top: 25%;
@@ -292,6 +306,7 @@
 			#QR-code a {
 				font-size: 13px;
 			}
+			
 			.mask {
 				height: 100%;
 				width: 100%;
@@ -299,10 +314,51 @@
 				top: 0;
 				background: #000000;
 			}
+			
+			.mui-slider-title {
+				position: absolute;
+				bottom: -40%;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				line-height: 30px;
+				margin: 0;
+				text-align: center;
+				vertical-align: middle;
+				text-indent: 0;
+				opacity: 1;
+				background-color: rgba(0, 0, 0, 0);
+				color: #FFF;
+				font-size: 18px;
+			}
+			
+			.noticeMsg {
+				overflow: hidden;
+				white-space: nowrap;
+				height: 50px;
+				width: 100%;
+				font-size: 15px;
+				-webkit-transition: .4s;
+				-o-transition: .4s;
+				transition: .4s;
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+				background: url(../Images/notice.png) left 10px center no-repeat;
+			}
+			
+			.noticeMsg ul li {
+				padding: 0;
+				margin: 0;
+			}
+			
+			#scroll_begin li, #scroll_end li {
+				line-height: 32px;
+				text-indent: 30px;
+			}
 		</style>
 	</head>
 	<body>
-		<div style="margin-bottom: 100px;">
+		<div style="margin-bottom: 50px;">
 			<header class="mui-bar mui-bar-nav" style="height:120px; background-color: #fff;box-shadow: 0 0 0 #fff;">
 				<img src="../image/index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;">
 				<h1 class="mui-title">旺客</h1>
@@ -330,43 +386,38 @@
 							</div>
 							<div class="rain"></div>
 						</div> -->
-						<div id="weather_img" style="margin-left: 10px;">
-								
-						</div>
-						<span style=" width: 40px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -55px;">今天</span>
+						<div id="weather_img" style="margin-left: 10px;"></div>
+						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -55px;">今天</span>
 						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -35px;"><font id="temperature">1°~7°</font></span>
-						<span style=" width: 40px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -15px;"><font id="weather">晴</font></span>
-						
+						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -15px;"><font id="weather">晴</font></span>
 					</div>
 					<div class="clearfix"></div>
 				</div>
 			</header>
 			<div class="mui-content">
 				<div class="Notice">
-					<div class="Notice-title">公告</div>
-					<span>这里是公告，公告的内容很有用</span>
+					<div class="Notice-title"><img src="../image/notice4.png" style="width:18px" alt=""></div>
+					<span id="notice_container"></span>
 					<img src="../image/iconrighth.png">
 					<div class="clearfix"></div>
 				</div>
-
-				<!-- <div class="Background-picture">
-					<img src="../image/bj.jpg" width="100%">
-					<h4>只是精神不滑坡，办法总比困难多</h4>
-				</div> -->
-				<div class="mui-slider" id="slider_img">
-				  
+				
+				<div class="mui-slider" id="slider_container">
+					<!-- <div class="mui-slider-group">
+						<div class="mui-slider-item"><a href="#"><img src="../image/bj.jpg" /><p class="mui-slider-title">只要精神不滑坡,办法总比困难多</p></a></div>
+					</div> -->
 				</div>
 
 				<div class="function" style="z-index: 1;">
-					<div class="functionL" onclick="jiaoyi()">
-						<div class="functionLc">
+					<div class="functionL">
+						<div class="functionLc" data-type="setting">
 							<img src="../image/idnex-message.png">
 							<p>码上成交</p>
 							<div class="clearfix"></div>
 						</div>
 					</div>
-					<div class="functionR">
-						<a href="marketing_code.html">
+					<div class="functionR" id="setting">
+						<a href="javascript: void(0);">
 							<div class="functionRc">
 								<img src="../image/Set-up.png">
 								<p>设置</p>
@@ -377,9 +428,8 @@
 					<div class="clearfix"></div>
 				</div>
 
-
 				<div class="functional_selection">
-					<div class="business_card">
+					<div class="business_card" data-type="card">
 						<img src="../image/business-card.png">
 						<div style="float: left;margin-left: 10px;">
 							<p>扫码换名片</p>
@@ -388,7 +438,7 @@
 						<div class="heitiao">雷达</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_cardR">
+					<div class="business_cardR" data-type="redpacket">
 						<img src="../image/Red-envelopes.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>发红包</p>
@@ -397,7 +447,7 @@
 						<div class="heitiao" style="background-color: #FC7053;">设置</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_card">
+					<div class="business_card" data-type="shop">
 						<img src="../image/Shopping-Mall.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>商城</p>
@@ -405,7 +455,7 @@
 						</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_cardR">
+					<div class="business_cardR" data-type="link">
 						<img src="../image/custom.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>自定义</p>
@@ -416,115 +466,143 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
-
-				<a href="self_media.html">自媒体</a><br />
-				<a href="my.html">我的</a><br />
-				<a href="asset_management.html">资产管理</a><br />
-				<a href="login.html">登录</a><br />
-				<a href="submit_successfully.html">提现申请</a>
-
-				<div id="cover" onclick="guanb()"></div>
-				<div id="QR-code">
-					<div class="QR-tu">
-						<img src="../image/QR.png">
-					</div>
-					<span>二维码类型（名片）</span>
-					<a style="float: left;margin-left: 45%;">设置 ></a>
-					<img onclick="guanb()" src="../image/Close.png" style="width: 28px;height: 28px;float: left;margin-top: 50px;margin-left: 45%;">
-					<div class="clearfix"></div>
-				</div>
-
 			</div>
+		</div>
+		<div class="code_container">
+			<div id="QR-code">
+				<div class="QR-tu">
+					<img src="../image/QR.png" id="qrcode_pic">
+				</div>
+				<span>二维码类型（<i id="qrcode_type">名片</i>）</span>
+				<a id="qrcode_setting" style="float: left;margin-left: 45%;">设置 ></a>
+				<img id="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;float: left;margin-top: 50px;margin-left: 45%;">
+				<div class="clearfix"></div>
+			</div>
+		</div>
 	</body>
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
 	<script>
-			mui.init();
+		mui.init({
+			swipeBack: false,
+			pullRefresh: {
+				container: "body",	//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+                down: {
+					height:50,//可选,默认50.触发下拉刷新拖动距离,
+					auto: false,//可选,默认false.首次加载自动下拉刷新一次
+					contentdown: "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+					contentover: "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+					contentrefresh: "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+					callback: function(){
+						getNotice();
+						weatherInit();	//天气初始化
+						slideInit(true);	//幻灯片初始化 
+                    }	
+                }
+			}
+		});
 			
-			mui.plusReady(function() {
-				var gallery = mui('.mui-slider');
-				gallery.slider({
-				  interval:1000//自动轮播周期，若为0则不自动播放，默认为0；
-				});
-				onPlusReady();//天气
-				
-				slideReady();//幻灯片
-				//打开扫一扫
-				var scan = document.getElementById('scan');
-				scan.addEventListener('tap', function() {
-						mui.openWindow({
-							url: 'scan.html',
-							id: 'scan',
-							show:{
-								autoShow: true,
-								aniShow: 'slide-in-bottom'
-							}
-						});
-				});
-				//打开收款码页面
-				var payment_code = document.getElementById('payment_code');
-				payment_code.addEventListener('tap', function() {
-						mui.openWindow({
-							url: 'payment_code.html',
-							id: 'payment_code',
-							show:{
-								autoShow: true,
-								aniShow: 'slide-in-bottom'
-							}
-						});
-				});
+		var noticeLen = 0;
+		var noticeIndex = 0;
+		var notice = {};
+		var qrType = 'card';
+		var userInfo = getUserInfo();
+		mui.plusReady(function() {
+			waiting = plus.nativeUI.showWaiting();
+			getNotice();
+			weatherInit();	//天气初始化
+			slideInit(false);	//幻灯片初始化 
+			
+			//打开扫一扫
+			var scan = document.getElementById('scan');
+			scan.addEventListener('tap', function() {
+				var paymentPage = plus.webview.create('scan.html', 'scan', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#000'}});
+				paymentPage.show('slide-in-bottom');
+				setStatusBar('#2289FF', 'light');
 			});
+			
+			//打开收款码页面
+			var payment_code = document.getElementById('payment_code');
+			payment_code.addEventListener('tap', function() {
+				var paymentPage = plus.webview.create('payment_code.html', 'payment_code', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#2289FF'}});
+				paymentPage.show('slide-in-bottom');
+				setStatusBar('#2289FF', 'light');
+			});
+			
+			//打开设置界面
+			document.getElementById('setting').addEventListener('tap', function() {
+				var settingPage = plus.webview.create('qrcode_setting.html', 'qrcode_setting', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#2289FF'}});
+				settingPage.show('slide-in-bottom');
+				setStatusBar('#2289FF', 'light');
+			})
+			
+			//打开二维码
+			mui('.mui-content').on('tap', '.business_card,.business_cardR,.functionLc', function() {
+				var type = this.dataset.type;
+				showQrcode(type);
+			})
+			
+			//关闭二维码
+			document.getElementById('hide_qrcode').addEventListener('tap', function() {
+				hideQrcode();
+			})
+			
+			//查看公告
+			mui('.mui-content').on('tap', '.Notice', function() {
+				noticeDeail();
+			})
+			
+			document.getElementById('qrcode_setting').addEventListener('tap', function() {
+				qrcodeTypeSetting(qrType);
+			})
+		});
 		
-			function onPlusReady(){
+		//获取地理位置
+		function weatherInit(){
 			plus.geolocation.getCurrentPosition(function(p){
-				//alert('Geolocation\nLatitude:' + p.coords.latitude + '\nLongitude:' + p.coords.longitude + '\nAltitude:' + p.coords.altitude);
-				var str='';
-				str=p.coords.longitude+','+p.coords.latitude;
-				GetTodayWeather(str);
+				getTodayWeather(p.coords.longitude + ',' + p.coords.latitude);
 			}, function(e){
-				alert('Geolocation error: ' + e.message);
+				mui.alert('Geolocation error: ' + e.message);
 			} );
 		}
 		
-			function slideReady(){
-			mui.ajax({
-				url: $ajaxUrl + 'carousel',
-				data: {
-					position:1
-				},
-				//async: true || false, // 异步 || 同步
-				async: true,
-				dataType: 'json',
-				type: 'post',
-				timeout: 10000,
-				success: function(data) {
-					if(data.errno=='0'){
-						var str='';
-						if(data.data==''){
-							str+='<div class="mui-slider-group"><div class="mui-slider-item"><a href="#"><img src="../image/bj.jpg" alt=""><p class="mui-slider-title">只是精神不滑坡，办法总比困难多</p></a></div></div>';
-						}else if(data.data.length==1){
-									str+='<div class="mui-slider-group"><div class="mui-slider-item"><a href="#"><img src="'+data.data[0].pic+'" alt=""><p class="mui-slider-title">'+data.data[0].title+'</p></a></div></div>';
-						}else if(data.data.lenth>1){
-							var k=data.data.length-1;
-							str+='<div class="mui-slider-group mui-slider-loop">';
-							str+='<div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="'+data.data[k].pic+'" alt=""><p class="mui-slider-title">'+data.data[k].title+'</p></a></div>';
-							var i=0;
-							for(i in data.data){
-								str+='<div class="mui-slider-group"><div class="mui-slider-item"><a href="#"><img src="'+data.data[i].pic+'" alt=""><p class="mui-slider-title">'+data.data[i].title+'</p></a></div></div>';
-							}
-							str+='<div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="'+data.data[0].pic+'" alt=""><p class="mui-slider-title">'+data.data[0].title+'</p></a></div>';
-							str+='</div>';
+		//获取轮播图
+		function slideInit(refresh){
+			mui.post($ajaxUrl + 'carousel', {position: 1}, function(res) {
+				if (res.errno == 0) {
+					var carousel = res.data;
+					var len = carousel.length;
+					var str = '';
+					if (len == 1) {
+						str += '<div class="mui-slider-group">';
+						str += '<div class="mui-slider-item"><a href="' + carousel[0].link + '"><img src="' + carousel[0].pic + '" /><p class="mui-slider-title">' + carousel[0].title + '</p></a></div>';
+						str += '</div>';
+					} else {
+						str += '<div class="mui-slider-group mui-slider-loop">';
+						str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="' + carousel[len-1].link + '"><img src="' + carousel[len-1].pic + '" /><p class="mui-slider-title">' + carousel[len-1].title + '</p></a></div>';
+						for (var i = 0; i < len; i++) {
+							str += '<div class="mui-slider-item"><a href="' + carousel[i].link + '"><img src="' + carousel[i].pic + '" /><p class="mui-slider-title">' + carousel[i].title + '</p></a></div>';
 						}
+						str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="' + carousel[0].link + '"><img src="' + carousel[0].pic + '" /><p class="mui-slider-title">' + carousel[0].title + '</p></a></div>';
+						str += '</div>';
 					}
-					console.log(JSON.stringify(data));
-					document.getElementById('slider_img').innerHTML=str;
-				},
-				error: function(xhr, type, errorThrown) {
-					// 请求失败
+					document.getElementById('slider_container').innerHTML = str;
+					sliderPlay();
+				} else {
+					console.log(res.message);
 				}
-			});
+				waiting.close();
+				if (refresh) {
+					setTimeout(function() {
+						mui('body').pullRefresh().endPulldownToRefresh();
+					}, 1000)
+				}
+			}, 'json')
 		}
-			function GetTodayWeather(LatandLong) {
+		
+		//获取当前天气
+		function getTodayWeather(LatandLong) {
 			var baidukey='S4Z3Zvt623P9TMYDOLF041qMLwxGl2vg';
 			var jsonUrl = "http://api.map.baidu.com/telematics/v3/weather?location=" + LatandLong + "&output=json&ak=" + baidukey + "";
 			mui.ajax(jsonUrl, {
@@ -532,43 +610,138 @@
 				type: 'get',
 				//timeout: 10000,
 				success: function(data) {
-					
 					if(data.status == "success") {
-						//alert(JSON.stringify(data.results[0].weather_data));
 						//console.log(JSON.stringify(data));
-						document.getElementById('city').innerHTML=data.results[0].currentCity;
-						document.getElementById('temperature').innerHTML=data.results[0].weather_data[0].temperature;
-						document.getElementById('weather').innerHTML=data.results[0].weather_data[0].weather;
-						var weather=data.results[0].weather_data[0].weather;
-						var str='';
-						if(weather.indexOf("晴")!=-1){
-							if(weather.indexOf("云")!=-1){
-								str+='<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div>';
-							}else if(weather.indexOf("雨")!=-1){
-								str+='<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>';
-							}else{
-								str+='<div class="icon sun-shower"><div class="sun"><div class="rays"></div></div></div>';
+						document.getElementById('city').innerHTML = data.results[0].currentCity;
+						document.getElementById('temperature').innerHTML = data.results[0].weather_data[0].temperature;
+						document.getElementById('weather').innerHTML = data.results[0].weather_data[0].weather;
+						var weather = data.results[0].weather_data[0].weather;
+						var str = '';
+						if (weather.indexOf("晴") != -1) {
+							if (weather.indexOf("云") != -1) {
+								str += '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div>';
+							} else if (weather.indexOf("雨") != -1) {
+								str += '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>';
+							} else {
+								str += '<div class="icon sun-shower"><div class="sun"><div class="rays"></div></div></div>';
 							}
-						}else{
-							if(weather.indexOf("云")!=-1){
-								if(weather.indexOf("雨")!=-1){
-									str+='<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
-								}else{
-									str+='<div class="icon cloudy"><div class="cloud"></div><div class="cloud"></div></div>';
+						} else {
+							if (weather.indexOf("云") != -1) {
+								if (weather.indexOf("雨") != -1) {
+									str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
+								} else {
+									str += '<div class="icon cloudy"><div class="cloud">< /div><div class="cloud"></div></div>';
 								}
 							}
-							if(weather.indexOf("雪")!=-1){
-								str+='<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
+							if (weather.indexOf("雪") != -1) {
+								str += '<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
 							}
 						}
-						document.getElementById('weather_img').innerHTML=str;
+						document.getElementById('weather_img').innerHTML = str;
 					}
 				},
 				error: function(xhr, type, error) {
-					//console.log(type)
 					mui.toast("网络异常,请稍候再试");
 				}
 			});
+		}
+		
+		//轮播图轮播设置
+		function sliderPlay() {
+			mui('.mui-slider').slider({
+				interval: 2500//自动轮播周期，若为0则不自动播放，默认为0；
+			});
+		}
+		
+		//展示二维码
+		function showQrcode(type) {
+			mui.post($ajaxUrl + 'userqrcode&action=make_url', {type: type, token: userInfo.token}, function(res) {
+				console.log(JSON.stringify(res));
+				if (res.errno == 0) {
+					var qrcodeType = {
+						'redpacket': '红包',
+						'card': '名片',
+						'link': '自定义',
+						'pic': '图片',
+						'article': '文章红包',
+						'shop': '商城'
+					};
+					if (res.data.type != 'shop') {
+						document.getElementById('qrcode_setting').style.display = 'block';
+						qrType = res.data.type;
+					} else {
+						document.getElementById('qrcode_setting').style.display = 'none';
+					}
+					var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+					document.getElementById('qrcode_type').innerHTML = qrcodeType[res.data.type];
+					document.getElementById('qrcode_pic').setAttribute('src', url);
+					document.getElementsByClassName('code_container')[0].style.display = 'block';
+				} else if (res.errno == 1) {
+					plus.nativeUI.toast(res.msg);
+				} else if (res.errno == 2) {
+					var settingPage = plus.webview.create('qrcode_setting.html', 'qrcode_setting', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#2289FF'}});
+					settingPage.show('slide-in-bottom');
+					setStatusBar('#2289FF', 'light');
+				}
+			}, 'json');
+		}
+		
+		//隐藏二维码
+		function hideQrcode() {
+			document.getElementsByClassName('code_container')[0].style.display = 'none';
+		}
+		
+		//获取公告
+		function getNotice(){
+			mui.post($ajaxUrl + 'notice', {action: 'list'}, function(res) {
+				if (res.errno == 0) {
+					notice = res.data;
+					noticeLen = notice.length;
+					var str = '<div class="swiper-container"><div class="swiper-wrapper">';
+					for (var i = 0; i < noticeLen; i++) {
+						str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '">' + notice[i].title + '</div>';
+					}
+					str += '</div></div>';
+					document.getElementById('notice_container').innerHTML = str;
+					document.getElementsByClassName('Notice')[0].style.display = 'block';
+					scrollInit();
+				} else {
+					console.log(res.message);
+				}
+			}, 'json')
+		}
+		
+		//公告滚动初始化
+		function scrollInit() {
+			var mySwiper = new Swiper('.swiper-container', {
+				autoplay: true,	//可选选项，自动滑动
+				loop : true,
+				direction : 'vertical',
+				speed: 5000,
+				autoHeight: true,
+				watchOverflow: true,
+				on: {
+					slideChange: function(){
+						var index = this.activeIndex;
+						if (index <= noticeLen) {
+							noticeIndex = index - 1;
+						} else {
+							noticeIndex = 0;
+						}
+					},
+				}
+			})
+		}
+		
+		//查看公告详情
+		function noticeDeail() {
+			var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#FFF'}}, {notice: notice[noticeIndex]});
+			detailPage.show();
+		}
+		
+		//设置二维码类型
+		function qrcodeTypeSetting(type) {
+			console.log(type);
 		}
 	</script>
 </html>

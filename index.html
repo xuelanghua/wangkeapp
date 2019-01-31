@@ -62,7 +62,22 @@
 			styles: {
 				top: '0',
 				bottom: '51px',
-				statusbar: {background: '#FFFFFF'}
+				scrollIndicator: 'none',
+				statusbar: {background: '#FFFFFF'},
+// 				pullToRefresh: {
+// 					support:true,
+// 					height:'50px',
+// 					range:'200px',
+// 					contentdown:{
+// 						caption:'下拉可以刷新'
+// 					},
+// 					contentover:{
+// 						caption:'释放立即刷新'
+// 					},
+// 					contentrefresh:{
+// 						caption:'正在刷新...'
+// 					},
+// 				}
 			}
 		},
 		chat: {
@@ -75,7 +90,8 @@
 			styles: {
 				top: '0',
 				bottom: '51px',
-				statusbar: {background: '#1E7AE5'}
+				scrollIndicator: 'none',
+				statusbar: {background: '#2289FF'}
 			}
 		},
 		media: {
@@ -88,6 +104,7 @@
 			styles: {
 				top: '0',
 				bottom: '51px',
+				scrollIndicator: 'none',
 				statusbar: {background: '#FFFFFF'}
 			}
 		},
@@ -101,6 +118,7 @@
 			styles: {
 				top: '0',
 				bottom: '51px',
+				scrollIndicator: 'none',
 				statusbar: {background: '#2289FF'}
 			}
 		}
@@ -147,7 +165,7 @@
 				setStatusBar(tabsConfig[id].background, tabsConfig[id].style);
 			}
 		}
-		shortcutWebview = plus.webview.create('html/shortcut.html', 'shortcut', {bottom: '51px',background: 'transparent'});
+		shortcutWebview = plus.webview.create('html/shortcut.html', 'shortcut', {bottom: '51px', background: 'transparent'});
 	}
 	
 	//底部导航点击
@@ -199,8 +217,7 @@
 	function judgeLogin() {
 		// localStorage.removeItem('user');
 		//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
-		var userInfo = localStorage.getItem('user');
-		console.log(JSON.stringify(userInfo));
+		var userInfo = getUserInfo();
 		if (!userInfo) {
 // 			mui.preload({
 // 				url:'html/login.html',
