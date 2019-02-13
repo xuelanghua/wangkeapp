@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			body,.mui-bar{
+				background-color: #FFFFFF;
+			}
+			.fill_in{
+				margin: 20px 10px 25px 10px;
+				padding: 0 0.5625rem;
+				box-shadow: 0 0 0.3125rem 0.1875rem #DDDDDD;
+			}
+			.plan{
+				padding: 1.9375rem 18% 1.9375rem 18%;
+			}
+			.fill_in_chart{
+				text-align: center;
+				background-color: #F5F5F5;
+			}
+			.fill_in_chart img{
+				width: 3.125rem;
+			}
+			.chart{
+				padding: 6.5625rem 0 6.5625rem 0;
+				font-size: 15px;
+			}
+			.chart p{
+				font-size: 13px;
+			}
+			
+			.input input{
+				font-size: 0.875rem;
+				background-color: #F5F5F5;
+				border: none;
+				padding: 1.5625rem 0.625rem;
+				border-radius: 0.3125rem;
+			}
+			
+			button{
+				width: 100%;
+				font-size: 0.9375rem;
+				margin: 35px 0;
+				padding: 15px 0;
+				color: #FFFFFF;
+				border: none;
+				border-radius: 0.3125rem;
+				background-color: #2289FF;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" id="back"></a>
+			<h1 class="mui-title">图片设置</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="fill_in">
+				<div class="plan">
+					<div class="fill_in_chart"  id="pic">
+						<div class="chart">
+							<img src="../image/fill_in.png" >
+							<div>上传照片</div>
+							<p>尺寸：1000×1580</p>
+						</div>
+					</div>
+					<input type="hidden" name="pic" value="">
+				</div>
+				
+				<div class="input">
+					<input type="text" name="pic_title" placeholder="输入图片标题(必填)" />
+				</div>
+				
+				<div class="input">
+					<input type="text" name="pic_alt" placeholder="输入图片说明(选填)" />
+				</div>
+				
+				<div class="input">
+					<input type="text" name="pic_link" placeholder="输入图片链接(选填)" />
+				</div>
+				
+				<button id="submit">确 定</button>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/upload.js"></script>
+	<script type="text/javascript">
+		mui.init({swipeBack: true});
+		
+		var userInfo = getUserInfo();
+		var flag = true;
+		mui.plusReady(function () {
+			settingInit();	//初始化设置
+			var currentWebview = plus.webview.currentWebview();
+			var fro = currentWebview.from;
+			
+			document.getElementById('back').addEventListener('tap', function() {
+				if (fro == 'setting') {
+					setStatusBar('', 'light');
+				}
+				mui.back();
+			})
+			
+			document.querySelector('.fill_in_chart').addEventListener('tap', function() {
+				imageUpload(function(res) { 
+					document.getElementById('pic').innerHTML = '<img src="' + res.url + '" style="width: 100%;height: 100%;">';
+					document.querySelector('input[name=pic]').value = res.filename;
+				});
+				// var pic = document.querySelector('input[name=pic]').value;
+				// console.log(pic);
+			})
+			
+			document.querySelector('#submit').addEventListener('tap', function() {
+				if (!flag) return;
+				var pic = document.querySelector('input[name=pic]').value;
+				var pic_title = document.querySelector('input[name=pic_title]').value;
+				var pic_link = document.querySelector('input[name=pic_link]').value;
+				var pic_alt = document.querySelector('input[name=pic_alt]').value;
+				if (pic.length == 0) {
+					plus.nativeUI.toast('请上传图片!');
+					return;
+				}
+				
+				if (pic_title.length == 0) {
+					plus.nativeUI.toast('请输入图片标题!');
+					return;
+				}
+				
+				flag = false;
+				mui.post($ajaxUrl + 'userqrcode',{
+						action: 'pic_setting',
+						pic: pic,
+						pic_title: pic_title,
+						pic_link: pic_link,
+						pic_alt: pic_alt,
+						token: userInfo.token
+					},function(res){
+						if (res.errno == 0) {
+							plus.nativeUI.toast(res.message);
+							setTimeout(function() {
+								if (fro == 'setting') {
+									setStatusBar('', 'light');
+								}
+								mui.back();
+							}, 2000)
+						} else {
+							flag = true;
+							plus.nativeUI.toast(res.message);
+						}
+						// console.log(JSON.stringify(data));
+					},'json'
+				);
+			})
+		})
+		
+		function settingInit() {
+			plus.nativeUI.showWaiting();
+			mui.post($ajaxUrl + 'userqrcode', {
+				action: 'setting_info',
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					var setting = res.data;
+					if (setting.pic.length > 0) {
+						document.getElementById('pic').innerHTML = '<img src="' + setting.pic_url + '" style="width: 100%;height: 100%;">';
+						document.querySelector('input[name=pic]').value = setting.pic;
+					}
+					if (setting.pic_title.length > 0) {
+						document.querySelector('input[name=pic_title]').value = setting.pic_title;
+					}
+					if (setting.pic_link.length > 0) {
+						document.querySelector('input[name=pic_link]').value = setting.pic_link;
+					}
+					if (setting.pic_alt.length > 0) {
+						document.querySelector('input[name=pic_alt]').value = setting.pic_alt;
+					}
+				}
+				plus.nativeUI.closeWaiting();
+			}, 'json')
+		}
+	</script>
+</html>

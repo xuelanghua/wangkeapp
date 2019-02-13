@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			.mui-bar{
+				background-color: #FFFFFF;
+			}
+			.record{
+				margin-top: 0.625rem;
+				font-size: 0.9375rem;
+			}
+			
+			.mui-content{
+				padding: 0 0.625rem;
+			}
+			
+			.money{
+				padding: 0.625rem 0.625rem;
+				background-color: #FFFFFF;
+				font-size: 0.875rem;
+				margin-top: 20px;
+				text-align: right;
+				border-radius: 0.3125rem;
+			}
+			.input-money{
+				width: 50%;
+			}
+			.money input{
+				width: 50%;
+				margin: 0;
+				border: none;
+			}
+			
+			button{
+				width: 100%;
+				font-size: 0.9375rem;
+				margin: 2.1875rem 0;
+				padding: 0.9375rem 0;
+				color: #FFFFFF;
+				border: none;
+				border-radius: 0.3125rem;
+				background-color: #2289FF;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" id="back"></a>
+			<h1 class="mui-title">红包设置</h1>
+			<div class="mui-pull-right record">红包记录</div>
+		</header>
+		
+		<div class="mui-content">
+			<div class="money">
+				<div class="mui-pull-left" style="margin-top: 0.625rem;">输入红包金额(必填)</div>
+				<div class="mui-pull-right input-money">
+					<input type="text" name="redpacket_fee" /> 元
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<button id="submit">确 定</button>
+		</div>
+	</body>
+	<script src="../js/mui.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init({swipeBack: true});
+		
+		var userInfo = getUserInfo();
+		var flag = true;
+		mui.plusReady(function () {
+			settingInit();	//初始化设置
+			var currentWebview = plus.webview.currentWebview();
+			var fro = currentWebview.from;
+			
+			document.getElementById('back').addEventListener('tap', function() {
+				if (fro == 'setting') {
+					setStatusBar('', 'light');
+				}
+				mui.back();
+			})
+			
+			document.querySelector('#submit').addEventListener('tap', function() {
+				if (!flag) return;
+				var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
+				if (redpacket_fee <= 0) {
+					plus.nativeUI.toast('红包金额输入错误!');
+					return;
+				}
+				
+				flag = false;
+				mui.post($ajaxUrl + 'userqrcode',{
+						action: 'redpacket_setting',
+						redpacket_fee: redpacket_fee,
+						token: userInfo.token
+					},function(res){
+						if (res.errno == 0) {
+							plus.nativeUI.toast(res.message);
+							setTimeout(function() {
+								if (fro == 'setting') {
+									setStatusBar('', 'light');
+								}
+								mui.back();
+							}, 2000)
+						} else {
+							flag = true;
+							plus.nativeUI.toast(res.message);
+						}
+						// console.log(JSON.stringify(data));
+					},'json'
+				);
+			})
+		})
+		
+		function settingInit() {
+			plus.nativeUI.showWaiting();
+			mui.post($ajaxUrl + 'userqrcode', {
+				action: 'setting_info',
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					var setting = res.data;
+					if (setting.redpacket_fee > 0) {
+						document.querySelector('input[name=redpacket_fee]').value = setting.redpacket_fee;
+					}
+				}
+				plus.nativeUI.closeWaiting();
+			}, 'json')
+		}
+	</script>
+</html>

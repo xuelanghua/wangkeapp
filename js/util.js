@@ -1,4 +1,5 @@
 $ajaxUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=entry&m=longbing_card&do=';
+$uploadUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=utility&a=file&do=upload&type=image&thumb=0';
 var getUserInfo = function() {
 	return JSON.parse(localStorage.getItem('user'));
 }

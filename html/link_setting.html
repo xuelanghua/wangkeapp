@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.mui-bar,body{
+				background-color: #FFFFFF;
+			}
+			.fill_in{
+				margin: 20px 10px 25px 10px;
+				padding: 0 0.625rem;
+				box-shadow: 0 0 0.3125rem 0.1875rem #DDDDDD;
+			}
+			
+			.chart{
+				padding: 6.5625rem 0 6.5625rem 0;
+				font-size: 15px;
+			}
+			.chart p{
+				font-size: 13px;
+			}
+			
+			.input input{
+				font-size: 0.875rem;
+				background-color: #F5F5F5;
+				border: none;
+				margin-top: 2.1875rem;
+				padding: 1.5625rem 0.625rem;
+				border-radius: 0.3125rem;
+				margin-bottom: 0;
+			}
+			
+			button{
+				width: 100%;
+				font-size: 0.9375rem;
+				margin: 2.1875rem 0;
+				padding: 0.9375rem 0;
+				color: #FFFFFF;
+				border: none;
+				border-radius: 0.3125rem;
+				background-color: #2289FF;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" id="back"></a>
+			<h1 class="mui-title">链接设置</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="fill_in">
+				<div class="input">
+					<input type="text" name="link" placeholder="输入链接地址(必填)" />
+				</div>
+				
+				<button id="submit">确 定</button>
+				
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init({swipeBack: true});
+		
+		var userInfo = getUserInfo();
+		var flag = true;
+		mui.plusReady(function () {
+			settingInit();	//初始化设置
+			var currentWebview = plus.webview.currentWebview();
+			var fro = currentWebview.from;
+			
+			document.getElementById('back').addEventListener('tap', function() {
+				if (fro == 'setting') {
+					setStatusBar('', 'light');
+				}
+				mui.back();
+			})
+			
+			document.querySelector('#submit').addEventListener('tap', function() {
+				if (!flag) return;
+				var link = document.querySelector('input[name=link]').value;
+				link.replace(/(^\s*)|(\s*$)/g, "");
+				if (link.length == 0) {
+					plus.nativeUI.toast('请输入链接地址!');
+					return;
+				}
+				
+				flag = false;
+				mui.post($ajaxUrl + 'userqrcode',{
+						action: 'link_setting',
+						link: link,
+						token: userInfo.token
+					},function(res){
+						if (res.errno == 0) {
+							plus.nativeUI.toast(res.message);
+							setTimeout(function() {
+								if (fro == 'setting') {
+									setStatusBar('', 'light');
+								}
+								mui.back();
+							}, 2000)
+						} else {
+							flag = true;
+							plus.nativeUI.toast(res.message);
+						}
+						// console.log(JSON.stringify(data));
+					},'json'
+				);
+			})
+		})
+		
+		function settingInit() {
+			plus.nativeUI.showWaiting();
+			mui.post($ajaxUrl + 'userqrcode', {
+				action: 'setting_info',
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					var setting = res.data;
+					if (setting.link.length > 0) {
+						document.querySelector('input[name=link]').value = setting.link;
+					}
+				}
+				plus.nativeUI.closeWaiting();
+			}, 'json')
+		}
+	</script>
+</html>
