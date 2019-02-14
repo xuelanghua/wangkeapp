@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html>
 
@@ -199,8 +200,8 @@
 	<body>
 		
 		<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title" id="article_top">腾讯悄然上线“微信支付分士大夫萨芬撒打发啊手动阀是”...</h1>
+			<div class="mui-icon mui-icon-left-nav mui-pull-left" id="back_icon"></div>
+			<h1 class="mui-title" id="article_top" style="margin-top: 5px;">腾讯悄然上线“微信支付分士大夫萨芬撒打发啊手动阀是”...</h1>
 		</header>
 		
 		<div class="mui-content">
@@ -211,13 +212,12 @@
 						<span id="article_author">托尼.斯塔克</span>
 						<span style="margin-left: 10px;" id="article_addtime">2018-11-09</span>
 					</div>
-					<a href="visitor.html">
 						<div class="visit">
-							<div class="visitl mui-pull-left">
+							<div class="visitl mui-pull-left" id="read_headimg">
 								<div class="fw">
 									<img src="../image//visit1.png" alt="">
 								</div>
-								<div class="fw1">
+								<!-- <div class="fw1">
 									<img src="../image//visit2.png" alt="">
 								</div>
 								<div class="fw1">
@@ -237,10 +237,10 @@
 								</div>
 								<div class="fw1">
 									<img src="../image//visit2.png" alt="">
-								</div>
-								<div class="fw1">
+								</div> -->
+								<!-- <div class="fw1">
 									<img src="../image//visit3.png" alt="">
-								</div>
+								</div> -->
 							</div>
 							<div class="visitr mui-pull-right">
 								<span>阅读：</span>
@@ -248,11 +248,10 @@
 							</div>
 							<div class="clearfix"></div>
 						</div>
-					</a>
 				</div>
 				<div class="article-content">
-					<div class="chart">
-						<img src="../image//guangao.jpg" alt="">
+					<div class="chart" id="top_adv">
+						<a><img src="../image//guangao.jpg" alt=""></a>
 					</div>
 					<div id="article_content">
 							<p>
@@ -262,7 +261,7 @@
 								或许大家看到这个标题会联想到市面上的一些远程控制软件，诸如：TeamViewer、AnyDesk等。这一次笔者想推荐的并不是一
 							</p>
 					</div>
-					<div class="chart">
+					<div class="chart" id="bottom_adv">
 						<img src="../image//guangao.jpg" alt="">
 					</div>
 				</div>
@@ -275,7 +274,7 @@
 					<div class="biaotix"></div>
 					<div class="clearfix"></div>
 				</div>
-				<div class="comment-content">
+				<div class="comment-content" id="comment_list">
 					<div class="comment1">
 						<div class="commentl mui-pull-left">
 							<img src="../image//visit2.png" >
@@ -314,7 +313,7 @@
 					</div>
 				</div>
 				<div class="comment-input">
-					<div class="input mui-pull-left">
+					<div class="input mui-pull-left" id="read_comment">
 						<img src="../image//shuru.png" >
 						<span style="margin-left: 10px;">写评论...</span>
 					</div>
@@ -323,12 +322,11 @@
 							<img src="../image//fenxiang.png" >
 							<span>分享</span>
 						</div>
-						<a href="red_envelopes.html">
-							<div>
-								<img src="../image//guangaowe.png" >
-								<span>广告位</span>
-							</div>
-						</a>
+						<!-- //red_envelopes.html -->
+						<div id="adv_setting">
+							<img src="../image//guangaowe.png" >
+							<span>广告位</span>
+						</div>
 						<div>
 							<img src="../image//yudu.png" >
 							<span>阅读量</span>
@@ -341,17 +339,14 @@
 			
 			<!-- 弹出框 -->
 			<div id="cover"></div>
-			<div class="tanchu">
-				<textarea rows="8" placeholder="说说你的看法..."/></textarea>
-				<button class="button">发 布</button>
+			<div class="tanchu" id="tanchu">
+				<textarea rows="8" placeholder="说说你的看法..."/ id="release_content"></textarea>
+				<button class="button" id="read_release">发 布</button>
 			</div>
 			
 		</div>
 		
 	</body>
-	  <script src="js/jquery.min.js"></script>
-		<script src="../js/mui.js"></script>
-		<script src="../js/util.js"></script>
 		<!-- <script>
 			$(document).ready(function(){
 			$("#cover").click(function(){
@@ -360,7 +355,7 @@
 				$("#cover").hide();
 			});
 			$(".input").click(function(){
-				$(".tanchu").show();
+				$("#read_comment").show();
 				$(this).show;
 				$("#cover").show();
 			});
@@ -368,22 +363,121 @@
 		</script> -->
 		
 </html>
+<script src="js/jquery.min.js"></script>
+<script src="../js/mui.js"></script>
+<script src="../js/util.js"></script>
 <script>
+	var article_id='';//文章id
+	var time=0;//停留时间
+	var rid=0;
 	mui.init();
 	mui.plusReady(function() {
-		var article_id=plus.webview.currentWebview().article_id;
-		article_info(article_id);
-		
+		article_id=plus.webview.currentWebview().article_id;
+		article_info();
+		article_read();
+		adv_list();
+	
+	//返回监听
+	var back=document.getElementById('back_icon');
+	back.addEventListener('tap', function() {
+		article_stay();
+		setTimeout(function(){
+			plus.webview.currentWebview().close();
+		}, 200);
+	})
+	setInterval('addtime()', 1000);
+	
+	//广告位设置
+	var adv_setting=document.getElementById('adv_setting');
+	adv_setting.addEventListener('tap', function() {
+		var styles = {
+			top: 15,
+			bottom: 0
+		};
+		var extras = {
+			article_id:article_id
+		};
+		var w = plus.webview.create('http://www.baidu.com', 'baidu.html', styles, extras);
+		w.show(); // 显示窗口
+	})
+	
+	document.addEventListener("pause", function () {
+		article_stay();
+	}, false);
+	document.addEventListener("resume", function () {
+		time=0;
+	}, false);
+	
+	plus.key.addEventListener('backbutton', function() {
+		article_stay();
+	})
+	
+	//写评论
+	var read_comment=document.getElementById('read_comment');
+	read_comment.addEventListener('tap', function() {
+		document.getElementById('cover').style.display="block";
+		document.getElementById('tanchu').style.display="block";
+	})
+	
+	var cover=document.getElementById('cover');
+	cover.addEventListener('tap', function() {
+		document.getElementById('cover').style.display="none";
+		document.getElementById('tanchu').style.display="none";
+	})
+	
+	var read_release=document.getElementById('read_release');
+	read_release.addEventListener('tap', function() {
+		var release_content=document.getElementById('release_content');
+		if(release_content.value==''){
+			mui.toast('内容不能为空!');
+			return;
+		}
+		read_released(release_content.value);
+		document.getElementById('cover').style.display="none";
+		document.getElementById('tanchu').style.display="none";
+	})	
 });
-function article_info(article_id){
+function addtime(){
+	time++;
+}
+function article_read(){
+	var userInfo = getUserInfo();
+	var url = $ajaxUrl + 'article';
+	mui.post(url, {
+		token: userInfo.token,
+		action: 'article_read',
+		id:article_id,
+		type:'record'
+	}, function(data) {
+		if(data.errno=='0'){
+			rid=data.data.rid;
+		}
+	}, 'json');
+}
+function article_stay(){
+	var userInfo = getUserInfo();
+	var url = $ajaxUrl + 'article';
+	mui.post(url, {
+		token: userInfo.token,
+		action: 'article_read',
+		rid:rid,
+		type:'stay',
+		stay_time:time,
+		id:article_id
+	}, function(data) {
+		console.log(JSON.stringify(data));
+	}, 'json');
+}
+function article_info(){
+		var userInfo = getUserInfo();
 		var str = '';
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
-			token: 'eaa3242cd05ca923b66b60cbb10d01ad',
+			token: userInfo.token,
 			action: 'article_info',
 			id:article_id
 		}, function(data) {
-			//console.log(JSON.stringify(data));
+			console.log(JSON.stringify(data));
 			//document.write(JSON.stringify(data));
 			if(data.errno=='0'){
 					document.getElementById('article_top').innerHTML = data.data.title;
@@ -392,6 +486,19 @@ function article_info(article_id){
 					document.getElementById('article_addtime').innerHTML = data.data.add_time;
 					document.getElementById('article_content').innerHTML = data.data.content;
 					document.getElementById('article_click').innerHTML = data.data.click;
+					var str='';
+					if(data.data.read_img.length<8){
+						for(i in data.data.read_img){
+							str+='<div class="fw"><img src="'+data.data.read_img[i].headimgurl+'" alt=""></div>';
+						}
+					}else{
+						for(i=0;i<8;i++){
+							str+='<div class="fw"><img src="'+data.data.read_img[i].headimgurl+'" alt=""></div>';
+						}
+						str+='<div class="fw"><img src="../image//visit3.png" alt=""></div>';
+					}
+					document.getElementById('read_headimg').innerHTML = str;
+					comment_list();
 					
 			}else{
 					mui.toast(data.message,{ duration:'long', type:'div' });
@@ -402,4 +509,69 @@ function article_info(article_id){
 			}
 		}, 'json');
 }
+
+function adv_list(){
+	var userInfo = getUserInfo();
+	var str = '';
+	var url = $ajaxUrl + 'article';
+	mui.post(url, {
+		token: userInfo.token,
+		action: 'article_info',
+		id:article_id
+	}, function(data) {
+		if(data.errno=='0'){
+			var str='';
+			var str1='';
+			if(data.data.is_me_adv=='1'){
+				
+			}else{
+				if(data.data.top_adv!='0'){
+					str='<img src="'+data.data.top_adv.pic+'" alt="">';
+				}
+				if(data.data.bottom_adv!='0'){
+					str1='<img src="'+data.data.bottom_adv.pic+'" alt="">';
+				}
+			}
+			document.getElementById('top_adv').innerHTML = str;
+			document.getElementById('bottom_adv').innerHTML = str1;
+		}
+	}, 'json');
+}
+
+function comment_list(){
+	var userInfo = getUserInfo();
+	var str = '';
+	var url = $ajaxUrl + 'article';
+	mui.post(url, {
+		token: userInfo.token,
+		action: 'article_info',
+		id:article_id
+	}, function(data) {
+		if(data.errno=='0'){
+			var str='';
+			 for(i in data.data.comment){
+				 str+='<div class="comment1"><div class="commentl mui-pull-left"><img src="'+data.data.comment[i].headimgurl+'" ></div><div class="commentr mui-pull-right"><div class="commentr-title"><span style="color: #2C8EFF;">'+data.data.comment[i].nickname+'</span></div><div style="line-height: 25px;font-size: 15px;margin-top: 5px;">'+data.data.comment[i].comment+'</div><div class="time"><span>'+data.data.comment[i].add_time+'</span></div></div><div class="clearfix"></div></div>';
+			 }
+			document.getElementById('comment_list').innerHTML = str;
+		}
+	}, 'json');
+}
+
+function read_released(content){
+	var userInfo = getUserInfo();
+	var url = $ajaxUrl + 'article';
+	mui.post(url, {
+		token: userInfo.token,
+		action: 'article_comment',
+		content:content,
+		id:article_id
+	}, function(data) {
+		if(data.errno=='0'){
+			comment_list();
+			mui.toast(data.message);
+			
+		}
+	}, 'json');
+}
+
 </script>
