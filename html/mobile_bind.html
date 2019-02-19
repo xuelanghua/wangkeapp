@@ -98,7 +98,7 @@
 						<div class="clearfix"></div>
 					</div>
 				</div>
-				<button class="Opening">开通会员&yen;199/年</button>
+				<button class="Opening">立即绑定</button>
 			</div>
 		</div>
 	</body>
@@ -106,9 +106,12 @@
 	<script src="../js/util.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			swipeBack: false
+			swipeBack: false,
+			beforeback: function() {
+				return false;
+			}
 		})
-		
+	
 		var flag = false;
 		var phoneNumber = /^[1][\d]{10}$/;
 		var userInfo = null;
@@ -186,15 +189,13 @@
 	        	console.log(JSON.stringify(res));
 	        	if (res.errno == 0) {
 	        		mui.toast(res.message);
-	        		if ((userInfo.is_staff == 0) || (userInfo.expire_time < parseInt(new Date().getTime()/1000))) {
-	        			mui.openWindow({
-		        			id: 'activation',
-		        			url: 'activation.html',
-		        		})
-	        		} else {
-	                	plus.webview.close('login');
-	                	plus.webview.close('mobile_bind');
-	        		}
+					var userInfo = getUserInfo();
+					userInfo.mobile = vmobile;
+					localStorage.setItem('user', JSON.stringify(res.data));
+					setTimeout(function() {
+						plus.webview.close('login');
+						plus.webview.close('mobile_bind');
+					}, 1000)
 	        	} else {
 	        		mui.toast(res.message);
 	        		return;

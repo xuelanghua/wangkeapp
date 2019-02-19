@@ -509,7 +509,6 @@
 		var qrType = 'card';
 		var userInfo = getUserInfo();
 		mui.plusReady(function() {
-			waiting = plus.nativeUI.showWaiting();
 			getNotice();
 			weatherInit();	//天气初始化
 			slideInit(false);	//幻灯片初始化 
@@ -518,7 +517,7 @@
 			var scan = document.getElementById('scan');
 			scan.addEventListener('tap', function() {
 				var paymentPage = plus.webview.create('scan.html', 'scan', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#000'}});
-				paymentPage.show('slide-in-bottom');
+				paymentPage.show('slide-in-right');
 				setStatusBar('#2289FF', 'light');
 			});
 			
@@ -526,14 +525,14 @@
 			var payment_code = document.getElementById('payment_code');
 			payment_code.addEventListener('tap', function() {
 				var paymentPage = plus.webview.create('payment_code.html', 'payment_code', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#2289FF'}});
-				paymentPage.show('slide-in-bottom');
+				paymentPage.show('slide-in-right');
 				setStatusBar('#2289FF', 'light');
 			});
 			
 			//打开设置界面
 			document.getElementById('setting').addEventListener('tap', function() {
 				var settingPage = plus.webview.create('qrcode_setting.html', 'qrcode_setting', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#2289FF'}});
-				settingPage.show('slide-in-bottom');
+				settingPage.show('slide-in-right');
 				setStatusBar('#2289FF', 'light');
 			})
 			
@@ -593,7 +592,9 @@
 				} else {
 					console.log(res.message);
 				}
-				waiting.close();
+				setTimeout(function() {
+					plus.nativeUI.closeWaiting();
+				}, 1000)
 				if (refresh) {
 					setTimeout(function() {
 						mui('body').pullRefresh().endPulldownToRefresh();
@@ -656,6 +657,10 @@
 		
 		//展示二维码
 		function showQrcode(type) {
+			if (type == 'shop') {
+				checkMember();
+				return;
+			}
 			mui.post($ajaxUrl + 'userqrcode&action=make_url', {type: type, token: userInfo.token}, function(res) {
 				if (res.errno == 0) {
 					var qrcodeType = {

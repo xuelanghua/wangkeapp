@@ -141,10 +141,10 @@
 		self = plus.webview.currentWebview();
 		//设置只支持竖屏幕显示
 		plus.screen.lockOrientation("portrait-primary");
-		//初始化与index有关的页面
-		initIndexView();
 		//判断是否已经登陆,若没有登陆将预加载登陆页面
 		judgeLogin();
+		//初始化与index有关的页面
+		initIndexView();
 	});
 	
 	//初始化
@@ -157,6 +157,7 @@
 	
 	//初始化所有bar页面
 	function initTabitemWebviews() {
+		plus.nativeUI.showWaiting();
 		for (var id in tabsConfig) {
 			tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
 			if (tabsConfig[id]['default']) {
@@ -215,36 +216,13 @@
 	}
 	
 	function judgeLogin() {
-		// localStorage.removeItem('user');
+		 // localStorage.removeItem('user');
 		//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
 		var userInfo = getUserInfo();
 		if (!userInfo) {
-// 			mui.preload({
-// 				url:'html/login.html',
-// 				id:'login',
-// 				styles:{
-// 					top: '0px',
-// 					bottom: '0px'
-// 				}
-// 			});
-			mui.openWindow({
-			    url: 'html/login.html',
-			    id: 'login',
-			    show:{
-			      	autoShow: true,
-			      	aniShow: 'slide-in-bottom'
-			    }
-			});
+			fnOpenWin('html/login.html', 'login', '', '', 'slide-in-bottom');
 		} else if (userInfo.mobile.length == 0) {
-			mui.openWindow({
-				id: 'mobile_bind',
-				url: 'html/mobile_bind.html'
-			})
-		} else if ((userInfo.is_staff == 0) || (userInfo.expire_time < parseInt(new Date().getTime()/1000))) {
-			mui.openWindow({
-				id: 'activation',
-				url: 'html/activation.html'
-			})
+			fnOpenWin('html/mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
 		}
 	}
 </script>
