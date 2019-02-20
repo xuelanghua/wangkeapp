@@ -40,3 +40,7 @@ function fnOpenWin(url, id, style, extra, aniShow) {
 function fnCloseWin(id) {
 	plus.webview.close(id);
 }
+
+function message(text) {
+	plus.nativeUI.toast(text);
+}

@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style>
+			canvas{
+				display: block;
+				margin: 0;
+				width:100%;
+				height:100%;
+				position: fixed;
+				left: 0;
+				right: 0;
+				top:0;
+				bottom:0;
+				z-index: -1;
+			}
+			
+			.long{
+				width: 150px;
+				height: 177px;
+				margin: 20% auto;
+			}
+			.long img{
+				width: 100%;
+				height: 100%;
+			}
+			
+			.wechat{
+				width: 80%;
+				text-align: center;
+				display: block;
+				margin: 40% auto;
+				border-radius: 25px;
+				background-color: #c2c2e1;
+				border: none;
+				padding: 15px 0;
+			}
+			
+			.wechat img{
+				width: 25px;
+				position: absolute;
+			}
+			.wechat span{
+				margin-left: 30px;
+				font-size: 15px;
+				color: #05094a;
+			}
+			
+			.banben{
+				display: block;
+				width: 100%;
+				position: fixed;
+				color: #FFFFFF;
+				bottom: 10%;
+				font-size: 14px;
+				text-align: center;
+			}
+			
+			.boten img{
+				width: 100%;
+				position: fixed;
+				bottom: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="login">
+			<canvas id="fullstarbg"></canvas>
+
+			<div class="long">
+				<img src="../image/longw.png">
+			</div>
+
+			<button class="wechat">
+				<img src="../image/longew.png">
+				<span id="wx_title">微信登录</span>
+			</button>
+
+			<div class="banben">
+				<span id="app_version">版本v1.1.0</span>
+			</div>
+
+			<div class="boten">
+				<img src="../image/buttont.png">
+			</div>
+
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/modernizr-2.6.2.min.js"></script>
+	<script type="text/javascript" src="../js/starbg.js"></script>
+	<script type="text/javascript">
+		mui.init({
+			swipeBack: false,
+			beforeback: function() {
+				return false;
+			}
+		});
+
+		var oauths = [];
+		mui.plusReady(function() {
+			plus.key.addEventListener('backbutton', function() {
+				return false;
+			})
+
+			//修改系统状态栏样式dark/light
+			plus.navigator.setStatusBarStyle('light');
+			//获取和设置APP的版本
+			mui('#app_version')[0].innerHTML = '版本' + plus.runtime.version;
+
+			//判断是否安装微信
+			var isWeixinInstalled = plus.runtime.isApplicationExist({
+				pname: 'com.tencent.mm',
+				action: 'weixin://'
+			});
+			if (!isWeixinInstalled) {
+				mui('#wx_title')[0].innerHTML = '微信下载';
+			}
+
+			mui('.login').on('tap', '.wechat', function() {
+				if (isWeixinInstalled) {
+					var waiting = plus.nativeUI.showWaiting();
+					plus.oauth.getServices(function(services) {
+						// console.log(JSON.stringify(services));
+						for (var i in services) {
+							var service = services[i];
+							service.login(function(e) {
+								service.getUserInfo(function(e) {
+									var userInfo = e.target.userInfo;
+									var openid = userInfo.openid;
+									var unionid = userInfo.unionid;
+									var nickname = userInfo.nickname;
+									var headimgurl = userInfo.headimgurl;
+									var client = mui.os.ios ? 'ios' : (mui.os.android ? 'android' : 'other');
+									var deviceid = plus.device.uuid;
+									mui.post($ajaxUrl + 'member&action=login', {
+										openid: openid,
+										unionid: unionid,
+										nickname: nickname,
+										headimgurl: headimgurl,
+										deviceid: deviceid,
+										client: client
+									}, function(res) {
+										if (res.errno == 0) {
+											mui.toast('登录成功!');
+											localStorage.setItem('user', JSON.stringify(res.data));
+											if (res.data.mobile.length == 0) {
+												fnOpenWin('mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
+											} else {
+												plus.navigator.setStatusBarStyle('dark');
+												fnCloseWin('login');
+											}
+										} else {
+											mui.toast(res.message);
+										}
+										waiting.close();
+									}, 'json');
+								}, function(e) {
+									waiting.close();
+									plus.nativeUI.toast("获取用户信息失败：" + e.message);
+								})
+							}, function(e) {
+								waiting.close();
+								plus.nativeUI.toast("登录认证失败：" + e.message);
+							});
+						}
+					}, function(e) {
+						waiting.close();
+						plus.nativeUI.toast("获取登录认证失败：" + e.message);
+					});
+				} else {
+					if (mui.os.ios) {
+						plus.runtime.openURL(
+							'https://itunes.apple.com/cn/app/%E5%BE%AE%E4%BF%A1/id414478124?mt=8&from=singlemessage&isappinstalled=0');
+					} else {
+
+					}
+				}
+			})
+		})
+
+		//判断是否安装客户端
+		var appIsInstalled = function(id) {
+			if (mui.os.android) {
+				var main = plus.android.runtimeMainActivity();
+				var packageManager = main.getPackageManager();
+				var PackageManager = plus.android.importClass(packageManager)
+				var packageName = {
+					"qq": "com.tencent.mobileqq",
+					"weixin": "com.tencent.mm",
+					"sinaweibo": "com.sina.weibo"
+				}
+				try {
+					return packageManager.getPackageInfo(packageName[id], PackageManager.GET_ACTIVITIES);
+				} catch (e) {}
+			} else {
+				switch (id) {
+					case "qq":
+						var TencentOAuth = plus.ios.import("TencentOAuth");
+						return TencentOAuth.iphoneQQInstalled();
+					case "weixin":
+						var WXApi = plus.ios.import("WXApi");
+						return WXApi.isWXAppInstalled()
+					case "sinaweibo":
+						var SinaAPI = plus.ios.import("WeiboSDK");
+						return SinaAPI.isWeiboAppInstalled()
+					default:
+						break;
+				}
+			}
+		}
+	</script>
+</html>
