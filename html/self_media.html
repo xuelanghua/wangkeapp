@@ -391,16 +391,20 @@
 					}
 				}
 				document.getElementById('classification').innerHTML = str;
-				mui.hideLoading();
+				
+				setTimeout(function(){
+					mui.hideLoading();
+				},500);
 			}, 'json');
 		}
 
 
 		function pullfresh_function() {
+			var userInfo = getUserInfo();
 			var str = '';
 			var url = $ajaxUrl + 'article';
 			mui.post(url, {
-				token: 'eaa3242cd05ca923b66b60cbb10d01ad',
+				token: userInfo.token,
 				action: 'article_list',
 				recommend: recommend,
 				hot: hot,

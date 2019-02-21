@@ -62,14 +62,6 @@
 	</head>
 
 	<body>
-<<<<<<< HEAD
-=======
-		<script src="../js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
->>>>>>> 20d87ab22b47744e3cd5b6bf3a31a63b9ca792e4
-
 		<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">文章访客</h1>
@@ -154,6 +146,7 @@
 					<div class="clearfix"></div>
 				</div>
 			</div>
+			<div id="read_bottom"></div>
 		</div>
 
 	</body>
@@ -163,30 +156,62 @@
 <script src="../js/util.js"></script>
 <script src="../js/showLoading.js"></script>
 <script>
+	var skip = 1;
+	var limit = 8;
+	var loadding = 0;
 	var article_id='';//文章id
-	mui.init();
+	mui.init({
+		swipeBack: false, //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
+		pullRefresh: {
+			container: "#read_bottom", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+			up: {
+				height: 50,
+				auto: false,
+				contentrefresh: "正在加载...",
+				contentnomore: '没有更多数据了',
+				callback: pullfresh_function
+			}
+		}
+	});
 	mui.plusReady(function() {
-		//mui.showLoading("正在加载..","div");
+		mui.showLoading("正在加载..","div");
 		article_id=plus.webview.currentWebview().article_id;
-		read_list();
+		pullfresh_function();
 	})
-	function read_list(){
+	function pullfresh_function(){
 		var userInfo = getUserInfo();
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
 			token: userInfo.token,
 			action: 'article_read',
 			id:article_id,
-			type:'list'
+			type:'list',
+			skip: skip,
+			limit: limit
 		}, function(data) {
-			//console.log(JSON.stringify(data.data));
+			//console.log(JSON.stringify(data));
 			if(data.errno=='0'){
 				var str='';
-				for(i in data.data){
-					str+='<div class="list"><div class="listL mui-pull-left"><img src="../image//bj.jpg">
-						</div><div class="listr mui-pull-right"><div class="listr-title"><div><span>光头强</span></div><div style="font-size: 12px;color: #999999;margin-top: 5px;"><span>2018-11-20  18:20</span><span class="time"><span>停留：</span><span>10分钟</span></span></div></div></div><div class="clearfix"></div></div>';
+				for(i in data.data.datas){
+					str+='<div class="list"><div class="listL mui-pull-left"><img src="'+data.data.datas[i].headimgurl+'"></div><div class="listr mui-pull-right"><div class="listr-title"><div><span>'+data.data.datas[i].nickname+'</span></div><div style="font-size: 12px;color: #999999;margin-top: 5px;"><span>'+data.data.datas[i].add_time+'</span><span class="time"><span>停留：</span><span>'+data.data.datas[i].stay_time+'分钟</span></span></div></div></div><div class="clearfix"></div></div>';
 				}
+				if (skip == 1) {
+					document.getElementById('read_list').innerHTML = str;
+				} else {
+					document.getElementById('read_list').innerHTML += str;
+				}
+				skip++;
+			}else{
+				loadding = 1;
 			}
 		}, 'json');
+		setTimeout(function(){
+			mui.hideLoading();
+		},500);
+		if (loadding == 0) {
+			this.endPullupToRefresh(false);
+		} else {
+			this.endPullupToRefresh(true);
+		}
 	}
 </script>
