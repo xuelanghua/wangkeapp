@@ -8,6 +8,7 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/index.css" rel="stylesheet" />
 		<link href="../icomoon/style.css" rel="stylesheet" />
+		<link href="../css/showLoading.css" rel="stylesheet" />
 
 		<style>
 			* {
@@ -253,6 +254,7 @@
 	<script src="../js/util.js"></script>
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/jquery.smint.js"></script>
+	<script src="../js/showLoading.js"></script>
 
 	<script>
 		var recommend = 1;
@@ -279,6 +281,7 @@
 		interval:1000//自动轮播周期，若为0则不自动播放，默认为0；
 		}); */
 		mui.plusReady(function() {
+			mui.showLoading("正在加载..","div");
 			window.addEventListener('scrollTop', function(event) {
 				window.scrollTo(0, 0);
 			});
@@ -296,9 +299,14 @@
 				//获取id
 				var id = this.getAttribute("data-id");
 				var styles = {
+<<<<<<< HEAD
+					top: 20,
+					bottom: 0
+=======
 					top: 0,
 					bottom: 0,
 					statusbar: {background: '#FFF'}
+>>>>>>> 20d87ab22b47744e3cd5b6bf3a31a63b9ca792e4
 				};
 				var extras = {
 					article_id:id
@@ -389,6 +397,7 @@
 					}
 				}
 				document.getElementById('classification').innerHTML = str;
+				mui.hideLoading();
 			}, 'json');
 		}
 

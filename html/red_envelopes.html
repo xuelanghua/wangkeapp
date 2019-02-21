@@ -126,10 +126,6 @@
 	</head>
 
 	<body>
-		<script src="js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
 		
 		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
@@ -142,11 +138,13 @@
 					<p class="mui-pull-left"></p>
 					<span>顶部广告位</span>
 				</div>
-				<div class="advertising-position">
+				<div class="advertising-position" id="top_adv">
 					<img src="../image//guangao.jpg" alt="">
+					
 				</div>
+				<input type="hidden" name="top_adv" value="">
 				<div class="link">
-					<input type="text" id="" value="" placeholder="输入跳转链接" />
+					<input type="text" value="" placeholder="输入跳转链接" id="top_link" />
 				</div>
 			</div>
 			
@@ -155,77 +153,110 @@
 					<p class="mui-pull-left"></p>
 					<span>底部广告位</span>
 				</div>
-				<div class="advertising-position">
+				<div class="advertising-position" id="bottom_adv">
 					<img src="../image//guangao.jpg" alt="">
 				</div>
+				<input type="hidden" name="bottom_adv" value="">
 				<div class="link">
-					<input type="text" id="" value="" placeholder="输入跳转链接" />
+					<input type="text" value="" placeholder="输入跳转链接" id="bottom_link" />
 				</div>
 			</div>
-			
-			<!-- <div class="fission">
-				<div class="fission-title">
-					<div class="fission-titleL"style="font-size: 15px;">
-						<p class="mui-pull-left"></p>
-						<span>裂变红包</span>
-					</div>
-					<div class="mui-switch mui-switch-blue mui-pull-right"style="margin-top: -25px;">
-						<div class="mui-switch-handle"></div>
-					</div>
-				</div>
-				<div class="fission-content">
-					<div style="padding: 20px 0;font-size: 12px;">
-						<span>当前为固定红包，</span>
-						<span style="color: #037AFD;">改为随机红包</span>
-					</div>
-					<div>
-						<div class="input">
-							<div class="mui-pull-left"style="margin-top: 7px;">固定红包金额</div>
-							<div class="mui-pull-right"style="width: 50%;">
-								<span>元</span>
-								<input type="text" placeholder="0" />
-							</div>
-							<div class="clearfix"></div>
-						</div>
-						<div class="input">
-							<div class="mui-pull-left"style="margin-top: 7px;">裂变次数</div>
-							<div class="mui-pull-right"style="width: 50%;">
-								<span>元</span>
-								<input type="text" placeholder="0" />
-							</div>
-							<div class="clearfix"></div>
-						</div>
-						<div class="total-sum">
-							<div class="total-sumc">
-								<h2>
-									<span style="font-size: 15px;margin: 0 -5px 0 0;">￥</span>
-									<span>100.00</span>
-								</h2>
-								<p>红包总额</p>
-							</div>
-						</div>
-						<div class="Explain">
-							<div class="Explain-title">
-								<p class="mui-pull-left"></p>
-								<span>文章裂变方案:</span>
-							</div>
-							<div class="Explain-content">
-								<p>
-									<span style="color: #7CB9FF;">1. 固定红包</span>
-									<span>（例：红包金额1元、裂变100次）</span>
-								</p>
-								<p>
-									<span style="color: #7CB9FF;">2. 随机红包</span>
-									<span>（例：随机红包金额区间为1~10，裂变红包 总额达到100元）</span>
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div> -->
-			<button class="button">提 交</button>
+			<button class="button" id="submit">提 交</button>
 		</div>
 		
 	</body>
 
 </html>
+<script src="../js/mui.js"></script>
+<script src="../js/util.js"></script>
+<script src="../js/upload.js"></script>
+<script>
+	var article_id='';
+	mui.init();
+	mui.plusReady(function() {
+		article_id=plus.webview.currentWebview().article_id;
+		adv_list();
+		var top_adv=document.getElementById('top_adv');
+		top_adv.addEventListener('tap', function() {
+			imageUpload(function(res) { 
+				document.getElementById('top_adv').innerHTML = '<img src="' + res.url + '">';
+				document.querySelector('input[name=top_adv]').value = res.filename;
+			});
+		})
+		var bottom_adv=document.getElementById('bottom_adv');
+		bottom_adv.addEventListener('tap', function() {
+			imageUpload(function(res) { 
+				document.getElementById('bottom_adv').innerHTML = '<img src="' + res.url + '">';
+				document.querySelector('input[name=bottom_adv]').value = res.filename;
+			});
+		})
+		var submit=document.getElementById('submit');
+		submit.addEventListener('tap', function() {
+			var top_adv=document.getElementsByName('top_adv')[0].value;
+			var bottom_adv=document.getElementsByName('bottom_adv')[0].value;
+			var top_link=document.getElementById('top_link').value;
+			var bottom_link=document.getElementById('bottom_link').value;
+			if(top_adv=='' && bottom_adv=='' && top_link=='' && bottom_link==''){
+				mui.toast('内容不能都为空!');
+			}
+			var userInfo = getUserInfo();
+			var url = $ajaxUrl + 'article';
+			mui.post(url, {
+				token: userInfo.token,
+				action: 'article_adv',
+				id:article_id,
+				top_pic:top_adv,
+				top_link:top_link,
+				bottom_pic:bottom_adv,
+				bottom_link:bottom_link
+			}, function(data) {
+				console.log(JSON.stringify(data));
+				if(data.errno=='0'){
+					mui.toast(data.message);
+					article = plus.webview.getWebviewById('article.html');
+					//触发详情页面的newsId事件
+						mui.fire(article,'articleinfo',{
+					  
+					});
+					setTimeout(function(){
+						var ws=plus.webview.currentWebview();
+						plus.webview.close(ws);
+					},2000);
+				}else{
+					mui.toast(data.message);
+				}
+			}, 'json');
+		})
+	})
+	
+	function adv_list(){
+		var userInfo = getUserInfo();
+		var str = '';
+		var url = $ajaxUrl + 'article';
+		mui.post(url, {
+			token: userInfo.token,
+			action: 'article_info',
+			id:article_id
+		}, function(data) {
+			//console.log(JSON.stringify(data));
+			if(data.errno=='0'){
+				if(data.data.is_me_adv=='1'){
+					if(data.data.adv_info.top_pic!=''){
+						document.getElementById('top_adv').innerHTML = '<img src="' + data.data.adv_info.top_pic + '">';
+						document.querySelector('input[name=top_adv]').value = data.data.adv_info.top_pic;
+					}
+					if(data.data.adv_info.bottom_adv!=''){
+						document.getElementById('bottom_adv').innerHTML = '<img src="' + data.data.adv_info.bottom_pic + '">';
+						document.querySelector('input[name=bottom_adv]').value = data.data.adv_info.bottom_pic;
+					}
+					if(data.data.adv_info.top_link!=''){
+						document.getElementById('top_link').innerHTML =data.data.adv_info.top_link;
+					}
+					if(data.data.adv_info.bottom_link!=''){
+						document.getElementById('bottom_link').innerHTML =data.data.adv_info.bottom_link;
+					}
+				}
+			}
+		}, 'json');
+	}
+</script>

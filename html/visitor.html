@@ -6,6 +6,8 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/showLoading.css" rel="stylesheet" />
 		<style>
 			.clearfix{
 				clear: both;
@@ -60,10 +62,13 @@
 	</head>
 
 	<body>
+<<<<<<< HEAD
+=======
 		<script src="../js/mui.js"></script>
 		<script type="text/javascript">
 			mui.init()
 		</script>
+>>>>>>> 20d87ab22b47744e3cd5b6bf3a31a63b9ca792e4
 
 		<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
@@ -81,7 +86,7 @@
 					<span class="shu">350次</span>
 				</span>
 			</div>
-			<div class="visitor-list">
+			<div class="visitor-list" id="read_list">
 				<div class="list">
 					<div class="listL mui-pull-left">
 						<img src="../image//bj.jpg">
@@ -154,3 +159,34 @@
 	</body>
 
 </html>
+<script src="../js/mui.js"></script>
+<script src="../js/util.js"></script>
+<script src="../js/showLoading.js"></script>
+<script>
+	var article_id='';//文章id
+	mui.init();
+	mui.plusReady(function() {
+		//mui.showLoading("正在加载..","div");
+		article_id=plus.webview.currentWebview().article_id;
+		read_list();
+	})
+	function read_list(){
+		var userInfo = getUserInfo();
+		var url = $ajaxUrl + 'article';
+		mui.post(url, {
+			token: userInfo.token,
+			action: 'article_read',
+			id:article_id,
+			type:'list'
+		}, function(data) {
+			//console.log(JSON.stringify(data.data));
+			if(data.errno=='0'){
+				var str='';
+				for(i in data.data){
+					str+='<div class="list"><div class="listL mui-pull-left"><img src="../image//bj.jpg">
+						</div><div class="listr mui-pull-right"><div class="listr-title"><div><span>光头强</span></div><div style="font-size: 12px;color: #999999;margin-top: 5px;"><span>2018-11-20  18:20</span><span class="time"><span>停留：</span><span>10分钟</span></span></div></div></div><div class="clearfix"></div></div>';
+				}
+			}
+		}, 'json');
+	}
+</script>
