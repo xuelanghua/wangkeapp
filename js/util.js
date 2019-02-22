@@ -1,9 +1,12 @@
-$ajaxUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=entry&m=longbing_card&do=';
-$uploadUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=utility&a=file&do=upload&type=image&thumb=0';
+$ajaxUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=entry&m=longbing_card&do=';	//服务器数据请求接口
+$uploadUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=utility&a=file&do=upload&type=image&thumb=0';	//图片上传接口
+
+//获取用户信息
 var getUserInfo = function() {
 	return JSON.parse(localStorage.getItem('user'));
 }
 
+//检查是否开通会员
 function checkMember() {
 	var userInfo = getUserInfo();
 	if (userInfo.is_activation == 0) {
@@ -12,7 +15,7 @@ function checkMember() {
 				fnOpenWin('activation.html', 'activation', '', '', 'slide-in-right');
 			}
 		});
-	} else if (userInfo.is_activation == 1 && userInfo.expire_time < parseInt(new Date().getTime()/1000)) {
+	} else if (userInfo.is_activation == 1 && userInfo.expire_time < parseInt(new Date().getTime() / 1000)) {
 		plus.nativeUI.confirm('您的会员已到期,前往续费?', function() {
 			if (e.index == 0) {
 				fnOpenWin('activation.html', 'activation', '', '', 'slide-in-right');
@@ -21,26 +24,103 @@ function checkMember() {
 	}
 }
 
+//获取用户信息
 function updateUserInfo(userInfo) {
-	mui.post($ajaxUrl + 'member&action=info', {token: userInfo.token}, function(res) {
+	mui.post($ajaxUrl + 'member&action=info', {
+		token: userInfo.token
+	}, function(res) {
 		localStorage.setItem('user', JSON.stringify(res.data));
 	})
 }
 
+//设置顶部状态栏
 function setStatusBar(color, style) {
 	plus.navigator.setStatusBarBackground(color);
 	plus.navigator.setStatusBarStyle(style);
 }
 
+//打开窗口
 function fnOpenWin(url, id, style, extra, aniShow) {
 	var page = plus.webview.create(url, id, style, extra);
 	page.show(aniShow);
 }
 
+//关闭指定窗口
 function fnCloseWin(id) {
 	plus.webview.close(id);
 }
 
-function message(text) {
-	plus.nativeUI.toast(text);
+//toast消息
+function message(text, type) {
+	if (type == 'alert') {
+		plus.nativeUI.alert(text)
+	} else {
+		plus.nativeUI.toast(text);
+	}
+	
+}
+
+//判断两个数据是否相等
+function isEqual(a, b) {
+	//如果a和b本来就全等
+	if (a === b) {
+		//判断是否为0和-0
+		return a !== 0 || 1 / a === 1 / b;
+	}
+	//判断是否为null和undefined
+	if (a == null || b == null) {
+		return a === b;
+	}
+	//接下来判断a和b的数据类型
+	var classNameA = toString.call(a),
+		classNameB = toString.call(b);
+	//如果数据类型不相等，则返回false
+	if (classNameA !== classNameB) {
+		return false;
+	}
+	//如果数据类型相等，再根据不同数据类型分别判断
+	switch (classNameA) {
+		case '[object RegExp]':
+		case '[object String]':
+			//进行字符串转换比较
+			return '' + a === '' + b;
+		case '[object Number]':
+			//进行数字转换比较,判断是否为NaN
+			if (+a !== +a) {
+				return +b !== +b;
+			}
+			//判断是否为0或-0
+			return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+		case '[object Date]':
+		case '[object Boolean]':
+			return +a === +b;
+	}
+	//如果是对象类型
+	if (classNameA == '[object Object]') {
+		//获取a和b的属性长度
+		var propsA = Object.getOwnPropertyNames(a),
+			propsB = Object.getOwnPropertyNames(b);
+		if (propsA.length != propsB.length) {
+			return false;
+		}
+		for (var i = 0; i < propsA.length; i++) {
+			var propName = propsA[i];
+			//如果对应属性对应值不相等，则返回false
+			if (a[propName] !== b[propName]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	//如果是数组类型
+	if (classNameA == '[object Array]') {
+		if (a.toString() == b.toString()) {
+			return true;
+		}
+		return false;
+	}
+}
+
+function logs(data) {
+	console.log(JSON.stringify(data));
 }

@@ -14,6 +14,13 @@
 				height: 100%;
 				overflow: hidden;
 			}
+			a:hover, a:active, a:visited, a:link, a:focus{
+				-webkit-tap-highlight-color:rgba(0,0,0,0)!important;
+				-webkit-tap-highlight-color: transparent!important;
+				outline:none!important;
+				background: none!important;
+				text-decoration: none!important;
+			}
 			
 			.clearfix{
 				clear: both;
@@ -124,6 +131,7 @@
 				width: 45px;
 				height: 45px;
 				margin-top: 5px;
+				border-radius: 50%;
 			}
 			.content{
 				width: 80%;
@@ -161,6 +169,134 @@
 			.good_friend_name{
 				margin-top: 18px;
 			}
+			
+			/* 新增客户 */
+			.number{
+				margin-top: 10px;
+				padding: 12px 0 0 0;
+				background-color: #FFFFFF;
+			}
+			.number_title{
+				width: 90%;
+				margin: 0 auto;
+				padding-bottom: 10px;
+				font-size: 12px;
+			}
+			.sign{
+				width: 33.33%;
+				float: left;
+			}
+			.sign_chart,.sign_chart1,.sign_chart2{
+				width: 32px;
+				height: 19px;
+				display: block;
+				border-radius: 5px;
+				background-color: #68B0FF;
+			}
+			.sign_chart1{
+				background-color: #F9D05E;
+			}
+			.sign_chart2{
+				background-color: #FA5954;
+			}
+			.sign_name{
+				margin-left: 5px;
+			}
+			
+			.number_surface{
+				text-align: center;
+				margin-top: 19px;
+			}
+			.trapezium{
+				width: 240px;
+				border-bottom: 30px solid #68B0FF;
+				border-left: 30px solid transparent;
+				border-right: 30px solid transparent;
+				transform:rotate(180deg);
+				margin: 4px auto;
+			}
+			.trapezium_content{
+				position: relative;
+				top: -28px;
+				font-size: 12px;
+				color: #FFFFFF;
+			}
+			.trapezium1{
+				width: 175px;
+				border-bottom: 30px solid #F9D05E;
+				border-left: 30px solid transparent;
+				border-right: 30px solid transparent;
+				transform:rotate(180deg);
+				margin: -20px auto;
+			}
+			.trapezium_content1{
+				position: relative;
+				top: -5px;
+				font-size: 12px;
+				color: #FFFFFF;
+			}
+			.trapezium2{
+				width: 110px;
+				border-bottom: 30px solid #FA5954;
+				border-left: 30px solid transparent;
+				border-right: 30px solid transparent;
+				transform:rotate(180deg);
+				margin: 4px auto;
+			}
+			.trapezium_content2{
+				position: relative;
+				top: -30px;
+				font-size: 12px;
+				color: #FFFFFF;
+			}
+			
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+			.mui-control-content {
+				height: 100000000px;
+			}
+			.mui-segmented-control{
+				border: none;
+				background-color: #FFFFFF;
+				border-radius: 0;
+			}
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: #FFFFFF;
+				color: #2289FF;
+				border-bottom: 2px solid #2289FF;
+			}
+			.mui-segmented-control .mui-control-item{
+				border-left: none;
+				font-size: 15px;
+				color: #000000;
+			}
+			.newly_added{
+				border-bottom: 1px solid #F2F2F2;
+			}
+			
+			.chart{
+				width: 70px;
+				height: 70px;
+			}
+			.chart img{
+				width: 100%;
+				height: 100%;
+				border-radius: 5px;
+			}
+			.customer_information{
+				font-size: 12px;
+			}
+			.customer_information_name{
+				font-size: 15px;
+			}
+			.customer_information img{
+				width: 9px;
+			}
+			.customer-content{
+				width: 76%;
+				padding: 10px 0;
+			}
 		</style>
 	</head>
 
@@ -185,7 +321,7 @@
 						<div class="switch1">
 							<div class="switch1_content" data-id="customer">
 								<i class="icon-friends"></i>
-								<span>新增客户1</span>
+								<span>新增客户</span>
 							</div>
 						</div>
 						<div class="switch1">
@@ -203,7 +339,7 @@
 						<div class="clearfix"></div>
 					</div>
 				</div>
-				<div class="mui-indexed-list-bar" style="height: 510px;">
+				<div class="mui-indexed-list-bar" style="height: 510px;display: block;" id="list_bar">
 					<a>A</a>
 					<a>B</a>
 					<a>C</a>
@@ -232,564 +368,443 @@
 					<a>Z</a>
 				</div>
 				<div class="mui-indexed-list-alert"></div>
-				<div id="crm">
-					<div class="mui-indexed-list-inner">
-						<div class="classify">
-							<div class="classify1">
-								<div class="classify1-content" data-label="deal">
-									<span>
-										<i class="icon-deal"></i>
-									</span>
-									<span>成交</span>
-								</div>
-							</div>
-							<div class="classify1">
-								<div class="classify1-content" data-label="follow">
-									<span>
-										<i class="icon-edit"></i>
-									</span>
-									<span>跟进中</span>
-								</div>
-							</div>
-							<div class="classify1">
-								<div class="classify1-content" data-label="member">
-									<span>
-										<i class="icon-diamond"></i>
-									</span>
-									<span>会员</span>
-								</div>
-							</div>
-							<div class="classify1">
-								<div class="classify1-content" data-label="job">
-									<span>
-										<i class="icon-position"></i>
-									</span>
-									<span>职位</span>
-								</div>
-							</div>
-							<div class="classify1">
-								<div class="classify1-content" data-label="label">
-									<span>
-										<i class="icon-label"></i>
-									</span>
-									<span>标签</span>
-								</div>
-							</div>
-							<div class="classify1">
-								<div class="classify1-content" data-label="care">
-									<span>
-										<i class="icon-people"></i>
-									</span>
-									<span>客情</span>
-								</div>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-						<div class="mui-indexed-list-empty-alert">没有数据</div>
-						<ul class="mui-table-view">
-							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿宝</span>
-												<span style="color: #3D94FF;">（熊猫）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="BPL" data-tags="ALaShanKou" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details_II.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿尚</span>
-												<span style="color: #3D94FF;">（是试试）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
-							<li data-value="BSD" data-tags="BaoShan" class="mui-table-view-cell mui-indexed-list-item">
-								<div class="mui-pull-left head-portrait">
-									<img src="../image/visit1.png">
-								</div>
-								<div class="mui-pull-right content">
-									<div>
-										<span class="mui-pull-left" style="font-size: 15px;">
-											<span>阿尚</span>
-										</span>
-										<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>
-										<div class="clearfix"></div>
-									</div>
-									<div class="Birthday">
-										<span>
-											<span>生日：</span>
-											<span>05-28</span>
-										</span>
-										<span style="margin-left: 15px;">
-											<span>纪念日：</span>
-											<span>05-28</span>
-										</span>
-									</div>
-								</div>
-							</li>
-							<li data-group="C" class="mui-table-view-divider mui-indexed-list-group">C</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿宝</span>
-												<span style="color: #3D94FF;">（熊猫）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="BPL" data-tags="ALaShanKou" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details_II.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿尚</span>
-												<span style="color: #3D94FF;">（是试试）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-group="D" class="mui-table-view-divider mui-indexed-list-group">D</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿宝</span>
-												<span style="color: #3D94FF;">（熊猫）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="BPL" data-tags="ALaShanKou" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details_II.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿尚</span>
-												<span style="color: #3D94FF;">（是试试）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-						</ul>
-						<div style="width: 100%;height: 45px;line-height: 45px;text-align: center;margin-bottom: 100px;font-size: 15px;color: #999;">
-
-						</div>
-					</div>
-				</div>
-				<div id="customer" style="display: none;">
-					<div class="mui-indexed-list-inner">
-						<div class="mui-indexed-list-empty-alert">没有数据</div>
-						<ul class="mui-table-view">
-							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿宝1111</span>
-												<span style="color: #3D94FF;">（熊猫）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="BPL" data-tags="ALaShanKou" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details_II.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿尚1111111</span>
-												<span style="color: #3D94FF;">（是试试）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
-							<li data-value="BSD" data-tags="BaoShan" class="mui-table-view-cell mui-indexed-list-item">
-								<div class="mui-pull-left head-portrait">
-									<img src="../image/visit1.png">
-								</div>
-								<div class="mui-pull-right content">
-									<div>
-										<span class="mui-pull-left" style="font-size: 15px;">
-											<span>阿尚</span>
-										</span>
-										<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>
-										<div class="clearfix"></div>
-									</div>
-									<div class="Birthday">
-										<span>
-											<span>生日：</span>
-											<span>05-28</span>
-										</span>
-										<span style="margin-left: 15px;">
-											<span>纪念日：</span>
-											<span>05-28</span>
-										</span>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div id="friend" style="display: none;">
-					<!--<div class="mui-indexed-list-bar" style="height: 900px;">
-						<a>A</a>
-						<a>B</a>
-						<a>C</a>
-						<a>D</a>
-						<a>E</a>
-						<a>F</a>
-						<a>G</a>
-						<a>H</a>
-						<a>I</a>
-						<a>J</a>
-						<a>K</a>
-						<a>L</a>
-						<a>M</a>
-						<a>N</a>
-						<a>O</a>
-						<a>P</a>
-						<a>Q</a>
-						<a>R</a>
-						<a>S</a>
-						<a>T</a>
-						<a>U</a>
-						<a>V</a>
-						<a>W</a>
-						<a>X</a>
-						<a>Y</a>
-						<a>Z</a>
-					</div>-->
-					<!--<div class="mui-indexed-list-alert"></div>-->
-					<!-- 好友 -->
-					<div class="mui-indexed-list-inner good_friend">
-						<div class="mui-indexed-list-empty-alert">没有数据</div>
-						<ul class="mui-table-view">
-							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-							<li data-value="GTQ" data-tags="GuangTouQiang" class="mui-table-view-cell mui-indexed-list-item">
-								<a href=" ">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">光头强1111</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">老夫所夺</div>
-									</div>
-								</a>
-							</li>
-							<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href=" ">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">光头强</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">老夫所夺</div>
-									</div>
-								</a>
-							</li>
-							<li data-group="C" class="mui-table-view-divider mui-indexed-list-group">C</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href=" ">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">光头强</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">老夫所夺</div>
-									</div>
-								</a>
-							</li>
-							<li data-group="D" class="mui-table-view-divider mui-indexed-list-group">D</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href=" ">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">光头强</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">老夫所夺</div>
-									</div>
-								</a>
-							</li>
-							<li data-group="E" class="mui-table-view-divider mui-indexed-list-group">E</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href=" ">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">光头强</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png" >
-									</div>
-									<div class="mui-pull-right content">
-										<div class="good_friend_name">老夫所夺</div>
-									</div>
-								</a>
-							</li>
-						</ul>
-						<div style="width: 100%;height: 45px;line-height: 45px;text-align: center;margin-bottom: 100px;font-size: 15px;color: #999;">
-						
-						</div>
-					</div>
-					<!-- <div class="mui-indexed-list-inner">
-						<div class="mui-indexed-list-empty-alert">没有数据</div>
-						<ul class="mui-table-view">
-							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿宝11</span>
-												<span style="color: #3D94FF;">（熊猫）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-value="BPL" data-tags="ALaShanKou" class="mui-table-view-cell mui-indexed-list-item">
-								<a href="customer_details_II.html">
-									<div class="mui-pull-left head-portrait">
-										<img src="../image/visit1.png">
-									</div>
-									<div class="mui-pull-right content">
-										<div>
-											<span class="mui-pull-left" style="font-size: 15px;">
-												<span>阿尚</span>
-												<span style="color: #3D94FF;">（是试试111）</span>
-											</span>
-											<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>
-											<div class="clearfix"></div>
-										</div>
-										<div class="biaoqian">
-											<button class="firm">云南万贤科技有限公司</button>
-											<button style="background-color: #F9D05E;">总经理</button>
-											<button style="background-color: #F96B5E;">下级会员</button>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
-							<li data-value="BSD" data-tags="BaoShan" class="mui-table-view-cell mui-indexed-list-item">
-								<div class="mui-pull-left head-portrait">
-									<img src="../image/visit1.png">
-								</div>
-								<div class="mui-pull-right content">
-									<div>
-										<span class="mui-pull-left" style="font-size: 15px;">
-											<span>阿尚</span>
-										</span>
-										<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>
-										<div class="clearfix"></div>
-									</div>
-									<div class="Birthday">
-										<span>
-											<span>生日：</span>
-											<span>05-28</span>
-										</span>
-										<span style="margin-left: 15px;">
-											<span>纪念日：</span>
-											<span>05-28</span>
-										</span>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div> -->
+				<div id="list_container">
 				</div>
 			</div>
 		</div>
+
+		<div id="crm" style="display: none">
+			<div class="mui-indexed-list-inner">
+				<div class="classify">
+					<div class="classify1">
+						<div class="classify1-content" data-label="deal">
+							<span>
+								<i class="icon-deal"></i>
+							</span>
+							<span>成交</span>
+						</div>
+					</div>
+					<div class="classify1">
+						<div class="classify1-content" data-label="follow">
+							<span>
+								<i class="icon-edit"></i>
+							</span>
+							<span>跟进中</span>
+						</div>
+					</div>
+					<div class="classify1">
+						<div class="classify1-content" data-label="member">
+							<span>
+								<i class="icon-diamond"></i>
+							</span>
+							<span>会员</span>
+						</div>
+					</div>
+					<div class="classify1">
+						<div class="classify1-content" data-label="job">
+							<span>
+								<i class="icon-position"></i>
+							</span>
+							<span>职位</span>
+						</div>
+					</div>
+					<div class="classify1">
+						<div class="classify1-content" data-label="label">
+							<span>
+								<i class="icon-label"></i>
+							</span>
+							<span>标签</span>
+						</div>
+					</div>
+					<div class="classify1">
+						<div class="classify1-content" data-label="care">
+							<span>
+								<i class="icon-people"></i>
+							</span>
+							<span>客情</span>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="mui-indexed-list-empty-alert">没有数据</div>
+				<ul class="mui-table-view"></ul>
+				<div style="width: 100%;height: 45px;line-height: 45px;text-align: center;margin-bottom: 100px;font-size: 15px;color: #999;"></div>
+			</div>
+		</div>
+		<div id="customer" style="display: none;">
+			<div class="mui-indexed-list-inner">
+				<div class="number">
+					<div class="number_title">
+						<div>
+							<div class="sign">
+								<span class="sign_chart mui-pull-left"></span>
+								<span class="sign_name">总用户数:10</span>
+								<div class="clearfix"></div>
+							</div>
+							<div class="sign">
+								<span class="sign_chart1 mui-pull-left"></span>
+								<span class="sign_name">跟进数量:3</span>
+								<div class="clearfix"></div>
+							</div>
+							<div class="sign">
+								<span class="sign_chart2 mui-pull-left"></span>
+								<span class="sign_name">成交数量:0</span>
+								<div class="clearfix"></div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						
+						<div class="number_surface">
+							<div class="trapezium"></div>
+							<div class="trapezium_content">用户总数:50</div>
+							<div class="trapezium1"></div>
+							<div class="trapezium_content1">跟进数量:3</div>
+							<div class="trapezium2"></div>
+							<div class="trapezium_content2">成交数量:0</div>
+						</div>
+					</div>
+				</div>
+				<div class="newly_added">
+					<div id="segmentedControl" class="mui-segmented-control">
+						<a class="mui-control-item mui-active" href="#item1">新增客户</a>
+						<a class="mui-control-item" href="#item2">跟进中</a>
+						<a class="mui-control-item" href="#item3">高意向</a>
+						<a class="mui-control-item" href="#item4">成交</a>
+					</div>
+				</div>
+				<div>
+					<div id="item1" class="mui-control-content mui-active">
+						<div id="scroll" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<li class="mui-table-view-cell">
+										<div class="chart mui-pull-left">
+											<img src="../image/bj.jpg" >
+										</div>
+										<div class="mui-pull-right customer-content">
+											<div class="customer_information">
+												<div class="mui-pull-left">
+													<span>
+														<img src="../image/bosi1.png" >
+													</span>
+													<span class="customer_information_name">
+														逐鹿中原
+													</span>
+												</div>
+												<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+												<div class="clearfix"></div>
+											</div>
+											<div style="font-size: 12px;margin-top: 8px;">
+												<span class="mui-pull-left">112次互动</span>
+												<span class="mui-pull-right"style="color: #4C7ABD;">进行中</span>
+											</div>
+										</div>
+									</li>
+									
+									<li class="mui-table-view-cell">
+										<div class="chart mui-pull-left">
+											<img src="../image/bj.jpg" >
+										</div>
+										<div class="mui-pull-right customer-content">
+											<div class="customer_information">
+												<div class="mui-pull-left">
+													<span>
+														<img src="../image/bosi1.png" >
+													</span>
+													<span class="customer_information_name">
+														逐鹿中原
+													</span>
+												</div>
+												<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+												<div class="clearfix"></div>
+											</div>
+											<div style="font-size: 12px;margin-top: 8px;">
+												<span class="mui-pull-left">112次互动</span>
+												<span class="mui-pull-right"style="color: #4C7ABD;">进行中</span>
+											</div>
+										</div>
+									</li>
+									
+									<li class="mui-table-view-cell">
+										<div class="chart mui-pull-left">
+											<img src="../image/rotation_chart.png" >
+										</div>
+										<div class="mui-pull-right customer-content">
+											<div class="customer_information">
+												<div class="mui-pull-left">
+													<span class="customer_information_name">
+														RVL
+													</span>
+												</div>
+												<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+												<div class="clearfix"></div>
+											</div>
+											<div style="font-size: 12px;margin-top: 8px;">
+												<span class="mui-pull-left">112次互动</span>
+												<span class="mui-pull-right"style="color: #4C7ABD;">进行中</span>
+											</div>
+										</div>
+									</li>
+									
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item2" class="mui-control-content">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<div class="chart mui-pull-left">
+									<img src="../image/bj.jpg" >
+								</div>
+								<div class="mui-pull-right customer-content">
+									<div class="customer_information">
+										<div class="mui-pull-left">
+											<span>
+												<img src="../image/bosi1.png" >
+											</span>
+											<span class="customer_information_name">
+												逐鹿中原
+											</span>
+										</div>
+										<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+										<div class="clearfix"></div>
+									</div>
+									<div style="font-size: 12px;margin-top: 8px;">
+										<span class="mui-pull-left">112次互动</span>
+										<span class="mui-pull-right"style="color: #4C7ABD;">跟进中</span>
+									</div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<div class="chart mui-pull-left">
+									<img src="../image/rotation_chart.png" >
+								</div>
+								<div class="mui-pull-right customer-content">
+									<div class="customer_information">
+										<div class="mui-pull-left">
+											<span class="customer_information_name">
+												RVL
+											</span>
+										</div>
+										<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+										<div class="clearfix"></div>
+									</div>
+									<div style="font-size: 12px;margin-top: 8px;">
+										<span class="mui-pull-left">112次互动</span>
+										<span class="mui-pull-right"style="color: #4C7ABD;">跟进中</span>
+									</div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<div class="chart mui-pull-left">
+									<img src="../image/rotation_chart.png" >
+								</div>
+								<div class="mui-pull-right customer-content">
+									<div class="customer_information">
+										<div class="mui-pull-left">
+											<span class="customer_information_name">
+												RVL
+											</span>
+										</div>
+										<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+										<div class="clearfix"></div>
+									</div>
+									<div style="font-size: 12px;margin-top: 8px;">
+										<span class="mui-pull-left">112次互动</span>
+										<span class="mui-pull-right"style="color: #4C7ABD;">跟进中</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="item3" class="mui-control-content">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<div class="chart mui-pull-left">
+									<img src="../image/bj.jpg" >
+								</div>
+								<div class="mui-pull-right customer-content">
+									<div class="customer_information">
+										<div class="mui-pull-left">
+											<span>
+												<img src="../image/bosi1.png" >
+											</span>
+											<span class="customer_information_name">
+												逐鹿中原
+											</span>
+										</div>
+										<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+										<div class="clearfix"></div>
+									</div>
+									<div style="font-size: 12px;margin-top: 8px;">
+										<span class="mui-pull-left">112次互动</span>
+										<span class="mui-pull-right"style="color: #4C7ABD;">高意向</span>
+									</div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<div class="chart mui-pull-left">
+									<img src="../image/bj.jpg" >
+								</div>
+								<div class="mui-pull-right customer-content">
+									<div class="customer_information">
+										<div class="mui-pull-left">
+											<span>
+												<img src="../image/bosi1.png" >
+											</span>
+											<span class="customer_information_name">
+												逐鹿中原
+											</span>
+										</div>
+										<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+										<div class="clearfix"></div>
+									</div>
+									<div style="font-size: 12px;margin-top: 8px;">
+										<span class="mui-pull-left">112次互动</span>
+										<span class="mui-pull-right"style="color: #4C7ABD;">高意向</span>
+									</div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<div class="chart mui-pull-left">
+									<img src="../image/rotation_chart.png" >
+								</div>
+								<div class="mui-pull-right customer-content">
+									<div class="customer_information">
+										<div class="mui-pull-left">
+											<span class="customer_information_name">
+												RVL
+											</span>
+										</div>
+										<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+										<div class="clearfix"></div>
+									</div>
+									<div style="font-size: 12px;margin-top: 8px;">
+										<span class="mui-pull-left">112次互动</span>
+										<span class="mui-pull-right"style="color: #4C7ABD;">高意向</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="item4" class="mui-control-content">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<div class="chart mui-pull-left">
+									<img src="../image/rotation_chart.png" >
+								</div>
+								<div class="mui-pull-right customer-content">
+									<div class="customer_information">
+										<div class="mui-pull-left">
+											<span class="customer_information_name">
+												RVL
+											</span>
+										</div>
+										<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+										<div class="clearfix"></div>
+									</div>
+									<div style="font-size: 12px;margin-top: 8px;">
+										<span class="mui-pull-left">112次互动</span>
+										<span class="mui-pull-right"style="color: #4C7ABD;">成交</span>
+									</div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<div class="chart mui-pull-left">
+									<img src="../image/bj.jpg" >
+								</div>
+								<div class="mui-pull-right customer-content">
+									<div class="customer_information">
+										<div class="mui-pull-left">
+											<span>
+												<img src="../image/bosi1.png" >
+											</span>
+											<span class="customer_information_name">
+												逐鹿中原
+											</span>
+										</div>
+										<div class="mui-pull-right" style="color: #6A6A6A;">1小时前</div>
+										<div class="clearfix"></div>
+									</div>
+									<div style="font-size: 12px;margin-top: 8px;">
+										<span class="mui-pull-left">112次互动</span>
+										<span class="mui-pull-right"style="color: #4C7ABD;">成交</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="friend" style="display: none;">
+			<div class="mui-indexed-list-inner good_friend">
+				<div class="mui-indexed-list-empty-alert">没有数据</div>
+				<ul class="mui-table-view"></ul>
+				<div style="width: 100%;height: 45px;line-height: 45px;text-align: center;margin-bottom: 100px;font-size: 15px;color: #999;"></div>
+			</div>
+		</div>
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script src="../js/mui.indexedlist.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init({
 				swipeBack: false
 			});
-			
-			var label = '';
+
+			var label = null;
 			var currentLabel = 'empty';
-			currentTab = 'crm';
+			var currentTab = 'crm';
+			var userInfo = null;
+			var customer_data = null;
 			mui.plusReady(function() {
-				indexInit();
+				userInfo = getUserInfo();
 				pageInit();
 			})
-			
+
 			function indexInit() {
 				var header = document.querySelector('header.mui-bar');
 				var list = document.getElementById('list');
 				list.style.height = (document.body.offsetHeight - header.offsetHeight + 2) + 'px';
 				window.indexedList = new mui.IndexedList(list);
 			}
-			
+
 			function pageInit() {
-				var customerList = localStorage.getItem('customer');
-				if (!customerList) {
-					showCustomer(customerList, 'crm');
+				localStorage.removeItem('customer');
+				customer_data = JSON.parse(localStorage.getItem('customer'));
+				// console.log(JSON.stringify(customer_data));
+				if (!customer_data) {
+					getCustomerList();
+				} else {
+					showCustomer(customer_data.crm, 'crm');
+					var html = document.getElementById('crm').innerHTML;
+					document.getElementById('list_container').innerHTML = html;
+					eventInit();
+					indexInit();
+					showCustomer(customer_data.friend, 'friend');
+					showCustomer(customer_data.customer, 'customer');
 				}
-				
+			}
+			
+			function eventInit() {
 				mui('.switch1').on('tap', '.switch1_content', function() {
 					var id = this.dataset.id;
 					if (id == currentTab) return;
-					var tabObj =  document.getElementsByClassName('switch1_content');
+					var tabObj = document.getElementsByClassName('switch1_content');
 					mui.each(tabObj, function(index, item) {
 						item.classList.remove('xuanz');
 					})
 					this.classList.add('xuanz');
-					document.getElementById(id).style.display = 'block';
-					document.getElementById(currentTab).style.display = 'none';
+					
+					var html = document.getElementById(id).innerHTML;
+					document.getElementById('list_container').innerHTML = html;
+					if (id == 'customer') {
+						document.getElementById('list_bar').style.display = "none";
+					} else {
+						document.getElementById('list_bar').style.display = "block";
+					}
+					eventInit();
+					indexInit();
 					currentTab = id;
 				})
 				
@@ -798,11 +813,11 @@
 					if (label == currentLabel) {
 						this.parentElement.classList.remove('label');
 						this.classList.remove('bian');
-						label = '';
+						label = null;
 						currentLabel = 'empty';
 						return;
 					}
-					var labelObj =  document.getElementsByClassName('classify1-content');
+					var labelObj = document.getElementsByClassName('classify1-content');
 					mui.each(labelObj, function(index, item) {
 						item.classList.remove('bian');
 						item.parentElement.classList.remove('label');
@@ -810,18 +825,392 @@
 					this.parentElement.classList.add('label');
 					this.classList.add('bian');
 					currentLabel = label;
+					showCustomer(customer_data.crm, 'crm');
+					var html = document.getElementById('crm').innerHTML;
+					message(html, 'alert');
+					// message(1111);
+					console.log(html);
+					// document.getElementById('list_container').innerHTML = html;
+// 					eventInit();
+// 					indexInit();
 				})
 			}
-			
+
 			function getCustomerList() {
-				mui.post($ajaxUrl + 'customer', {action: 'list'}, function(res) {
-					
-				})
+				mui.post($ajaxUrl + 'customer', {
+					action: 'list',
+					token: userInfo.token
+				}, function(res) {
+					customer_data = res.data;
+					localStorage.setItem('customer', JSON.stringify(customer_data));
+					showCustomer(customer_data.crm, 'crm');
+					var html = document.getElementById('crm').innerHTML;
+					document.getElementById('list_container').innerHTML = html;
+					eventInit();
+					indexInit();
+					showCustomer(customer_data.customer, 'customer');
+					showCustomer(customer_data.friend, 'friend');
+				}, 'json')
 			}
-			
+
 			function showCustomer(data, type) {
+				if (!data) return;
 				if (type == 'crm') {
-					
+					var html = '';
+					if (label == 'deal') {
+						for (var index in data) {
+							var list = data[index];
+							var flag = false;
+							var temp = '';
+							for (var i in list) {
+								if (list[i].mark == 2) {
+									flag = true;
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+											temp += '<div class="mui-pull-left head-portrait">';
+											if (list[i].headimgurl.length == 0) {
+												temp += '<img src="../image/user_default.png">';
+											} else {
+												temp += '<img src="' + list[i].headimgurl + '">';
+											}
+											temp += '</div>';
+											temp += '<div class="mui-pull-right content">';
+												temp += '<div>';
+													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+														temp += '<span>' + list[i].name + '</span>';
+														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+													temp += '</span>';
+													if (list[i].mark == 1) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+													} else if (list[i].mark == 2) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+													}
+													temp += '<div class="clearfix"></div>';
+												temp += '</div>';
+												temp += '<div class="biaoqian">';
+													temp += '<button class="firm">' + list[i].company + '</button>';
+													temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+													if (list[i].pid == list[i].recommend_id) {
+														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
+													}
+												temp += '</div>';
+											temp += '</div>';
+										temp += '</a>';
+									temp += '</li>';
+								}
+								if (flag) {
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += temp;
+								}
+							}
+						}
+					} else if (label == 'follow') {
+						for (var index in data) {
+							var list = data[index];
+							var flag = false;
+							var temp = '';
+							for (var i in list) {
+								if (list[i].mark == 1) {
+									flag = true;
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+											temp += '<div class="mui-pull-left head-portrait">';
+											if (list[i].headimgurl.length == 0) {
+												temp += '<img src="../image/user_default.png">';
+											} else {
+												temp += '<img src="' + list[i].headimgurl + '">';
+											}
+											temp += '</div>';
+											temp += '<div class="mui-pull-right content">';
+												temp += '<div>';
+													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+														temp += '<span>' + list[i].name + '</span>';
+														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+													temp += '</span>';
+													if (list[i].mark == 1) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+													} else if (list[i].mark == 2) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+													}
+													temp += '<div class="clearfix"></div>';
+												temp += '</div>';
+												temp += '<div class="biaoqian">';
+													temp += '<button class="firm">' + list[i].company + '</button>';
+													temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+													if (list[i].pid == list[i].recommend_id) {
+														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
+													}
+												temp += '</div>';
+											temp += '</div>';
+										temp += '</a>';
+									temp += '</li>';
+								}
+								if (flag) {
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += temp;
+								}
+							}
+						}
+					} else if (label == 'member') {
+						for (var index in data) {
+							var list = data[index];
+							var flag = false;
+							var temp = '';
+							for (var i in list) {
+								if (list[i].is_member == 1) {
+									flag = true;
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+											temp += '<div class="mui-pull-left head-portrait">';
+											if (list[i].headimgurl.length == 0) {
+												temp += '<img src="../image/user_default.png">';
+											} else {
+												temp += '<img src="' + list[i].headimgurl + '">';
+											}
+											temp += '</div>';
+											temp += '<div class="mui-pull-right content">';
+												temp += '<div>';
+													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+														temp += '<span>' + list[i].name + '</span>';
+														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+													temp += '</span>';
+													if (list[i].mark == 1) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+													} else if (list[i].mark == 2) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+													}
+													temp += '<div class="clearfix"></div>';
+												temp += '</div>';
+												temp += '<div class="biaoqian">';
+													temp += '<button class="firm">' + list[i].company + '</button>';
+													temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+													if (list[i].pid == list[i].recommend_id) {
+														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
+													}
+												temp += '</div>';
+											temp += '</div>';
+										temp += '</a>';
+									temp += '</li>';
+								}
+								if (flag) {
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += temp;
+								}
+							}
+						}
+					} else if (label == 'job') {
+						for (var index in data) {
+							var list = data[index];
+							var flag = false;
+							var temp = '';
+							for (var i in list) {
+								if (list[i].job.length != 0) {
+									flag = true;
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+											temp += '<div class="mui-pull-left head-portrait">';
+											if (list[i].headimgurl.length == 0) {
+												temp += '<img src="../image/user_default.png">';
+											} else {
+												temp += '<img src="' + list[i].headimgurl + '">';
+											}
+											temp += '</div>';
+											temp += '<div class="mui-pull-right content">';
+												temp += '<div>';
+													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+														temp += '<span>' + list[i].name + '</span>';
+														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+													temp += '</span>';
+													if (list[i].mark == 1) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+													} else if (list[i].mark == 2) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+													}
+													temp += '<div class="clearfix"></div>';
+												temp += '</div>';
+												temp += '<div class="biaoqian">';
+													// temp += '<button class="firm">' + list[i].company + '</button>';
+													temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+// 													if (list[i].pid == list[i].recommend_id) {
+// 														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
+// 													}
+												temp += '</div>';
+											temp += '</div>';
+										temp += '</a>';
+									temp += '</li>';
+								}
+								if (flag) {
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += temp;
+								}
+							}
+						}
+					} else if (label == 'label') {
+						for (var index in data) {
+							var list = data[index];
+							var flag = false;
+							var temp = '';
+							for (var i in list) {
+								if (list[i].label_id.length != 0) {
+									flag = true;
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+											temp += '<div class="mui-pull-left head-portrait">';
+											if (list[i].headimgurl.length == 0) {
+												temp += '<img src="../image/user_default.png">';
+											} else {
+												temp += '<img src="' + list[i].headimgurl + '">';
+											}
+											temp += '</div>';
+											temp += '<div class="mui-pull-right content">';
+												temp += '<div>';
+													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+														temp += '<span>' + list[i].name + '</span>';
+														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+													temp += '</span>';
+													if (list[i].mark == 1) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+													} else if (list[i].mark == 2) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+													}
+													temp += '<div class="clearfix"></div>';
+												temp += '</div>';
+												temp += '<div class="biaoqian">';
+												for (var j = 0; j < list[i].label.length && j < 5; j++) {
+													temp += '<button style="background-color: #68B0FF;">' + list[i].label[j] + '</button>';
+												}
+												temp += '</div>';
+											temp += '</div>';
+										temp += '</a>';
+									temp += '</li>';
+								}
+								if (flag) {
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += temp;
+								}
+							}
+						}
+					} else if (label == 'care') {
+						for (var index in data) {
+							var list = data[index];
+							var flag = false;
+							var temp = '';
+							for (var i in list) {
+								if (list[i].birthday.length != 0 || list[i].anniversay.length != 0) {
+									flag = true;
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+											temp += '<div class="mui-pull-left head-portrait">';
+											if (list[i].headimgurl.length == 0) {
+												temp += '<img src="../image/user_default.png">';
+											} else {
+												temp += '<img src="' + list[i].headimgurl + '">';
+											}
+											temp += '</div>';
+											temp += '<div class="mui-pull-right content">';
+												temp += '<div>';
+													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+														temp += '<span>' + list[i].name + '</span>';
+														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+													temp += '</span>';
+													if (list[i].mark == 1) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+													} else if (list[i].mark == 2) {
+														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+													}
+													temp += '<div class="clearfix"></div>';
+												temp += '</div>';
+												temp += '<div class="Birthday">';
+												if (list[i].birthday.length != 0) {
+													temp += '<span>';
+														temp += '<span>生日：</span>';
+														temp += '<span>' + list[i].birthday + '</span>';
+													temp += '</span>';
+												}
+												if (list[i].anniversary.length != 0) {	
+													temp += '<span style="margin-left: 15px;">';
+														temp += '<span>纪念日：</span>';
+														temp += '<span>' + list[i].anniversary + '</span>';
+													temp += '</span>';
+												}
+												temp += '</div>';
+											temp += '</div>';
+										temp += '</a>';
+									temp += '</li>';
+								}
+								if (flag) {
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += temp;
+								}
+							}
+						}
+					} else {
+						for (var index in data) {
+							html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+							var list = data[index];
+							for (var i in list) {
+								html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
+									html += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+										html += '<div class="mui-pull-left head-portrait">';
+										if (list[i].headimgurl.length == 0) {
+											html += '<img src="../image/user_default.png">';
+										} else {
+											html += '<img src="' + list[i].headimgurl + '">';
+										}
+											
+										html += '</div>';
+										html += '<div class="mui-pull-right content">';
+											html += '<div>';
+												html += '<span class="mui-pull-left" style="font-size: 15px;">';
+													html += '<span>' + list[i].name + '</span>';
+													<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+												html += '</span>';
+												if (list[i].mark == 1) {
+													html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+												} else if (list[i].mark == 2) {
+													html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+												}
+												html += '<div class="clearfix"></div>';
+											html += '</div>';
+											html += '<div class="biaoqian">';
+												html += '<button class="firm">' + list[i].company + '</button>';
+												html += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+												if (list[i].pid == list[i].recommend_id) {
+													html += '<button style="background-color: #F96B5E;">下级会员</button>';
+												}
+											html += '</div>';
+										html += '</div>';
+									html += '</a>';
+								html += '</li>';
+							}
+						}
+					}
+					document.querySelector('#crm .mui-table-view').innerHTML = html;
+					// indexInit();
+				} else if (type == 'friend') {
+					var html = '';
+					// console.log(JSON.stringify(data));
+					for (var index in data) {
+						html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+						var list = data[index];
+						for (var i in list) {
+							html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
+								html += '<a href="javascript:void(0);" class="detail" data-type="friend" data-id="' + list[i].uid + '">';
+									html += '<div class="mui-pull-left head-portrait">';
+									if (list[i].avatarUrl.length == 0) {
+										html += '<img src="../image/user_default.png">';
+									} else {
+										html += '<img src="' + list[i].avatarUrl + '">';
+									}
+									html += '</div>';
+									html += '<div class="mui-pull-right content">';
+										html += '<div class="good_friend_name">' + list[i].name + '</div>';
+									html += '</div>';
+								html += '</a>';
+							html += '</li>';
+						}
+					}
+					document.querySelector('#friend .mui-table-view').innerHTML = html;
 				}
 			}
 		</script>
