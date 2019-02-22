@@ -51,12 +51,8 @@ function fnCloseWin(id) {
 }
 
 //toast消息
-function message(text, type) {
-	if (type == 'alert') {
-		plus.nativeUI.alert(text)
-	} else {
-		plus.nativeUI.toast(text);
-	}
+function message(text) {
+	plus.nativeUI.toast(text);
 	
 }
 

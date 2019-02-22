@@ -438,17 +438,17 @@
 						<div>
 							<div class="sign">
 								<span class="sign_chart mui-pull-left"></span>
-								<span class="sign_name">总用户数:10</span>
+								<span class="sign_name">总用户数:<span class="customer_total">10</span></span>
 								<div class="clearfix"></div>
 							</div>
 							<div class="sign">
 								<span class="sign_chart1 mui-pull-left"></span>
-								<span class="sign_name">跟进数量:3</span>
+								<span class="sign_name">跟进数量:<span class="customer_follow">3</span></span>
 								<div class="clearfix"></div>
 							</div>
 							<div class="sign">
 								<span class="sign_chart2 mui-pull-left"></span>
-								<span class="sign_name">成交数量:0</span>
+								<span class="sign_name">成交数量:<span class="customer_deal">0</span></span>
 								<div class="clearfix"></div>
 							</div>
 							<div class="clearfix"></div>
@@ -456,11 +456,11 @@
 						
 						<div class="number_surface">
 							<div class="trapezium"></div>
-							<div class="trapezium_content">用户总数:50</div>
+							<div class="trapezium_content">用户总数:<span class="customer_total">50</span></div>
 							<div class="trapezium1"></div>
-							<div class="trapezium_content1">跟进数量:3</div>
+							<div class="trapezium_content1">跟进数量:<span class="customer_follow">3</span></div>
 							<div class="trapezium2"></div>
-							<div class="trapezium_content2">成交数量:0</div>
+							<div class="trapezium_content2">成交数量:<span class="customer_deal">0</span></div>
 						</div>
 					</div>
 				</div>
@@ -524,7 +524,6 @@
 											</div>
 										</div>
 									</li>
-									
 									<li class="mui-table-view-cell">
 										<div class="chart mui-pull-left">
 											<img src="../image/rotation_chart.png" >
@@ -803,6 +802,11 @@
 					} else {
 						document.getElementById('list_bar').style.display = "block";
 					}
+					if (id == 'crm' && currentLabel != 'empty') {
+						var currentObj = document.querySelector('.classify1-content[data-label=' + currentLabel + ']');
+						currentObj.parentElement.classList.add('label');
+						currentObj.classList.add('bian');
+					}
 					eventInit();
 					indexInit();
 					currentTab = id;
@@ -810,33 +814,41 @@
 				
 				mui('.classify1').on('tap', '.classify1-content', function() {
 					label = this.dataset.label;
+					var self = this;
 					if (label == currentLabel) {
-						this.parentElement.classList.remove('label');
-						this.classList.remove('bian');
+						self.parentElement.classList.remove('label');
+						self.classList.remove('bian');
 						label = null;
 						currentLabel = 'empty';
+						
+						showCustomer(customer_data.crm, 'crm');
+						var html = document.getElementById('crm').innerHTML;
+						document.getElementById('list_container').innerHTML = html;
+						eventInit();
+						indexInit();
 						return;
 					}
+					
+					showCustomer(customer_data.crm, 'crm');
+					var html = document.getElementById('crm').innerHTML;
+					document.getElementById('list_container').innerHTML = html;
+					eventInit();
+					indexInit();
+					
 					var labelObj = document.getElementsByClassName('classify1-content');
 					mui.each(labelObj, function(index, item) {
 						item.classList.remove('bian');
 						item.parentElement.classList.remove('label');
-					})
-					this.parentElement.classList.add('label');
-					this.classList.add('bian');
+					});
+					var currentObj = document.querySelector('.classify1-content[data-label=' + label + ']');
+					currentObj.parentElement.classList.add('label');
+					currentObj.classList.add('bian');
 					currentLabel = label;
-					showCustomer(customer_data.crm, 'crm');
-					var html = document.getElementById('crm').innerHTML;
-					message(html, 'alert');
-					// message(1111);
-					console.log(html);
-					// document.getElementById('list_container').innerHTML = html;
-// 					eventInit();
-// 					indexInit();
 				})
 			}
 
 			function getCustomerList() {
+				if (!userInfo) return;
 				mui.post($ajaxUrl + 'customer', {
 					action: 'list',
 					token: userInfo.token
@@ -1185,11 +1197,12 @@
 							}
 						}
 					}
+					if (html.length == 0) {
+						html += '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
+					}
 					document.querySelector('#crm .mui-table-view').innerHTML = html;
-					// indexInit();
 				} else if (type == 'friend') {
 					var html = '';
-					// console.log(JSON.stringify(data));
 					for (var index in data) {
 						html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
 						var list = data[index];
@@ -1209,6 +1222,9 @@
 								html += '</a>';
 							html += '</li>';
 						}
+					}
+					if (html.length == 0) {
+						html += '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
 					}
 					document.querySelector('#friend .mui-table-view').innerHTML = html;
 				}
