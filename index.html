@@ -212,6 +212,13 @@
 			currentTab.children[0].classList.add(tabsConfig[current].icon);
 			current = this.dataset.id;
 			currentTab = this;
+			
+			//向聊天页面传递清除定时器自定义事件
+			if (current == 'chat') {
+				mui.fire(plus.webview.getWebviewById('chat'), 'addInterval');
+			} else {
+				mui.fire(plus.webview.getWebviewById('chat'), 'clearInterval');
+			}
 		});
 	}
 	

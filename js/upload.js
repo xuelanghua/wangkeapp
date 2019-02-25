@@ -2,13 +2,13 @@
 function imageUpload(cb) {
 	if (mui.os.plus) {
 		var buttonTitle = [{
-			title: "拍照"
+			title: "拍照", style: 'default'
 		}, {
-			title: "从手机相册选择"
+			title: "从手机相册选择", style: 'default'
 		}];
 
 		plus.nativeUI.actionSheet({
-			title: "上传图片",
+			// title: "上传图片",
 			cancel: "取消",
 			buttons: buttonTitle
 		}, function(b) { /*actionSheet 按钮点击事件*/

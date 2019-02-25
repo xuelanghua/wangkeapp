@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../plugins/cropper/css/cropper.min.css" />
+		<style type="text/css">
+			body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				background-color: #000;
+			}
+
+			#imgBox {
+				width: 100%;
+				height: auto;
+			}
+
+			#imgBox img {
+				width: 100%;
+				margin: auto;
+				margin: 0;
+				padding: 0;
+			}
+
+			.image-select {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				background-color: #000;
+			}
+
+			.image-select div {
+				float: left;
+				width: 50%;
+				height: 50px;
+				line-height: 50px;
+				color: #FFF;
+				font-size: 18px;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content">
+			<div id="imgBox">
+				<img id="userImage_id" src="../image/cropper_bg.png" />
+			</div>
+			<div class='image-select'>
+				<div id="cancel">取消</div>
+				<div id="confirm">完成</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript" src="../plugins/jquery-3.1.1.slim.min.js"></script>
+		<script type="text/javascript" src="../plugins/cropper/js/cropper.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init({
+				swipeBack: false,
+				beforeback: function() {
+					return false;
+				}
+			});
+
+			mui.plusReady(function() {
+				document.getElementById('imgBox').style.height = (document.body.offsetHeight - 50) + 'px';
+				console.log(document.body.offsetHeight);
+				
+				// loadImage('../image/user_default.png');
+				loadImage('../image/user_default.png');
+				initImageCropper();
+
+				//确定裁切
+				document.getElementById("confirm").addEventListener("tap", function(e) {
+					var dataURL = $("#userImage_id").cropper("getCroppedCanvas", {
+						width: 300,
+						height: 300
+					})
+					var imgUrl = dataURL.toDataURL("image/png", 1);
+					$("#userImage_id").attr("src", imgUrl);
+					$("#userImage_id").cropper("replace", imgUrl);
+					$("#userImage_id").cropper("clear"); //裁切完成取消显示裁切框
+					$("#userImage_id").cropper("disable");
+					//确定裁切后销毁裁切组件，标记一下，下次继续裁切时需要初始化一下裁切组件
+					window.imageDisable = true;
+					// console.log(imgUrl);
+
+					//向后台提供数据
+					// uploadFile(imgUrl);
+				});
+
+				document.getElementById('cancel').addEventListener('tap', function() {
+					plus.webview.close('cropper');
+				})
+				//初始化裁切组件
+				initImageCropper();
+			});
+
+			//初始化裁剪组件
+			function initImageCropper() {
+				$("#userImage_id").cropper({
+					viewMode: 2, //暂不清楚什么功能
+					dragMode: "move", //设置移动图片、重新绘制选图区域(crop:在裁剪框外拖动鼠标会生成一个新的裁剪框, move:在裁剪框外拖动鼠标会移动原图, none:什么也不做)
+					aspectRatio: 1, //裁剪框的纵横比，默认是不限制的。例如1:1的头像就写1,16:9可写成16 / 9。,
+					data: null, //直接设置data 
+					preview: "", //预览图的位置，用jQuery选择器表示
+					responsive: !0, //在更改窗口大小后是否重新渲染cropper。
+					restore: !0, //在更改窗口大小后是否恢复裁剪区域。
+					checkCrossOrigin: !0, //检查图像是否是跨域图像。
+					checkOrientation: !0,
+					modal: !0, //非裁剪区域是否用黑罩遮盖。
+					guides: 0, //裁剪区域是否显示虚线。
+					center: 0, //裁剪区域正中央是否显示+号。
+					highlight: !0, //裁剪区域是否高亮显示。
+					background: 0, //是否显示背景的黑白方格（类似PS里透明图层的显示方式）。
+					autoCrop: !0, //cropper初始化完成后是否自动显示裁剪框
+					autoCropArea: 1, //自动显示的裁剪框的大小。因此，数字应当在0~1之间。
+					movable: !0, //是否允许移动原图。（如果这里填false那么尽管dragMode的值是move，在裁剪框外拖动也不会移动原图）
+					rotatable: !0, //是否可以旋转原图。
+					scalable: 0, //是否可以对原图进行纵横拉伸。
+					zoomable: !0, //是否可以对原图进行缩小放大。
+					zoomOnTouch: !0, //是否允许在移动端上使用双指触摸缩放原图。
+					zoomOnWheel: !0, //是否允许使用鼠标滚轮缩放原图。
+					wheelZoomRatio: .1, //当使用鼠标滚轮缩放时的比例。
+					cropBoxMovable: 0, //是否允许移动裁剪框。
+					cropBoxResizable: 0, //是否允许通过拖动裁剪框的边框来调整裁剪框的大小。
+					toggleDragModeOnDblclick: !0, //是否允许通过双击来在crop和move之间切换dragMode。
+					minCanvasWidth: 300, //canvas（原图）宽度最小值。
+					minCanvasHeight: 300, //剪切框宽度最小值。
+					minCropBoxWidth: 0, //剪切框高度最小值。
+					minCropBoxHeight: 0, //canvas（原图）宽度最小值。
+					minContainerWidth: 300, //容器宽度最小值。
+					minContainerHeight: 300, //容器高度最小值。
+					ready: null,
+					cropstart: null,
+					cropmove: null,
+					cropend: null,
+					crop: function(data) {
+						//初始化
+						window._scaleX = data.scaleX;
+						window._scaleY = data.scaleY;
+					},
+					zoom: null
+				});
+			}
+
+			//选择图片
+			function selectImage() {
+				plus.gallery.pick(function(path) {
+					loadImage(path);
+				}, function(e) {
+					mui.toast("没有选择图片.");
+				});
+			}
+
+			//确定选择图片
+			function loadImage(path) {
+				var img = document.getElementById("userImage_id");
+				img.src = path;
+// 				if (window.imageDisable == true) {
+// 					$("#userImage_id").cropper("enable");
+// 				}
+// 				$("#userImage_id").cropper("replace", path);
+			}
+
+			function uploadFile(file) {
+				var waiting = plus.nativeUI.showWaiting('图片上传中...');
+				var task = plus.uploader.createUpload($uploadUrl, {
+						method: "POST",
+						blocksize: 614400,
+						priority: 100
+					},
+					function(t, status) { //上传完成
+						if (status == 200) {
+							var res = JSON.parse(t.responseText);
+							if (res.error) {
+								plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+							} else {
+								console.log(JSON.stringify(res));
+								cb(res);
+								waiting.close();
+							}
+						} else {
+							console.log("上传失败：" + status);
+							plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
+						}
+					}
+				);
+				// 页面中要上传的 图片路径
+				task.addFile(file, {
+					key: 'file'
+				});
+				task.start();
+			}
+
+			function dataURItoBlob(base64Data) {
+				var byteString;
+				if (base64Data.split(',')[0].indexOf('base64') >= 0)
+					byteString = atob(base64Data.split(',')[1]);
+				else
+					byteString = unescape(base64Data.split(',')[1]);
+				var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+				var ia = new Uint8Array(byteString.length);
+				for (var i = 0; i < byteString.length; i++) {
+					ia[i] = byteString.charCodeAt(i);
+				}
+				return new Blob([ia], {
+					type: mimeString
+				});
+			}
+		</script>
+	</body>
+</html>
