@@ -7,6 +7,14 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<style>
+			a:hover, a:active, a:visited, a:link, a:focus{
+				-webkit-tap-highlight-color:rgba(0,0,0,0)!important;
+				-webkit-tap-highlight-color: transparent!important;
+				outline:none!important;
+				background: none!important;
+				text-decoration: none!important;
+			}
+			
 			.clearfix{
 				clear: both;
 			}
@@ -17,7 +25,6 @@
 			.title_header{
 				padding-bottom: 10px;
 				border-radius: 5px;
-				/* display: none; */
 				box-shadow: 0 0 5px 3px #DDDDDD;
 			}
 			.title_chart{
@@ -32,6 +39,7 @@
 			
 			/* 名片样式横 */
 			.transverse_title_header{
+				display: none;
 				border-radius: 5px;
 				box-shadow: 0 0 5px 3px #DDDDDD;
 			}
@@ -109,6 +117,10 @@
 			.style_chart img{
 				height: 50px;
 				box-shadow: 0 0 5px 0 #c7c7c7;
+			}
+			
+			.style_chart img.selected{
+				box-shadow: 0 0 5px 0 red!important;
 			}
 			
 			.information{
@@ -214,13 +226,26 @@
 			.picture_display{
 				margin-top: 10px;
 				padding: 0 0.625rem;
-				padding-bottom: 15px;
+				padding-bottom: 5px;
 				background-color: #FFFFFF;
 			}
+			
+			#pic-container {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: flex-start;
+			}
+			
 			.picture_display_chear{
-				width: 80px;
-				height: 80px;
+				/* width: 80px; */
+				width: 5.532rem;
+				/* height: 80px; */
+				height: 5.532rem;
+				margin-right: 10px;
+				margin-bottom: 10px;
 				padding: 20px;
+				padding-bottom: 10px;
 				background-color: #DDDDDD;
 			}
 			.picture_display_chear img{
@@ -261,15 +286,15 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
+		<header class="mui-bar mui-bar-nav" style="background: #FFF;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">名片信息</h1>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content" style="padding-bottom: 25px;">
 			<div class="title">
 				<!-- 名片样式竖 -->
-				<div class="title_header">
+				<div class="title_header" id="vertical">
 					<div class="title_chart">
 						<img src="../image/bj.jpg">
 					</div>
@@ -281,7 +306,7 @@
 				</div>
 
 				<!-- 名片样式横 -->
-				<div class="transverse_title_header">
+				<div class="transverse_title_header" id="horizontal">
 					<img class="tu_chart" src="../image/position_ditu.png">
 					<div class="transverse_title_header_left mui-pull-left">
 						<div class="company">暂未填写</div>
@@ -323,10 +348,10 @@
 				
 				<div class="style">名片样式</div>
 				<div class="style_chart">
-					<span>
-						<img src="../image/shu.png" style="border-radius: 8px;">
+					<span data-style="vertical">
+						<img src="../image/shu.png" style="border-radius: 8px;" class="selected">
 					</span>
-					<span>
+					<span data-style="horizontal">
 						<img src="../image/heng.png" style="width: 80px;margin-left: 15px;border-radius: 8px;">
 					</span>
 				</div>
@@ -425,8 +450,10 @@
 
 			<div class="picture_display">
 				<div class="personality_title">图片展示</div>
-				<div class="picture_display_chear">
-					<img src="../image/Add-Icon.png">
+				<div id="pic-container">
+					<div class="picture_display_chear">
+						<img src="../image/Add-Icon.png">
+					</div>
 				</div>
 			</div>
 			
@@ -442,6 +469,18 @@
 		})
 		
 		mui.plusReady(function () {
+			mui('.style_chart').on('tap', 'span', function() {
+				var style = this.dataset.style;
+				this.children[0].classList.add('selected');
+				document.getElementById(style).style.display = 'block';
+				if (style == 'horizontal') {
+					document.querySelector('.style_chart span:first-child img').classList.remove('selected');
+					document.getElementById('vertical').style.display = 'none';
+				} else {
+					document.getElementById('horizontal').style.display = 'none';
+					document.querySelector('.style_chart span:last-child img').classList.remove('selected');
+				}
+			})
 		    document.getElementById('headimgurl').addEventListener('tap', function() {
 				fnOpenWin('cropper.html', 'cropper', {statusbar: {background: '#000'}}, '', '');
 			})

@@ -149,6 +149,7 @@
 									}, function(res) {
 										if (res.errno == 0) {
 											mui.toast('登录成功!');
+											mui.fire(plus.webview.getWebviewById('chat'), 'loginSuccess');
 											localStorage.setItem('user', JSON.stringify(res.data));
 											if (res.data.mobile.length == 0) {
 												fnOpenWin('mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
