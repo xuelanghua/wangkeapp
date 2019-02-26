@@ -112,3 +112,4 @@ function imageResize(src, cb) {
 		plus.nativeUI.alert('处理出错!', '', '提示', 'OK');
 	})
 }
+
