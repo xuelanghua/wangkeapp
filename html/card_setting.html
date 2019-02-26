@@ -209,8 +209,8 @@
 				background-color: #FFFFFF;
 			}
 			.play{
-				width: 15px;
-				margin-left: 15px;
+				width: 25px;
+				margin-left: 10px;
 			}
 			.hold_down{
 				width: 70%;
@@ -454,7 +454,7 @@
 							<div class="sound_recording_content mui-pull-left hidden">
 								<div class="horn"></div>
 								<p class="mui-pull-right voice-time" style="margin-right: 0.625rem;">9</p>
-								<img class="play" src="../image/pofang.png">
+								<img class="play" src="../image/bofang.png">
 								<input type="hidden" name="voice" value="">
 								<input type="hidden" name="voice_time" value="">
 							</div>
@@ -497,6 +497,7 @@
 		var voiceTime = 0;
 		var timer = null;
 		var r = null;
+		var play = null;
 		mui.plusReady(function() {
 			userInfo = getUserInfo();
 			getMemberInfo();
@@ -526,13 +527,6 @@
 					cardType = 'cardType1';
 				}
 			})
-
-			//提交事件
-			// 			document.getElementById('member_info').addEventListener('submit', function(e) {
-			// 				var name = document.querySelector('input[name=name]').value;
-			// 				var submitData = new FormData(this);
-			// 				e.preventDefault();
-			// 			})
 
 			document.getElementById("headimgurl").addEventListener("tap", function() {
 				var editButtons = new Array();
@@ -617,16 +611,30 @@
 				}
 			})
 
+			//按住录音
 			document.getElementById('voice_record').addEventListener('hold', function() {
 				document.querySelector('.showArea').style.display = 'block';
 				voiceTime = 0;
 				startRecord();
 			})
-
+			
+			//结束录音
 			document.getElementById('voice_record').addEventListener('release', function() {
 				document.querySelector('.showArea').style.display = 'none';
-				stopRecord();
-				console.log(voiceTime);
+				setTimeout('stopRecord()', 2000);
+			})
+			
+			//播放录音
+			document.querySelector('.play').addEventListener('tap', function() {
+				document.querySelector('.play').src = '../image/play.gif';
+				var voice = document.querySelector('input[name=voice]').value;
+				var audio = document.createElement("audio");  
+				audio.src = voice; 
+				audio.play();
+				console.log('voiceTime=' + voiceTime);
+				setTimeout(function() {
+					document.querySelector('.play').src = '../image/bofang.png';
+				}, voiceTime*1000)
 			})
 		}
 
@@ -741,10 +749,6 @@
 			// 从相册中选择图片
 			plus.gallery.pick(function(e) {
 				cropperImg(e, 'card_setting');
-				// imageResize(e);
-				//     	for(var i in e.files){
-				// 	    	var fileSrc = e.files[i];
-				//     	}
 			}, function(e) {
 				console.log("取消选择图片");
 			}, {
@@ -777,22 +781,35 @@
 				filename: "_doc/audio/",
 				format: 'mp3'
 			}, function(e) {
-				message("Audio record success!");
-				logs(e);
+				document.querySelector('.voice-container').children[0].classList.add('hidden');
+				document.querySelector('.voice-container').children[1].classList.remove('hidden'); 
+				document.querySelector('.voice-time').innerText = voiceTime;
+				document.querySelector('input[name=voice_time]').value = voiceTime;
+				document.querySelector('input[name=voice]').value = e;
+				voiceUpload(e);
 			}, function(e) {
 				message("Audio record failed: " + e.message);
 			});
 		}
-		
+
 		//结束录音
 		function stopRecord() {
-			r.stop();
 			clearInterval(timer);
+			r.stop();
 		}
-		
+
+		//播放录音
+		function playRecord(path) {
+			play = plus.audio.createPlayer('https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3');
+			play.play(function() {
+				document.querySelector('.play').src = '../image/bofang.png';
+			}, function(e) {
+				message("Audio play error: " + e.message);
+			});
+		}
+
 		//文件上传
-		function voiceUpload(file, cb) {
-			var waiting = plus.nativeUI.showWaiting('音频上传中...');
+		function voiceUpload(file) {
 			var task = plus.uploader.createUpload($voiceUrl, {
 					method: "POST",
 					blocksize: 614400,
@@ -802,20 +819,19 @@
 					if (status == 200) {
 						var res = JSON.parse(t.responseText);
 						if (res.error) {
-							plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+							// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 						} else {
-							cb(res);
-							waiting.close();
+							document.querySelector('input[name=voice]').value = res.data.path;
 						}
 					} else {
 						console.log("上传失败：" + status);
-						plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
+						// plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
 					}
 				}
 			);
 			// 页面中要上传的 图片路径
 			task.addFile(file, {
-				key: 'file'
+				key: 'upfile'
 			});
 			task.start();
 		}
