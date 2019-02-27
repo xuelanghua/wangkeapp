@@ -238,6 +238,7 @@
 			}
 			
 			.picture_display_chear {
+				position: relative;
 				/* width: 80px; */
 				width: 5.53rem;
 				/* height: 80px; */
@@ -248,6 +249,23 @@
 				/* padding-bottom: 10px; */
 				/* background-color: #DDDDDD; */
 			}
+			
+			.mui-close {
+				position: absolute!important;
+				top: -8px;
+				right: -8px;
+				display: block;
+				width: 20px;
+				height: 20px;
+				line-height: 18px;
+				background-color: #F00;
+				border-radius: 50%;
+				color: #FFF;
+				text-align: center;
+				z-index: 9;
+			}
+			
+			
 			.picture_display_chear img {
 				width: 100%;
 				height: 100%;
@@ -291,6 +309,155 @@
 			}
 			.hidden {
 				display: none!important;
+			}
+			
+			/* 图片预览 */
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
 			}
 		</style>
 	</head>
@@ -483,7 +650,10 @@
 		</div>
 	</body>
 	<script src="../js/mui.js"></script>
+	<script src="../js/mui.zoom.js"></script>
+	<script src="../js/mui.previewimage.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/upload.js"></script>
 	<script type="text/javascript">
 		mui.init({
 			swipeBack: true,
@@ -498,10 +668,14 @@
 		var timer = null;
 		var r = null;
 		var play = null;
+		var imageId = 0;
+		var images = new Array();
+		var submitFlag = true;
 		mui.plusReady(function() {
 			userInfo = getUserInfo();
 			getMemberInfo();
 			eventInit();
+			mui.previewImage();
 		})
 
 		//事件初始化
@@ -509,8 +683,9 @@
 			window.addEventListener('cropperSuccess', function(event) {
 				mui.each(document.getElementsByClassName('member-avatar'), function(index, item) {
 					item.src = event.detail.image;
+					console.log(event.detail.image);
+					document.querySelector('input[name=avatar]').value = event.detail.image;
 				})
-
 				document.querySelector('input[name=avatar]').value = event.detail.image;
 			})
 			mui('.style_chart').on('tap', 'span', function() {
@@ -548,7 +723,7 @@
 							getImage(); //拍照
 							break;
 						case 2:
-							galleryImg(); //相册选择
+							galleryImage(); //相册选择
 							break;
 					}
 				});
@@ -636,6 +811,55 @@
 					document.querySelector('.play').src = '../image/bofang.png';
 				}, voiceTime*1000)
 			})
+			
+			//上传图片
+			document.getElementById('add_pic').addEventListener('tap', function() {
+				imageUpload(function(res) {
+					images[imageId] = res.url;
+					imageId++;
+					var newImgDiv = document.createElement('div');
+					newImgDiv.setAttribute('data-id', imageId);
+					newImgDiv.classList.add('picture_display_chear');
+					var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					newImgDiv.innerHTML = html;
+					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+// 					for (var j in images) {
+// 						console.log(j);
+// 						console.log(images[j]);
+// 					}
+				});
+			})
+			
+			//删除图片
+			mui('#pic-container').on('tap', '.mui-close', function() {
+				var parentDiv = this.parentElement;
+				var imgId = parentDiv.dataset.id;
+				parentDiv.remove();
+				delete images[imgId];
+			})
+			
+			//提交表单
+			document.getElementById('submit').addEventListener('tap', function() {
+				var submitData = {
+					avatar: document.querySelector('input[name=avatar]').value,
+					name: document.querySelector('input[name=name]').value,
+					job: document.querySelector('input[name=job]').value,
+					phone: document.querySelector('input[name=phone]').value,
+					wechat: document.querySelector('input[name=wechat]').value,
+					telephone: document.querySelector('input[name=telephone]').value,
+					email: document.querySelector('input[name=email]').value,
+					company: document.querySelector('input[name=company]').value,
+					company_address: document.querySelector('input[name=company_address]').value,
+					desc: document.querySelector('textarea[name=desc]').value,
+					voice: document.querySelector('input[name=voice]').value,
+					voice_time: voiceTime,
+					images: images.filter(function(e) {return e != null}).join(','),
+					card_type: cardType,
+					my_url: '',
+					token: userInfo.token
+				};
+				doSumbit(submitData);
+			})
 		}
 
 		//获取会员信息
@@ -656,23 +880,25 @@
 						fnCloseWin('card_setting');
 					}, 2000);
 				}
-				plus.nativeUI.closeWaiting();
+				setTimeout(function() {
+					plus.nativeUI.closeWaiting();
+				}, 1000)
 			}, 'json')
 		}
 
 		//加载会员信息
 		function loadInfo(data) {
 			if (data.card_type == 'cardType1') {
-				document.querySelector('.style_chart span:first-child').classList.add('selected');
+				document.querySelector('.style_chart span:first-child img').classList.add('selected');
+				document.querySelector('.style_chart span:last-child img').classList.remove('selected');
 				document.getElementById('vertical').style.display = 'block';
 				document.getElementById('horizontal').style.display = 'none';
-				document.querySelector('.style_chart span:last-child img').classList.remove('selected');
 				cardType = 'cardType1';
 			} else {
-				document.querySelector('.style_chart span:last-child').classList.add('selected');
+				document.querySelector('.style_chart span:last-child img').classList.add('selected');
+				document.querySelector('.style_chart span:first-child img').classList.remove('selected');
 				document.getElementById('horizontal').style.display = 'block';
 				document.getElementById('vertical').style.display = 'none';
-				document.querySelector('.style_chart span:first-child img').classList.remove('selected');
 				cardType = 'cardType2';
 			}
 			if (data.avatar.length != 0) {
@@ -707,21 +933,33 @@
 			}
 
 			for (var attr in data) {
-				if (data[attr].length != 0 && (attr == 'name' || attr == 'job' || attr == 'phone' || attr == 'wechat' || attr ==
+				if (data[attr].length != 0 && (attr == 'avatar' || attr == 'name' || attr == 'job' || attr == 'phone' || attr == 'wechat' || attr ==
 						'telephone' || attr == 'email' || attr == 'company' || attr == 'company_address')) {
 					document.querySelector('input[name=' + attr + ']').value = data[attr];
 				} else if (data[attr].length != 0 && attr == 'desc2') {
 					document.querySelector('textarea[name=desc]').value = data[attr];
 				}
 			}
+			
+			if (data.voice.length != 0) {
+				document.querySelector('.voice-container').children[0].classList.add('hidden');
+				document.querySelector('.voice-container').children[1].classList.remove('hidden'); 
+				document.querySelector('.voice-time').innerText = data.voice_time;
+				document.querySelector('input[name=voice_time]').value = data.voice_time;
+				document.querySelector('input[name=voice]').value = data.voice;
+				voiceTime = data.voice_time;
+			}
 
 			if (data.images.length != 0) {
+				images = data.images;
 				for (var i in data['images']) {
 					var newDiv = document.createElement('div');
+					newDiv.setAttribute('data-id', i);
 					newDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + data.images[i] + '" />';
+					var html = '<img src="' + data.images[i] + '" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 					newDiv.innerHTML = html;
 					document.getElementById('pic-container').insertBefore(newDiv, document.getElementById('add_pic'));
+					imageId++;
 				}
 			}
 		}
@@ -745,7 +983,7 @@
 		}
 
 		// 从相册中选择图片 
-		function galleryImg(cb) {
+		function galleryImage(cb) {
 			// 从相册中选择图片
 			plus.gallery.pick(function(e) {
 				cropperImg(e, 'card_setting');
@@ -834,6 +1072,37 @@
 				key: 'upfile'
 			});
 			task.start();
+		}
+		
+		//提交数据
+		function doSumbit(data) {
+			if (!submitFlag) return;
+			submitFlag = false;
+			plus.nativeUI.showWaiting('数据处理中...');
+			mui.post($ajaxUrl + 'staff&action=cardEdit', data, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					message('修改成功!');
+					submitFlag = true;
+					setTimeout(function() {
+						fnCloseWin('card_setting');
+					}, 2000)
+				} else {
+					message('修改失败!');
+					submitFlag = true;
+				}
+				plus.nativeUI.closeWaiting();
+			}, 'json')
+		}
+		
+		//图片转base64
+		function canvasGen(image) {
+			var canvas = document.createElement('canvas');
+			canvas.width = image.width;
+			canvas.height = image.height;
+			var ctx = canvas.getContext('2d');
+			ctx.drawImage(image, 0, 0, image.width, image.height);
+			var data = canvas.toDataUrl("image/jpeg", 1);
 		}
 	</script>
 	</script>

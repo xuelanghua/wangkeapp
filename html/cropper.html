@@ -84,8 +84,12 @@
 						height: 750
 					})
 					var imgUrl = dataURL.toDataURL("image/png", 1);
-					mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {image: imgUrl});
-					fnCloseWin('cropper');
+					base64ToImage(imgUrl, 10, function(e) {
+						uploadFile(e.target);
+						// console.log(JSON.stringify(e));
+					});
+					// mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {image: imgUrl});
+					// fnCloseWin('cropper');
 				});
 
 				document.getElementById('cancel').addEventListener('tap', function() {
@@ -173,8 +177,8 @@
 							if (res.error) {
 								plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 							} else {
-								console.log(JSON.stringify(res));
-								cb(res);
+								mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {image: res.path});
+								fnCloseWin('cropper');
 								waiting.close();
 							}
 						} else {
@@ -203,6 +207,27 @@
 				}
 				return new Blob([ia], {
 					type: mimeString
+				});
+			}
+			
+			//base64转本地图片
+			function base64ToImage(base64, quality, callback) {
+				quality = quality || 10;
+				var bitmap = new plus.nativeObj.Bitmap();
+				// 从本地加载Bitmap图片
+				bitmap.loadBase64Data(base64, function() {
+					//    console.log('加载图片成功');
+					bitmap.save("_doc/avatar_" + Math.ceil(Math.random()*100) + ".jpg", {
+						overwrite: true,
+						quality: quality
+					}, function(e) {
+						// console.log(e);
+						callback(e);
+					}, function(e) {
+						console.log('保存图片失败：' + JSON.stringify(e));
+					});
+				}, function(e) {
+					console.log('加载图片失败：' + JSON.stringify(e));
 				});
 			}
 		</script>
