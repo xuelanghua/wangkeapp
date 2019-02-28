@@ -509,6 +509,34 @@
 			mui.plusReady(function() {
 				userInfo = getUserInfo();
 				pageInit();
+				
+				document.getElementById('label_edit').addEventListener('tap', function() {
+					console.log(11111);
+				})
+				
+				document.querySelector('#customer_edit').addEventListener('tap', function() {
+					if (currentTab == 'friend') {
+						// fnOpenWin('')
+					} else {
+						fnOpenWin('customer_entry.html', 'customer_entry', {statusbar: {background: '#FFFFFF'}}, '', 'slide-in-right');
+						plus.navigator.setStatusBarStyle('dark');
+					}
+				})
+				
+				window.addEventListener('addInterval', function(e) {
+					console.log('addInterval');
+					timeInterval();
+				})
+				
+				window.addEventListener('clearInterval', function(e) {
+					console.log('claerInterval');
+					clearTimeInterval();
+				})
+				
+				window.addEventListener('loginSuccess', function(e) {
+					console.log('loginSuccess');
+					getCustomerList();
+				})
 			})
 
 			function indexInit() {
@@ -519,7 +547,7 @@
 			}
 
 			function pageInit() {
-				setTimeout('getCustomerList()', 20000);
+				// setTimeout('getCustomerList()', 20000);
 				// localStorage.removeItem('customer');
 				customer_data = JSON.parse(localStorage.getItem('customer'));
 				if (!customer_data) {
@@ -536,21 +564,6 @@
 			}
 			
 			function eventInit() {
-				window.addEventListener('addInterval', function(e) {
-					console.log('addInterval');
-					timeInterval();
-				})
-				
-				window.addEventListener('clearInterval', function(e) {
-					console.log('claerInterval');
-					clearTimeInterval();
-				})
-				
-				window.addEventListener('loginSuccess', function(e) {
-					console.log('loginSuccess');
-					getCustomerList();
-				})
-				
 				mui('.switch1').on('tap', '.switch1_content', function() {
 					var id = this.dataset.id;
 					if (id == currentTab) return;
@@ -635,19 +648,6 @@
 					var uid = this.dataset.id;
 					var type = this.dataset.type;
 					fnOpenWin('customer_detail.html', 'customer_detail', {statusbar: {background: '#2289FF'}}, {uid: uid}, 'slide-in-right');
-				})
-				
-				document.getElementById('label_edit').addEventListener('tap', function() {
-					console.log(11111);
-				})
-				
-				document.querySelector('#customer_edit').addEventListener('tap', function() {
-					if (currentTab == 'friend') {
-						// fnOpenWin('')
-					} else {
-						fnOpenWin('customer_entry.html', 'customer_entry', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
-						plus.navigator.setStatusBarStyle('dark');
-					}
 				})
 			}
 
