@@ -16,7 +16,7 @@ function imageUpload(cb) {
 				case 0:
 					break;
 				case 1:
-					getImage(cb); /*拍照*/
+					getImg(cb); /*拍照*/
 					break;
 				case 2:
 					galleryImg(cb); /*打开相册*/
@@ -29,7 +29,7 @@ function imageUpload(cb) {
 }
 
 // 拍照获取图片
-function getImage(cb) {
+function getImg(cb) {
 	var camera = plus.camera.getCamera();
 	camera.captureImage(function(e) {
 		plus.io.resolveLocalFileSystemURL(e, function(entry) {
@@ -112,3 +112,4 @@ function imageResize(src, cb) {
 		plus.nativeUI.alert('处理出错!', '', '提示', 'OK');
 	})
 }
+

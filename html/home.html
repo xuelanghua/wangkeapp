@@ -355,6 +355,43 @@
 				line-height: 32px;
 				text-indent: 30px;
 			}
+			
+			/* 快捷弹窗 */
+			.mui-popover .mui-popover-arrow:after{
+				width: 0;
+			}
+			.mui-popover{
+				margin-left: 60%;
+				margin-top: 40px;
+			}
+			
+			.Pop-up-menu{
+				width: 128px;
+				float: right;
+				margin-right: 22px;
+				border-radius: 5px;
+				background-color: #4c4c4c;
+			}
+			.Pop-up-menu li{
+				padding: 15px 0 10px 0;
+				margin-left: 10px;
+				border-bottom: 1px solid #6a6a6a;
+			}
+			.Pop-up-menu li img{
+				width: 17px;
+				height: 16px;
+				float: left;
+			}
+			.Pop-up-menu li span{
+				margin-left: 18px;
+				font-size: 15px;
+				margin-top: -2px;
+				float: left;
+			}
+			
+			.mui-backdrop {
+				background-color: transparent!important;
+			}
 		</style>
 	</head>
 	<body>
@@ -362,7 +399,9 @@
 			<header class="mui-bar mui-bar-nav" style="height:120px; background-color: #fff;box-shadow: 0 0 0 #fff;">
 				<img src="../image/index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;">
 				<h1 class="mui-title">旺客</h1>
-				<img src="../image/index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;">
+				<a href="#popover" id="openPopover">
+					<img src="../image/index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;margin-right: 10px;">
+				</a>
 				<div class="titlecontent">
 					<div class="titlecontentL">
 						<li id="scan">
@@ -477,6 +516,26 @@
 				<a id="qrcode_setting" style="float: left;margin-left: 45%;">设置 ></a>
 				<img id="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;float: left;margin-top: 50px;margin-left: 45%;">
 				<div class="clearfix"></div>
+			</div>
+		</div>
+		
+		<div id="popover" class="mui-popover">
+			<div class="Pop-up-menu">
+				<li>
+					<img src="../image/share.png" >
+					<span>分享</span>
+					<div class="clearfix"></div>
+				</li>
+				<li>
+					<img src="../image/receipt.png" style="height: 17px;" >
+					<span>收款码</span>
+					<div class="clearfix"></div>
+				</li>
+				<li style="border-bottom: none;">
+					<img src="../image/scan.png" >
+					<span>扫一扫</span>
+					<div class="clearfix"></div>
+				</li>
 			</div>
 		</div>
 	</body>
@@ -613,7 +672,6 @@
 				//timeout: 10000,
 				success: function(data) {
 					if(data.status == "success") {
-						//console.log(JSON.stringify(data));
 						document.getElementById('city').innerHTML = data.results[0].currentCity;
 						document.getElementById('temperature').innerHTML = data.results[0].weather_data[0].temperature;
 						document.getElementById('weather').innerHTML = data.results[0].weather_data[0].weather;
@@ -624,20 +682,22 @@
 								str += '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div>';
 							} else if (weather.indexOf("雨") != -1) {
 								str += '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>';
+							} else if (weather.indexOf('雪') != -1) {
+								str += '<div class="icon flurries"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="snow"><div class="flake"></div></div>';
 							} else {
 								str += '<div class="icon sun-shower"><div class="sun"><div class="rays"></div></div></div>';
 							}
-						} else {
-							if (weather.indexOf("云") != -1) {
-								if (weather.indexOf("雨") != -1) {
-									str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
-								} else {
-									str += '<div class="icon cloudy"><div class="cloud">< /div><div class="cloud"></div></div>';
-								}
+						} else if (weather.indexOf("云") != -1) {
+							if (weather.indexOf("雨") != -1) {
+								str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
+							} else {
+								str += '<div class="icon cloudy"><div class="cloud">< /div><div class="cloud"></div></div>';
 							}
-							if (weather.indexOf("雪") != -1) {
-								str += '<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
-							}
+						} else if (weather.indexOf("雨") != -1) {
+							str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
+							// str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
+						} else if (weather.indexOf("雪") != -1) {
+							str += '<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
 						}
 						document.getElementById('weather_img').innerHTML = str;
 					}

@@ -1,5 +1,7 @@
-$ajaxUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=entry&m=longbing_card&do=';	//服务器数据请求接口
-$uploadUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=utility&a=file&do=upload&type=image&thumb=0';	//图片上传接口
+$ajaxUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=entry&m=longbing_card&do='; //服务器数据请求接口
+$uploadUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=utility&a=file&do=upload&type=image&thumb=0'; //图片上传接口
+// $voiceUrl = 'https://wangke.ynhost.cn/web/index.php?c=utility&a=file&do=upload&upload_type=voice&uniacid=2'; //音频上传接口
+$voiceUrl = 'https://wangke.ynhost.cn/app/index.php?i=2&c=entry&m=longbing_card&do=upload'; //音频上传接口
 
 //获取用户信息
 var getUserInfo = function() {
@@ -53,7 +55,7 @@ function fnCloseWin(id) {
 //toast消息
 function message(text) {
 	plus.nativeUI.toast(text);
-	
+
 }
 
 //判断两个数据是否相等
@@ -117,6 +119,20 @@ function isEqual(a, b) {
 	}
 }
 
+//打印日志
 function logs(data) {
 	console.log(JSON.stringify(data));
+}
+
+
+//打开裁剪窗口
+function cropperImg(img, id) {
+	fnOpenWin('cropper.html', 'cropper', {
+		statusbar: {
+			background: '#000'
+		}
+	}, {
+		image: img,
+		wid: id
+	}, '');
 }

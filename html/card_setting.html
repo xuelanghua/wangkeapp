@@ -45,7 +45,7 @@
 			}
 			.tu_chart{
 				position: absolute;
-				width: 60%;
+				width: 55%;
 				height: 190px;
 				left: 15px;
 			}
@@ -54,7 +54,7 @@
 				height: 190px;
 			}
 			.transverse_title_header_right{
-				width: 55%;
+				width: 50%;
 				height: 190px;
 			}
 			.transverse_title_header_right img{
@@ -129,7 +129,7 @@
 				background-color: #FFFFFF;
 			}
 			.head_portrait{
-				padding: 10px 0;
+				padding: 10px 8px;
 				font-size: 14px;
 				border-bottom: 1px solid #F2F2F2;
 			}
@@ -150,6 +150,7 @@
 				color: #C5C4C9;
 			}
 			input[type='text']{
+				width: 250px; 
 				margin-bottom: 0;
 				padding: 5px;
 				font-size: 14px;
@@ -209,8 +210,8 @@
 				background-color: #FFFFFF;
 			}
 			.play{
-				width: 15px;
-				margin-left: 15px;
+				width: 25px;
+				margin-left: 10px;
 			}
 			.hold_down{
 				width: 70%;
@@ -237,19 +238,38 @@
 				justify-content: flex-start;
 			}
 			
-			.picture_display_chear{
+			.picture_display_chear {
+				position: relative;
 				/* width: 80px; */
-				width: 5.532rem;
+				width: 5.53rem;
 				/* height: 80px; */
-				height: 5.532rem;
+				height: 5.53rem;
 				margin-right: 10px;
 				margin-bottom: 10px;
-				padding: 20px;
-				padding-bottom: 10px;
-				background-color: #DDDDDD;
+				/* padding: 20px; */
+				/* padding-bottom: 10px; */
+				/* background-color: #DDDDDD; */
 			}
-			.picture_display_chear img{
+			
+			.mui-close {
+				position: absolute!important;
+				top: -8px;
+				right: -8px;
+				display: block;
+				width: 20px;
+				height: 20px;
+				line-height: 18px;
+				background-color: #F00;
+				border-radius: 50%;
+				color: #FFF;
+				text-align: center;
+				z-index: 9;
+			}
+			
+			
+			.picture_display_chear img {
 				width: 100%;
+				height: 100%;
 			}
 			
 			.preservation{
@@ -282,6 +302,164 @@
 				display: block;
 				margin: 0 auto;
 			}
+			
+			button:enabled:active
+			{
+				color: #fff;
+				background-color: #2798FE!important;
+			}
+			.hidden {
+				display: none!important;
+			}
+			
+			/* 图片预览 */
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
 		</style>
 	</head>
 
@@ -296,12 +474,12 @@
 				<!-- 名片样式竖 -->
 				<div class="title_header" id="vertical">
 					<div class="title_chart">
-						<img src="../image/bj.jpg">
+						<img class="member-avatar" src="../image/user_default.jpg">
 					</div>
 					<div class="news">
-						<h4>暂未填写</h4>
-						<p>首席服务官</p>
-						<p>云南万贤科技有限公司</p>
+						<h4 class="member-name">暂未填写</h4>
+						<p class="member-job">暂未填写</p>
+						<p class="member-company">暂未填写</p>
 					</div>
 				</div>
 
@@ -309,11 +487,11 @@
 				<div class="transverse_title_header" id="horizontal">
 					<img class="tu_chart" src="../image/position_ditu.png">
 					<div class="transverse_title_header_left mui-pull-left">
-						<div class="company">暂未填写</div>
+						<div class="company member-company">暂未填写</div>
 						<div class="position">
 							<div style="margin: 2px 0 0 0.625rem;">
-								<div class="weitianx">暂未填写</div>
-								<div style="margin-top: -4px;">首席服务官</div>
+								<div class="weitianx member-name">暂未填写</div>
+								<div style="margin-top: -4px;" class="member-job">暂未填写</div>
 							</div>
 						</div>
 						<div class="transverse_title_header_news">
@@ -321,31 +499,31 @@
 								<div class="news1_chart mui-pull-left">
 									<img src="../image/bosi1.png">
 								</div>
-								<div class="mui-pull-left">暂未填写</div>
+								<div class="mui-pull-left member-phone">暂未填写</div>
 								<div class="clearfix"></div>
 							</div>
 							<div class="title_header_news1">
 								<div class="news1_chart mui-pull-left">
 									<img src="../image/bosi2.png">
 								</div>
-								<div class="mui-pull-left">暂未填写</div>
+								<div class="mui-pull-left member-email">暂未填写</div>
 								<div class="clearfix"></div>
 							</div>
 							<div class="title_header_news1">
 								<div class="news1_chart mui-pull-left">
 									<img src="../image/bosi3.png">
 								</div>
-								<div class="mui-pull-left">暂未填写</div>
+								<div class="mui-pull-left  member-company-address">暂未填写</div>
 								<div class="clearfix"></div>
 							</div>
 						</div>
 					</div>
 					<div class="transverse_title_header_right mui-pull-right">
-						<img src="../image/bj.jpg">
+						<img class="member-avatar" src="../image/user_default.jpg">
 					</div>
 					<div class="clearfix"></div>
 				</div>
-				
+
 				<div class="style">名片样式</div>
 				<div class="style_chart">
 					<span data-style="vertical">
@@ -356,14 +534,14 @@
 					</span>
 				</div>
 			</div>
-
 			<div class="information">
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">头像</div>
 					<div class="mui-pull-right" id="headimgurl">
 						<div class="head_portrait_chart mui-pull-left">
-							<img src="../image/bj.jpg">
+							<img class="member-avatar" src="../image/sound_recording_chart.png">
 						</div>
+						<input type="hidden" name="avatar" value="">
 						<div class="mui-icon mui-icon-forward mui-pull-right icon"></div>
 					</div>
 					<div class="clearfix"></div>
@@ -371,14 +549,14 @@
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">姓名</div>
 					<div class="mui-pull-right">
-						<input type="text" placeholder="暂未填写" />
+						<input type="text" name="name" value="" placeholder="暂未填写" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">职位</div>
 					<div class="mui-pull-right">
-						<input type="text" placeholder="暂未填写" />
+						<input type="text" name="job" value="" placeholder="暂未填写" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -388,35 +566,42 @@
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">手机号</div>
 					<div class="mui-pull-right">
-						<input type="text" placeholder="暂未填写" />
+						<input type="text" name="phone" value="" placeholder="暂未填写" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">微信号</div>
 					<div class="mui-pull-right">
-						<input type="text" placeholder="暂未填写" />
+						<input type="text" name="wechat" value="" placeholder="暂未填写" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">座机号</div>
 					<div class="mui-pull-right">
-						<input type="text" placeholder="暂未填写" />
+						<input type="text" name="telephone" value="" placeholder="暂未填写" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">邮箱</div>
 					<div class="mui-pull-right">
-						<input type="text" placeholder="暂未填写" />
+						<input type="text" name="email" value="" placeholder="暂未填写" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">公司</div>
 					<div class="mui-pull-right">
-						<input type="text" placeholder="暂未填写" />
+						<input type="text" name="company" value="" placeholder="暂未填写" />
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="head_portrait">
+					<div class="mui-pull-left head_portrait_name">公司地址</div>
+					<div class="mui-pull-right">
+						<input type="text" name="company_address" value="" placeholder="暂未填写" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -425,50 +610,85 @@
 			<div class="personality">
 				<div class="personality_title">个性签名</div>
 				<div class="mui-input-row" style="margin: 10px 5px;">
-					<textarea id="textarea" rows="3" placeholder="多行文本框"></textarea>
+					<textarea id="textarea" rows="3" name="desc" placeholder="个性签名"></textarea>
 				</div>
 				<div class="sound_recording">
 					<div>
 						<div class="mui-pull-left sound_recording_chart">
-							<img src="../image/sound_recording_chart.png">
+							<img src="../image/sound_recording_chart.png" style="border-radius: 50%;" class="member-avatar">
 						</div>
-						<div class="sound_recording_content mui-pull-left">
-							<div class="horn"></div>
-							<p class="mui-pull-right" style="margin-right: 0.625rem;">9</p>
-							<img class="play" src="../image/pofang.png">
+						<div class="voice-container">
+							<div class="sound_recording_content mui-pull-left" style="background-color: rgba(0, 0, 0, 0);">暂未录音</div>
+							<div class="sound_recording_content mui-pull-left hidden">
+								<div class="horn"></div>
+								<p class="mui-pull-right voice-time" style="margin-right: 0.625rem;">9</p>
+								<img class="play" src="../image/bofang.png">
+								<input type="hidden" name="voice" value="">
+								<input type="hidden" name="voice_time" value="">
+							</div>
 						</div>
 						<div class="clearfix"></div>
 					</div>
-					<button id="touchArea" class="hold_down">开始录音 按住说话</button>
+					<button id="voice_record" class="hold_down">开始录音 按住说话</button>
 				</div>
-			</div>
-			
-			<div class="showArea">
-				<img src="../image/luyin.gif">
-				<div>松开结束录音</div>
 			</div>
 
 			<div class="picture_display">
 				<div class="personality_title">图片展示</div>
 				<div id="pic-container">
-					<div class="picture_display_chear">
-						<img src="../image/Add-Icon.png">
+					<div class="picture_display_chear" id="add_pic">
+						<img src="../image/add.png">
 					</div>
+					<input type="hidden" name="images" />
 				</div>
 			</div>
-			
-			<button class="preservation">保存</button>
-		</div>
+			<button type="submit" class="preservation" id="submit">保存</button>
 
+			<div class="showArea">
+				<img src="../image/luyin.gif">
+				<div>松开结束录音</div>
+			</div>
+		</div>
 	</body>
 	<script src="../js/mui.js"></script>
+	<script src="../js/mui.zoom.js"></script>
+	<script src="../js/mui.previewimage.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/upload.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			swipeBack: true
+			swipeBack: true,
+			gestureConfig: {
+				hold: true, //默认为false，不监听
+				release: true //默认为false，不监听
+			}
 		})
-		
-		mui.plusReady(function () {
+
+		var cardType = 'cardType1';
+		var voiceTime = 0;
+		var timer = null;
+		var r = null;
+		var play = null;
+		var imageId = 0;
+		var images = new Array();
+		var submitFlag = true;
+		mui.plusReady(function() {
+			userInfo = getUserInfo();
+			getMemberInfo();
+			eventInit();
+			mui.previewImage();
+		})
+
+		//事件初始化
+		function eventInit() {
+			window.addEventListener('cropperSuccess', function(event) {
+				mui.each(document.getElementsByClassName('member-avatar'), function(index, item) {
+					item.src = event.detail.image;
+					console.log(event.detail.image);
+					document.querySelector('input[name=avatar]').value = event.detail.image;
+				})
+				document.querySelector('input[name=avatar]').value = event.detail.image;
+			})
 			mui('.style_chart').on('tap', 'span', function() {
 				var style = this.dataset.style;
 				this.children[0].classList.add('selected');
@@ -476,18 +696,415 @@
 				if (style == 'horizontal') {
 					document.querySelector('.style_chart span:first-child img').classList.remove('selected');
 					document.getElementById('vertical').style.display = 'none';
+					cardType = 'cardType2';
 				} else {
 					document.getElementById('horizontal').style.display = 'none';
 					document.querySelector('.style_chart span:last-child img').classList.remove('selected');
+					cardType = 'cardType1';
 				}
 			})
-		    document.getElementById('headimgurl').addEventListener('tap', function() {
-				fnOpenWin('cropper.html', 'cropper', {statusbar: {background: '#000'}}, '', '');
+
+			document.getElementById("headimgurl").addEventListener("tap", function() {
+				var editButtons = new Array();
+				editButtons.push({
+					title: "拍照上传",
+					style: "default"
+				});
+				editButtons.push({
+					title: "从相册选择",
+					style: "default"
+				});
+				plus.nativeUI.actionSheet({
+					cancel: "取消",
+					buttons: editButtons
+				}, function(e) {
+					var index = e.index;
+					switch (index) {
+						case 1:
+							getImage(); //拍照
+							break;
+						case 2:
+							galleryImage(); //相册选择
+							break;
+					}
+				});
+			});
+
+			//输入框change事件
+			document.querySelector('input[name=name]').addEventListener('change', function(e) {
+				e.preventDefault();
+				var content = this.value;
+				mui.each(document.getElementsByClassName('member-name'), function(index, item) {
+					if (content.length != 0) {
+						item.innerHTML = content;
+					} else {
+						item.innerHTML = '暂未填写';
+					}
+				})
 			})
-		})
-		
-		function getUserInfo() {
+
+			document.querySelector('input[name=job]').addEventListener('change', function() {
+				var content = this.value;
+				mui.each(document.getElementsByClassName('member-job'), function(index, item) {
+					if (content.length != 0) {
+						item.innerHTML = content;
+					} else {
+						item.innerHTML = '暂未填写';
+					}
+				})
+			})
+
+			document.querySelector('input[name=company]').addEventListener('change', function() {
+				var content = this.value;
+				mui.each(document.getElementsByClassName('member-company'), function(index, item) {
+					if (content.length != 0) {
+						item.innerHTML = content;
+					} else {
+						item.innerHTML = '暂未填写';
+					}
+				})
+			})
+
+			document.querySelector('input[name=phone]').addEventListener('change', function() {
+				if (this.value.length != 0) {
+					document.querySelector('.member-phone').innerText = this.value;
+				} else {
+					document.querySelector('.member-phone').innerText = '暂未填写';
+				}
+			})
+			document.querySelector('input[name=email]').addEventListener('change', function() {
+				if (this.value.length != 0) {
+					document.querySelector('.member-email').innerText = this.value;
+				} else {
+					document.querySelector('.member-email').innerText = '暂未填写';
+				}
+			})
+			document.querySelector('input[name=company_address]').addEventListener('change', function() {
+				if (this.value.length != 0) {
+					document.querySelector('.member-company-address').innerText = this.value;
+				} else {
+					document.querySelector('.member-company-address').innerText = '暂未填写';
+				}
+			})
+
+			//按住录音
+			document.getElementById('voice_record').addEventListener('hold', function() {
+				document.querySelector('.showArea').style.display = 'block';
+				voiceTime = 0;
+				startRecord();
+			})
 			
+			//结束录音
+			document.getElementById('voice_record').addEventListener('release', function() {
+				document.querySelector('.showArea').style.display = 'none';
+				setTimeout('stopRecord()', 2000);
+			})
+			
+			//播放录音
+			document.querySelector('.play').addEventListener('tap', function() {
+				document.querySelector('.play').src = '../image/play.gif';
+				var voice = document.querySelector('input[name=voice]').value;
+				var audio = document.createElement("audio");  
+				audio.src = voice; 
+				audio.play();
+				console.log('voiceTime=' + voiceTime);
+				setTimeout(function() {
+					document.querySelector('.play').src = '../image/bofang.png';
+				}, voiceTime*1000)
+			})
+			
+			//上传图片
+			document.getElementById('add_pic').addEventListener('tap', function() {
+				imageUpload(function(res) {
+					images[imageId] = res.url;
+					imageId++;
+					var newImgDiv = document.createElement('div');
+					newImgDiv.setAttribute('data-id', imageId);
+					newImgDiv.classList.add('picture_display_chear');
+					var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					newImgDiv.innerHTML = html;
+					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+// 					for (var j in images) {
+// 						console.log(j);
+// 						console.log(images[j]);
+// 					}
+				});
+			})
+			
+			//删除图片
+			mui('#pic-container').on('tap', '.mui-close', function() {
+				var parentDiv = this.parentElement;
+				var imgId = parentDiv.dataset.id;
+				parentDiv.remove();
+				delete images[imgId];
+			})
+			
+			//提交表单
+			document.getElementById('submit').addEventListener('tap', function() {
+				var submitData = {
+					avatar: document.querySelector('input[name=avatar]').value,
+					name: document.querySelector('input[name=name]').value,
+					job: document.querySelector('input[name=job]').value,
+					phone: document.querySelector('input[name=phone]').value,
+					wechat: document.querySelector('input[name=wechat]').value,
+					telephone: document.querySelector('input[name=telephone]').value,
+					email: document.querySelector('input[name=email]').value,
+					company: document.querySelector('input[name=company]').value,
+					company_address: document.querySelector('input[name=company_address]').value,
+					desc: document.querySelector('textarea[name=desc]').value,
+					voice: document.querySelector('input[name=voice]').value,
+					voice_time: voiceTime,
+					images: images.filter(function(e) {return e != null}).join(','),
+					card_type: cardType,
+					my_url: '',
+					token: userInfo.token
+				};
+				doSumbit(submitData);
+			})
+		}
+
+		//获取会员信息
+		function getMemberInfo() {
+			if (!userInfo) {
+				message('用户信息不存在,请重新登录!');
+				setTimeout(function() {
+					fnCloseWin('card_setting');
+				}, 2000);
+			}
+			plus.nativeUI.showWaiting();
+			mui.get($ajaxUrl + 'staff&action=card&token=' + userInfo.token, function(res) {
+				if (res.errno == 0) {
+					loadInfo(res.data);
+				} 
+// 				else {
+// 					message(res.message);
+// 					setTimeout(function() {
+// 						fnCloseWin('card_setting');
+// 					}, 2000);
+// 				}
+				setTimeout(function() {
+					plus.nativeUI.closeWaiting();
+				}, 1000)
+			}, 'json')
+		}
+
+		//加载会员信息
+		function loadInfo(data) {
+			if (data.card_type == 'cardType1') {
+				document.querySelector('.style_chart span:first-child img').classList.add('selected');
+				document.querySelector('.style_chart span:last-child img').classList.remove('selected');
+				document.getElementById('vertical').style.display = 'block';
+				document.getElementById('horizontal').style.display = 'none';
+				cardType = 'cardType1';
+			} else {
+				document.querySelector('.style_chart span:last-child img').classList.add('selected');
+				document.querySelector('.style_chart span:first-child img').classList.remove('selected');
+				document.getElementById('horizontal').style.display = 'block';
+				document.getElementById('vertical').style.display = 'none';
+				cardType = 'cardType2';
+			}
+			if (data.avatar.length != 0) {
+				mui.each(document.getElementsByClassName('member-avatar'), function(index, item) {
+					item.src = data.avatar;
+				})
+			}
+			if (data.name.length != 0) {
+				mui.each(document.getElementsByClassName('member-name'), function(index, item) {
+					item.innerHTML = data.name;
+				})
+			}
+			if (data.job.length != 0) {
+				mui.each(document.getElementsByClassName('member-job'), function(index, item) {
+					item.innerHTML = data.job;
+				})
+			}
+			if (data.company.length != 0) {
+				mui.each(document.getElementsByClassName('member-company'), function(index, item) {
+					item.innerHTML = data.company;
+				})
+			}
+
+			if (data.phone.length != 0) {
+				document.querySelector('.member-phone').innerHTML = data.phone;
+			}
+			if (data.email.length != 0) {
+				document.querySelector('.member-email').innerHTML = data.email;
+			}
+			if (data.company_address.length != 0) {
+				document.querySelector('.member-company-address').innerHTML = data.company_address;
+			}
+
+			for (var attr in data) {
+				if (data[attr].length != 0 && (attr == 'avatar' || attr == 'name' || attr == 'job' || attr == 'phone' || attr == 'wechat' || attr ==
+						'telephone' || attr == 'email' || attr == 'company' || attr == 'company_address')) {
+					document.querySelector('input[name=' + attr + ']').value = data[attr];
+				} else if (data[attr].length != 0 && attr == 'desc2') {
+					document.querySelector('textarea[name=desc]').value = data[attr];
+				}
+			}
+			
+			if (data.voice.length != 0) {
+				document.querySelector('.voice-container').children[0].classList.add('hidden');
+				document.querySelector('.voice-container').children[1].classList.remove('hidden'); 
+				document.querySelector('.voice-time').innerText = data.voice_time;
+				document.querySelector('input[name=voice_time]').value = data.voice_time;
+				document.querySelector('input[name=voice]').value = data.voice;
+				voiceTime = data.voice_time;
+			}
+
+			if (data.images.length != 0) {
+				images = data.images;
+				for (var i in data['images']) {
+					var newDiv = document.createElement('div');
+					newDiv.setAttribute('data-id', i);
+					newDiv.classList.add('picture_display_chear');
+					var html = '<img src="' + data.images[i] + '" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					newDiv.innerHTML = html;
+					document.getElementById('pic-container').insertBefore(newDiv, document.getElementById('add_pic'));
+					imageId++;
+				}
+			}
+		}
+
+		// 拍照获取图片
+		function getImage() {
+			var camera = plus.camera.getCamera();
+			camera.captureImage(function(e) {
+				plus.io.resolveLocalFileSystemURL(e, function(entry) {
+					cropperImg(entry.toLocalURL(), 'card_setting');
+					// imageResize(entry.toLocalURL());
+					// 其他操作,比如预览展示
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(s) {
+				console.log("error" + s);
+			}, {
+				filename: "_doc/camera/"
+			})
+		}
+
+		// 从相册中选择图片 
+		function galleryImage(cb) {
+			// 从相册中选择图片
+			plus.gallery.pick(function(e) {
+				cropperImg(e, 'card_setting');
+			}, function(e) {
+				console.log("取消选择图片");
+			}, {
+				filter: "image",
+				multiple: false,
+				maximum: 5,
+				system: false,
+				onmaxed: function() {
+					plus.nativeUI.alert('最多只能选择1张图片');
+				}
+			});
+		}
+
+		//创建计时器记录录音时长
+		function timeInterval() {
+			timer = setInterval(function() {
+				voiceTime++;
+			}, 1000)
+		}
+
+		//开始录音
+		function startRecord() {
+			r = plus.audio.getRecorder();
+			if (r == null) {
+				message("Device not ready!");
+				return;
+			}
+			timeInterval();
+			r.record({
+				filename: "_doc/audio/",
+				format: 'mp3'
+			}, function(e) {
+				document.querySelector('.voice-container').children[0].classList.add('hidden');
+				document.querySelector('.voice-container').children[1].classList.remove('hidden'); 
+				document.querySelector('.voice-time').innerText = voiceTime;
+				document.querySelector('input[name=voice_time]').value = voiceTime;
+				document.querySelector('input[name=voice]').value = e;
+				voiceUpload(e);
+			}, function(e) {
+				message("Audio record failed: " + e.message);
+			});
+		}
+
+		//结束录音
+		function stopRecord() {
+			clearInterval(timer);
+			r.stop();
+		}
+
+		//播放录音
+		function playRecord(path) {
+			play = plus.audio.createPlayer('https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3');
+			play.play(function() {
+				document.querySelector('.play').src = '../image/bofang.png';
+			}, function(e) {
+				message("Audio play error: " + e.message);
+			});
+		}
+
+		//文件上传
+		function voiceUpload(file) {
+			var task = plus.uploader.createUpload($voiceUrl, {
+					method: "POST",
+					blocksize: 614400,
+					priority: 100
+				},
+				function(t, status) { //上传完成
+					if (status == 200) {
+						var res = JSON.parse(t.responseText);
+						if (res.error) {
+							// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+						} else {
+							document.querySelector('input[name=voice]').value = res.data.path;
+						}
+					} else {
+						console.log("上传失败：" + status);
+						// plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
+					}
+				}
+			);
+			// 页面中要上传的 图片路径
+			task.addFile(file, {
+				key: 'upfile'
+			});
+			task.start();
+		}
+		
+		//提交数据
+		function doSumbit(data) {
+			if (!submitFlag) return;
+			submitFlag = false;
+			plus.nativeUI.showWaiting('数据处理中...');
+			mui.post($ajaxUrl + 'staff&action=cardEdit', data, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					message('修改成功!');
+					submitFlag = true;
+					setTimeout(function() {
+						fnCloseWin('card_setting');
+					}, 2000)
+				} else {
+					message('修改失败!');
+					submitFlag = true;
+				}
+				plus.nativeUI.closeWaiting();
+			}, 'json')
+		}
+		
+		//图片转base64
+		function canvasGen(image) {
+			var canvas = document.createElement('canvas');
+			canvas.width = image.width;
+			canvas.height = image.height;
+			var ctx = canvas.getContext('2d');
+			ctx.drawImage(image, 0, 0, image.width, image.height);
+			var data = canvas.toDataUrl("image/jpeg", 1);
 		}
 	</script>
 	</script>

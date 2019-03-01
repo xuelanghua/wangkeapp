@@ -317,8 +317,8 @@
 					</div>
 					<div class="mui-pull-right ns">
 						<img class="info" src="../image/Message-icon.png" />
-						<a href="customer_entry.html">
-							<img src="../image/shuxie.png" />
+						<a href="javascript: void(0);" class="customer-edit" id="customer_edit">
+							<img class src="../image/shuxie.png" />
 						</a>
 					</div>
 				</div>
@@ -415,19 +415,19 @@
 						</div>
 					</div>
 					<div class="classify1">
-						<div class="classify1-content" data-label="label">
-							<span>
-								<i class="icon-label"></i>
-							</span>
-							<span>标签</span>
-						</div>
-					</div>
-					<div class="classify1">
 						<div class="classify1-content" data-label="care">
 							<span>
 								<i class="icon-people"></i>
 							</span>
 							<span>客情</span>
+						</div>
+					</div>
+					<div class="classify1">
+						<div class="classify1-content" data-label="label" id="label_edit">
+							<span>
+								<i class="icon-label"></i>
+							</span>
+							<span>标签</span>
 						</div>
 					</div>
 					<div class="clearfix"></div>
@@ -509,6 +509,34 @@
 			mui.plusReady(function() {
 				userInfo = getUserInfo();
 				pageInit();
+				
+				document.getElementById('label_edit').addEventListener('tap', function() {
+					console.log(11111);
+				})
+				
+				document.querySelector('#customer_edit').addEventListener('tap', function() {
+					if (currentTab == 'friend') {
+						// fnOpenWin('')
+					} else {
+						fnOpenWin('customer_entry.html', 'customer_entry', {statusbar: {background: '#FFFFFF'}}, '', 'slide-in-right');
+						plus.navigator.setStatusBarStyle('dark');
+					}
+				})
+				
+				window.addEventListener('addInterval', function(e) {
+					console.log('addInterval');
+					timeInterval();
+				})
+				
+				window.addEventListener('clearInterval', function(e) {
+					console.log('claerInterval');
+					clearTimeInterval();
+				})
+				
+				window.addEventListener('loginSuccess', function(e) {
+					console.log('loginSuccess');
+					getCustomerList();
+				})
 			})
 
 			function indexInit() {
@@ -519,7 +547,7 @@
 			}
 
 			function pageInit() {
-				setTimeout('getCustomerList()', 20000);
+				// setTimeout('getCustomerList()', 20000);
 				// localStorage.removeItem('customer');
 				customer_data = JSON.parse(localStorage.getItem('customer'));
 				if (!customer_data) {
@@ -536,21 +564,6 @@
 			}
 			
 			function eventInit() {
-				window.addEventListener('addInterval', function(e) {
-					console.log('addInterval');
-					timeInterval();
-				})
-				
-				window.addEventListener('clearInterval', function(e) {
-					console.log('claerInterval');
-					clearTimeInterval();
-				})
-				
-				window.addEventListener('loginSuccess', function(e) {
-					console.log('loginSuccess');
-					getCustomerList();
-				})
-				
 				mui('.switch1').on('tap', '.switch1_content', function() {
 					var id = this.dataset.id;
 					if (id == currentTab) return;
@@ -564,8 +577,15 @@
 					document.getElementById('list_container').innerHTML = html;
 					if (id == 'customer') {
 						document.getElementById('list_bar').style.display = "none";
+						document.querySelector('.customer-edit').style.display = 'none';
 					} else {
 						document.getElementById('list_bar').style.display = "block";
+						document.querySelector('.customer-edit').style.display = '';
+						if (id == 'crm') {
+							document.querySelector('.customer-edit img').src = '../image/shuxie.png';
+						} else {
+							document.querySelector('.customer-edit img').src = '../image/add_friend.png';
+						}
 					}
 					if (id == 'crm' && currentLabel != 'empty') {
 						var currentObj = document.querySelector('.classify1-content[data-label=' + currentLabel + ']');
@@ -579,6 +599,9 @@
 				
 				mui('.classify1').on('tap', '.classify1-content', function() {
 					label = this.dataset.label;
+					if (label == 'label') {
+						return;
+					}
 					var self = this;
 					if (label == currentLabel) {
 						self.parentElement.classList.remove('label');
@@ -610,10 +633,25 @@
 					currentObj.classList.add('bian');
 					currentLabel = label;
 				})
+				
+				mui('.mui-indexed-list-item').on('tap', 'a', function() {
+					var uid = this.dataset.id;
+					var type = this.dataset.type;
+					if (type == 'crm') {
+						fnOpenWin('crm_detail.html', 'crm_detail', {statusbar: {background: '#2289FF'}}, {uid: uid}, 'slide-in-right');
+					} else if (type == 'friend') {
+						
+					}
+				})
+				
+				mui('.mui-table-view').on('tap', '.new-customer', function() {
+					var uid = this.dataset.id;
+					var type = this.dataset.type;
+					fnOpenWin('customer_detail.html', 'customer_detail', {statusbar: {background: '#2289FF'}}, {uid: uid}, 'slide-in-right');
+				})
 			}
 
 			function getCustomerList() {
-				console.log('===+++===');
 				if (!userInfo) return;
 				mui.post($ajaxUrl + 'customer', {
 					action: 'list',
@@ -974,7 +1012,7 @@
 						var list = data[index];
 						for (var i in list) {
 							html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-								html += '<a href="javascript:void(0);" class="detail" data-type="friend" data-id="' + list[i].uid + '">';
+								html += '<a href="javascript:void(0);" class="detail" data-type="friend" data-id="' + list[i].fid + '">';
 									html += '<div class="mui-pull-left head-portrait">';
 									if (list[i].avatarUrl.length == 0) {
 										html += '<img src="../image/user_default.png">';
@@ -1014,7 +1052,7 @@
 							var list = data[index];
 							html = '<ul class="mui-table-view">';
 							for (var i in list) {
-								html += '<li class="mui-table-view-cell">';
+								html += '<li class="mui-table-view-cell new-customer" data-type="customer" data-id="' + list[i].id + '">';
 								if (list[i].avatarUrl.length == 0) {
 									html += '<div class="chart mui-pull-left"><img src="../image/user_default.png" ></div>';
 								} else {

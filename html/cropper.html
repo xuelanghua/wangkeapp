@@ -69,39 +69,32 @@
 					return false;
 				}
 			});
-
+			var self = null;
 			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
 				document.getElementById('imgBox').style.height = (document.body.offsetHeight - 50) + 'px';
-				console.log(document.body.offsetHeight);
 				
-				// loadImage('../image/user_default.png');
-				loadImage('../image/user_default.png');
+				loadImage(self.image);
 				initImageCropper();
 
 				//确定裁切
 				document.getElementById("confirm").addEventListener("tap", function(e) {
 					var dataURL = $("#userImage_id").cropper("getCroppedCanvas", {
-						width: 300,
-						height: 300
+						width: 750,
+						height: 750
 					})
 					var imgUrl = dataURL.toDataURL("image/png", 1);
-					$("#userImage_id").attr("src", imgUrl);
-					$("#userImage_id").cropper("replace", imgUrl);
-					$("#userImage_id").cropper("clear"); //裁切完成取消显示裁切框
-					$("#userImage_id").cropper("disable");
-					//确定裁切后销毁裁切组件，标记一下，下次继续裁切时需要初始化一下裁切组件
-					window.imageDisable = true;
-					// console.log(imgUrl);
-
-					//向后台提供数据
-					// uploadFile(imgUrl);
+					base64ToImage(imgUrl, 10, function(e) {
+						uploadFile(e.target);
+						// console.log(JSON.stringify(e));
+					});
+					// mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {image: imgUrl});
+					// fnCloseWin('cropper');
 				});
 
 				document.getElementById('cancel').addEventListener('tap', function() {
 					plus.webview.close('cropper');
 				})
-				//初始化裁切组件
-				initImageCropper();
 			});
 
 			//初始化裁剪组件
@@ -184,8 +177,9 @@
 							if (res.error) {
 								plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 							} else {
-								console.log(JSON.stringify(res));
-								cb(res);
+								// logs(res);
+								mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {image: res.url});
+								fnCloseWin('cropper');
 								waiting.close();
 							}
 						} else {
@@ -214,6 +208,27 @@
 				}
 				return new Blob([ia], {
 					type: mimeString
+				});
+			}
+			
+			//base64转本地图片
+			function base64ToImage(base64, quality, callback) {
+				quality = quality || 10;
+				var bitmap = new plus.nativeObj.Bitmap();
+				// 从本地加载Bitmap图片
+				bitmap.loadBase64Data(base64, function() {
+					//    console.log('加载图片成功');
+					bitmap.save("_doc/avatar_" + Math.ceil(Math.random()*100) + ".jpg", {
+						overwrite: true,
+						quality: quality
+					}, function(e) {
+						// console.log(e);
+						callback(e);
+					}, function(e) {
+						console.log('保存图片失败：' + JSON.stringify(e));
+					});
+				}, function(e) {
+					console.log('加载图片失败：' + JSON.stringify(e));
 				});
 			}
 		</script>
