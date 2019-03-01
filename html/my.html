@@ -362,7 +362,7 @@
 		</div>
 		
 		<div class="menu">
-			<li>
+			<li id="shop_setting">
 				<img src="../image//Store-management.png" >
 				<span>店铺管理</span>
 			</li>
@@ -442,6 +442,23 @@
 			window.addEventListener('scrollTop', function(event) {
 				window.scrollTo(0, 0);
 			});
+			//店铺管理
+			var shop_setting=document.getElementById('shop_setting');
+			shop_setting.addEventListener('tap', function() {
+				var styles = {
+					top: 0,
+					bottom: 0,
+					statusbar: {background: '#fff'},
+					
+				};
+				var extras = {
+					
+				};
+				//commodity_management
+				var w = plus.webview.create('store_management.html', 'store_management.html', styles, extras);
+				w.show(); // 显示窗口
+			})
+			
 		})
 		
 		function ycit(){

@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../icomoon/style.css" rel="stylesheet"/>
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			a{
+				color: #000000;
+			}
+			.title{
+				width: 100%;
+				height: 292px;
+				background: url(../image/store_management_header.png) no-repeat;
+				background-size: 100% 100%;
+			}
+			.header{
+				width: 100%;
+				position: fixed;
+				top: 0;
+				padding:15px;
+				color: #333333;
+				background-color: #FFFFFF;
+				text-align: center;
+			}
+			.header img{
+				width: 19px;
+			}
+			.Notice{
+				margin-top: 55px;
+				font-size: 12px;
+				padding: 5px;
+				color: #CC9C2D;
+				background-color: rgba(255,255,255,0.8)
+			}
+			
+			.sum_of_money{
+				width: 80%;
+				padding: 0 41px 31px 41px;
+				margin: 90px auto 1.25rem;
+				text-align: center;
+				border-radius: 0.3125rem;
+				background-color: #FFFFFF;
+			}
+			.money{
+				padding-top: 23px;
+				font-size: 12px;
+			}
+			.number{
+				color: #CC9C2D;
+				font-size: 25px;
+				margin-top: 15px;
+			}
+			.receivables{
+				margin-top: 30px;
+				color: #333333;
+			}
+			.numbers{
+				color: #CC9C2D;
+				font-size: 15px;
+				margin-top: 0.1875rem;
+			}
+			.money button{
+				width: 100%;
+				border: none;
+				padding: 15px 0;
+				border-radius: 25px;
+				font-size: 15px;
+				background-color: #F5CA3A;
+				margin-top: 27px;
+			}
+			.bj{
+				height: 170px;
+				margin-top: -185px;
+				background-color: #FFFFFF;
+			}
+			.shue{
+				font-size: 0.9375rem;
+				color: #000000;
+			}
+			.administration{
+				padding: 28px 0 16px 0;
+				margin-top: 185px;
+				font-size: 13px;
+				background-color: #FFFFFF;
+			}
+			.administration_content{
+				width: 25%;
+				float: left;
+				text-align: center;
+			}
+			.administration_content img{
+				height: 27px;
+			}
+			
+			.mui-bar-tab .mui-tab-item.mui-active{
+				color: #F5CA3A;
+			}
+		</style>
+	</head>
+
+	<body>
+		
+		<div class="mui-content">
+			<div style="background-color: #FFFFFF;">
+				<div class="title">
+					<div class="header">
+						<span class="mui-action-back mui-pull-left mui-icon mui-icon-arrowleft"></span>
+						<span>我的店铺</span>
+					</div>
+					
+					<div class="Notice">
+						<span>公告</span>
+						<span>这里是公告，公告的内容很有用</span>
+						<span class="mui-pull-right mui-icon mui-icon-arrowright" style="font-size: 16px;margin-top: 3px;color: #000000;"></span>
+						<div class="clearfix"></div>
+					</div>
+					
+					<div class="sum_of_money">
+						<div class="money">
+							<div>
+								<div>金日收款金额</div>
+								<div class="number">2,350.25</div>
+							</div>
+							<div class="receivables">
+								<div class="mui-pull-left">
+									<div>店铺收款</div>
+									<div class="numbers">2,350.25</div>
+								</div>
+								<div class="mui-pull-right">
+									<div>收款码</div>
+									<div class="numbers">2,350.25</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							<button>资产中心</button>
+							<div class="receivables">
+								<div class="mui-pull-left">
+									<div class="shue">10</div>
+									<div>待发货</div>
+								</div>
+								<div class="mui-pull-right"style="border-left: 1px solid #DDDDDD;width: 49%;text-align: right;">
+									<div class="shue">2,358</div>
+									<div>浏览量</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+					</div>
+					<div class="bj"></div>
+				</div>
+			</div>
+			
+			
+			<div class="administration">
+				<a href="shop.html">
+					<div class="administration_content">
+						<img src="../image/administration.png" >
+						<div>店铺管理</div>
+					</div>
+				</a>
+				<div class="administration_content" id="goods_manage">
+					<img src="../image/administration1.png" >
+					<div>商品管理</div>
+				</div>
+				<div class="administration_content">
+					<img src="../image/administration2.png" >
+					<div>订单管理</div>
+				</div>
+				<div class="administration_content">
+					<img src="../image/administration3.png" >
+					<div>商品添加</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			
+		</div> 
+		
+		
+	</body>
+
+</html>
+<script src="../js/mui.min.js"></script>
+<script src="../js/util.js"></script>
+<script>
+	mui.init();
+	mui.plusReady(function(){
+		window.addEventListener('scrollTop', function(event) {
+			window.scrollTo(0, 0);
+		});
+		setStatusBar('', 'dark');
+		//商品管理
+		var goods_manage=document.getElementById('goods_manage');
+		goods_manage.addEventListener('tap', function() {
+			var styles = {
+				top: 0,
+				bottom: 0,
+				statusbar: {background: '#fff'}
+			};
+			var extras = {
+				
+			};
+			//commodity_management
+			var w = plus.webview.create('commodity_management.html', 'commodity_management.html', styles, extras);
+			w.show(); // 显示窗口
+		})
+		
+	})
+</script>

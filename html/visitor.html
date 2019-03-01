@@ -71,15 +71,15 @@
 			<div class="Number">
 				<span>
 					<span>文章访客数量：</span>
-					<span class="shu">5220人</span>
+					<span class="shu"><font id="read_num"></font>人</span>
 				</span>
 				<span style="margin-left: 25px;">
 					<span>分享：</span>
-					<span class="shu">350次</span>
+					<span class="shu"><font id="share_num"></font>次</span>
 				</span>
 			</div>
 			<div class="visitor-list" id="read_list">
-				<div class="list">
+<!-- 				<div class="list">
 					<div class="listL mui-pull-left">
 						<img src="../image//bj.jpg">
 					</div>
@@ -144,7 +144,7 @@
 						</div>
 					</div>
 					<div class="clearfix"></div>
-				</div>
+				</div> -->
 			</div>
 			<div id="read_bottom"></div>
 		</div>
@@ -189,8 +189,10 @@
 			skip: skip,
 			limit: limit
 		}, function(data) {
-			//console.log(JSON.stringify(data));
+			console.log(JSON.stringify(data));
 			if(data.errno=='0'){
+				document.getElementById('read_num').innerHTML =data.data.total;
+				document.getElementById('share_num').innerHTML =data.data.share_times;
 				var str='';
 				for(i in data.data.datas){
 					str+='<div class="list"><div class="listL mui-pull-left"><img src="'+data.data.datas[i].headimgurl+'"></div><div class="listr mui-pull-right"><div class="listr-title"><div><span>'+data.data.datas[i].nickname+'</span></div><div style="font-size: 12px;color: #999999;margin-top: 5px;"><span>'+data.data.datas[i].add_time+'</span><span class="time"><span>停留：</span><span>'+data.data.datas[i].stay_time+'分钟</span></span></div></div></div><div class="clearfix"></div></div>';
