@@ -326,19 +326,19 @@
 					<div class="switch">
 						<div class="switch1">
 							<div class="switch1_content" data-id="customer">
-								<i class="icon-friends"></i>
+								<i class="iconfont icon-friends"></i>
 								<span>新增客户</span>
 							</div>
 						</div>
 						<div class="switch1">
 							<div class="switch1_content xuanz" data-id="crm">
-								<i class="icon-custom"></i>
+								<i class="iconfont icon-custom"></i>
 								<span>客户CRM</span>
 							</div>
 						</div>
 						<div class="switch1" style="border-right: none;">
 							<div class="switch1_content" data-id="friend">
-								<i class="icon-friend"></i>
+								<i class="iconfont icon-friend"></i>
 								<span>好友</span>
 							</div>
 						</div>
@@ -385,7 +385,7 @@
 					<div class="classify1">
 						<div class="classify1-content" data-label="deal">
 							<span>
-								<i class="icon-deal"></i>
+								<i class="iconfont icon-deal"></i>
 							</span>
 							<span>成交</span>
 						</div>
@@ -393,7 +393,7 @@
 					<div class="classify1">
 						<div class="classify1-content" data-label="follow">
 							<span>
-								<i class="icon-edit"></i>
+								<i class="iconfont icon-edit"></i>
 							</span>
 							<span>跟进中</span>
 						</div>
@@ -401,7 +401,7 @@
 					<div class="classify1">
 						<div class="classify1-content" data-label="member">
 							<span>
-								<i class="icon-diamond"></i>
+								<i class="iconfont icon-diamond"></i>
 							</span>
 							<span>会员</span>
 						</div>
@@ -409,7 +409,7 @@
 					<div class="classify1">
 						<div class="classify1-content" data-label="job">
 							<span>
-								<i class="icon-position"></i>
+								<i class="iconfont icon-position"></i>
 							</span>
 							<span>职位</span>
 						</div>
@@ -417,7 +417,7 @@
 					<div class="classify1">
 						<div class="classify1-content" data-label="care">
 							<span>
-								<i class="icon-people"></i>
+								<i class="iconfont icon-people"></i>
 							</span>
 							<span>客情</span>
 						</div>
@@ -425,7 +425,7 @@
 					<div class="classify1">
 						<div class="classify1-content" data-label="label" id="label_edit">
 							<span>
-								<i class="icon-label"></i>
+								<i class="iconfont icon-label"></i>
 							</span>
 							<span>标签</span>
 						</div>
@@ -639,19 +639,25 @@
 				})
 				
 				mui('.mui-indexed-list-item').on('tap', 'a', function() {
-					var uid = this.dataset.id;
+					var cid = this.dataset.id;
 					var type = this.dataset.type;
 					if (type == 'crm') {
-						fnOpenWin('crm_detail.html', 'crm_detail', {statusbar: {background: '#2289FF'}}, {uid: uid}, 'slide-in-right');
-					} else if (type == 'friend') {
+						var from = this.dataset.from;
+						if (from == 1) {
+							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {statusbar: {background: '#2289FF'}}, {cid: cid}, 'slide-in-right');
+						} else {
+							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {statusbar: {background: '#2289FF'}}, {cid: cid}, 'slide-in-right');
+						}
 						
+					} else if (type == 'friend') {
+						var fid = this.dataset.id;
 					}
 				})
 				
 				mui('.mui-table-view').on('tap', '.new-customer', function() {
-					var uid = this.dataset.id;
+					var cid = this.dataset.id;
 					var type = this.dataset.type;
-					fnOpenWin('customer_detail.html', 'customer_detail', {statusbar: {background: '#2289FF'}}, {uid: uid}, 'slide-in-right');
+					fnOpenWin('customer_detail.html', 'customer_detail', {statusbar: {background: '#2289FF'}}, {cid: cid}, 'slide-in-right');
 				})
 			}
 
@@ -686,7 +692,7 @@
 								if (list[i].mark == 2) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
 											temp += '<div class="mui-pull-left head-portrait">';
 											if (list[i].headimgurl.length == 0) {
 												temp += '<img src="../image/user_default.png">';
@@ -733,7 +739,7 @@
 								if (list[i].mark == 1) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
 											temp += '<div class="mui-pull-left head-portrait">';
 											if (list[i].headimgurl.length == 0) {
 												temp += '<img src="../image/user_default.png">';
@@ -780,7 +786,7 @@
 								if (list[i].is_member == 1) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
 											temp += '<div class="mui-pull-left head-portrait">';
 											if (list[i].headimgurl.length == 0) {
 												temp += '<img src="../image/user_default.png">';
@@ -827,7 +833,7 @@
 								if (list[i].job.length != 0) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
 											temp += '<div class="mui-pull-left head-portrait">';
 											if (list[i].headimgurl.length == 0) {
 												temp += '<img src="../image/user_default.png">';
@@ -874,7 +880,7 @@
 								if (list[i].label_id.length != 0) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
 											temp += '<div class="mui-pull-left head-portrait">';
 											if (list[i].headimgurl.length == 0) {
 												temp += '<img src="../image/user_default.png">';
@@ -919,7 +925,7 @@
 								if (list[i].birthday.length != 0 || list[i].anniversay.length != 0) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
 											temp += '<div class="mui-pull-left head-portrait">';
 											if (list[i].headimgurl.length == 0) {
 												temp += '<img src="../image/user_default.png">';
@@ -970,7 +976,7 @@
 							var list = data[index];
 							for (var i in list) {
 								html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-									html += '<a href="javascript:void(0);" class="detail" data-type="crm" data-id="' + list[i].uid + '">';
+									html += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type + '" data-id="' + list[i].id + '">';
 										html += '<div class="mui-pull-left head-portrait">';
 										if (list[i].headimgurl.length == 0) {
 											html += '<img src="../image/user_default.png">';

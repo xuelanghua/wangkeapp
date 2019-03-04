@@ -6,6 +6,7 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../iconfont/iconfont.css" rel="stylesheet" />
 		<style>
 			.clearfix{
 				clear: both;
@@ -49,7 +50,7 @@
 				margin-top: -15px;
 			}
 			.company{
-				width: 60%;
+				/* width: 60%; */
 				overflow: hidden;
 				text-overflow:ellipsis;
 				white-space: nowrap;
@@ -271,21 +272,25 @@
 			
 			.jilu{
 				padding: 0 0 0 10px;
-				
+				margin-bottom: 60px;
 			}
+			
+			button:enabled:active,
+			button.mui-active:enabled,
+			.mui-btn:enabled:active,
+			.mui-btn.mui-active:enabled
+			{
+				background-color: none!important;
+			}
+
 		</style>
 	</head>
 
 	<body>
-		<script src="js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
-		
 		<header class="mui-bar mui-bar-nav"style="background-color: #2289FF;color: #FFFFFF;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #FFFFFF;"></a>
 			<h1 class="mui-title">客户详情</h1>
-			<div class="mui-pull-right"style="margin-top: 10px;font-size: 15px;">编辑</div>
+			<div class="mui-pull-right" style="margin-top: 10px;font-size: 15px;" id="crm_edit">编辑</div>
 		</header>
 		
 		<div class="mui-content">
@@ -293,28 +298,28 @@
 			<div class="info">
 				<div class="head">
 					<div class="chart">
-						<img src="../image/touxiang.png" >
+						<img src="../image/touxiang.png" id="crm_avatar">
 					</div>
-					<div class="name">
+					<div class="name" id="crm_name">
 						购多少
 					</div>
 				</div>
 				<div class="function">
 					<div>
 						<span>电话</span>
-						<span style="color: #000000;margin-left: 62px;">13888888888</span>
+						<span style="color: #000000;margin-left: 62px;" id="crm_mobile">13888888888</span>
 					</div>
 					<div style="margin-top: 15px;">
 						<span class="mui-pull-left">公司&职位</span>
 						<span class="mui-pull-left" style="margin-left: 32px;color: #FFFFFF;font-size: 10px;">
-							<span class="company mui-pull-left">云南万贤科技有限公司</span>
-							<span class="position mui-pull-left">总经理</span>
+							<span class="company mui-pull-left" id="crm_company">万贤科技</span>
+							<span class="position mui-pull-left" id="crm_job">总经理</span>
 						</span>
 						<div class="clearfix"></div>
 					</div>
 					<div style="margin-top: 15px;">
 						<span>设置标签</span>
-						<span style="margin-left: 40px;color: #2289FF;">[朋友]</span>
+						<span style="margin-left: 40px;color: #2289FF;" id="crm_label">[朋友]</span>
 					</div>
 					<button class="button">客情关怀</button>
 				</div>
@@ -327,10 +332,10 @@
 					<div class="clearfix"></div>
 				</div>
 				<div class="jilu">
-					<div class="current_chart mui-pull-left">
+					<!-- <div class="current_chart mui-pull-left">
 						<img src="../image/activation.png" >
 					</div>
-					<div class="Record_list mui-pull-right"style="width: 80%;">
+					<div class="Record_list mui-pull-right"style="width: 85%;">
 						<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">
 							<span>新增记录:</span>
 							<span style="color: #2289FF;">已成交</span>
@@ -344,7 +349,7 @@
 					<div class="current_chart mui-pull-left">
 						<img src="../image/activation.png" >
 					</div>
-					<div class="Record_list mui-pull-right"style="width: 80%;">
+					<div class="Record_list mui-pull-right"style="width: 85%;">
 						<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">
 							<span class="mui-pull-left">新增记录:</span>
 						</div>
@@ -355,6 +360,20 @@
 						<div class="xinahsi">已成交萨芬士大夫十大撒打发是大方式打</div>
 					</div>
 					<div class="clearfix"></div>
+					<div class="current_chart mui-pull-left">
+						<img src="../image/activation.png" >
+					</div>
+					<div class="Record_list mui-pull-right"style="width: 85%;">
+						<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">
+							<span>新增记录:</span>
+							<span style="color: #2289FF;">已成交</span>
+						</div>
+						<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">
+							<span>02-28</span>
+							<span>09:58</span>
+						</div>
+					</div>
+					<div class="clearfix"></div> -->
 				</div>
 			</div>
 			
@@ -365,10 +384,10 @@
 				</div>
 				<div class="comment-inputr mui-pull-right">
 					<div style="margin-left: 10px;">
-						<img src="../image/wdeal.png">
-						<span>未成交</span>
+						<span id="deal_icon" style="margin-top: 3px;margin-bottom: 2px;"><i class="iconfont icon-user-flag" style="font-size: 23px;"></i></span>
+						<span id="deal_title">未成交</span>
 					</div>
-					<button class="mui-pull-right">电话</button>
+					<button class="mui-pull-right" data-phone="" id="call_up">电话</button>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -413,32 +432,121 @@
 			
 		</div>
 	</body>
-	<script src="../js/jquery.min.js"></script>
-	<script>
-		  $(document).ready(function(){
-					$("#cover").click(function(){
-						$(".guaih").hide();
-						$(this).hide;
-						$("#cover").hide();
-					});
-					$(".button").click(function(){
-						$(".guaih").show();
-						$(this).show;
-						$("#cover").show();
-					});
-		  });
-		  
-		  $(document).ready(function(){
-		  	$("#cover").click(function(){
-		  		$(".tanchu").hide();
-		  		$(this).hide;
-		  		$("#cover").hide();
-		  	});
-		  	$(".input").click(function(){
-		  		$(".tanchu").show();
-		  		$(this).show;
-		  		$("#cover").show();
-		  	});
-		  });
-  </script>
+	<script src="../js/mui.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/Zepto.min.js"></script>
+	<script type="text/javascript">
+		mui.init({
+			swipeBack: true
+		})
+		
+		var cid = 0;
+		var userInfo = getUserInfo();
+		mui.plusReady(function () {
+			var self = plus.webview.currentWebview();
+			cid = self.cid;
+			
+			getCustomerInfo();
+			
+			document.getElementById('call_up').addEventListener('tap', function() {
+				var phone = this.dataset.phone;
+				plus.device.dial(phone);
+			})
+			
+			document.querySelector('.input').addEventListener('tap', function() {
+				document.getElementById('cover').style.display = 'block';
+				document.querySelector('.tanchu').style.display = 'block';
+			})
+			
+			document.querySelector('.button').addEventListener('tap', function() {
+				document.getElementById('cover').style.display = 'block';
+				document.querySelector('.guaih').style.display = 'block';
+			})
+			
+			document.getElementById('cover').addEventListener('tap', function() {
+				this.style.display = 'none';
+				document.querySelector('.guaih').style.display = 'none';
+				document.querySelector('.tanchu').style.display = 'none';
+			})
+		})
+		
+		function getCustomerInfo() {
+			plus.nativeUI.showWaiting();
+			mui.post($ajaxUrl + 'customer', {action: 'detail', token: userInfo.token, id: cid, type: 'crm'}, function(res) {
+				if (res.errno == 0) {
+					var data = res.data;
+					if (data.headimgurl.length != 0) {
+						document.getElementById('crm_avatar').src = data.headimgurl;
+					}
+					document.getElementById('crm_name').innerText = data.name;
+					document.getElementById('crm_mobile').innerText = data.mobile;
+					document.getElementById('call_up').dataset.phone = data.mobile;
+					document.getElementById('crm_company').innerText = data.company;
+					document.getElementById('crm_job').innerText = data.job;
+					var follow = data.follow;
+					var html = '';
+					if (follow.length > 0) {
+						for (var i in follow) {
+							if (follow[i].mark == 1 || follow[i].mark == 2) {
+								html += '<div class="current_chart mui-pull-left">';
+									if (data.headimgurl.length != 0) {
+										html += '<img src="' + data.headimgurl + '" >';
+									} else {
+										html += '<img src="../image/user_default.png" >';
+									}
+								html += '</div>';
+								html += '<div class="Record_list mui-pull-right"style="width: 85%;">';
+									html += '<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">';
+										html += '<span>新增记录:</span>';
+										if (follow[i].mark == 1) {
+											html += '<span style="color: #2289FF;">开始跟进</span>';
+										} else {
+											html += '<span style="color: #2289FF;">已成交</span>';
+										}
+									html += '</div>';
+									html += '<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">';
+										html += '<span>' + follow[i].create_time + '</span>';
+									html += '</div>';
+								html += '</div>';
+								html += '<div class="clearfix"></div>';
+							} else {
+								html += '<div class="current_chart mui-pull-left">';
+									if (data.headimgurl.length != 0) {
+										html += '<img src="' + data.headimgurl + '" >';
+									} else {
+										html += '<img src="../image/user_default.png" >';
+									}
+								html += '</div>';
+								html += '<div class="Record_list mui-pull-right"style="width: 85%;">';
+									html += '<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">';
+										html += '<span class="mui-pull-left">新增记录:</span>';
+									html += '</div>';
+									html += '<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">';
+										html += '<span>' + follow[i].create_time + '</span>';
+									html += '</div>';
+									html += '<div class="xinahsi">' + follow[i].content + '</div>';
+								html += '</div>';
+								html += '<div class="clearfix"></div>';
+							}
+						}
+					} else {
+						html += '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
+					}
+					document.querySelector('.jilu').innerHTML = html;
+					
+					if (data.mark == 2) {
+						document.getElementById('deal_icon').style.color = 'red';
+						document.getElementById('deal_title').innerText = '已成交';
+						document.getElementById('deal_title').style.color = 'red';
+					}
+				} else {
+					message(res.message);
+					setTimeout(function() {
+						plus.webview.close('crm_detail_app');
+					}, 2000)
+				}
+				plus.nativeUI.closeWaiting();
+			}, 'json')
+		}
+	</script>
 </html>

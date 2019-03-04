@@ -6,6 +6,7 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../iconfont/iconfont.css" rel="stylesheet" />
 		<style>
 			.clearfix{
 				clear: both;
@@ -23,13 +24,13 @@
 			.info{
 				width: 94%;
 				position: absolute;
-				top: 20%;
+				top: 105px;
 				left: 3%;
 				box-shadow: 0 0 5px 0 #DDDEDE;
 				padding: 0 10px 25px 10px;
 				text-align: center;
 				color: #999999;
-				border-radius: 5px;
+				border-radius: 10px;
 				background-color: #FFFFFF;
 			}
 			.infoL{
@@ -347,16 +348,11 @@
 	</head>
 
 	<body>
-		<script src="js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
-		
 		<header class="mui-bar mui-bar-nav"style="background-color: #2289FF;color: #FFFFFF;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #FFFFFF;"></a>
 			<h1 class="mui-title">客户详情</h1>
 			<a href="modify.html">
-				<div class="mui-pull-right"style="margin-top: 10px;font-size: 15px;color: #FFFFFF;">编辑</div>
+				<div class="mui-pull-right" style="margin-top: 10px;font-size: 15px;color: #FFFFFF;">编辑</div>
 			</a>
 		</header>
 		
@@ -370,12 +366,6 @@
 					<div class="name">
 						<span>购多少</span>
 						<span style="color: #2289FF;">(喵喵喵)</span>
-					</div>
-					<div class="dianh">
-						<span>
-							<img src="../image/dianhua.png" >
-						</span>
-						<span>13888888888</span>
 					</div>
 					<div class="Grade">下级会员</div>
 				</div>
@@ -398,9 +388,25 @@
 				<div class="clearfix"></div>
 			</div>
 			<div class="function">
+				<div>
+					<span>电话</span>
+					<span style="color: #000000;margin-left: 62px;">13888888888</span>
+				</div>
+				<div style="margin-top: 15px;">
+					<span class="mui-pull-left">公司&职位</span>
+					<span class="mui-pull-left" style="margin-left: 32px;color: #FFFFFF;font-size: 10px;">
+						<span class="company mui-pull-left">云南万贤科技有限公司</span>
+						<span class="position mui-pull-left">总经理</span>
+					</span>
+					<div class="clearfix"></div>
+				</div>
+				<div style="margin-top: 15px;">
+					<span>设置标签</span>
+					<span style="margin-left: 40px;color: #2289FF;">[朋友]</span>
+				</div>
 				<div class="button">
 					<button class="mui-pull-left buttonL">发消息</button>
-					<button class="mui-pull-right buttonR">录入客户CRM</button>
+					<button class="mui-pull-right buttonR">客情关怀</button>
 					<div class="clearfix"></div>
 				</div>
 			</div>
@@ -582,8 +588,9 @@
 				</div>
 				<div class="comment-inputr mui-pull-right">
 					<div style="margin-left: 10px;">
-						<img src="../image/wdeal.png">
-						<span>未成交</span>
+						<!-- <img src="../image/wdeal.png"> -->
+						<span id="deal_icon" style="margin-top: 3px;margin-bottom: 2px;"><i class="iconfont icon-user-flag" style="font-size: 23px;"></i></span>
+						<span id="deal_title">未成交</span>
 					</div>
 					<button class="mui-pull-right">电话</button>
 				</div>
@@ -631,52 +638,54 @@
 			
 		</div>
 	</body>
+	<script src="../js/mui.js"></script>
 	<script src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
-		  var hd = document.getElementsByClassName("hd")[0].getElementsByTagName("li");
-		  var bd = document.getElementsByClassName("bd")[0].getElementsByTagName("li");
-		  for (var i = 0; i < hd.length; i++) {
-			hd[i].onclick = function(){
-			  doTabs(this);
-			}
-		  }
-		  function doTabs(obj){
+		mui.init({
+			swipeBack: true
+		})
+		
+		mui.plusReady(function() {
+			var hd = document.getElementsByClassName("hd")[0].getElementsByTagName("li");
+			var bd = document.getElementsByClassName("bd")[0].getElementsByTagName("li");
 			for (var i = 0; i < hd.length; i++) {
-			  if(hd[i]==obj){
-				hd[i].className = "current";
-				bd[i].className = "current";
-			  }else{
-				hd[i].className = "";
-				bd[i].className = "";
-			  }
+						hd[i].onclick = function(){
+						  doTabs(this);
+						}
 			}
-		  }
-		  
-		  $(document).ready(function(){
-					$("#cover").click(function(){
-						$(".tanchu").hide();
-						$(this).hide;
-						$("#cover").hide();
-					});
-					$(".input").click(function(){
-						$(".tanchu").show();
-						$(this).show;
-						$("#cover").show();
-					});
-		  });
-		  
-		  // 客情关怀
-		  $(document).ready(function(){
-		  	$("#cover").click(function(){
-		  		$(".guaih").hide();
-		  		$(this).hide;
-		  		$("#cover").hide();
-		  	});
-		  	$(".buttonR").click(function(){
-		  		$(".guaih").show();
-		  		$(this).show;
-		  		$("#cover").show();
-		  	});
-		  });
-  </script>
+			
+			function doTabs(obj){
+						for (var i = 0; i < hd.length; i++) {
+						  if(hd[i]==obj){
+							hd[i].className = "current";
+							bd[i].className = "current";
+						  }else{
+							hd[i].className = "";
+							bd[i].className = "";
+						  }
+						}
+			}
+			
+			$("#cover").click(function(){
+				$(".guaih").hide();
+				$(this).hide;
+				$("#cover").hide();
+			});
+			$(".buttonR").click(function(){
+				$(".guaih").show();
+				$(this).show;
+				$("#cover").show();
+			});
+			$("#cover").click(function(){
+				$(".tanchu").hide();
+				$(this).hide;
+				$("#cover").hide();
+			});
+			$(".input").click(function(){
+				$(".tanchu").show();
+				$(this).show;
+				$("#cover").show();
+			});
+		})
+	</script>
 </html>
