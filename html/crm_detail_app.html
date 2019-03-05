@@ -227,7 +227,7 @@
 				font-size: 15px;
 				background-color: #F5F6F8;
 			}
-			.tanchu button{
+			.tanchu button, .guaih button{
 				width: 30%;
 				background-color: #2289FF;
 				color: #FFFFFF;
@@ -274,25 +274,16 @@
 				padding: 0 0 0 10px;
 				margin-bottom: 60px;
 			}
-			
-			button:enabled:active,
-			button.mui-active:enabled,
-			.mui-btn:enabled:active,
-			.mui-btn.mui-active:enabled
-			{
-				background-color: none!important;
-			}
-
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav"style="background-color: #2289FF;color: #FFFFFF;">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #FFFFFF;"></a>
+		<header class="mui-bar mui-bar-nav" style="background-color: #2289FF;color: #FFFFFF;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;"></a>
 			<h1 class="mui-title">客户详情</h1>
 			<div class="mui-pull-right" style="margin-top: 10px;font-size: 15px;" id="crm_edit">编辑</div>
 		</header>
-		
+
 		<div class="mui-content">
 			<div class="title"></div>
 			<div class="info">
@@ -324,7 +315,7 @@
 					<button class="button">客情关怀</button>
 				</div>
 			</div>
-			
+
 			<div class="example">
 				<div class="example_title">
 					<p class="mui-pull-left"></p>
@@ -376,14 +367,14 @@
 					<div class="clearfix"></div> -->
 				</div>
 			</div>
-			
+
 			<div class="comment-input">
 				<div class="input mui-pull-left">
-					<img src="../image/shuru.png" >
+					<img src="../image/shuru.png">
 					<span style="margin-left: 10px;">跟进记录...</span>
 				</div>
 				<div class="comment-inputr mui-pull-right">
-					<div style="margin-left: 10px;">
+					<div style="margin-left: 10px;" id="deal_flag">
 						<span id="deal_icon" style="margin-top: 3px;margin-bottom: 2px;"><i class="iconfont icon-user-flag" style="font-size: 23px;"></i></span>
 						<span id="deal_title">未成交</span>
 					</div>
@@ -391,7 +382,7 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
-			
+
 			<!-- 客情关怀 弹出框 -->
 			<div id="cover"></div>
 			<div class="guaih">
@@ -404,7 +395,7 @@
 						<p class="mui-pull-left"></p>
 						<span class="mui-pull-left">
 							<span>生日：</span>
-							<span>12-28</span>
+							<span id="birthday">12-28</span>
 						</span>
 						<div class="clearfix"></div>
 					</div>
@@ -412,24 +403,24 @@
 						<p class="mui-pull-left"></p>
 						<span class="mui-pull-left">
 							<span>纪念日：</span>
-							<span>12-28</span>
+							<span id="anniversary">12-28</span>
 						</span>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 				<div class="tibu">
-					<button class="buttonL mui-pull-left">放弃</button>
-					<button class="buttonR mui-pull-right">开启</button>
+					<!-- <button class="buttonL mui-pull-left">放弃</button> -->
+					<!-- <button class="buttonR mui-pull-right">开启</button> -->
+					<button class="button" id="notice_button">开启</button>
 					<div class="clearfix"></div>
 				</div>
 			</div>
-			
+
 			<!-- 跟进记录弹出框 -->
 			<div class="tanchu">
-				<textarea rows="8" placeholder="说说你的看法..."/></textarea>
-				<button class="button">发 布</button>
+				<textarea rows="8" name="content" placeholder="请输入..." /></textarea>
+				<button class="button" id="follow_publish">发 布</button>
 			</div>
-			
 		</div>
 	</body>
 	<script src="../js/mui.js"></script>
@@ -439,40 +430,151 @@
 		mui.init({
 			swipeBack: true
 		})
-		
+
 		var cid = 0;
+		var dealFlag = 0;
+		var noticeStatus = 0;
 		var userInfo = getUserInfo();
-		mui.plusReady(function () {
+		mui.plusReady(function() {
 			var self = plus.webview.currentWebview();
 			cid = self.cid;
-			
+
 			getCustomerInfo();
 			
+			window.addEventListener('editCustomer', function() {
+				getCustomerInfo();
+			})
+
 			document.getElementById('call_up').addEventListener('tap', function() {
 				var phone = this.dataset.phone;
 				plus.device.dial(phone);
 			})
-			
+
 			document.querySelector('.input').addEventListener('tap', function() {
 				document.getElementById('cover').style.display = 'block';
 				document.querySelector('.tanchu').style.display = 'block';
 			})
-			
+
 			document.querySelector('.button').addEventListener('tap', function() {
 				document.getElementById('cover').style.display = 'block';
 				document.querySelector('.guaih').style.display = 'block';
 			})
-			
+
 			document.getElementById('cover').addEventListener('tap', function() {
 				this.style.display = 'none';
 				document.querySelector('.guaih').style.display = 'none';
 				document.querySelector('.tanchu').style.display = 'none';
 			})
+
+			mui('.mui-content').on('tap', '#deal_flag', function() {
+				if (dealFlag == 1) {
+					mui.post($ajaxUrl + 'customer', {
+						action: 'mark',
+						cid: cid,
+						token: userInfo.token,
+						mark: 1
+					}, function(res) {
+						if (res.errno == 0) {
+							getCustomerInfo();
+							document.getElementById('deal_icon').style.color = '#999';
+							document.getElementById('deal_title').innerText = '未成交';
+							document.getElementById('deal_title').style.color = '#999';
+							dealFlag = 0;
+						}
+					}, 'json')
+				} else {
+					mui.post($ajaxUrl + 'customer', {
+						action: 'mark',
+						cid: cid,
+						token: userInfo.token,
+						mark: 2
+					}, function(res) {
+						if (res.errno == 0) {
+							getCustomerInfo();
+							document.getElementById('deal_icon').style.color = 'red';
+							document.getElementById('deal_title').innerText = '已成交';
+							document.getElementById('deal_title').style.color = 'red';
+							dealFlag = 1;
+						}
+					}, 'json')
+				}
+			})
+
+			mui('.mui-content').on('tap', '#follow_publish', function() {
+				var content = document.querySelector('textarea[name=content]').value;
+				content = content.replace(/^\s*|\s*$/g, "");
+				if (content.length == 0) {
+					message('请输入跟进内容!');
+					return;
+				}
+				document.getElementById('cover').style.display = 'none';
+				document.querySelector('.tanchu').style.display = 'none';
+				mui.post($ajaxUrl + 'customer', {
+					action: 'follow',
+					cid: cid,
+					token: userInfo.token,
+					content: content
+				}, function(res) {
+					if (res.errno == 0) {
+						message('跟进成功!');
+						getCustomerInfo();
+					} else {
+						message(res.message);
+					}
+				}, 'json')
+			})
+
+			mui('.mui-content').on('tap', '#notice_button', function() {
+				document.getElementById('cover').style.display = 'none';
+				document.querySelector('.guaih').style.display = 'none';
+				if (noticeStatus == 1) {
+					mui.post($ajaxUrl + 'customer', {
+						action: 'notice',
+						cid: cid,
+						token: userInfo.token,
+						notice: 0
+					}, function(res) {
+						if (res.errno == 0) {
+							message('关闭成功!');
+							getCustomerInfo();
+							noticeStatus = 0;
+						} else {
+							message('关闭失败!');
+						}
+					}, 'json')
+				} else {
+					mui.post($ajaxUrl + 'customer', {
+						action: 'notice',
+						cid: cid,
+						token: userInfo.token,
+						notice: 1
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							message('开启成功!');
+							getCustomerInfo();
+							noticeStatus = 1;
+						} else {
+							message('开启失败!');
+						}
+					}, 'json')
+				}
+			})
+			
+			mui('header').on('tap', '#crm_edit', function() {
+				fnOpenWin('customer_edit.html', 'customer_edit', {statusbar: {background: '#FFF'}}, {cid: cid}, 'slide-in-right');
+				plus.navigator.setStatusBarStyle('dark');
+			})
 		})
-		
+
 		function getCustomerInfo() {
 			plus.nativeUI.showWaiting();
-			mui.post($ajaxUrl + 'customer', {action: 'detail', token: userInfo.token, id: cid, type: 'crm'}, function(res) {
+			mui.post($ajaxUrl + 'customer', {
+				action: 'detail',
+				token: userInfo.token,
+				id: cid,
+				type: 'crm'
+			}, function(res) {
 				if (res.errno == 0) {
 					var data = res.data;
 					if (data.headimgurl.length != 0) {
@@ -489,42 +591,42 @@
 						for (var i in follow) {
 							if (follow[i].mark == 1 || follow[i].mark == 2) {
 								html += '<div class="current_chart mui-pull-left">';
-									if (data.headimgurl.length != 0) {
-										html += '<img src="' + data.headimgurl + '" >';
-									} else {
-										html += '<img src="../image/user_default.png" >';
-									}
+								if (data.headimgurl.length != 0) {
+									html += '<img src="' + data.headimgurl + '" >';
+								} else {
+									html += '<img src="../image/user_default.png" >';
+								}
 								html += '</div>';
 								html += '<div class="Record_list mui-pull-right"style="width: 85%;">';
-									html += '<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">';
-										html += '<span>新增记录:</span>';
-										if (follow[i].mark == 1) {
-											html += '<span style="color: #2289FF;">开始跟进</span>';
-										} else {
-											html += '<span style="color: #2289FF;">已成交</span>';
-										}
-									html += '</div>';
-									html += '<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">';
-										html += '<span>' + follow[i].create_time + '</span>';
-									html += '</div>';
+								html += '<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">';
+								html += '<span>新增记录:</span>';
+								if (follow[i].mark == 1) {
+									html += '<span style="color: #2289FF;">开始跟进</span>';
+								} else {
+									html += '<span style="color: #2289FF;">已成交</span>';
+								}
+								html += '</div>';
+								html += '<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">';
+								html += '<span>' + follow[i].create_time + '</span>';
+								html += '</div>';
 								html += '</div>';
 								html += '<div class="clearfix"></div>';
 							} else {
 								html += '<div class="current_chart mui-pull-left">';
-									if (data.headimgurl.length != 0) {
-										html += '<img src="' + data.headimgurl + '" >';
-									} else {
-										html += '<img src="../image/user_default.png" >';
-									}
+								if (data.headimgurl.length != 0) {
+									html += '<img src="' + data.headimgurl + '" >';
+								} else {
+									html += '<img src="../image/user_default.png" >';
+								}
 								html += '</div>';
 								html += '<div class="Record_list mui-pull-right"style="width: 85%;">';
-									html += '<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">';
-										html += '<span class="mui-pull-left">新增记录:</span>';
-									html += '</div>';
-									html += '<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">';
-										html += '<span>' + follow[i].create_time + '</span>';
-									html += '</div>';
-									html += '<div class="xinahsi">' + follow[i].content + '</div>';
+								html += '<div class="mui-pull-left"style="width: 60%;margin-top: 5px;">';
+								html += '<span class="mui-pull-left">新增记录:</span>';
+								html += '</div>';
+								html += '<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">';
+								html += '<span>' + follow[i].create_time + '</span>';
+								html += '</div>';
+								html += '<div class="xinahsi">' + follow[i].content + '</div>';
 								html += '</div>';
 								html += '<div class="clearfix"></div>';
 							}
@@ -533,11 +635,27 @@
 						html += '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
 					}
 					document.querySelector('.jilu').innerHTML = html;
-					
+
 					if (data.mark == 2) {
 						document.getElementById('deal_icon').style.color = 'red';
 						document.getElementById('deal_title').innerText = '已成交';
 						document.getElementById('deal_title').style.color = 'red';
+						dealFlag = 1;
+					}
+
+					if (data.birthday.length != 0) {
+						document.getElementById('birthday').innerText = data.birthday;
+					} else {
+						document.getElementById('birthday').innerText = '未填写';
+					}
+					if (data.anniversary.length != 0) {
+						document.getElementById('anniversary').innerText = data.anniversary;
+					} else {
+						document.getElementById('anniversary').innerText = '未填写';
+					}
+					if (data.is_notice == 1) {
+						document.getElementById('notice_button').innerText = '关闭';
+						noticeStatus = 1;
 					}
 				} else {
 					message(res.message);
