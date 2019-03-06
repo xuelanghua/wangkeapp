@@ -211,7 +211,7 @@
 				mui('.mui-content').on('tap', '.conetnt_list1', function() {
 					var type = this.dataset.type;
 					var dt = datePick(function(e) {
-						document.querySelector('input[name=' + type + ']').value = e;
+						document.querySelector('input[name=' + type + ']').value = e.value;
 					})
 				})
 
@@ -326,9 +326,10 @@
 					token: userInfo.token,
 					data: data
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						mui.fire(plus.webview.getWebviewById('customer_detail_app'), 'editCustomer');
+						mui.fire(plus.webview.getWebviewById('customer_detail_miniapp'), 'editCustomer');
 						message('编辑成功!');
 						setTimeout(function() {
 							plus.webview.close('customer_edit');
