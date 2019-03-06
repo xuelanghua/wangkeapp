@@ -179,13 +179,24 @@
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			mui.init({
-				swipeBack: true
+				swipeBack: true,
+				beforeback: function() {
+					plus.navigator.setStatusBarStyle('light');
+				}
 			})
 			
 			var submitFlag = true;
 			var userInfo = null;
+			var self = null;
+			var cid = 0;
+			var type = 2;
 			mui.plusReady(function() {
 				userInfo = getUserInfo();
+				self = plus.webview.currentWebview();
+				cid = self.cid;
+				if (cid > 0) {
+					type = 1;
+				}
 				mui('.mui-content').on('tap', '.conetnt_list1', function() {
 					var type = this.dataset.type;
 					var dt = datePick(function(e) {
@@ -204,6 +215,9 @@
 						industry: document.querySelector('input[name=industry]').value,
 						birthday: document.querySelector('input[name=birthday]').value,
 						anniversary: document.querySelector('input[name=anniversary]').value,
+					}
+					if (type == 1) {
+						submitData.uid = cid;
 					}
 					if (submitData.name.length == 0) {
 						message('请输入姓名!');
@@ -274,9 +288,10 @@
 			//提交数据
 			function fnSubmit(data) {
 				submitFlag = false;
+				if (cid != 0) {}
 				// plus.nativeUI.showWaiting('数据处理中!', 'div');
-				mui.post($ajaxUrl + 'customer', {action: 'add', type: 2, token: userInfo.token, data: data}, function(res) {
-					logs(res);
+				mui.post($ajaxUrl + 'customer', {action: 'add', type: type, token: userInfo.token, data: data}, function(res) {
+					// logs(res);
 					if (res.errno == 0) {
 						message('录入成功!');
 						mui.fire(plus.webview.getWebviewById('chat'), 'addCustomer');
