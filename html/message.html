@@ -65,6 +65,7 @@
 			}
 			.Record_listR{
 				width: 82%;
+				height: 66px;
 				padding: 10px 10px 8px 0;
 				border-bottom: 1px solid #F2F2F2;
 			}
@@ -313,6 +314,13 @@
 			var userInfo = getUserInfo();
 			mui.plusReady(function() {
 				getChatList();
+				
+				mui('#chat_message').on('tap', '.Record_list', function() {
+					var cid = this.dataset.cid;
+					var chatName = this.dataset.name;
+					fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: cid, chatName: chatName, barStyle: 'dark'}, 'slide-in-right');
+				})
+				
 				mui('header').on('tap', 'li', function() {
 					var type = this.dataset.type;
 					this.className = 'current';
@@ -334,11 +342,10 @@
 					var html = '';
 					if (res.errno == 0) {
 						var chatList = res.data;
-						logs(chatList);
 						var total = chatList.length;
 						document.getElementById('chat_total').innerText = '(' + total + ')';
 						for (var i = 0; i < total; i++) {
-							html += '<div class="Record_list">';
+							html += '<div class="Record_list" data-cid="' + chatList[i].user.id + '" data-name="' + chatList[i].user.nickName + '">';
 								html += '<div class="Record_listL mui-pull-left">';
 								if (!chatList[i].user.avatarUrl) {
 									html += '<img src="../image/user_default.png">';
@@ -368,8 +375,12 @@
 										html += '<div class="clearfix"></div>';
 									html += '</div>';
 									html += '<div class="tishi">';
-									if (chatList[i].message.length > 0) {
-										html += '<span class="mui-pull-left">' + chatList[i].message.content + '</span>';
+									if (chatList[i].message !== 'empty') {
+										if (chatList[i].message.message_type == 'text') {
+											html += '<span class="mui-pull-left">' + chatList[i].message.content + '</span>';
+										} else {
+											html += '<span class="mui-pull-left">[图片]</span>';
+										}
 										if (chatList[i].message.count > 0) {
 											html += '<p class="mui-badge mui-pull-right">' + chatList[i].message.count + '</p>';
 										}

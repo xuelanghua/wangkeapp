@@ -5,7 +5,6 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title></title>
 		<link rel="stylesheet" href="../css/mui.min.css" />
-		<link rel="stylesheet" href="../css/app.css" />
 		<link rel="stylesheet" href="../css/mui.imageviewer.css" />
 		<style>
 			html,
@@ -298,7 +297,7 @@
 	<body contextmenu="return false;">
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title" id="dialog_name">chat (聊天窗口)</h1>
+			<h1 class="mui-title" id="dialog_name">聊天</h1>
 		</header>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
@@ -364,7 +363,7 @@
 					release: true //默认为false，不监听
 				},
 				beforeback: function() {
-					plus.navigator.setStatusBarStyle('light');
+					plus.navigator.setStatusBarStyle(plus.webview.currentWebview().barStyle);
 				}
 			});
 			template.config('escape', false);
@@ -383,10 +382,15 @@
 				});
 			}
 
+			var chatId = 0;
 			mui.plusReady(function() {
 				plus.webview.currentWebview().setStyle({
 					softinputMode: "adjustResize"
 				});
+				var self = plus.webview.currentWebview();
+				var chatName = self.chatName;
+				chatId = self.chatId;
+				document.getElementById('dialog_name').innerText = chatName;
 				var showKeyboard = function() {
 					if (mui.os.ios) {
 						var webView = plus.webview.currentWebview().nativeInstanceObject();
