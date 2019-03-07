@@ -316,7 +316,7 @@
 						<input type="search" id="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="搜索">
 					</div>
 					<div class="mui-pull-right ns">
-						<img class="info" src="../image/Message-icon.png" />
+						<img class="info" id="message" src="../image/Message-icon.png" />
 						<a href="javascript: void(0);" class="customer-edit" id="customer_edit">
 							<img class src="../image/shuxie.png" />
 						</a>
@@ -486,6 +486,14 @@
 			</div>
 		</div>
 		<div id="friend" style="display: none;">
+			<div style="height: 60px;padding-left: 15px;padding-top: 10px;">
+				<div class="mui-pull-left head-portrait">
+					<img src="../image/add_friend_1.png">
+				</div>
+				<div class="mui-pull-left" style="margin-left: 18px;">
+					<div class="good_friend_name">新朋友</div>
+				</div>
+			</div>
 			<div class="mui-indexed-list-inner good_friend">
 				<div class="mui-indexed-list-empty-alert">没有数据</div>
 				<ul class="mui-table-view"></ul>
@@ -512,6 +520,11 @@
 				
 				document.getElementById('label_edit').addEventListener('tap', function() {
 					console.log(11111);
+				})
+				
+				document.getElementById('message').addEventListener('tap', function() {
+					fnOpenWin('message.html', 'message', {statusbar: {background: '#FFF'}}, {prePage: 'chat'}, 'slide-in-right');
+					plus.navigator.setStatusBarStyle('dark');
 				})
 				
 				document.querySelector('#customer_edit').addEventListener('tap', function() {
@@ -548,6 +561,7 @@
 				var list = document.getElementById('list');
 				list.style.height = (document.body.offsetHeight - header.offsetHeight + 2) + 'px';
 				window.indexedList = new mui.IndexedList(list);
+				mui.trigger(document.getElementById(currentTab),'tap');
 			}
 
 			function pageInit() {
@@ -670,12 +684,12 @@
 					customer_data = res.data;
 					localStorage.setItem('customer', JSON.stringify(customer_data));
 					showCustomer(customer_data.crm, 'crm');
-					var html = document.getElementById('crm').innerHTML;
+					showCustomer(customer_data.customer, 'customer');
+					showCustomer(customer_data.friend, 'friend');
+					var html = document.getElementById(currentTab).innerHTML;
 					document.getElementById('list_container').innerHTML = html;
 					eventInit();
 					indexInit();
-					showCustomer(customer_data.customer, 'customer');
-					showCustomer(customer_data.friend, 'friend');
 				}, 'json')
 			}
 

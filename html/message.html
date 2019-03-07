@@ -1,0 +1,396 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			header img{
+				height: 17px;
+				margin-top: 13px;
+				margin-right: 10px;
+			}
+			.mui-bar{
+				height: 80px;
+				padding: 0;
+				background-color: #FFFFFF;
+			}
+			
+			.example{
+				width: 100%;
+				margin-bottom: 66px;
+				background-color: #FFFFFF;
+			}
+			.hd{
+				font-size: 15px;
+				margin-top: 38px;
+			}
+			.hd li{
+				display: block;
+				width: 45%;
+				float: left;
+				padding: 10px 0;
+				text-align: center;
+			}
+			
+			.hd li.current{
+				color: #2289FF;
+				border-bottom: 2px solid #2289FF;
+			}
+			.bd{
+				margin-top: 50px;
+				margin-left: 10px;
+			}
+			.bd li{
+				display: none;
+			}
+			.bd li.current{
+				display: block;
+			}
+			.Record_listL{
+				width: 48px;
+				height: 48px;
+				margin-top: 10px;
+				border-radius: 50%;
+			}
+			.Record_listL img{
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+			}
+			.Record_listR{
+				width: 82%;
+				padding: 10px 10px 8px 0;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.Label img{
+				position: relative;
+				top: 2px;
+				width: 15px
+			}
+			.tishi{
+				font-size: 12px;
+				color: #999999;
+				margin-top: 5px;
+			}
+			.mui-badge{
+				color: #FFFFFF;
+				background-color: #F93B2E;
+			}
+			
+			.date{
+				font-size: 14px;
+				color: #999999;
+			}
+			
+			.mui-badge{
+				margin-bottom: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">消息</h1>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<img class="mui-pull-right" src="../image/newsh.png">
+			<div class="hd">
+				<li class="current" data-type="chat">
+					<span>
+						<span>聊天</span>
+						<span id="chat_total">(0)</span>
+					</span>
+				</li>
+				<li data-type="system">
+					<span>
+						<span>通知消息</span>
+						<span>(0)</span>
+					</span>
+				</li>
+				<div class="clearfix"></div>
+			</div>
+		</header>
+
+		<div class="mui-content">
+			<div class="example">
+				<div class="bd">
+					<li class="current" id="chat_message" data-type="chat">
+						<!-- <div class="Record_list">
+							<div class="Record_listL mui-pull-left">
+								<img src="../image/Alipay.png">
+							</div>
+							<div class="Record_listR mui-pull-right">
+								<div>
+									<span class="mui-pull-left">
+										<span class="Label">
+											<img src="../image/newsb2.png">
+										</span>
+										<span style="font-size: 15px;">小飞飞</span>
+									</span>
+									<span class="mui-pull-right date">19:10</span>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tishi">
+									<span class="mui-pull-left">欧尼酱,僵尸</span>
+									<p class="mui-badge mui-pull-right">1</p>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="Record_list">
+							<div class="Record_listL mui-pull-left">
+								<img src="../image/Alipay.png">
+							</div>
+							<div class="Record_listR mui-pull-right">
+								<div>
+									<span class="mui-pull-left">
+										<span class="Label">
+											<img src="../image/newsb1.png">
+										</span>
+										<span style="font-size: 15px;">小飞飞</span>
+										<span style="color: #2289FF;font-size: 15px;">(张飞)</span>
+									</span>
+									<span class="mui-pull-right date">19:10</span>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tishi">
+									<span class="mui-pull-left">欧尼酱,僵尸</span>
+									<p class="mui-badge mui-pull-right">1</p>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="Record_list">
+							<div class="Record_listL mui-pull-left">
+								<img src="../image/Alipay.png">
+							</div>
+							<div class="Record_listR mui-pull-right">
+								<div>
+									<span class="mui-pull-left">
+										<span class="Label">
+											<img src="../image/newsb3.png">
+										</span>
+										<span style="font-size: 15px;">小飞飞</span>
+									</span>
+									<span class="mui-pull-right date">19:10</span>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tishi">
+									<span class="mui-pull-left">欧尼酱,僵尸</span>
+									<p class="mui-badge mui-pull-right">1</p>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div> -->
+					</li>
+					<li id="system_message" data-type="system">
+						<div style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>
+						<!-- <div class="Record_list">
+							<div class="Record_listL mui-pull-left">
+								<img src="../image/news1.png">
+							</div>
+							<div class="Record_listR mui-pull-right">
+								<div>
+									<span class="mui-pull-left">
+										<span style="font-size: 15px;">新的好友</span>
+									</span>
+									<span class="mui-pull-right date">19:10</span>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tishi" style="margin-top: 5px;">
+									<span class="mui-pull-left">[小飞飞]添加你为好友</span>
+									<p class="mui-badge mui-pull-right">1</p>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="Record_list">
+							<div class="Record_listL mui-pull-left">
+								<img src="../image/news2.png">
+							</div>
+							<div class="Record_listR mui-pull-right">
+								<div>
+									<span class="mui-pull-left">
+										<span style="font-size: 15px;">商城提醒</span>
+									</span>
+									<span class="mui-pull-right date">19:10</span>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tishi" style="margin-top: 5px;">
+									<span class="mui-pull-left">你的客户[头强光]下单成功（未支付）</span>
+									<p class="mui-badge mui-pull-right">1</p>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="Record_list">
+							<div class="Record_listL mui-pull-left">
+								<img src="../image/news3.png">
+							</div>
+							<div class="Record_listR mui-pull-right">
+								<div>
+									<span class="mui-pull-left">
+										<span style="font-size: 15px;">客情关怀</span>
+									</span>
+									<span class="mui-pull-right date">18/12/25</span>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tishi" style="margin-top: 5px;">
+									<span class="mui-pull-left">你的客户[强光头]后天生日，送个祝福吧</span>
+
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="Record_list">
+							<div class="Record_listL mui-pull-left">
+								<img src="../image/news4.png">
+							</div>
+							<div class="Record_listR mui-pull-right">
+								<div>
+									<span class="mui-pull-left">
+										<span style="font-size: 15px;">升级</span>
+									</span>
+									<span class="mui-pull-right date">18/12/25</span>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tishi" style="margin-top: 5px;">
+									<span class="mui-pull-left">旺客2.1版本升级提醒</span>
+
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="Record_list">
+							<div class="Record_listL mui-pull-left">
+								<img src="../image/news5.png">
+							</div>
+							<div class="Record_listR mui-pull-right">
+								<div>
+									<span class="mui-pull-left">
+										<span style="font-size: 15px;">余额提现</span>
+									</span>
+									<span class="mui-pull-right date">18/12/25</span>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tishi" style="margin-top: 5px;">
+									<span class="mui-pull-left">你的余额提现已到账</span>
+
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div> -->
+					</li>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					var self = plus.webview.currentWebview();
+					if (self.prePage == 'chat' || self.prePage == 'member') {
+						plus.navigator.setStatusBarStyle(plus.webview.barStyle);
+					}
+				}
+			})
+			
+			var userInfo = getUserInfo();
+			mui.plusReady(function() {
+				getChatList();
+				mui('header').on('tap', 'li', function() {
+					var type = this.dataset.type;
+					this.className = 'current';
+					if (type == 'system') {
+						document.querySelector('.hd li[data-type=chat]').className = '';
+						document.querySelector('.bd li[data-type=chat]').className = '';
+						document.querySelector('.bd li[data-type=system]').className = 'current';
+					} else {
+						document.querySelector('.hd li[data-type=system]').className = '';
+						document.querySelector('.bd li[data-type=system]').className = '';
+						document.querySelector('.bd li[data-type=chat]').className = 'current';
+					}
+				})
+			})
+			
+			function getChatList() {
+				plus.nativeUI.showWaiting();
+				mui.post($ajaxUrl + 'chat', {action: 'list', token: userInfo.token}, function(res) {
+					var html = '';
+					if (res.errno == 0) {
+						var chatList = res.data;
+						logs(chatList);
+						var total = chatList.length;
+						document.getElementById('chat_total').innerText = '(' + total + ')';
+						for (var i = 0; i < total; i++) {
+							html += '<div class="Record_list">';
+								html += '<div class="Record_listL mui-pull-left">';
+								if (!chatList[i].user.avatarUrl) {
+									html += '<img src="../image/user_default.png">';
+								} else {
+									html += '<img src="' + chatList[i].user.avatarUrl + '">';
+								}
+									
+								html += '</div>';
+								html += '<div class="Record_listR mui-pull-right">';
+									html += '<div>';
+										html += '<span class="mui-pull-left">';
+											html += '<span class="Label">';
+											if (chatList[i].type == 'friend') {
+												html += '<img src="../image/newsb3.png">';
+											} else if (chatList[i].type == 'customer') {
+												html += '<img src="../image/newsb2.png">';
+											} else {
+												html += '<img src="../image/newsb1.png">';
+											}
+											html += '</span>';
+											html += '<span style="font-size: 15px;">' + chatList[i].user.nickName + '</span>';
+											if (chatList[i].name) {
+												html += '<span style="color: #2289FF;font-size: 15px;">(' + chatList[i].name + ')</span>';
+											}
+										html += '</span>';
+										html += '<span class="mui-pull-right date">' + chatList[i].time + '</span>';
+										html += '<div class="clearfix"></div>';
+									html += '</div>';
+									html += '<div class="tishi">';
+									if (chatList[i].message.length > 0) {
+										html += '<span class="mui-pull-left">' + chatList[i].message.content + '</span>';
+										if (chatList[i].message.count > 0) {
+											html += '<p class="mui-badge mui-pull-right">' + chatList[i].message.count + '</p>';
+										}
+										html += '<div class="clearfix"></div>';
+									} else {
+										html += '<span class="mui-pull-left">  </span>';
+										// html += '<p class="mui-badge mui-pull-right"></p>';
+										html += '<div class="clearfix"></div>';
+									}
+									html += '</div>';
+								html += '</div>';
+								html += '<div class="clearfix"></div>';
+							html += '</div>';
+						}
+					} else {
+						html += '<div style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
+					}
+					document.getElementById('chat_message').innerHTML = html;
+					plus.nativeUI.closeWaiting();
+				}, 'json')
+			}
+		</script>
+	</body>
+</html>
