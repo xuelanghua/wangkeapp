@@ -14,16 +14,19 @@ function checkMember() {
 	if (userInfo.is_activation == 0) {
 		plus.nativeUI.confirm('此功能需要开通VIP会员才可使用,前往开通?', function(e) {
 			if (e.index == 0) {
-				fnOpenWin('activation.html', 'activation', '', '', 'slide-in-right');
+				fnOpenWin('activation.html', 'activation', '', '', 'slide-in-bottom');
 			}
 		});
+		return false;
 	} else if (userInfo.is_activation == 1 && userInfo.expire_time < parseInt(new Date().getTime() / 1000)) {
 		plus.nativeUI.confirm('您的会员已到期,前往续费?', function() {
 			if (e.index == 0) {
-				fnOpenWin('activation.html', 'activation', '', '', 'slide-in-right');
+				fnOpenWin('activation.html', 'activation', '', '', 'slide-in-bottom');
 			}
 		});
+		return false;
 	}
+	return true;
 }
 
 //获取用户信息

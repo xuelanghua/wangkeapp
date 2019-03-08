@@ -140,6 +140,12 @@
 			initIndexView();
 		})
 		
+		window.addEventListener('showChat', function() {
+			mui.trigger(document.getElementById('chat'), 'tap');
+			// currentTab.children[0].classList.remove(tabsConfig[current].icon);
+			// currentTab.children[0].classList.add(tabsConfig[current].selected);
+		})
+		
 		//设置currentTab
 		currentTab = mui('#bar .tab-item')[0];
 		//获取当前webview
@@ -147,7 +153,7 @@
 		//设置只支持竖屏幕显示
 		plus.screen.lockOrientation("portrait-primary");
 		
-		// localStorage.removeItem('user');
+		localStorage.removeItem('user');
 		var userInfo = getUserInfo();
 		if (!userInfo) {
 			login();
@@ -238,7 +244,7 @@
 	}
 	
 	function login() {
-		fnOpenWin('html/login.html', 'login', {statusbar: {background: '#060665'}}, '', 'slide-in-bottom');
+		fnOpenWin('html/login.html', 'login', {statusbar: {background: '#122c9a'}}, '', 'slide-in-bottom');
 	}
 	
 	function bindMobile() {
@@ -250,7 +256,7 @@
 		//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
 		var userInfo = getUserInfo();
 		if (!userInfo) {
-			fnOpenWin('html/login.html', 'login', {statusbar: {background: '#060665'}}, '', 'slide-in-bottom');
+			fnOpenWin('html/login.html', 'login', {statusbar: {background: '#122c9a'}}, '', 'slide-in-bottom');
 			return;
 		} else if (userInfo.mobile.length == 0) {
 			fnOpenWin('html/mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');

@@ -58,7 +58,7 @@ for(var i=0;i<nums;i++){
              linesArr.push({
                  initX:lx,
                  initY:0,
-                 length:Math.random()*50+30,
+                 length:Math.random()*50+10,
                  speed:Math.random()*10
              })
          }
@@ -75,8 +75,10 @@ var redYlimt=-0.35*canvasElement.width*0.22;;
  function draw(){
       cxt.clearRect(0,0,canvasElement.width,canvasElement.height);
      var colors=cxt.createLinearGradient(0,0,0,canvasElement.height);
-     colors.addColorStop(0,"#060665");
-     colors.addColorStop(0.5,"#050a41");
+     // colors.addColorStop(0,"#060665");
+     colors.addColorStop(0,"#122c9a");
+     // colors.addColorStop(0.5,"#050a41");
+     colors.addColorStop(0.6,"#050a41");
      
      cxt.fillStyle=colors; //08071e
      cxt.fillRect(0,0,canvasElement.width,canvasElement.height)

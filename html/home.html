@@ -468,7 +468,7 @@
 				</div>
 
 				<div class="functional_selection">
-					<div class="business_card" data-type="card">
+					<div class="business_card" id="card" data-type="card">
 						<img src="../image/business-card.png">
 						<div style="float: left;margin-left: 10px;">
 							<p>扫码换名片</p>
@@ -477,7 +477,7 @@
 						<div class="heitiao">雷达</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_cardR" data-type="redpacket">
+					<div class="business_cardR" id="redpacket" data-type="redpacket">
 						<img src="../image/Red-envelopes.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>发红包</p>
@@ -486,7 +486,7 @@
 						<div class="heitiao" style="background-color: #FC7053;">设置</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_card" data-type="shop">
+					<div class="business_card" id="shop" data-type="shop">
 						<img src="../image/Shopping-Mall.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>商城</p>
@@ -494,13 +494,13 @@
 						</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_cardR" data-type="link">
-						<img src="../image/custom.png">
+					<div class="business_cardR" id="target" data-type="link">
+						<img src="../image/target.png">
 						<div style="float: left;margin-left: 15px;">
-							<p>自定义</p>
-							<span style="color: #000;">营销多元化</span>
+							<p>目标&任务</p>
+							<span style="color: #000;">释放你的小宇宙</span>
 						</div>
-						<div class="heitiao" style="background-color: #05D6DF;">设置</div>
+						<!-- <div class="heitiao" style="background-color: #05D6DF;">设置</div> -->
 						<div class="clearfix"></div>
 					</div>
 					<div class="clearfix"></div>
@@ -596,9 +596,22 @@
 			})
 			
 			//打开二维码
-			mui('.mui-content').on('tap', '.business_card,.business_cardR,.functionLc', function() {
+			mui('.mui-content').on('tap', '#card,#redpacket,.functionLc', function() {
 				var type = this.dataset.type;
 				showQrcode(type);
+			})
+			
+			//打开商城
+			mui('.mui-content').on('tap', '#shop', function() {
+				var activation = checkMember();
+				if (activation) {
+					// fnOpenWin();
+				}
+			})
+			
+			//打开目标
+			mui('.mui-content').on('tap', '#target', function() {
+				fnOpenWin('target.html', 'target', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
 			})
 			
 			//关闭二维码
@@ -723,10 +736,6 @@
 		
 		//展示二维码
 		function showQrcode(type) {
-			if (type == 'shop') {
-				checkMember();
-				return;
-			}
 			mui.post($ajaxUrl + 'userqrcode&action=make_url', {type: type, token: userInfo.token}, function(res) {
 				if (res.errno == 0) {
 					var qrcodeType = {

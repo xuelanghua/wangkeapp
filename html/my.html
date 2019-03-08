@@ -1,494 +1,447 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>我的</title>
-    <link href="../css/mui.min.css" rel="stylesheet"/>
-	<style type="text/css">
-		.clearfix {
-			clear: both;
-		}
-		.message{
-			width: 28px; height: 24px;
-			margin-top: 10px;
-		}
-		#btn_show{
-			margin-right: 16px;
-			width: 23px;
-			height: 23px;
-			top: 5px;
-			position: relative;
-			z-index: 9;
-		}
-		#btn_show img{
-			width: 100%;
-			height: 100%;
-		}
-		.target{
-			width: 95%;
-			position: absolute;
-			left: 2.5%;
-			right: 2.5%;
-			top: 163px;
-			color: #000000;
-			background-color: #FFFFFF;
-			border-radius: 8px;
-			box-shadow: 0 -8px 18px 2px #1B86E2;
-		}
-		ul,li{
-			list-style: none;
-		}
-		
-		.target ul li{
-			width: 30%;
-			float: left;
-			margin-top: 15px;
-		}
-		.target p{
-			width: 1px;
-			height: 35px;
-			float: right;
-			margin-top: -50px;
-			background-color: #F2F2F2;
-		}
-		.target-details{
-			float: right;
-			font-size: 14px;
-			margin-right: 10px;
-			color: #999;
-			padding-bottom: 15px;
-		}
-		.target-details img{
-			width: 8px;
-			margin-left: 5px;
-			margin-right: 18px;
-			float: right;
-			margin-top: 3px;
-		}
-		.Notice{
-			margin-top: 290px;
-			padding: 10px;
-			font-size: 12px;
-			background-color: #DDDEDE;
-		}
-		.Notice-title{
-			float: left;
-			margin-right: 15px;
-		}
-		.Notice img{
-			float: right;
-			width: 8px;
-			margin-top: 3px;
-		}
-		.goods{
-			padding: 20px 0;
-			background-color: #FFFFFF;
-			margin-top: 10px;
-		}
-		.goodsL{
-			width: 50%;
-			float: left;
-			border-right: 1px solid #F2F2F2;
-			text-align: center;
-		}
-		.goodsR{
-			width: 50%;
-			float: right;
-			text-align: center;
-		}
-		.goods span{
-			margin-left: 10px;
-			font-size: 15px;
-		}
-		.goods div{
-			font-size: 13px;
-		}
-		.menu{
-			margin-top: 10px;
-			padding-bottom: 20px;
-			background-color: #fff;
-		}
-		.menu li{
-			width: 25%;
-			float: left;
-			padding-top: 30px;
-			text-align: center;
-		}
-		.menu li img{
-			height: 21px;
-		}
-		.menu li span{
-			display: block;
-			margin-top: 7-px;
-			font-size: 12px;
-			color: #000000;
-		}
-		.task{
-			margin-top: 10px;
-			padding-bottom: 50px;
-			background-color: #fff;
-		}
-		.task1{
-			padding: 22px 10px;
-			font-size: 12px;
-			border-bottom: 1px solid #F2F2F2;
-		}
-		.task1 p{
-			width: 3px;
-			height: 15px;
-			float: left;
-			margin-top: 3px;
-			background-color: #2289FF;
-		}
-		.task2{
-			padding-top: 20px;
-			padding-bottom: 10px;
-			margin-left: 10px;
-			border-bottom: 1px solid #F2F2F2;
-		}
-		
-		.task2 span{
-			float: left;
-			margin-top: 8px;
-			font-size: 15px;
-			padding-left: 15px;
-		}
-		
-		.task2 p{
-			color:#FF8A3D;
-			border: 1px solid #FF8A3D;
-			padding: 6px;
-			font-size: 12px;
-			float: right;
-			margin-right: 20px;
-			border-radius: 5px;
-		}
-		.mui-popover .mui-popover-arrow:after{
-			width: 0;
-		}
-		.mui-popover{
-			margin-left: 60%;
-			margin-top: 40px;
-		}
-		
-		.Pop-up-menu{
-			width: 128px;
-			float: right;
-			margin-right: 22px;
-			border-radius: 5px;
-			background-color: #fff;
-		}
-		.Pop-up-menu li{
-			padding: 15px 0 10px 0;
-			margin-left: 10px;
-			border-bottom: 1px solid #F2F2F2;
-		}
-		.Pop-up-menu li img{
-			width: 17px;
-			height: 16px;
-			float: left;
-		}
-		.Pop-up-menu li span{
-			margin-left: 18px;
-			font-size: 15px;
-			margin-top: -2px;
-			float: left;
-		}
-		#cover{
-			position: fixed;
-			z-index: 9999;
-			top: 0;
-			left: 0;
-			display: none;
-			width: 100%;
-			height: 100%;
-			opacity: 0.5;
-			background: #484848 none repeat scroll 0% 0%;
-		}
-		#QR-code{
-			width: 288px;
-			height: 335px;
-			background-color: #fff;
-			display: none;
-			z-index: 99999;
-			position: fixed;
-			top: 25%;
-			left: 13%;
-			border-radius: 8px;
-			text-align: center;
-		}
-		.QR-tu{
-			width: 217px;
-			height: 217px;
-			margin: 0 auto;
-			padding-top: 30px;
-		}
-		.QR-tu img{
-			width: 100%;
-		}
-		#QR-code span{
-			display: block;
-			font-size: 15px;
-			margin-top: 50px;
-			padding-bottom: 10px;
-		}
-		#QR-code a{
-			font-size: 13px;
-		}
-	</style>
-</head>
-<body>
-	<header id="header" class="mui-bar mui-bar-transparent mui-active" style="background-color: rgba(34,137,255,0);">
-		<img class="message" src="../image//Message-icon.png">
-		<a href="#popover" id="openPopover">
-			<img class="message mui-pull-right" src="../image//Add-Icon.png"style="width: 24px; height: 24px;margin-right: 10px;margin-left: 10px;" >
-		</a>
-		<span id="btn_show" class="mui-right mui-pull-right"onclick="ycit()">
-			<img id="btn_show" src="../image//QR-code.png">
-		</span>
-		<h1 class="mui-title"style="color: #fff;">我的</h1>
-	</header>
-	
-	
-	<div class="mui-content">
-		<img id="img1" src="../image//Mybackground_q1.png" style="width:100%; height: 308px;" >
-		<div class="money" style="margin-top: -230px; padding: 0 10px; color: #fff; font-size: 27px;">
-			<div class="moneyL" style="width: 50%; margin-left: 10px;">
-				<p style="color: #CFE5FF;font-size: 12px;">今日收款金额</p>
-				<span>0.00</span>
-			</div>
-			<div class="moneyR" style="margin-left: 52%; margin-top: -50px;">
-				<div>
-					<p style="color: #CFE5FF;font-size: 12px;">推广金</p>
-					<a href="sign_in.html">
-						<button style="float: left;margin-left: 50px;margin-top: -30px; font-size: 12px;border: none;color:#2289FF;padding: 3px 6px 2px 6px;">签到领取</button>
-					</a>
-				    <div class="clearfix"></div>
-				</div>
-				<span>2,580</span>
-			</div>
-		</div>
-		
-		<div id="popover" class="mui-popover">
-			<div class="Pop-up-menu">
-				<li>
-					<img src="../image//share_q1.png" >
-					<span>分享</span>
-					<div class="clearfix"></div>
-				</li>
-				<li>
-					<img src="../image//Receipt-code.png"style="height: 17px;" >
-					<span>收款码</span>
-					<div class="clearfix"></div>
-				</li>
-				<li>
-					<img src="../image//Scan_q1.png" >
-					<span>扫一扫</span>
-					<div class="clearfix"></div>
-				</li>
-			</div>
-		</div>
-		
-		<div class="target">
-			<ul>
-				<li style="text-align: left;">
-					<div style="font-size: 12px; margin-left: 10px;">曝光</div>
-					<h4 style="font-size: 18px; margin-left: 10px;">5000</h4>
-					<div style="font-size: 10px; color: #FF4E47; margin-left: 10px; margin-top: -5px;">未完成</div>
-					<p></p>
-				</li>
-				<li>
-					<div style="margin-left: 30%;">
-						<div style="font-size: 12px;">拓客</div>
-						<h4 style="font-size: 18px;">5000</h4>
-						<div style="font-size: 10px; color: #FF4E47;margin-top: -5px;">未完成</div>
-						<p></p>
-					</div>
-				</li>
-				<li>
-					<div style="margin-left: 30%;">
-						<div style="font-size: 12px; margin-right: 10px;">客户跟进</div>
-						<h4 style="font-size: 18px; margin-right: 10px;">5000</h4>
-						<div style="font-size: 10px; color: #267CFF;margin-top: -5px; margin-right: 10px;">已完成</div>
-					</div>
-				</li>
-				<div class="clearfix"></div>
-			</ul>
-			<ul>
-				<li style="text-align: left;">
-					<div style="font-size: 12px; margin-left: 10px;">有效沟通</div>
-					<h4 style="font-size: 18px; margin-left: 10px;">5000</h4>
-					<div style="font-size: 10px; color: #FF4E47; margin-left: 10px; margin-top: -5px;">未完成</div>
-					<p></p>
-				</li>
-				<li>
-					<div style="margin-left: 30%;">
-						<div style="font-size: 12px;">转介绍</div>
-						<h4 style="font-size: 18px;">5000</h4>
-						<div style="font-size: 10px; color: #FF4E47;margin-top: -5px;">未完成</div>
-						<p></p>
-					</div>
-				</li>
-				<li>
-					<div style="margin-left: 30%;">
-						<div style="font-size: 12px; margin-right: 10px;">成交</div>
-						<h4 style="font-size: 18px; margin-right: 10px;">5000</h4>
-						<div style="font-size: 10px; color: #267CFF;margin-top: -5px; margin-right: 10px;">已完成</div>
-					</div>
-				</li>
-				<div class="clearfix"></div>
-			</ul>
-			<div class="target-details">
-				<span>目标详情</span>
-				<img src="../image//iconrightb.png"/>
-			</div>
-		</div>
-		
-		<div class="Notice">
-			<div class="Notice-title">公告</div>
-			<span>这里是公告，公告的内容很有用</span>
-			<img src="../image//iconrighth.png" >
-		</div>
-		
-		<div class="goods">
-			<div class="goodsL">
-				<div>待收货<span>50</span></div>
-			</div>
-			<div class="goodsR">
-				<div>待回复<span>50</span></div>
-			</div>
-			<div class="clearfix"></div>
-		</div>
-		
-		<div class="menu">
-			<li id="shop_setting">
-				<img src="../image//Store-management.png" >
-				<span>店铺管理</span>
-			</li>
-			<li>
-				<img src="../image//Marketing-code.png" >
-				<span>boss</span>
-			</li>
-			<li>
-				<img src="../image//customer-management.png">
-				<span>雷达</span>
-			</li>
-			<li>
-				<img src="../image//Personal-information.png">
-				<span>个人信息</span>
-			</li>
-			<div class="clearfix"></div>
-			<li>
-				<img src="../image//data-statistics.png">
-				<span>数据统计</span>
-			</li>
-			<li>
-				<img src="../image//asset-management.png">
-				<span>资产管理</span>
-			</li>
-			<li>
-				<img src="../image//Target-management.png">
-				<span>目标管理</span>
-			</li>
-			<a href="html/red_packet.html">
-				<li>
-					<img src="../image//Red-envelopes_q1.png">
-					<span>红包管理</span>
-				</li>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>我的</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.clearfix {
+				clear: both;
+			}
+
+			ul,
+			li {
+				list-style: none;
+			}
+
+			.message {
+				width: 28px;
+				height: 24px;
+				margin-top: 10px;
+			}
+
+			#btn_show {
+				margin-right: 16px;
+				width: 23px;
+				height: 23px;
+				top: 5px;
+				position: relative;
+				z-index: 9;
+			}
+
+			#btn_show img {
+				width: 100%;
+				height: 100%;
+			}
+
+			.img1 {
+				width: 100%;
+				height: 260px;
+			}
+
+			.my_message {
+				color: #fff;
+				width: 50%;
+				text-align: center;
+				margin: -200px auto 0;
+				font-size: 27px;
+			}
+
+			.my_message_chart {
+				width: 60px;
+				height: 60px;
+				margin: 0 auto;
+			}
+
+			.my_message_chart img {
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+			}
+
+			.my_message_name {
+				font-size: 15px;
+				margin-top: 13px;
+			}
+
+			.maker {
+				padding: 2px 5px;
+				font-size: 10px;
+				margin-left: 10px;
+				border-radius: 15px;
+				background-color: #71BBF2;
+			}
+
+			.maker img {
+				width: 8px;
+				height: 8px;
+				position: relative;
+				top: 1px;
+				transform: rotate(270deg);
+			}
+
+			.prosperous {
+				margin-top: 10px;
+				font-size: 15px;
+			}
+
+			.prosperous img {
+				width: 15px;
+				height: 15px;
+				position: relative;
+				top: 1px;
+				right: 5px;
+			}
+
+
+			.di {
+				margin-top: 68px;
+				background-color: #FFFFFF;
+			}
+
+			.Notice {
+				padding: 10px;
+				font-size: 12px;
+				margin-top: -15px;
+				background-color: #DDDEDE;
+			}
+
+			.Notice-title {
+				float: left;
+				margin-right: 15px;
+			}
+
+			.Notice img {
+				float: right;
+				width: 8px;
+				margin-top: 3px;
+			}
+
+			.goods {
+				padding: 16px 0;
+				width: 95%;
+				margin: 0 auto;
+				position: relative;
+				top: -40px;
+				box-shadow: 0 0 15px 0 #adadad;
+				background-color: #FFFFFF;
+				border-radius: 5px;
+			}
+
+			.goodsL,
+			.goodsR {
+				width: 50%;
+				padding: 8px 0;
+				text-align: center;
+			}
+
+			.goodsL img {
+				width: 22px;
+				height: 19px;
+			}
+
+			.goodsR {
+				border-left: 1px solid #DDDDDD;
+			}
+
+			.goodsR img {
+				width: 17px;
+				height: 19px;
+			}
+
+			.goodsR img,
+			.goodsL img {
+				position: relative;
+				top: 3px;
+			}
+
+			.goods span {
+				margin-left: 10px;
+				font-size: 15px;
+			}
+
+			.goods div {
+				font-size: 13px;
+			}
+
+			.menu {
+				margin-top: 10px;
+				padding-bottom: 20px;
+				background-color: #fff;
+			}
+
+			.menu li {
+				width: 25%;
+				float: left;
+				padding-top: 30px;
+				text-align: center;
+			}
+
+			.menu li img {
+				height: 21px;
+			}
+
+			.menu li span {
+				display: block;
+				margin-top: 7-px;
+				font-size: 12px;
+				color: #000000;
+			}
+
+			.mui-popover .mui-popover-arrow:after {
+				width: 0;
+			}
+
+			.mui-popover {
+				margin-left: 60%;
+				margin-top: 40px;
+			}
+
+			.Pop-up-menu {
+				width: 128px;
+				float: right;
+				margin-right: 22px;
+				border-radius: 5px;
+				background-color: #fff;
+			}
+
+			.Pop-up-menu li {
+				padding: 15px 0 10px 0;
+				margin-left: 10px;
+				border-bottom: 1px solid #F2F2F2;
+			}
+
+			.Pop-up-menu li img {
+				width: 17px;
+				height: 16px;
+				float: left;
+			}
+
+			.Pop-up-menu li span {
+				margin-left: 18px;
+				font-size: 15px;
+				margin-top: -2px;
+				float: left;
+			}
+
+			#cover {
+				position: fixed;
+				z-index: 9999;
+				top: 0;
+				left: 0;
+				display: none;
+				width: 100%;
+				height: 100%;
+				opacity: 0.5;
+				background: #484848 none repeat scroll 0% 0%;
+			}
+
+			#QR-code {
+				width: 288px;
+				height: 335px;
+				background-color: #fff;
+				display: none;
+				z-index: 99999;
+				position: fixed;
+				top: 25%;
+				left: 13%;
+				border-radius: 8px;
+				text-align: center;
+			}
+
+			.QR-tu {
+				width: 217px;
+				height: 217px;
+				margin: 0 auto;
+				padding-top: 30px;
+			}
+
+			.QR-tu img {
+				width: 100%;
+			}
+
+			#QR-code span {
+				display: block;
+				font-size: 15px;
+				margin-top: 50px;
+				padding-bottom: 10px;
+			}
+
+			#QR-code a {
+				font-size: 13px;
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent mui-active" style="background-color: rgba(34,137,255,0);">
+			<img class="message" src="../image/Message-icon.png">
+			<a href="#popover" id="openPopover">
+				<img class="message mui-pull-right" src="../image/Add-Icon.png" style="width: 24px; height: 24px;margin-right: 10px;margin-left: 10px;">
 			</a>
-			<div class="clearfix"></div>
-		</div>
-		
-		<div class="task">
-			<div class="task1">
-				<p></p>
-				<span style="float: left;margin-left: 10px;font-size: 15px;">任务</span>
-				<div style="color: #999999;margin-left: 55px;margin-top: 1px;">做任务赢推广金，推广商品更轻松</div>
+			<span id="btn_show" class="mui-right mui-pull-right" onclick="ycit()">
+				<img id="btn_show" src="../image/QR-code.png">
+			</span>
+			<h1 class="mui-title" style="color: #fff;">我的</h1>
+		</header>
+
+		<div class="mui-content">
+			<img class="img1" src="../image/member_center_bg.jpg">
+			<div class="my_message">
+				<div class="my_message_chart"> 
+					<img src="../image/bj.jpg">
+				</div>
+				<div class="my_message_name">
+					<span>wk6100kdf</span>
+					<span class="maker">
+						<span>创客</span>
+						<span>
+							<img src="../image/quickxia.png">
+						</span>
+					</span>
+				</div>
+				<div class="prosperous">
+					<span>
+						<img src="../image/prosperous.png">
+					</span>
+					<span>
+						<span style="color: #C6DEFF;">旺旺</span>
+						<span>9,999</span>
+					</span>
+				</div>
 			</div>
-			<div class="task2">
-				<span>推广3人下载APP</span>
-				<p>已完成2人下载</p>
+
+			<div id="popover" class="mui-popover">
+				<div class="Pop-up-menu">
+					<li>
+						<img src="../image/share_q1.png">
+						<span>分享</span>
+						<div class="clearfix"></div>
+					</li>
+					<li>
+						<img src="../image/Receipt-code.png" style="height: 17px;">
+						<span>收款码</span>
+						<div class="clearfix"></div>
+					</li>
+					<li>
+						<img src="../image/Scan_q1.png">
+						<span>扫一扫</span>
+						<div class="clearfix"></div>
+					</li>
+				</div>
+			</div>
+
+			<div class="di">
+				<div class="goods">
+					<div class="goodsL mui-pull-left">
+						<span>
+							<img src="../image/goodsL.png">
+						</span>
+						<span>会员中心</span>
+					</div>
+					<div class="goodsR mui-pull-right">
+						<span>
+							<img src="../image/goodsR.png">
+						</span>
+						<span>签到领旺旺</span>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+
+				<div class="Notice">
+					<div style="width: 99%;margin: 0 auto;">
+						<div class="Notice-title">公告</div>
+						<span>这里是公告，公告的内容很有用</span>
+						<img src="../image/iconrighth.png">
+					</div>
+				</div>
+
+				<div class="menu">
+					<li>
+						<img src="../image/Store-management.png">
+						<span>店铺管理</span>
+					</li>
+					<li>
+						<img src="../image/Marketing-code.png">
+						<span>boss</span>
+					</li>
+					<li>
+						<img src="../image/customer-management.png">
+						<span>雷达</span>
+					</li>
+					<li>
+						<img src="../image/Personal-information.png">
+						<span>个人信息</span>
+					</li>
+					<div class="clearfix"></div>
+					<li>
+						<img src="../image/data-statistics.png">
+						<span>数据统计</span>
+					</li>
+					<a href="asset_management.html">
+						<li>
+							<img src="../image/asset-management.png">
+							<span>资产管理</span>
+						</li>
+					</a>
+					<li>
+						<img src="../image/Target-management.png">
+						<span>目标管理</span>
+					</li>
+					<a href="html/red_packet.html">
+						<li>
+							<img src="../image/Red-envelopes_q1.png">
+							<span>红包管理</span>
+						</li>
+					</a>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+
+			<div id="cover" onclick="yc()"></div>
+			<div id="QR-code">
+				<div class="QR-tu">
+					<img src="../image/QR.png">
+				</div>
+				<span>二维码类型（名片）</span>
+				<a style="float: left;margin-left: 45%;">设置 ></a>
+				<img onclick="yc()" src="../image/Close.png" style="width: 28px;height: 28px;float: left;margin-top: 50px;margin-left: 45%;">
 				<div class="clearfix"></div>
 			</div>
-			<div class="task2">
-				<span>微信分享3次商品</span>
-				<p>去推广</p>
-				<div class="clearfix"></div>
-			</div>
-			<div class="task2">
-				<span>更新商品信息</span>
-				<p style="border: 1px solid #2289FF;color: #2289FF;">已完成</p>
-				<div class="clearfix"></div>
-			</div>
 		</div>
-		
-		<div id="cover"onclick="yc()"></div>
-		<div id="QR-code">
-			<div class="QR-tu">
-				<img src="../image//QR.png" >
-			</div>
-			<span>二维码类型（名片）</span>
-			<a style="float: left;margin-left: 45%;">设置 ></a>
-			<img onclick="yc()" src="../image//Close.png"style="width: 28px;height: 28px;float: left;margin-top: 50px;margin-left: 45%;" >
-			<div class="clearfix"></div>
-		</div>
-	</div>
-</body>
-<script src="../js/mui.min.js"></script>
-<script type="text/javascript" charset="utf-8">
-      	mui.init();
-		mui.plusReady(function(){
-			window.addEventListener('scrollTop', function(event) {
-				window.scrollTo(0, 0);
-			});
-			//店铺管理
-			var shop_setting=document.getElementById('shop_setting');
-			shop_setting.addEventListener('tap', function() {
-				var styles = {
-					top: 0,
-					bottom: 0,
-					statusbar: {background: '#fff'},
-					
-				};
-				var extras = {
-					
-				};
-				//commodity_management
-				var w = plus.webview.create('store_management.html', 'store_management.html', styles, extras);
-				w.show(); // 显示窗口
-			})
-			
-		})
-		
-		function ycit(){
-			var zt = document.getElementById("cover").style.display;
-			var zt = document.getElementById("QR-code").style.display;
-			if (zt == "block"){
-				document.getElementById("cover").style.display = "none";
-			}else{
-				document.getElementById("cover").style.display = "block";
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+
+			function ycit() {
+				var zt = document.getElementById("cover").style.display;
+				var zt = document.getElementById("QR-code").style.display;
+				if (zt == "block") {
+					document.getElementById("cover").style.display = "none";
+				} else {
+					document.getElementById("cover").style.display = "block";
+				}
+				if (zt == "block") {
+					document.getElementById("QR-code").style.display = "none";
+				} else {
+					document.getElementById("QR-code").style.display = "block";
+				}
 			}
-			if (zt == "block"){
-				document.getElementById("QR-code").style.display = "none";
-			}else{
-				document.getElementById("QR-code").style.display = "block";
-			}   
-		}
-		
-		function yc(){
-			var zt = document.getElementById("cover").style.display;
-			var zt = document.getElementById("QR-code").style.display;
-			if (zt == "block"){
-				document.getElementById("cover").style.display = "none";
-			}else{
-				document.getElementById("cover").style.display = "block";
+
+			function yc() {
+				var zt = document.getElementById("cover").style.display;
+				var zt = document.getElementById("QR-code").style.display;
+				if (zt == "block") {
+					document.getElementById("cover").style.display = "none";
+				} else {
+					document.getElementById("cover").style.display = "block";
+				}
+				if (zt == "block") {
+					document.getElementById("QR-code").style.display = "none";
+				} else {
+					document.getElementById("QR-code").style.display = "block";
+				}
 			}
-			if (zt == "block"){
-				document.getElementById("QR-code").style.display = "none";
-			}else{
-				document.getElementById("QR-code").style.display = "block";
-			}   
-		}
-    </script>
+		</script>
+	</body>
 </html>
