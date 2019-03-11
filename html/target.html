@@ -138,11 +138,6 @@
 	</head>
 
 	<body>
-		<script src="../js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
-		
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">目标管理</h1>
@@ -164,23 +159,23 @@
 					<ul>
 						<li style="text-align: left;">
 							<div style="font-size: 12px; margin-left: 10px;">曝光</div>
-							<h4 style="font-size: 18px; margin-left: 10px;">5000</h4>
-							<div style="font-size: 10px; color: #FF4E47; margin-left: 10px; margin-top: -5px;">未达标</div>
+							<h4 style="font-size: 18px; margin-left: 10px;" id="exposure_rate_number">0/0</h4>
+							<div style="font-size: 10px; color: #FF4E47; margin-left: 10px; margin-top: -5px;" id="exposure_rate_text">未达标</div>
 							<p></p>
 						</li>
 						<li>
 							<div style="margin-left: 30%;">
 								<div style="font-size: 12px;">拓客</div>
-								<h4 style="font-size: 18px;">5000</h4>
-								<div style="font-size: 10px; color: #FF4E47;margin-top: -5px;">已达标</div>
+								<h4 style="font-size: 18px;" id="new_customer_number">0/0</h4>
+								<div style="font-size: 10px; color: #FF4E47;margin-top: -5px;" id="new_customer_text">未达标</div>
 								<p></p>
 							</div>
 						</li>
 						<li>
 							<div style="margin-left: 30%;">
 								<div style="font-size: 12px; margin-right: 10px;">客户跟进</div>
-								<h4 style="font-size: 18px; margin-right: 10px;">5000</h4>
-								<div style="font-size: 10px; color: #267CFF;margin-top: -5px; margin-right: 10px;">优秀</div>
+								<h4 style="font-size: 18px; margin-right: 10px;" id="customer_follow_number">0/0</h4>
+								<div style="font-size: 10px; color: #FF4E47/*#267CFF*/;margin-top: -5px; margin-right: 10px;" id="customer_follow_text">未达标</div>
 							</div>
 						</li>
 						<div class="clearfix"></div>
@@ -188,23 +183,23 @@
 					<ul>
 						<li style="text-align: left;">
 							<div style="font-size: 12px; margin-left: 10px;">有效沟通</div>
-							<h4 style="font-size: 18px; margin-left: 10px;">5000</h4>
-							<div style="font-size: 10px; color: #FF4E47; margin-left: 10px; margin-top: -5px;">英雄</div>
+							<h4 style="font-size: 18px; margin-left: 10px;" id="communication_number">0/0</h4>
+							<div style="font-size: 10px; color: #FF4E47; margin-left: 10px; margin-top: -5px;" id="communication_text">未达标</div>
 							<p></p>
 						</li>
 						<li>
 							<div style="margin-left: 30%;">
 								<div style="font-size: 12px;">转介绍</div>
-								<h4 style="font-size: 18px;">5000</h4>
-								<div style="font-size: 10px; color: #FF4E47;margin-top: -5px;">未完成</div>
+								<h4 style="font-size: 18px;" id="share_card_number">0/0</h4>
+								<div style="font-size: 10px; color: #FF4E47;margin-top: -5px;" id="share_card_text">未达标</div>
 								<p></p>
 							</div>
 						</li>
 						<li>
 							<div style="margin-left: 30%;">
 								<div style="font-size: 12px; margin-right: 10px;">成交</div>
-								<h4 style="font-size: 18px; margin-right: 10px;">5000</h4>
-								<div style="font-size: 10px; color: #267CFF;margin-top: -5px; margin-right: 10px;">已完成</div>
+								<h4 style="font-size: 18px; margin-right: 10px;" id="deal_number">0/0</h4>
+								<div style="font-size: 10px; color: #FF4E47/*#267CFF*/;margin-top: -5px; margin-right: 10px;" id="deal_text">未达标</div>
 							</div>
 						</li>
 						<div class="clearfix"></div>
@@ -235,9 +230,44 @@
 					<div class="clearfix"></div>
 				</div> -->
 			</div>
-			
 		</div>
-		
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			})
+			
+			var userInfo = getUserInfo();
+			var date = formatDate('y-m-d', '');;
+			mui.plusReady(function() {
+				
+				userTargetStatistics(); 
+			})
+			
+			function userTargetStatistics() {
+				mui.post($ajaxUrl + 'target', {action: 'detail', token: userInfo.token, date: date, pattern: 2}, function(res) {
+					logs(res);
+					var plan = res.data.plan;
+					var finish = res.data.finish;
+					for (var index in plan) {
+						document.getElementById(index + '_number').innerText = finish[index]  + '/' +  plan[index];
+						var rate = parseFloat((finish[index] / plan[index]).toFixed(1));
+						if (rate < 1) {
+							document.getElementById(index + '_text').innerText = '未达标';
+						} else if (rate >= 1 && rate < 1.1) {
+							document.getElementById(index + '_text').innerText = '已达标';
+							document.getElementById(index + '_text').style.color = '#267CFF';
+						} else if (rate >= 1.1 && rate < 1.5) {
+							document.getElementById(index + '_text').innerText = '优秀';
+							document.getElementById(index + '_text').style.color = '#267CFF';
+						} else {
+							document.getElementById(index + '_text').innerText = '英雄';
+							document.getElementById(index + '_text').style.color = '#267CFF';
+						}
+					}
+				}, 'json')
+			}
+		</script>
 	</body>
-
 </html>

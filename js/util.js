@@ -139,3 +139,40 @@ function cropperImg(img, id) {
 		wid: id
 	}, '');
 }
+
+//日期格式化
+function formatDate(format, date) {
+	if (date.length != 0) {
+		var date = new Date(date);
+	} else {
+		var date = new Date();
+	}
+	var year = date.getFullYear();
+	var month = date.getMonth() + 1;
+	if (month < 10) {
+		month = '0' + month;
+	}
+	var day = date.getDate();
+	if (day < 10) {
+		day = '0' + day;
+	}
+	var hour = date.getHours();
+	if (hour < 10) {
+		hour = '0' + hour;
+	}
+	var minute = date.getMinutes();
+	if (minute < 10) {
+		minute = '0' + minute;
+	}
+	var second = date.getSeconds();
+	if (second < 10) {
+		second = '0' + second;
+	}
+	format = format.replace('y', year);
+	format = format.replace('m', month);
+	format = format.replace('d', day);
+	format = format.replace('H', hour);
+	format = format.replace('i', minute);
+	format = format.replace('s', second);
+	return format;
+}

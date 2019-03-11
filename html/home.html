@@ -498,7 +498,7 @@
 						<img src="../image/target.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>目标&任务</p>
-							<span style="color: #000;">释放你的小宇宙</span>
+							<span style="color: #000;">释放小宇宙</span>
 						</div>
 						<!-- <div class="heitiao" style="background-color: #05D6DF;">设置</div> -->
 						<div class="clearfix"></div>
@@ -691,7 +691,11 @@
 				//timeout: 10000,
 				success: function(data) {
 					if(data.status == "success") {
-						document.getElementById('city').innerHTML = data.results[0].currentCity;
+						var city = data.results[0].currentCity;
+						if (city.length > 3) {
+							city = city.substr(0, 3) + '...';
+						}
+						document.getElementById('city').innerHTML = city;
 						document.getElementById('temperature').innerHTML = data.results[0].weather_data[0].temperature;
 						document.getElementById('weather').innerHTML = data.results[0].weather_data[0].weather;
 						var weather = data.results[0].weather_data[0].weather;
