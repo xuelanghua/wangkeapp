@@ -1,0 +1,302 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>新增商品</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			.mui-bar{
+				background-color: #FFFFFF;
+			}
+			.mui-input-row{
+				padding-top: 10px;
+				background-color: #FFFFFF;
+			}
+			#textarea{
+				border: none;
+				border-radius: 0;
+				margin: 0 0 0 10px;
+				font-size: 14px;
+				padding: 0;
+			}
+			
+			.chart{
+				text-align: center;
+				padding: 15px 0 12px 12px;
+				background-color: #FFFFFF;
+			}
+			.add_chart{
+				width: 90px;
+				height: 90px;
+				font-size: 14px;
+				border:2px dashed #DDDDDD
+			}
+			.wenzi{
+				margin-top: 25%;
+			}
+			
+			.tips{
+				font-size: 12px;
+				padding: 6px 10px;
+				color: #999999;
+			}
+			
+			.mui-table-view-cell{
+				position: initial;
+				font-size: 14px;
+				padding: 10px 0;
+				background-color: #FFFFFF;
+			}
+			.mui-table-view-cell .mui-icon{
+				margin-right: 10px;
+				color: #999999;
+			}
+			
+			.fenli{
+				margin-left: 15px;
+				color: #999999;
+			}
+			
+			.mui-navigate-right{
+				font-size: 14px;
+			}
+			.mui-table-view-cell p{
+				font-size: 14px;
+				margin-top: 2px;
+			}
+			.mui-table-view-cell input{
+				width: 80%;
+				margin: 0;
+				padding: 0 10px;
+				border: none;
+				font-size: 14px;
+			}
+			.adding_commodity_specifications{
+				font-size: 14px;
+				padding: 15px 0 10px 10px;
+			}
+			.adding_commodity_specifications img{
+				width: 16px;
+				margin-top: 2px;
+			}
+			
+			.recommend{
+				font-size: 12px;
+				border-bottom: 1px solid #F2F2F2;
+				padding-bottom: 15px;
+			}
+			.mui-switch-blue.mui-active{
+				background-color: #FFD626;
+				border: 2px solid #FFD626;
+			}
+			.mui-input-row{
+				margin: 0;
+			}
+			.mui-input-row label{
+				font-size: 14px;
+				margin-left: -15px;
+			}
+			.tishi{
+				color: #999999;
+			}
+			.choice,.choice1{
+				border-bottom: 1px solid #F2F2F2;
+			}
+			
+			.selection_function{
+				width: 100%;
+				text-align: center;
+				padding: 15px 0;
+				font-size: 15px;
+				position: fixed;
+				bottom: 0;
+				background-color: #F5CA3A;
+			}
+			.upper_shelf{
+				width: 50%;
+			}
+			.warehouse{
+				width: 50%;
+				border-left: 1px solid #000000;
+			}
+			
+			.bian{
+				background-color: #FFFFFF;
+				padding-left: 10px;
+			}
+			.mui-table-view-cell > a:not(.mui-btn){
+				margin: 0;
+				padding: 0;
+			}
+			
+			.add_choice{
+				width: 92%;
+				padding: 0 10px;
+				font-size: 14px;
+				border: 1px solid #F2F2F2;
+				background-color: #FFFFFF;
+			}
+			.choice input{
+				width: 80%;
+				margin: 0;
+				border: none;
+				font-size: 14px;
+			}
+			.add_choice img{
+				width: 25px;
+				float: right;
+				margin-top: -35%;
+				margin-right: -20px;
+				transform:rotate(180deg);
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">新增商品</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="mui-input-row"style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
+				<textarea id="textarea" rows="3" placeholder="请输入商品名称"></textarea>
+			</div>
+			
+			<div class="chart">
+				<div class="add_chart">
+					<div class="wenzi">添加<br/>主图</div>
+				</div>
+			</div>
+			
+			<div class="tips">
+				精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序
+			</div>
+			
+			<div class="bian">
+				<div class="recommend">
+					<div class="mui-input-row">
+						<label>设为推荐</label>
+						<div class="mui-switch mui-active mui-switch-blue">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</div>
+					<div class="tishi">设为推荐则该商品会在所属商品分类中置顶</div>
+				</div>
+			</div>
+			
+			<div class="bian">
+				<div class="choice"style="padding: 10px 0;">
+					<div class="mui-table-view-cell">
+						<span>商品类型</span>
+						<span class="fenli">未分类</span>
+						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="bian" style="margin-top: 10px;">
+				<div class="choice">
+					<div class="mui-table-view-cell">
+						<span>价格</span>
+						<input type="text" placeholder="给商品定个好价格" />
+					</div>
+				</div>
+				<div class="choice1">
+					<div class="mui-table-view-cell">
+						<span>库存</span>
+						<input type="text" placeholder="设置合理库存避免超卖" />
+					</div>
+				</div>
+			</div>
+			
+			<div style="background-color: #FFFFFF;padding-top: 20px;">
+				<div class="add_choice">
+					<div class="choice"style="padding: 10px 0;">
+						<span>规格</span>
+						<input type="text" placeholder="尺寸,大小,颜色等" />
+					</div>
+					<div class="choice"style="padding: 10px 0;">
+						<span>价格</span>
+						<input type="text" placeholder="给商品定个好价格" />
+					</div>
+					<div class="choice"style="padding: 10px 0;">
+						<span>库存</span>
+						<input type="text" placeholder="设置合理的库存避免超卖" />
+					</div>
+					<img src="../image/add_choice.png" >
+				</div>
+			</div>
+			
+			<div class="adding_commodity_specifications">
+				<span class="mui-pull-left">
+					<img src="../image/add_vew.png" >
+				</span>
+				<span class="mui-pull-left" style="margin: 0 0 0 10px;">添加商品规格</span>
+				<div class="clearfix"></div>
+			</div>
+			
+			<div class="bian">
+				<div class="choice">
+					<div class="mui-table-view-cell">
+						<span>销量</span>
+						<input type="text" placeholder="未设置" />
+					</div>
+				</div>
+				<div class="choice1">
+					<div class="mui-table-view-cell">
+						<span>浏览量</span>
+						<input type="text" placeholder="未设置" />
+					</div>
+				</div>
+				<div class="choice">
+					<div class="mui-table-view-cell">
+						<span>排序值</span>
+						<input type="text" placeholder="倒序, 值越大排名越靠前" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="bian" style="margin-top: 10px;">
+				<div class="choice">
+					<div class="mui-table-view-cell">
+						<span>运费</span>
+						<input type="text" placeholder="不填则视为包邮" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="bian">
+				<div class="choice"style="margin: 10px 0 80px 0; padding: 10px 0;">
+					<div class="mui-table-view-cell">
+						<span>商品图文描述</span>
+						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
+						<p class="mui-pull-right">未添加</p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="selection_function">
+				<div class="mui-pull-left upper_shelf">上架出售</div>
+				<div class="mui-pull-right warehouse">放入仓库</div>
+				<div class="clearfix"></div>
+			</div>
+			
+		</div>
+		
+		
+		
+		
+	</body>
+
+</html>

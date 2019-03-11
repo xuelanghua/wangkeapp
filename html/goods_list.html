@@ -1,0 +1,398 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/showLoading.css" rel="stylesheet" />
+		<style>
+			
+			.clearfix{
+				clear: both;
+			}
+			p{
+				color: #333333;
+			}
+			.mui-bar{
+				background-color: #FFFFFF;
+			}
+			.more{
+				margin-top: 0.625rem;
+				font-size: 0.9375rem;
+				color: #333333;
+			}
+			.mui-popover{
+				height: 0;
+			}
+			.mui-popover .mui-popover-arrow{
+				top: -18px;
+			}
+			.mui-popover .mui-popover-arrow:after{
+				background-color: #333333;
+			}
+			.mui-backdrop{
+				background: none;
+			}
+			.nr{
+				background: #333333;
+				color: #FFFFFF;
+			}
+			
+			.mui-content{
+				padding: 0;
+			}
+			.search{
+				margin: 0.625rem;
+				padding: 0 10px;
+				border-radius: 0.3125rem;
+				border: 1px solid #DDDDDD;
+				background-color: #FFFFFF;
+			}
+			.mui-icon{
+				font-size: 20px;
+			}
+			.search input{
+				width: 90%;
+				margin: 0;
+				border: none;
+				padding: 3px;
+				font-size: 0.875rem;
+			}
+			
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+			.mui-control-content {
+				
+			}
+			.mui-segmented-control{
+				border: none;
+				background-color: #FFFFFF;
+				border-radius: 0;
+			}
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: #FFFFFF;
+				color: #F4CA3A;
+				border-bottom: 2px solid #F4CA3A;
+			}
+			.mui-segmented-control .mui-control-item{
+				border-left: none;
+				font-size: 15px;
+				color: #000000;
+			}
+			.newly_added{
+				border-bottom: 1px solid #F2F2F2;
+			}
+			
+			.chart{
+				width: 80px;
+				height: 80px;
+			}
+			.chart img{
+				width: 100%;
+				height: 100%;
+			}
+			.customer_information{
+				font-size: 14px;
+			}
+			
+			
+			.customer-content{
+				width: 70%;
+			}
+			.customer-content h4{
+				font-size: 16px;
+				color: #FE4F4F;
+				margin-top: 20px;
+			}
+			.genduo{
+				background-color: #EAEBED;
+				font-size: 20px;
+				color: #8F8F8F;
+				line-height: 5px;
+				padding: 0 8px 10px 8px;
+				border-radius: 10px;
+			}
+			.playb{
+				width: 50%;
+				position: absolute;
+				padding: 10px 0 5px 0;
+				top: 45px;
+				right: 16%;
+				border-radius: 5px;
+				background-color: rgba(51,51,51,0.85);
+				display: none;
+			}
+			.jiao{
+				width: 0;
+				height: 0;
+				border-top: 10px solid transparent;
+				border-bottom: 7px solid transparent;
+				border-left: 10px solid #515151;
+				float: right;
+				margin-top: 10px;
+				margin-right: -10px;
+			}
+			.play{
+				width: 21%;
+				color: #FFFFFF;
+				font-size: 12px;
+				float: left;
+				margin-left: 5px;
+				text-align: center;
+			}
+			.play img{
+				width: 16px;
+			}
+			
+			
+			.add_merchandise{
+				width: 100%;
+				position: fixed;
+				bottom: 0;
+				padding: 15px 0;
+				border: none;
+				border-radius: 0;
+				font-size: 16px;
+				background-color: #F4CA3A;
+			}
+			.mui-table-view-cell.mui-active{
+				background: #FFFFFF;
+			}
+		</style>
+	</head>
+
+	<body id="body_tap">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">商品管理</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="search">
+				<span class="mui-icon mui-icon-search"></span>
+				<span>
+					<input type="text" placeholder="搜索商品名称"/>
+				</span>
+			</div>
+			
+			<div class="newly_added">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">出售中</a>
+					<a class="mui-control-item" href="#item2">售罄的</a>
+					<a class="mui-control-item" href="#item3">仓库中</a>
+				</div>
+			</div>
+			
+			<div>
+				<div id="item1" class="mui-control-content mui-active">
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view" id="item1_list">
+								<li class="mui-table-view-cell">
+									<div class="chart mui-pull-left">
+										<img src="../image/bj.jpg" >
+									</div>
+									<div class="mui-pull-right customer-content">
+										<div class="customer_information">
+											内蒙古风干牛肉干 蒙亮手撕牛肉248g
+										</div>
+										<h4>￥58.00</h4>
+										<div style="font-size: 12px;">
+											<span class="mui-pull-left">库存：283</span>
+											<span class="mui-pull-right genduo">...</span>
+										</div>
+<!-- 										<div class="playb">
+											<div class="jiao"></div>
+											<div class="play">
+												<img src="../image/edit.png" />
+												<div>编辑</div>
+											</div>
+											<div class="play">
+												<img src="../image/lower_shelf.png" />
+												<div>下架</div>
+											</div>
+											<div class="play">
+												<img src="../image/delete.png" />
+												<div style="margin-top: -1px;">删除</div>
+											</div>
+											<div class="play">
+												<img src="../image/extension.png" />
+												<div>推广</div>
+											</div>
+											<div class="clearfix"></div>
+										</div> -->
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="item2" class="mui-control-content">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<div class="chart mui-pull-left">
+								<img src="../image/bj.jpg" >
+							</div>
+							<div class="mui-pull-right customer-content">
+								<div class="customer_information">
+									内蒙古风干牛肉干 蒙亮手撕牛肉248g
+								</div>
+								<h4>￥58.00</h4>
+								<div style="font-size: 12px;">
+									<span class="mui-pull-left">库存：283</span>
+									<span class="mui-pull-right genduo">...</span>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="chart mui-pull-left">
+								<img src="../image/bj.jpg" >
+							</div>
+							<div class="mui-pull-right customer-content">
+								<div class="customer_information">
+									内蒙古风干牛肉干 蒙亮手撕牛肉248g
+								</div>
+								<h4>￥58.00</h4>
+								<div style="font-size: 12px;">
+									<span class="mui-pull-left">库存：283</span>
+									<span class="mui-pull-right genduo">...</span>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="chart mui-pull-left">
+								<img src="../image/bj.jpg" >
+							</div>
+							<div class="mui-pull-right customer-content">
+								<div class="customer_information">
+									内蒙古风干牛肉干 蒙亮手撕牛肉248g
+								</div>
+								<h4>￥58.00</h4>
+								<div style="font-size: 12px;">
+									<span class="mui-pull-left">库存：283</span>
+									<span class="mui-pull-right genduo">...</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div id="item3" class="mui-control-content">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<div class="chart mui-pull-left">
+								<img src="../image/bj.jpg" >
+							</div>
+							<div class="mui-pull-right customer-content">
+								<div class="customer_information">
+									内蒙古风干牛肉干 蒙亮手撕牛肉248g
+								</div>
+								<h4>￥58.00</h4>
+								<div style="font-size: 12px;">
+									<span class="mui-pull-left">库存：283</span>
+									<span class="mui-pull-right genduo">...</span>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="chart mui-pull-left">
+								<img src="../image/bj.jpg" >
+							</div>
+							<div class="mui-pull-right customer-content">
+								<div class="customer_information">
+									内蒙古风干牛肉干 蒙亮手撕牛肉248g
+								</div>
+								<h4>￥58.00</h4>
+								<div style="font-size: 12px;">
+									<span class="mui-pull-left">库存：283</span>
+									<span class="mui-pull-right genduo">...</span>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="chart mui-pull-left">
+								<img src="../image/bj.jpg" >
+							</div>
+							<div class="mui-pull-right customer-content">
+								<div class="customer_information">
+									内蒙古风干牛肉干 蒙亮手撕牛肉248g
+								</div>
+								<h4>￥58.00</h4>
+								<div style="font-size: 12px;">
+									<span class="mui-pull-left">库存：283</span>
+									<span class="mui-pull-right genduo">...</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<button class="add_merchandise">添加商品</button>
+			
+		</div>
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell nr">
+							<a href="#">分组管理</a>
+						</li>
+						<li class="mui-table-view-cell nr">
+							<a href="#">批量管理</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>
+<script src="../js/mui.js"></script>
+<script src="../js/util.js"></script>
+<script src="../js/showLoading.js"></script>
+<script src="../js/Zepto.min.js"></script>
+<script type="text/javascript">
+	mui.init();
+	mui.plusReady(function(){
+		setStatusBar('', 'dark');
+		mui.showLoading("正在加载..","div");
+		goods_list();
+		//更多监听
+		mui(".mui-table-view").on('tap', '.genduo', function(e) {
+			jQuery('.playb').hide();
+			var id = this.getAttribute("data-id");
+			jQuery(this).parent().parent().find('.playb').show();
+			e.stopPropagation();
+		})
+		document.addEventListener('tap', function(e) {
+			jQuery('.playb').hide();
+		})
+
+	})
+	function goods_list(){
+		var userInfo = getUserInfo();
+		var url = $ajaxUrl + 'goods';
+		mui.post(url, {
+			token: userInfo.token,
+			action: 'goods_list'
+		}, function(data) {
+			//console.log(JSON.stringify(data));
+			if(data.errno=='0'){
+				var str='';
+				for(i in data.data){
+						str+='<li class="mui-table-view-cell"><div class="chart mui-pull-left"><img src="'+data.data[i].cover+'" ></div><div class="mui-pull-right customer-content"><div class="customer_information">'+data.data[i].name+'</div><h4>￥'+data.data[i].price+'</h4><div style="font-size: 12px;"><span class="mui-pull-left">已售：283</span><span class="mui-pull-right genduo" data-id="'+data.data[i].id+'">...</span></div><div class="playb"><div class="jiao"></div><div class="play"><img src="../image/edit.png" /><div>编辑</div></div><div class="play"><img src="../image/lower_shelf.png" /><div>下架</div></div><div class="play"><img src="../image/delete.png" /><div style="margin-top: -1px;">删除</div></div><div class="play"><img src="../image/extension.png" /><div>推广</div></div><div class="clearfix"></div></div></div></li>';
+				}
+				document.getElementById('item1_list').innerHTML = str;
+			}
+		}, 'json');
+	}
+	setTimeout(function(){
+		mui.hideLoading();
+	},500);
+</script>
