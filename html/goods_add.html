@@ -515,14 +515,23 @@
 
 			var imageId = 0;
 			var images = new Array();
+			var specId = 0;
 			var content = '';
 			mui.plusReady(function() {
 				eventInit();
 				mui.previewImage();
 			})
-			
+
 			//时间初始化
 			function eventInit() {
+				document.getElementById("mySwitch").addEventListener("toggle", function(event) {
+					if (event.detail.isActive) {
+						console.log("你启动了开关");
+					} else {
+						console.log("你关闭了开关");
+					}
+				})
+
 				window.addEventListener('detailAdd', function(event) {
 					content = event.detail.content;
 					if (content.length != 0) {
@@ -531,7 +540,7 @@
 						document.getElementById('content_desc').innerText = '未添加';
 					}
 				})
-				
+
 				mui('.mui-content').on('tap', '#goods_detail', function() {
 					fnOpenWin('goods_detail.html', 'goods_detail', {
 						statusbar: {
@@ -541,7 +550,7 @@
 						content: content
 					}, 'slide-in-right');
 				})
-				
+
 				//上传主图
 				document.getElementById('add_pic').addEventListener('tap', function() {
 					imageUpload(function(res) {
@@ -556,7 +565,7 @@
 						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
 					});
 				})
-				
+
 				//删除主图 
 				mui('#pic-container').on('tap', '.mui-close', function() {
 					var parentDiv = this.parentElement;
@@ -564,28 +573,28 @@
 					parentDiv.remove();
 					delete images[imgId];
 				})
-				
+
 				document.getElementById('add_spec').addEventListener('tap', function() {
 					var newImgDiv = document.createElement('div');
 					newImgDiv.setAttribute('data-id', imageId);
 					newImgDiv.classList.add('add_choice');
 					var html = '<div class="choice" style="padding: 10px 0;">';
-						html += '<span>规格</span>';
-						html += '<input type="text" placeholder="尺寸,大小,颜色等" />';
+					html += '<span>规格</span>';
+					html += '<input type="text" placeholder="尺寸,大小,颜色等" />';
 					html += '</div>';
 					html += '<div class="choice" style="padding: 10px 0;">';
-						html += '<span>价格</span>';
-						html += '<input type="text" placeholder="给商品定个好价格" />';
+					html += '<span>价格</span>';
+					html += '<input type="text" placeholder="给商品定个好价格" />';
 					html += '</div>';
 					html += '<div class="choice" style="padding: 10px 0;">';
-						html += '<span>库存</span>';
-						html += '<input type="text" placeholder="设置合理的库存避免超卖" />';
+					html += '<span>库存</span>';
+					html += '<input type="text" placeholder="设置合理的库存避免超卖" />';
 					html += '</div>';
 					html += '<img src="../image/add_choice.png" class="spec-remove">';
 					newImgDiv.innerHTML = html;
 					document.getElementById('goods_spe').appendChild(newImgDiv);
 				})
-				
+
 				mui('.mui-content').on('tap', '.spec-remove', function() {
 					this.parentElement.remove();
 				})
