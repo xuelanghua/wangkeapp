@@ -159,21 +159,25 @@
 			
 			
 			<div class="administration">
-				<a href="shop.html">
+				<!-- <a href="shop.html">
 					<div class="administration_content">
 						<img src="../image/administration.png" >
 						<div>店铺管理</div>
 					</div>
-				</a>
+				</a> -->
+				<div class="administration_content" id="shop_manage">
+					<img src="../image/administration.png" >
+					<div>店铺管理</div>
+				</div>
 				<div class="administration_content" id="goods_manage">
 					<img src="../image/administration1.png" >
 					<div>商品管理</div>
 				</div>
-				<div class="administration_content">
+				<div class="administration_content" id="order_manage">
 					<img src="../image/administration2.png" >
 					<div>订单管理</div>
 				</div>
-				<div class="administration_content">
+				<div class="administration_content" id="goods_add">
 					<img src="../image/administration3.png" >
 					<div>商品添加</div>
 				</div>
@@ -189,27 +193,26 @@
 <script src="../js/mui.min.js"></script>
 <script src="../js/util.js"></script>
 <script>
-	mui.init();
+	mui.init({
+		swipeBack: true,
+		beforeback: function() {
+			setStatusBar('', 'light')
+		}
+	});
+	
 	mui.plusReady(function(){
 		window.addEventListener('scrollTop', function(event) {
 			window.scrollTo(0, 0);
 		});
-		setStatusBar('', 'dark');
-		//商品管理
-		var goods_manage=document.getElementById('goods_manage');
-		goods_manage.addEventListener('tap', function() {
-			var styles = {
-				top: 0,
-				bottom: 0,
-				statusbar: {background: '#fff'}
-			};
-			var extras = {
-				
-			};
-			//commodity_management
-			var w = plus.webview.create('commodity_management.html', 'commodity_management.html', styles, extras);
-			w.show(); // 显示窗口
-		})
 		
+		//商品管理
+		document.getElementById('goods_manage').addEventListener('tap', function() {
+			fnOpenWin('goods_list.html', 'goods_list', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+		});
+		
+		//添加商品
+		document.getElementById('goods_add').addEventListener('tap', function() {
+			fnOpenWin('goods_add.html', 'goods_add', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+		});
 	})
 </script>

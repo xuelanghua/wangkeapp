@@ -357,7 +357,7 @@
 				</div>
 
 				<div class="menu">
-					<li>
+					<li id="shop">
 						<img src="../image/Store-management.png">
 						<span>店铺管理</span>
 					</li>
@@ -410,8 +410,16 @@
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
+			
+			mui.plusReady(function() {
+				mui('.mui-content').on('tap', '#shop', function() {
+					fnOpenWin('shop_index.html', 'shop_index', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+					setStatusBar('', 'dark');
+				})
+			})
 
 			function ycit() {
 				var zt = document.getElementById("cover").style.display;

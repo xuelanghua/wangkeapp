@@ -27,14 +27,15 @@
 			
 			.chart{
 				text-align: center;
-				padding: 15px 0 12px 12px;
+				padding: 15px 0 5px 12px;
 				background-color: #FFFFFF;
 			}
 			.add_chart{
-				width: 90px;
-				height: 90px;
+				width: 5rem;
+				height: 5rem;
 				font-size: 14px;
-				border:2px dashed #DDDDDD
+				border:2px dashed #DDDDDD;
+				margin-bottom: 10px;
 			}
 			.wenzi{
 				margin-top: 25%;
@@ -137,9 +138,13 @@
 			.add_choice{
 				width: 92%;
 				padding: 0 10px;
+				margin-bottom: 10px;
 				font-size: 14px;
 				border: 1px solid #F2F2F2;
 				background-color: #FFFFFF;
+			}
+			.add_choice:last-child{
+				margin-bottom: 0px;
 			}
 			.choice input{
 				width: 80%;
@@ -154,35 +159,226 @@
 				margin-right: -20px;
 				transform:rotate(180deg);
 			}
+			
+			#pic-container {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: flex-start;
+			}
+			
+			.picture_display_chear {
+				position: relative;
+				width: 5rem;
+				height: 5rem;
+				margin-right: 10px;
+				margin-bottom: 10px;
+			}
+			
+			.picture_display_chear img {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.mui-close {
+				position: absolute!important;
+				top: -8px;
+				right: -8px;
+				display: block;
+				width: 20px;
+				height: 20px;
+				line-height: 18px;
+				background-color: #F00;
+				border-radius: 50%;
+				color: #FFF;
+				text-align: center;
+				z-index: 9;
+			}
+			
+			/* 图片预览 */
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
 		</style>
 	</head>
 
 	<body>
-		<script src="../js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
-		
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">新增商品</h1>
 		</header>
-		
+
 		<div class="mui-content">
-			<div class="mui-input-row"style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
+			<div class="mui-input-row" style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
 				<textarea id="textarea" rows="3" placeholder="请输入商品名称"></textarea>
 			</div>
-			
+
 			<div class="chart">
-				<div class="add_chart">
-					<div class="wenzi">添加<br/>主图</div>
+				<div id="pic-container">
+					<!-- <div class="picture_display_chear" id="add_pic">
+						<img src="../image/add.png">
+						<span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>
+					</div>
+					<div class="picture_display_chear" id="add_pic">
+						<img src="../image/add.png">
+						<span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>
+					</div> -->
+					<div class="add_chart" id="add_pic">
+						<div class="wenzi">添加<br />主图</div>
+					</div>
+					<input type="hidden" name="images" />
 				</div>
 			</div>
-			
+
 			<div class="tips">
-				精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序
+				<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 -->
+				精美的商品图片让商品脱颖而出
 			</div>
-			
+
 			<div class="bian">
 				<div class="recommend">
 					<div class="mui-input-row">
@@ -194,9 +390,9 @@
 					<div class="tishi">设为推荐则该商品会在所属商品分类中置顶</div>
 				</div>
 			</div>
-			
+
 			<div class="bian">
-				<div class="choice"style="padding: 10px 0;">
+				<div class="choice" style="padding: 10px 0;padding-bottom">
 					<div class="mui-table-view-cell">
 						<span>商品类型</span>
 						<span class="fenli">未分类</span>
@@ -204,7 +400,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="bian" style="margin-top: 10px;">
 				<div class="choice">
 					<div class="mui-table-view-cell">
@@ -219,33 +415,48 @@
 					</div>
 				</div>
 			</div>
-			
-			<div style="background-color: #FFFFFF;padding-top: 20px;">
-				<div class="add_choice">
-					<div class="choice"style="padding: 10px 0;">
+
+			<div style="background-color: #FFFFFF;padding-top: 20px;padding-bottom: 10px;" id="goods_spe">
+				<!-- <div class="add_choice">
+					<div class="choice" style="padding: 10px 0;">
 						<span>规格</span>
 						<input type="text" placeholder="尺寸,大小,颜色等" />
 					</div>
-					<div class="choice"style="padding: 10px 0;">
+					<div class="choice" style="padding: 10px 0;">
 						<span>价格</span>
 						<input type="text" placeholder="给商品定个好价格" />
 					</div>
-					<div class="choice"style="padding: 10px 0;">
+					<div class="choice" style="padding: 10px 0;">
 						<span>库存</span>
 						<input type="text" placeholder="设置合理的库存避免超卖" />
 					</div>
-					<img src="../image/add_choice.png" >
+					<img src="../image/add_choice.png">
 				</div>
+				<div class="add_choice">
+					<div class="choice" style="padding: 10px 0;">
+						<span>规格</span>
+						<input type="text" placeholder="尺寸,大小,颜色等" />
+					</div>
+					<div class="choice" style="padding: 10px 0;">
+						<span>价格</span>
+						<input type="text" placeholder="给商品定个好价格" />
+					</div>
+					<div class="choice" style="padding: 10px 0;">
+						<span>库存</span>
+						<input type="text" placeholder="设置合理的库存避免超卖" />
+					</div>
+					<img src="../image/add_choice.png">
+				</div> -->
 			</div>
-			
-			<div class="adding_commodity_specifications">
+
+			<div class="adding_commodity_specifications" id="add_spec">
 				<span class="mui-pull-left">
-					<img src="../image/add_vew.png" >
+					<img src="../image/add_vew.png">
 				</span>
 				<span class="mui-pull-left" style="margin: 0 0 0 10px;">添加商品规格</span>
 				<div class="clearfix"></div>
 			</div>
-			
+
 			<div class="bian">
 				<div class="choice">
 					<div class="mui-table-view-cell">
@@ -266,7 +477,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="bian" style="margin-top: 10px;">
 				<div class="choice">
 					<div class="mui-table-view-cell">
@@ -275,28 +486,110 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="bian">
-				<div class="choice"style="margin: 10px 0 80px 0; padding: 10px 0;">
+				<div class="choice" style="margin: 10px 0 80px 0; padding: 10px 0;" id="goods_detail">
 					<div class="mui-table-view-cell">
 						<span>商品图文描述</span>
 						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
-						<p class="mui-pull-right">未添加</p>
+						<p class="mui-pull-right" id="content_desc">未添加</p>
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="selection_function">
 				<div class="mui-pull-left upper_shelf">上架出售</div>
 				<div class="mui-pull-right warehouse">放入仓库</div>
 				<div class="clearfix"></div>
 			</div>
-			
 		</div>
-		
-		
-		
-		
-	</body>
+		<script src="../js/mui.js"></script>
+		<script src="../js/mui.zoom.js"></script>
+		<script src="../js/mui.previewimage.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/upload.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			})
 
+			var imageId = 0;
+			var images = new Array();
+			var content = '';
+			mui.plusReady(function() {
+				eventInit();
+				mui.previewImage();
+			})
+			
+			//时间初始化
+			function eventInit() {
+				window.addEventListener('detailAdd', function(event) {
+					content = event.detail.content;
+					if (content.length != 0) {
+						document.getElementById('content_desc').innerText = '点击编辑';
+					} else {
+						document.getElementById('content_desc').innerText = '未添加';
+					}
+				})
+				
+				mui('.mui-content').on('tap', '#goods_detail', function() {
+					fnOpenWin('goods_detail.html', 'goods_detail', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, {
+						content: content
+					}, 'slide-in-right');
+				})
+				
+				//上传主图
+				document.getElementById('add_pic').addEventListener('tap', function() {
+					imageUpload(function(res) {
+						images[imageId] = res.url;
+						imageId++;
+						var newImgDiv = document.createElement('div');
+						newImgDiv.setAttribute('data-id', imageId);
+						newImgDiv.classList.add('picture_display_chear');
+						var html = '<img src="' + res.url +
+							'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+						newImgDiv.innerHTML = html;
+						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+					});
+				})
+				
+				//删除主图 
+				mui('#pic-container').on('tap', '.mui-close', function() {
+					var parentDiv = this.parentElement;
+					var imgId = parentDiv.dataset.id;
+					parentDiv.remove();
+					delete images[imgId];
+				})
+				
+				document.getElementById('add_spec').addEventListener('tap', function() {
+					var newImgDiv = document.createElement('div');
+					newImgDiv.setAttribute('data-id', imageId);
+					newImgDiv.classList.add('add_choice');
+					var html = '<div class="choice" style="padding: 10px 0;">';
+						html += '<span>规格</span>';
+						html += '<input type="text" placeholder="尺寸,大小,颜色等" />';
+					html += '</div>';
+					html += '<div class="choice" style="padding: 10px 0;">';
+						html += '<span>价格</span>';
+						html += '<input type="text" placeholder="给商品定个好价格" />';
+					html += '</div>';
+					html += '<div class="choice" style="padding: 10px 0;">';
+						html += '<span>库存</span>';
+						html += '<input type="text" placeholder="设置合理的库存避免超卖" />';
+					html += '</div>';
+					html += '<img src="../image/add_choice.png" class="spec-remove">';
+					newImgDiv.innerHTML = html;
+					document.getElementById('goods_spe').appendChild(newImgDiv);
+				})
+				
+				mui('.mui-content').on('tap', '.spec-remove', function() {
+					this.parentElement.remove();
+				})
+			}
+		</script>
+	</body>
 </html>
