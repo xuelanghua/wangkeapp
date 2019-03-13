@@ -6,6 +6,8 @@
 		<title>新增商品</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
 		<style>
 			.clearfix{
 				clear: both;
@@ -354,7 +356,7 @@
 
 		<div class="mui-content">
 			<div class="mui-input-row" style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
-				<textarea id="textarea" rows="3" placeholder="请输入商品名称"></textarea>
+				<textarea name="name" rows="3" placeholder="请输入商品名称"></textarea>
 			</div>
 
 			<div class="chart">
@@ -383,7 +385,7 @@
 				<div class="recommend">
 					<div class="mui-input-row">
 						<label>设为推荐</label>
-						<div class="mui-switch mui-active mui-switch-blue">
+						<div class="mui-switch mui-switch-blue" id="recommend_switch">
 							<div class="mui-switch-handle"></div>
 						</div>
 					</div>
@@ -392,10 +394,10 @@
 			</div>
 
 			<div class="bian">
-				<div class="choice" style="padding: 10px 0;padding-bottom">
+				<div class="choice" style="padding: 10px 0;padding-bottom" id="goods_type_pick">
 					<div class="mui-table-view-cell">
 						<span>商品类型</span>
-						<span class="fenli">未分类</span>
+						<span class="fenli" id="goods_type">未分类</span>
 						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
 					</div>
 				</div>
@@ -405,13 +407,13 @@
 				<div class="choice">
 					<div class="mui-table-view-cell">
 						<span>价格</span>
-						<input type="text" placeholder="给商品定个好价格" />
+						<input type="number" name="price" placeholder="给商品定个好价格" />
 					</div>
 				</div>
 				<div class="choice1">
 					<div class="mui-table-view-cell">
 						<span>库存</span>
-						<input type="text" placeholder="设置合理库存避免超卖" />
+						<input type="number" name="stock" placeholder="设置合理库存避免超卖" />
 					</div>
 				</div>
 			</div>
@@ -461,19 +463,19 @@
 				<div class="choice">
 					<div class="mui-table-view-cell">
 						<span>销量</span>
-						<input type="text" placeholder="未设置" />
+						<input type="number" name="sale_count" placeholder="设置商品的虚拟销量" />
 					</div>
 				</div>
 				<div class="choice1">
 					<div class="mui-table-view-cell">
 						<span>浏览量</span>
-						<input type="text" placeholder="未设置" />
+						<input type="number" name="view_count" placeholder="设置商品的虚拟浏览量" />
 					</div>
 				</div>
 				<div class="choice">
 					<div class="mui-table-view-cell">
 						<span>排序值</span>
-						<input type="text" placeholder="倒序, 值越大排名越靠前" />
+						<input type="number" name="top" placeholder="倒序, 值越大排名越靠前" />
 					</div>
 				</div>
 			</div>
@@ -482,7 +484,7 @@
 				<div class="choice">
 					<div class="mui-table-view-cell">
 						<span>运费</span>
-						<input type="text" placeholder="不填则视为包邮" />
+						<input type="number" name="freight" placeholder="不填则视为包邮" />
 					</div>
 				</div>
 			</div>
@@ -498,12 +500,14 @@
 			</div>
 
 			<div class="selection_function">
-				<div class="mui-pull-left upper_shelf">上架出售</div>
-				<div class="mui-pull-right warehouse">放入仓库</div>
+				<div class="mui-pull-left upper_shelf form-submit" data-status="1">上架出售</div>
+				<div class="mui-pull-right warehouse form-submit" data-status="0">放入仓库</div>
 				<div class="clearfix"></div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/util.js"></script>
@@ -513,25 +517,27 @@
 				swipeBack: true
 			})
 
+			var flag = true;
 			var imageId = 0;
 			var images = new Array();
 			var specId = 0;
+			var spec = new Array();
 			var content = '';
+			var recommend = 0;
+			var type = 0; //二级分类
+			var type_p = 0; //一级分类
+			var status = 0;
+			var goodsTypeTitle = '';
+			var userInfo = getUserInfo();
 			mui.plusReady(function() {
+				getGoodsType();
 				eventInit();
 				mui.previewImage();
 			})
 
-			//时间初始化
+			//事件初始化
 			function eventInit() {
-				document.getElementById("mySwitch").addEventListener("toggle", function(event) {
-					if (event.detail.isActive) {
-						console.log("你启动了开关");
-					} else {
-						console.log("你关闭了开关");
-					}
-				})
-
+				//详情添加完毕监听
 				window.addEventListener('detailAdd', function(event) {
 					content = event.detail.content;
 					if (content.length != 0) {
@@ -541,6 +547,21 @@
 					}
 				})
 
+				//商品分类选择监听
+				document.getElementById('goods_type_pick').addEventListener('tap', function() {
+					goodsTypePick();
+				})
+
+				//推荐开关监听
+				document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
+					if (event.detail.isActive) {
+						recommend = 1;
+					} else {
+						recommend = 1;
+					}
+				})
+
+				//添加商品详情
 				mui('.mui-content').on('tap', '#goods_detail', function() {
 					fnOpenWin('goods_detail.html', 'goods_detail', {
 						statusbar: {
@@ -578,26 +599,184 @@
 					var newImgDiv = document.createElement('div');
 					newImgDiv.setAttribute('data-id', imageId);
 					newImgDiv.classList.add('add_choice');
+					newImgDiv.dataset.specid = specId;
 					var html = '<div class="choice" style="padding: 10px 0;">';
 					html += '<span>规格</span>';
 					html += '<input type="text" placeholder="尺寸,大小,颜色等" />';
 					html += '</div>';
 					html += '<div class="choice" style="padding: 10px 0;">';
 					html += '<span>价格</span>';
-					html += '<input type="text" placeholder="给商品定个好价格" />';
+					html += '<input type="number" placeholder="给商品定个好价格" />';
 					html += '</div>';
 					html += '<div class="choice" style="padding: 10px 0;">';
 					html += '<span>库存</span>';
-					html += '<input type="text" placeholder="设置合理的库存避免超卖" />';
+					html += '<input type="number" placeholder="设置合理的库存避免超卖" />';
 					html += '</div>';
 					html += '<img src="../image/add_choice.png" class="spec-remove">';
 					newImgDiv.innerHTML = html;
 					document.getElementById('goods_spe').appendChild(newImgDiv);
+					specId++;
 				})
 
+				//移除规格
 				mui('.mui-content').on('tap', '.spec-remove', function() {
 					this.parentElement.remove();
 				})
+
+				//表单提交
+				mui('.selection_function').on('tap', '.form-submit', function() {
+					status = this.dataset.status;
+					var goods_name = document.querySelector('textarea[name=name]').value;
+					var goods_price = document.querySelector('input[name=price]').value;
+					var goods_stock = document.querySelector('input[name=stock]').value;
+					var goods_sale = document.querySelector('input[name=sale_count]').value;
+					var goods_view = document.querySelector('input[name=view_count]').value;
+					var goods_top = document.querySelector('input[name=top]').value;
+					var goods_freight = document.querySelector('input[name=freight]').value;
+					if (goods_name.length == 0) {
+						message('请填写商品名称!');
+						return;
+					}
+					if (images.length == 0) {
+						message('请上传主图!');
+						return;
+					}
+					if (type_p == 0) {
+						message('请选择商品类型!');
+						return;
+					}
+					if (isNaN(goods_price) || goods_price.length == 0) {
+						message('请填写商品价格!');
+						return;
+					}
+					if (parseFloat(goods_price) < 0) {
+						message('商品价格填写有误!');
+						return;
+					}
+					if (isNaN(goods_stock) || goods_stock.length == 0) {
+						message('请填写商品库存!');
+						return;
+					}
+					if (parseInt(goods_price) <= 0) {
+						message('商品库存填写有误!');
+						return;
+					}
+					mui('.add_choice').each(function(index, object) {
+						var sid = object.dataset.specid;
+						var specName = object.children[0].children[1].value;
+						var specPrice = object.children[1].children[1].value;
+						var specStock = object.children[2].children[1].value;
+						if (specName.length == 0) {
+							message('请填写商品规格!');
+							return;
+						}
+						if (isNaN(specPrice)) {
+							message('请填写商品价格!');
+							return;
+						}
+						if (parseFloat(specPrice) < 0) {
+							message('商品价格填写有误!');
+							return;
+						}
+						if (isNaN(specStock)) {
+							message('请填写商品库存!');
+							return;
+						}
+						if (parseInt(specStock) <= 0) {
+							message('商品库存填写有误!');
+							return;
+						}
+						var temp = {
+							name: specName,
+							price: parseFloat(specPrice),
+							stock: parseInt(specStock),
+						}
+						spec[sid] = temp;
+					})
+					var submitData = {
+						name: goods_name,
+						images: images,
+						recommend: recommend,
+						type: type,
+						type_p: type_p,
+						price: goods_price,
+						stock: goods_stock,
+						spec: spec,
+						sale_count: goods_sale,
+						view_count: goods_view,
+						top: goods_top,
+						freight: goods_freight,
+						status: status,
+						content: content
+					}
+					formSubmit(submitData);
+				})
+			}
+
+			//获取商品分类
+			function getGoodsType() {
+				mui.post($ajaxUrl + 'goods', {
+					action: 'goods_category',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						goodsType = res.data;
+						goodsTypeTitle = goodsType[0].text;
+						type_p = goodsType[0].value;
+						if (!goodsType[0].children) {
+							type = goodsType[0].value;
+						} else {
+							goodsTypeTitle += '--' + goodsType[0].children[0].text;
+							type = goodsType[0].children[0].value;
+						}
+					}
+					document.getElementById('goods_type').innerText = goodsTypeTitle;
+				}, 'json');
+			}
+
+			//选择商品分类
+			function goodsTypePick() {
+				var picker = new mui.PopPicker({
+					layer: 2
+				});
+				picker.setData(goodsType);
+				picker.show(function(selectItems) {
+					goodsTypeTitle = '';
+					goodsTypeTitle += selectItems[0].text;
+					type_p = selectItems[0].value;
+					if (selectItems[1].value != undefined) {
+						goodsTypeTitle += '--' + selectItems[1].text;
+						type = selectItems[1].value;
+					} else {
+						type = selectItems[0].value;
+					}
+					document.getElementById('goods_type').innerText = goodsTypeTitle;
+				})
+			}
+
+			//提交操作
+			function formSubmit(data) {
+				if (!flag) {
+					return;
+				}
+				plus.nativeUI.showWaiting();
+				flag = false;
+				mui.post($ajaxUrl + 'goods', {
+					action: 'add',
+					token: userInfo.token,
+					data: data
+				}, function(res) {
+					if (res.errno == 0) {
+						message('添加成功!');
+						setTimeout(function() {
+							plus.webview.close('goods_add');
+						}, 2000)
+					} else {
+						message(res.message);
+						flag = true;
+					}
+					plus.nativeUI.closeWaiting();
+				}, 'json');
 			}
 		</script>
 	</body>

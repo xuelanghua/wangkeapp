@@ -8,7 +8,7 @@
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/showLoading.css" rel="stylesheet" />
 		<style>
-			
+
 			.clearfix{
 				clear: both;
 			}
@@ -161,6 +161,12 @@
 			.mui-table-view-cell.mui-active{
 				background: #FFFFFF;
 			}
+			
+			.mui-search input {
+				background-color: #fff;
+				border-radius: 0.3125rem;
+				border: 1px solid #DDD;
+			}
 		</style>
 	</head>
 
@@ -169,15 +175,18 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">商品管理</h1>
 		</header>
-		
+
 		<div class="mui-content">
-			<div class="search">
+			<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
+				<input type="search" class="mui-input-clear" style="" placeholder="搜索商品名称">
+			</div>
+			<!-- <div class="search">
 				<span class="mui-icon mui-icon-search"></span>
 				<span>
-					<input type="text" placeholder="搜索商品名称"/>
+					<input type="text" name="goods_name" placeholder="搜索商品名称"/>
 				</span>
-			</div>
-			
+			</div> -->
+
 			<div class="newly_added">
 				<div id="segmentedControl" class="mui-segmented-control">
 					<a class="mui-control-item mui-active" href="#item1">出售中</a>
@@ -185,7 +194,7 @@
 					<a class="mui-control-item" href="#item3">仓库中</a>
 				</div>
 			</div>
-			
+
 			<div>
 				<div id="item1" class="mui-control-content mui-active">
 					<div id="scroll" class="mui-scroll-wrapper">
@@ -193,7 +202,7 @@
 							<ul class="mui-table-view" id="item1_list">
 								<li class="mui-table-view-cell">
 									<div class="chart mui-pull-left">
-										<img src="../image/bj.jpg" >
+										<img src="../image/bj.jpg">
 									</div>
 									<div class="mui-pull-right customer-content">
 										<div class="customer_information">
@@ -204,7 +213,7 @@
 											<span class="mui-pull-left">库存：283</span>
 											<span class="mui-pull-right genduo">...</span>
 										</div>
-<!-- 										<div class="playb">
+										<!-- 										<div class="playb">
 											<div class="jiao"></div>
 											<div class="play">
 												<img src="../image/edit.png" />
@@ -234,7 +243,7 @@
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell">
 							<div class="chart mui-pull-left">
-								<img src="../image/bj.jpg" >
+								<img src="../image/bj.jpg">
 							</div>
 							<div class="mui-pull-right customer-content">
 								<div class="customer_information">
@@ -249,7 +258,7 @@
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="chart mui-pull-left">
-								<img src="../image/bj.jpg" >
+								<img src="../image/bj.jpg">
 							</div>
 							<div class="mui-pull-right customer-content">
 								<div class="customer_information">
@@ -264,7 +273,7 @@
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="chart mui-pull-left">
-								<img src="../image/bj.jpg" >
+								<img src="../image/bj.jpg">
 							</div>
 							<div class="mui-pull-right customer-content">
 								<div class="customer_information">
@@ -283,7 +292,7 @@
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell">
 							<div class="chart mui-pull-left">
-								<img src="../image/bj.jpg" >
+								<img src="../image/bj.jpg">
 							</div>
 							<div class="mui-pull-right customer-content">
 								<div class="customer_information">
@@ -298,7 +307,7 @@
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="chart mui-pull-left">
-								<img src="../image/bj.jpg" >
+								<img src="../image/bj.jpg">
 							</div>
 							<div class="mui-pull-right customer-content">
 								<div class="customer_information">
@@ -313,7 +322,7 @@
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="chart mui-pull-left">
-								<img src="../image/bj.jpg" >
+								<img src="../image/bj.jpg">
 							</div>
 							<div class="mui-pull-right customer-content">
 								<div class="customer_information">
@@ -329,9 +338,9 @@
 					</ul>
 				</div>
 			</div>
-			
+
 			<button class="add_merchandise">添加商品</button>
-			
+
 		</div>
 		<!--右上角弹出菜单-->
 		<div id="topPopover" class="mui-popover">
@@ -355,44 +364,55 @@
 </html>
 <script src="../js/mui.js"></script>
 <script src="../js/util.js"></script>
-<script src="../js/showLoading.js"></script>
-<script src="../js/Zepto.min.js"></script>
 <script type="text/javascript">
-	mui.init();
-	mui.plusReady(function(){
-		setStatusBar('', 'dark');
-		mui.showLoading("正在加载..","div");
-		goods_list();
-		//更多监听
+	mui.init({
+		swipeBack: true
+	});
+
+	var goodsName = '';
+	mui.plusReady(function() {
+		eventInit();
+		getGoodsList();
+	})
+
+	function eventInit() {
+		document.onkeydown = function(event) {
+			var e = event || window.event || arguments.callee.caller.arguments[0];
+			if (e && e.keyCode == 13) { // enter 键
+				console.log("按 Enter");
+			}
+		};
 		mui(".mui-table-view").on('tap', '.genduo', function(e) {
-			jQuery('.playb').hide();
+			document.querySelector('.playb').style.display = 'none';
 			var id = this.getAttribute("data-id");
-			jQuery(this).parent().parent().find('.playb').show();
+			// this.parentElement.parent().find('.playb').show();
 			e.stopPropagation();
 		})
-		document.addEventListener('tap', function(e) {
-			jQuery('.playb').hide();
-		})
 
-	})
-	function goods_list(){
+		// 		document.addEventListener('tap', function(e) {
+		// 			jQuery('.playb').hide();
+		// 		})
+	}
+
+	function getGoodsList() {
 		var userInfo = getUserInfo();
 		var url = $ajaxUrl + 'goods';
 		mui.post(url, {
 			token: userInfo.token,
 			action: 'goods_list'
 		}, function(data) {
-			//console.log(JSON.stringify(data));
-			if(data.errno=='0'){
-				var str='';
-				for(i in data.data){
-						str+='<li class="mui-table-view-cell"><div class="chart mui-pull-left"><img src="'+data.data[i].cover+'" ></div><div class="mui-pull-right customer-content"><div class="customer_information">'+data.data[i].name+'</div><h4>￥'+data.data[i].price+'</h4><div style="font-size: 12px;"><span class="mui-pull-left">已售：283</span><span class="mui-pull-right genduo" data-id="'+data.data[i].id+'">...</span></div><div class="playb"><div class="jiao"></div><div class="play"><img src="../image/edit.png" /><div>编辑</div></div><div class="play"><img src="../image/lower_shelf.png" /><div>下架</div></div><div class="play"><img src="../image/delete.png" /><div style="margin-top: -1px;">删除</div></div><div class="play"><img src="../image/extension.png" /><div>推广</div></div><div class="clearfix"></div></div></div></li>';
+			if (data.errno == '0') {
+				var str = '';
+				for (i in data.data) {
+					str += '<li class="mui-table-view-cell"><div class="chart mui-pull-left"><img src="' + data.data[i].cover +
+						'" ></div><div class="mui-pull-right customer-content"><div class="customer_information">' + data.data[i].name +
+						'</div><h4>￥' + data.data[i].price +
+						'</h4><div style="font-size: 12px;"><span class="mui-pull-left">已售：283</span><span class="mui-pull-right genduo" data-id="' +
+						data.data[i].id +
+						'">...</span></div><div class="playb"><div class="jiao"></div><div class="play"><img src="../image/edit.png" /><div>编辑</div></div><div class="play"><img src="../image/lower_shelf.png" /><div>下架</div></div><div class="play"><img src="../image/delete.png" /><div style="margin-top: -1px;">删除</div></div><div class="play"><img src="../image/extension.png" /><div>推广</div></div><div class="clearfix"></div></div></div></li>';
 				}
 				document.getElementById('item1_list').innerHTML = str;
 			}
 		}, 'json');
 	}
-	setTimeout(function(){
-		mui.hideLoading();
-	},500);
 </script>
