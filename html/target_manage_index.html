@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!-- 我的目标页面 -->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			.mui-bar,body,.mui-content{
+				background-color: #FFFFFF;
+			}
+			.title img{
+				width: 100%;
+				height: 210px;
+			}
+			.title_content{
+				font-size: 13px;
+				width: 80%;
+				color: #FFFFFF;
+				margin: -43% auto 0;
+			}
+			
+			.target{
+				padding: 23px 10px 27px 10px;
+				margin: 0 10px 20px;
+				font-size: 15px;
+				border-radius: 5px;
+				box-shadow: 0 0 15px 0 #DDDDDD;
+			}
+			.target input{
+				font-size: 14px;
+				margin: 15px 0;
+				border: none;
+				border-radius: 5px;
+				background-color: #F5F5F5;
+			}
+			.hold_down{
+				width: 48%;
+				color: #2798FE;
+				border: 1px solid #2798FE;
+				display: block;
+				font-size: 14px;
+				border-radius: 5px;
+				padding: 7px 0;
+				background-color: #EDF5FF;
+			}
+			.voice{
+				width: 48%;
+				padding: 1px 10px;
+				border-radius: 5px;
+				background-color: #F5F5F5;
+			}
+			.voice img{
+				width: 20px;
+				height: 20px;
+				margin-top: 7px;
+			}
+			
+			.voiceR{
+				font-size: 12px;
+			}
+			
+			.voiceR p{
+				width: 6px;
+				height: 6px;
+				margin-bottom: 2px;
+				margin-top: 5px;
+				background-color: #F21515;
+				border-radius: 50%;
+			}
+			
+			/* 录音 */
+			.showArea{
+				width:120px;
+				height:120px;
+				background-color:#999999;
+				font-size:15px;
+				position: fixed;
+				bottom: 55%;
+				left: 35%;
+				color: #FFFFFF;
+				border-radius: 5px;
+				display: none;
+				text-align: center;
+			}
+			.showArea img{
+				width: 80px;
+				display: block;
+				margin: 0 auto;
+			}
+			
+			.target_date{
+				width: 100%;
+				font-size: 15px;
+				margin: 15px 0;
+				border: none;
+				color: #999999;
+				border-radius: 5px;
+				padding: 11px 10px;
+				background-color: #F5F5F5;
+			}
+			.target_date .mui-icon{
+				font-size: 18px;
+			}
+			
+			.next_step{
+				margin: 30px 10px;
+			}
+			.next_step button{
+				background-color: #2489FF;
+				width: 100%;
+				border: none;
+				color: #FFFFFF;
+				border-radius: 5px;
+				padding: 17px 0;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="../js/mui.js"></script>
+		<!-- <script src="../js/jquery-1.11.0.min.js"></script> -->
+		<script src="../js/Zepto.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var timeOutEvent = 0;
+			$(function() {
+				$(document).click(function() {
+					$(".showArea").css("display", "none");
+				})
+				$("#touchArea").on({
+					touchstart: function(e) {
+						timeOutEvent = setTimeout("longPress()", 500);
+						e.preventDefault();
+						return false;
+					},
+					touchmove: function() {
+						clearTimeout(timeOutEvent);
+						timeOutEvent = 0;
+					},
+					touchend: function(e) {
+						clearTimeout(timeOutEvent);
+						timeOutEvent = ShortLeave();
+						e.preventDefault();
+						return false;
+					}
+				})
+			});
+
+			function longPress() {
+				timeOutEvent = 0;
+				$(".showArea").css("display", "block");
+			}
+
+			function ShortLeave() {
+				timeOutEvent = 0;
+				$(".showArea").css("display", "none");
+			}
+		</script>
+		<header class="mui-bar mui-bar-nav mui-action-back">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">目标设定</h1>
+		</header>
+		<div class="mui-content">
+			<div class="title">
+				<img src="../image/target/goal_seting1b.png">
+				<div class="title_content">
+					成功的唯一秘诀就是持之以恒，不忘初心的完成自己设定的目标，如果遇到困难也不要怕，俗话说的好你的能力不足以支撑你的梦想的时候，就静下来学习吧。营销码为您提供了商业课程，让你快速学习如何获客成交、演讲、变现。 </div>
+			</div>
+			<div style="margin-top: 100px;">
+				<div class="target">
+					<div>大声告诉我你的目标是什么</div>
+					<input type="text" placeholder="输入内容" />
+					<div class="sound_recording">
+						<button id="touchArea" class="hold_down mui-pull-left">开始录音，按住说话</button>
+						<div class="voice mui-pull-right">
+							<img class="mui-pull-left" src="../image/target/sound_recording.png">
+							<div class="voiceR mui-pull-right">
+								<p></p>
+								<div>9</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="target">
+					<div>这些目标需要多少钱可以实现</div>
+					<input type="text" placeholder="输入金额" />
+				</div>
+				<div class="target">
+					<div>目标说明</div>
+					<input type="text" placeholder="输入内容" />
+				</div>
+				<div class="target">
+					<div>实现目标需要多少时间</div>
+					<button class="target_date">
+						<div class="mui-pull-left">选择时间</div>
+						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
+						<div class="clearfix"></div>
+					</button>
+				</div>
+			</div>
+			<div class="next_step" id="next_step_container">
+				<a id="next_step">
+					<button>下一步</button>
+				</a>
+			</div>
+			<div class="showArea">
+				<img src="../image/target/luyin.gif">
+				<div>松开结束录音</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script src="../js/mui.js"></script>
+<script src="../js/util.js"></script>
+<script>
+	//初始化页面 对页面进行相关的设置
+	mui.init({
+		swipeBack: true
+	});
+	
+	mui('#next_step_container').on('tap','#next_step',function(){
+	   fnOpenWin('target_manage_detail.html', 'target_manage_detail', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+	}) ;
+	//获取用户信息
+	var userInfo = getUserInfo();
+	//获取时间
+	var date = formatDate('y-m-d', '');
+	//mui框架加载完成后进行什么操作
+	mui.plusReady(function() {
+		//检查该用户是否设定个人目标
+		check_user_target_state();
+	});
+
+	function check_user_target_state() {
+		alert('检查用户是否设置个人目标');
+	}
+	
+	
+</script>

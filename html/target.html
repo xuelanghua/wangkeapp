@@ -144,7 +144,7 @@
 		</header>
 		
 		<div class="mui-content">
-			<div class="my_target">
+			<div class="my_target" id="my_target_unit">
 				<span>
 					<img src="../image/target_my.png" >
 				</span>
@@ -238,10 +238,13 @@
 				swipeBack: true
 			})
 			
+			mui('.mui-content').on('tap','#my_target_unit',function(){
+			  fnOpenWin('target_manage_index.html', 'target_manage_index', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+			}) 
+			
 			var userInfo = getUserInfo();
-			var date = formatDate('y-m-d', '');;
+			var date = formatDate('y-m-d', '');
 			mui.plusReady(function() {
-				
 				userTargetStatistics(); 
 			})
 			
