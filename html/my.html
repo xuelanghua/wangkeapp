@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>我的</title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
 		<style type="text/css">
 			.clearfix {
 				clear: both;
@@ -101,21 +102,28 @@
 			}
 
 			.Notice {
+				height: 40px;
+				position: relative;
 				padding: 10px;
 				font-size: 12px;
 				margin-top: -15px;
 				background-color: #DDDEDE;
+				/* display: none; */
 			}
 
 			.Notice-title {
 				float: left;
 				margin-right: 15px;
 			}
-
-			.Notice img {
-				float: right;
+			
+			.Notice .notice-more {
+				position: absolute;
+				right: 5px;
+				top: 10px;
+			}
+			
+			.Notice .notice-more img {
 				width: 8px;
-				margin-top: 3px;
 			}
 
 			.goods {
@@ -271,11 +279,12 @@
 			#QR-code a {
 				font-size: 13px;
 			}
+			
 		</style>
 	</head>
 	<body>
 		<header id="header" class="mui-bar mui-bar-transparent mui-active" style="background-color: rgba(34,137,255,0);">
-			<img class="message" src="../image/Message-icon.png">
+			<img id="message" class="message" src="../image/Message-icon.png">
 			<a href="#popover" id="openPopover">
 				<img class="message mui-pull-right" src="../image/Add-Icon.png" style="width: 20px; height: 20px;margin-right: 10px;margin-left: 10px;">
 			</a>
@@ -289,13 +298,13 @@
 			<img class="img1" src="../image/member_center_bg.jpg">
 			<div class="my_message">
 				<div class="my_message_chart"> 
-					<img src="../image/bj.jpg">
+					<img id="avatar" src="../image/user_default.jpg">
 				</div>
 				<div class="my_message_name">
-					<span>wk6100kdf</span>
+					<span id="nickname">旺客</span>
 					<span class="maker">
-						<span>创客</span>
-						<span>
+						<span id="group_name">普通</span>
+						<span id="more">
 							<img src="../image/quickxia.png">
 						</span>
 					</span>
@@ -306,7 +315,7 @@
 					</span>
 					<span>
 						<span style="color: #C6DEFF;">旺旺</span>
-						<span>9,999</span>
+						<span id="wang_number">0</span>
 					</span>
 				</div>
 			</div>
@@ -349,11 +358,14 @@
 				</div>
 
 				<div class="Notice">
-					<div style="width: 99%;margin: 0 auto;">
-						<div class="Notice-title">公告</div>
-						<span>这里是公告，公告的内容很有用</span>
+					<div class="Notice-title"><img src="../image/notice4.png" style="width:18px" alt=""></div>
+					<div id="notice_container">
+						<div class="swiper-container"></div>
+					</div>
+					<div class="notice-more">
 						<img src="../image/iconrighth.png">
 					</div>
+					<div class="clearfix"></div>
 				</div>
 
 				<div class="menu">
@@ -384,7 +396,7 @@
 							<span>资产管理</span>
 						</li>
 					</a>
-					<li>
+					<li id="target">
 						<img src="../image/Target-management.png">
 						<span>目标管理</span>
 					</li>
@@ -411,15 +423,44 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
-			mui.init();
+			mui.init({
+				swipeBack: false
+			});
 			
+			var userInfo = getUserInfo();
 			mui.plusReady(function() {
+				eventInit();
+				getMemberInfo();
+				getNotice();
+			})
+			
+			//事件初始化
+			function eventInit() {
+				//商城首页
 				mui('.mui-content').on('tap', '#shop', function() {
-					fnOpenWin('shop_index.html', 'shop_index', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+					fnOpenWin('shop_index.html', 'shop_index', {statusbar: {background: '#F7F7F7'}}, '', 'slide-in-right');
 					setStatusBar('', 'dark');
 				})
-			})
+				
+				//目标
+				mui('.mui-content').on('tap', '#target', function() {
+					fnOpenWin('target.html', 'target', {statusbar: {background: '#F7F7F7'}}, {page: 'my'}, 'slide-in-right');
+					setStatusBar('', 'dark');
+				})
+				
+				//消息通知
+				document.getElementById('message').addEventListener('tap', function() {
+					fnOpenWin('message.html', 'message', {statusbar: {background: '#FFF'}}, {prePage: 'my'}, 'slide-in-right');
+					setStatusBar('', 'dark');
+				})
+				
+				//查看公告
+				mui('.mui-content').on('tap', '.Notice', function() {
+					noticeDeail();
+				})
+			}
 
 			function ycit() {
 				var zt = document.getElementById("cover").style.display;
@@ -449,6 +490,75 @@
 				} else {
 					document.getElementById("QR-code").style.display = "block";
 				}
+			}
+			
+			//获取用户信息
+			function getMemberInfo() {
+				mui.post($ajaxUrl + 'member',{
+						action: 'detail',
+						token: userInfo.token
+					}, function(res){
+						var memberInfo = res.data;
+						document.getElementById('nickname').innerText = memberInfo.nickName;
+						document.getElementById('avatar').src = memberInfo.avatarUrl;
+						if (!memberInfo.group) {
+							document.getElementById('group_name').innerText = '普通';
+							document.getElementById('more').style.display = 'none';
+						} else {
+							document.getElementById('group_name').innerText = memberInfo.group.name;
+						}
+						document.getElementById('wang_number').innerText = memberInfo.wang;
+					}, 'json'
+				);
+			}
+			
+			//获取公告
+			function getNotice(){
+				mui.post($ajaxUrl + 'notice', {action: 'list'}, function(res) {
+					if (res.errno == 0) {
+						notice = res.data;
+						noticeLen = notice.length;
+						var str = '<div class="swiper-container"><div class="swiper-wrapper">';
+						for (var i = 0; i < noticeLen; i++) {
+							str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '" style="height: 8px;">' + notice[i].title + '</div>';
+						}
+						str += '</div></div>';
+						document.getElementById('notice_container').innerHTML = str;
+						document.getElementsByClassName('Notice')[0].style.display = 'block';
+						scrollInit();
+					} else {
+						console.log(res.message);
+					}
+				}, 'json')
+			}
+			
+			//公告滚动初始化
+			function scrollInit() {
+				var mySwiper = new Swiper('.swiper-container', {
+					autoplay: true,	//可选选项，自动滑动
+					loop : true,
+					direction : 'vertical',
+					speed: 5000,
+					autoHeight: true,
+					watchOverflow: true,
+					on: {
+						slideChange: function(){
+							var index = this.activeIndex;
+							if (index <= noticeLen) {
+								noticeIndex = index - 1;
+							} else {
+								noticeIndex = 0;
+							}
+						},
+					}
+				})
+			}
+			
+			//查看公告详情
+			function noticeDeail() {
+				var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#FFF'}}, {notice: notice[noticeIndex], page: 'my'});
+				detailPage.show('slide-in-right');
+				setStatusBar('', 'dark');
 			}
 		</script>
 	</body>

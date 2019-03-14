@@ -28,7 +28,7 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">公告标题</h1>
 		</header>
 		
@@ -42,7 +42,12 @@
 	<script type="text/javascript" src="../js/util.js"></script>
 	<script>
 		mui.init({
-			swipeBack: true
+			swipeBack: true,
+			beforeback: function() {
+				if (plus.webview.currentWebview().page == 'my') {
+					setStatusBar('', 'light');
+				}
+			}
 		})
 		
 		var noticeId = 0;
@@ -60,7 +65,6 @@
 				if (res.errno == 0) {
 					var detail = res.data;
 					document.getElementsByClassName('article')[0].innerHTML = detail.content;
-					console.log(JSON.stringify(detail));
 				} else {
 					console.log(res.message);
 				}

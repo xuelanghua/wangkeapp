@@ -7,66 +7,77 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../icomoon/style.css" rel="stylesheet"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
 		<style>
-			.clearfix{
+			.clearfix {
 				clear: both;
 			}
-			a{
-				color: #000000;
-			}
-			.title{
-				width: 100%;
-				height: 292px;
-				background: url(../image/store_management_header.png) no-repeat;
-				background-size: 100% 100%;
-			}
-			.header{
-				width: 100%;
-				position: fixed;
-				top: 0;
-				padding:15px;
-				color: #333333;
-				background-color: #FFFFFF;
-				text-align: center;
-			}
-			.header img{
-				width: 19px;
-			}
-			.Notice{
-				margin-top: 55px;
+			
+			.Notice {
+				position: relative;
+				height: 40px;
+				line-height: 40px;
 				font-size: 12px;
 				padding: 5px;
 				color: #CC9C2D;
-				background-color: rgba(255,255,255,0.8)
+				background-color: rgba(255,255,255,0.8);
+				display: none;
 			}
 			
-			.sum_of_money{
+			.Notice-title {
+				position: absolute;
+				left: 5px;
+			}
+			
+			.Notice .notice-more {
+				position: absolute;
+				right: 5px;
+				top: 2px;
+			}
+			
+			.Notice .notice-more img {
+				width: 8px;
+			}
+			
+			.title {
+				width: 100%;
+				padding-top: 90px;
+				background: url(../image/store_management_header.png) no-repeat;
+				background-size: 100% 260px;
+			}
+			
+			.sum_of_money {
 				width: 80%;
 				padding: 0 41px 31px 41px;
-				margin: 90px auto 1.25rem;
+				margin: 0 auto 1.25rem;
 				text-align: center;
 				border-radius: 0.3125rem;
 				background-color: #FFFFFF;
 			}
-			.money{
+			
+			.money {
 				padding-top: 23px;
 				font-size: 12px;
 			}
-			.number{
+			
+			.number {
 				color: #CC9C2D;
 				font-size: 25px;
 				margin-top: 15px;
 			}
-			.receivables{
+			
+			.receivables {
 				margin-top: 30px;
 				color: #333333;
 			}
-			.numbers{
+			
+			.numbers {
 				color: #CC9C2D;
 				font-size: 15px;
 				margin-top: 0.1875rem;
 			}
-			.money button{
+			
+			.money button {
 				width: 100%;
 				border: none;
 				padding: 15px 0;
@@ -75,96 +86,104 @@
 				background-color: #F5CA3A;
 				margin-top: 27px;
 			}
-			.bj{
+			
+			.bj {
 				height: 170px;
 				margin-top: -185px;
 				background-color: #FFFFFF;
 			}
-			.shue{
+			
+			.shue {
 				font-size: 0.9375rem;
 				color: #000000;
 			}
-			.administration{
+			
+			.administration {
 				padding: 28px 0 16px 0;
-				margin-top: 185px;
+				margin-top: 10px;
 				font-size: 13px;
 				background-color: #FFFFFF;
 			}
-			.administration_content{
+			.administration_content {
 				width: 25%;
 				float: left;
 				text-align: center;
 			}
-			.administration_content img{
+			
+			.administration_content img {
 				height: 27px;
 			}
 			
 			.mui-bar-tab .mui-tab-item.mui-active{
 				color: #F5CA3A;
 			}
+			
+			#notice_container {
+				margin: 0;
+				padding: 0;
+				padding-left: 25px;
+				height: 40px;
+				line-height: 40px;
+			}
+			
+			.swiper-slide {
+				position: relative;
+				top: -5px;
+			}
 		</style>
 	</head>
 
 	<body>
-		
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">店铺管理</h1>
+		</header>
 		<div class="mui-content">
-			<div style="background-color: #FFFFFF;">
-				<div class="title">
-					<div class="header">
-						<span class="mui-action-back mui-pull-left mui-icon mui-icon-arrowleft"></span>
-						<span>我的店铺</span>
-					</div>
-					
-					<div class="Notice">
-						<span>公告</span>
-						<span>这里是公告，公告的内容很有用</span>
-						<span class="mui-pull-right mui-icon mui-icon-arrowright" style="font-size: 16px;margin-top: 3px;color: #000000;"></span>
-						<div class="clearfix"></div>
-					</div>
-					
-					<div class="sum_of_money">
-						<div class="money">
-							<div>
-								<div>金日收款金额</div>
-								<div class="number">2,350.25</div>
+			<div class="Notice">
+				<div class="Notice-title"><img src="../image/notice4.png" style="width:18px" alt=""></div>
+				<div id="notice_container">
+					<div class="swiper-container"></div>
+				</div>
+				<div class="notice-more">
+					<img src="../image/iconrighth.png">
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="title">
+				<div class="sum_of_money">
+					<div class="money">
+						<div>
+							<div>金日收款金额</div>
+							<div class="number" id="today_receipt">0</div>
+						</div>
+						<div class="receivables">
+							<div class="mui-pull-left">
+								<div>店铺收款</div>
+								<div class="numbers" id="shop_receipt">0</div>
 							</div>
-							<div class="receivables">
-								<div class="mui-pull-left">
-									<div>店铺收款</div>
-									<div class="numbers">2,350.25</div>
-								</div>
-								<div class="mui-pull-right">
-									<div>收款码</div>
-									<div class="numbers">2,350.25</div>
-								</div>
-								<div class="clearfix"></div>
+							<div class="mui-pull-right">
+								<div>收款码</div>
+								<div class="numbers" id="qr_receipt">0</div>
 							</div>
-							<button>资产中心</button>
-							<div class="receivables">
-								<div class="mui-pull-left">
-									<div class="shue">10</div>
-									<div>待发货</div>
-								</div>
-								<div class="mui-pull-right"style="border-left: 1px solid #DDDDDD;width: 49%;text-align: right;">
-									<div class="shue">2,358</div>
-									<div>浏览量</div>
-								</div>
-								<div class="clearfix"></div>
+							<div class="clearfix"></div>
+						</div>
+						<button>资产中心</button>
+						<div class="receivables">
+							<div class="mui-pull-left">
+								<div class="shue" id="wait_send">0</div>
+								<div>待发货</div>
 							</div>
+							<div class="mui-pull-right"style="border-left: 1px solid #DDDDDD;width: 49%;text-align: right;">
+								<div class="shue" id="view">0</div>
+								<div>浏览量</div>
+							</div>
+							<div class="clearfix"></div>
 						</div>
 					</div>
-					<div class="bj"></div>
 				</div>
+				<div class="bj"></div>
 			</div>
-			
-			
 			<div class="administration">
-				<!-- <a href="shop.html">
-					<div class="administration_content">
-						<img src="../image/administration.png" >
-						<div>店铺管理</div>
-					</div>
-				</a> -->
 				<div class="administration_content" id="shop_manage">
 					<img src="../image/administration.png" >
 					<div>店铺管理</div>
@@ -183,26 +202,36 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
-			
 		</div> 
-		
-		
 	</body>
-
 </html>
 <script src="../js/mui.min.js"></script>
 <script src="../js/util.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
 <script>
 	mui.init({
 		swipeBack: true,
 		beforeback: function() {
-			setStatusBar('', 'light')
+			setStatusBar('', 'light');
 		}
 	});
 	
+	var userInfo = getUserInfo();
 	mui.plusReady(function(){
+		eventInit();
+		getStatistics();
+		getNotice();
+	})
+	
+	//事件初始化
+	function eventInit() {
 		window.addEventListener('scrollTop', function(event) {
 			window.scrollTo(0, 0);
+		});
+		
+		//商品管理
+		document.getElementById('shop_manage').addEventListener('tap', function() {
+			fnOpenWin('shop_setting.html', 'shop_setting', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
 		});
 		
 		//商品管理
@@ -210,9 +239,81 @@
 			fnOpenWin('goods_list.html', 'goods_list', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
 		});
 		
+		//商品管理
+		document.getElementById('order_manage').addEventListener('tap', function() {
+			fnOpenWin('order_list.html', 'order_list', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+		});
+		
 		//添加商品
 		document.getElementById('goods_add').addEventListener('tap', function() {
 			fnOpenWin('goods_add.html', 'goods_add', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
 		});
-	})
+		
+		//查看公告
+		mui('.mui-content').on('tap', '.Notice', function() {
+			noticeDeail();
+		})
+	}
+	
+	//获取公告
+	function getNotice(){
+		mui.post($ajaxUrl + 'notice', {action: 'list'}, function(res) {
+			if (res.errno == 0) {
+				notice = res.data;
+				noticeLen = notice.length;
+				var str = '<div class="swiper-container"><div class="swiper-wrapper">';
+				for (var i = 0; i < noticeLen; i++) {
+					str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '" style="height: 8px;">' + notice[i].title + '</div>';
+				}
+				str += '</div></div>';
+				document.getElementById('notice_container').innerHTML = str;
+				document.getElementsByClassName('Notice')[0].style.display = 'block';
+				scrollInit();
+			} else {
+				console.log(res.message);
+			}
+		}, 'json')
+	}
+	
+	//获取统计数据
+	function getStatistics() {
+		mui.post($ajaxUrl + 'shop', {
+				action: 'index',
+				token: userInfo.token
+			}, function(res){
+				var data= res.data;
+				for (var index in data) {
+					document.getElementById(index).innerText = data[index];
+				}
+			}, 'json'
+		);
+	}
+	
+	//公告滚动初始化
+	function scrollInit() {
+		var mySwiper = new Swiper('.swiper-container', {
+			autoplay: true,	//可选选项，自动滑动
+			loop : true,
+			direction : 'vertical',
+			speed: 5000,
+			autoHeight: true,
+			watchOverflow: true,
+			on: {
+				slideChange: function(){
+					var index = this.activeIndex;
+					if (index <= noticeLen) {
+						noticeIndex = index - 1;
+					} else {
+						noticeIndex = 0;
+					}
+				},
+			}
+		})
+	}
+	
+	//查看公告详情
+	function noticeDeail() {
+		var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#FFF'}}, {notice: notice[noticeIndex], page: 'shop_index'});
+		detailPage.show('slide-in-right');
+	}
 </script>
