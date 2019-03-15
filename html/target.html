@@ -137,7 +137,7 @@
 	</head>
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">目标管理</h1>
 		</header>
 		<div class="mui-content">
@@ -235,28 +235,37 @@
 				swipeBack: true
 			});
 			
-			//点击的定目标按钮
-			mui('.mui-content').on('tap', '#my_target_unit', function() {
-				//先检查会员
-				// if(checkMember()){
-				if(true){
-					//再跳转页面
-					fnOpenWin('target_manage_index.html', 'target_manage_index', {
-						statusbar: {
-							background: '#FFF'
-						}
-					}, '', 'slide-in-right');
-				}
-				return false;
-			});
-			
 			var userInfo = getUserInfo();
 			var date = formatDate('y-m-d', '');
 			mui.plusReady(function() {
+				eventInit();
 				userTargetStatistics();
 				check_user_target_state();
 			})
 
+			//事件初始化
+			function eventInit() {
+				//点击的定目标按钮
+				mui('.mui-content').on('tap', '#my_target_unit', function() {
+					//先检查会员
+					// if(checkMember()){
+					if(true){
+						//再跳转页面
+						fnOpenWin('target_manage_index.html', 'target_manage_index', {
+							statusbar: {
+								background: '#FFF'
+							}
+						}, '', 'slide-in-right');
+					}
+					return false;
+				});
+				
+				//查看详情
+				mui('.mui-content').on('tap', '.trapezium', function () {
+					fnOpenWin('target_detail.html', 'target_detail', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+				})
+			}
+			
 			function userTargetStatistics() {
 				mui.post($ajaxUrl + 'target', {
 					action: 'detail',
