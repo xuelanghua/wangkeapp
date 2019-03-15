@@ -94,7 +94,7 @@
 		</style>
 	</head>
 	<body>
-		<header class="mui-bar mui-bar-nav mui-action-back">
+		<header class="mui-bar mui-bar-nav ">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<a class="mui-pull-right">按月计算</a>
 			<h1 class="mui-title">目标设定</h1>
@@ -129,10 +129,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>每天拓客</label>
-						<input type="text" id='field-range-input' value='60'>
+						<input type="text" id='field-range2-input' value='60'>
 					</div>
 					<div>
-						<input type="range" id='field-range' value="60" min="0" max="100" />
+						<input type="range" id='field-range2' value="60" min="0" max="100" />
 					</div>
 				</div>
 			</div>
@@ -140,10 +140,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>客户跟进</label>
-						<input type="text" id='field-range-input' value='60'>
+						<input type="text" id='field-range3-input' value='60'>
 					</div>
 					<div>
-						<input type="range" id='field-range' value="60" min="0" max="100" />
+						<input type="range" id='field-range3' value="60" min="0" max="100" />
 					</div>
 				</div>
 			</div>
@@ -151,10 +151,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>有效沟通</label>
-						<input type="text" id='field-range-input' value='60'>
+						<input type="text" id='field-range4-input' value='60'>
 					</div>
 					<div>
-						<input type="range" id='field-range' value="60" min="0" max="100" />
+						<input type="range" id='field-range4' value="60" min="0" max="100" />
 					</div>
 				</div>
 			</div>
@@ -162,10 +162,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>每天转介绍</label>
-						<input type="text" id='field-range-input' value='60'>
+						<input type="text" id='field-range5-input' value='60'>
 					</div>
 					<div>
-						<input type="range" id='field-range' value="60" min="0" max="100" />
+						<input type="range" id='field-range5' value="60" min="0" max="100" />
 					</div>
 				</div>
 			</div>
@@ -183,7 +183,9 @@
 	<script src="../js/mui.min.js"></script>
 	<script>
 		//监听input事件，获取range的value值，也可以直接element.value获取该range的值
+		//找到所有的range
 		var rangeList = document.querySelectorAll('input[type="range"]');
+		//根据range的长度得到个数 得到循环查询的次数
 		for (var i = 0, len = rangeList.length; i < len; i++) {
 			rangeList[i].addEventListener('input', function() {
 				if (this.id.indexOf('field') >= 0) {

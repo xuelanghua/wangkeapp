@@ -121,46 +121,7 @@
 		</style>
 	</head>
 	<body>
-		<script src="../js/mui.js"></script>
-		<!-- <script src="../js/jquery-1.11.0.min.js"></script> -->
-		<script src="../js/Zepto.min.js"></script>
-		<script type="text/javascript">
-			mui.init()
-			var timeOutEvent = 0;
-			$(function() {
-				$(document).click(function() {
-					$(".showArea").css("display", "none");
-				})
-				$("#touchArea").on({
-					touchstart: function(e) {
-						timeOutEvent = setTimeout("longPress()", 500);
-						e.preventDefault();
-						return false;
-					},
-					touchmove: function() {
-						clearTimeout(timeOutEvent);
-						timeOutEvent = 0;
-					},
-					touchend: function(e) {
-						clearTimeout(timeOutEvent);
-						timeOutEvent = ShortLeave();
-						e.preventDefault();
-						return false;
-					}
-				})
-			});
-
-			function longPress() {
-				timeOutEvent = 0;
-				$(".showArea").css("display", "block");
-			}
-
-			function ShortLeave() {
-				timeOutEvent = 0;
-				$(".showArea").css("display", "none");
-			}
-		</script>
-		<header class="mui-bar mui-bar-nav mui-action-back">
+		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">目标设定</h1>
 		</header>
@@ -176,7 +137,8 @@
 					<input type="text" placeholder="输入内容" />
 					<div class="sound_recording">
 						<button id="touchArea" class="hold_down mui-pull-left">开始录音，按住说话</button>
-						<div class="voice mui-pull-right">
+						<div class="voice mui-pull-right" onclick="play_record();">
+							<input type="hidden" name="voice" value="" />
 							<img class="mui-pull-left" src="../image/target/sound_recording.png">
 							<div class="voiceR mui-pull-right">
 								<p></p>
@@ -210,23 +172,26 @@
 				</a>
 			</div>
 			<div class="showArea">
-				<img src="../image/target/luyin.gif">
+				<img src="../image/luyin.gif">
 				<div>松开结束录音</div>
+				<!-- <p style="text-align: center; color: white;"><span id="record_sec">1</span>秒</p> -->
 			</div>
 		</div>
 	</body>
 </html>
+<script src="../js/upload.js"></script>
 <script src="../js/mui.js"></script>
+<!-- <script src="../js/jquery-1.11.0.min.js"></script> -->
+<script src="../js/Zepto.min.js"></script>
 <script src="../js/util.js"></script>
+<script src="../js/mui.js"></script>
+<script src="../js/mui.zoom.js"></script>
+<script src="../js/mui.previewimage.js"></script>
 <script>
 	//初始化页面 对页面进行相关的设置
 	mui.init({
 		swipeBack: true
 	});
-	
-	mui('#next_step_container').on('tap','#next_step',function(){
-	   fnOpenWin('target_manage_detail.html', 'target_manage_detail', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
-	}) ;
 	//获取用户信息
 	var userInfo = getUserInfo();
 	//获取时间
@@ -236,10 +201,173 @@
 		//检查该用户是否设定个人目标
 		check_user_target_state();
 	});
-
+	mui('#next_step_container').on('tap', '#next_step', function() {
+		// 		fnOpenWin('target_manage_detail.html', 'target_manage_detail', {
+		// 			statusbar: {
+		// 				background: '#FFF'
+		// 			}
+		// 		}, '', 'slide-in-right');
+		mui.openWindow({
+			url: "target_manage_detail.html",
+			id: "target_manage_detail",
+			createNew: false, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+			show: {
+				autoShow: true, //页面loaded事件发生后自动显示，默认为true
+			},
+			styles: {
+				statusbar: {
+					background: '#FFF'
+				}
+			},
+			waiting: {
+				autoShow: true, //自动显示等待框，默认为true
+				title: '正在加载...', //等待对话框上显示的提示内容
+			},
+		});
+	});
+	var url = $ajaxUrl + "target";
+	//
 	function check_user_target_state() {
-		alert('检查用户是否设置个人目标');
+		var userInfo = getUserInfo();
+		mui.post($ajaxUrl + 'target', {
+			action: 'check_user_target_state',
+			token: userInfo.token
+		}, function(res) {
+			console.log(JSON.stringify(res));
+		});
 	}
-	
-	
+</script>
+<script type="text/javascript">
+	//初始化录音对象
+	var r = null;
+	//
+	//初始化计时器
+	var timeOutEvent = 0;
+	//
+	$(function() {
+		$(document).click(function() {
+			$(".showArea").css("display", "none");
+		})
+		//录音键的页面交互触发块
+		$("#touchArea").on({
+			touchstart: function(e) {
+				//触摸开始 获取录音对象
+				start_record();
+				window.setTimeout("longPress()", 100);
+				window.setInterval(function() { 
+					timeOutEvent = timeOutEvent++;
+					$('#record_sec').html(timeOutEvent);
+				}, 1000);
+				// e.preventDefault();
+				return false;
+			},
+			touchmove: function() {
+				// clearTimeout(timeOutEvent);
+				// timeOutEvent = 0; 
+			},
+			touchend: function(e) {
+				clearTimeout(timeOutEvent);
+				ShortLeave();
+				e.preventDefault();
+				stopRecord()
+				return false;
+			}
+		})
+	});
+
+	function longPress() {
+		
+		$(".showArea").css("display", "block");
+		//触摸开始
+	}
+
+	function ShortLeave() {
+		timeOutEvent = 0;
+		$(".showArea").css("display", "none");
+	}
+	/**
+	 * 录音的方法
+	 */
+	function start_record() {
+		//创建录音对象
+		r = plus.audio.getRecorder();
+		//检查录音对象
+		if (r == null) {
+			message("Device not ready!");
+			return;
+		}
+		//调用录音对象录音
+		r.record({
+			filename: "_doc/audio/",
+			format: 'mp3'
+		}, function(e) {
+			console.log(JSON.stringify(e));
+			//回调函数返回录音对象
+			//将但会的对象传给文件上传方法
+			voiceUpload(e);
+		}, function(e) {
+			message("Audio record failed: " + e.message);
+		});
+	}
+	/**
+	 * 结束录音
+	 */
+	function stopRecord() {
+		// clearInterval(timer);
+		r.stop();
+	}
+	/**
+	 * 文件上传
+	 */
+	function voiceUpload(file) {
+		console.log('开始上传');
+		plus.nativeUI.showWaiting();
+		//创建文件上传对象
+		var task = plus.uploader.createUpload($voiceUrl, {
+			method: "POST",
+			blocksize: 614400,
+			priority: 100
+		}, function(t, status) { //上传完成
+			if (status == 200) {
+				var res = JSON.parse(t.responseText);
+				if (res.error) {
+					plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+				} else {
+					//设置相关的input 将上传成功的音频的地址赋值给value
+					document.querySelector('input[name=voice]').value = res.data.path;
+					message("上传完成");
+				}
+			} else {
+				console.log("上传失败：" + status);
+				plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
+			}
+		});
+		//关闭等待框
+		plus.nativeUI.closeWaiting();
+		// 页面中要上传的 图片路径
+		task.addFile(file, {
+			key: 'upfile'
+		});
+		//开始上传
+		task.start();
+	}
+	/**
+	 * 点击播放按钮的方法
+	 */
+	function play_record() {
+		console.log('播放');
+		//获取到隐藏的input中的value 
+		var rec_path = document.querySelector('input[name=voice]').value;
+		if (rec_path == '') {
+			message("你还没有录制哦");
+			return false;
+		}
+		console.log(rec_path);
+		//先清除之前遗留下来的播放对象
+		$('audio').remove();
+		// 创建htnl音频播放对象
+		var audio = document.createElement("audio");
+		audio.src = rec_path;
+		audio.play();
+	}
 </script>
