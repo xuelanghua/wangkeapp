@@ -12,14 +12,7 @@
 			}
 			/* .mui-bar{
 				background-color: #FFFFFF;
-				box-shadow: none;
 			} */
-			.tips{
-				font-size: 15px;
-				color: #FFFFFF;
-				padding: 14px 15px;
-				background-color: #F5CA3A;
-			}
 			.address{
 				padding: 17px 15px;
 				background-color: #FFFFFF;
@@ -76,6 +69,7 @@
 			.detailed_content button{
 				padding: 2px 10px;
 				color: #999999;
+				border-radius: 0;
 				margin-left: 10px;
 			}
 			.total{
@@ -126,6 +120,23 @@
 				color: #999999;
 			}
 			
+			.logistics{
+				padding: 17px 15px;
+				margin-top: 10px;
+				font-size: 14px;
+				background-color: #FFFFFF;
+			}
+			.logistics a{
+				color: #333333;
+			}
+			.odd_numbers{
+				margin-left: 5px;
+			}
+			.logistics .mui-icon{
+				margin-top: -30px;
+				color: #999999;
+			}
+			
 			.detailed_title{
 				font-size: 15px;
 				border-left: 7px solid #F5CA3A;
@@ -134,18 +145,13 @@
 		</style>
 	</head>
 
-	<body>=
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">订单详情</h1>
 		</header>
 		
 		<div class="mui-content" style="padding-bottom: 25px;">
-			<div class="tips">
-				<div>等待买家付款</div>
-				<div style="font-size: 14px;">订单将在<span id="pay_text">2分</span>后自动取消</div>
-			</div>
-			
 			<div class="address">
 				<div class="mui-pull-left">
 					<img src="../image/bosi3.png" >
@@ -153,9 +159,9 @@
 				<div>
 					<div class="address_contacts">
 						<span id="order_name">xuelang</span>
-						<span id="order_mobile">15398699237</span>
+						<span id="order_mobile">15969569000</span>
 					</div>
-					<div class="address_name" id="order_address">重庆市万州区回来了</div>
+					<div class="address_name" id="order_address">昌宏西路高原明珠商务中心</div>
 				</div>
 			</div>
 			
@@ -193,10 +199,7 @@
 				</div>
 				<div class="detailed_content">
 					<span class="mui-pull-left">
-						<span>订单总计</span>
-						<span>
-							<button id="order_edit">修改</button>
-						</span>
+						订单总计
 					</span>
 					<span class="mui-pull-right total" id="order_total_price">￥25.00</span>
 					<div class="clearfix"></div>
@@ -211,25 +214,34 @@
 					</span>
 				</div> -->
 				<div class="order_content">
-					<span class="mui-pull-left">订单状态:</span>
-					<span class="state">未完成（未付款）</span>
+					<span class="mui-pull-left">支付方式:</span>
+					<span class="state">微信支付</span>
 				</div>
 				<div class="order_content">
 					<span class="mui-pull-left">下单时间:</span>
 					<span class="state" id="order_create_time">2018-02-27 09:15:59</span>
 				</div>
 			</div>
+			
+			<div class="logistics">
+				<div class="odd_numbers">
+					<div>运送单号：<span id="courier_number">53021358841</span></div>
+				</div>
+				<div id="courier_info">【物流详情】你的快递已拣货完成，由顺风快递寄出</div>
+				<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
+			</div>
+			
 			<div class="order_contacts" data-id="" data-name="">
 				<div class="mui-pull-left">
 					<div class="order_contacts_chart mui-pull-left">
-						<img id="avatar" src="../image/bj.jpg" />
+						<img id="avatar" src="../image/bj.jpg" >
 					</div>
 					<span class="mui-pull-left" style="margin-top: 10px;" id="nickname">微信昵称</span>
 					<div class="clearfix"></div>
 				</div>
 				<div class="mui-pull-right contact">
 					<span>联系TA</span>
-					<span class="mui-icon mui-icon-arrowright" style="font-size: 18px;"></span>
+					<span class="mui-icon mui-icon-arrowright"></span>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -253,10 +265,46 @@
 			
 			//事件初始化
 			function eventInit() {
+				//联系
 				mui('.mui-content').on('tap', '.order_contacts', function() {
 					var userId = this.dataset.id;
 					var nickname = this.dataset.name;
 					fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: userId, chatName: nickname, barStyle: 'dark'}, 'slide-in-right');
+				})
+				
+				//发货
+				mui('.mui-content').on('tap', '.deliver_goods', function() {
+					this.style.display = 'block';
+					document.querySelector('.tanchu').style.display = 'block';
+					document.querySelector('#cover').style.display = 'block';
+				})
+				
+				//发货弹窗
+				mui('.mui-content').on('tap', '#cover', function() {
+					this.style.display = 'none';
+					document.querySelector('.tanchu').style.display = 'none';
+				})
+				
+				//发货
+				mui('.mui-content').on('tap', '.tanchu_button', function() {
+					var expressCompany = document.querySelector('input[name=express_company]').value;
+					var courierNumber = document.querySelector('input[name=courier_number]').value;
+					if (expressCompany.length == 0) {
+						message('请填写物流公司!');
+						return;
+					}
+					if (courierNumber.length == 0) {
+						message('请填写物流单号!');
+						return;
+					}
+					document.querySelector('#cover').style.display = 'none';
+					document.querySelector('.tanchu').style.display = 'none';
+					fnExpress(expressCompany, courierNumber);
+				})
+				
+				//查看物流
+				mui('.mui-content').on('tap', '.logistics', function(e) {
+					fnOpenWin('logistics.html', 'logistics', {statusbar: {background: '#F7F7F7'}}, {orderId: orderId}, 'slide-in-right');
 				})
 			}
 			
@@ -269,7 +317,6 @@
 					}, function(res){
 						if (res.errno == 0) {
 							var detail = res.data;
-							document.getElementById('pay_text').innerText = detail.pay_text;
 							document.getElementById('order_name').innerText = detail.name;
 							document.getElementById('order_mobile').innerText = detail.phone;
 							document.getElementById('order_address').innerText = detail.address + detail.address_detail;
@@ -315,6 +362,29 @@
 							setTimeout(function() {
 								fnCloseWin('order_details_1');
 							}, 2000)
+						}
+					}, 'json'
+				);
+			}
+			
+			//发货
+			function fnExpress(expressCompany, courierNumber) {
+				mui.post($ajaxUrl + 'order', {
+						action: 'express',
+						token: userInfo.token,
+						order_id: orderId,
+						express_company: expressCompany,
+						courier_number: courierNumber
+					}, function(res){
+						logs(res);
+						if (res.errno == 0) {
+							message('发货成功!');
+							mui.fire(plus.webview.getWebviewById('order_list'), 'expressSuccess');
+							setTimeout(function() {
+								plus.webview.close('order_details_2');
+							}, 2000)
+						} else {
+							message(res.message);
 						}
 					}, 'json'
 				);

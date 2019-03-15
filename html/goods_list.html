@@ -351,17 +351,18 @@
 	mui.init({
 		swipeBack: true,
 		pullRefresh: {
-			container: ".mui-content",	//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
-		    down: {
-				height:50,//可选,默认50.触发下拉刷新拖动距离,
-				auto: false,//可选,默认false.首次加载自动下拉刷新一次
-				contentdown: "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
-				contentover: "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
-				contentrefresh: "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
-				callback: function(){
-					getGoodsList();
-		        }	
-		    }
+			container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+			down: {
+				style: 'circle', //必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+				color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件颜色
+				height: '50px', //可选,默认50px.下拉刷新控件的高度,
+				range: '100px', //可选 默认100px,控件可下拉拖拽的范围
+				offset: '0px', //可选 默认0px,下拉刷新控件的起始位置
+				auto: false, //可选,默认false.首次加载自动上拉刷新一次
+				callback: function() {
+					getGoodsList(true);
+				} //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+			}
 		}
 	});
 
@@ -369,7 +370,7 @@
 	var userInfo = getUserInfo();
 	mui.plusReady(function() {
 		eventInit();
-		getGoodsList();
+		getGoodsList(false);
 	})
 
 	function eventInit() {
@@ -425,7 +426,7 @@
 	}
 	
 	//获取商品列表
-	function getGoodsList() {
+	function getGoodsList(refresh) {
 		plus.nativeUI.showWaiting();
 		mui.post($ajaxUrl + 'goods', {
 			action: 'goods_list',
@@ -559,6 +560,9 @@
 				document.getElementById('item3_list').innerHTML = offSaleStr;
 			} else {
 				document.getElementById('item3_list').innerHTML = emptyContent;
+			}
+			if (refresh) {
+				mui('.mui-content').pullRefresh().endPulldownToRefresh();
 			}
 			plus.nativeUI.closeWaiting();
 		}, 'json');
