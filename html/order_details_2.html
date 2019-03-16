@@ -324,39 +324,47 @@
 			mui.init({
 				swipeBack: true
 			})
-			
+
 			var orderId = 0;
 			var self = null;
 			userInfo = getUserInfo();
-			mui.plusReady(function () {
-			    self = plus.webview.currentWebview();
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
 				orderId = self.orderId;
 				orderDetail();
 				eventInit();
 			})
-			
+
 			//事件初始化
 			function eventInit() {
 				//联系
 				mui('.mui-content').on('tap', '.order_contacts', function() {
 					var userId = this.dataset.id;
 					var nickname = this.dataset.name;
-					fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: userId, chatName: nickname, barStyle: 'dark'}, 'slide-in-right');
+					fnOpenWin('dialog.html', 'dialog', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						cid: userId,
+						chatName: nickname,
+						barStyle: 'dark'
+					}, 'slide-in-right');
 				})
-				
+
 				//发货
 				mui('.mui-content').on('tap', '.deliver_goods', function() {
 					this.style.display = 'block';
 					document.querySelector('.tanchu').style.display = 'block';
 					document.querySelector('#cover').style.display = 'block';
 				})
-				
+
 				//发货弹窗
 				mui('.mui-content').on('tap', '#cover', function() {
 					this.style.display = 'none';
 					document.querySelector('.tanchu').style.display = 'none';
 				})
-				
+
 				//发货
 				mui('.mui-content').on('tap', '.tanchu_button', function() {
 					var expressCompany = document.querySelector('input[name=express_company]').value;
@@ -374,87 +382,84 @@
 					fnExpress(expressCompany, courierNumber);
 				})
 			}
-			
+
 			//获取订单详情
 			function orderDetail() {
 				mui.post($ajaxUrl + 'order', {
-						action: 'detail',
-						token: userInfo.token,
-						order_id: orderId
-					}, function(res){
-						if (res.errno == 0) {
-							var detail = res.data;
-							document.getElementById('order_name').innerText = detail.name;
-							document.getElementById('order_mobile').innerText = detail.phone;
-							document.getElementById('order_address').innerText = detail.address + detail.address_detail;
-							document.getElementById('order_price').innerText = '￥' + detail.price;
-							document.getElementById('order_freight').innerText = '￥' + detail.freight;
-							document.getElementById('order_total_price').innerText = '￥' + detail.total_price;
-							document.getElementById('order_create_time').innerText = detail.create_time;
-							document.getElementById('nickname').innerText = detail.buyer.nickName;
-							document.getElementById('avatar').src = detail.buyer.avatarUrl;
-							document.querySelector('.order_contacts').dataset.id = detail.user_id;
-							document.querySelector('.order_contacts').dataset.name = detail.buyer.nickName;
-							var goods = detail.goods;
-							var html = '';
-							for (var i in goods) {
-								if (i == 0) {
-									html += '<div>';
-								} else {
-									html += '<div style="padding-top: 12px;">';
-								}
-									html += '<div class="commodity_information_chart mui-pull-left">';
-										html += '<img src="' + goods[i].cover + '" >';
-									html += '</div>';
-									html += '<div class="jianshu">';
-										html += '<div class="font">';
-											html += '<span>' + goods[i].name + '</span>';
-											html += '<span class="mui-pull-right">￥' + goods[i].price + '/件</span>';
-										html += '</div>';
-										html += '<div>';
-										if (goods[i].content.length == 0) {
-											html += '<span>规格：默认</span>';
-										} else {
-											html += '<span>规格：' + goods[i].content + '</span>';
-										}
-											html += '<span class="mui-pull-right">x' + goods[i].number + '</span>';
-										html += '</div>';
-									html += '</div>';
-									html += '<div class="clearfix"></div>';
-								html += '</div>';
+					action: 'detail',
+					token: userInfo.token,
+					order_id: orderId
+				}, function(res) {
+					if (res.errno == 0) {
+						var detail = res.data;
+						document.getElementById('order_name').innerText = detail.name;
+						document.getElementById('order_mobile').innerText = detail.phone;
+						document.getElementById('order_address').innerText = detail.address + detail.address_detail;
+						document.getElementById('order_price').innerText = '￥' + detail.price;
+						document.getElementById('order_freight').innerText = '￥' + detail.freight;
+						document.getElementById('order_total_price').innerText = '￥' + detail.total_price;
+						document.getElementById('order_create_time').innerText = detail.create_time;
+						document.getElementById('nickname').innerText = detail.buyer.nickName;
+						document.getElementById('avatar').src = detail.buyer.avatarUrl;
+						document.querySelector('.order_contacts').dataset.id = detail.user_id;
+						document.querySelector('.order_contacts').dataset.name = detail.buyer.nickName;
+						var goods = detail.goods;
+						var html = '';
+						for (var i in goods) {
+							if (i == 0) {
+								html += '<div>';
+							} else {
+								html += '<div style="padding-top: 12px;">';
 							}
-							document.querySelector('.commodity_information').innerHTML = html;
-						} else {
-							message(res.message);
-							setTimeout(function() {
-								fnCloseWin('order_details_1');
-							}, 2000)
+							html += '<div class="commodity_information_chart mui-pull-left">';
+							html += '<img src="' + goods[i].cover + '" >';
+							html += '</div>';
+							html += '<div class="jianshu">';
+							html += '<div class="font">';
+							html += '<span>' + goods[i].name + '</span>';
+							html += '<span class="mui-pull-right">￥' + goods[i].price + '/件</span>';
+							html += '</div>';
+							html += '<div>';
+							if (goods[i].content.length == 0) {
+								html += '<span>规格：默认</span>';
+							} else {
+								html += '<span>规格：' + goods[i].content + '</span>';
+							}
+							html += '<span class="mui-pull-right">x' + goods[i].number + '</span>';
+							html += '</div>';
+							html += '</div>';
+							html += '<div class="clearfix"></div>';
+							html += '</div>';
 						}
-					}, 'json'
-				);
+						document.querySelector('.commodity_information').innerHTML = html;
+					} else {
+						message(res.message);
+						setTimeout(function() {
+							fnCloseWin('order_details_1');
+						}, 2000)
+					}
+				}, 'json');
 			}
-			
+
 			//发货
 			function fnExpress(expressCompany, courierNumber) {
 				mui.post($ajaxUrl + 'order', {
-						action: 'express',
-						token: userInfo.token,
-						order_id: orderId,
-						express_company: expressCompany,
-						courier_number: courierNumber
-					}, function(res){
-						logs(res);
-						if (res.errno == 0) {
-							message('发货成功!');
-							mui.fire(plus.webview.getWebviewById('order_list'), 'expressSuccess');
-							setTimeout(function() {
-								plus.webview.close('order_details_2');
-							}, 2000)
-						} else {
-							message(res.message);
-						}
-					}, 'json'
-				);
+					action: 'express',
+					token: userInfo.token,
+					order_id: orderId,
+					express_company: expressCompany,
+					courier_number: courierNumber
+				}, function(res) {
+					if (res.errno == 0) {
+						message('发货成功!');
+						mui.fire(plus.webview.getWebviewById('order_list'), 'expressSuccess');
+						setTimeout(function() {
+							plus.webview.close('order_details_2');
+						}, 2000)
+					} else {
+						message(res.message);
+					}
+				}, 'json');
 			}
 		</script>
 	</body>
