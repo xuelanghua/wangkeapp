@@ -134,36 +134,40 @@
 			<div style="margin-top: 100px;">
 				<div class="target">
 					<div>大声告诉我你的目标是什么</div>
-					<input type="text" placeholder="输入内容" />
+					<input type="text" id="user_target_main_content" placeholder="输入内容" value="保时捷911" />
 					<div class="sound_recording">
 						<button id="touchArea" class="hold_down mui-pull-left">开始录音，按住说话</button>
-						<div class="voice mui-pull-right" onclick="play_record();">
-							<input type="hidden" name="voice" value="" />
-							<img class="mui-pull-left" src="../image/sound_recording.png">
+						<div class="voice mui-pull-right" onclick="playRecord();">
+							<input type="hidden" id="target_record_url" name="voice" value="" />
+							<input type="hidden" id="target_record_time" name="record_time" value="" />
+							<img class="mui-pull-left" id="sound_recording" src="../image/sound_recording.png">
 							<div class="voiceR mui-pull-right">
-								<p></p>
-								<div>9</div>
+								<p id="recording_point" style="visibility: hidden;"></p>
+								<div id="record_timer_num" style="visibility: hidden;">0</div>
 							</div>
 							<div class="clearfix"></div>
+							<div id="progress_bar" style="width: 0%; height: 1px; background-color: red; float: left;"></div>
 						</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 				<div class="target">
 					<div>这些目标需要多少钱可以实现</div>
-					<input type="text" placeholder="输入金额" />
+					<input type="number" id="target_total_money" placeholder="输入金额" value="1000000"/>
 				</div>
 				<div class="target">
 					<div>目标说明</div>
-					<input type="text" placeholder="输入内容" />
+					<input type="text" id="target_description" placeholder="输入内容" value="目标说明" />
 				</div>
 				<div class="target">
 					<div>实现目标需要多少时间</div>
-					<button class="target_date">
+					<!-- <div>预计：<span style="color: #00CCFF; font-size: 12px;">2019年3月16日</span> 完成</div> -->
+					<input type="text" id="target_time" placeholder="天" value="600" />
+					<!-- <button class="target_date">
 						<div class="mui-pull-left">选择时间</div>
 						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
 						<div class="clearfix"></div>
-					</button>
+					</button> -->
 				</div>
 			</div>
 			<div class="next_step" id="next_step_container">
@@ -184,13 +188,19 @@
 <!-- <script src="../js/jquery-1.11.0.min.js"></script> -->
 <script src="../js/Zepto.min.js"></script>
 <script src="../js/util.js"></script>
-<script src="../js/mui.js"></script>
-<script src="../js/mui.zoom.js"></script>
-<script src="../js/mui.previewimage.js"></script>
 <script>
 	//初始化页面 对页面进行相关的设置
 	mui.init({
-		swipeBack: true
+		swipeBack: true,
+		gestureConfig: {
+			tap: true, //默认为true
+			doubletap: true, //默认为false
+			longtap: true, //默认为false
+			swipe: true, //默认为true
+			drag: true, //默认为true
+			hold: true, //默认为false，不监听
+			release: true //默认为false，不监听
+		}
 	});
 	//获取用户信息
 	var userInfo = getUserInfo();
@@ -199,96 +209,103 @@
 	//mui框架加载完成后进行什么操作
 	mui.plusReady(function() {
 		//检查该用户是否设定个人目标
-		check_user_target_state();
-	});
-	mui('#next_step_container').on('tap', '#next_step', function() {
-		// 		fnOpenWin('target_manage_detail.html', 'target_manage_detail', {
-		// 			statusbar: {
-		// 				background: '#FFF'
-		// 			}
-		// 		}, '', 'slide-in-right');
-		mui.openWindow({
-			url: "target_manage_detail.html",
-			id: "target_manage_detail",
-			createNew: false, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
-			show: {
-				autoShow: true, //页面loaded事件发生后自动显示，默认为true
-			},
-			styles: {
-				statusbar: {
-					background: '#FFF'
-				}
-			},
-			waiting: {
-				autoShow: true, //自动显示等待框，默认为true
-				title: '正在加载...', //等待对话框上显示的提示内容
-			},
+		checkUserTargetState();
+		
+		/**
+		 * 点击下一步加载页面
+		 */
+		mui('#next_step_container').on('tap', '#next_step', function() {
+			//将本页面的值带入到下一个页面
+			//封装表单数据
+			var user_target_main_content = $('#user_target_main_content').val();
+			var target_record_url = $('#target_record_url').val();
+			var target_record_time = $('#target_record_time').val();
+			var target_total_money = $('#target_total_money').val();
+			var target_description = $('#target_description').val();
+			var target_time = $('#target_time').val();
+			// return false;
+			mui.openWindow({
+				url: "target_manage_detail.html",
+				id: "target_manage_detail",
+				createNew: false, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+				show: {
+					autoShow: true, //页面loaded事件发生后自动显示，默认为true
+				},
+				styles: {
+					statusbar: {
+						background: '#FFF'
+					}
+				},
+				waiting: {
+					autoShow: true, //自动显示等待框，默认为true
+					title: '正在加载...', //等待对话框上显示的提示内容
+				},
+				extras: {
+					user_target_main_content:user_target_main_content,
+					target_record_url:target_record_url,
+					target_record_time:target_record_time,
+					target_total_money:target_total_money,
+					target_description:target_description,
+					target_time:target_time,
+				},
+			});
 		});
+		//绑定录音按键的操作事件
+		bindRecordBtnEvent();
+		//先提前隐藏录音提示界面
+		$(".showArea").css("display", "none");
 	});
-	var url = $ajaxUrl + "target";
-	//
-	function check_user_target_state() {
-		var userInfo = getUserInfo();
-		mui.post($ajaxUrl + 'target', {
-			action: 'check_user_target_state',
-			token: userInfo.token
-		}, function(res) {
-			console.log(JSON.stringify(res));
+	/**
+	 * 绑定录音按键的操作事件
+	 */
+	function bindRecordBtnEvent() {
+		recording_point
+		record_timer_num
+		//初始化一个记事变量
+		var recordTimerNum = 0;
+		//初始化一个计时器
+		var recordTimer = null;
+		//按住
+		document.getElementById('touchArea').addEventListener('hold', function() {
+			//计时自增
+			recordTimer = setInterval(function() {
+				recordTimerNum++;
+				console.log(recordTimerNum);
+			}, 1000);
+			//开启录音
+			startRecord();
+			$(".showArea").css("display", "block");
 		});
-	}
-</script>
-<script type="text/javascript">
-	//初始化录音对象
-	var r = null;
-	//
-	//初始化计时器
-	var timeOutEvent = 0;
-	//
-	$(function() {
-		$(document).click(function() {
-			$(".showArea").css("display", "none");
-		})
-		//录音键的页面交互触发块
-		$("#touchArea").on({
-			touchstart: function(e) {
-				//触摸开始 获取录音对象
-				start_record();
-				window.setTimeout("longPress()", 100);
-				window.setInterval(function() { 
-					timeOutEvent = timeOutEvent++;
-					$('#record_sec').html(timeOutEvent);
-				}, 1000);
-				// e.preventDefault();
-				return false;
-			},
-			touchmove: function() {
-				// clearTimeout(timeOutEvent);
-				// timeOutEvent = 0; 
-			},
-			touchend: function(e) {
-				clearTimeout(timeOutEvent);
-				ShortLeave();
-				e.preventDefault();
-				stopRecord()
+		//释放
+		document.getElementById('touchArea').addEventListener('release', function() {
+			if (recordTimerNum < 1) {
+				message('录音时间小于1秒');
+				//计时器归零
+				recordTimerNum = 0;
+				$(".showArea").css("display", "none");
 				return false;
 			}
-		})
-	});
-
-	function longPress() {
-		
-		$(".showArea").css("display", "block");
-		//触摸开始
+			//结束计时器
+			clearInterval(recordTimer);
+			//结束录音
+			stopRecord();
+			//设置时间
+			$('#record_timer_num').html(recordTimerNum);
+			document.querySelector('input[name=record_time]').value = recordTimerNum;
+			$('#record_timer_num').css('visibility', 'visible');
+			//显示红点
+			$('#recording_point').css('visibility', 'visible');
+			//计时器归零
+			recordTimerNum = 0;
+			$(".showArea").css("display", "none");
+		});
 	}
-
-	function ShortLeave() {
-		timeOutEvent = 0;
-		$(".showArea").css("display", "none");
-	}
+	//初始化录音对象
+	var r = null;
 	/**
 	 * 录音的方法
 	 */
-	function start_record() {
+	function startRecord() {
 		//创建录音对象
 		r = plus.audio.getRecorder();
 		//检查录音对象
@@ -354,20 +371,61 @@
 	/**
 	 * 点击播放按钮的方法
 	 */
-	function play_record() {
-		console.log('播放');
+	function playRecord() {
 		//获取到隐藏的input中的value 
 		var rec_path = document.querySelector('input[name=voice]').value;
 		if (rec_path == '') {
 			message("你还没有录制哦");
 			return false;
 		}
+		//获取播放时间
+		var record_time = document.querySelector('input[name=record_time]').value;
+		//模拟进度条
+		$("#progress_bar").animate({
+			width: '100%'
+		}, (record_time * 1500), function() {
+			$("#progress_bar").css('width', '0%');
+		});
+		console.log('播放');
 		console.log(rec_path);
 		//先清除之前遗留下来的播放对象
-		$('audio').remove();
+		$("audio").remove();
 		// 创建htnl音频播放对象
 		var audio = document.createElement("audio");
 		audio.src = rec_path;
 		audio.play();
 	}
+	/**
+	 * 检查用户目标添加状态
+	 */
+	function checkUserTargetState() {
+		var userInfo = getUserInfo();
+		var url = $ajaxUrl + "target";
+		mui.ajax(url, {
+			data: {
+				action: 'check_user_target_state',
+				token: userInfo.token
+			},
+			dataType: 'json', //服务器返回json格式数据
+			type: 'post', //HTTP请求类型
+			timeout: 10000, //超时时间设置为10秒；
+			success: function(res) {
+				console.log(JSON.stringify(res));
+				//已经设置目标
+				if (res.code == '200') {
+					console.log('设定');
+				}
+				//用户未设置目标
+				if (res.code == '404') {
+					//为空
+					console.log('没有设定目标');
+				}
+			},
+			error: function(xhr, type, errorThrown) {
+				console.log(JSON.stringify(errorThrown));
+			}
+		});
+	}
+
+	
 </script>
