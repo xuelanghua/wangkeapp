@@ -168,15 +168,16 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			userInfo = getUserInfo();
-			var selectTime = '2019-03-13';
+			var selectTime = '2019-03-18';
 			var timeType = '1';
 			var optionsCont = {
 				"type": "date"
 			};
+			var myDate = new Date();
 			$("body").removeClass("mui-hidden");
 
 			function userTargetStatistics() {
-				// logs(selectTime);
+				logs(selectTime);
 				// logs(timeType);
 				mui.post($ajaxUrl + 'target', {
 					action: 'detail',
@@ -219,21 +220,36 @@
 			// 年月日切换
 			mui(".target-detail-heade").on("tap", ".mui-col-xs-4", function(e) {
 				var typs = this.getAttribute('timeType');
+				var isYear = myDate.getFullYear();
+				var isMonth = myDate.getMonth()+1;
+				var isDay = myDate.getDate();
 				$(this).siblings('.mui-col-xs-4').children('i').removeClass("active");
 				$(this).children('i').addClass('active');
 				// logs(typs);
 				if (typs == "year") {
 					optionsCont = "year";
+					selectTime = isYear + '-01';
+					timeType = "3";
+					userTargetStatistics();
 				} else if (typs == "month") {
 					optionsCont = {
 						"type": "month",
 						"beginYear": 2019,
 						"endYear": 2029
 					}
+					selectTime =isYear + "-" + isMonth;
+					timeType = "2";
+					userTargetStatistics();
 				} else {
 					optionsCont = {
-						"type": "date"
+						"type": "date",
+						"beginYear": 2019,
+						"endYear": 2029
 					}
+					var itYear = myDate.getFullYear();
+					selectTime = "" + isYear + "-" + isMonth + "-" + isDay;
+					timeType = "1";
+					userTargetStatistics();
 				}
 			})
 			// 选择器
