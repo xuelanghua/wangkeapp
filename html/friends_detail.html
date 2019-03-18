@@ -9,13 +9,176 @@
 		<link href="../css/mui.picker.min.css" rel="stylesheet" />
 	</head>
 	<body class="mui-hidden">
-		<header class="mui-bar mui-bar-nav friends_detail-header">
+		<header class="mui-bar mui-bar-nav friends-detail-header">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">&nbsp;</h1>
-			<a class="mui-title">···</h1>
+			<span class="mui-pull-right mui-icon ">···</span>
 		</header>
-		<div class="mui-content friends_detail-container">
-			l;sdfl;gkl;kl;
+		<div class="mui-content friends-detail-container">
+			<!-- 名片样式一 -->
+			<div class="first-card-container">
+				<div class="card">
+					<img class="user-head-img" src="../image/kaol.jpg">
+					<div class="card-left-cont">
+						<ul>
+							<li id="first-row">万贤科技</li>
+							<li id="second-row">胡尚</li>
+							<li id="third-row">首席服务官</li>
+							<li id="fourth-row">159123456789</li>
+							<li id="fifth-row">send.lzp@qq.com</li>
+							<li id="sixth-row">昆明市官渡区昌宏西路昆明市官渡区昌宏西路</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- 名片样式一结束 -->
+			<!-- 名片样式二 -->
+			<div class="second-card-container">
+
+			</div>
+			<!-- 名片样式二结束 -->
+			<!-- 名片信息 -->
+			<!-- mui-icon-arrowdown -->
+			<div class="show-card-info" id="showInfo"><span id="descText">展开全部名片信息</span><i class="mui-icon mui-icon-arrowup"></i></div>
+			<div class="card-info-container">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell"><i>手机</i><span>13700696591</span><a href="tel:13700696591">拨打</a></li>
+					<li class="mui-table-view-cell"><i>微信</i><span>13700696591</span><a>复制</a></li>
+					<li class="mui-table-view-cell"><i>公司</i><span>云南万贤科技有限公司</span><a>复制</a></li>
+					<li class="mui-table-view-cell"><i>地址</i><span>昆明市官渡区昌宏西路高原明珠商务中心A座707</span></li>
+				</ul>
+			</div>
+			<div class="operation-btn-cont">
+				<button type="button">分享名片</button>
+				<button type="button">同步到通讯录</button>
+			</div>
+			<!-- 浏览记录 -->
+			<div class="browse-record">
+				<div class="browse-record-left">
+					<ul class="browse-record-img-cont">
+						<li class="browse-record-img">
+							<img src="../image/kaol.jpg" alt="">
+						</li>
+						<li class="browse-record-img">
+							<img src="../image/kaol.jpg" alt="">
+						</li>
+						<li class="browse-record-img">
+							<img src="../image/kaol.jpg" alt="">
+						</li>
+						<li class="browse-record-img">
+							<img src="../image/kaol.jpg" alt="">
+						</li>
+						<span>···</span>
+					</ul>
+					<p>最近5人浏览</p>
+				</div>
+				<div class="browse-record-right">
+					<span class="click-heart"></span>
+					<span>靠谱:0</span>
+				</div>
+			</div>
+			<h5 class="personality-desc">个性签名</h5>
+			<div class="personality-cont">
+				<p>越努力越幸运越努力越幸运越努力越幸运越努力越幸运越努力越幸运越努力越幸运</p>
+				<div class="user-info">
+					<div class="user-head-img"><img src="../image/kaol.jpg"></div>
+					<div id="audio-control" class="play-control play">
+						<div class="left-arrow"></div>
+						<i class="play-status"></i>
+						<div class="right-info mui-pull-right">
+							<i></i>
+							<span>30</span>
+						</div>
+					</div>
+					<div>
+						<span class="click-heart"></span>
+						<span>靠谱:0</span>
+					</div>
+				</div>
+			</div>
 		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/Zepto.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			$("body").removeClass("mui-hidden");
+			//主列表点击事件
+			mui('#friends_detail-container').on('tap', 'a', function() {
+				var href = this.getAttribute('href');
+
+				//非plus环境，直接走href跳转
+				if (!mui.os.plus) {
+					location.href = href;
+					return;
+				}
+
+				var id = this.getAttribute("data-wid");
+				if (!id) {
+					id = href;
+				}
+
+				if (href && ~href.indexOf('.html')) {
+					//打开窗口的相关参数
+					var options = {
+						styles: {
+							popGesture: "close"
+						},
+						extras: {}
+					};
+					var titleType = this.getAttribute("data-title-type");
+					if (titleType && titleType.indexOf("native") > -1) { //原生导航
+						options.styles.titleNView = {
+							autoBackButton: true,
+							backgroundColor: '#f7f7f7',
+							titleText: this.innerHTML.trim(),
+							splitLine: {
+								color: '#cccccc'
+							}
+						};
+
+						options.show = {
+							event: 'loaded'
+						}
+						//有原生标题的情况下，就不需要waiting框了
+						options.waiting = {
+							autoShow: false
+						}
+					} else {
+						//非原生导航，需要设置顶部状态栏占位
+						options.styles.statusbar = {
+							background: "#f7f7f7"
+						}
+					}
+					//打开新窗口
+					mui.openWindow(href, id, options);
+				}
+			});
+			document.getElementById("fifth-row").innerText = "2913626209@qq.com";
+			// 超出文本隐藏
+			var contain = document.getElementById("sixth-row");
+			var txt = contain.innerHTML;
+			if (txt.length > 10) {
+				txt = txt.substring(0, 10 - 1) + "..."
+				contain.innerHTML = txt;
+			} else {
+				console.log("error")
+			}
+			$("#showInfo").click(function() {
+				$(this).find("i").toggleClass("mui-icon-arrowdown");
+				var descText = $("#descText").text();
+				if (descText == "展开全部名片信息") {
+					$("#descText").text("收起以下名片信息");
+				} else {
+					$("#descText").text("展开全部名片信息");
+				}
+				$(".card-info-container").slideToggle();
+			})
+		</script>
 	</body>
 </html>
