@@ -337,20 +337,25 @@
 				type: 'post',
 				timeout: 10000,
 				success: function(ret) {
-					console.log(JSON.stringify('成功'));
-					console.log(JSON.stringify(ret));
-					message('设置成功！');
-					//添加自定义事件
-					plus.webview.close('target_manage_index');
-					plus.webview.close('target');
-					var self = plus.webview.currentWebview();
-					self.close();
+					if (ret.data == 1) {
+						console.log(JSON.stringify('成功'));
+						console.log(JSON.stringify(ret));
+						message('设置成功！');
+						//添加自定义事件
+						plus.webview.close('target_manage_index');
+						plus.webview.close('target');
+						var self = plus.webview.currentWebview();
+						self.close();
+					} else {
+						message('参数错误！');
+					}
 				},
 				error: function(xhr, type, errorThrown) {
 					console.log(JSON.stringify('失败'));
 					console.log(JSON.stringify(xhr));
 					console.log(JSON.stringify(type));
 					console.log(JSON.stringify(errorThrown));
+					message('参数错误！');
 				}
 			});
 			plus.nativeUI.closeWaiting();
