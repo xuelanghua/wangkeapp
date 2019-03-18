@@ -134,7 +134,7 @@
 			<div style="margin-top: 100px;">
 				<div class="target">
 					<div>大声告诉我你的目标是什么</div>
-					<input type="text" id="user_target_main_content" placeholder="输入内容" value="保时捷911" />
+					<input type="text" id="user_target_main_content" placeholder="输入内容" value="" />
 					<div class="sound_recording">
 						<button id="touchArea" class="hold_down mui-pull-left">开始录音，按住说话</button>
 						<div class="voice mui-pull-right" onclick="playRecord();">
@@ -153,16 +153,16 @@
 				</div>
 				<div class="target">
 					<div>这些目标需要多少钱可以实现</div>
-					<input type="number" id="target_total_money" placeholder="输入金额" value="1000000"/>
+					<input type="number" id="target_total_money" placeholder="输入金额" value="" />
 				</div>
 				<div class="target">
 					<div>目标说明</div>
-					<input type="text" id="target_description" placeholder="输入内容" value="目标说明" />
+					<input type="text" id="target_description" placeholder="输入内容" value="" />
 				</div>
 				<div class="target">
 					<div>实现目标需要多少时间</div>
 					<!-- <div>预计：<span style="color: #00CCFF; font-size: 12px;">2019年3月16日</span> 完成</div> -->
-					<input type="text" id="target_time" placeholder="天" value="600" />
+					<input type="text" id="target_time" placeholder="天" value="" />
 					<!-- <button class="target_date">
 						<div class="mui-pull-left">选择时间</div>
 						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
@@ -210,7 +210,6 @@
 	mui.plusReady(function() {
 		//检查该用户是否设定个人目标
 		checkUserTargetState();
-		
 		/**
 		 * 点击下一步加载页面
 		 */
@@ -223,6 +222,31 @@
 			var target_total_money = $('#target_total_money').val();
 			var target_description = $('#target_description').val();
 			var target_time = $('#target_time').val();
+			//检查数据完整性
+			if (user_target_main_content == '') {
+				message('请填写目标名称');
+				return false;
+			}
+			if (target_record_url == '') {
+				message('你还没有录制目标音频');
+				return false;
+			}
+			if (target_record_time == '') {
+				message('你还没有录制目标音频');
+				return false;
+			}
+			if (target_total_money == '') {
+				message('你还没有设置目标金额');
+				return false;
+			}
+			if (target_description == '') {
+				message('你还没有设置目标描述');
+				return false;
+			}
+			if (target_time == '') {
+				message('你还没有设置时间');
+				return false;
+			}
 			// return false;
 			mui.openWindow({
 				url: "target_manage_detail.html",
@@ -241,12 +265,12 @@
 					title: '正在加载...', //等待对话框上显示的提示内容
 				},
 				extras: {
-					user_target_main_content:user_target_main_content,
-					target_record_url:target_record_url,
-					target_record_time:target_record_time,
-					target_total_money:target_total_money,
-					target_description:target_description,
-					target_time:target_time,
+					user_target_main_content: user_target_main_content,
+					target_record_url: target_record_url,
+					target_record_time: target_record_time,
+					target_total_money: target_total_money,
+					target_description: target_description,
+					target_time: target_time,
 				},
 			});
 		});
@@ -414,6 +438,12 @@
 				//已经设置目标
 				if (res.code == '200') {
 					console.log('设定');
+					//如果用户设定了目标就跳转到目标详情页面去
+					fnOpenWin('target_detail.html', 'target_detail', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, '', 'slide-in-right');
 				}
 				//用户未设置目标
 				if (res.code == '404') {
@@ -426,6 +456,4 @@
 			}
 		});
 	}
-
-	
 </script>

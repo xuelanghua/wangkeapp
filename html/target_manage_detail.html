@@ -103,7 +103,7 @@
 			<div class="your_goal">
 				<div class="your_goal_title">
 					<div class="mui-pull-left">
-						<img src="../image/your_goal.png">
+						<img src="../image/target/your_goal.png">
 					</div>
 					<div>你的目标是<span id="target_maincontent"></span>价值<span id="target_price"></span>你将用<span id="target_total_time"></span>天来
 						完成你的目标 </div>
@@ -118,10 +118,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>每天曝光</label>
-						<input type="text" id='field-range1-input' value='60'>
+						<input type="text" id='field-range1-input' value='60' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range1' value="60" min="0" max="500" disabled="disabled" />
+						<input type="range" id='field-range1' value="60" min="0" max="1000" disabled="disabled" />
 					</div>
 				</div>
 			</div>
@@ -129,10 +129,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>每天拓客</label>
-						<input type="text" id='field-range2-input' value='60'>
+						<input type="text" id='field-range2-input' value='60' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range2' value="60" min="0" max="500" disabled="disabled" />
+						<input type="range" id='field-range2' value="60" min="0" max="1000" disabled="disabled" />
 					</div>
 				</div>
 			</div>
@@ -140,10 +140,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>客户跟进</label>
-						<input type="text" id='field-range3-input' value='60'>
+						<input type="text" id='field-range3-input' value='60' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range3' value="60" min="0" max="500" disabled="disabled" />
+						<input type="range" id='field-range3' value="60" min="0" max="1000" disabled="disabled" />
 					</div>
 				</div>
 			</div>
@@ -151,10 +151,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>有效沟通</label>
-						<input type="text" id='field-range4-input' value='10'>
+						<input type="text" id='field-range4-input' value='10' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range4' value="10" min="0" max="500" disabled="disabled" />
+						<input type="range" id='field-range4' value="10" min="0" max="1000" disabled="disabled" />
 					</div>
 				</div>
 			</div>
@@ -162,10 +162,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>每天转介绍</label>
-						<input type="text" id='field-range5-input' value='60'>
+						<input type="text" id='field-range5-input' value='60' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range5' value="60" min="0" max="500" disabled="disabled" />
+						<input type="range" id='field-range5' value="60" min="0" max="1000" disabled="disabled" />
 					</div>
 				</div>
 			</div>
@@ -175,7 +175,7 @@
 				<div class="clearfix"></div>
 			</div>
 			<div class="bottom">
-				<button>开干喽</button>
+				<button onclick="addUserTarget();">开干喽</button>
 				<div style="margin-top: 20px;">不积跬步无以至千里，让我们现在就开始进步吧</div>
 			</div>
 		</div>
@@ -193,7 +193,7 @@
 			document.getElementById('target_total_time').innerHTML = self.target_time;
 			// alert(JSON.stringify(self));
 			//获取权重
-			getTargetWeight(self.target_total_money,self.target_time);
+			getTargetWeight(self.target_total_money, self.target_time);
 		});
 		//监听input事件，获取range的value值，也可以直接element.value获取该range的值
 		//找到所有的range
@@ -211,12 +211,10 @@
 		// 		document.getElementById('field-range-input').addEventListener('input', function() {
 		// 			document.getElementById('field-range').value = this.value;
 		// 		});
-		
 		/**
 		 * 从后台取到权重数据 并计算出相应对应的数值
 		 */
-		function getTargetWeight(target_total_money,target_time){
-			
+		function getTargetWeight(target_total_money, target_time) {
 			var userInfo = getUserInfo();
 			var ajax_url = $ajaxUrl + 'target';
 			mui.ajax(ajax_url, {
@@ -232,33 +230,32 @@
 					console.log(JSON.stringify(ret));
 					//开始计算
 					//计算每天多少
-					var daily_money=target_total_money/target_time;
-					daily_money=daily_money.toFixed(0);
+					var daily_money = target_total_money / target_time;
+					daily_money = daily_money.toFixed(0);
 					$('#daily_money').html(daily_money);
 					$('#daily_money_top').html(daily_money);
 					//再根据权重算出相应的数值
-					var cardinal_number=ret.data.cardinal_number;
+					var cardinal_number = ret.data.cardinal_number;
 					//计算基数价值
-					var cardinal_money=(daily_money/cardinal_number).toFixed(0);
+					var cardinal_money = (daily_money / cardinal_number).toFixed(0);
 					//计算曝光
-					$('#field-range1-input').val((cardinal_money*ret.data.exposure_rate));
-					$('#field-range1').val((cardinal_money*ret.data.exposure_rate));
+					$('#field-range1-input').val((cardinal_money * ret.data.exposure_rate));
+					$('#field-range1').val((cardinal_money * ret.data.exposure_rate));
 					//计算拓客
-					$('#field-range2-input').val((cardinal_money*ret.data.new_customer));
-					$('#field-range2').val((cardinal_money*ret.data.new_customer));
-					$('#daily_customer_num').html((cardinal_money*ret.data.new_customer));
+					$('#field-range2-input').val((cardinal_money * ret.data.new_customer));
+					$('#field-range2').val((cardinal_money * ret.data.new_customer));
+					$('#daily_customer_num').html((cardinal_money * ret.data.new_customer));
 					//计算跟进
-					$('#field-range3-input').val((cardinal_money*ret.data.customer_follow));
-					$('#field-range3').val((cardinal_money*ret.data.customer_follow));
+					$('#field-range3-input').val((cardinal_money * ret.data.customer_follow));
+					$('#field-range3').val((cardinal_money * ret.data.customer_follow));
 					//计算沟通
-					$('#field-range4-input').val((cardinal_money*ret.data.communication));
-					$('#field-range4').val((cardinal_money*ret.data.communication));
+					$('#field-range4-input').val((cardinal_money * ret.data.communication));
+					$('#field-range4').val((cardinal_money * ret.data.communication));
 					//计算转介绍
-					$('#field-range5-input').val((cardinal_money*ret.data.share_card));
-					$('#field-range5').val((cardinal_money*ret.data.share_card));
+					$('#field-range5-input').val((cardinal_money * ret.data.share_card));
+					$('#field-range5').val((cardinal_money * ret.data.share_card));
 					console.log(cardinal_money);
 					//获取总价值
-					
 				},
 				error: function(xhr, type, errorThrown) {
 					console.log(JSON.stringify('失败'));
@@ -266,31 +263,75 @@
 				}
 			});
 		}
-		
 		/**
 		 * 提交所有客户目标信息
 		 */
 		function addUserTarget() {
-			
+			var showwatting = plus.nativeUI.showWaiting();
 			var self = plus.webview.currentWebview();
-			self.user_target_main_content
-			self.target_total_money
-			self.target_time;
-			var user_target_main_content = $('#user_target_main_content').val();
 			//封装表单数据
+			//目标名称
 			var user_target_main_content = self.user_target_main_content;
+			//目标录音地址
 			var target_record_url = self.target_record_url;
+			//目标录音时间
 			var target_record_time = self.target_record_time;
+			//目标实现金额
 			var target_total_money = self.target_total_money;
+			//目标描述
 			var target_description = self.target_description;
+			//目标实现时间
 			var target_time = self.target_time;
-			return false;
+			//目标曝光量
+			var terget_exposure_rate = $('#field-range1-input').val();
+			//目标拓客
+			var terget_new_customer = $('#field-range2-input').val();
+			//目标跟进
+			var terget_customer_follow = $('#field-range3-input').val();
+			//目标沟通
+			var terget_communication = $('#field-range4-input').val();
+			//目标转介绍
+			var terget_share_card = $('#field-range5-input').val();
+			//目标成交额
+			var terget_deal = $('#daily_money').html();
+			//获取用户信息
 			var userInfo = getUserInfo();
-			varajax_url = ajaxUrl + 'target';
+			// alert(JSON.stringify(userInfo));
+			// return false;
+			var ajax_url = $ajaxUrl + 'target';
+			// console.log(ajax_url);
+			// return false;
 			mui.ajax(ajax_url, {
 				data: {
-					action: 'check_user_target_state',
-					token: userInfo.token
+					action: 'commitUserTarget',
+					//用户token
+					token: userInfo.token,
+					//用户id
+					userId: userInfo.id,
+					//目标名称
+					user_target_main_content: user_target_main_content,
+					//目标录音地址
+					target_record_url: target_record_url,
+					//目标录音时间
+					target_record_time: target_record_time,
+					//目标实现金额
+					target_total_money: target_total_money,
+					//目标描述
+					target_description: target_description,
+					//目标实现时间
+					target_time: target_time,
+					//目标曝光量
+					terget_exposure_rate: terget_exposure_rate,
+					//目标拓客
+					terget_new_customer: terget_new_customer,
+					//目标跟进
+					terget_customer_follow: terget_customer_follow,
+					//目标沟通
+					terget_communication: terget_communication,
+					//目标转介绍
+					terget_share_card: terget_share_card,
+					//目标成交额
+					terget_deal: terget_deal,
 				},
 				dataType: 'json',
 				type: 'post',
@@ -298,12 +339,21 @@
 				success: function(ret) {
 					console.log(JSON.stringify('成功'));
 					console.log(JSON.stringify(ret));
+					message('设置成功！');
+					//添加自定义事件
+					plus.webview.close('target_manage_index');
+					plus.webview.close('target');
+					var self = plus.webview.currentWebview();
+					self.close();
 				},
 				error: function(xhr, type, errorThrown) {
 					console.log(JSON.stringify('失败'));
+					console.log(JSON.stringify(xhr));
+					console.log(JSON.stringify(type));
 					console.log(JSON.stringify(errorThrown));
 				}
 			});
+			plus.nativeUI.closeWaiting();
 		}
 	</script>
 </html>
