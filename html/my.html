@@ -347,7 +347,7 @@
 						</span>
 						<span>会员中心</span>
 					</div>
-					<div class="goodsR mui-pull-right" id="sign_in_block">
+					<div class="goodsR mui-pull-right">
 						<span>
 							<img src="../image/goodsR.png">
 						</span>
@@ -390,8 +390,10 @@
 					</li>
 					<div class="clearfix"></div>
 					<li>
-						<img src="../image/data-statistics.png">
-						<span>数据统计</span>
+						<a href="friends_detail.html"></a>
+							<img src="../image/data-statistics.png">
+							<span>数据统计</span>
+						</a>
 					</li>
 					<li>
 						<a href="asset_management.html">
@@ -479,16 +481,6 @@
 				mui('.mui-content').on('tap', '.Notice', function() {
 					noticeDeail();
 				})
-				//签到
-				document.getElementById('sign_in_block').addEventListener('tap',function(){
-					fnOpenWin('sign_in_index.html', 'sign_in_index.html', {
-						statusbar: {
-							background: '#FFF'
-						}
-					}, {
-						prePage: 'my'
-					}, 'slide-in-right');
-				});
 			}
 
 			function ycit() {
@@ -604,13 +596,13 @@
 			// a标签的跳转
 			mui('.menu li').on('tap', 'a', function() {
 				var href = this.getAttribute('href');
-				var id=href.indexOf('.html');
+				var id = href.indexOf('.html');
 				//非plus环境，直接走href跳转
 				if (!mui.os.plus) {
 					location.href = href;
 					return;
 				}
-			
+
 				if (href && ~href.indexOf('.html')) {
 					//打开窗口的相关参数
 					var options = {
@@ -629,7 +621,7 @@
 								color: '#cccccc'
 							}
 						};
-			
+
 						options.show = {
 							event: 'loaded'
 						}
