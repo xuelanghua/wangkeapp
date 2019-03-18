@@ -45,7 +45,7 @@
 								<span class="title">曝光</span>
 								<div class="progress-section">
 									<p class="desc" id="exposure_rate_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in" data-progress="30">
+									<p class="mui-progressbar mui-progressbar-in" id="exposure_rate_progress">
 										<span></span>
 									</p>
 								</div>
@@ -55,7 +55,7 @@
 								<span class="title">拓客</span>
 								<div class="progress-section">
 									<p class="desc" id="new_customer_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in"><span></span></p>
+									<p class="mui-progressbar mui-progressbar-in" id="new_customer_progress"><span></span></p>
 								</div>
 								<span class="data-desc" id="new_customer_text"></span>
 							</li>
@@ -63,7 +63,7 @@
 								<span class="title">客户跟进</span>
 								<div class="progress-section">
 									<p class="desc" id="customer_follow_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in"><span></span></p>
+									<p class="mui-progressbar mui-progressbar-in" id="customer_follow_progress"><span></span></p>
 								</div>
 								<span class="data-desc" id="customer_follow_text"></span>
 							</li>
@@ -71,7 +71,7 @@
 								<span class="title">有效沟通</span>
 								<div class="progress-section">
 									<p class="desc" id="communication_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in"><span></span></p>
+									<p class="mui-progressbar mui-progressbar-in" id="communication_progress"><span></span></p>
 								</div>
 								<span class="data-desc" id="communication_text"></span>
 							</li>
@@ -79,7 +79,7 @@
 								<span class="title">转介绍</span>
 								<div class="progress-section">
 									<p class="desc" id="share_card_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in"><span></span></p>
+									<p class="mui-progressbar mui-progressbar-in" id="share_card_progress"><span></span></p>
 								</div>
 								<span class="data-desc" id="share_card_text"></span>
 							</li>
@@ -87,7 +87,7 @@
 								<span class="title">成交</span>
 								<div class="progress-section">
 									<p class="desc" id="deal_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in"><span></span></p>
+									<p class="mui-progressbar mui-progressbar-in" id="deal_progress"><span></span></p>
 								</div>
 								<span class="data-desc" id="deal_text"></span>
 							</li>
@@ -176,7 +176,7 @@
 			$("body").removeClass("mui-hidden");
 
 			function userTargetStatistics() {
-				logs(selectTime);
+				// logs(selectTime);
 				// logs(timeType);
 				mui.post($ajaxUrl + 'target', {
 					action: 'detail',
@@ -190,6 +190,10 @@
 					for (var index in plan) {
 						document.getElementById(index + '_number').innerText = finish[index] + '/' + plan[index];
 						document.getElementById(index + '_show').innerText = finish[index];
+						// 进度条控制
+						// mui("#" + index + "_progress").progressbar().setProgress(finish[index]/plan[index]);
+						mui("#" + index + "_progress").progressbar().setProgress(plan[index]);
+						
 						var rate = parseFloat((finish[index] / plan[index]).toFixed(1));
 						if (rate < 1) {
 							document.getElementById(index + '_text').innerText = '未达标';
@@ -220,7 +224,7 @@
 			mui(".target-detail-heade").on("tap", ".mui-col-xs-4", function(e) {
 				var typs = this.getAttribute('timeType');
 				var isYear = myDate.getFullYear();
-				var isMonth = myDate.getMonth()+1;
+				var isMonth = myDate.getMonth() + 1;
 				var isDay = myDate.getDate();
 				$(this).siblings('.mui-col-xs-4').children('i').removeClass("active");
 				$(this).children('i').addClass('active');
@@ -231,12 +235,20 @@
 					timeType = "3";
 					userTargetStatistics();
 				} else if (typs == "month") {
-					optionsCont={"type": "month","beginYear": 2019,"endYear": 2029}
-					selectTime =isYear + "-" + isMonth;
+					optionsCont = {
+						"type": "month",
+						"beginYear": 2019,
+						"endYear": 2029
+					}
+					selectTime = isYear + "-" + isMonth;
 					timeType = "2";
 					userTargetStatistics();
 				} else {
-					optionsCont ={"type": "date","beginYear": 2019,"endYear": 2029}
+					optionsCont = {
+						"type": "date",
+						"beginYear": 2019,
+						"endYear": 2029
+					}
 					var itYear = myDate.getFullYear();
 					selectTime = "" + isYear + "-" + isMonth + "-" + isDay;
 					timeType = "1";
@@ -317,27 +329,25 @@
 				getSong();
 			})
 			// 播放
-			// 			mui(".target-modal-frame .target-list").on("tap", ".play-control", function() {
-			// 				clicks();
-			// 			})
-			$(function() {
-				// 获取音频
-				getSong();
-				// 渐变进度条
-				var progres = [90, 60, 70, 80, 60, 90];
-				var className = ["exposure", "toker", "evolve", "communicate", "reporting", "deal"];
-				mui.each(className, function(i, names) {
-					var p = 0;
-					var myVar = setInterval(function() {
-						p += 1;
-						mui('.progress-items.' + names + ' .progress-section').progressbar().setProgress(p);
-						if (p == [i]) {
-							p = 0;
-							clearInterval(myVar);
-						}
-					}, 20);
-				});
+			mui(".target-modal-frame .target-list").on("tap", ".play-control", function() {
+				clicks();
 			})
+			// 获取音频
+
+			// 渐变进度条
+			// 	var progres = [90, 60, 70, 80, 60, 90];
+			// 	var className = ["exposure", "toker", "evolve", "communicate", "reporting", "deal"];
+			// 	mui.each(className, function(i, names) {
+			// 		var p = 0;
+			// 		var myVar = setInterval(function() {
+			// 			p += 1;
+			// 			mui('.progress-items.' + names + ' .progress-section').progressbar().setProgress(p);
+			// 			if (p == progres[i]) {
+			// 				p = 0;
+			// 				clearInterval(myVar);
+			// 			}
+			// 		}, 20);
+			// 	});
 			//获取语音链接并插入dom中
 			function getSong() {
 				var audio = document.getElementById("audio");
@@ -345,6 +355,7 @@
 				// audio.loop = true;
 				playCotrol();
 			}
+			getSong();
 
 			//点击播放/暂停
 			function clicks() {
@@ -362,6 +373,7 @@
 
 			//播放事件监听
 			function playCotrol() {
+				var audio = document.getElementById("audio");
 				audio.addEventListener("loadeddata",
 					function() {
 						$("#control").addClass("play").removeClass("color_gray");
