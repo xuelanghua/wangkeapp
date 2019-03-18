@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>名片管理</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/vip-page.css" rel="stylesheet" />
+	</head>
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">名片管理</h1>
+		</header>
+		<div id="card-manage-container" class="mui-content card-manage-container">
+			<ul class="manage-header mui-table-view">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="data-statistics.html">
+						<div class="manage-left">
+							<div class="head-img">
+								<img src="../image/kaol.jpg" alt="">
+							</div>
+							<span>阿飞</span>
+						</div>
+						<span class="edit-desc">编辑</span>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view manage-lists">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="activation-code.html">
+						<div class="manage-left"><img class="sml-icon" src="../image/icon/share-icon-icon.png"><span>转发名片</span></div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						<div class="manage-left"><img class="sml-icon" src="../image/icon/my-qr-code-icon.png"><span>名片码</span></div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						<div class="manage-left"><img class="sml-icon" src="../image/icon/dynamic-icon.png"><span>发布动态</span></div>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/Zepto.min.js"></script>
+		<script type="text/javascript">
+			(function() {
+				mui.init();
+				// 初始化字体大小
+				var viewport = document.documentElement.clientWidth;
+				if (viewport > 750) {
+					viewport = 750
+				}
+				document.documentElement.style.fontSize = viewport / 7.5 + "px";
+				// 初始化字体大小结束
+				$("body").removeClass("mui-hidden");
+				//主列表点击事件
+				mui('#card-manage-container').on('tap', 'a', function() {
+					var href = this.getAttribute('href');
+				
+					//非plus环境，直接走href跳转
+					if (!mui.os.plus) {
+						location.href = href;
+						return;
+					}
+				
+					var id = this.getAttribute("data-wid");
+					if (!id) {
+						id = href;
+					}
+				
+					if (href && ~href.indexOf('.html')) {
+						//打开窗口的相关参数
+						var options = {
+							styles: {
+								popGesture: "close"
+							},
+							extras: {}
+						};
+						var titleType = this.getAttribute("data-title-type");
+						if (titleType && titleType.indexOf("native") > -1) { //原生导航
+							options.styles.titleNView = {
+								autoBackButton: true,
+								backgroundColor: '#f7f7f7',
+								titleText: this.innerHTML.trim(),
+								splitLine: {
+									color: '#cccccc'
+								}
+							};
+				
+							options.show = {
+								event: 'loaded'
+							}
+							//有原生标题的情况下，就不需要waiting框了
+							options.waiting = {
+								autoShow: false
+							}
+						} else {
+							//非原生导航，需要设置顶部状态栏占位
+							options.styles.statusbar = {
+								background: "#f7f7f7"
+							}
+						}
+						//打开新窗口
+						mui.openWindow(href, id, options);
+					}
+				});
+			})();
+		</script>
+	</body>
+
+</html>
