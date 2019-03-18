@@ -115,13 +115,13 @@
 				float: left;
 				margin-right: 15px;
 			}
-			
+
 			.Notice .notice-more {
 				position: absolute;
 				right: 5px;
 				top: 10px;
 			}
-			
+
 			.Notice .notice-more img {
 				width: 8px;
 			}
@@ -279,7 +279,6 @@
 			#QR-code a {
 				font-size: 13px;
 			}
-			
 		</style>
 	</head>
 	<body>
@@ -297,7 +296,7 @@
 		<div class="mui-content">
 			<img class="img1" src="../image/member_center_bg.jpg">
 			<div class="my_message">
-				<div class="my_message_chart"> 
+				<div class="my_message_chart">
 					<img id="avatar" src="../image/user_default.jpg">
 				</div>
 				<div class="my_message_name">
@@ -378,8 +377,10 @@
 						<span>boss</span>
 					</li>
 					<li>
-						<img src="../image/customer-management.png">
-						<span>雷达</span>
+						<a href="data_statistics.html">
+							<img src="../image/customer-management.png">
+							<span>雷达</span>
+						</a>
 					</li>
 					<li>
 						<img src="../image/Personal-information.png">
@@ -390,12 +391,12 @@
 						<img src="../image/data-statistics.png">
 						<span>数据统计</span>
 					</li>
-					<a href="asset_management.html">
-						<li>
+					<li>
+						<a href="asset_management.html">
 							<img src="../image/asset-management.png">
 							<span>资产管理</span>
-						</li>
-					</a>
+						</a>
+					</li>
 					<li id="target">
 						<img src="../image/Target-management.png">
 						<span>目标管理</span>
@@ -428,34 +429,50 @@
 			mui.init({
 				swipeBack: false
 			});
-			
+
 			var userInfo = getUserInfo();
 			mui.plusReady(function() {
 				eventInit();
 				getMemberInfo();
 				getNotice();
 			})
-			
+
 			//事件初始化
 			function eventInit() {
 				//商城首页
 				mui('.mui-content').on('tap', '#shop', function() {
-					fnOpenWin('shop_index.html', 'shop_index', {statusbar: {background: '#F7F7F7'}}, '', 'slide-in-right');
+					fnOpenWin('shop_index.html', 'shop_index', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, '', 'slide-in-right');
 					setStatusBar('', 'dark');
 				})
-				
+
 				//目标
 				mui('.mui-content').on('tap', '#target', function() {
-					fnOpenWin('target.html', 'target', {statusbar: {background: '#F7F7F7'}}, {page: 'my'}, 'slide-in-right');
+					fnOpenWin('target.html', 'target', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						page: 'my'
+					}, 'slide-in-right');
 					setStatusBar('', 'dark');
 				})
-				
+
 				//消息通知
 				document.getElementById('message').addEventListener('tap', function() {
-					fnOpenWin('message.html', 'message', {statusbar: {background: '#FFF'}}, {prePage: 'my'}, 'slide-in-right');
+					fnOpenWin('message.html', 'message', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, {
+						prePage: 'my'
+					}, 'slide-in-right');
 					setStatusBar('', 'dark');
 				})
-				
+
 				//查看公告
 				mui('.mui-content').on('tap', '.Notice', function() {
 					noticeDeail();
@@ -491,36 +508,38 @@
 					document.getElementById("QR-code").style.display = "block";
 				}
 			}
-			
+
 			//获取用户信息
 			function getMemberInfo() {
-				mui.post($ajaxUrl + 'member',{
-						action: 'detail',
-						token: userInfo.token
-					}, function(res){
-						var memberInfo = res.data;
-						document.getElementById('nickname').innerText = memberInfo.nickName;
-						document.getElementById('avatar').src = memberInfo.avatarUrl;
-						if (!memberInfo.group) {
-							document.getElementById('group_name').innerText = '普通';
-							document.getElementById('more').style.display = 'none';
-						} else {
-							document.getElementById('group_name').innerText = memberInfo.group.name;
-						}
-						document.getElementById('wang_number').innerText = memberInfo.wang;
-					}, 'json'
-				);
+				mui.post($ajaxUrl + 'member', {
+					action: 'detail',
+					token: userInfo.token
+				}, function(res) {
+					var memberInfo = res.data;
+					document.getElementById('nickname').innerText = memberInfo.nickName;
+					document.getElementById('avatar').src = memberInfo.avatarUrl;
+					if (!memberInfo.group) {
+						document.getElementById('group_name').innerText = '普通';
+						document.getElementById('more').style.display = 'none';
+					} else {
+						document.getElementById('group_name').innerText = memberInfo.group.name;
+					}
+					document.getElementById('wang_number').innerText = memberInfo.wang;
+				}, 'json');
 			}
-			
+
 			//获取公告
-			function getNotice(){
-				mui.post($ajaxUrl + 'notice', {action: 'list'}, function(res) {
+			function getNotice() {
+				mui.post($ajaxUrl + 'notice', {
+					action: 'list'
+				}, function(res) {
 					if (res.errno == 0) {
 						notice = res.data;
 						noticeLen = notice.length;
 						var str = '<div class="swiper-container"><div class="swiper-wrapper">';
 						for (var i = 0; i < noticeLen; i++) {
-							str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '" style="height: 8px;">' + notice[i].title + '</div>';
+							str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '" style="height: 8px;">' +
+								notice[i].title + '</div>';
 						}
 						str += '</div></div>';
 						document.getElementById('notice_container').innerHTML = str;
@@ -531,18 +550,18 @@
 					}
 				}, 'json')
 			}
-			
+
 			//公告滚动初始化
 			function scrollInit() {
 				var mySwiper = new Swiper('.swiper-container', {
-					autoplay: true,	//可选选项，自动滑动
-					loop : true,
-					direction : 'vertical',
+					autoplay: true, //可选选项，自动滑动
+					loop: true,
+					direction: 'vertical',
 					speed: 5000,
 					autoHeight: true,
 					watchOverflow: true,
 					on: {
-						slideChange: function(){
+						slideChange: function() {
 							var index = this.activeIndex;
 							if (index <= noticeLen) {
 								noticeIndex = index - 1;
@@ -553,13 +572,69 @@
 					}
 				})
 			}
-			
+
 			//查看公告详情
 			function noticeDeail() {
-				var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#FFF'}}, {notice: notice[noticeIndex], page: 'my'});
+				var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {
+					top: '0',
+					bottom: '0',
+					scrollIndicator: 'none',
+					statusbar: {
+						background: '#FFF'
+					}
+				}, {
+					notice: notice[noticeIndex],
+					page: 'my'
+				});
 				detailPage.show('slide-in-right');
 				setStatusBar('', 'dark');
 			}
+			// a标签的跳转
+			mui('.menu li').on('tap', 'a', function() {
+				var href = this.getAttribute('href');
+				var id=href.indexOf('.html');
+				//非plus环境，直接走href跳转
+				if (!mui.os.plus) {
+					location.href = href;
+					return;
+				}
+			
+				if (href && ~href.indexOf('.html')) {
+					//打开窗口的相关参数
+					var options = {
+						styles: {
+							popGesture: "close"
+						},
+						extras: {}
+					};
+					var titleType = this.getAttribute("data-title-type");
+					if (titleType && titleType.indexOf("native") > -1) { //原生导航
+						options.styles.titleNView = {
+							autoBackButton: true,
+							backgroundColor: '#f7f7f7',
+							titleText: this.innerHTML.trim(),
+							splitLine: {
+								color: '#cccccc'
+							}
+						};
+			
+						options.show = {
+							event: 'loaded'
+						}
+						//有原生标题的情况下，就不需要waiting框了
+						options.waiting = {
+							autoShow: false
+						}
+					} else {
+						//非原生导航，需要设置顶部状态栏占位
+						options.styles.statusbar = {
+							background: "#f7f7f7"
+						}
+					}
+					//打开新窗口
+					mui.openWindow(href, id, options);
+				}
+			});
 		</script>
 	</body>
 </html>
