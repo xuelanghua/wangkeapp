@@ -29,8 +29,7 @@
 					</div>
 					<div class="mui-col-xs-6 timer-select">
 						<i>&lt;</i>
-						<!-- <button  class="select-time" id='select-time' data-options='{"type":"date","beginYear":2019,"endYear":2029}'>2019-03-13</button> -->
-						<button class="select-time" id='select-time'>2019-03-13</button>
+						<span class="select-time" id='select-time'>2019-03-13</span>
 						<i>&gt;</i>
 					</div>
 				</div>
@@ -232,20 +231,12 @@
 					timeType = "3";
 					userTargetStatistics();
 				} else if (typs == "month") {
-					optionsCont = {
-						"type": "month",
-						"beginYear": 2019,
-						"endYear": 2029
-					}
+					optionsCont={"type": "month","beginYear": 2019,"endYear": 2029}
 					selectTime =isYear + "-" + isMonth;
 					timeType = "2";
 					userTargetStatistics();
 				} else {
-					optionsCont = {
-						"type": "date",
-						"beginYear": 2019,
-						"endYear": 2029
-					}
+					optionsCont ={"type": "date","beginYear": 2019,"endYear": 2029}
 					var itYear = myDate.getFullYear();
 					selectTime = "" + isYear + "-" + isMonth + "-" + isDay;
 					timeType = "1";
@@ -309,7 +300,6 @@
 						selectTime = res.text;
 						timeType = "2";
 						userTargetStatistics();
-						_self.picker.dispose();
 						_self.picker = null;
 					});
 				}
