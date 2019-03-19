@@ -86,28 +86,28 @@
 						<div class="statistics-list mui-pull-left">
 							<img src="../image/icon/data-statistics-icon-05.png">
 							<div class="desc">
-								<p>10</p>
+								<p id="view_goods"></p>
 								<span>查看商品</span>
 							</div>
 						</div>
 						<div class="statistics-list mui-pull-left">
 							<img src="../image/icon/data-statistics-icon-04.png">
 							<div class="desc">
-								<p>10</p>
+								<p id="view_web"></p>
 								<span>查看官网</span>
 							</div>
 						</div>
 						<div class="statistics-list mui-pull-left">
 							<img src="../image/icon/data-statistics-icon-03.png">
 							<div class="desc">
-								<p>10</p>
+								<p id="copy_wechat"></p>
 								<span>复制微信</span>
 							</div>
 						</div>
 						<div class="statistics-list mui-pull-left">
 							<img src="../image/icon/data-statistics-icon-02.png">
 							<div class="desc">
-								<p>10</p>
+								<p id="share_card"></p>
 								<span>转发名片</span>
 							</div>
 						</div>
@@ -119,85 +119,144 @@
 								<img src="../image/icon/data-statistics-icon-06.png">
 								<span>查看名片</span>
 							</div>
-							<span>6</span>
+							<span id="view_card"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="left-title">
 								<img src="../image/icon/data-statistics-icon-07.png">
 								<span>查看动态</span>
 							</div>
-							<span>6</span>
+							<span id="view_timeline"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="left-title">
 								<img src="../image/icon/data-statistics-icon-08.png">
 								<span>授权手机号</span>
 							</div>
-							<span>16</span>
+							<span id="authorization_phone"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="left-title">
 								<img src="../image/icon/data-statistics-icon-09.png">
-								<span>咨询产品</span>
+								<span>咨询商品</span>
 							</div>
-							<span>6</span>
+							<span id="consult_goods"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="left-title">
 								<img src="../image/icon/data-statistics-icon-10.png">
 								<span>保存电话</span>
 							</div>
-							<span>8</span>
+							<span id="save_phone"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="left-title">
 								<img src="../image/icon/data-statistics-icon-11.png">
 								<span>觉得靠谱</span>
 							</div>
-							<span>5</span>
+							<span id="like"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="left-title">
 								<img src="../image/icon/data-statistics-icon-12.png">
 								<span>拨打电话</span>
 							</div>
-							<span>3</span>
+							<span id="dial_phone"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="left-title">
 								<img src="../image/icon/data-statistics-icon-13.png">
 								<span>播放语音</span>
 							</div>
-							<span>11</span>
+							<span id="play_voice"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<div class="left-title">
 								<img src="../image/icon/data-statistics-icon-14.png">
 								<span>复制邮箱</span>
 							</div>
-							<span>4</span>
+							<span id="copy_email"></span>
 						</li>
-
 					</ul>
 				</div>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script type="text/javascript" src="../js/mui.picker.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript" src="../js/data-statistice.js"></script>
 		<script type="text/javascript">
-			(function() {
-				mui.init();
-				// 初始化字体大小
-				var viewport = document.documentElement.clientWidth;
-				if (viewport > 750) {
-					viewport = 750
-				}
-				document.documentElement.style.fontSize = viewport / 7.5 + "px";
-				// 初始化字体大小结束
-				$("body").removeClass("mui-hidden");
-			})();
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			var postType = 2;
+			// var 
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			$("body").removeClass("mui-hidden");
+
+			var userInfo = getUserInfo();
+			mui.plusReady(function() {
+				behaviorStatistics();
+				businessCardBrowsingStatistics();
+			})
+			// 获取行为数据
+			function behaviorStatistics() {
+				mui.post($ajaxUrl + 'staff&action=card_view_statistics', {
+					type: postType,
+					token: userInfo.token
+				}, function(res) {
+					if(res.errno==0){
+						var data=res.data;
+						for(items in data){
+							document.getElementById(items).innerHTML=data[items].number;
+						}
+					}else{
+						
+					}
+				}, 'json')
+			}
+			// 获取名片浏览记录
+			function businessCardBrowsingStatistics(){
+				mui.post($ajaxUrl + 'staff&action=card_view_record', {
+					skip:1,
+					limit: 10,
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+// 					if(res.errno==0){
+// 						var data=res.data;
+// 						for(items in data){
+// 							logs(items);
+// 						}
+// 					}else{
+// 						
+// 					}
+				}, 'json')
+			}
+			// 选择天数
+			var userPicker = new mui.PopPicker();
+			userPicker.setData([{
+				value: 1,
+				text: '近7天'
+			}, {
+				value: 2,
+				text: '近30天'
+			}]);
+			
+			var showUserPickerButton = document.getElementById('showUserPicker');
+			var selectTitle = document.getElementById('selectTitle');
+			showUserPickerButton.addEventListener('tap', function(event) {
+				userPicker.show(function(items) {
+					selectTitle.innerText = items[0].text;
+					postType=items[0].value;
+					behaviorStatistics();
+				});
+			}, false);
 		</script>
 	</body>
 
