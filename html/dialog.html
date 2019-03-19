@@ -301,14 +301,15 @@
 		</header>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
-			<% for(var i in record){ var item=record[i]; %>
-				<div style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;">2019年03月19日 15:21</div>
+			<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
+				<div style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
+				<% for (var i in record[index]) { var item = record[index][i]; %>
 				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 					<% if(item.sender=='self' ) { %>
 						<!-- <i class="msg-user mui-icon mui-icon-person"></i> -->
-						<img class="msg-user-img msg-user" src="../image/user_default.png" alt="" />
+						<img class="msg-user-img msg-user" src="<%= (avatar.user) %>" alt="" />
 					<% } else { %>
-						<img class="msg-user-img" src="../image/user_default.png" alt="" />
+						<img class="msg-user-img" src="<%= (avatar.target) %>" alt="" />
 					<% } %>
 					<div class="msg-content">
 						<div class="msg-content-inner">
@@ -325,6 +326,7 @@
 					</div>
 					<div class="mui-item-clear"></div>
 				</div>
+				<% } %>
 			<% } %>
 		</script>
 		<div class="mui-content">
@@ -390,16 +392,26 @@
 			var userInfo = getUserInfo();
 			var ws = null;
 			var chatData = null;
+			var skip = 1;
+			var limit = 15;
+			var recordData = {avatar: null, data: null};
+			var lastIndex = '';
 			mui.plusReady(function() {
 				WebSocketInit();
-				plus.webview.currentWebview().setStyle({
+				var self = plus.webview.currentWebview();
+				self.setStyle({
 					softinputMode: "adjustResize"
 				});
-				var self = plus.webview.currentWebview();
 				var chatName = self.chatName;
 				chatId = self.cid;
 				chatAvatar = self.avatar;
 				document.getElementById('dialog_name').innerText = chatName;
+				
+				var avatar = {user: userInfo.avatarUrl, target: chatAvatar};
+				recordData.avatar = avatar;
+				chatData = {user_id: userInfo.id, target_id: chatId, type: 'text', content: ''};
+				getRecordList(false);
+				
 				var showKeyboard = function() {
 					if (mui.os.ios) {
 						var webView = plus.webview.currentWebview().nativeInstanceObject();
@@ -417,17 +429,9 @@
 						//alert("ll");
 					}
 				};
-				var record = [{
-						sender: 'zs',
-						type: 'text',
-						content: 'Hi，我是 MUI 小管家！'
-					},
-					{
-						sender: 'self',
-						type: 'text',
-						content: 'Hi，我是 MUI 小管家！'
-					},
-				];
+
+				
+
 				var ui = {
 					body: document.querySelector('body'),
 					footer: document.querySelector('footer'),
@@ -442,6 +446,7 @@
 					h: document.querySelector('#h'),
 					content: document.querySelector('.mui-content')
 				};
+
 				ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
 				//alert(ui.boxMsgText.offsetWidth );
 				var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
@@ -459,9 +464,11 @@
 						});
 					}
 				};
+
 				var imageViewer = new mui.ImageViewer('.msg-content-image', {
 					dbl: false
 				});
+
 				var bindMsgList = function() {
 					//绑定数据:
 					/*tp.bind({
@@ -470,7 +477,7 @@
 						model: record
 					});*/
 					ui.areaMsgList.innerHTML = template('msg-template', {
-						"record": record
+						"recordData": recordData
 					});
 					var msgItems = ui.areaMsgList.querySelectorAll('.msg-item');
 					[].forEach.call(msgItems, function(item, index) {
@@ -481,15 +488,18 @@
 					imageViewer.findAllImage();
 					ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 				};
-				bindMsgList();
+
+				// bindMsgList();
+
 				window.addEventListener('resize', function() {
 					ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 				}, false);
+
 				var send = function(msg) {
-					record.push(msg);
+					recordData.data[lastIndex].push(msg);
 					bindMsgList();
-					// toRobot(msg.content);
 				};
+
 				var toRobot = function(info) {
 					var apiUrl = 'http://www.tuling123.com/openapi/api';
 					mui.getJSON(apiUrl, {
@@ -497,7 +507,6 @@
 						"info": info,
 						"userid": plus.device.uuid
 					}, function(data) {
-						//alert(JSON.stringify(data));
 						record.push({
 							sender: 'zs',
 							type: 'text',
@@ -513,6 +522,7 @@
 						ui.boxMsgText.focus();
 					}, 150);
 				}
+
 				//解决长按“发送”按钮，导致键盘关闭的问题；
 				ui.footerRight.addEventListener('touchstart', function(event) {
 					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -520,6 +530,7 @@
 						event.preventDefault();
 					}
 				});
+
 				//解决长按“发送”按钮，导致键盘关闭的问题；
 				ui.footerRight.addEventListener('touchmove', function(event) {
 					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -527,25 +538,25 @@
 						event.preventDefault();
 					}
 				});
-				//					ui.footerRight.addEventListener('touchcancel', function(event) {
-				//						if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
-				//							msgTextFocus();
-				//							event.preventDefault();
-				//						}
-				//					});
-				//					ui.footerRight.addEventListener('touchend', function(event) {
-				//						if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
-				//							msgTextFocus();
-				//							event.preventDefault();
-				//						}
-				//					});
+				ui.footerRight.addEventListener('touchcancel', function(event) {
+					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
+						msgTextFocus();
+						event.preventDefault();
+					}
+				});
+				ui.footerRight.addEventListener('touchend', function(event) {
+					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
+						msgTextFocus();
+						event.preventDefault();
+					}
+				});
 				ui.footerRight.addEventListener('release', function(event) {
 					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 						if (ui.boxMsgText.value.length == 0) {
 							message('发送内容不能为空!');
 							return;
 						}
-						//showKeyboard();
+						// showKeyboard();
 						ui.boxMsgText.focus();
 						setTimeout(function() {
 							ui.boxMsgText.focus();
@@ -575,13 +586,14 @@
 						ui.boxMsgSound.style.display = 'none';
 						ui.boxMsgText.style.display = 'block';
 						//--
-						//showKeyboard();
+						// showKeyboard();
 						ui.boxMsgText.focus();
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
 					}
 				}, false);
+				
 				ui.footerLeft.addEventListener('tap', function(event) {
 					var btnArray = [{
 						title: "拍照"
@@ -664,6 +676,7 @@
 						plus.nativeUI.toast("录音时出现异常: " + e.message);
 					});
 				}, false);
+				
 				ui.body.addEventListener('drag', function(event) {
 					//console.log('drag');
 					if (Math.abs(event.detail.deltaY) > 50) {
@@ -684,6 +697,7 @@
 						}
 					}
 				}, false);
+				
 				ui.boxMsgSound.addEventListener('release', function(event) {
 					//console.log('release');
 					if (audio_tips.classList.contains("cancel")) {
@@ -733,6 +747,38 @@
 						ui.boxMsgText.blur();
 					}
 				})
+				
+				//获取聊天记录
+				function getRecordList(loadMore) {
+					if (loadMore) {
+						skip++;
+					} else {
+						skip = 1;
+					}
+					mui.post($ajaxUrl + 'chat', {
+							action: 'record_list',
+							token: userInfo.token,
+							user_id: userInfo.id,
+							target_id: chatId,
+							skip: skip,
+							limit: limit
+						}, function(res){
+							if (res.errno == 0) {
+								if (loadMore) {
+									
+								} else {
+									recordData.data = res.data;
+									for (var index in res.data) {
+										lastIndex = index;
+									}
+									// logs(recordData);
+									bindMsgList();
+								}
+							}
+						}, 'json'
+					);
+				}
+				
 			});
 
 			var timer = 0
@@ -778,7 +824,7 @@
 							heartCheck.reset();
 							heartCheck.start();
 						} else if (data.errno == 0) {
-							
+
 						}
 					};
 					ws.onclose = function() {
@@ -788,10 +834,6 @@
 				} else {
 					message("您的手机不支持 WebSocket!");
 				}
-			}
-			
-			function getTime() {
-				return '2019年8月15号';
 			}
 		</script>
 	</body>
