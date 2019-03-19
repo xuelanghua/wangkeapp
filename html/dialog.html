@@ -302,6 +302,7 @@
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
 			<% for(var i in record){ var item=record[i]; %>
+				<div style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;">2019年03月19日 15:21</div>
 				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 					<% if(item.sender=='self' ) { %>
 						<!-- <i class="msg-user mui-icon mui-icon-person"></i> -->
@@ -339,7 +340,8 @@
 				<button id='msg-sound' type="button" class='input-sound' style="display: none;">按住说话</button>
 			</div>
 			<label for="" class="footer-right">
-				<i id='msg-type' class="mui-icon mui-icon-mic"></i>
+				<!-- <i id='msg-type' class="mui-icon mui-icon-mic"></i> -->
+				<i id='msg-type' class="mui-icon mui-icon-paperplane"></i>
 			</label>
 		</footer>
 		<div id='sound-alert' class="rprogress">
@@ -348,6 +350,7 @@
 			<div id="audio_tips" class="rsalert">手指上滑，取消发送</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script src="../js/mui.imageViewer.js"></script>
 		<script src="../js/arttmpl.js"></script>
 		<script type="text/javascript" charset="utf-8">
@@ -383,13 +386,19 @@
 			}
 
 			var chatId = 0;
+			var chatAvatar = '';
+			var userInfo = getUserInfo();
+			var ws = null;
+			var chatData = null;
 			mui.plusReady(function() {
+				WebSocketInit();
 				plus.webview.currentWebview().setStyle({
 					softinputMode: "adjustResize"
 				});
 				var self = plus.webview.currentWebview();
 				var chatName = self.chatName;
-				chatId = self.chatId;
+				chatId = self.cid;
+				chatAvatar = self.avatar;
 				document.getElementById('dialog_name').innerText = chatName;
 				var showKeyboard = function() {
 					if (mui.os.ios) {
@@ -409,10 +418,16 @@
 					}
 				};
 				var record = [{
-					sender: 'zs',
-					type: 'text',
-					content: 'Hi，我是 MUI 小管家！'
-				}];
+						sender: 'zs',
+						type: 'text',
+						content: 'Hi，我是 MUI 小管家！'
+					},
+					{
+						sender: 'self',
+						type: 'text',
+						content: 'Hi，我是 MUI 小管家！'
+					},
+				];
 				var ui = {
 					body: document.querySelector('body'),
 					footer: document.querySelector('footer'),
@@ -473,7 +488,7 @@
 				var send = function(msg) {
 					record.push(msg);
 					bindMsgList();
-					toRobot(msg.content);
+					// toRobot(msg.content);
 				};
 				var toRobot = function(info) {
 					var apiUrl = 'http://www.tuling123.com/openapi/api';
@@ -526,6 +541,10 @@
 				//					});
 				ui.footerRight.addEventListener('release', function(event) {
 					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
+						if (ui.boxMsgText.value.length == 0) {
+							message('发送内容不能为空!');
+							return;
+						}
 						//showKeyboard();
 						ui.boxMsgText.focus();
 						setTimeout(function() {
@@ -537,6 +556,10 @@
 							type: 'text',
 							content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
 						});
+						chatData.content = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
+						chatData.type = 'text';
+						logs(chatData);
+						ws.send(JSON.stringify(chatData)); //向服务器发送消息
 						ui.boxMsgText.value = '';
 						mui.trigger(ui.boxMsgText, 'input', null);
 					} else if (ui.btnMsgType.classList.contains('mui-icon-mic')) {
@@ -596,6 +619,7 @@
 						}
 					});
 				}, false);
+
 				var setSoundAlertVisable = function(show) {
 					if (show) {
 						ui.boxSoundAlert.style.display = 'block';
@@ -608,6 +632,7 @@
 						}, 200);
 					}
 				};
+
 				var recordCancel = false;
 				var recorder = null;
 				var audio_tips = document.getElementById("audio_tips");
@@ -684,7 +709,7 @@
 					e.preventDefault();
 				});
 				ui.boxMsgText.addEventListener('input', function(event) {
-					ui.btnMsgType.classList[ui.boxMsgText.value == '' ? 'remove' : 'add']('mui-icon-paperplane');
+					// ui.btnMsgType.classList[ui.boxMsgText.value == '' ? 'remove' : 'add']('mui-icon-paperplane');
 					ui.btnMsgType.setAttribute("for", ui.boxMsgText.value == '' ? '' : 'msg-text');
 					ui.h.innerText = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '\n-') || '-';
 					ui.footer.style.height = (ui.h.offsetHeight + footerPadding) + 'px';
@@ -709,6 +734,65 @@
 					}
 				})
 			});
+
+			var timer = 0
+			//websocket 心跳检测
+			var heartCheck = {
+				timeout: 3e3,
+				timeoutObj: null,
+				serverTimeoutObj: null,
+				reset: function() {
+					return console.log("heartCheck.reset.timer", timer), clearTimeout(timer), clearTimeout(this.timeoutObj),
+						clearTimeout(this.serverTimeoutObj);
+				},
+				start: function() {
+					this.timeoutObj = setTimeout(function() {
+						var t = {
+							ping: !0,
+							user_id: userInfo.id,
+							target_id: chatId
+						};
+						// logs(t);
+						ws.send(JSON.stringify(t));
+					}, this.timeout);
+				}
+			};
+
+			//socket初始化
+			function WebSocketInit() {
+				if ("WebSocket" in window) {
+					// 打开一个 web socket
+					ws = new WebSocket("wss://wangke.ynhost.cn/wss");
+					ws.onopen = function() {
+						if (ws.readyState == WebSocket.OPEN) {
+							console.log("连接已打开！");
+							heartCheck.reset();
+							heartCheck.start();
+						}
+						// ws.send(JSON.stringify(test));
+					};
+					ws.onmessage = function(event) {
+						var data = event.data;
+						if (data == 'pong') {
+							console.log('websocket连接正常...');
+							heartCheck.reset();
+							heartCheck.start();
+						} else if (data.errno == 0) {
+							
+						}
+					};
+					ws.onclose = function() {
+						// 关闭 websocket
+						console.log("连接已关闭...");
+					};
+				} else {
+					message("您的手机不支持 WebSocket!");
+				}
+			}
+			
+			function getTime() {
+				return '2019年8月15号';
+			}
 		</script>
 	</body>
 </html>

@@ -608,7 +608,9 @@
 		})
 
 		var cid = 0;
-		var chatName = ';'
+		var userId = 0;
+		var chatName = '';
+		var avatar = '';
 		var dealFlag = 0;
 		var noticeStatus = 0;
 		var userInfo = getUserInfo();
@@ -639,7 +641,7 @@
 			
 			document.querySelector('#send_button').addEventListener('tap', function() {
 				// console.log('openWin');
-				fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: cid, chatName: chatName, barStyle: 'light'}, 'slide-in-right');
+				fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: 7088, chatName: chatName, avatar: avatar, barStyle: 'light'}, 'slide-in-right');
 				plus.navigator.setStatusBarStyle('dark');
 			})
 			
@@ -798,6 +800,8 @@
 				if (res.errno == 0) {
 					var data = res.data;
 					chatName = data.name;
+					userId = data.uid;
+					avatar = data.headimgurl;
 					if (data.headimgurl.length != 0) {
 						document.getElementById('crm_avatar').src = data.headimgurl;
 					}

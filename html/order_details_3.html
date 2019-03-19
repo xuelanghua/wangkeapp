@@ -231,7 +231,7 @@
 				<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
 			</div>
 			
-			<div class="order_contacts" data-id="" data-name="">
+			<div class="order_contacts" data-id="" data-name="" data-avatar="">
 				<div class="mui-pull-left">
 					<div class="order_contacts_chart mui-pull-left">
 						<img id="avatar" src="../image/bj.jpg" >
@@ -269,7 +269,8 @@
 				mui('.mui-content').on('tap', '.order_contacts', function() {
 					var userId = this.dataset.id;
 					var nickname = this.dataset.name;
-					fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: userId, chatName: nickname, barStyle: 'dark'}, 'slide-in-right');
+					var avatar = this.dataset.avatar;
+					fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: userId, chatName: nickname, avatar: avatar, barStyle: 'dark'}, 'slide-in-right');
 				})
 				
 				//发货
@@ -328,6 +329,7 @@
 							document.getElementById('avatar').src = detail.buyer.avatarUrl;
 							document.querySelector('.order_contacts').dataset.id = detail.user_id;
 							document.querySelector('.order_contacts').dataset.name = detail.buyer.nickName;
+							document.querySelector('.order_contacts').dataset.avatar = detail.buyer.avatarUrl;
 							var goods = detail.goods;
 							var html = '';
 							for (var i in goods) {
