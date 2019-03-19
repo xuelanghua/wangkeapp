@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>我的动态</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/vip-page.css" rel="stylesheet" />
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的动态</h1>
+		</header>
+		<div class="mui-content my-dynamics-container">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<h2 class="dynamics-title mui-ellipsis links-sign">我今天发布的动态的标题呢！</h2>
+					<div class="dynamics-img-cont links-sign">
+						<ul class="dynamics-img">
+							<li class="img-items"><img src="../image/kaol.jpg"></li>
+							<li class="img-items"><img src="../image/Deal-s.png"></li>
+							<li class="img-items"><img src="../image/kaol.jpg"></li>
+							<li class="img-items ellipsis-sign">···</li>
+						</ul>
+					</div>
+					<div class="dynamics-footer">
+						<div class="release-time">2019-05-25</div>
+						<div>
+							<button type="button" class="mui-btn mui-button-row del-btn">删除</button>
+							<button type="button" class="mui-btn mui-button-row share-btn">转发</button>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<h2 class="dynamics-title mui-ellipsis links-sign">我今天发布的动态的标题呢！我今天发布的动态的标题呢</h2>
+					<div class="dynamics-img-cont">
+						<ul class="dynamics-img">
+						</ul>
+					</div>
+					<div class="dynamics-footer">
+						<div class="release-time">2019-05-25</div>
+						<div>
+							<button type="button" class="mui-btn mui-button-row del-btn">删除</button>
+							<button type="button" class="mui-btn mui-button-row share-btn">转发</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class="create-dynamics">新建动态</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/Zepto.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			$("body").removeClass("mui-hidden");
+			// 初始化字体大小结束
+			userInfo = getUserInfo();
+			mui.plusReady(function() {});
+			mui(".mui-table-view").on("tap", ".links-sign", function() {
+				fnOpenWin("dynamics_detail.html", "dynamics_detail", {
+					statusbar: {
+						background: '#f7f7f7'
+					}
+				}, '','slide-in-right');
+			})
+		</script>
+	</body>
+
+</html>
