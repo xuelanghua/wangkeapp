@@ -1253,6 +1253,7 @@
 }
 .friends-detail-container{
 	background-color: #ffffff;
+	// 横版名片样式
 	.first-card-container{
 		padding: 0.2rem 0.3rem;
 		.user-head-img{
@@ -1280,6 +1281,8 @@
 				margin: 0;
 				padding: 0;
 				list-style-type: none;
+				width: 52%;
+				overflow: hidden;
 			}
 			li{
 				color: #333333; 
@@ -1293,7 +1296,7 @@
 				font-weight: 700;
 			}
 			#third-row{
-				font-size: 0.26rem;
+				font-size: 0.24rem;
 			}
 			#fourth-row{
 				margin-top: 0.56rem;
@@ -1301,7 +1304,7 @@
 				// line-height: 1.8;
 			}
 			#fourth-row,#fifth-row,#sixth-row{
-				font-size: 0.28rem;
+				font-size: 0.24rem;
 				color: #444444;
 				display: flex;
 				align-items: center;
@@ -1318,7 +1321,7 @@
 				position: absolute;
 				left: 0;
 				top: 50%;
-				margin-top: -0.2rem;
+				margin-top: -0.15rem;
 			}
 			#fourth-row::before{
 				background:#eaeaea url("../image/icon/friends-left-01.png")center center no-repeat;
@@ -1339,6 +1342,34 @@
 			 white-space:nowrap
 			}
 			
+		}
+	}
+	// 竖版的名片样式
+	.second-card-container{
+		padding: 0.2rem 0.3rem;
+		.user-head-img{
+			position: relative;
+			width: 100%;
+			height: auto;
+		}
+		.card{
+			border-radius: 0.1rem;
+			box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.1);
+			// height: 10rem;
+			overflow: hidden;
+			position: relative;
+		}
+		.user-info{
+			padding:0.2rem 0 0.4rem; 
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+			p{
+				margin-bottom: 0;
+				font-size: 0.24rem;
+				color: #999999;
+				line-height: 1.4;
+			}
 		}
 	}
 	.show-card-info{
@@ -1428,8 +1459,8 @@
 					margin: 0;
 					padding: 0;
 					flex-grow: 1;	
-					// background-color: #007aff;
 					align-items: center;
+					overflow: hidden;
 				}
 				p{
 					font-size: 0.24rem;
@@ -1480,10 +1511,12 @@
 	.personality-desc{
 		padding: 0.3rem;
 		background-color: #f4f4f8;
-		font-size: 0.24rem;
+		font-size: 0.3rem;
+		color:#333333;
+		
 	}
 	.personality-cont{
-		padding: 0.3rem;
+		padding:0.2rem 0.3rem 0.3rem;
 		background-color: #ffffff;
 		.user-info{
 			display: flex;
@@ -1492,6 +1525,7 @@
 		.user-head-img{
 			width: 0.98rem;
 			height: 0.98rem;
+			border-radius: 0.1rem;
 			overflow: hidden;
 			img{
 				width: 100%;
@@ -1499,15 +1533,15 @@
 			}
 		}
 		.play-control{
-			width: 60%;
 			border:1px solid #dddddd;
-			margin-left: 0.1rem;
+			margin:0 0.24rem;
 			position: relative;
 			height: 0.7rem;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			border-radius: 0.05rem;
+			flex-grow: 1;
 			.left-arrow{
 				height: 0.2rem;
 				width: 0.2rem;
@@ -1557,8 +1591,131 @@
 				margin-left: 0.1rem;
 			}
 		}
+		.click-agree{
+			height: 0.7rem;
+			width: 0.7rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 0.24rem;
+			color: #999999;
+		}
+		.agree-icon{
+			width: 0.4rem;
+			height: 0.4rem;
+			background: url("../image/icon/friends_detail-icon-03.png")center  center no-repeat;
+			background-size:contain; 
+		}
+		.click-agree.active{
+			color: #f93556;
+			 .agree-icon{
+				background: url("../image/icon/friends_detail-icon-04.png")center  center no-repeat;
+				background-size:contain; 
+			}
+		}
+	}
+	// 商品橱窗
+	.goods-window{
+		padding:0.1rem 0.3rem;
+		.goods-lists{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			overflow: hidden;
+		}
+		.goods-item{
+			margin: 0.2rem 0;
+			height: 1.5rem;
+			.flex;
+			.goods-img{
+				width: 1.5rem;
+				height: 1.5rem;
+				border-radius: 0.1rem;
+				overflow: hidden;
+				margin-right: 0.1rem;
+				flex-shrink: 0;
+				img{
+					width: 100%;
+					height: 100%;
+				}
+			}
+			.goods-desc{
+				height: 1.4rem;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between; 
+				flex-grow: 1;
+				.goods-title{
+					line-height: 1.4;
+					margin-bottom: 0;
+					color: #333333;
+				}
+				.spec{
+					margin-bottom: 0;
+				}
+				p{
+					font-size: 0.24rem;
+					text-align: justify;
+				}
+				.price{
+					font-size: 0.3rem;
+					color: #f31a33;
+				}
+			}
+		}
+	}
+	.img-show{
+		height: auto;
+		width: 100%;
+		overflow: hidden;
+		padding:0 0.3rem 0.3rem;
+		text-align: center;
+		img{
+			max-width: 100% !important;
+			height: auto;
+		}
 	}
 }
 
 // 好友详情页面end
+// 好友详情页面更多start
+.detail-more-header{
+	.confirm-btn{
+		height: 44px;
+		font-size: 0.28rem;
+		color: #2289ff;
+		display: flex;
+		align-items: center;
+	}
+}
+.friends-more-container{
+	.mui-btn-block{
+		border: none;
+		height: 0.99rem;
+		padding: 0;
+		margin: 0;
+		line-height: 0.99rem;
+		font-size: 0.3rem;
+	}
+	.mui-btn-block:active{
+		background-color: #ffffff;
+		color: #333333;
+		
+	}
+	.mui-input-row{
+		.flex;
+		height: 1rem;
+		background-color: #ffffff;
+		margin: 0.2rem 0;
+		input{
+			flex-grow: 1;
+		}
+		label{
+			flex-shrink: 0;
+			width: auto;
+		}
+	}
+}
+// 好友详情页面更多end
 

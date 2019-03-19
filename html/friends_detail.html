@@ -11,7 +11,8 @@
 	<body class="mui-hidden">
 		<header class="mui-bar mui-bar-nav friends-detail-header">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<span class="mui-pull-right mui-icon ">···</span>
+			<h1 class="mui-title">胡尚</h1>
+			<span class="mui-pull-right mui-icon">···</span>
 		</header>
 		<div class="mui-content friends-detail-container">
 			<!-- 名片样式一 -->
@@ -32,8 +33,15 @@
 			</div>
 			<!-- 名片样式一结束 -->
 			<!-- 名片样式二 -->
-			<div class="second-card-container">
-
+			<div class="second-card-container mui-hidden">
+				<div class="card">
+					<img class="user-head-img" src="../image/kaol.jpg">
+					<div class="user-info">
+						<h4>胡尚</h4>
+						<p>首席服务官</p>
+						<p>万贤科技</p>
+					</div>
+				</div>
 			</div>
 			<!-- 名片样式二结束 -->
 			<!-- 名片信息 -->
@@ -42,7 +50,9 @@
 			<div class="card-info-container">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell"><i>手机</i><span>13700696591</span><a href="tel:13700696591">拨打</a></li>
+					<li class="mui-table-view-cell mui-hidden"><i>座机</i><span>0871-69831648</span><a href="tel:13700696591">拨打</a></li>
 					<li class="mui-table-view-cell"><i>微信</i><span>13700696591</span><a>复制</a></li>
+					<li class="mui-table-view-cell mui-hidden"><i>邮箱</i><span>2913626209@qq.com</span><a>复制</a></li>
 					<li class="mui-table-view-cell"><i>公司</i><span>云南万贤科技有限公司</span><a>复制</a></li>
 					<li class="mui-table-view-cell"><i>地址</i><span>昆明市官渡区昌宏西路高原明珠商务中心A座707</span></li>
 				</ul>
@@ -72,7 +82,7 @@
 					<p>最近5人浏览</p>
 				</div>
 				<div class="browse-record-right">
-					<span class="click-heart"></span>
+					<span class="click-heart active"></span>
 					<span>靠谱:0</span>
 				</div>
 			</div>
@@ -89,14 +99,44 @@
 							<span>30</span>
 						</div>
 					</div>
-					<div>
-						<span class="click-heart"></span>
-						<span>靠谱:0</span>
+					<div class="click-agree active">
+						<span class="agree-icon"></span>
+						<span>点赞</span>
 					</div>
 				</div>
 			</div>
+			<h5 class="personality-desc">主推商品</h5>
+			<div class="goods-window">
+				<ul class="goods-lists">
+					<li class="goods-item">
+						<div class="goods-img">
+							<img src="../image/kaol.jpg" >
+						</div>
+						<div class="goods-desc">
+							<p class="goods-title">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
+							<p class="spec">规格：默认</p>
+							<p class="price">&yen;<span id="goods-price">20.00</span></p>
+						</div>
+					</li>
+					<li class="goods-item">
+						<div class="goods-img">
+							<img src="../image/kaol.jpg" >
+						</div>
+						<div class="goods-desc">
+							<p class="goods-title">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
+							<p class="spec">规格：默认</p>
+							<p class="price">&yen;<span id="goods-price">20.00</span></p>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<h5 class="personality-desc">图片展示</h5>
+			<div class="img-show">
+				<img src="../image/kaol.jpg" >
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -159,15 +199,39 @@
 					mui.openWindow(href, id, options);
 				}
 			});
+			mui(".friends-detail-header").on("tap","span",function(){
+				fnOpenWin('friends_detail_more.html', 'friends_detail_more', {
+					statusbar: {
+						background: '#f7f7f7'
+					}
+				}, '', 'slide-in-right');
+			})
+			
 			document.getElementById("fifth-row").innerText = "2913626209@qq.com";
 			// 超出文本隐藏
+			
+			// 产品标题超出隐藏
+			var goodsTitle = document.getElementsByClassName("goods-title");
+			for(i=0;i<goodsTitle.length;i++){
+				var txt = goodsTitle[i].innerHTML;
+				if (txt.length > 20) {
+					txt = txt.substring(0, 25 - 1) + "..."
+					goodsTitle[i].innerHTML = txt;
+				} else {
+					console.log("error")
+				}
+			}
+			// 名片地址超出隐藏
 			var contain = document.getElementById("sixth-row");
-			var txt = contain.innerHTML;
-			if (txt.length > 10) {
-				txt = txt.substring(0, 10 - 1) + "..."
-				contain.innerHTML = txt;
-			} else {
-				console.log("error")
+			overText(contain,10);
+			function overText(tgt,num){
+				var txt = tgt.innerHTML;
+				if (txt.length > num) {
+					txt = txt.substring(0, num - 1) + "..."
+					tgt.innerHTML = txt;
+				} else {
+					console.log("error")
+				}
 			}
 			$("#showInfo").click(function() {
 				$(this).find("i").toggleClass("mui-icon-arrowdown");
