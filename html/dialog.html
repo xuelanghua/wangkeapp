@@ -301,33 +301,35 @@
 		</header>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
-			<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
-				<div style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
-				<% for (var i in record[index]) { var item = record[index][i]; %>
-				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
-					<% if(item.sender=='self' ) { %>
-						<!-- <i class="msg-user mui-icon mui-icon-person"></i> -->
-						<img class="msg-user-img msg-user" src="<%= (avatar.user) %>" alt="" />
-					<% } else { %>
-						<img class="msg-user-img" src="<%= (avatar.target) %>" alt="" />
-					<% } %>
-					<div class="msg-content">
-						<div class="msg-content-inner">
-							<% if(item.type=='text' ) { %>
-								<%=( item.content|| '&nbsp;&nbsp;') %>
-							<% } else if(item.type=='image' ) { %>
-								<img class="msg-content-image" src="<%=(item.content)%>" style="max-width: 100px;" />
-							<% } else if(item.type=='sound' ) { %>
-								<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
-								<span class="play-state">点击播放</span>
-							<% } %>
+			<div class="msg-container">
+				<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
+					<div style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
+					<% for (var i in record[index]) { var item = record[index][i]; %>
+					<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
+						<% if(item.sender=='self' ) { %>
+							<!-- <i class="msg-user mui-icon mui-icon-person"></i> -->
+							<img class="msg-user-img msg-user" src="<%= (avatar.user) %>" alt="" />
+						<% } else { %>
+							<img class="msg-user-img" src="<%= (avatar.target) %>" alt="" />
+						<% } %>
+						<div class="msg-content">
+							<div class="msg-content-inner">
+								<% if(item.type=='text' ) { %>
+									<%=( item.content|| '&nbsp;&nbsp;') %>
+								<% } else if(item.type=='image' ) { %>
+									<img class="msg-content-image" src="<%=(item.content)%>" style="max-width: 100px;" />
+								<% } else if(item.type=='sound' ) { %>
+									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
+									<span class="play-state">点击播放</span>
+								<% } %>
+							</div>
+							<div class="msg-content-arrow"></div>
 						</div>
-						<div class="msg-content-arrow"></div>
+						<div class="mui-item-clear"></div>
 					</div>
-					<div class="mui-item-clear"></div>
-				</div>
+					<% } %>
 				<% } %>
-			<% } %>
+			</div>
 		</script>
 		<div class="mui-content">
 			<div id='msg-list'>
@@ -353,6 +355,7 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/upload.js"></script>
 		<script src="../js/mui.imageViewer.js"></script>
 		<script src="../js/arttmpl.js"></script>
 		<script type="text/javascript" charset="utf-8">
@@ -371,21 +374,6 @@
 					plus.navigator.setStatusBarStyle(plus.webview.currentWebview().barStyle);
 				}
 			});
-			template.config('escape', false);
-
-			if (mui.os.ios) {
-				// 解决在ios上fixed元素focusin时位置出现错误的问题 
-				document.addEventListener('DOMContentLoaded', function() {
-					var footerDom = document.querySelector('footer');
-
-					document.addEventListener('focusin', function() {
-						footerDom.style.position = 'absolute';
-					});
-					document.addEventListener('focusout', function() {
-						footerDom.style.position = 'fixed';
-					});
-				});
-			}
 
 			var chatId = 0;
 			var chatAvatar = '';
@@ -396,8 +384,26 @@
 			var limit = 15;
 			var recordData = {avatar: null, data: null};
 			var lastIndex = '';
+			var msgHeight = 0;
 			mui.plusReady(function() {
+				//模板配置
+				template.config('escape', false);
+				if (mui.os.ios) {
+					// 解决在ios上fixed元素focusin时位置出现错误的问题 
+					document.addEventListener('DOMContentLoaded', function() {
+						var footerDom = document.querySelector('footer');
+				
+						document.addEventListener('focusin', function() {
+							footerDom.style.position = 'absolute';
+						});
+						document.addEventListener('focusout', function() {
+							footerDom.style.position = 'fixed';
+						});
+					});
+				}
+				
 				WebSocketInit();
+				
 				var self = plus.webview.currentWebview();
 				self.setStyle({
 					softinputMode: "adjustResize"
@@ -409,8 +415,23 @@
 				
 				var avatar = {user: userInfo.avatarUrl, target: chatAvatar};
 				recordData.avatar = avatar;
-				chatData = {user_id: userInfo.id, target_id: chatId, type: 'text', content: ''};
+				chatData = {user_id: userInfo.id, target_id: chatId, type: 'text', content: '', uniacid: userInfo.uniacid};
 				getRecordList(false);
+				
+				document.addEventListener("pause", function () {
+					heartCheck.reset();
+				}, false);
+				
+				document.addEventListener("resume", function () {
+					WebSocketInit();
+				}, false);
+
+				document.getElementById('msg-list').addEventListener('scroll', function(e) {
+					var top = this.scrollTop;
+					if (top < 100) {
+						getRecordList(true);
+					}
+				}, false);
 				
 				var showKeyboard = function() {
 					if (mui.os.ios) {
@@ -426,11 +447,8 @@
 						imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
 						//var view = ((ViewGroup)main.findViewById(android.R.id.content)).getChildAt(0);
 						imm.showSoftInput(main.getWindow().getDecorView(), InputMethodManager.SHOW_IMPLICIT);
-						//alert("ll");
 					}
 				};
-
-				
 
 				var ui = {
 					body: document.querySelector('body'),
@@ -446,9 +464,8 @@
 					h: document.querySelector('#h'),
 					content: document.querySelector('.mui-content')
 				};
-
+			
 				ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
-				//alert(ui.boxMsgText.offsetWidth );
 				var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
 				var msgItemTap = function(msgItem, event) {
 					var msgType = msgItem.getAttribute('msg-type');
@@ -470,12 +487,6 @@
 				});
 
 				var bindMsgList = function() {
-					//绑定数据:
-					/*tp.bind({
-						template: 'msg-template',
-						element: 'msg-list',
-						model: record
-					});*/
 					ui.areaMsgList.innerHTML = template('msg-template', {
 						"recordData": recordData
 					});
@@ -489,8 +500,6 @@
 					ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 				};
 
-				// bindMsgList();
-
 				window.addEventListener('resize', function() {
 					ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 				}, false);
@@ -498,22 +507,6 @@
 				var send = function(msg) {
 					recordData.data[lastIndex].push(msg);
 					bindMsgList();
-				};
-
-				var toRobot = function(info) {
-					var apiUrl = 'http://www.tuling123.com/openapi/api';
-					mui.getJSON(apiUrl, {
-						"key": 'acfbca724ea1b5db96d2eef88ce677dc',
-						"info": info,
-						"userid": plus.device.uuid
-					}, function(data) {
-						record.push({
-							sender: 'zs',
-							type: 'text',
-							content: data.text
-						});
-						bindMsgList();
-					});
 				};
 
 				function msgTextFocus() {
@@ -550,6 +543,7 @@
 						event.preventDefault();
 					}
 				});
+				
 				ui.footerRight.addEventListener('release', function(event) {
 					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 						if (ui.boxMsgText.value.length == 0) {
@@ -561,7 +555,7 @@
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
-						//							event.detail.gesture.preventDefault();
+						
 						send({
 							sender: 'self',
 							type: 'text',
@@ -569,7 +563,6 @@
 						});
 						chatData.content = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
 						chatData.type = 'text';
-						logs(chatData);
 						ws.send(JSON.stringify(chatData)); //向服务器发送消息
 						ui.boxMsgText.value = '';
 						mui.trigger(ui.boxMsgText, 'input', null);
@@ -585,7 +578,6 @@
 						ui.btnMsgType.classList.remove('mui-icon-compose');
 						ui.boxMsgSound.style.display = 'none';
 						ui.boxMsgText.style.display = 'block';
-						//--
 						// showKeyboard();
 						ui.boxMsgText.focus();
 						setTimeout(function() {
@@ -595,41 +587,52 @@
 				}, false);
 				
 				ui.footerLeft.addEventListener('tap', function(event) {
-					var btnArray = [{
-						title: "拍照"
-					}, {
-						title: "从相册选择"
-					}];
-					plus.nativeUI.actionSheet({
-						title: "选择照片",
-						cancel: "取消",
-						buttons: btnArray
-					}, function(e) {
-						var index = e.index;
-						switch (index) {
-							case 0:
-								break;
-							case 1:
-								var cmr = plus.camera.getCamera();
-								cmr.captureImage(function(path) {
-									send({
-										sender: 'self',
-										type: 'image',
-										content: "file://" + plus.io.convertLocalFileSystemURL(path)
-									});
-								}, function(err) {});
-								break;
-							case 2:
-								plus.gallery.pick(function(path) {
-									send({
-										sender: 'self',
-										type: 'image',
-										content: path
-									});
-								}, function(err) {}, null);
-								break;
+					imageUpload(function(res) {
+						var imgMsg = {
+							sender: "self",
+							content: res.url,
+							type: "image"
 						}
-					});
+						send(imgMsg);
+						chatData.type = 'image';
+						chatData.content = res.url;
+						ws.send(JSON.stringify(chatData));
+					})
+// 					var btnArray = [{
+// 						title: "拍照"
+// 					}, {
+// 						title: "从相册选择"
+// 					}];
+// 					plus.nativeUI.actionSheet({
+// 						title: "选择照片",
+// 						cancel: "取消",
+// 						buttons: btnArray
+// 					}, function(e) {
+// 						var index = e.index;
+// 						switch (index) {
+// 							case 0:
+// 								break;
+// 							case 1:
+// 								var cmr = plus.camera.getCamera();
+// 								cmr.captureImage(function(path) {
+// 									send({
+// 										sender: 'self',
+// 										type: 'image',
+// 										content: "file://" + plus.io.convertLocalFileSystemURL(path)
+// 									});
+// 								}, function(err) {});
+// 								break;
+// 							case 2:
+// 								plus.gallery.pick(function(path) {
+// 									send({
+// 										sender: 'self',
+// 										type: 'image',
+// 										content: path
+// 									});
+// 								}, function(err) {}, null);
+// 								break;
+// 						}
+// 					});
 				}, false);
 
 				var setSoundAlertVisable = function(show) {
@@ -699,7 +702,6 @@
 				}, false);
 				
 				ui.boxMsgSound.addEventListener('release', function(event) {
-					//console.log('release');
 					if (audio_tips.classList.contains("cancel")) {
 						audio_tips.classList.remove("cancel");
 						audio_tips.innerHTML = "手指上划，取消发送";
@@ -741,8 +743,9 @@
 					}, 1000);
 					event.detail.gesture.preventDefault();
 				}, false);
+				
 				//点击消息列表，关闭键盘
-				ui.areaMsgList.addEventListener('click', function(event) {
+				ui.areaMsgList.addEventListener('tap', function(event) {
 					if (!focus) {
 						ui.boxMsgText.blur();
 					}
@@ -752,8 +755,10 @@
 				function getRecordList(loadMore) {
 					if (loadMore) {
 						skip++;
+						limit = 6;
 					} else {
 						skip = 1;
+						limit = 15;
 					}
 					mui.post($ajaxUrl + 'chat', {
 							action: 'record_list',
@@ -765,76 +770,95 @@
 						}, function(res){
 							if (res.errno == 0) {
 								if (loadMore) {
-									
+									var moreData = res.data;
+									var temp = recordData.data;
+									Object.assign(moreData, temp);
+									recordData.data = moreData;
+									bindMsgList();
+									ui.areaMsgList.scrollTop = 300;
 								} else {
 									recordData.data = res.data;
 									for (var index in res.data) {
 										lastIndex = index;
 									}
-									// logs(recordData);
 									bindMsgList();
+								}
+							} else {
+								if (!loadMore) {
+									recordData.data = res.data;
+									for (var index in res.data) {
+										lastIndex = index;
+									}
 								}
 							}
 						}, 'json'
 					);
 				}
 				
-			});
-
-			var timer = 0
-			//websocket 心跳检测
-			var heartCheck = {
-				timeout: 3e3,
-				timeoutObj: null,
-				serverTimeoutObj: null,
-				reset: function() {
-					return console.log("heartCheck.reset.timer", timer), clearTimeout(timer), clearTimeout(this.timeoutObj),
+				var timer = 0
+				//websocket 心跳检测
+				var heartCheck = {
+					timeout: 3e3,
+					timeoutObj: null,
+					serverTimeoutObj: null,
+					reset: function() {
+						clearTimeout(timer);
 						clearTimeout(this.serverTimeoutObj);
-				},
-				start: function() {
-					this.timeoutObj = setTimeout(function() {
-						var t = {
-							ping: !0,
-							user_id: userInfo.id,
-							target_id: chatId
+						clearTimeout(this.timeoutObj);
+						console.log("heartCheck.reset.timer");
+						return;
+					},
+					start: function() {
+						this.timeoutObj = setTimeout(function() {
+							var t = {
+								ping: !0,
+								user_id: userInfo.id,
+								target_id: chatId
+							};
+							ws.send(JSON.stringify(t));
+						}, this.timeout);
+					}
+				};
+				
+				//socket初始化
+				function WebSocketInit() {
+					if ("WebSocket" in window) {
+						// 打开一个 web socket
+						ws = new WebSocket("wss://wangke.ynhost.cn/wss");
+						ws.onopen = function() {
+							if (ws.readyState == WebSocket.OPEN) {
+								console.log("连接已打开...");
+								heartCheck.reset();
+								heartCheck.start();
+							}
 						};
-						// logs(t);
-						ws.send(JSON.stringify(t));
-					}, this.timeout);
+						ws.onmessage = function(event) {
+							var data = event.data;
+							if (data == 'pong') {
+								console.log('websocket连接正常...');
+								heartCheck.reset();
+								heartCheck.start();
+							} else {
+								data = JSON.parse(data);
+								if (data.data2) {
+									var message = {
+										sender: chatId,
+										type: data.data2.message_type,
+										content: data.data2.content
+									}
+									send(message);
+								}
+							}
+						};
+						ws.onclose = function() {
+							// 关闭 websocket
+							console.log("连接已关闭...");
+						};
+					} else {
+						message("您的手机不支持 WebSocket!");
+					}
 				}
-			};
-
-			//socket初始化
-			function WebSocketInit() {
-				if ("WebSocket" in window) {
-					// 打开一个 web socket
-					ws = new WebSocket("wss://wangke.ynhost.cn/wss");
-					ws.onopen = function() {
-						if (ws.readyState == WebSocket.OPEN) {
-							console.log("连接已打开！");
-							heartCheck.reset();
-							heartCheck.start();
-						}
-						// ws.send(JSON.stringify(test));
-					};
-					ws.onmessage = function(event) {
-						var data = event.data;
-						if (data == 'pong') {
-							console.log('websocket连接正常...');
-							heartCheck.reset();
-							heartCheck.start();
-						} else if (data.errno == 0) {
-
-						}
-					};
-					ws.onclose = function() {
-						// 关闭 websocket
-						console.log("连接已关闭...");
-					};
-				} else {
-					message("您的手机不支持 WebSocket!");
-				}
-			}
+			});
 		</script>
 	</body>
 </html>

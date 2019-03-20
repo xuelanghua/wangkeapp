@@ -1,0 +1,292 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<style>
+			body{
+				background-color: #FFFFFF;
+			}
+			.mui-content{
+				background-color: #FFFFFF;
+			}
+			.clearfix{
+				clear: both;
+			}
+			.background img{ 
+				width: 100%;
+				height: 100%;
+			}
+			.activation{
+				width: 90%;
+				position: absolute;
+				top: 10%;
+				left: 5%;
+				right: 5%;
+			}
+			.an-crown img{
+				width: 130px;
+				margin: 0 auto;
+				display: block;
+				margin-bottom: 20px;
+			}
+			.activation-title{
+				background-color: #FFFFFF;
+				padding: 0 17px;
+				border-radius: 5px;
+				box-shadow: 0 8px 20px 1px #E8E8E8;
+			}
+			.activation1{
+				color: #999999;
+				padding: 16px 0;
+				font-size: 15px;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.activation1 img{
+				width: 8px;
+				height: 10px;
+			}
+			.button button{
+				width: 100%;
+				margin-top: 32px;
+				background-color: #2798FE;
+				color: #FFFFFF;
+				font-size: 18px;
+				border: none;
+				padding: 15px 0;
+				border-radius: 5px;
+			}
+			.button div{
+				margin-top: 19px;
+				font-size: 12px;
+			}
+			
+			.close-button {
+				position: absolute;
+				top: 30px;
+				right: 15px;
+				width: 50px;
+				height: 25px;
+				line-height: 25px;
+				background-color: #343434;
+				color: #F7F7F7;
+				border-radius: 3px;
+				text-align: center;
+				font-size: 14px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="close-button">关闭</div>
+			<div class="background">
+				<img src="../image/activation.png">
+			</div>
+			<div class="activation">
+				<div class="an-crown">
+					<img src="../image/An-crown.png">
+				</div>
+
+				<div class="activation-title">
+					<div class="activation1 pay-type">
+						<span class="mui-pull-left pay-type-title">支付方式（微信）</span>
+						<span class="mui-pull-right" style="font-size: 40px;">···</span>
+						<div class="clearfix"></div>
+					</div>
+					<div class="activation1 pay-year">
+						<span class="mui-pull-left">
+							<span>购买年限</span>
+							<span style="color: #3D86FF;margin-left: 20px;" class="pay-year-title">1年</span>
+						</span>
+						<span class="mui-pull-right">
+							<img src="../image/Marketing-codea.png">
+						</span>
+						<div class="clearfix"></div>
+					</div>
+					<div class="activation1 pay-fee">
+						<span class="mui-pull-left">
+							<span>应付金额</span>
+							<span style="color: #3D86FF;margin-left: 20px;">&yen;<span class="pay-fee-title">199</span></span>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="button">
+					<a href="#">
+						<button class="pay">立即支付</button>
+					</a>
+					<div>
+						<span>开通即视为同意</span>
+						<span>
+							<a href="agreement.html">《旺客-用户协议》</a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/mui.picker.js"></script>
+	<script src="../js/mui.poppicker.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init({
+			swipeBack: true,
+			// 			beforeback: function() {
+			// 				return false;
+			// 			}
+		})
+
+		var userInfo = null;
+		var payType = 'wxpay';
+		var payYear = 1;
+		var price = 199;
+		var fee = 199;
+
+		//支付相关变量
+		var wxChannel = null; // 微信支付
+		var aliChannel = null; // 支付宝支付
+		var channel = null; //支付通道
+		var ALIPAYSERVER = $ajaxUrl + 'member&action=activation';
+		var WXPAYSERVER = $ajaxUrl + 'member&action=activation';;
+		mui.plusReady(function() {
+			//			var webviews = plus.webview.all();
+			//			console.log(JSON.stringify(webviews));
+			userInfo = getUserInfo();
+			// 获取支付通道  
+			plus.payment.getChannels(function(channels) {
+				for (var i in channels) {
+					if (channels[i].id == "wxpay") {
+						wxChannel = channels[i];
+					} else {
+						aliChannel = channels[i];
+					}
+				}
+			}, function(e) {
+				plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
+			});
+
+			mui('.activation').on('tap', '.pay-type', function() {
+				var picker = new mui.PopPicker({
+					layer: 1
+				});
+				picker.setData([{
+					value: 'wxpay',
+					text: '微信'
+				}, {
+					value: 'alipay',
+					text: '支付宝'
+				}, {
+					value: 'unionpay',
+					text: '银联'
+				}]);
+				picker.show(function(selectItems) {
+					payType = selectItems[0].value;
+					mui('.pay-type-title')[0].innerHTML = '支付方式（' + selectItems[0].text + '）';
+				})
+			})
+
+			mui('.activation').on('tap', '.pay-year', function() {
+				var picker = new mui.PopPicker({
+					layer: 1
+				});
+				picker.setData([{
+					value: '1',
+					text: '1年'
+				}, {
+					value: '2',
+					text: '2年'
+				}, {
+					value: '3',
+					text: '3年'
+				}, {
+					value: '4',
+					text: '4年'
+				}, {
+					value: '5',
+					text: '5年'
+				}]);
+				picker.show(function(selectItems) {
+					payYear = selectItems[0].value;
+					fee = payYear * price;
+					mui('.pay-year-title')[0].innerHTML = selectItems[0].text;
+					mui('.pay-fee-title')[0].innerHTML = fee;
+				})
+			})
+
+			mui('.button').on('tap', '.pay', function() {
+				pay(payType);
+			})
+			
+			mui('.mui-content').on('tap', '.close-button', function() {
+				mui.back();
+			})
+		})
+
+		// 2. 发起支付请求  
+		function pay(id) {
+			// 从服务器请求支付订单
+			var PAYSERVER = '';
+			if (id == 'alipay') {
+				plus.nativeUI.alert("暂不支持支付宝支付！", null, "提示");
+				return;
+				PAYSERVER = ALIPAYSERVER;
+				channel = aliChannel;
+			} else if (id == 'wxpay') {
+				PAYSERVER = WXPAYSERVER;
+				channel = wxChannel;
+			} else {
+				plus.nativeUI.alert("不支持此支付通道！", null, "提示");
+				return;
+			}
+
+			var waiting = plus.nativeUI.showWaiting();
+			mui.post(PAYSERVER, {
+				year: payYear,
+				price: price,
+				fee: fee,
+				pay_type: payType,
+				token: userInfo.token
+			}, function(res) {
+				console.log(JSON.stringify(res));
+				waiting.close();
+				if (res.errno == 0) {
+					var data = res.data;
+					var param = {
+						appid: data.appid,
+						noncestr: data.nonce_str,
+						package: 'Sign=WXPay',
+						partnerid: data.mch_id,
+						prepayid: data.prepay_id,
+						timestamp: data.timeStamp,
+						sign: data.paySign
+					};
+
+					plus.payment.request(channel, param, function(result) {
+						//                  	console.log(JSON.stringify(result));
+						plus.nativeUI.alert("支付成功！", function() {
+							plus.navigator.setStatusBarStyle('dark');
+							updateUserInfo(userInfo);
+							plus.webview.close('login');
+							plus.webview.close('mobile_bind');
+							plus.webview.close('activation');
+							//                      	mui.fire('index')
+							//                      	mui.back();
+						});
+					}, function(error) {
+						console.log(JSON.stringify(error));
+						plus.nativeUI.alert("支付失败：" + error.code);
+					});
+				} else {
+					plus.nativeUI.alert(res.message, null, '提示');
+				}
+			}, 'json')
+		}
+	</script>
+</html>
