@@ -1,0 +1,547 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.mui-bar,body,.mui-content{
+				background-color: #FFFFFF;
+				box-shadow: none;
+			}
+			.clearfix{
+				clear: both;
+			}
+			.maker{
+				position: relative;
+			}
+			.maker_bj{
+				width: 100%;
+				height: 100%;
+			}
+			.maker_name,.maker1,.maker2,.maker3{
+				position: absolute;
+				top: 18%;
+				font-size: 28px;
+				left: 12%;
+				color: #856C22;
+			}
+			.maker_position{
+				font-size: 12px;
+				padding: 3px 10px;
+				color: #FFFFFF;
+				border-radius: 15px;
+				background-color: #885A3D;
+			}
+			
+			.maker1{
+				top: 29%;
+				font-size: 12px;
+			}
+			.maker1_chart{
+				width: 14px;
+				height: 14px;
+				margin: 3px 10px 0 0;
+			}
+			.tu{
+				margin: 4px 10px;
+				float: right;
+				border-left: 1px solid #856C22;
+			}
+			.tu img{
+				width: 11px;
+				height: 13px;
+				float: right;
+				margin-left: 10px;
+			}
+			
+			.maker2{
+				width: 40%;
+				top: 30%;
+				left: 52%;
+				font-size: 10px;
+			}
+			
+			.jihuo{
+				margin-top: 10px;
+			}
+			.jihuo button{
+				font-size: 12px;
+				border: none;
+				padding: 4px 10px;
+				border-top-left-radius: 14px;
+				border-bottom-left-radius: 14px;
+				color: #856C22;
+				background: linear-gradient(to right, #FFF1E2 , #DEB692);
+			}
+			
+			.maker3{
+				width: 75%;
+				top: 66%;
+				color: #FFFFFF;
+				text-align: center;
+				font-size: 15px;
+			}
+			.maker3L,.maker3R{
+				width: 50%;
+				margin-left: -10%;
+			}
+			.maker3R{
+				margin-right: -10%;
+				margin-top: -35px;
+			}
+			.maker3 .mui-icon{
+				font-size: 13px;
+			}
+			.xian,.xian1{
+				width: 1px;
+				height: 30px;
+				margin: 5px auto 0;
+				background-color: #999999;
+			}
+			
+			.record{
+				width: 94%;
+				background-color: #FFFFFF;
+				position: absolute;
+				left: 3%;
+				right: 3%;
+				top: 82%;
+				border-radius: 5px;
+				box-shadow: 0 0 10px 0 #999999;
+			}
+			.record_title{
+				padding: 15px 11px;
+				font-size: 15px;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.record_title_chart img{
+				width: 13px;
+				height: 13px;
+				position: relative;
+				top: 2px;
+			}
+			.record_title_grade{
+				font-size: 12px;
+				color: #999999;
+			}
+			.record_title .mui-icon{
+				font-size: 16px;
+			}
+			.money{
+				font-size: 17px;
+				color: #856C22;
+			}
+			
+			.achievement{
+				text-align: center;
+				padding: 12px 0;
+			}
+			.achievementL,.achievementR{
+				width: 49%;
+				font-size: 12px;
+			}
+			.achievementR{
+				margin-top: -35px;
+			}
+			
+			.fans{
+				font-size: 15px;
+				padding: 0 12px;
+				margin-top: 13%;
+			}
+			.fans-title{
+				padding: 28px 0 18px 0;
+			}
+			.fans_information{
+				padding: 20px 10px;
+				border-radius: 5px;
+				margin-bottom: 15px;
+				box-shadow: 0 0 10px 2px #DDDDDD;
+			}
+			.fans_information_chart{
+				width: 40px;
+				height: 40px;
+				margin-top: 8px;
+				border-radius: 50%;
+			}
+			.fans_information_chart img{
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+			}
+			.vip,.vip1{
+				padding: 2px 10px;
+				font-size: 10px;
+				color: #FFFFFF;
+				margin-left: 10px;
+				border-bottom-left-radius: 10px;
+				border-top-right-radius: 10px;
+				background: linear-gradient(to right, #B7C4DC , #8A9BB9);
+			}
+			.vip1{
+				background: linear-gradient(to right, #F3E3B9 , #E9CB7D);
+			}
+			.time{
+				font-size: 12px;
+				margin-top: 10px;
+				color: #999999;
+			}
+			.recommender{
+				font-size: 12px;
+				margin-top: 32px;
+				color: #999999;
+			}
+			.recommender1{
+				font-size: 12px;
+			}
+			.jfans{
+				font-size: 10px;
+				padding: 2px 5px;
+				border-radius: 15px;
+				margin-left: 5px;
+				border: 1px solid #999999;
+			}
+			
+			/* 遮拦层 */
+			#mui-backdrop,#mui-backdrop1 {
+				position: fixed;
+				z-index: 9;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				display: none;
+				background-color: rgba(0,0,0,0.6);
+			}
+			/* 服务奖说明 */
+			#target,#explain{
+				width: 90%;
+				margin: 0 auto;
+				display: none;
+				z-index: 99;
+				position: fixed;
+				top: 20%;
+				left: 5%;
+				right: 5%;
+				border-radius: 5px;
+				padding-bottom: 27px;
+				background-color: #FFFFFF;
+			}
+			#target img{
+				width: 100%;
+			}
+			.target_title{
+				font-size: 28px;
+				color: #856C22;
+				margin-top: 5px;
+				text-align: center;
+			}
+			.classification_name{
+				padding: 0 18px;
+				text-align: center;
+				margin-top: 15px;
+			}
+			.grade,.target_name,.reward{
+				width: 17.5%;
+				height: 35px;
+				line-height: 40px;
+				font-size: 14px;
+				background-color: #F0CEB5;
+			}
+			.target_name{
+				width: 45%;
+				margin-left: 3px;
+			}
+			.reward{
+				width: 35%;
+				margin-left: 3px;
+			}
+			.target_specification{
+				height: 54px;
+			}
+			
+			.grade1,.target_name1,.reward1{
+				width: 17.5%;
+				height: 60px;
+				font-size: 11px;
+				padding: 11px 0;
+				background-color: #EAB994;
+			}
+			.grade1{
+				padding: 11px 15px;
+				font-size: 18px;
+			}
+			.target_name1{
+				width: 45%;
+				text-align: left;
+				margin-left: 3px;
+				padding-left: 6px;
+			}
+			.reward1{
+				width: 35%;
+				padding: 20px 0;
+				margin-left: 3px;
+			}
+			#target button{
+				width: 60%;
+				display: block;
+				border-radius: 25px;
+				margin: 27px auto 0;
+				color: #FFFFFF;
+				border: none;
+				padding: 12px 0;
+				font-size: 18px;
+				background-color: #885A3D;
+			}
+			
+			/* 旅游说明 */
+			.explain_chart img{
+				width: 100%;
+			}
+			.explain_title{
+				font-size: 28px;
+				color: #856C22;
+				margin-top: 24px;
+				text-align: center;
+			}
+			.explain_content{
+				padding: 37px 20px;
+				font-size: 15px;
+			}
+			#explain button{
+				width: 60%;
+				display: block;
+				border-radius: 25px;
+				color: #FFFFFF;
+				border: none;
+				margin: 0 auto;
+				padding: 12px 0;
+				font-size: 18px;
+				background-color: #885A3D;
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			function popDIV(showid,backdropid){
+				document.getElementById(showid).style.display="block";
+				document.getElementById(backdropid).style.display="block";
+				
+				var backdropiddiv = document.getElementById(backdropid);
+				backdropid.style.width = document.body.scrollWidth;
+				$("#"+backdropid).height($(document).height());
+			}
+			function hidediv(showid,backdropid){
+				document.getElementById(showid).style.display = 'none';
+				document.getElementById(backdropid).style.display = 'none';
+			}
+			
+			function popdiv(explainid,backdropid){
+				document.getElementById(explainid).style.display="block";
+				document.getElementById(backdropid).style.display="block";
+				
+				var backdropiddiv = document.getElementById(backdropid);
+				backdropid.style.width = document.body.scrollWidth;
+				$("#"+backdropid).height($(document).height());
+			}
+			function explaindiv(explainid,backdropid){
+				document.getElementById(explainid).style.display = 'none';
+				document.getElementById(backdropid).style.display = 'none';
+			}
+		</script>
+		
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-pull-right"style="font-size: 15px;margin-top: 10px;">我的权益</div>
+			<h1 class="mui-title">会员</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="maker">
+				<div class="maker_name">
+					<span>服务站</span>
+					<span class="maker_position">经 理</span>
+				</div>
+				<div class="maker1">
+					<img onclick="popDIV('explain','mui-backdrop')" class="maker1_chart mui-pull-left" src="../image/maker1.png" >
+					<span>
+						<span class="mui-pull-left">今年达标次数</span>
+						<span style="font-size: 15px;">3</span>
+						<span class="tu">
+							<img src="../image/maker2.png" >
+						</span>
+					</span>
+				</div>
+				<div class="maker2">
+					<div class="mui-pull-right">
+						<div class="jihuo">
+							<button>创客激活码:49/50</button>
+						</div>
+						<div class="jihuo">
+							<button> VIP 激活码:49/50</button>
+						</div>
+					</div>
+				</div>
+				<img class="maker_bj" src="../image/agent.jpg" >
+				<div class="maker3">
+					<div class="maker3L mui-pull-left">
+						<div style="font-size: 15px;">501</div>
+						<div style="margin-top: 5px;font-size: 10px;">
+							<span>本月服务奖</span>
+							<span class="mui-icon mui-icon-arrowright"></span>
+						</div>
+					</div>
+					<div class="xian"></div>
+					<div class="maker3R mui-pull-right">
+						<div style="font-size: 15px;">501</div>
+						<div style="margin-top: 5px;font-size: 10px;">
+							<span>本月推荐奖</span>
+							<span class="mui-icon mui-icon-arrowright"></span>
+						</div>
+					</div>
+				</div>
+				<div class="record">
+					<div class="record_title">
+						<div class="mui-pull-left">
+							<span>本月战绩</span>
+							<span>
+								<span class="record_title_grade">达到目标获得奖励提升等级</span>
+								<span class="record_title_chart" onclick="popdiv('target','mui-backdrop1')">
+									<img src="../image/record.png" >
+								</span>
+							</span> 
+						</div>
+						<a href="more_achievements.html">
+							<div class="mui-pull-right"style="color: #999999;">
+								<span>更多</span>
+								<span class="mui-icon mui-icon-arrowright"></span>
+							</div>
+						</a>
+						<div class="clearfix"></div>
+					</div>
+					<div class="achievement">
+						<div class="achievementL mui-pull-left">
+							<div>本月业绩</div>
+							<div>
+								<span class="money">50,050</span>
+								<span>元</span>
+							</div>
+						</div>
+						<div class="xian1"></div>
+						<div class="achievementR mui-pull-right">
+							<div>5万市场</div>
+							<div>
+								<span class="money">1</span>
+								<span>个</span>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="fans">
+				<div class="fans-title">我的粉丝(10)</div>
+				<div class="fans_information">
+					<div class="fans_information_chart mui-pull-left">
+						<img src="../image/bj.jpg" >
+					</div>
+					<div class="mui-pull-left"style="margin-left: 15px;">
+						<div>
+							<span>强光头</span>
+							<span>
+								<span class="vip1">创客</span>
+							</span>
+						</div>
+						<div class="time">
+							<span>加入时间：</span>
+							<span>2018-02-08</span>
+						</div>
+					</div>
+					<div class="mui-pull-right recommender1">
+						<span>推荐收益：</span>
+						<span>50000</span>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				
+				<div class="fans_information">
+					<div class="fans_information_chart mui-pull-left">
+						<img src="../image/bj.jpg" >
+					</div>
+					<div class="mui-pull-left"style="margin-left: 15px;">
+						<div>
+							<span>强光头</span>
+							<span class="jfans">间接粉丝</span>
+							<span>
+								<span class="vip">VIP</span>
+							</span>
+						</div>
+						<div class="time">
+							<span>加入时间：</span>
+							<span>2018-02-08</span>
+						</div>
+					</div>
+					<div class="mui-pull-right recommender">
+						<span>推荐人：</span>
+						<span>小飞飞</span>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				
+			</div>
+			
+		</div>
+		
+		<div id="mui-backdrop" onclick="hidediv('explain','mui-backdrop')"></div>
+		<div id="target">
+			<img src="../image/agent_target.jpg" >
+			<div class="target_title">说明</div>
+			<div class="classification_name">
+				<div>
+					<div class="grade mui-pull-left"></div>
+					<div class="target_name mui-pull-left">目标</div>
+					<div class="reward mui-pull-left">奖励</div>
+				</div>
+				<div class="target_specification">
+					<div class="grade1 mui-pull-left">经理</div>
+					<div class="target_name1 mui-pull-left">总业绩大于等于20万2个5万市场</div>
+					<div class="reward1 mui-pull-left">3万元</div>
+				</div>
+				<div class="target_specification">
+					<div class="grade1 mui-pull-left"style="background: #F0CEB5;">总监</div>
+					<div class="target_name1 mui-pull-left"style="background: #F0CEB5;">总业绩大于等于50万3个10万市场</div>
+					<div class="reward1 mui-pull-left"style="background: #F0CEB5;">5万元</div>
+				</div>
+				<div class="target_specification">
+					<div class="grade1 mui-pull-left">董事</div>
+					<div class="target_name1 mui-pull-left">总业绩大于等于100万4个20万市场</div>
+					<div class="reward1 mui-pull-left">10万元</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<button id="button" onclick="hidediv('explain','mui-backdrop')">知道了</button>
+		</div>
+		
+		<div id="mui-backdrop1" onclick="explaindiv('target','mui-backdrop1')"></div>
+		<div id="explain">
+			<div class="explain_chart">
+				<img src="../image/agent_explain.jpg" >
+			</div>
+			<div class="explain_title">说明</div>
+			<div class="explain_content">
+				<div>1年中任意3个月完成任务，奖励旅游活动一次超过3个每满3个月奖励一次。</div>
+			</div>
+			<button>知道了</button>
+		</div>
+		
+	</body>
+
+</html>

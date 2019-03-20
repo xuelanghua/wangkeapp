@@ -435,6 +435,7 @@
 			});
 
 			var userInfo = getUserInfo();
+			var group_id = 0;
 			mui.plusReady(function() {
 				eventInit();
 				getMemberInfo();
@@ -520,6 +521,7 @@
 					token: userInfo.token
 				}, function(res) {
 					var memberInfo = res.data;
+					// group_id=memberInfo.group_id;
 					document.getElementById('nickname').innerText = memberInfo.nickName;
 					document.getElementById('avatar').src = memberInfo.avatarUrl;
 					if (!memberInfo.group) {
@@ -631,6 +633,34 @@
 					mui.openWindow(href, id, options);
 				}
 			});
+			mui(".goods").on("tap", ".goodsL", function() {
+				group_id = 1;
+				if (group_id == 0) {
+					
+				} else if (group_id == 1) {
+					fnOpenWin('member.html', 'member', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, '', 'slide-in-right');
+				} else if (group_id == 2) {
+					fnOpenWin('maker.html', 'maker', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, '', 'slide-in-right');
+				} else if (group_id == 3) {
+					fnOpenWin('agent.html', 'agent', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, '', 'slide-in-right');
+				} else if (group_id == 4) {
+
+				} else {
+
+				}
+			})
 		</script>
 	</body>
 </html>
