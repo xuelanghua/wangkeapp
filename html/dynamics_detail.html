@@ -26,13 +26,13 @@
 			</div>
 			<div class="dynamics-content">
 				<p>一个朋友，仅仅因为他想干什么时恰好优惠政策结束了，就气得直骂娘。孩子在这里，不要说脏话。终于忍不住了，我提醒他。他倒一脸不屑：孩子咋了?孩子迟早也会骂人的。</p>
-				<ul>
-					<li><img src="../image/Bank_card.png" ></li>
-					<li><img src="../image/activation.png" ></li>
-					<li><img src="../image/bj.jpg" ></li>
-					<li><img src="../image/Bank_card.png" ></li>
-					<li><img src="../image/activation.png" ></li>
-					<li><img src="../image/bj.jpg" ></li>
+				<ul class="dynamics-img-group">
+					<li><img src="../image/Bank_card.png"></li>
+					<li><img src="../image/activation.png"></li>
+					<li><img src="../image/bj.jpg"></li>
+					<li><img src="../image/Bank_card.png"></li>
+					<li><img src="../image/activation.png"></li>
+					<li><img src="../image/bj.jpg"></li>
 				</ul>
 			</div>
 		</div>
@@ -51,8 +51,20 @@
 			// 初始化字体大小结束
 			userInfo = getUserInfo();
 			mui.plusReady(function() {
+				var images = [].slice.call(document.querySelectorAll('.dynamics-img-group img'));
+				var urls = [];
+				images.forEach(function(item) {
+				  urls.push(item.src);
+				});
+				mui('.dynamics-img-group').on('tap', 'img', function() {
+				  var index = images.indexOf(this);
+				  plus.nativeUI.previewImage(urls, {
+				    current: index,
+				    loop: true,
+				    indicator: 'number'
+				  });
+				});
 			});
-			// $(".dynamics-content img")
 		</script>
 	</body>
 
