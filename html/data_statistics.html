@@ -16,68 +16,126 @@
 		</header>
 		<div class="mui-content data-statistics-container">
 			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item" href="#item1">时间</a>
-				<a class="mui-control-item mui-active" href="#item2">行为</a>
+				<a class="mui-control-item mui-active" href="#item1">时间</a>
+				<a class="mui-control-item" href="#item2">行为</a>
 			</div>
 			<div class="segmentedControl-cont">
 				<!-- 第一个选项卡 -->
-				<div id="item1" class="mui-control-content">
-					<ul class="time-line-cont">
-						<li class="time-line-items-title">
-							<h5>2018/12/10</h5>
-						</li>
-						<li class="time-line-items">
-							<div class="time-line-items-top">
-								<div class="top-left">
-									<div class="head-img-cont"><img src="../image/kaol.jpg" alt="头像"></div>
-									<span class="user-name">老菲菲</span>
-									<span class="create-time">13:10</span>
-								</div>
-								<div class="top-right">
-									<a href="###"><img class="chat-icon" src="../image/icon/data-statistics-icon-01.png"></a>
-								</div>
+				<div id="item1" class="mui-control-content mui-active">
+					<ul v-if="dataGroup" class="time-line-cont">
+						<li v-for="(item,key,index) in dataGroup" :key="index">
+							<div class="time-line-items-title">
+								<h5>{{key}}</h5>
 							</div>
-							<div class="time-line-items-bottom">
-								<a href="###"><span>第二次查看</span>你的<span>动态</span>,尽快把握商机尽快把握商机尽快把握商机尽快把握商机</a>
-							</div>
-						</li>
-						<li class="time-line-items">
-							<div class="time-line-items-top">
-								<div class="top-left">
-									<div class="head-img-cont"><img src="../image/kaol.jpg" alt="头像"></div>
-									<span class="user-name">老菲菲</span>
-									<span class="create-time">13:10</span>
-								</div>
-								<div class="top-right">
-									<a href="###"><img class="chat-icon" src="../image/icon/data-statistics-icon-01.png"></a>
-								</div>
-							</div>
-							<div class="time-line-items-bottom">
-								<a href="###"><span>第二次查看</span>你的<span>动态</span>,尽快把握商机</a>
-							</div>
-						</li>
-						<li class="time-line-items-title">
-							<h5>2018/12/9</h5>
-						</li>
-						<li class="time-line-items">
-							<div class="time-line-items-top">
-								<div class="top-left">
-									<div class="head-img-cont"><img src="../image/kaol.jpg" alt="头像"></div>
-									<span class="user-name">老菲菲</span>
-									<span class="create-time">10:10</span>
-								</div>
-								<div class="top-right">
-									<a href="###"><img class="chat-icon" src="../image/icon/data-statistics-icon-01.png"></a>
-								</div>
-							</div>
-							<div class="time-line-items-bottom">
-								<a href="###"><span>第二次查看</span>你的<span>动态</span>,尽快把握商机</a>
-							</div>
+							<ul>
+								<li class="time-line-items" v-for="(items,cindex) in item" :key="cindex">
+									<div class="time-line-items-top">
+										<div class="top-left">
+											<div class="head-img-cont"><img :src="items.avatarUrl" alt=""></div>
+											<span class="user-name">{{items.nickName}}</span>
+											<span class="create-time">{{items.create_time}}</span>
+										</div>
+										<div class="top-right">
+											<img class="chat-icon" src="../image/icon/data-statistics-icon-01.png">
+										</div>
+									</div>
+									<div class="time-line-items-bottom" v-if="items.sign=='praise'">
+										<div v-if="items.type==1">
+											<p>TA给你的<span>录音</span>点赞了, 看来TA对你的介绍<span>非常感兴趣</span></p>
+										</div>
+										<div v-else-if="items.type==2">
+											<p v-if="items.count==1"><span>首次查看</span>你的<span>名片</span>,TA正在了解你</p>
+											<p v-else-if="items.count>1||items.count<5"><span>第{{items.count}}次查看</span>你的<span>名片</span>,你成功的吸引了TA</p>
+											<p v-else><span>第{{items.count}}次查看</span>你的<span>名片</span>,高意向客户,立即主动沟通</p>
+										</div>
+										<div v-else-if="items.type==3">
+											<p>TA给你点赞了, 看来TA觉得你<span>非常靠谱</span></p>
+										</div>
+										<div v-else-if="items.type==4">
+											<p v-if="items.count==1"><span>首次分享</span>了你的<span>名片</span></p>
+											<p v-else><span>第{{items.count}}次分享</span>了你的<span>名片</span></p>
+										</div>
+									</div>
+									<div class="time-line-items-bottom" v-else-if="items.sign=='copy'">
+										<div v-if="items.type==1">
+											<p v-if="items.count==1">TA<span>首次</span>保存了你的电话, 请随时保持电话畅通</p>
+											<p v-else><span>第{{items.count}}次</span>保存了你的电话, 请随时保持电话畅通</p>
+										</div>
+										<div v-else-if="items.type==2">
+											<p v-if="items.count==1"><span>首次拨打</span>你的<span>手机号</span></p>
+											<p v-else><span>第{{items.count}}次拨打</span>你的<span>手机号</span></p>
+										</div>
+										<div v-else-if="items.type==3">
+											<p v-if="items.count==1"><span>首次拨打</span>你的<span>座机号</span></p>
+											<p v-else><span>第{{items.count}}次拨打</span>你的<span>座机号</span></p>
+										</div>
+										<div v-else-if="items.type==4">
+											<p v-if="items.count==1">TA<span>首次</span>复制了你的微信, 请随时查看微信通讯录</p>
+											<p v-else><span>第{{items.count}}次</span>复制了你的微信, 请随时查看微信通讯录</p>
+										</div>
+										<div v-else-if="items.type==5">
+											<p v-if="items.count==1">TA<span>首次</span>复制了你的邮箱, 可随时发邮件给你</p>
+											<p v-else><span>第{{items.count}}次</span>复制了你的邮箱, 可随时发邮件给你录</p>
+										</div>
+										<div v-else-if="items.type==6">
+											<p v-if="items.count==1"><span>首次复制</span>你公司的<span>名称</span></p>
+											<p v-else><span>第{{items.count}}次复制</span>你公司的<span>名称</span></p>
+										</div>
+										<div v-else-if="items.type==7">
+											<p v-if="items.count==1"><span>首次查看</span>你公司的<span>定位</span></p>
+											<p v-else><span>第{{items.count}}次查看</span>你公司的<span>定位</span></p>
+										</div>
+										<div v-else-if="items.type==8">
+											<p v-if="items.count==1"><span>首次咨询</span>你的<span>产品</span></p>
+											<p v-else><span>第{{items.count}}次咨询</span>你的<span>产品</span></p>
+										</div>
+										<div v-else-if="items.type==9">
+											<p v-if="items.count==1"><span>首次播放</span>你的<span>语音</span></p>
+											<p v-else><span>第{{items.count}}次播放</span>你的<span>语音</span></p>
+										</div>
+									</div>
+									<div class="time-line-items-bottom" v-else-if="items.sign=='view'">
+										<div v-if="items.type==1">
+											<p v-if="items.count==1"><span>首次查看</span>你的<span>商城</span>,尽快把握商机</p>
+											<p v-else-if="items.count==2"><span>第{{items.count}}次查看</span>你的<span>商城</span>,潜在购买客户</p>
+											<p v-else-if="items.count==3"><span>第{{items.count}}次查看</span>你的<span>商城</span>,高意向客户成交在望</p>
+											<p v-else><span>第{{items.count}}次查看</span>你的<span>商城</span>,购买欲望强烈</p>
+										</div>
+										<div v-else-if="items.type==2">
+											<p v-if="items.count==1"><span>首次查看</span>你的<span>商品({{items.target_name}})详情</span>,尽快把握商机</p>
+											<p v-else><span>第{{items.count}}次查看</span>你的<span>商品(' + viewList[k].target_name + ')详情</span>,尽快把握商机</p>
+										</div>
+										<div v-else-if="items.type==3">
+											<p v-if="items.count==1"><span>首次查看</span>你的<span>动态</span></p>
+											<p v-else-if="items.count==2"><span>第{{items.count}}次查看</span>你的<span>动态</span>,赶快主动沟通</p>
+											<p v-else><span>第{{items.count}}次查看</span>你的<span>动态</span>,高意向客户成交在望</p>
+										</div>
+										<div v-else-if="items.type==4">
+											<p v-if="items.count==1"><span>首次点赞</span>了你的<span>动态</span></p>
+											<p v-else><span>第{{items.count}}次点赞</span>了你的<span>动态</span></p>
+										</div>
+										<div v-else-if="items.type==5">
+											<p v-if="items.count==1"><span>首次评论</span>了你的<span>动态</span></p>
+											<p v-else><span>第{{items.count}}次评论</span>了你的<span>动态</span></p>
+										</div>
+										<div v-else-if="items.type==6">
+											<p v-if="items.count==1"><span>首次查看公司官网</span>,看来他对公司感兴趣</p>
+											<p v-else-if="items.count==2"><span>第{{items.count}}次查看公司官网</span>,赶快主动沟通</p>
+											<p v-else><span>第{{items.count}}次查看公司官网</span>,高意向客户成交在望</p>
+										</div>
+										<div v-else-if="items.type==7">
+											<p v-if="items.count==1"><span>首次浏览</span>你的<span>动态({{items.target_name}})详情</span></p>
+											<p v-else><span>第{{items.count}}次浏览</span>你的<span>动态(' + viewList[k].target_name + ')详情</span></p>
+										</div>
+									</div>
+								</li>
+							</ul>
 						</li>
 					</ul>
+					<div v-else style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>
 				</div>
 				<!-- 第二个选项卡 -->
-				<div id="item2" class="mui-control-content mui-active">
+				<div id="item2" class="mui-control-content">
 					<div id="showUserPicker" class="select-time">
 						<p class="select-title"><span id="selectTitle">近7天</span>被查看的行为统计</p>
 						<i class="mui-icon mui-icon-arrowdown"></i>
@@ -181,17 +239,38 @@
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript" src="../js/mui.picker.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript" src="../js/data-statistice.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				pullRefresh: {
+					container: '#item1',
+					up: {
+						height: 50,
+						auto: false,
+						contentrefresh: "正在加载...",
+						contentnomore: '没有更多数据了',
+						callback: pullupRefresh
+					},
+					down: {
+						style: 'circle',
+						color: '#2BD009',
+						height: '50px',
+						range: '120px',
+						offset: '0px',
+						auto: false,
+						callback: pulldownRefresh
+					}
+				}
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
-			var postType = 2;
-			// var 
+			var postType = 1;
+			var pgNum = 1;
 			if (viewport > 750) {
 				viewport = 750
 			}
@@ -210,24 +289,42 @@
 					type: postType,
 					token: userInfo.token
 				}, function(res) {
-					if(res.errno==0){
-						var data=res.data;
-						for(items in data){
-							document.getElementById(items).innerHTML=data[items].number;
+					if (res.errno == 0) {
+						var data = res.data;
+						for (items in data) {
+							document.getElementById(items).innerHTML = data[items].number;
+							mui('#item1').pullRefresh().endPulldown();
 						}
-					}else{
-						
+					} else {
+
 					}
 				}, 'json')
 			}
 			// 获取名片浏览记录
-			function businessCardBrowsingStatistics(){
+			function businessCardBrowsingStatistics() {
 				mui.post($ajaxUrl + 'staff&action=card_view_record', {
-// 					skip:1,
-// 					limit: 10,
+					skip: pgNum,
+					limit: 10,
 					token: userInfo.token
 				}, function(res) {
-					logs(res);
+					 let _self = itemCont.this
+					var data = res.data;
+					if (res.errno == 0 && pgNum == 1) {
+						itemCont.dataGroup = data;
+						mui.later(function(){
+							// 下拉加载完成隐藏加载动画
+							mui('#item1').pullRefresh().endPulldown();
+						},1500)
+					} else if (res.errno == 0) {
+						for (list in data) {
+							Vue.set(itemCont.dataGroup, list, data[list]);
+						}
+						// 上拉加载完成隐藏加载动画
+						mui('#item1').pullRefresh().endPullupToRefresh();
+					} else {
+						// 没有更多数据了
+						mui('#item1').pullRefresh().endPullupToRefresh(true);
+					}
 				}, 'json')
 			}
 			// 选择天数
@@ -239,16 +336,37 @@
 				value: 2,
 				text: '近30天'
 			}]);
-			
+			// 实例化vue对象
+			var itemCont = new Vue({
+				el: '#item1',
+				data: {
+					dataGroup: []
+				},
+				ready: function() {
+				}
+			});
 			var showUserPickerButton = document.getElementById('showUserPicker');
 			var selectTitle = document.getElementById('selectTitle');
 			showUserPickerButton.addEventListener('tap', function(event) {
 				userPicker.show(function(items) {
 					selectTitle.innerText = items[0].text;
-					postType=items[0].value;
+					postType = items[0].value;
 					behaviorStatistics();
 				});
 			}, false);
+			
+			// 下拉刷新具体业务实现
+			function pulldownRefresh() {
+				pgNum = 1;
+				businessCardBrowsingStatistics();
+				behaviorStatistics();
+			}
+			
+			// 上拉加载具体业务实现
+			function pullupRefresh() {
+				pgNum += 1;
+				businessCardBrowsingStatistics();
+			}
 		</script>
 	</body>
 
