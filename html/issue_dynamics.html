@@ -27,9 +27,12 @@
 					<input type="hidden" name="images" />
 				</div>
 			</div>
+			<div class="issue-dynamics">发布动态</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/mui.previewimage.js"></script>
+		<script src="../js/upload.js"></script>
 		<script type="text/javascript" src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -39,12 +42,14 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			userInfo = getUserInfo();
 			$("body").removeClass("mui-hidden");
 			// 初始化字体大小结束
-			userInfo = getUserInfo();
+			var imageId = 0;
+			var images = new Array();
 			mui.plusReady(function() {
 				
-			});
+			})
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
 				imageUpload(function(res) {
@@ -66,6 +71,10 @@
 				parentDiv.remove();
 				delete images[imgId];
 			})
+			// 发布按钮居底 防止被输入法顶上去
+			var height = document.documentElement.clientHeight || document.body.clientHeight;
+			var viewportHeight=document.body.clientHeight;
+			document.querySelector('.issue-dynamics').style.top=height-50+"px";
 		</script>
 	</body>
 
