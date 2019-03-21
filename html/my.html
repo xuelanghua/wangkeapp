@@ -376,38 +376,30 @@
 						<img src="../image/Marketing-code.png">
 						<span>boss</span>
 					</li>
-					<li class="data_statistics">
+					<li id="data_statistics">
 						<img src="../image/customer-management.png">
 						<span>雷达</span>
 					</li>
-					<li>
-						<a href="card_manage.html">
-							<img src="../image/Personal-information.png">
-							<span>名片管理</span>
-						</a>
+					<li id="card_manage">
+						<img src="../image/Personal-information.png">
+						<span>名片管理</span>
 					</li>
 					<div class="clearfix"></div>
-					<li>
-						<a href="friends_detail.html">
-							<img src="../image/data-statistics.png">
-							<span>数据统计</span>
-						</a>
+					<li id="">
+						<img src="../image/data-statistics.png">
+						<span>数据统计</span>
 					</li>
-					<li>
-						<a href="asset_management.html">
-							<img src="../image/asset-management.png">
-							<span>资产管理</span>
-						</a>
+					<li id="asset_management">
+						<img src="../image/asset-management.png">
+						<span>资产管理</span>
 					</li>
 					<li id="target">
 						<img src="../image/Target-management.png">
 						<span>目标管理</span>
 					</li>
-					<li>
-						<a href="red_packet.html">
-							<img src="../image/Red-envelopes_q1.png">
-							<span>红包管理</span>
-						</a>
+					<li id="red_packet">
+						<img src="../image/Red-envelopes_q1.png">
+						<span>红包管理</span>
 					</li>
 					<div class="clearfix"></div>
 				</div>
@@ -492,6 +484,41 @@
 				//查看公告
 				mui('.mui-content').on('tap', '.Notice', function() {
 					noticeDeail();
+				})
+				// 雷达页面
+				mui('.mui-content').on('tap', '#data_statistics', function() {
+					fnOpenWin('data_statistics.html', 'data_statistics', {
+						statusbar: {
+							background: '#ffffff'
+						}
+					}, '', 'slide-in-right');
+					setStatusBar('', 'dark');
+				})
+
+				// 红包管理
+				mui('.mui-content').on('tap', '#red_packet', function() {
+					fnOpenWin('red_packet.html', 'red_packet', {
+						statusbar: {
+							background: '#f7f7f7'
+						}
+					}, '', 'slide-in-right');
+					setStatusBar('', 'dark');
+				})
+				// 资产管理
+				mui('.mui-content').on('tap', '#asset_management', function() {
+					fnOpenWin('asset_management.html', 'asset_management', {
+						statusbar: {
+							background: '#FFFFFF'
+						}
+					}, '', 'slide-in-right');
+				})
+				// 名片管理
+				mui('.mui-content').on('tap', '#card_manage', function() {
+					fnOpenWin('card_manage.html', 'card_manage', {
+						statusbar: {
+							background: '#FFFFFF'
+						}
+					}, '', 'slide-in-right');
 				})
 			}
 
@@ -606,38 +633,6 @@
 				detailPage.show('slide-in-right');
 				setStatusBar('', 'dark');
 			}
-			// a标签的跳转
-			mui('.menu li').on('tap', 'a', function() {
-				var href = this.getAttribute('href');
-				var id = href.indexOf('.html');
-				//非plus环境，直接走href跳转
-				if (!mui.os.plus) {
-					location.href = href;
-					return;
-				}
-				if (href && id) {
-					//打开窗口的相关参数
-					var options = {
-						styles: {
-							popGesture: "close",
-							statusbar: {
-								background: "#ffffff"
-							}
-						},
-						extras: {},
-						show: {
-							autoShow: true,
-							aniShow: "slide-in-right",
-							duration: 200
-						},
-						waiting: {
-							autoShow: false
-						}
-					}
-					//打开新窗口
-					mui.openWindow(href, id, options);
-				}
-			});
 			mui(".goods").on("tap", ".goodsL", function() {
 				group_id = 1;
 				if (group_id == 0) {

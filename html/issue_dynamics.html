@@ -15,6 +15,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">发布动态</h1>
+			<span class="mui-pull-right issue-dynamics">发布</span>
 		</header>
 		<div class="mui-content issue-dynamics-container">
 			<div class="section-issue">
@@ -29,7 +30,7 @@
 					<input type="hidden" name="images" />
 				</div>
 			</div>
-			<div class="issue-dynamics">发布动态</div>
+			<!-- <div class="issue-dynamics">发布动态</div> -->
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
@@ -37,7 +38,15 @@
 		<script src="../js/upload.js"></script>
 		<script type="text/javascript" src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				beforeback: function() {
+					//获得列表界面的webview
+					var myDynamics = plus.webview.currentWebview().opener();　
+					mui.fire(myDynamics, 'refresh');
+					//返回true，继续页面关闭逻辑
+					return true;
+				}
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -48,9 +57,7 @@
 			// 初始化字体大小结束
 			var imageId = 0;
 			var images = new Array();
-			mui.plusReady(function() {
-
-			})
+			mui.plusReady(function() {})
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
 				imageUpload(function(res) {
@@ -77,17 +84,24 @@
 			var height = document.documentElement.clientHeight || document.body.clientHeight;
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			document.querySelector('.issue-dynamics').style.top = height - 50 + "px";
-			mui(".mui-content").on("tap", ".issue-dynamics", function() {
-				var titles=document.querySelector('input[name=title]').value;
-				var contents=document.querySelector('textarea[name=desc]').value
-				mui.get($ajaxUrl + 'timeline&action=add', {
+			mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
+				e.preventDefault();
+				var titles = document.querySelector('input[name=title]').value;
+				var contents = document.querySelector('textarea[name=desc]').value
+				mui.post($ajaxUrl + 'timeline&action=add', {
 					token: userInfo.token,
 					title: titles,
 					content: contents,
-					cover:''
+					cover: images.filter(function(e) {
+						return e != null
+					}).join(',')
 				}, function(res) {
-					logs(res);
-					message("qignqilaskdf")
+					if (res.errno == 0) {
+						message("发布成功");
+						plus.key.hideSoftKeybord();
+						document.querySelector('input[name=title]').value = "";
+						document.querySelector('textarea[name=desc]').value = "";
+					}
 				}, 'json')
 			})
 		</script>

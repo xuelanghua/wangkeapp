@@ -20,7 +20,7 @@
 					<h2 class="dynamics-title mui-ellipsis" @tap="opDetail(items.id)">{{items.title}}</h2>
 					<div class="dynamics-img-cont" @tap="opDetail(items.id)">
 						<ul v-if="items.cover" class="dynamics-img">
-							<li class="img-items" v-for="(img,idx) in items.cover" v-if="idx<3" :key="idx"><img :src="img"></li>
+							<li class="img-items" v-if="items.cover.length>0&&items.cover[0]!=''&&idx<3" v-for="(img,idx) in items.cover" :key="idx"><img :src="img"></li>
 							<li v-if="items.cover.length>3" class="img-items ellipsis-sign">···</li>
 						</ul>
 					</div>
@@ -33,6 +33,9 @@
 					</div>
 				</li>
 			</ul>
+			<div v-if="voidDy" class="dynamics-void">
+				<span>暂无动态</span>
+			</div>
 			<div class="create-dynamics">新建动态</div>
 		</div>
 		<script type="text/javascript" src="../js/vue.min.js"></script>
@@ -50,7 +53,8 @@
 			var muiCont = new Vue({
 				el: '#mui-content',
 				data: {
-					dataList: []
+					dataList: [],
+					voidDy:false
 				}
 			});
 			// 初始化字体大小结束
@@ -67,19 +71,35 @@
 					skip: skipNum,
 					limit: 10
 				}, function(res) {
+					logs(res);
 					let data = res.data;
 					if (res.errno == 0 && skipNum == 1) {
 						muiCont.dataList = data;
-					} else {
+						muiCont.dataList.reverse()
+					} else if(res.errno == 0) {
 						for (item in data) {
 							muiCont.dataList.push(item);
 						}
+						muiCont.dataList.reverse()
+					}else{
+						muiCont.dataList=[];
+						muiCont.voidDy=true;
 					}
 				}, 'json')
 			}
 			// 删除按钮
-			function delBtn(e) {
-				message(e);
+			function delBtn(tid) {
+				mui.post($ajaxUrl + 'timeline&action=delete', {
+					token: userInfo.token,
+					tid: tid
+				}, function(res) {
+					if(res.errno==0){
+						behaviorStatistics();
+						message("已删除")
+					}else{
+						message(res.message)
+					}
+				}, 'json')
 			}
 			// 转发按钮
 			function shareBtn(e) {
@@ -102,6 +122,9 @@
 					}
 				}, '', 'slide-in-right');
 			})
+			window.addEventListener('refresh', function(e){
+                  behaviorStatistics();
+            });
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		</script>
 	</body>

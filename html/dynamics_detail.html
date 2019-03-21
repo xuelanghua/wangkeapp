@@ -14,31 +14,34 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">动态详情</h1>
 		</header>
-		<div class="mui-content dynamics-detail-container">
+		<div id="mui-content" class="mui-content dynamics-detail-container">
 			<div class="dynamics-title-cont">
 				<div class="dynamics-title-left">
-					<h2>这里是我的动态标题标题标题标题标题</h2>
-					<p><span class="user-name">小飞飞</span><span class="release-time">03月06日</span></p>
-				</div>
-				<div class="dynamics-title-right">
-					<img src="../image/icon/sharing-dynamics-icon.png" >
+					<h2>{{title}}</h2>
+					<p><span class="user-name">小飞飞</span><span class="release-time">{{create_time.substring(0,10)}}</span></p>
 				</div>
 			</div>
 			<div class="dynamics-content">
-				<p>一个朋友，仅仅因为他想干什么时恰好优惠政策结束了，就气得直骂娘。孩子在这里，不要说脏话。终于忍不住了，我提醒他。他倒一脸不屑：孩子咋了?孩子迟早也会骂人的。</p>
-				<ul class="dynamics-img-group">
-					<li><img src="../image/Bank_card.png"></li>
-					<li><img src="../image/activation.png"></li>
-					<li><img src="../image/bj.jpg"></li>
-					<li><img src="../image/Bank_card.png"></li>
-					<li><img src="../image/activation.png"></li>
-					<li><img src="../image/bj.jpg"></li>
+				<p>{{content}}</p>
+				<ul class="dynamics-img-group"  :class="[cover.length==2||cover.length==5||cover.length==9?'active':'']" v-if="cover.length>0&&cover[0]!=''">
+					<li  v-for="img in cover"><img :src="img"></li>
 				</ul>
+			</div>
+			<div class="comment-cont" v-if="comment.length>0||likes.length>0">
+				<div class="thumbs-cont">
+					<img src="../image/icon/give-the-thumbs-up.png" >
+					<span v-for="lists in likes">{{lists.nickName}}</span>
+				</div>
+				<div v-if="comment.length>0" class="comment-list" >
+					<ul>
+						<li v-for="lists in comment"><p><span>{{lists.nickName}}</span>{{lists.content}}</p></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
-		<script type="text/javascript" src="../js/Zepto.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			// 初始化字体大小
@@ -47,9 +50,21 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			$("body").removeClass("mui-hidden");
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
+			var muiCont = new Vue({
+				el: '#mui-content',
+				data: {
+					title:"",
+					create_time:'',
+					likes:[],
+					content:'',
+					cover: [],
+					comment:[]
+				}
+			});
 			userInfo = getUserInfo();
+			var tid = 0;
 			mui.plusReady(function() {
 				var images = [].slice.call(document.querySelectorAll('.dynamics-img-group img'));
 				var urls = [];
@@ -63,8 +78,32 @@
 				    loop: true,
 				    indicator: 'number'
 				  });
+				  message("点击了图片");
 				});
+				// 接收上个页面传参
+				var self = plus.webview.currentWebview();  
+				tid = self.aid;
+				getDynamicsDetail();
 			});
+			function getDynamicsDetail(){
+				mui.post($ajaxUrl + 'timeline&action=detail', {
+					token: userInfo.token,
+					tid: tid
+					}, function(res) {
+						logs(res);
+						if(res.errno==0){
+							var data=res.data;
+							muiCont.title=data.title;
+							muiCont.cover=data.cover;
+							muiCont.content=data.content;
+							muiCont.create_time=data.create_time;
+							muiCont.comment=data.comment.data;
+							muiCont.likes=data.like.data;
+						}else{
+							message(res.message)
+						}
+				}, 'json')
+			}
 		</script>
 	</body>
 
