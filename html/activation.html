@@ -28,9 +28,31 @@
 		<div class="close-button">关闭</div>
 		<div id="vip-container" class="mui-content vip-container">
 			<a class="activation-link" href="activation_code.html">激活码激活</a>
-			<div class="mui-card">
+			<div class="mui-card" id="form">
 				<form class="mui-input-group">
-					<div class="radio-list active">
+					<div class="radio-list active" v-for="(item, index) in group" :key="index" v-if="item.id < 3">
+						<div class="mui-radio mui-left">
+							<label>{{ item.name }}</label>
+							<label>{{ item.rights }}</label>
+							<input name="group" type="radio">
+						</div>
+						<div class="mui-right">
+							<span>&yen;{{ item.activation_fee }}</span>
+							<span>续费{{ item.annual_fee }}</span> 
+						</div>
+					</div>
+					<!-- <div class="radio-list">
+						<div class="mui-radio mui-left">
+							<label>创客</label>
+							<label>推广收益/送50个会员/送9999旺旺</label>
+							<input name="radio1" type="radio">
+						</div>
+						<div class="mui-right">
+							<span>&yen;9999</span>
+							<span>续费69</span>
+						</div>
+					</div> -->
+					<!-- <div class="radio-list active">
 						<div class="mui-radio mui-left">
 							<label>VIP</label>
 							<label>推广收益</label>
@@ -51,7 +73,7 @@
 							<span>&yen;9999</span>
 							<span>续费69</span>
 						</div>
-					</div>
+					</div> -->
 				</form>
 				<div class="radio-list last">
 					<span>代理</span>
@@ -67,7 +89,7 @@
 				<p>开通即视为同意<a href="agreement.html">《旺客-用户协议》</a></p>
 			</div>
 			<!-- 创客弹窗开始 -->
-			<div class="maker-model-container  mui-hidden">
+			<div class="maker-model-container mui-hidden">
 				<div class="maker-cont">
 					<h2 class="title">尊贵</h2>
 					<h2 class="title">创客</h2>
@@ -125,7 +147,8 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script type="text/javascript" src="../js/Zepto.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<!-- <script type="text/javascript" src="../js/Zepto.min.js"></script> -->
 		<!-- <script type="text/javascript" src="../js/vip-page.js"></script> -->
 		<script type="text/javascript">
 			mui.init({
@@ -141,6 +164,15 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
+			
+			//vue初始化
+			var vm = new Vue({
+				el: "#form",
+				data: {
+					group: []
+				} 
+			});
+			
 			mui.plusReady(function() {
 				eventInit();
 				getGroupInfo();
@@ -160,13 +192,29 @@
 				mui.post($ajaxUrl + 'member', {
 						action: 'group_info'
 					}, function(res){
+						var data = res.data;
+						mui.each(data, function(index, item) {
+							var rights = item.rights;
+							rights = JSON.parse(rights);
+							var temp = '';
+							for (var i in rights) {
+								if (i > 0) {
+									temp += '/' + rights[i];
+								} else {
+									temp += rights[i];
+								}
+							}
+							item.rights = temp;
+							console.log(temp);
+						})
+						// logs(data);
+						vm.group = res.data;
 						logs(res);
 						var right = JSON.parse(res.data[1].rights);
 						logs(right);
 					}, 'json'
 				);
 			}
-			
 			
 			//主列表点击事件
 			mui('#vip-container').on('tap', 'a', function() {
