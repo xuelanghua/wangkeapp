@@ -376,11 +376,9 @@
 						<img src="../image/Marketing-code.png">
 						<span>boss</span>
 					</li>
-					<li>
-						<a href="data_statistics.html">
-							<img src="../image/customer-management.png">
-							<span>雷达</span>
-						</a>
+					<li class="data_statistics">
+						<img src="../image/customer-management.png">
+						<span>雷达</span>
 					</li>
 					<li>
 						<a href="card_manage.html">
@@ -431,7 +429,20 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init({
-				swipeBack: false
+				swipeBack: false,
+				preloadPages: [{
+					url: "data_statistics.html",
+					id: "data_statistics",
+					styles: {
+						popGesture: "close",
+						statusbar: {
+							background: "#ffffff"
+						}
+					},
+					extras: {},
+					subpages: [{}, {}]
+				}],
+				preloadLimit: 5
 			});
 
 			var userInfo = getUserInfo();
@@ -604,29 +615,23 @@
 					location.href = href;
 					return;
 				}
-
-				if (href && ~href.indexOf('.html')) {
+				if (href && id) {
 					//打开窗口的相关参数
 					var options = {
 						styles: {
-							popGesture: "close"
-						},
-						extras: {}
-					};
-					var titleType = this.getAttribute("data-title-type");
-					if (titleType && titleType.indexOf("native") > -1) { //原生导航
-						options.styles.titleNView = {
-							autoBackButton: true,
-							backgroundColor: '#f7f7f7',
-							titleText: this.innerHTML.trim(),
-							splitLine: {
-								color: '#cccccc'
+							popGesture: "close",
+							statusbar: {
+								background: "#ffffff"
 							}
-						};
-					} else {
-						//非原生导航，需要设置顶部状态栏占位
-						options.styles.statusbar = {
-							background: "#f7f7f7"
+						},
+						extras: {},
+						show: {
+							autoShow: true,
+							aniShow: "slide-in-right",
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
 						}
 					}
 					//打开新窗口
@@ -636,7 +641,7 @@
 			mui(".goods").on("tap", ".goodsL", function() {
 				group_id = 1;
 				if (group_id == 0) {
-					
+
 				} else if (group_id == 1) {
 					fnOpenWin('member.html', 'member', {
 						statusbar: {

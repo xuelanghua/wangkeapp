@@ -13,10 +13,10 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">名片管理</h1>
 		</header>
-		<div id="card-manage-container" class="mui-content card-manage-container">
+		<div class="mui-content card-manage-container">
 			<ul class="manage-header mui-table-view">
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="data-statistics.html">
+				<li class="mui-table-view-cell edit">
+					<div class="mui-navigate-right">
 						<div class="manage-left">
 							<div class="head-img">
 								<img src="../image/kaol.jpg" alt="">
@@ -24,92 +24,50 @@
 							<span>阿飞</span>
 						</div>
 						<span class="edit-desc">编辑</span>
-					</a>
+					</div>
 				</li>
 			</ul>
 			<ul class="mui-table-view manage-lists">
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="activation-code.html">
-						<div class="manage-left"><img class="sml-icon" src="../image/icon/share-icon-icon.png"><span>转发名片</span></div>
-					</a>
+				<li class="mui-table-view-cell share">
+					<div class="manage-left mui-navigate-right"><img class="sml-icon" src="../image/icon/share-icon-icon.png"><span>转发名片</span></div>
 				</li>
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						<div class="manage-left"><img class="sml-icon" src="../image/icon/my-qr-code-icon.png"><span>名片码</span></div>
-					</a>
+				<li class="mui-table-view-cell business-card">
+					<div class="manage-left mui-navigate-right"><img class="sml-icon" src="../image/icon/my-qr-code-icon.png"><span>名片码</span></div>
 				</li>
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="my_dynamics.html">
-						<div class="manage-left"><img class="sml-icon" src="../image/icon/dynamic-icon.png"><span>发布动态</span></div>
-					</a>
+				<li class="mui-table-view-cell issue">
+					<div class="manage-left mui-navigate-right"><img class="sml-icon" src="../image/icon/dynamic-icon.png"><span>发布动态</span></div>
 				</li>
 			</ul>
 		</div>
 		<script src="../js/mui.min.js"></script>
-		<script src="../js/Zepto.min.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
 		<script type="text/javascript">
-			(function() {
-				mui.init();
-				// 初始化字体大小
-				var viewport = document.documentElement.clientWidth;
-				if (viewport > 750) {
-					viewport = 750
-				}
-				document.documentElement.style.fontSize = viewport / 7.5 + "px";
-				// 初始化字体大小结束
-				$("body").removeClass("mui-hidden");
-				//主列表点击事件
-				mui('#card-manage-container').on('tap', 'a', function() {
-					var href = this.getAttribute('href');
-				
-					//非plus环境，直接走href跳转
-					if (!mui.os.plus) {
-						location.href = href;
-						return;
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			//主列表点击事件
+			mui(".mui-content").on("tap", ".edit", function() {
+
+			})
+			mui(".mui-content").on("tap", ".share", function() {
+
+			})
+			mui(".mui-content").on("tap", ".business-card", function() {
+
+			})
+			mui(".mui-content").on("tap", ".issue", function() {
+				fnOpenWin('my_dynamics.html', 'my_dynamics', {
+					statusbar: {
+						background: '#FFF'
 					}
-				
-					var id = this.getAttribute("data-wid");
-					if (!id) {
-						id = href;
-					}
-				
-					if (href && ~href.indexOf('.html')) {
-						//打开窗口的相关参数
-						var options = {
-							styles: {
-								popGesture: "close"
-							},
-							extras: {}
-						};
-						var titleType = this.getAttribute("data-title-type");
-						if (titleType && titleType.indexOf("native") > -1) { //原生导航
-							options.styles.titleNView = {
-								autoBackButton: true,
-								backgroundColor: '#f7f7f7',
-								titleText: this.innerHTML.trim(),
-								splitLine: {
-									color: '#cccccc'
-								}
-							};
-				
-							options.show = {
-								event: 'loaded'
-							}
-							//有原生标题的情况下，就不需要waiting框了
-							options.waiting = {
-								autoShow: false
-							}
-						} else {
-							//非原生导航，需要设置顶部状态栏占位
-							options.styles.statusbar = {
-								background: "#f7f7f7"
-							}
-						}
-						//打开新窗口
-						mui.openWindow(href, id, options);
-					}
-				});
-			})();
+				}, '', 'slide-in-right');
+			})
 		</script>
 	</body>
 

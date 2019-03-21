@@ -35,7 +35,7 @@
 											<span class="user-name">{{items.nickName}}</span>
 											<span class="create-time">{{items.create_time}}</span>
 										</div>
-										<div class="top-right">
+										<div class="top-right" @tap="startChat(items.user_id,items.nickName,items.avatarUrl)">
 											<img class="chat-icon" src="../image/icon/data-statistics-icon-01.png">
 										</div>
 									</div>
@@ -243,7 +243,6 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript" src="../js/mui.picker.min.js"></script>
-		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript" src="../js/data-statistice.js"></script>
 		<script type="text/javascript">
 			mui.init({
@@ -276,7 +275,7 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			$("body").removeClass("mui-hidden");
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 
 			var userInfo = getUserInfo();
 			mui.plusReady(function() {
@@ -307,14 +306,14 @@
 					limit: 10,
 					token: userInfo.token
 				}, function(res) {
-					 let _self = itemCont.this
+					let _self = itemCont.this
 					var data = res.data;
 					if (res.errno == 0 && pgNum == 1) {
 						itemCont.dataGroup = data;
-						mui.later(function(){
+						mui.later(function() {
 							// 下拉加载完成隐藏加载动画
 							mui('#item1').pullRefresh().endPulldown();
-						},1500)
+						}, 1500)
 					} else if (res.errno == 0) {
 						for (list in data) {
 							Vue.set(itemCont.dataGroup, list, data[list]);
@@ -341,8 +340,6 @@
 				el: '#item1',
 				data: {
 					dataGroup: []
-				},
-				ready: function() {
 				}
 			});
 			var showUserPickerButton = document.getElementById('showUserPicker');
@@ -354,18 +351,31 @@
 					behaviorStatistics();
 				});
 			}, false);
-			
+
 			// 下拉刷新具体业务实现
 			function pulldownRefresh() {
 				pgNum = 1;
 				businessCardBrowsingStatistics();
 				behaviorStatistics();
 			}
-			
+
 			// 上拉加载具体业务实现
 			function pullupRefresh() {
 				pgNum += 1;
 				businessCardBrowsingStatistics();
+			}
+			// 打开用户聊天界面
+			function startChat(cid,chatName,avatar) {
+				fnOpenWin('dialog.html', 'dialog', {
+					statusbar: {
+						background: '#F7F7F7'
+					}
+				}, {
+					cid: cid,
+					chatName: chatName,
+					avatar: avatar,
+					barStyle: 'light'
+				}, 'slide-in-right');
 			}
 		</script>
 	</body>

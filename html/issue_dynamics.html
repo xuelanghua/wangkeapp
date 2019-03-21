@@ -7,6 +7,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style type="text/css">
+		</style>
 	</head>
 
 	<body class="mui-hidden">
@@ -16,8 +18,8 @@
 		</header>
 		<div class="mui-content issue-dynamics-container">
 			<div class="section-issue">
-				<input class="issue-title" id="issue-title" type="text" name="title" value="" placeholder="动态名称"/>
-				<textarea class="issue-desc" id="issue-desc" name="desc" rows="3" placeholder="填写信息内容"></textarea>
+				<input class="issue-title" id="issue-title" type="text" name="title" placeholder="动态名称" />
+				<textarea class="issue-desc" id="issue-desc" rows="3" name="desc" placeholder="填写信息内容"></textarea>
 			</div>
 			<div class="picture_display">
 				<div id="pic-container">
@@ -29,7 +31,7 @@
 			</div>
 			<div class="issue-dynamics">发布动态</div>
 		</div>
-		<script src="../js/mui.js"></script>
+		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/upload.js"></script>
@@ -43,12 +45,11 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			userInfo = getUserInfo();
-			$("body").removeClass("mui-hidden");
 			// 初始化字体大小结束
 			var imageId = 0;
 			var images = new Array();
 			mui.plusReady(function() {
-				
+
 			})
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
@@ -58,12 +59,13 @@
 					var newImgDiv = document.createElement('div');
 					newImgDiv.setAttribute('data-id', imageId);
 					newImgDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					var html = '<img src="' + res.url +
+						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 					newImgDiv.innerHTML = html;
 					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
 				});
 			})
-			
+
 			//删除图片
 			mui('#pic-container').on('tap', '.mui-close', function() {
 				var parentDiv = this.parentElement;
@@ -73,8 +75,21 @@
 			})
 			// 发布按钮居底 防止被输入法顶上去
 			var height = document.documentElement.clientHeight || document.body.clientHeight;
-			var viewportHeight=document.body.clientHeight;
-			document.querySelector('.issue-dynamics').style.top=height-50+"px";
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			document.querySelector('.issue-dynamics').style.top = height - 50 + "px";
+			mui(".mui-content").on("tap", ".issue-dynamics", function() {
+				var titles=document.querySelector('input[name=title]').value;
+				var contents=document.querySelector('textarea[name=desc]').value
+				mui.get($ajaxUrl + 'timeline&action=add', {
+					token: userInfo.token,
+					title: titles,
+					content: contents,
+					cover:''
+				}, function(res) {
+					logs(res);
+					message("qignqilaskdf")
+				}, 'json')
+			})
 		</script>
 	</body>
 
