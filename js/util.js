@@ -32,7 +32,8 @@ function checkMember() {
 }
 
 //获取用户信息
-function updateUserInfo(userInfo) {
+function updateUserInfo() {
+	var userInfo = getUserInfo();
 	mui.post($ajaxUrl + 'member&action=info', {
 		token: userInfo.token
 	}, function(res) {

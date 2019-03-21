@@ -314,12 +314,10 @@
 							//                  	console.log(JSON.stringify(result));
 							plus.nativeUI.alert("支付成功！", function() {
 								plus.navigator.setStatusBarStyle('dark');
-								updateUserInfo(userInfo);
-								plus.webview.close('login');
-								plus.webview.close('mobile_bind');
-								plus.webview.close('activation');
-								//                      	mui.fire('index')
-								//                      	mui.back();
+								setTimeout(function() {
+									updateUserInfo();
+								}, 2000);
+								mui.back();
 							});
 						}, function(error) {
 							console.log(JSON.stringify(error));
