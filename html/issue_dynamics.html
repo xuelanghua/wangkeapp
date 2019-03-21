@@ -81,9 +81,7 @@
 				delete images[imgId];
 			})
 			// 发布按钮居底 防止被输入法顶上去
-			var height = document.documentElement.clientHeight || document.body.clientHeight;
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-			document.querySelector('.issue-dynamics').style.top = height - 50 + "px";
 			mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
 				e.preventDefault();
 				var titles = document.querySelector('input[name=title]').value;
@@ -99,8 +97,7 @@
 					if (res.errno == 0) {
 						message("发布成功");
 						plus.key.hideSoftKeybord();
-						document.querySelector('input[name=title]').value = "";
-						document.querySelector('textarea[name=desc]').value = "";
+						mui.back();
 					}
 				}, 'json')
 			})
