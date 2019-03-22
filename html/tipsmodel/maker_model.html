@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/index.css" rel="stylesheet" />
+		<link href="../../icomoon/style.css" rel="stylesheet" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+		<link rel="stylesheet" href="../../css/tipspg.css">
+		<style type="text/css">
+			.tips-cont .tips-body {
+			  background: url(../../image/tipspg-img-04.jpg) center center no-repeat;
+			  background-size: contain;
+			}
+			.tips-cont .tips-body span {
+			  color: #b7a970;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content">
+			<div class="tips-cont">
+				<div class="tips-body">
+					<h2>会员即将到期</h2>
+					<p>所有会员特权将失效</p>
+					<img src="../../image/tipspg-img-05.png" >
+					<span>立即续费</span>
+				</div>
+				<img id="hide_qrcode" src="../../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
+			</div>
+		</div>
+	</body>
+	<script src="../../js/mui.min.js"></script>
+	<script src="../../js/util.js"></script>
+	<script>
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		var postType = 1;
+		var pgNum = 1;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		mui.init();
+		mui.plusReady(function() {
+			mui(".mui-content").on("tap", "#hide_qrcode", function() {
+				plus.webview.close("maker_model", "auto", "", "");
+			})
+		});
+	</script>
+</html>
