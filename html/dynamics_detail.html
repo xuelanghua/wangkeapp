@@ -23,18 +23,20 @@
 			</div>
 			<div class="dynamics-content">
 				<p>{{content}}</p>
-				<ul class="dynamics-img-group"  :class="[cover.length==2||cover.length==5||cover.length==9?'active':'']" v-if="cover.length>0&&cover[0]!=''">
-					<li  v-for="img in cover"><img :src="img"></li>
+				<ul class="dynamics-img-group" :class="[cover.length==2||cover.length==5||cover.length==9?'active':'']" v-if="cover.length>0&&cover[0]!=''">
+					<li v-for="img in cover"><img :src="img"></li>
 				</ul>
 			</div>
 			<div class="comment-cont" v-if="comment.length>0||likes.length>0">
 				<div class="thumbs-cont">
-					<img src="../image/icon/give-the-thumbs-up.png" >
+					<img src="../image/icon/give-the-thumbs-up.png">
 					<span v-for="lists in likes">{{lists.nickName}}</span>
 				</div>
-				<div v-if="comment.length>0" class="comment-list" >
+				<div v-if="comment.length>0" class="comment-list">
 					<ul>
-						<li v-for="lists in comment"><p><span>{{lists.nickName}}</span>{{lists.content}}</p></li>
+						<li v-for="lists in comment">
+							<p><span>{{lists.nickName}}</span>{{lists.content}}</p>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -42,8 +44,9 @@
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
+		<script src="../js/mui.zoom.js"></script>
+		<script src="../js/mui.previewimage.js"></script>
 		<script type="text/javascript">
-			mui.init();
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -56,54 +59,60 @@
 			var muiCont = new Vue({
 				el: '#mui-content',
 				data: {
-					title:"",
-					create_time:'',
-					likes:[],
-					content:'',
+					title: "",
+					create_time: '',
+					likes: [],
+					content: '',
 					cover: [],
-					comment:[]
+					comment: []
 				},
-				mounted(){
+				created: function() {
+					userInfo = getUserInfo();
+				},
+				mounted: function() {
 					mui.plusReady(function() {
-						var images = [].slice.call(document.querySelectorAll('.dynamics-img-group img'));
-						var urls = [];
-						images.forEach(function(item) {
-						  urls.push(item.src);
-						});
-						mui('.dynamics-img-group').on('tap', 'img', function() {
-						  var index = images.indexOf(this);
-						  plus.nativeUI.previewImage(urls, {
-						    current: index,
-						    loop: true,
-						    indicator: 'number'
-						  });
-						  message("点击了图片");
-						});
-						// 接收上个页面传参
-						var self = plus.webview.currentWebview();  
+						var self = plus.webview.currentWebview();
 						tid = self.aid;
 						getDynamicsDetail();
+						setTimeout(function() {
+							var images = [].slice.call(document.querySelectorAll('.dynamics-img-group img'));
+							logs(muiCont.cover)
+							var urls = [];
+							images.forEach(function(item) {
+								urls.push(item.src);
+							});
+							mui('.dynamics-img-group').on('tap', 'img', function() {
+								var index = images.indexOf(this);
+								plus.nativeUI.previewImage(urls, {
+									current: index,
+									loop: true,
+									indicator: 'number'
+								});
+							});
+						}, 200)
 					});
 				}
 			});
-			userInfo = getUserInfo();
-			function getDynamicsDetail(){
+			// mui.previewImage();
+			mui.init();
+
+			function getDynamicsDetail() {
 				mui.post($ajaxUrl + 'timeline&action=detail', {
 					token: userInfo.token,
 					tid: tid
-					}, function(res) {
-						logs(res);
-						if(res.errno==0){
-							var data=res.data;
-							muiCont.title=data.title;
-							muiCont.cover=data.cover;
-							muiCont.content=data.content;
-							muiCont.create_time=data.create_time;
-							muiCont.comment=data.comment.data;
-							muiCont.likes=data.like.data;
-						}else{
-							message(res.message)
-						}
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						var data = res.data;
+						muiCont.title = data.title;
+						muiCont.cover = data.cover;
+						muiCont.content = data.content;
+						muiCont.create_time = data.create_time;
+						muiCont.comment = data.comment.data;
+						muiCont.likes = data.like.data;
+					} else {
+						message(res.message)
+					}
 				}, 'json')
 			}
 		</script>

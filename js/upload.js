@@ -2,9 +2,11 @@
 function imageUpload(cb) {
 	if (mui.os.plus) {
 		var buttonTitle = [{
-			title: "拍照", style: 'default'
+			title: "拍照",
+			style: 'default'
 		}, {
-			title: "从手机相册选择", style: 'default'
+			title: "从手机相册选择",
+			style: 'default'
 		}];
 
 		plus.nativeUI.actionSheet({
@@ -50,9 +52,9 @@ function galleryImg(cb) {
 	// 从相册中选择图片
 	plus.gallery.pick(function(e) {
 		imageResize(e, cb);
-		//     	for(var i in e.files){
-		// 	    	var fileSrc = e.files[i];
-		//     	}
+		// 		    	for(var i in e.files){
+		// 			    	var fileSrc = e.files[i];
+		// 		    	}
 	}, function(e) {
 		console.log("取消选择图片");
 	}, {
@@ -112,4 +114,3 @@ function imageResize(src, cb) {
 		plus.nativeUI.alert('处理出错!', '', '提示', 'OK');
 	})
 }
-

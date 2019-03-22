@@ -40,10 +40,8 @@
 		<script type="text/javascript">
 			mui.init({
 				beforeback: function() {
-					//获得列表界面的webview
 					var myDynamics = plus.webview.currentWebview().opener();　
 					mui.fire(myDynamics, 'refresh');
-					//返回true，继续页面关闭逻辑
 					return true;
 				}
 			});
@@ -61,6 +59,7 @@
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
 				imageUpload(function(res) {
+					logs(res);
 					images[imageId] = res.url;
 					imageId++;
 					var newImgDiv = document.createElement('div');
@@ -80,7 +79,6 @@
 				parentDiv.remove();
 				delete images[imgId];
 			})
-			// 发布按钮居底 防止被输入法顶上去
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
 				e.preventDefault();
@@ -90,14 +88,12 @@
 					token: userInfo.token,
 					title: titles,
 					content: contents,
-					cover: images.filter(function(e) {
-						return e != null
-					}).join(',')
+					cover: images.filter(function(e) {return e != null}).join(',')
 				}, function(res) {
 					if (res.errno == 0) {
-						message("发布成功");
 						plus.key.hideSoftKeybord();
 						mui.back();
+						message("发布成功");
 					}
 				}, 'json')
 			})

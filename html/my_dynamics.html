@@ -20,14 +20,15 @@
 					<h2 class="dynamics-title mui-ellipsis" @tap="opDetail(items.id)">{{items.title}}</h2>
 					<div class="dynamics-img-cont" @tap="opDetail(items.id)">
 						<ul v-if="items.cover" class="dynamics-img">
-							<li class="img-items" v-if="items.cover.length>0&&items.cover[0]!=''&&idx<3" v-for="(img,idx) in items.cover" :key="idx"><img :src="img"></li>
+							<li class="img-items" v-if="items.cover.length>0&&items.cover[0]!=''&&idx<3" v-for="(img,idx) in items.cover"
+							 :key="idx"><img :src="img"></li>
 							<li v-if="items.cover.length>3" class="img-items ellipsis-sign">···</li>
 						</ul>
 					</div>
 					<div class="dynamics-footer">
 						<div class="release-time">{{items.create_time.substring(0,10)}}</div>
 						<div class="thumbs">
-							<img src="../image/icon/give-the-thumbs-up.png" >
+							<img src="../image/icon/give-the-thumbs-up.png">
 							<span>{{items.like}}</span>
 						</div>
 						<div>
@@ -46,7 +47,27 @@
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				pullRefresh: {
+					container: '#mui-content',
+					up: {
+						height: 50,
+						auto: false,
+						contentrefresh: "正在加载...",
+						contentnomore: '没有更多数据了',
+						callback: pullupRefresh
+					},
+					down: {
+						style: 'circle',
+						color: '#2BD009',
+						height: '50px',
+						range: '120px',
+						offset: '0px',
+						auto: false,
+						callback: pulldownRefresh
+					}
+				}
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -58,7 +79,7 @@
 				el: '#mui-content',
 				data: {
 					dataList: [],
-					voidDy:false
+					voidDy: false
 				}
 			});
 			// 初始化字体大小结束
@@ -75,19 +96,18 @@
 					skip: skipNum,
 					limit: 10
 				}, function(res) {
-					logs(res);
 					let data = res.data;
 					if (res.errno == 0 && skipNum == 1) {
 						muiCont.dataList = data;
 						muiCont.dataList.reverse()
-					} else if(res.errno == 0) {
+					} else if (res.errno == 0) {
 						for (item in data) {
 							muiCont.dataList.push(item);
 						}
 						muiCont.dataList.reverse()
-					}else{
-						muiCont.dataList=[];
-						muiCont.voidDy=true;
+					} else {
+						muiCont.dataList = [];
+						muiCont.voidDy = true;
 					}
 				}, 'json')
 			}
@@ -97,10 +117,10 @@
 					token: userInfo.token,
 					tid: tid
 				}, function(res) {
-					if(res.errno==0){
+					if (res.errno == 0) {
 						behaviorStatistics();
 						message("已删除")
-					}else{
+					} else {
 						message(res.message)
 					}
 				}, 'json')
@@ -119,16 +139,16 @@
 					aid: detailId
 				}, 'slide-in-right');
 			}
-			mui(".mui-content").on("tap",".create-dynamics",function(){
+			mui(".mui-content").on("tap", ".create-dynamics", function() {
 				fnOpenWin("issue_dynamics.html", "issue_dynamics", {
 					statusbar: {
 						background: '#f7f7f7'
 					}
 				}, '', 'slide-in-right');
 			})
-			window.addEventListener('refresh', function(e){
-                  behaviorStatistics();
-            });
+			window.addEventListener('refresh', function(e) {
+				behaviorStatistics();
+			});
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		</script>
 	</body>
