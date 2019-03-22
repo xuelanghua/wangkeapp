@@ -9,16 +9,52 @@
 		<link href="../css/vip-page.css" rel="stylesheet" />
 	</head>
 
-	<body class="mui-hidden">
+	<body class="mui-hidden" style="position: relative;min-height: 100%;">
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">激活码领取</h1>
 		</header>
 		<div class="mui-content collection-code-container">
-			炯炯sad佛123
+			<div class="section-top">
+				<img src="../image/activation_code_collection02.png">
+				<h2>服务站</h2>
+			</div>
+			<div class="section-body">
+				<div class="section-shell">
+					<div class="section-items">
+						<h2>服务中心激活码</h2>
+						<div class="section-input">
+							<input type="number" value="50"></input><label>个</label>
+						</div>
+					</div>
+					<div class="section-items">
+						<h2>服务站激活码</h2>
+						<div class="section-input">
+							<input type="number" value="0"></input><label>个</label>
+						</div>
+					</div>
+					<div class="section-items">
+						<h2>创客激活码</h2>
+						<div class="section-input">
+							<input type="number" value="50"></input><label>个</label>
+						</div>
+					</div>
+					<div class="section-items">
+						<h2>VIP激活码</h2>
+						<div class="section-input">
+							<input maxlength="6" type="number" value="0"></input><label>个</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="confirm-section">
+				<button type="button">确定</button>
+				<p>确定领取后将无法更改</p>
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			// 初始化字体大小
@@ -32,6 +68,18 @@
 			mui.plusReady(function() {
 				logs("激活码领取")
 			});
+			$(function() {
+				$('input').bind('input propertychange', function() {
+					var obj = $(this);
+					var text_length = obj.val().length; 
+					var width = parseInt(text_length) * 16;
+					if(width<100){
+						obj.css('width', width + 'px');
+					}else{
+						obj.css('width', 100 + 'px');
+					}
+				});
+			})
 		</script>
 	</body>
 

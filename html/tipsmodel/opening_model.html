@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			body {
+			  background: rgba(0, 0, 0, 0.5);
+			  min-height: 100%;
+			  width: 100%;
+			}
+			.mui-content {
+			  position: fixed;
+			  width: 100%;
+			  top: 0;
+			  bottom: 0;
+			  display: flex;
+			  align-items: center;
+			  flex-direction: column;
+			  justify-content: center;
+			}
+			.tips-cont {
+			  width: 5.91rem;
+			  height: 9.57rem;
+			  text-align: center;
+			  border-radius: 0.2rem;
+			}
+			.tips-cont .tips-body {
+			  height:7.95rem;
+			  padding: 2rem 0.46rem  0;
+			  border-radius: 0.24rem;
+			  width: 100%;
+			  background: url(../../image/tipspg-img-01.png) center center no-repeat;
+			  background-size: contain;
+			  overflow: hidden;
+			  display: flex;
+			  align-items: flex-start;
+			  flex-direction: column;
+			  position: relative;
+			}
+			.tips-cont .tips-body h2 {
+			  font-size: 0.47rem;
+			  font-weight: normal;
+			  color: #2a3239;
+			  margin-bottom: 0.6rem;
+			}
+			.tips-cont .tips-body p:first-of-type {
+			  margin: 0;
+			  font-size: 0.28rem;
+			  color: #2a3239;
+			}
+			.tips-cont .tips-body p:last-of-type {
+			  margin: 0;
+			  font-size: 0.21rem;
+			  color: #2a3239;
+			}
+			.tips-cont .tips-body span {
+			  display: block;
+			  width: 2.4rem;
+			  height: 0.8rem;
+			  font-size: 0.36rem;
+			  line-height: 0.8rem;
+			  border-radius: 0.44rem;
+			  margin-top: 0.3rem;
+			  background-color: #405160;
+			  color: #ffffff;
+			  display: flex;
+			  justify-content: center;
+			  align-self:center;
+			  position: absolute;
+			  bottom: 0.8rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content">
+			<div class="tips-cont">
+				<div class="tips-body">
+					<h2>旺客VIP</h2>
+					<p>此功能需要开通会员才能使用</p>
+					<p>开通会员尊享多项权益</p>
+					<span id="opening">立即开通</span>
+				</div>
+				<img id="hide_qrcode" src="../../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
+			</div>
+		</div>
+	</body>
+	<script src="../../js/mui.min.js"></script>
+	<script src="../../js/util.js"></script>
+	<script>
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		var postType = 1;
+		var pgNum = 1;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		mui.init();
+		mui.plusReady(function() {
+			mui(".mui-content").on("tap", "#hide_qrcode", function() {
+				plus.webview.close("opening_model", "auto", "", "");
+			})
+			mui(".mui-content").on("tap", "#opening", function() {
+				var statusBarStyle = plus.navigator.getStatusBarStyle();
+				fnOpenWin('../activation.html', 'activation', '', {
+					statusBarStyle: statusBarStyle
+				}, 'slide-in-bottom');
+				setStatusBar('', 'light');
+				plus.webview.close("opening_model", "auto", "", "");
+			})
+		});
+	</script>
+</html>
