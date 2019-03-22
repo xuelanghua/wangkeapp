@@ -52,6 +52,7 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
+			var tid = 0;
 			var muiCont = new Vue({
 				el: '#mui-content',
 				data: {
@@ -61,30 +62,31 @@
 					content:'',
 					cover: [],
 					comment:[]
+				},
+				mounted(){
+					mui.plusReady(function() {
+						var images = [].slice.call(document.querySelectorAll('.dynamics-img-group img'));
+						var urls = [];
+						images.forEach(function(item) {
+						  urls.push(item.src);
+						});
+						mui('.dynamics-img-group').on('tap', 'img', function() {
+						  var index = images.indexOf(this);
+						  plus.nativeUI.previewImage(urls, {
+						    current: index,
+						    loop: true,
+						    indicator: 'number'
+						  });
+						  message("点击了图片");
+						});
+						// 接收上个页面传参
+						var self = plus.webview.currentWebview();  
+						tid = self.aid;
+						getDynamicsDetail();
+					});
 				}
 			});
 			userInfo = getUserInfo();
-			var tid = 0;
-			mui.plusReady(function() {
-				var images = [].slice.call(document.querySelectorAll('.dynamics-img-group img'));
-				var urls = [];
-				images.forEach(function(item) {
-				  urls.push(item.src);
-				});
-				mui('.dynamics-img-group').on('tap', 'img', function() {
-				  var index = images.indexOf(this);
-				  plus.nativeUI.previewImage(urls, {
-				    current: index,
-				    loop: true,
-				    indicator: 'number'
-				  });
-				  message("点击了图片");
-				});
-				// 接收上个页面传参
-				var self = plus.webview.currentWebview();  
-				tid = self.aid;
-				getDynamicsDetail();
-			});
 			function getDynamicsDetail(){
 				mui.post($ajaxUrl + 'timeline&action=detail', {
 					token: userInfo.token,
