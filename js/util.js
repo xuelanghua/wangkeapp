@@ -38,7 +38,7 @@ function updateUserInfo() {
 		token: userInfo.token
 	}, function(res) {
 		localStorage.setItem('user', JSON.stringify(res.data));
-	})
+	}, 'json')
 }
 
 //设置顶部状态栏
