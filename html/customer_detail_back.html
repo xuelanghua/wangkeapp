@@ -1,0 +1,680 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			.mui-title{
+				color: #FFFFFF;
+			}
+			.mui-bar{
+				box-shadow: none;
+			}
+			.title{
+				height: 150px;
+				background-color: #2289FF;
+			}
+			.info{
+				width: 94%;
+				position: absolute;
+				top: 20%;
+				left: 3%;
+				box-shadow: 0 0 5px 0 #DDDEDE;
+				padding: 0 10px 25px 10px;
+				text-align: center;
+				color: #999999;
+				border-radius: 5px;
+				background-color: #FFFFFF;
+			}
+			.infoL{
+				width: 49%;
+				font-size: 10px;
+				margin-top: 6px;
+			}
+			.infoR{
+				width: 49%;
+				font-size: 10px;
+				margin-top: -55px;
+			}
+			.rig{
+				margin-left: 5px;
+				color: #333333;
+			}
+			.xian{
+				width: 1px;
+				height: 40px;
+				margin: 20px auto 0;
+				background-color: #DDDDDD;
+			}
+			.infoL img{
+				height: 25px;
+				margin-right: 10px;
+				margin-top: 12px;
+			}
+			.infoR img{
+				height: 25px;
+				margin-left: 10px;
+				margin-top: 12px;
+			}
+			.head{
+				width: 40%;
+				text-align: center;
+				margin: 0 auto;
+			}
+			.chart{
+				width: 70px;
+				height: 70px;
+				margin: 0 auto;
+				border-radius: 50%;
+			}
+			.chart img{
+				width: 100%;
+				height: 100%;
+				margin-top: -30px;
+				border-radius: 50%;
+			}
+			.name{
+				font-size: 17px;
+				color: #333333;
+				margin-top: -15px;
+			}
+			.Grade{
+				font-size: 12px;
+				color: #f96b5e;
+				margin-top: 10px;
+			}
+			.company{
+				width: 60%;
+				overflow: hidden;
+				text-overflow:ellipsis;
+				white-space: nowrap;
+				padding: 0 10px;
+				display: block;
+				border-radius: 10px;
+				background-color: #68B0FF;
+			}
+			.position{
+				padding: 0 10px;
+				border-radius: 10px;
+				margin-left: 15px;
+				background-color: #F9D05E;
+			}
+			
+			.function{
+				padding: 45% 10px 26px 10px;
+				font-size: 12px;
+				color: #999999;
+				background-color: #FFFFFF;
+			}
+			.button button{
+				width: 45%;
+				margin-top: 27px;
+				padding: 10px 0;
+				border-radius: 5px;
+			}
+			.buttonL{
+				color: #FFFFFF;
+				border: none;
+				background-color: #2289FF;
+			}
+			.buttonR{
+				color: #338CFF;
+				border: 1px solid #338CFF;
+			}
+			
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			#example{
+				width: 100%;
+				margin-bottom: 66px;
+				margin-top: 8px;
+				background-color: #FFFFFF;
+			}
+			#example .hd ul li{
+				display: block;
+				width: 25%;
+				float: left;
+				padding: 19px 0;
+				text-align: center;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			#example .hd ul li.current{
+				color: #2289FF;
+				border-bottom: 2px solid #2289FF;
+			}
+			#example .bd{
+				margin: 0 10px;
+			}
+			#example .bd ul li{
+				display: none;
+			}
+			#example .bd ul li.current{
+				display: block;
+			}
+			.Record_list{
+				padding: 15px 0;
+				font-size: 15px;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			
+			.comment-input{
+				width: 100%;
+				position: fixed;
+				bottom: 0;
+				padding: 10px 15px 8px 15px;
+				border-top: 1px solid #F2F2F2;
+				background-color: #FFFFFF;
+			}
+			.input{
+				width: 50%;
+				background-color: #F5F6F8;
+				padding: 7px 0 7px 11px;
+				color: #999999;
+				font-size: 15px;
+				margin-top: 4px;
+				border-radius: 25px;
+			}
+			.input img{
+				width: 17px;
+				height: 18px;
+			}
+			.comment-inputr{
+				width: 50%;
+				font-size: 12px;
+			}
+			.comment-inputr div{
+				width: 33.33%;
+				float: left;
+				text-align: center;
+			}
+			.comment-inputr button{
+				color: #FFFFFF;
+				border: none;
+				font-size: 15px;
+				border-radius: 5px;
+				margin-top: 5px;
+				background-color: #2289FF;
+			}
+			.comment-inputr img{
+				height: 21px;
+			}
+			.comment-inputr span{
+				display: block;
+				color: #999999;
+				margin-top: -5px;
+			}
+			.comment-content{
+				margin-bottom: 50px;
+				padding-bottom: 20px;
+			}
+			.tanchu{
+				padding: 19px;
+				border-radius: 8px;
+				background-color: #FFFFFF;
+				position: fixed;
+				z-index: 99999;
+				width: 92%;
+				top: 25%;
+				left: 4%;
+				right: 4%;
+				display: none;
+			}
+			.tanchu textarea{
+				border: none;
+				font-size: 15px;
+				background-color: #F5F6F8;
+			}
+			.tanchu button{
+				width: 30%;
+				background-color: #2289FF;
+				color: #FFFFFF;
+				border: none;
+				margin: 0 auto;
+				display: block;
+				font-size: 15px;
+				border-radius: 5px;
+			}
+			#cover{
+			    position: fixed;
+				z-index: 9999;
+				top: 0;
+				left: 0;
+				display: none;
+				width: 100%;
+				height: 100%;
+				opacity: 0.5;
+				background: #333333 none repeat scroll 0% 0%;
+			}
+			
+			.guaih{
+				border-radius: 8px;
+				background-color: #FFFFFF;
+				position: fixed;
+				z-index: 99999;
+				width: 92%;
+				top: 25%;
+				left: 4%;
+				right: 4%;
+				display: none;
+			}
+			.tanchu-title{
+				text-align: center;
+				padding: 15px 0;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.tanchu_content{
+				font-size: 14px;
+				padding: 20px 10px 40px 10px;
+				color: #999999;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.tanchu_content p{
+				width: 4px;
+				height: 4px;
+				margin-top: 8px;
+				border-radius: 50%;
+				margin-right: 10px;
+				background-color: #2289FF;
+			}
+			.tibu{
+				padding: 15px 0;
+			}
+			.tibu button{
+				width: 40%;
+				text-align: center;
+			}
+			.tbuttonL{
+				color: #2289FF;
+				margin-left: 5%;
+				border: 1px solid #2289FF;
+			}
+			.tbuttonR{
+				background-color: #2289FF;
+				color: #FFFFFF;
+				margin-right: 5%;
+				border: 1px solid #2289FF;
+			}
+			
+			.dianh{
+				text-align: center;
+				font-size: 14px;
+				color: #999999;
+				padding-top: 5px;
+			}
+			.dianh img{
+				width: 10px;
+				float: left;
+				margin-top: 3px;
+				margin-left: 10%;
+			}
+			
+			.current_chart{
+				width: 40px;
+				height: 40px;
+				margin-top: 15px;
+				border-radius: 50%;
+			}
+			.current_chart img{
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+			}
+			
+			.shuj span{
+				color: #2289FF;
+			}
+			
+			.xinahsi{
+				color: #6fb2ff;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+				float: left;
+				padding: 5px 6px;
+				margin-top: 10px;
+				background-color: #F7F7F7;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="background-color: #2289FF;color: #FFFFFF;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;"></a>
+			<h1 class="mui-title">客户详情</h1>
+			<a href="modify.html">
+				<div class="mui-pull-right" style="margin-top: 10px;font-size: 15px;color: #FFFFFF;">编辑</div>
+			</a>
+		</header>
+
+		<div class="mui-content">
+			<div class="title"></div>
+			<div class="info">
+				<div class="head">
+					<div class="chart">
+						<img src="../image/touxiang.png">
+					</div>
+					<div class="name">
+						<span>购多少</span>
+						<span style="color: #2289FF;">(喵喵喵)</span>
+					</div>
+					<div class="dianh">
+						<span>
+							<img src="../image/dianhua.png">
+						</span>
+						<span>13888888888</span>
+					</div>
+					<div class="Grade">下级会员</div>
+				</div>
+
+				<div class="infoL mui-pull-left">
+					<img src="../image/infoL.png">
+					<div>
+						<span>预计成交日期</span>
+						<span class="rig">01/20</span>
+					</div>
+				</div>
+				<div class="xian"></div>
+				<div class="infoR mui-pull-right">
+					<img src="../image/infoR.png">
+					<div>
+						<span>AI预计成功率</span>
+						<span class="rig">50%</span>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="function">
+				<div class="button">
+					<button class="mui-pull-left buttonL">发消息</button>
+					<button class="mui-pull-right buttonR">录入客户CRM</button>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+
+			<div id="example">
+				<div class="hd">
+					<ul>
+						<li class="current">浏览记录</li>
+						<li>跟进记录</li>
+						<li>AI分析</li>
+						<li>成交记录</li>
+						<div class="clearfix"></div>
+					</ul>
+				</div>
+				<div class="bd">
+					<ul>
+						<li class="current">
+							<div class="current_chart mui-pull-left">
+								<img src="../image/activation.png">
+							</div>
+							<div class="Record_list mui-pull-right" style="width: 80%;">
+								<div class="mui-pull-left shuj" style="width: 70%;">
+									<span>第9次查看</span>你的<span>名片</span>，以下速度快撒飞洒地方
+								</div>
+								<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 10px;">
+									<span>02-28</span>
+									<span>09:58</span>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</li>
+						<li>
+							<div class="current_chart mui-pull-left">
+								<img src="../image/activation.png">
+							</div>
+							<div class="Record_list mui-pull-right" style="width: 80%;">
+								<div class="mui-pull-left" style="width: 60%;margin-top: 5px;">
+									<span>新增记录:</span>
+									<span style="color: #2289FF;">已成交</span>
+								</div>
+								<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">
+									<span>02-28</span>
+									<span>09:58</span>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<div class="current_chart mui-pull-left">
+								<img src="../image/activation.png">
+							</div>
+							<div class="Record_list mui-pull-right" style="width: 80%;">
+								<div class="mui-pull-left" style="width: 60%;margin-top: 5px;">
+									<span class="mui-pull-left">新增记录:</span>
+								</div>
+								<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 5px;">
+									<span>02-28</span>
+									<span>09:58</span>
+								</div>
+								<div class="xinahsi">已成交萨芬士大夫十大撒打发是大方式打</div>
+							</div>
+							<div class="clearfix"></div>
+						</li>
+						<li>
+							<div class="Record_list">
+								<div>
+									<span class="mui-pull-left">万贤传单码</span>
+									<span class="mui-pull-right">19800</span>
+									<div class="clearfix"></div>
+								</div>
+								<div style="font-size: 14px;color: #999999;margin-top: 10px;">
+									<span class="mui-pull-left">
+										<span>定单号:</span>
+										<span>20180508123652</span>
+									</span>
+									<span class="mui-pull-right">2018-05-08</span>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="Record_list">
+								<div>
+									<span class="mui-pull-left">万贤传单码</span>
+									<span class="mui-pull-right">19800</span>
+									<div class="clearfix"></div>
+								</div>
+								<div style="font-size: 14px;color: #999999;margin-top: 10px;">
+									<span class="mui-pull-left">
+										<span>定单号:</span>
+										<span>20180508123652</span>
+									</span>
+									<span class="mui-pull-right">2018-05-08</span>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="Record_list">
+								<div>
+									<span class="mui-pull-left">万贤传单码</span>
+									<span class="mui-pull-right">19800</span>
+									<div class="clearfix"></div>
+								</div>
+								<div style="font-size: 14px;color: #999999;margin-top: 10px;">
+									<span class="mui-pull-left">
+										<span>定单号:</span>
+										<span>20180508123652</span>
+									</span>
+									<span class="mui-pull-right">2018-05-08</span>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="Record_list">
+								<div>
+									<span class="mui-pull-left">万贤传单码</span>
+									<span class="mui-pull-right">19800</span>
+									<div class="clearfix"></div>
+								</div>
+								<div style="font-size: 14px;color: #999999;margin-top: 10px;">
+									<span class="mui-pull-left">
+										<span>定单号:</span>
+										<span>20180508123652</span>
+									</span>
+									<span class="mui-pull-right">2018-05-08</span>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="Record_list">
+								<div>
+									<span class="mui-pull-left">万贤传单码</span>
+									<span class="mui-pull-right">19800</span>
+									<div class="clearfix"></div>
+								</div>
+								<div style="font-size: 14px;color: #999999;margin-top: 10px;">
+									<span class="mui-pull-left">
+										<span>定单号:</span>
+										<span>20180508123652</span>
+									</span>
+									<span class="mui-pull-right">2018-05-08</span>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="Record_list">
+								<div>
+									<span class="mui-pull-left">万贤传单码</span>
+									<span class="mui-pull-right">19800</span>
+									<div class="clearfix"></div>
+								</div>
+								<div style="font-size: 14px;color: #999999;margin-top: 10px;">
+									<span class="mui-pull-left">
+										<span>定单号:</span>
+										<span>20180508123652</span>
+									</span>
+									<span class="mui-pull-right">2018-05-08</span>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="Record_list">
+								<div>
+									<span class="mui-pull-left">万贤传单码</span>
+									<span class="mui-pull-right">19800</span>
+									<div class="clearfix"></div>
+								</div>
+								<div style="font-size: 14px;color: #999999;margin-top: 10px;">
+									<span class="mui-pull-left">
+										<span>定单号:</span>
+										<span>20180508123652</span>
+									</span>
+									<span class="mui-pull-right">2018-05-08</span>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="comment-input">
+				<div class="input mui-pull-left">
+					<img src="../image/shuru.png">
+					<span style="margin-left: 10px;">跟进记录...</span>
+				</div>
+				<div class="comment-inputr mui-pull-right">
+					<div style="margin-left: 10px;">
+						<img src="../image/wdeal.png">
+						<span>未成交</span>
+					</div>
+					<button class="mui-pull-right">电话</button>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+
+			<!-- 弹出框 -->
+			<div id="cover"></div>
+			<div class="tanchu">
+				<textarea rows="8" placeholder="说说你的看法..." /></textarea>
+				<button class="button">发 布</button>
+			</div>
+
+			<!-- 客情关怀 弹出框 -->
+			<div id="cover"></div>
+			<div class="guaih">
+				<div class="tanchu-title">
+					客情关怀
+				</div>
+				<div class="tanchu_content">
+					<div style="color: #000000;margin-bottom: 10px;">开启客情关怀将在以下特定日期进行消息提示</div>
+					<div>
+						<p class="mui-pull-left"></p>
+						<span class="mui-pull-left">
+							<span>生日：</span>
+							<span>12-28</span>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+					<div>
+						<p class="mui-pull-left"></p>
+						<span class="mui-pull-left">
+							<span>纪念日：</span>
+							<span>12-28</span>
+						</span>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="tibu">
+					<button class="tbuttonL mui-pull-left">放弃</button>
+					<button class="tbuttonR mui-pull-right">开启</button>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+	<script src="../js/mui.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		mui.init({
+			swipeBack: true
+		})
+
+		mui.plusReady(function() { 
+			var hd = document.getElementsByClassName("hd")[0].getElementsByTagName("li");
+			var bd = document.getElementsByClassName("bd")[0].getElementsByTagName("li");
+			for (var i = 0; i < hd.length; i++) {
+				hd[i].onclick = function() {
+					doTabs(this);
+				}
+			}
+			$("#cover").click(function() {
+				$(".tanchu").hide();
+				$(this).hide;
+				$("#cover").hide();
+			});
+			$(".input").click(function() {
+				$(".tanchu").show();
+				$(this).show;
+				$("#cover").show();
+			});
+
+			$("#cover").click(function() {
+				$(".guaih").hide();
+				$(this).hide;
+				$("#cover").hide();
+			});
+			$(".buttonR").click(function() {
+				$(".guaih").show();
+				$(this).show;
+				$("#cover").show();
+			});
+
+
+			function doTabs(obj) {
+				for (var i = 0; i < hd.length; i++) {
+					if (hd[i] == obj) {
+						hd[i].className = "current";
+						bd[i].className = "current";
+					} else {
+						hd[i].className = "";
+						bd[i].className = "";
+					}
+				}
+			}
+		})
+	</script>
+</html>

@@ -135,23 +135,6 @@
 		};
 
 		mui.plusReady(function() {
-
-
-// 			plus.webview.currentWebview().setStyle({
-// 				mask: "rgba(0,0,0,0.5)"
-// 			});
-// 			plus.webview.currentWebview().addEventListener("maskClick", function() {
-// 				plus.webview.currentWebview().setStyle({
-// 					mask: "none"
-// 				});
-// 				plus.webview.close( "tipspg", "auto", "", "" );
-// 			}, false);
-
-// 			var tips=plus.webview.create( "html/tipspg.html", "tipspg", {
-// 				background:"transparent"
-// 			}, "" );
-// 			tips.show();
-
 			//自定义事件监听快捷菜单页面点击
 			window.addEventListener('closeShortcut', function() {
 				document.getElementById('short_cut').dataset.status = 0;
@@ -165,6 +148,13 @@
 			window.addEventListener('loginSuccess', function() {
 				console.log('loginSuccess');
 				initIndexView();
+			})
+
+			window.addEventListener('activationSuccess', function() {
+				console.log('activationSuccess');
+				setTimeout(function() {
+					updateUserInfo();
+				}, 2000)
 			})
 
 			window.addEventListener('showChat', function() {
