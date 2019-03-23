@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>目标详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style type="text/css">
+			body {
+				touch-action: none;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav target-detail-header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title"><span>激活码</span></h1>
+		</header>
+		<div class="mui-content activate-container">
+			<div class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+				<a class="mui-control-item mui-active" href="#item1">未使用（30）</a>
+				<a class="mui-control-item" href="#item2">已使用（20）</a>
+			</div>
+			<div class="segmentedControl-cont">
+				<!-- 第一个选项卡 -->
+				<div id="item1" class="mui-control-content mui-active">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell"><span>E85213</span><button type="button" class="mui-btn mui-btn-primary mui-btn-outlined">赠送</button></li>
+						<li class="mui-table-view-cell"><span>E85213</span><button type="button" class="mui-btn mui-btn-outlined">激活</button></li>
+					</ul>
+				</div>
+				<div id="item2" class="mui-control-content">
+					02
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			userInfo = getUserInfo();
+			mui.plusReady(function() {
+				plus.webview.currentWebview().setStyle({
+					statusbar: {
+						background: '#ff0000'
+					},
+					top: 0,
+					bottom: 0
+				});
+			});
+		</script>
+	</body>
+
+</html>
