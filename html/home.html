@@ -155,7 +155,7 @@
 			}
 
 			.functionRc {
-				width: 40%;
+				width: 50%;
 				color: #000000;
 				margin: 0 auto;
 				text-align: center;
@@ -448,18 +448,18 @@
 				</div>
 
 				<div class="function" style="z-index: 1;">
-					<div class="functionL">
-						<div class="functionLc" data-type="setting">
+					<div class="functionL" id="qrcode_setting">
+						<div class="functionLc">
 							<img src="../image/idnex-message.png">
 							<p>码上成交</p>
 							<div class="clearfix"></div>
 						</div>
 					</div>
-					<div class="functionR" id="setting">
+					<div class="functionR" id="redpack_setting">
 						<a href="javascript: void(0);">
 							<div class="functionRc">
-								<img src="../image/Set-up.png">
-								<p>设置</p>
+								<img src="../image/redpack.png">
+								<p>发红包</p>
 								<div class="clearfix"></div>
 							</div>
 						</a>
@@ -468,7 +468,7 @@
 				</div>
 
 				<div class="functional_selection">
-					<div class="business_card" id="card" data-type="card">
+					<div class="business_card" id="card">
 						<img src="../image/business-card.png">
 						<div style="float: left;margin-left: 10px;">
 							<p>扫码换名片</p>
@@ -477,16 +477,15 @@
 						<div class="heitiao">雷达</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_cardR" id="redpacket" data-type="redpacket">
-						<img src="../image/Red-envelopes.png">
+					<div class="business_cardR" id="new_customer">
+						<img src="../image/customers.png">
 						<div style="float: left;margin-left: 15px;">
-							<p>发红包</p>
-							<span style="color: #000;">特色营销方式</span>
+							<p>新增客户</p>
+							<span style="color: #000;">AI精准分析</span>
 						</div>
-						<div class="heitiao" style="background-color: #FC7053;">设置</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_card" id="shop" data-type="shop">
+					<div class="business_card" id="shop">
 						<img src="../image/Shopping-Mall.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>商城</p>
@@ -494,7 +493,7 @@
 						</div>
 						<div class="clearfix"></div>
 					</div>
-					<div class="business_cardR" id="target" data-type="link">
+					<div class="business_cardR" id="target">
 						<img src="../image/target.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>目标&任务</p>
@@ -513,7 +512,7 @@
 					<img src="../image/QR.png" id="qrcode_pic">
 				</div>
 				<span>二维码类型（<i id="qrcode_type">名片</i>）</span>
-				<a id="qrcode_setting" style="float: left;margin-left: 45%;">设置 ></a>
+				<a id="card_setting" style="float: left;margin-left: 45%;">设置 ></a>
 				<img id="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;float: left;margin-top: 50px;margin-left: 45%;">
 				<div class="clearfix"></div>
 			</div>
@@ -589,16 +588,21 @@
 			});
 			
 			//打开设置界面
-			document.getElementById('setting').addEventListener('tap', function() {
+			document.getElementById('qrcode_setting').addEventListener('tap', function() {
 				var settingPage = plus.webview.create('qrcode_setting.html', 'qrcode_setting', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#2289FF'}});
 				settingPage.show('slide-in-right');
 				setStatusBar('#2289FF', 'light');
 			})
 			
+			//打开设置界面
+			document.getElementById('redpack_setting').addEventListener('tap', function() {
+				fnOpenWin('redpacket_setting.html', 'redpacket_setting', {statusbar: {background: '#FFF'}}, {from: 'home'}, 'slide-in-right');
+			})
+			
 			//打开二维码
-			mui('.mui-content').on('tap', '#card,#redpacket,.functionLc', function() {
+			mui('.mui-content').on('tap', '#card', function() {
 				var type = this.dataset.type;
-				showQrcode(type);
+				showQrcode('card');
 			})
 			
 			//打开商城
@@ -624,16 +628,23 @@
 				hideQrcode();
 			})
 			
+			//查看新增客户
+			document.getElementById('new_customer').addEventListener('tap', function() {
+				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
+				mui.fire(plus.webview.getWebviewById('chat'), 'newCustomer');
+			})
+			
 			//查看公告
 			mui('.mui-content').on('tap', '.Notice', function() {
 				noticeDeail();
 			})
 			
-			//设置二维码
-			document.getElementById('qrcode_setting').addEventListener('tap', function() {
+			// 设置二维码
+			document.getElementById('card_setting').addEventListener('tap', function() {
 				qrcodeTypeSetting(qrType);
 			})
 			
+			//查看消息
 			document.getElementById('message').addEventListener('tap', function() {
 				fnOpenWin('message.html', 'message', {statusbar: {background: '#FFF'}}, {prePage: 'home'}, 'slide-in-right');
 			})

@@ -135,11 +135,20 @@
 			currentTab.classList.add('mui-active');
 		})
 		
+		//自定义事件监听-首页新增客户点击
+		window.addEventListener('newCustomer', function() {
+			mui.trigger(document.getElementById('chat'), 'tap');
+			document.querySelector('div[data-id=home]').classList.remove('mui-active');
+			document.getElementById('chat').classList.add('mui-active');
+		})
+		
+		//自定义事件-登录成功
 		window.addEventListener('loginSuccess', function() {
 			console.log('loginSuccess');
 			initIndexView();
 		})
 		
+		//自定义事件-激活成功
 		window.addEventListener('activationSuccess', function() {
 			console.log('activationSuccess');
 			setTimeout(function() {

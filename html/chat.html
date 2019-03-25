@@ -521,6 +521,11 @@
 				userInfo = getUserInfo();
 				pageInit();
 				
+				//自定义事件监听-首页新增客户点击
+				window.addEventListener('newCustomer', function() {
+					mui.trigger(document.querySelector('.switch1_content[data-id=customer]'), 'tap');
+				})
+				
 				document.getElementById('label_edit').addEventListener('tap', function() {
 					console.log(11111);
 				})
@@ -668,6 +673,7 @@
 						
 					} else if (type == 'friend') {
 						var fid = this.dataset.id;
+						fnOpenWin('friend_detail.html', 'friend_detail', {statusbar: {background: '#FFF'}}, {fid: fid, userId: fid}, 'slide-in-right');
 					}
 				})
 				
