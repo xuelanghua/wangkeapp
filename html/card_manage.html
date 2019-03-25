@@ -19,9 +19,9 @@
 					<div class="mui-navigate-right">
 						<div class="manage-left">
 							<div class="head-img">
-								<img src="../image/kaol.jpg" alt="">
+								<img id="head-img" src="../image/user_default.jpg" alt="">
 							</div>
-							<span>阿飞</span>
+							<span id="user-name"></span>
 						</div>
 						<span class="edit-desc">编辑</span>
 					</div>
@@ -40,6 +40,7 @@
 			</ul>
 		</div>
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script type="text/javascript" src="../js/util.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -48,12 +49,25 @@
 			if (viewport > 750) {
 				viewport = 750
 			}
+			mui.plusReady(function() {
+				setUserCard();
+			})
+
+			function setUserCard() {
+				var userInfo = getUserInfo();
+				document.getElementById("head-img").src = userInfo.avatarUrl;
+				document.getElementById("user-name").innerText = userInfo.nickName;
+			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			//主列表点击事件
 			mui(".mui-content").on("tap", ".edit", function() {
-
+				fnOpenWin('card_setting.html', 'card_setting', {
+					statusbar: {
+						background: '#f7f7f7'
+					}
+				}, '', 'slide-in-right');
 			})
 			mui(".mui-content").on("tap", ".share", function() {
 

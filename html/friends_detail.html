@@ -14,7 +14,7 @@
 			<h1 class="mui-title">胡尚</h1>
 			<span class="mui-pull-right mui-icon">···</span>
 		</header>
-		<div class="mui-content friends-detail-container">
+		<div id="mui-content" class="mui-content friends-detail-container">
 			<!-- 名片样式一 -->
 			<div class="first-card-container">
 				<div class="card">
@@ -51,15 +51,15 @@
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell"><i>手机</i><span>13700696591</span><a href="tel:13700696591">拨打</a></li>
 					<li class="mui-table-view-cell mui-hidden"><i>座机</i><span>0871-69831648</span><a href="tel:13700696591">拨打</a></li>
-					<li class="mui-table-view-cell"><i>微信</i><span>13700696591</span><a>复制</a></li>
+					<li class="mui-table-view-cell"><i>微信</i><span>13700696591</span><a href="javascript:void(0)" @tap="copy_fun('13700696591')">复制</a></li>
 					<li class="mui-table-view-cell mui-hidden"><i>邮箱</i><span>2913626209@qq.com</span><a>复制</a></li>
-					<li class="mui-table-view-cell"><i>公司</i><span>云南万贤科技有限公司</span><a>复制</a></li>
+					<li class="mui-table-view-cell"><i>公司</i><span>云南万贤科技有限公司</span><a href="javascript:void(0)" @tap="copy_fun('云南万贤科技有限公司')">复制</a></li>
 					<li class="mui-table-view-cell"><i>地址</i><span>昆明市官渡区昌宏西路高原明珠商务中心A座707</span></li>
 				</ul>
 			</div>
 			<div class="operation-btn-cont">
 				<button type="button">分享名片</button>
-				<button type="button">同步到通讯录</button>
+				<button type="button" @tap="addAddressList">同步到通讯录</button>
 			</div>
 			<!-- 浏览记录 -->
 			<div class="browse-record">
@@ -81,8 +81,8 @@
 					</ul>
 					<p>最近5人浏览</p>
 				</div>
-				<div class="browse-record-right">
-					<span class="click-heart active"></span>
+				<div id="reliable-btn" class="browse-record-right">
+					<span class="click-heart"></span>
 					<span>靠谱:0</span>
 				</div>
 			</div>
@@ -91,7 +91,8 @@
 				<p>越努力越幸运越努力越幸运越努力越幸运越努力越幸运越努力越幸运越努力越幸运</p>
 				<div class="user-info">
 					<div class="user-head-img"><img src="../image/kaol.jpg"></div>
-					<div id="audio-control" class="play-control play">
+					<!-- 添加 play是播放状态的图标-->
+					<div id="audio-control" class="play-control" @tap="startPlay">
 						<div class="left-arrow"></div>
 						<i class="play-status"></i>
 						<div class="right-info mui-pull-right">
@@ -99,7 +100,7 @@
 							<span>30</span>
 						</div>
 					</div>
-					<div class="click-agree active">
+					<div class="click-agree">
 						<span class="agree-icon"></span>
 						<span>点赞</span>
 					</div>
@@ -110,7 +111,7 @@
 				<ul class="goods-lists">
 					<li class="goods-item">
 						<div class="goods-img">
-							<img src="../image/kaol.jpg" >
+							<img src="../image/kaol.jpg">
 						</div>
 						<div class="goods-desc">
 							<p class="goods-title">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
@@ -120,7 +121,7 @@
 					</li>
 					<li class="goods-item">
 						<div class="goods-img">
-							<img src="../image/kaol.jpg" >
+							<img src="../image/kaol.jpg">
 						</div>
 						<div class="goods-desc">
 							<p class="goods-title">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
@@ -132,11 +133,16 @@
 			</div>
 			<h5 class="personality-desc">图片展示</h5>
 			<div class="img-show">
-				<img src="../image/kaol.jpg" >
+				<img src="../image/kaol.jpg">
+			</div>
+			<div class="add-friend-btn">
+				<img src="../image/icon/add_friends_icon.png" class="constrain-img">
+				<span>添加好友</span>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -147,72 +153,32 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			$("body").removeClass("mui-hidden");
-			//主列表点击事件
-			mui('#friends_detail-container').on('tap', 'a', function() {
-				var href = this.getAttribute('href');
-
-				//非plus环境，直接走href跳转
-				if (!mui.os.plus) {
-					location.href = href;
-					return;
-				}
-
-				var id = this.getAttribute("data-wid");
-				if (!id) {
-					id = href;
-				}
-
-				if (href && ~href.indexOf('.html')) {
-					//打开窗口的相关参数
-					var options = {
-						styles: {
-							popGesture: "close"
-						},
-						extras: {}
-					};
-					var titleType = this.getAttribute("data-title-type");
-					if (titleType && titleType.indexOf("native") > -1) { //原生导航
-						options.styles.titleNView = {
-							autoBackButton: true,
-							backgroundColor: '#f7f7f7',
-							titleText: this.innerHTML.trim(),
-							splitLine: {
-								color: '#cccccc'
-							}
-						};
-
-						options.show = {
-							event: 'loaded'
-						}
-						//有原生标题的情况下，就不需要waiting框了
-						options.waiting = {
-							autoShow: false
-						}
-					} else {
-						//非原生导航，需要设置顶部状态栏占位
-						options.styles.statusbar = {
-							background: "#f7f7f7"
-						}
-					}
-					//打开新窗口
-					mui.openWindow(href, id, options);
-				}
-			});
-			mui(".friends-detail-header").on("tap","span",function(){
+			// 跳转到更多页面
+			mui(".friends-detail-header").on("tap", "span", function() {
 				fnOpenWin('friends_detail_more.html', 'friends_detail_more', {
 					statusbar: {
 						background: '#f7f7f7'
 					}
 				}, '', 'slide-in-right');
 			})
-			
+			// 实例化vue对象
+			var muiCont = new Vue({
+				el: '#mui-content',
+				data: {
+					dataList: [],
+					voidDy: false,
+					audiourl: "https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3",
+					contName: "胡尚",
+					phoneNum: "13700696591"
+				},
+				mounted: function() {}
+			});
 			document.getElementById("fifth-row").innerText = "2913626209@qq.com";
 			// 超出文本隐藏
-			
+
 			// 产品标题超出隐藏
 			var goodsTitle = document.getElementsByClassName("goods-title");
-			for(i=0;i<goodsTitle.length;i++){
+			for (i = 0; i < goodsTitle.length; i++) {
 				var txt = goodsTitle[i].innerHTML;
 				if (txt.length > 20) {
 					txt = txt.substring(0, 25 - 1) + "..."
@@ -223,8 +189,9 @@
 			}
 			// 名片地址超出隐藏
 			var contain = document.getElementById("sixth-row");
-			overText(contain,10);
-			function overText(tgt,num){
+			overText(contain, 10);
+
+			function overText(tgt, num) {
 				var txt = tgt.innerHTML;
 				if (txt.length > num) {
 					txt = txt.substring(0, num - 1) + "..."
@@ -243,6 +210,90 @@
 				}
 				$(".card-info-container").slideToggle();
 			})
+			$("body").removeClass("mui-hidden");
+
+			mui(".friends-detail-container").on("tap", "#reliable-btn,.click-agree", function() {
+				this.classList.toggle('active');
+			})
+			//  复制方法
+			function copy_fun(copy) {
+				//判断是安卓还是ios
+				if (mui.os.ios) {
+					//ios
+					var UIPasteboard = plus.ios.importClass("UIPasteboard");
+					var generalPasteboard = UIPasteboard.generalPasteboard();
+					//设置/获取文本内容:
+					generalPasteboard.plusCallMethod({
+						setValue: copy,
+						forPasteboardType: "public.utf8-plain-text"
+					});
+					generalPasteboard.plusCallMethod({
+						valueForPasteboardType: "public.utf8-plain-text"
+					});
+					message("已成功复制到剪贴板");
+				} else {
+					//安卓
+					var context = plus.android.importClass("android.content.Context");
+					var main = plus.android.runtimeMainActivity();
+					var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
+					plus.android.invoke(clip, "setText", copy);
+					message("已成功复制到剪贴板");
+				}
+			}
+
+			//播放录音
+
+			// 音频播放
+			var audio = null;
+
+			function startPlay() {
+				logs(muiCont.audiourl);
+				if (plus.audio == undefined) {
+					message("设备没有准备好！");
+				}
+				audio = plus.audio.createPlayer(muiCont.audiourl);
+				audio.play(function() {
+					message("音频开始播放");
+				}, function(e) {
+					message(e.message);
+				});
+				document.getElementById("audio-control").classList.toggle("play");
+			}
+			// 停止播放
+			function stopPlay() {
+				audio.stop();
+			}
+			// 添加到通讯录
+			// 扩展API加载完毕，现在可以正常调用扩展API
+			function addAddressList() {
+				plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function(addressbook) {
+					plus.nativeUI.confirm('确认将' + muiCont.contName + '（' + muiCont.phoneNum + '）添加到通讯录吗？', function(e) {
+						if (e.index == 0) {
+							var contact = addressbook.create();
+							contact.name = {
+								givenName: muiCont.contName
+							};
+							contact.phoneNumbers = [{
+								type: "手机",
+								value: muiCont.phoneNum,
+								preferred: true
+							}];
+							contact.save(function(){
+								message("添加成功");
+							},function(){
+								message("添加失败");
+							});
+						} else {
+						}
+					}, {
+						"title": "",
+						"buttons": ["添加", "取消"],
+						"verticalAlign": "bottom"
+					});
+				}, function(e) {
+					message("添加失败");
+				});
+			}
 		</script>
 	</body>
 </html>
