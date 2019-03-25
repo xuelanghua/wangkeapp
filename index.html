@@ -1,294 +1,273 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>首页</title>
-		<link href="css/mui.min.css" rel="stylesheet" />
-		<link href="icomoon/style.css" rel="stylesheet" />
-	</head>
-	<body>
-		<div class="mui-content">
-			<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;">
-				<div class="mui-tab-item mui-active tab-item" data-id="home">
-					<span class="mui-icon icon-home-page-s" style="font-size: 18px;margin-top: 2px;"></span>
-					<span class="mui-tab-label">首页</span>
-				</div>
-				<div class="mui-tab-item tab-item" data-id="chat" id="chat">
-					<span class="mui-icon icon-chat" style="font-size: 18px;margin-top: 2px;"></span>
-					<span class="mui-tab-label">聊天</span>
-				</div>
-				<div class="mui-tab-item" id="short_cut" data-status='0'>
-					<span class="mui-icon icon-quick" style="font-size: 18px;margin-top: 2px;"></span>
-					<span class="mui-tab-label">快捷</span>
-				</div>
-				<div class="mui-tab-item tab-item" data-id="media">
-					<span class="mui-icon icon-selfmedia" style="font-size: 18px;margin-top: 2px;"></span>
-					<span class="mui-tab-label">自媒体</span>
-				</div>
-				<div class="mui-tab-item tab-item" data-id="user" id="user">
-					<span class="mui-icon icon-my" style="font-size: 18px;margin-top: 2px;"></span>
-					<span class="mui-tab-label">我的</span>
-				</div>
-			</nav>
-		</div>
-	</body>
-	<script src="js/mui.js"></script>
-	<script src="js/util.js"></script>
-	<script>
-		mui.init({
-			swipeBack: false
-		});
-
-		var self = null;
-		var shortcutWebview = null;
-		var currentTab = null;
-		var current = '';
-		var tabs = {};
-		var styles = {
-			top: '0',
-			bottom: '51px',
-			statusbar: {
-				background: '#FFFFFF'
-			}
-		};
-		var tabsConfig = {
-			home: {
-				url: 'html/home.html',
-				styles: styles,
-				default: true,
-				icon: 'icon-home-page',
-				selected: 'icon-home-page-s',
-				background: '#FFFFFF',
-				style: 'dark',
-				styles: {
-					top: '0',
-					bottom: '51px',
-					scrollIndicator: 'none',
-					statusbar: {
-						background: '#FFFFFF'
-					},
-					// 				pullToRefresh: {
-					// 					support:true,
-					// 					height:'50px',
-					// 					range:'200px',
-					// 					contentdown:{
-					// 						caption:'下拉可以刷新'
-					// 					},
-					// 					contentover:{
-					// 						caption:'释放立即刷新'
-					// 					},
-					// 					contentrefresh:{
-					// 						caption:'正在刷新...'
-					// 					},
-					// 				}
-				}
-			},
-			chat: {
-				url: 'html/chat.html',
-				styles: styles,
-				icon: 'icon-chat',
-				selected: 'icon-chat-s',
-				background: '#CCC',
-				style: 'light',
-				styles: {
-					top: '0',
-					bottom: '51px',
-					scrollIndicator: 'none',
-					statusbar: {
-						background: '#2289FF'
-					}
-				}
-			},
-			media: {
-				url: 'html/self_media.html',
-				styles: styles,
-				icon: 'icon-selfmedia',
-				selected: 'icon-selfmedia-s',
-				background: '#FFFFFF',
-				style: 'dark',
-				styles: {
-					top: '0',
-					bottom: '51px',
-					scrollIndicator: 'none',
-					statusbar: {
-						background: '#FFFFFF'
-					}
-				}
-			},
-			user: {
-				url: 'html/my.html',
-				styles: styles,
-				icon: 'icon-my',
-				selected: 'icon-my-s',
-				background: '#CCC',
-				style: 'light',
-				styles: {
-					top: '0',
-					bottom: '51px',
-					scrollIndicator: 'none',
-					statusbar: {
-						background: '#2289FF'
-					}
-				}
-			}
-		};
-
-		mui.plusReady(function() {
-			//自定义事件监听快捷菜单页面点击
-			window.addEventListener('closeShortcut', function() {
-				document.getElementById('short_cut').dataset.status = 0;
-				shortcutWebview.hide();
-				//修改选中颜色样式
-				mui.trigger(currentTab, 'tap');
-				document.getElementById('short_cut').classList.remove('mui-active');
-				currentTab.classList.add('mui-active');
-			})
-
-			window.addEventListener('loginSuccess', function() {
-				console.log('loginSuccess');
-				initIndexView();
-			})
-
-			window.addEventListener('activationSuccess', function() {
-				console.log('activationSuccess');
-				setTimeout(function() {
-					updateUserInfo();
-				}, 2000)
-			})
-
-			window.addEventListener('showChat', function() {
-				mui.trigger(document.getElementById('chat'), 'tap');
-				// currentTab.children[0].classList.remove(tabsConfig[current].icon);
-				// currentTab.children[0].classList.add(tabsConfig[current].selected);
-			})
-
-			//设置currentTab
-			currentTab = mui('#bar .tab-item')[0];
-			//获取当前webview
-			self = plus.webview.currentWebview();
-			//设置只支持竖屏幕显示
-			plus.screen.lockOrientation("portrait-primary");
-
-			// localStorage.removeItem('user');
-			var userInfo = getUserInfo();
-			if (!userInfo) {
-				login();
-			} else if (userInfo.mobile.length == 0) {
-				bindMobile();
-			} else {
-				initIndexView();
-			}
-			//判断是否已经登陆,若没有登陆将预加载登陆页面
-			// judgeLogin();
-			//初始化与index有关的页面
-			// initIndexView();
-		});
-
-		//初始化
-		function initIndexView() {
-			//初始化所有bar页面
-			initTabitemWebviews();
-			//添加bar点击事件接受
-			tapBaritem();
-		}
-
-		//初始化所有bar页面
-		function initTabitemWebviews() {
-			plus.nativeUI.showWaiting();
-			for (var id in tabsConfig) {
-				tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
-				if (tabsConfig[id]['default']) {
-					self.append(tabs[id]);
-					current = id;
-					setStatusBar(tabsConfig[id].background, tabsConfig[id].style);
-				}
-			}
-			shortcutWebview = plus.webview.create('html/shortcut.html', 'shortcut', {
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>首页</title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+	<link href="icomoon/style.css" rel="stylesheet"/>
+</head>
+<body>
+	<div class="mui-content">
+		<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;">
+			<div class="mui-tab-item mui-active tab-item" data-id="home">
+				<span class="mui-icon icon-home-page-s" style="font-size: 18px;margin-top: 2px;"></span>
+				<span class="mui-tab-label">首页</span>
+			</div>
+			<div class="mui-tab-item tab-item" data-id="chat" id="chat">
+				<span class="mui-icon icon-chat" style="font-size: 18px;margin-top: 2px;"></span>
+				<span class="mui-tab-label">聊天</span>
+			</div>
+			<div class="mui-tab-item" id="short_cut" data-status='0'>
+				<span class="mui-icon icon-quick" style="font-size: 18px;margin-top: 2px;"></span>
+				<span class="mui-tab-label">快捷</span>
+			</div>
+			<div class="mui-tab-item tab-item" data-id="media">
+				<span class="mui-icon icon-selfmedia" style="font-size: 18px;margin-top: 2px;"></span>
+				<span class="mui-tab-label">自媒体</span>
+			</div>
+			<div class="mui-tab-item tab-item" data-id="user" id="user">
+				<span class="mui-icon icon-my" style="font-size: 18px;margin-top: 2px;"></span>
+				<span class="mui-tab-label">我的</span>
+			</div>
+		</nav>
+	</div>
+</body>
+<script src="js/mui.js"></script>
+<script src="js/util.js"></script>
+<script>
+	mui.init({
+		swipeBack: false
+	});
+	
+	var self = null;
+	var shortcutWebview = null;
+	var currentTab = null;
+	var current = '';
+	var tabs = {};
+	var styles = {
+		top: '0',
+		bottom: '51px',
+		statusbar: {background: '#FFFFFF'}
+	};
+	var tabsConfig = {
+		home: {
+			url: 'html/home.html',
+			styles: styles,
+			default: true,
+			icon: 'icon-home-page',
+			selected: 'icon-home-page-s',
+			background: '#FFFFFF',
+			style: 'dark',
+			styles: {
+				top: '0',
 				bottom: '51px',
-				background: 'transparent'
-			});
+				scrollIndicator: 'none',
+				statusbar: {background: '#FFFFFF'},
+// 				pullToRefresh: {
+// 					support:true,
+// 					height:'50px',
+// 					range:'200px',
+// 					contentdown:{
+// 						caption:'下拉可以刷新'
+// 					},
+// 					contentover:{
+// 						caption:'释放立即刷新'
+// 					},
+// 					contentrefresh:{
+// 						caption:'正在刷新...'
+// 					},
+// 				}
+			}
+		},
+		chat: {
+			url: 'html/chat.html',
+			styles: styles,
+			icon: 'icon-chat',
+			selected: 'icon-chat-s',
+			background: '#CCC',
+			style: 'light',
+			styles: {
+				top: '0',
+				bottom: '51px',
+				scrollIndicator: 'none',
+				statusbar: {background: '#2289FF'}
+			}
+		},
+		media: {
+			url: 'html/self_media.html',
+			styles: styles,
+			icon: 'icon-selfmedia',
+			selected: 'icon-selfmedia-s',
+			background: '#FFFFFF',
+			style: 'dark',
+			styles: {
+				top: '0',
+				bottom: '51px',
+				scrollIndicator: 'none',
+				statusbar: {background: '#FFFFFF'}
+			}
+		},
+		user: {
+			url: 'html/my.html',
+			styles: styles,
+			icon: 'icon-my',
+			selected: 'icon-my-s',
+			background: '#CCC',
+			style: 'light',
+			styles: {
+				top: '0',
+				bottom: '51px',
+				scrollIndicator: 'none',
+				statusbar: {background: '#2289FF'}
+			}
 		}
-
-		//底部导航点击
-		function tapBaritem() {
-			mui('#bar').on('tap', '#short_cut', function() {
-				var status = this.dataset.status;
-				if (status == 0) {
-					this.dataset.status = 1;
-					shortcutWebview.show();
-					this.children[0].classList.remove('icon-quick');
-					this.children[0].classList.add('icon-quick-s');
-					currentTab.children[0].classList.remove(tabsConfig[current].selected);
-					currentTab.children[0].classList.add(tabsConfig[current].icon);
-				}
-				// 			else {
-				// 				mui.trigger(currentTab, 'tap');
-				// 				this.classList.remove('mui-active');
-				// 				this.children[0].classList.remove('icon-quick-s');
-				// 				this.children[0].classList.add('icon-quick');
-				// 				currentTab.children[0].classList.remove(tabsConfig[current].icon);
-				// 				currentTab.children[0].classList.add(tabsConfig[current].selected);
-				// 				currentTab.classList.add('mui-active');
-				// 				this.dataset.status = 0;
-				// 				shortcutWebview.hide();
-				// 			}
-			});
-
-			mui('#bar').on('tap', '.tab-item', function(e) {
-				document.getElementById('short_cut').children[0].classList.remove('icon-quick-s');
-				document.getElementById('short_cut').children[0].classList.add('icon-quick');
-				this.children[0].classList.remove(tabsConfig[this.dataset.id].icon);
-				this.children[0].classList.add(tabsConfig[this.dataset.id].selected);
-				document.getElementById('short_cut').dataset.status = 0;
-				shortcutWebview.hide();
-				if (current == this.dataset.id) {
-					mui.fire(tabs[current], 'scrollTop');
-					return;
-				}
-				tabs[this.dataset.id].show();
-				setStatusBar(tabsConfig[this.dataset.id].background, tabsConfig[this.dataset.id].style);
-				tabs[current].hide();
+	};
+	
+	mui.plusReady(function() {
+		//自定义事件监听快捷菜单页面点击
+		window.addEventListener('closeShortcut', function() {
+			document.getElementById('short_cut').dataset.status = 0;
+			shortcutWebview.hide();
+			//修改选中颜色样式
+			mui.trigger(currentTab, 'tap');
+			document.getElementById('short_cut').classList.remove('mui-active');
+			currentTab.classList.add('mui-active');
+		})
+		
+		window.addEventListener('loginSuccess', function() {
+			console.log('loginSuccess');
+			initIndexView();
+		})
+		
+		window.addEventListener('activationSuccess', function() {
+			console.log('activationSuccess');
+			setTimeout(function() {
+				updateUserInfo();
+			}, 2000)
+		})
+		
+		window.addEventListener('showChat', function() {
+			mui.trigger(document.getElementById('chat'), 'tap');
+			// currentTab.children[0].classList.remove(tabsConfig[current].icon);
+			// currentTab.children[0].classList.add(tabsConfig[current].selected);
+		})
+		
+		//设置currentTab
+		currentTab = mui('#bar .tab-item')[0];
+		//获取当前webview
+		self = plus.webview.currentWebview();
+		//设置只支持竖屏幕显示
+		plus.screen.lockOrientation("portrait-primary");
+		
+		// localStorage.removeItem('user');
+		var userInfo = getUserInfo();
+		if (!userInfo) {
+			login();
+		} else if (userInfo.mobile.length == 0) {
+			bindMobile();
+		} else {
+			initIndexView();
+		}
+		//判断是否已经登陆,若没有登陆将预加载登陆页面
+		// judgeLogin();
+		//初始化与index有关的页面
+		// initIndexView();
+	});
+	
+	//初始化
+	function initIndexView(){
+		//初始化所有bar页面
+		initTabitemWebviews();
+		//添加bar点击事件接受
+		tapBaritem();
+	}
+	
+	//初始化所有bar页面
+	function initTabitemWebviews() {
+		plus.nativeUI.showWaiting();
+		for (var id in tabsConfig) {
+			tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
+			if (tabsConfig[id]['default']) {
+				self.append(tabs[id]);
+				current = id;
+				setStatusBar(tabsConfig[id].background, tabsConfig[id].style);
+			}
+		}
+		shortcutWebview = plus.webview.create('html/shortcut.html', 'shortcut', {bottom: '51px', background: 'transparent'});
+	}
+	
+	//底部导航点击
+	function tapBaritem() {
+		mui('#bar').on('tap', '#short_cut', function() {
+			var status = this.dataset.status;
+			if (status == 0) {
+				this.dataset.status = 1;
+				shortcutWebview.show();
+				this.children[0].classList.remove('icon-quick');
+				this.children[0].classList.add('icon-quick-s');
 				currentTab.children[0].classList.remove(tabsConfig[current].selected);
 				currentTab.children[0].classList.add(tabsConfig[current].icon);
-				current = this.dataset.id;
-				currentTab = this;
-
-				//向聊天页面传递清除定时器自定义事件
-				if (current == 'chat') {
-					mui.fire(plus.webview.getWebviewById('chat'), 'addInterval');
-				} else {
-					mui.fire(plus.webview.getWebviewById('chat'), 'clearInterval');
-				}
-			});
-		}
-
-		function login() {
-			fnOpenWin('html/login.html', 'login', {
-				statusbar: {
-					background: '#122c9a'
-				}
-			}, '', 'slide-in-bottom');
-		}
-
-		function bindMobile() {
+			} 
+// 			else {
+// 				mui.trigger(currentTab, 'tap');
+// 				this.classList.remove('mui-active');
+// 				this.children[0].classList.remove('icon-quick-s');
+// 				this.children[0].classList.add('icon-quick');
+// 				currentTab.children[0].classList.remove(tabsConfig[current].icon);
+// 				currentTab.children[0].classList.add(tabsConfig[current].selected);
+// 				currentTab.classList.add('mui-active');
+// 				this.dataset.status = 0;
+// 				shortcutWebview.hide();
+// 			}
+		});
+		
+		mui('#bar').on('tap', '.tab-item', function(e) {
+			document.getElementById('short_cut').children[0].classList.remove('icon-quick-s');
+			document.getElementById('short_cut').children[0].classList.add('icon-quick');
+			this.children[0].classList.remove(tabsConfig[this.dataset.id].icon);
+			this.children[0].classList.add(tabsConfig[this.dataset.id].selected);
+			document.getElementById('short_cut').dataset.status = 0;
+			shortcutWebview.hide();
+			if (current == this.dataset.id) {
+				mui.fire(tabs[current], 'scrollTop');
+				return;
+			}
+			tabs[this.dataset.id].show();
+			setStatusBar(tabsConfig[this.dataset.id].background, tabsConfig[this.dataset.id].style);
+			tabs[current].hide();
+			currentTab.children[0].classList.remove(tabsConfig[current].selected);
+			currentTab.children[0].classList.add(tabsConfig[current].icon);
+			current = this.dataset.id;
+			currentTab = this;
+			
+			//向聊天页面传递清除定时器自定义事件
+			if (current == 'chat') {
+				mui.fire(plus.webview.getWebviewById('chat'), 'addInterval');
+			} else {
+				mui.fire(plus.webview.getWebviewById('chat'), 'clearInterval');
+			}
+		});
+	}
+	
+	function login() {
+		fnOpenWin('html/login.html', 'login', {statusbar: {background: '#122c9a'}}, '', 'slide-in-bottom');
+	}
+	
+	function bindMobile() {
+		fnOpenWin('html/mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
+	}
+	
+	function judgeLogin() {
+		localStorage.removeItem('user');
+		//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
+		var userInfo = getUserInfo();
+		if (!userInfo) {
+			fnOpenWin('html/login.html', 'login', {statusbar: {background: '#122c9a'}}, '', 'slide-in-bottom');
+			return;
+		} else if (userInfo.mobile.length == 0) {
 			fnOpenWin('html/mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
 		}
-
-		function judgeLogin() {
-			localStorage.removeItem('user');
-			//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
-			var userInfo = getUserInfo();
-			if (!userInfo) {
-				fnOpenWin('html/login.html', 'login', {
-					statusbar: {
-						background: '#122c9a'
-					}
-				}, '', 'slide-in-bottom');
-				return;
-			} else if (userInfo.mobile.length == 0) {
-				fnOpenWin('html/mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
-			}
-		}
-	</script>
+	}
+</script>
 </html>
