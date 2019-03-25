@@ -32,7 +32,7 @@
 							<span>{{items.like}}</span>
 						</div>
 						<div>
-							<button type="button" class="mui-btn mui-button-row del-btn" @tap="delBtn(items.id)">删除</button>
+							<button type="button" class="mui-btn mui-button-row del-btn" @tap="delBtn(items.id,index)">删除</button>
 							<button type="button" class="mui-btn mui-button-row share-btn" @tap="shareBtn(items.id)">转发</button>
 						</div>
 					</div>
@@ -47,9 +47,35 @@
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
+			mui.init({
+				pullRefresh: {
+					container: '#mui-content',
+					up: {
+						style: 'circle',
+						height: 10,
+						auto: false,
+						contentrefresh: "正在加载...",
+						contentnomore: '没有更多数据了',
+						callback: function() {
+							skipNum += 1;
+							behaviorStatistics();
+						}
+					},
+					down: {
+						style: 'circle',
+						height: 10,
+						auto: false,
+						callback: function() {
+							skipNum = 1;
+							mui('#mui-content').pullRefresh().refresh(true);
+							behaviorStatistics();
+						}
+					}
+				}
+			});
 			// 初始化字体大小
 			var userInfo = getUserInfo();
-			var skipNum = 0;
+			var skipNum = 1;
 			userInfo = getUserInfo();
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -65,32 +91,6 @@
 					voidDy: false
 				},
 				mounted: function() {
-					mui.init({
-						pullRefresh: {
-							container: 'body',
-							up: {
-								height: 50,
-								auto: false,
-								contentrefresh: "正在加载...",
-								contentnomore: '没有更多数据了',
-								callback: function() {
-									behaviorStatistics();
-								}
-							},
-							down: {
-								height: 50,
-								offset: '0px',
-								auto: false,
-								contentdown: "下拉可以刷新",
-								contentover: "释放立即刷新",
-								contentrefresh: "正在刷新...",
-								callback: function() {
-									skipNum = 1;
-									behaviorStatistics();
-								}
-							}
-						}
-					});
 					mui.plusReady(function() {
 						behaviorStatistics();
 					});
@@ -98,39 +98,39 @@
 			});
 			// 获取动态列表
 			function behaviorStatistics() {
-				skipNum += 1;
-				logs(skipNum);
 				mui.post($ajaxUrl + 'timeline&action=list', {
 					token: userInfo.token,
 					skip: skipNum,
 					limit: 5
 				}, function(res) {
-					logs(skipNum);
-					let data = res.data;
+					var data = res.data;
 					if (res.errno == 0 && skipNum == 1) {
 						muiCont.dataList = data;
-						muiCont.dataList.reverse();
-					} else if (res.errno == 0) {
-						for (item in data) {
-							muiCont.dataList.push(item);
+						mui('#mui-content').pullRefresh().endPulldown();
+						if(data.length<1){
+							muiCont.voidDy = true;
 						}
-						muiCont.dataList.reverse()
-						mui('body').pullRefresh().endPulldownToRefresh();
+					} else if (res.errno == 0 && skipNum > 1) {
+						muiCont.dataList = muiCont.dataList.concat(data);
+						if(data.length<1){
+							muiCont.voidDy = true;
+						}
+						mui('#mui-content').pullRefresh().endPullupToRefresh();
 					} else {
-						muiCont.dataList = [];
-						muiCont.voidDy = true;
-						mui('body').pullRefresh().endPullupToRefresh(true);
+						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 					}
 				}, 'json')
 			}
 			// 删除按钮
-			function delBtn(tid) {
+			function delBtn(tid,index) {
 				mui.post($ajaxUrl + 'timeline&action=delete', {
 					token: userInfo.token,
 					tid: tid
 				}, function(res) {
 					if (res.errno == 0) {
 						behaviorStatistics();
+						// logs(skipNum);
+						muiCont.dataList.splice(index,1)
 						message("已删除")
 					} else {
 						message(res.message)
@@ -151,6 +151,10 @@
 					aid: detailId
 				}, 'slide-in-right');
 			}
+			// 发布完新动态刷新列表页面
+			window.addEventListener('refresh', function(e) {
+				behaviorStatistics();
+			});
 			mui(".mui-content").on("tap", ".create-dynamics", function() {
 				fnOpenWin("issue_dynamics.html", "issue_dynamics", {
 					statusbar: {
@@ -158,9 +162,6 @@
 					}
 				}, '', 'slide-in-right');
 			})
-			window.addEventListener('refresh', function(e) {
-				behaviorStatistics();
-			});
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		</script>
 	</body>

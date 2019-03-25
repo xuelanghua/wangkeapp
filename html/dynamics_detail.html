@@ -76,7 +76,6 @@
 						getDynamicsDetail();
 						setTimeout(function() {
 							var images = [].slice.call(document.querySelectorAll('.dynamics-img-group img'));
-							logs(muiCont.cover)
 							var urls = [];
 							images.forEach(function(item) {
 								urls.push(item.src);
@@ -95,13 +94,11 @@
 			});
 			// mui.previewImage();
 			mui.init();
-
 			function getDynamicsDetail() {
 				mui.post($ajaxUrl + 'timeline&action=detail', {
 					token: userInfo.token,
 					tid: tid
 				}, function(res) {
-					// logs(res);
 					if (res.errno == 0) {
 						var data = res.data;
 						muiCont.title = data.title;
