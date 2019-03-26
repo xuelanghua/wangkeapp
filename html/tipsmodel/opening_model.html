@@ -99,17 +99,32 @@
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		mui.init();
+		
+		var userInfo = getUserInfo();
 		mui.plusReady(function() {
 			mui(".mui-content").on("tap", "#hide_qrcode", function() {
 				plus.webview.close("opening_model", "auto", "", "");
 			})
+			
 			mui(".mui-content").on("tap", "#opening", function() {
-				var statusBarStyle = plus.navigator.getStatusBarStyle();
-				fnOpenWin('../activation.html', 'activation', '', {
-					statusBarStyle: statusBarStyle
-				}, 'slide-in-bottom');
-				setStatusBar('', 'light');
-				plus.webview.close("opening_model", "auto", "", "");
+				mui.get($ajaxUrl + 'member', {
+						action: 'check_apply',
+						token: userInfo.token
+					}, function(res){
+						if (res.errno == 0) {
+							var statusBarStyle = plus.navigator.getStatusBarStyle();
+							fnOpenWin('../activation.html', 'activation', '', {
+								statusBarStyle: statusBarStyle
+							}, 'slide-in-bottom');
+							setStatusBar('', 'light');
+							plus.webview.close("opening_model", "auto", "", "");
+						} else {
+							plus.nativeUI.alert(res.message, function() {
+								mui.back();
+							})
+						}
+					},'json'
+				);
 			})
 		});
 	</script>

@@ -14,28 +14,27 @@
 			<h1 class="mui-title">代理预约</h1>
 		</header>
 		<div class="mui-content oreder-container">
-			<form class="items-container mui-input-group">
-				<div class="mui-card" v-for="(item, key, index) in group">
-					<div class="mui-card-header">
-						<div class="mui-radio mui-left">
-							<label>{{ group.alias }}（{{ group.name }}）</label>
-							<input name="radio1" type="radio">
+			<form class="items-container mui-input-group" id="form">
+				<template v-for="(item, key, index) in group">
+					<div class="mui-card">
+						<div class="mui-card-header">
+							<div class="mui-radio mui-left" :data-id="item.id">
+								<label>{{ item.alias }}（{{ item.name }}）</label>
+								<input name="radio1" type="radio">
+							</div>
+							<div class="mui-right">
+								<span>&yen;{{ item.activation_fee }}</span>
+							</div>
 						</div>
-						<div class="mui-right">
-							<span>&yen;{{ group.activation_fee }}</span>
+						<div class="mui-card-content">
+							<div class="mui-card-content-inner">
+								<ul>
+									<li v-for="right in item.rights">{{ right }}</li>
+								</ul>
+							</div>
 						</div>
 					</div>
-					<div class="mui-card-content">
-						<div class="mui-card-content-inner">
-							<ul>
-								<li>送5个创客(会员与创客自由组合)送5个创客(会员与创客自由组合)送5个创客(会员与创客自由组合)</li>
-								<li>送5万旺旺</li>
-								<li>区域保护（该区域下的所有会员续费获得20元）</li>
-								<li>知识付费产品奖励25%</li>
-							</ul>
-						</div>
-					</div>
-				</div>
+				</template>
 				<!-- <div class="mui-card">
 					<div class="mui-card-header">
 						<div class="mui-radio mui-left">
@@ -80,10 +79,12 @@
 				</div> -->
 			</form>
 			<div class="mui-content-padded">
-				<button type="button" class="mui-btn mui-btn-blue mui-btn-block ">确定</button>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="submit">确定</button>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: true,
@@ -101,8 +102,8 @@
 			// 初始化字体大小结束
 			
 			//vue初始化
-			var vm new Vue({
-				el: '.items-container',
+			var vm = new Vue({
+				el: '#form',
 				data: {
 					group: []
 				}
@@ -110,11 +111,44 @@
 			
 			var self = null;
 			var groupData = null;
+			var groupId = 0;
+			var userInfo = getUserInfo();
 			mui.plusReady(function () {
 			    self = plus.webview.currentWebview();
 				groupData = self.groupData;
-				vm.group = [groupData[2], groupData[3], groupData[4]]
-				logs(groupData);
+				vm.group = [groupData[2], groupData[3], groupData[4]];
+				
+				//选择代理级别
+				mui('.mui-content').on('tap', '.mui-radio', function() {
+					groupId = this.dataset.id;
+				})
+				
+				mui('.mui-content').on('tap', '#submit', function() {
+					if (groupId == 0) {
+						message('请选择要申请的代理!', 'center');
+						return;
+					}
+					plus.nativeUI.showWaiting('数据处理中...');
+					mui.post($ajaxUrl + 'member', {
+							action: 'agent_apply',
+							token: userInfo.token,
+							group_id: groupId
+						}, function(res){
+							logs(res);
+							if (res.errno == 0) {
+								plus.nativeUI.alert('申请成功, 等待审核!', function() {
+									plus.webview.close('agent_apply');
+									plus.webview.close('activation');
+								})
+							} else {
+								plus.nativeUI.alert(res.message, function() {
+									window.location.reload();
+								})
+							}
+							plus.nativeUI.closeWaiting();
+						}, 'json'
+					);
+				})
 			})
 		</script>
 	</body>

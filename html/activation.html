@@ -195,7 +195,7 @@
 				
 				//跳转代理申请
 				mui('.radio-list').on('tap', '.apply', function() {
-					fnOpenWin('agent_apply.html', 'agent_apply', {statusbar: {background: '#FFF'}}, groupData, 'slide-in-right');
+					fnOpenWin('agent_apply.html', 'agent_apply', {statusbar: {background: '#FFF'}}, {groupData: groupData}, 'slide-in-right');
 					plus.navigator.setStatusBarStyle('dark');
 				})
 				
@@ -250,17 +250,18 @@
 						var data = res.data;
 						groupData = data;
 						mui.each(data, function(index, item) {
-							var rights = item.rights;
-							rights = JSON.parse(rights);
-							var temp = '';
-							for (var i in rights) {
-								if (i > 0) {
-									temp += '/' + rights[i];
-								} else {
-									temp += rights[i];
+							if (index < 2) {
+								var rights = item.rights;
+								var temp = '';
+								for (var i in rights) {
+									if (i > 0) {
+										temp += '/' + rights[i];
+									} else {
+										temp += rights[i];
+									}
 								}
+								item.rights = temp;
 							}
-							item.rights = temp;
 						})
 						groupId = data[0].id;
 						activationFee = data[0].activation_fee;
