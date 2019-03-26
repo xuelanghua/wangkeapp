@@ -92,12 +92,12 @@
 				<div class="user-info">
 					<div class="user-head-img"><img src="../image/kaol.jpg"></div>
 					<!-- 添加 play是播放状态的图标-->
-					<div id="audio-control" class="play-control" @tap="startPlay">
+					<div id="audio-control" class="play-control">
 						<div class="left-arrow"></div>
 						<i class="play-status"></i>
 						<div class="right-info mui-pull-right">
 							<i></i>
-							<span>30</span>
+							<span id="timer-num">30</span>
 						</div>
 					</div>
 					<div class="click-agree">
@@ -167,7 +167,6 @@
 				data: {
 					dataList: [],
 					voidDy: false,
-					audiourl: "https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3",
 					contName: "胡尚",
 					phoneNum: "13700696591"
 				},
@@ -175,7 +174,50 @@
 			});
 			document.getElementById("fifth-row").innerText = "2913626209@qq.com";
 			// 超出文本隐藏
-
+			var voice = null;
+			var playstatus = 0;
+			var audiourl = "../image/alice.mp3";
+			mui.plusReady(function() {
+				// 音频播放
+				var audioLength=0;
+				var i=0;
+				var voice = plus.audio.createPlayer(audiourl);
+				var timer=setInterval(function(){
+					if(!audioLength){
+						audioLength = parseInt(voice.duration());
+						$("#timer-num").text(audioLength);
+					}else{
+						$("#timer-num").text(audioLength);
+						clearInterval(timer);
+					}
+				},1000);
+				mui("#mui-content").on("tap", ".play-control", function() {
+					if (plus.audio == undefined) {
+						message("设备没有准备好！");
+						return;
+					}
+					if (playstatus == 0) {
+						voice.play(function() {
+							voice.stop();
+							// 播放完成停止播放
+							playstatus == 0;
+							$(".play-control").removeClass("play", "pause");
+						}, function(e) {
+							message("播放失败");
+						});
+						playstatus = 1;
+						$(".play-control").addClass("play");
+					} else if (playstatus == 1) {
+						voice.pause();
+						$(".play-control").removeClass("play");
+						playstatus = 2;
+					} else {
+						voice.resume();
+						playstatus = 1;
+						$(".play-control").addClass("play");
+					}
+				})
+			})
 			// 产品标题超出隐藏
 			var goodsTitle = document.getElementsByClassName("goods-title");
 			for (i = 0; i < goodsTitle.length; i++) {
@@ -241,30 +283,7 @@
 				}
 			}
 
-			//播放录音
-
-			// 音频播放
-			var audio = null;
-
-			function startPlay() {
-				logs(muiCont.audiourl);
-				if (plus.audio == undefined) {
-					message("设备没有准备好！");
-				}
-				audio = plus.audio.createPlayer(muiCont.audiourl);
-				audio.play(function() {
-					message("音频开始播放");
-				}, function(e) {
-					message(e.message);
-				});
-				document.getElementById("audio-control").classList.toggle("play");
-			}
-			// 停止播放
-			function stopPlay() {
-				audio.stop();
-			}
 			// 添加到通讯录
-			// 扩展API加载完毕，现在可以正常调用扩展API
 			function addAddressList() {
 				plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function(addressbook) {
 					plus.nativeUI.confirm('确认将' + muiCont.contName + '（' + muiCont.phoneNum + '）添加到通讯录吗？', function(e) {
@@ -278,13 +297,12 @@
 								value: muiCont.phoneNum,
 								preferred: true
 							}];
-							contact.save(function(){
+							contact.save(function() {
 								message("添加成功");
-							},function(){
+							}, function() {
 								message("添加失败");
 							});
-						} else {
-						}
+						} else {}
 					}, {
 						"title": "",
 						"buttons": ["添加", "取消"],
@@ -293,7 +311,7 @@
 				}, function(e) {
 					message("添加失败");
 				});
-			}  
+			}
 		</script>
 	</body>
 </html>

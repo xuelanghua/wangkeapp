@@ -73,19 +73,14 @@
 	</head>
 
 	<body>
-		<script src="../js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
-		
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">店铺管理</h1>
 		</header>
 		
 		<div class="mui-content">
-			<div class="header">
-				<a>
+			<div class="header" id="store_setting">
+				<a href="javascript:void(0);">
 					<img class="chart mui-pull-left" src="../image/user_default.png">
 					<div class="mui-media-body">
 						<div class="title">小3食客</div>
@@ -116,8 +111,19 @@
 					<div class="clearfix"></div>
 				</ul>
 			</div>
-			
 		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui(".mui-content").on("tap","#store_setting",function(){
+				fnOpenWin("store_setting.html", "store_setting", {
+					statusbar: {
+						background: '#f7f7f7'
+					}
+				}, '', 'slide-in-right');
+			})
+		</script>
 	</body>
 
 </html>
