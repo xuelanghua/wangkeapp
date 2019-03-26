@@ -16,30 +16,30 @@
 		</header>
 		<div id="mui-content" class="mui-content friends-detail-container">
 			<!-- 名片样式一 -->
-			<div class="first-card-container">
+			<div v-if="cardType=='cardType2'" class="first-card-container">
 				<div class="card">
-					<img class="user-head-img" src="../image/kaol.jpg">
+					<img class="user-head-img" :src="friendData.avatar">
 					<div class="card-left-cont">
 						<ul>
-							<li id="first-row">万贤科技</li>
-							<li id="second-row">胡尚</li>
-							<li id="third-row">首席服务官</li>
-							<li id="fourth-row">159123456789</li>
-							<li id="fifth-row">send.lzp@qq.com</li>
-							<li id="sixth-row">昆明市官渡区昌宏西路昆明市官渡区昌宏西路</li>
+							<li id="first-row">{{friendData.company}}</li>
+							<li id="second-row">{{friendData.name}}</li>
+							<li id="third-row">{{friendData.job}}</li>
+							<li id="fourth-row">{{friendData.phone}}</li>
+							<li id="fifth-row">{{friendData.email}}</li>
+							<li id="sixth-row">{{friendData.company_address}}</li>
 						</ul>
 					</div>
 				</div>
 			</div>
 			<!-- 名片样式一结束 -->
 			<!-- 名片样式二 -->
-			<div class="second-card-container mui-hidden">
+			<div class="second-card-container" v-else>
 				<div class="card">
-					<img class="user-head-img" src="../image/kaol.jpg">
+					<img class="user-head-img" :src="friendData.avatar">
 					<div class="user-info">
-						<h4>胡尚</h4>
-						<p>首席服务官</p>
-						<p>万贤科技</p>
+						<h4>{{friendData.name}}</h4>
+						<p>{{friendData.job}}</p>
+						<p>{{friendData.company_address}}</p>
 					</div>
 				</div>
 			</div>
@@ -49,12 +49,17 @@
 			<div class="show-card-info" id="showInfo"><span id="descText">展开全部名片信息</span><i class="mui-icon mui-icon-arrowup"></i></div>
 			<div class="card-info-container">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell"><i>手机</i><span>13700696591</span><a href="tel:13700696591">拨打</a></li>
-					<li class="mui-table-view-cell mui-hidden"><i>座机</i><span>0871-69831648</span><a href="tel:13700696591">拨打</a></li>
-					<li class="mui-table-view-cell"><i>微信</i><span>13700696591</span><a href="javascript:void(0)" @tap="copy_fun('13700696591')">复制</a></li>
-					<li class="mui-table-view-cell mui-hidden"><i>邮箱</i><span>2913626209@qq.com</span><a>复制</a></li>
-					<li class="mui-table-view-cell"><i>公司</i><span>云南万贤科技有限公司</span><a href="javascript:void(0)" @tap="copy_fun('云南万贤科技有限公司')">复制</a></li>
-					<li class="mui-table-view-cell"><i>地址</i><span>昆明市官渡区昌宏西路高原明珠商务中心A座707</span></li>
+					<li class="mui-table-view-cell"><i>手机</i><span>{{friendData.phone==""?"暂无":friendData.phone}}</span><a v-if="friendData.phone"
+						 :href="'tel:'+friendData.phone">拨打</a></li>
+					<li class="mui-table-view-cell" v-if="cardType=='cardType1'"><i>座机</i><span>{{friendData.telephone==""?"暂无":friendData.telephone}}</span><a
+						 v-if="friendData.telephone" href="tel:13700696591">拨打</a></li>
+					<li class="mui-table-view-cell"><i>微信</i><span>{{friendData.wechat==""?"暂无":friendData.wechat}}</span><a v-if="friendData.wechat"
+						 href="javascript:void(0)" @tap="copy_fun(friendData.wechat)">复制</a></li>
+					<li class="mui-table-view-cell" v-if="cardType=='cardType1'"><i>邮箱</i><span>{{friendData.email==""?"暂无":friendData.email}}</span><a
+						 v-if="friendData.email" href="javascript:void(0)" @tap="copy_fun(friendData.email)">复制</a></li>
+					<li class="mui-table-view-cell"><i>公司</i><span>{{friendData.company==""?"暂无":friendData.company}}</span><a v-if="friendData.company"
+						 href="javascript:void(0)" @tap="copy_fun(friendData.company)">复制</a></li>
+					<li class="mui-table-view-cell"><i>地址</i><span>{{friendData.company_address==""?"暂无":friendData.company_address}}</span></li>
 				</ul>
 			</div>
 			<div class="operation-btn-cont">
@@ -65,23 +70,14 @@
 			<div class="browse-record">
 				<div class="browse-record-left">
 					<ul class="browse-record-img-cont">
-						<li class="browse-record-img">
-							<img src="../image/kaol.jpg" alt="">
-						</li>
-						<li class="browse-record-img">
-							<img src="../image/kaol.jpg" alt="">
-						</li>
-						<li class="browse-record-img">
-							<img src="../image/kaol.jpg" alt="">
-						</li>
-						<li class="browse-record-img">
-							<img src="../image/kaol.jpg" alt="">
+						<li class="browse-record-img" v-for="(items,index) in friendData.card_view" v-if="index<7" :key="index">
+							<img :src="items.avatarUrl">
 						</li>
 						<span>···</span>
 					</ul>
 					<p>最近5人浏览</p>
 				</div>
-				<div id="reliable-btn" class="browse-record-right">
+				<div id="reliable-btn" class="browse-record-right" @tap="reliable">
 					<span class="click-heart"></span>
 					<span>靠谱:0</span>
 				</div>
@@ -92,7 +88,7 @@
 				<div class="user-info">
 					<div class="user-head-img"><img src="../image/kaol.jpg"></div>
 					<!-- 添加 play是播放状态的图标-->
-					<div id="audio-control" class="play-control">
+					<div id="audio-control" class="play-control" @tap="playVoice">
 						<div class="left-arrow"></div>
 						<i class="play-status"></i>
 						<div class="right-info mui-pull-right">
@@ -100,7 +96,7 @@
 							<span id="timer-num">30</span>
 						</div>
 					</div>
-					<div class="click-agree">
+					<div class="click-agree" @tap="clickAgree">
 						<span class="agree-icon"></span>
 						<span>点赞</span>
 					</div>
@@ -114,7 +110,7 @@
 							<img src="../image/kaol.jpg">
 						</div>
 						<div class="goods-desc">
-							<p class="goods-title">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
+							<p class="goods-title mui-ellipsis-2">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
 							<p class="spec">规格：默认</p>
 							<p class="price">&yen;<span id="goods-price">20.00</span></p>
 						</div>
@@ -124,7 +120,7 @@
 							<img src="../image/kaol.jpg">
 						</div>
 						<div class="goods-desc">
-							<p class="goods-title">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
+							<p class="goods-title mui-ellipsis-2">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
 							<p class="spec">规格：默认</p>
 							<p class="price">&yen;<span id="goods-price">20.00</span></p>
 						</div>
@@ -142,7 +138,7 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script type="text/javascript" src="../js/vue.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -151,6 +147,7 @@
 			if (viewport > 750) {
 				viewport = 750
 			}
+			var fid = "";
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			// 跳转到更多页面
@@ -165,33 +162,27 @@
 			var muiCont = new Vue({
 				el: '#mui-content',
 				data: {
-					dataList: [],
-					voidDy: false,
-					contName: "胡尚",
-					phoneNum: "13700696591"
+					cardType: 'cardType1',
+					friendData: {},
+					contName: '',
+					phoneNum: ''
+
 				},
+				created: function() {},
 				mounted: function() {}
 			});
-			document.getElementById("fifth-row").innerText = "2913626209@qq.com";
 			// 超出文本隐藏
 			var voice = null;
 			var playstatus = 0;
 			var audiourl = "../image/alice.mp3";
 			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				fid = self.fid;
+				logs(fid);
+				getFriendsInfo();
 				// 音频播放
-				var audioLength=0;
-				var i=0;
 				var voice = plus.audio.createPlayer(audiourl);
-				var timer=setInterval(function(){
-					if(!audioLength){
-						audioLength = parseInt(voice.duration());
-						$("#timer-num").text(audioLength);
-					}else{
-						$("#timer-num").text(audioLength);
-						clearInterval(timer);
-					}
-				},1000);
-				mui("#mui-content").on("tap", ".play-control", function() {
+				function playVoice() {
 					if (plus.audio == undefined) {
 						message("设备没有准备好！");
 						return;
@@ -216,31 +207,26 @@
 						playstatus = 1;
 						$(".play-control").addClass("play");
 					}
-				})
+				}
 			})
-			// 产品标题超出隐藏
-			var goodsTitle = document.getElementsByClassName("goods-title");
-			for (i = 0; i < goodsTitle.length; i++) {
-				var txt = goodsTitle[i].innerHTML;
-				if (txt.length > 20) {
-					txt = txt.substring(0, 25 - 1) + "..."
-					goodsTitle[i].innerHTML = txt;
-				} else {
-					console.log("error")
-				}
-			}
-			// 名片地址超出隐藏
-			var contain = document.getElementById("sixth-row");
-			overText(contain, 10);
-
-			function overText(tgt, num) {
-				var txt = tgt.innerHTML;
-				if (txt.length > num) {
-					txt = txt.substring(0, num - 1) + "..."
-					tgt.innerHTML = txt;
-				} else {
-					console.log("error")
-				}
+			// 获取资料
+			function getFriendsInfo() {
+				var userInfo = getUserInfo();
+				mui.post($ajaxUrl + 'customer&action=detail&type=friend', {
+					token: userInfo.token,
+					user_id: fid
+				}, function(res) {
+					var data = res.data;
+					if (res.errno == 0) {
+						muiCont.cardType = data.card_type;
+						muiCont.contName = data.name;
+						muiCont.phoneNum = data.phone;
+						muiCont.friendData = data;
+					} else {
+						message(res.errno.message)
+					}
+					logs(res);
+				}, 'json')
 			}
 			$("#showInfo").click(function() {
 				$(this).find("i").toggleClass("mui-icon-arrowdown");
@@ -253,10 +239,14 @@
 				$(".card-info-container").slideToggle();
 			})
 			$("body").removeClass("mui-hidden");
-
-			mui(".friends-detail-container").on("tap", "#reliable-btn,.click-agree", function() {
-				this.classList.toggle('active');
-			})
+			// 点赞
+			function clickAgree() {
+				$(".click-agree").toggleClass('active');
+			}
+			// 靠谱
+			function reliable() {
+				$("#reliable-btn").toggleClass('active');
+			}
 			//  复制方法
 			function copy_fun(copy) {
 				//判断是安卓还是ios
