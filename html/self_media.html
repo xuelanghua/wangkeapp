@@ -272,7 +272,16 @@
 					auto: true,
 					contentrefresh: "正在加载...",
 					contentnomore: '没有更多数据了',
-					callback: pullfresh_function
+					callback: function() {
+						pullfresh_function(true, false)
+					}
+				},
+				down: {
+					style:'circle',//单webview模式的下拉刷新 
+					color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+					callback: function() {
+						pullfresh_function(false, true)
+					}
 				}
 			},
 			beforeback: function() {
@@ -286,9 +295,13 @@
 		mui.plusReady(function() {
 			mui.showLoading("正在加载..","div");
 			window.addEventListener('scrollTop', function(event) {
-				console.log(2222);
 				window.scrollTo(0, 0);
 			});
+			
+			window.addEventListener('advSettingFinish', function() {
+				console.log('advSettingFinish');
+				window.location.reload();
+			})
 			slideReady(); //幻灯片
 			class_list(); //文章分类
 			
@@ -401,7 +414,7 @@
 		}
 
 
-		function pullfresh_function() {
+		function pullfresh_function(up, down) {
 			var userInfo = getUserInfo();
 			var str = '';
 			var url = $ajaxUrl + 'article';
@@ -433,12 +446,17 @@
 				} else {
 					loadding = 1;
 				}
+				if (loadding == 0 && up) {
+					mui('#article_bottom').pullRefresh().endPullupToRefresh(false);
+					// this.endPullupToRefresh(false);
+				} else if (loadding == 1 && up) {
+					mui('#article_bottom').pullRefresh().endPullupToRefresh(true);
+					// this.endPullupToRefresh(true);
+				} else if (down) {
+					mui('#article_bottom').pullRefresh().endPulldownToRefresh();
+					// this.pullRefresh().endPulldownToRefresh();
+				}
 			}, 'json');
-			if (loadding == 0) {
-				this.endPullupToRefresh(false);
-			} else {
-				this.endPullupToRefresh(true);
-			}
 		}
 
 		function update_class(id) {
