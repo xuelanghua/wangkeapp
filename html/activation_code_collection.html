@@ -7,6 +7,12 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style type="text/css">
+			.collection-code-container .section-body .section-items .section-input input {
+				/* background-color: rgba(0, 0, 0, 0.3); */
+				min-width: 0.6rem;
+			}
+		</style>
 	</head>
 
 	<body class="mui-hidden" style="position: relative;min-height: 100%;">
@@ -14,40 +20,42 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">激活码领取</h1>
 		</header>
-		<div class="mui-content collection-code-container">
+		<div id="collections" class="mui-content collection-code-container">
 			<div class="section-top">
 				<img src="../image/activation_code_collection02.png">
 				<h2>服务站</h2>
 			</div>
 			<div class="section-body">
 				<div class="section-shell">
-					<div class="section-items">
+					<div class="section-items" v-if="userType==1">
 						<h2>服务中心激活码</h2>
 						<div class="section-input">
-							<input type="number" value="50"></input><label>个</label>
+							<input type="number" value="0" v-model="srCoder"></input><label>个</label>
 						</div>
 					</div>
-					<div class="section-items">
+					<div class="section-items"  v-if="userType==1||userType==2">
 						<h2>服务站激活码</h2>
 						<div class="section-input">
-							<input type="number" value="0"></input><label>个</label>
+							<input type="number" value="0" v-model="znCoder"></input><label>个</label>
 						</div>
 					</div>
-					<div class="section-items">
+					<div class="section-items"  v-if="userType==1||userType==2||userType==3">
 						<h2>创客激活码</h2>
 						<div class="section-input">
-							<input type="number" value="50"></input><label>个</label>
+							<input type="number" value="0" v-model="ckCoder"></input><label>个</label>
 						</div>
 					</div>
-					<div class="section-items">
+					<div class="section-items" v-if="userType==1||userType==2||userType==3||userType==4">
 						<h2>VIP激活码</h2>
 						<div class="section-input">
-							<input maxlength="6" type="number" value="0"></input><label>个</label>
+							<input maxlength="6" type="number" value="0" v-model="vipCoder"></input><label>个</label>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="confirm-section">
+				<p class="tips-info" v-if="status==1">您有<span>{{surplus}}</span>个VIP可以领取！</p>
+				<p class="tips-info" v-else>您领超了<span>{{surplus}}</span>个VIP！</p>
 				<button type="button">确定</button>
 				<p>确定领取后将无法更改</p>
 			</div>
@@ -55,6 +63,7 @@
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/Zepto.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			// 初始化字体大小
@@ -65,20 +74,86 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-			mui.plusReady(function() {
-				logs("激活码领取")
+			// vue实例初始化
+			var collection = new Vue({
+				el: "#collections",
+				data() {
+					return {
+						srCoder: 0,
+						znCoder: 0,
+						ckCoder: 0,
+						vipCoder: 0,
+						userType: 1,
+						status: 1
+					}
+				},
+				mounted: function() {
+					mui.init();
+					mui.plusReady(function() {
+						logs("激活码领取")
+					});
+				},
+				computed: {
+					surplus: function() {
+						var num = 0;
+						if (this.userType == 1) {
+							num = parseInt((500000 - this.srCoder * 200000 - this.znCoder * 50000 - this.ckCoder * 9999 - this.vipCoder *199) / 199);
+							if (num >= 0) {
+								this.status = 1;
+								return num;
+							} else {
+								this.status = 2;
+								return Math.abs(num);
+							}
+						} else if (this.userType == 2) {
+							num = parseInt((200000 - this.znCoder * 50000 - this.ckCoder * 9999 - this.vipCoder *199) / 199);
+							if (num >= 0) {
+								this.status = 1;
+								return num;
+							} else {
+								this.status = 2;
+								return Math.abs(num);
+							}
+						} else if (this.userType == 3) {
+							num = parseInt(( 50000 - this.ckCoder * 9999 - this.vipCoder *199) / 199);
+							if (num >= 0) {
+								this.status = 1;
+								return num;
+							} else {
+								this.status = 2;
+								return Math.abs(num);
+							}
+						} else if (this.userType == 4) {
+							num = parseInt((9999 - this.vipCoder *199) / 199);
+							if (num >= 0) {
+								this.status = 1;
+								return num;
+							} else {
+								this.status = 2;
+								return Math.abs(num);
+							}
+						}
+
+					}
+				}
 			});
 			$(function() {
 				$('input').bind('input propertychange', function() {
 					var obj = $(this);
-					var text_length = obj.val().length; 
+					var text_length = obj.val().length;
 					var width = parseInt(text_length) * 16;
-					if(width<100){
+					if (width < 100) {
 						obj.css('width', width + 'px');
-					}else{
+					} else {
 						obj.css('width', 100 + 'px');
 					}
 				});
+			})
+			mui(".mui-content").on("tap", ".mask-container", function() {
+				collection.tips = false;
+			})
+			mui(".mui-content").on("tap", ".tips-cont", function() {
+
 			})
 		</script>
 	</body>
