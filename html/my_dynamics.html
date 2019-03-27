@@ -93,6 +93,7 @@
 				mounted: function() {
 					mui.plusReady(function() {
 						behaviorStatistics();
+						plus.navigator.setStatusBarStyle('dark');
 					});
 				}
 			});
@@ -103,16 +104,17 @@
 					skip: skipNum,
 					limit: 5
 				}, function(res) {
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0 && skipNum == 1) {
 						muiCont.dataList = data;
 						mui('#mui-content').pullRefresh().endPulldown();
-						if(data.length<1){
+						if (data.length < 1) {
 							muiCont.voidDy = true;
 						}
 					} else if (res.errno == 0 && skipNum > 1) {
 						muiCont.dataList = muiCont.dataList.concat(data);
-						if(data.length<1){
+						if (data.length < 1) {
 							muiCont.voidDy = true;
 						}
 						mui('#mui-content').pullRefresh().endPullupToRefresh();
@@ -122,15 +124,14 @@
 				}, 'json')
 			}
 			// 删除按钮
-			function delBtn(tid,index) {
+			function delBtn(tid, index) {
 				mui.post($ajaxUrl + 'timeline&action=delete', {
 					token: userInfo.token,
 					tid: tid
 				}, function(res) {
 					if (res.errno == 0) {
 						behaviorStatistics();
-						// logs(skipNum);
-						muiCont.dataList.splice(index,1)
+						muiCont.dataList.splice(index, 1)
 						message("已删除")
 					} else {
 						message(res.message)
@@ -143,24 +144,16 @@
 			}
 			// 打开详情
 			function opDetail(detailId) {
-				fnOpenWin("dynamics_detail.html", "dynamics_detail", {
-					statusbar: {
-						background: '#f7f7f7'
-					}
-				}, {
+				openPage('dynamics_detail.html', 'dynamics_detail', '#f7f7f7', {
 					aid: detailId
-				}, 'slide-in-right');
+				})
 			}
 			// 发布完新动态刷新列表页面
 			window.addEventListener('refresh', function(e) {
 				behaviorStatistics();
 			});
 			mui(".mui-content").on("tap", ".create-dynamics", function() {
-				fnOpenWin("issue_dynamics.html", "issue_dynamics", {
-					statusbar: {
-						background: '#f7f7f7'
-					}
-				}, '', 'slide-in-right');
+				openPage('issue_dynamics.html', 'issue_dynamics', '#f7f7f7', '')
 			})
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		</script>

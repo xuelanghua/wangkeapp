@@ -11,10 +11,10 @@
 	<body class="mui-hidden">
 		<header class="mui-bar mui-bar-nav friends-detail-header">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">胡尚</h1>
+			<h1 class="mui-title"></h1>
 			<span class="mui-pull-right mui-icon">···</span>
 		</header>
-		<div id="mui-content" class="mui-content friends-detail-container">
+		<div  id="mui-content" class="mui-content friends-detail-container">
 			<!-- 名片样式一 -->
 			<div v-if="cardType=='cardType2'" class="first-card-container">
 				<div class="card">
@@ -38,8 +38,8 @@
 					<img class="user-head-img" :src="friendData.avatar">
 					<div class="user-info">
 						<h4>{{friendData.name}}</h4>
-						<p>{{friendData.job}}</p>
-						<p>{{friendData.company_address}}</p>
+						<p>{{friendData.job==''?'还未填写':friendData.job}}</p>
+						<p>{{friendData.company_address==''?'还未填写':friendData.company_address}}</p>
 					</div>
 				</div>
 			</div>
@@ -75,25 +75,25 @@
 						</li>
 						<span>···</span>
 					</ul>
-					<p>最近5人浏览</p>
+					<p>最近{{friendData.card_count}}人浏览</p>
 				</div>
 				<div id="reliable-btn" class="browse-record-right" @tap="reliable">
 					<span class="click-heart"></span>
-					<span>靠谱:0</span>
+					<span>靠谱:{{friendData.like_count}}</span>
 				</div>
 			</div>
 			<h5 class="personality-desc">个性签名</h5>
 			<div class="personality-cont">
-				<p>越努力越幸运越努力越幸运越努力越幸运越努力越幸运越努力越幸运越努力越幸运</p>
+				<p v-html="friendData.desc"></p>
 				<div class="user-info">
 					<div class="user-head-img"><img src="../image/kaol.jpg"></div>
 					<!-- 添加 play是播放状态的图标-->
-					<div id="audio-control" class="play-control" @tap="playVoice">
+					<div id="audio-control" class="play-control">
 						<div class="left-arrow"></div>
 						<i class="play-status"></i>
 						<div class="right-info mui-pull-right">
 							<i></i>
-							<span id="timer-num">30</span>
+							<span id="timer-num">{{friendData.voice_time}}</span>
 						</div>
 					</div>
 					<div class="click-agree" @tap="clickAgree">
@@ -104,8 +104,8 @@
 			</div>
 			<h5 class="personality-desc">主推商品</h5>
 			<div class="goods-window">
-				<ul class="goods-lists">
-					<li class="goods-item">
+				<ul class="goods-lists" v-if="friendData.goods !== undefined && friendData.goods.length >0 ">
+					<li class="goods-item" v-for="(goods,index) in friendData.goods" :key="index">
 						<div class="goods-img">
 							<img src="../image/kaol.jpg">
 						</div>
@@ -115,21 +115,14 @@
 							<p class="price">&yen;<span id="goods-price">20.00</span></p>
 						</div>
 					</li>
-					<li class="goods-item">
-						<div class="goods-img">
-							<img src="../image/kaol.jpg">
-						</div>
-						<div class="goods-desc">
-							<p class="goods-title mui-ellipsis-2">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
-							<p class="spec">规格：默认</p>
-							<p class="price">&yen;<span id="goods-price">20.00</span></p>
-						</div>
-					</li>
 				</ul>
+				<div v-else style="font-size: 0.28rem;color: #999999;">
+					暂无商品
+				</div>
 			</div>
 			<h5 class="personality-desc">图片展示</h5>
 			<div class="img-show">
-				<img src="../image/kaol.jpg">
+				<img :src="img" v-for="img in friendData.images">
 			</div>
 			<div class="add-friend-btn">
 				<img src="../image/icon/add_friends_icon.png" class="constrain-img">
@@ -165,50 +158,50 @@
 					cardType: 'cardType1',
 					friendData: {},
 					contName: '',
-					phoneNum: ''
-
+					phoneNum: '',
+					audiourl: ""
 				},
 				created: function() {},
-				mounted: function() {}
-			});
-			// 超出文本隐藏
-			var voice = null;
-			var playstatus = 0;
-			var audiourl = "../image/alice.mp3";
-			mui.plusReady(function() {
-				var self = plus.webview.currentWebview();
-				fid = self.fid;
-				logs(fid);
-				getFriendsInfo();
-				// 音频播放
-				var voice = plus.audio.createPlayer(audiourl);
-				function playVoice() {
-					if (plus.audio == undefined) {
-						message("设备没有准备好！");
-						return;
-					}
-					if (playstatus == 0) {
-						voice.play(function() {
-							voice.stop();
-							// 播放完成停止播放
-							playstatus == 0;
-							$(".play-control").removeClass("play", "pause");
-						}, function(e) {
-							message("播放失败");
-						});
-						playstatus = 1;
-						$(".play-control").addClass("play");
-					} else if (playstatus == 1) {
-						voice.pause();
-						$(".play-control").removeClass("play");
-						playstatus = 2;
-					} else {
-						voice.resume();
-						playstatus = 1;
-						$(".play-control").addClass("play");
-					}
+				mounted: function() {
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						fid = self.fid;
+						getFriendsInfo();
+						// 音频播放
+						var voice = null;
+						var playstatus = 0;
+						var voice = plus.audio.createPlayer(muiCont.audiourl);
+						mui(".mui-content").on("tap", ".play-control", function() {
+							if (plus.audio == undefined) {
+								message("设备没有准备好！");
+								return;
+							}
+							if (playstatus == 0) {
+								voice.play(function() {
+									voice.stop();
+									// 播放完成停止播放
+									playstatus == 0;
+									$(".play-control").removeClass("play", "pause");
+								}, function(e) {
+									message("播放失败");
+									$(".play-control").removeClass("play", "pause");
+								});
+								playstatus = 1;
+								$(".play-control").addClass("play");
+							} else if (playstatus == 1) {
+								voice.pause();
+								$(".play-control").removeClass("play");
+								playstatus = 2;
+							} else {
+								voice.resume();
+								playstatus = 1;
+								$(".play-control").addClass("play");
+							}
+						})
+					})
 				}
-			})
+			});
+		
 			// 获取资料
 			function getFriendsInfo() {
 				var userInfo = getUserInfo();
@@ -216,16 +209,18 @@
 					token: userInfo.token,
 					user_id: fid
 				}, function(res) {
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0) {
 						muiCont.cardType = data.card_type;
 						muiCont.contName = data.name;
 						muiCont.phoneNum = data.phone;
 						muiCont.friendData = data;
+						muiCont.audiourl=data.voice;
+						mui(".mui-title")[0].innerText=data.name;
 					} else {
 						message(res.errno.message)
 					}
-					logs(res);
 				}, 'json')
 			}
 			$("#showInfo").click(function() {

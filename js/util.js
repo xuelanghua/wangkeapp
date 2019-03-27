@@ -190,3 +190,34 @@ function formatDate(format, date) {
 	format = format.replace('s', second);
 	return format;
 }
+
+// 打开窗口
+function openPage(url,id,color,extras){
+	mui.openWindow({
+		url: url,
+		id: id,
+		styles: {
+			bounce: 'vertical',
+			scrollsToTop: true,
+			statusbar: {
+				background: color
+			}
+		},
+		extras: extras,
+		createNew: false,
+		show: {
+			autoShow: true,
+			aniShow: 'slide-in-right',
+			duration: 300,
+			event: 'titleUpdate',
+			extras: {
+				acceleration: 'auto',
+				capture: '',
+				otherCapture: ''
+			}
+		},
+		waiting: {
+			autoShow: false
+		}
+	})
+}
