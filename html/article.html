@@ -204,13 +204,13 @@
 			<h1 class="mui-title" id="article_top"></h1>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content mui-hidden">
 			<div class="article">
 				<div class="article-title">
 					<h1 style="margin-top: 20px;" id="article_title"></h1>
 					<div class="author">
-						<span id="article_author">托尼.斯塔克</span>
-						<span style="margin-left: 10px;" id="article_addtime">2018-11-09</span>
+						<span id="article_author"></span>
+						<span style="margin-left: 10px;" id="article_addtime"></span>
 					</div>
 					<div class="visit">
 						<div class="visitl mui-pull-left" id="read_headimg">
@@ -244,7 +244,7 @@
 						</div>
 						<div class="visitr mui-pull-right">
 							<span>阅读：</span>
-							<span id="article_click">520</span>
+							<span id="article_click"></span>
 						</div>
 						<div class="clearfix"></div>
 					</div>
@@ -446,7 +446,7 @@
 			var extras = {
 				article_id: article_id
 			};
-			var w = plus.webview.create('red_envelopes.html', 'red_envelopes', styles, extras);
+			var w = plus.webview.create('adv_setting.html', 'adv_setting', styles, extras);
 			w.show(); // 显示窗口
 		})
 
@@ -579,6 +579,8 @@
 					plus.webview.close(ws);
 				}, 2000);
 			}
+			
+			document.querySelector('.mui-content').classList.remove('mui-hidden');
 		}, 'json');
 	}
 
