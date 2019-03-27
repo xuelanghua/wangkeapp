@@ -1,9 +1,8 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
-		<title>新增商品</title>
+		<title>编辑商品</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/mui.picker.css" rel="stylesheet" />
@@ -121,7 +120,7 @@
 				background-color: #F5CA3A;
 			}
 			.upper_shelf{
-				width: 50%;
+				width: 100%;
 			}
 			.warehouse{
 				width: 50%;
@@ -157,7 +156,7 @@
 			.add_choice img{
 				width: 25px;
 				float: right;
-				margin-top: -35%;
+				margin-top: -30%;
 				margin-right: -20px;
 				transform:rotate(180deg);
 			}
@@ -347,18 +346,17 @@
 			}
 		</style>
 	</head>
-
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">新增商品</h1>
+			<h1 class="mui-title">编辑商品</h1>
 		</header>
-
 		<div class="mui-content">
+			<!-- 商品id -->
+			<input type="hidden" id="goods_id" value="" />
 			<div class="mui-input-row" style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
-				<textarea name="name" rows="3" placeholder="请输入商品名称"></textarea>
+				<textarea name="name" id="good_name" rows="3" placeholder="请输入商品名称"></textarea>
 			</div>
-
 			<div class="chart">
 				<div id="pic-container">
 					<!-- <div class="picture_display_chear" id="add_pic">
@@ -375,12 +373,8 @@
 					<input type="hidden" name="images" />
 				</div>
 			</div>
-
 			<div class="tips">
-				<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 -->
-				精美的商品图片让商品脱颖而出
-			</div>
-
+				<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 --> 精美的商品图片让商品脱颖而出 </div>
 			<div class="bian">
 				<div class="recommend">
 					<div class="mui-input-row">
@@ -392,7 +386,6 @@
 					<div class="tishi">设为推荐则该商品会在所属商品分类中置顶</div>
 				</div>
 			</div>
-
 			<div class="bian">
 				<div class="choice" style="padding: 10px 0;padding-bottom" id="goods_type_pick">
 					<div class="mui-table-view-cell">
@@ -402,22 +395,20 @@
 					</div>
 				</div>
 			</div>
-
 			<div class="bian" style="margin-top: 10px;">
 				<div class="choice">
 					<div class="mui-table-view-cell">
 						<span>价格</span>
-						<input type="number" name="price" placeholder="给商品定个好价格" />
+						<input type="number" name="price" placeholder="给商品定个好价格" id="good_price" />
 					</div>
 				</div>
 				<div class="choice1">
 					<div class="mui-table-view-cell">
 						<span>库存</span>
-						<input type="number" name="stock" placeholder="设置合理库存避免超卖" />
+						<input type="number" name="stock" placeholder="设置合理库存避免超卖" id="good_stock" />
 					</div>
 				</div>
 			</div>
-
 			<div style="background-color: #FFFFFF;padding-top: 20px;padding-bottom: 10px;" id="goods_spe">
 				<!-- <div class="add_choice">
 					<div class="choice" style="padding: 10px 0;">
@@ -433,24 +424,8 @@
 						<input type="text" placeholder="设置合理的库存避免超卖" />
 					</div>
 					<img src="../image/add_choice.png">
-				</div>
-				<div class="add_choice">
-					<div class="choice" style="padding: 10px 0;">
-						<span>规格</span>
-						<input type="text" placeholder="尺寸,大小,颜色等" />
-					</div>
-					<div class="choice" style="padding: 10px 0;">
-						<span>价格</span>
-						<input type="text" placeholder="给商品定个好价格" />
-					</div>
-					<div class="choice" style="padding: 10px 0;">
-						<span>库存</span>
-						<input type="text" placeholder="设置合理的库存避免超卖" />
-					</div>
-					<img src="../image/add_choice.png">
 				</div> -->
 			</div>
-
 			<div class="adding_commodity_specifications" id="add_spec">
 				<span class="mui-pull-left">
 					<img src="../image/add_vew.png">
@@ -458,54 +433,50 @@
 				<span class="mui-pull-left" style="margin: 0 0 0 10px;">添加商品规格</span>
 				<div class="clearfix"></div>
 			</div>
-
 			<div class="bian">
 				<div class="choice">
 					<div class="mui-table-view-cell">
 						<span>销量</span>
-						<input type="number" name="sale_count" placeholder="设置商品的虚拟销量" />
+						<input type="number" name="sale_count" placeholder="设置商品的虚拟销量" id="good_sale_count" />
 					</div>
 				</div>
 				<div class="choice1">
 					<div class="mui-table-view-cell">
 						<span>浏览量</span>
-						<input type="number" name="view_count" placeholder="设置商品的虚拟浏览量" />
+						<input type="number" name="view_count" placeholder="设置商品的虚拟浏览量" id="good_view_count" />
 					</div>
 				</div>
 				<div class="choice">
 					<div class="mui-table-view-cell">
 						<span>排序值</span>
-						<input type="number" name="top" placeholder="倒序, 值越大排名越靠前" />
+						<input type="number" name="top" placeholder="倒序, 值越大排名越靠前" id="good_top" />
 					</div>
 				</div>
 			</div>
-
 			<div class="bian" style="margin-top: 10px;">
 				<div class="choice">
 					<div class="mui-table-view-cell">
 						<span>运费</span>
-						<input type="number" name="freight" placeholder="不填则视为包邮" />
+						<input type="number" name="freight" placeholder="不填则视为包邮" id="good_freight" />
 					</div>
 				</div>
 			</div>
-
 			<div class="bian">
 				<div class="choice" style="margin: 10px 0 80px 0; padding: 10px 0;" id="goods_detail">
 					<div class="mui-table-view-cell">
 						<span>商品图文描述</span>
 						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
-						<p class="mui-pull-right" id="content_desc">未添加</p>
+						<p class="mui-pull-right" id="content_desc">点击编辑</p>
 					</div>
 				</div>
 			</div>
-
 			<div class="selection_function">
-				<div class="mui-pull-left upper_shelf form-submit" data-status="1">上架出售</div>
-				<div class="mui-pull-right warehouse form-submit" data-status="0">放入仓库</div>
+				<div class="mui-pull-left upper_shelf form-submit" data-status="1">完成修改</div>
 				<div class="clearfix"></div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
+		<script src="../js/Zepto.min.js"></script>
 		<script src="../js/mui.picker.js"></script>
 		<script src="../js/mui.poppicker.js"></script>
 		<script src="../js/mui.zoom.js"></script>
@@ -516,9 +487,9 @@
 			mui.init({
 				swipeBack: true
 			})
-
 			var flag = true;
 			var imageId = 0;
+			//存储图片的数组
 			var images = new Array();
 			var specId = 0;
 			var spec = new Array();
@@ -528,40 +499,187 @@
 			var type_p = 0; //一级分类
 			var status = 0;
 			var goodsTypeTitle = '';
-			var goodsType='';
 			var userInfo = getUserInfo();
+			//2019-3-27 新增 分类数组容器
+			var good_type_container = '';
+			//2019-3-27 新增 商品规格容器
+			var good_spec_container = '';
 			mui.plusReady(function() {
+				//获取商品规格
+				getGoodSpec();
+				//获取商品类型
 				getGoodsType();
+				//获取商品信息
+				getGoodInfo();
 				eventInit();
 				mui.previewImage();
 			})
-
+			//获取商品的信息
+			function getGoodInfo() {
+				var wv = plus.webview.currentWebview();
+				var goodid = wv.goods_id;
+				var ajax_url = $ajaxUrl + 'goods';
+				mui.ajax(ajax_url, {
+					data: {
+						good_id: goodid,
+						action: 'get_goods_by_id',
+						token: userInfo.token
+					},
+					dataType: 'json',
+					type: 'post',
+					timeout: 10000,
+					success: function(ret) {
+						console.log(JSON.stringify(ret));
+						console.log(JSON.stringify(ret.data.name));
+						//商品id
+						$('#goods_id').val(ret.data.id);
+						//商品名称
+						$('#good_name').val(ret.data.name);
+						//获取推荐值
+						recommend = ret.data.recommend;
+						//推荐状态为1 打开开关
+						if (recommend == 1) {
+							mui("#recommend_switch").switch().toggle();
+						}
+						//获取价格
+						$('#good_price').val(ret.data.price);
+						//获取库存
+						$('#good_stock').val(ret.data.stock);
+						//获取规格
+						for (var i = 0; i < good_spec_container.length; i++) {
+							var newImgDiv = document.createElement('div');
+							newImgDiv.setAttribute('data-id', imageId);
+							newImgDiv.classList.add('add_choice');
+							newImgDiv.dataset.specid = specId;
+							var html = '<div class="choice" style="padding: 10px 0;">';
+							html += '<span>规格</span>';
+							html += '<input type="text" placeholder="尺寸,大小,颜色等" value="'+good_spec_container[i].title+'" />';
+							html += '</div>';
+							html += '<div class="choice" style="padding: 10px 0;">';
+							html += '<span>价格</span>';
+							html += '<input type="number" placeholder="给商品定个好价格" value="'+good_spec_container[i].price+'" />';
+							html += '</div>';
+							html += '<div class="choice" style="padding: 10px 0;">';
+							html += '<span>库存</span>';
+							html += '<input type="number" placeholder="设置合理的库存避免超卖" value="'+good_spec_container[i].stock+'" />';
+							html += '</div>';
+							html += '<img src="../image/add_choice.png" class="spec-remove">';
+							newImgDiv.innerHTML = html;
+							document.getElementById('goods_spe').appendChild(newImgDiv);
+							specId++;
+						}
+						//获取销量
+						$('#good_sale_count').val(ret.data.sale_count);
+						//获取浏览量
+						$('#good_view_count').val(ret.data.view_count);
+						//获取排序
+						$('#good_top').val(ret.data.top);
+						//获取运费
+						$('#good_freight').val(ret.data.freight);
+						//获取图片链接 并读取原图片
+						var img_url_str = ret.data.images;
+						for (var i = 0; i < img_url_str.length; i++) {
+							// alert(img_url_str[i]);
+							// alert(images);
+							//下标量自增
+							imageId++;
+							//往图片数组中追加图片
+							images[imageId] = img_url_str[i];
+							//js新建一个div 用于展示刚刚添加的图片
+							var newImgDiv = document.createElement('div');
+							//设置该div的id
+							newImgDiv.setAttribute('data-id', imageId);
+							//为该div设置相关的类
+							newImgDiv.classList.add('picture_display_chear');
+							//拼装一个图片标签展示图片
+							var html = '<img src="' + img_url_str[i] +
+								'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+							//插入html
+							newImgDiv.innerHTML = html;
+							//在照片容器之前插入一个元素
+							document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+						}
+						//获取商品类型
+						//设置商品类型id
+						type = ret.data.type;
+						//设置选择器的文字
+						for (var i = 0; i < good_type_container.length; i++) {
+							if (good_type_container[i].value == type) {
+								$('#goods_type').html(good_type_container[i].text);
+							}
+						}
+						//获取图文描述
+						//转换html实体
+						function htmlspecialchars_decode(str) {
+							str = str.replace(/&amp;/g, '&');
+							str = str.replace(/&lt;/g, '<');
+							str = str.replace(/&gt;/g, '>');
+							str = str.replace(/&quot;/g, "''");
+							str = str.replace(/&#039;/g, "'");
+							return str;
+						}
+						content = htmlspecialchars_decode(ret.data.content);
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(JSON.stringify('失败'));
+						console.log(JSON.stringify(errorThrown));
+					}
+				});
+			}
+			/**
+			 * 获取商品规格
+			 */
+			function getGoodSpec() {
+				var wv = plus.webview.currentWebview();
+				var goodid = wv.goods_id;
+				var ajax_url = $ajaxUrl + 'goods';
+				mui.ajax(ajax_url, {
+					data: {
+						good_id: goodid,
+						action: 'get_good_spec_by_id',
+						token: userInfo.token
+					},
+					dataType: 'json',
+					type: 'post',
+					timeout: 10000,
+					success: function(ret) {
+						good_spec_container = ret.data;
+						console.log(JSON.stringify('成功'));
+						console.log(JSON.stringify(ret));
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(JSON.stringify('失败'));
+						console.log(JSON.stringify(errorThrown));
+					}
+				});
+			}
 			//事件初始化
 			function eventInit() {
 				//详情添加完毕监听
-				window.addEventListener('detailAdd', function(event) {
+				window.addEventListener('detailUpdate', function(event) {
 					content = event.detail.content;
 					if (content.length != 0) {
 						document.getElementById('content_desc').innerText = '点击编辑';
 					} else {
-						document.getElementById('content_desc').innerText = '未添加';
+						document.getElementById('content_desc').innerText = '点击编辑';
 					}
 				})
-
 				//商品分类选择监听
 				document.getElementById('goods_type_pick').addEventListener('tap', function() {
 					goodsTypePick();
 				})
-
 				//推荐开关监听
 				document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
 					if (event.detail.isActive) {
 						recommend = 1;
+						console.log(event);
+						console.log(recommend);
 					} else {
-						recommend = 1;
+						recommend = 0;
+						console.log(event);
+						console.log(recommend);
 					}
 				})
-
 				//添加商品详情
 				mui('.mui-content').on('tap', '#goods_detail', function() {
 					fnOpenWin('goods_detail.html', 'goods_detail', {
@@ -572,22 +690,30 @@
 						content: content
 					}, 'slide-in-right');
 				})
-
 				//上传主图
 				document.getElementById('add_pic').addEventListener('tap', function() {
+					//调用图片上传功能
 					imageUpload(function(res) {
-						images[imageId] = res.url;
+						//上传完一张图片 运用返回的参数进行图片添加
+						//返回图片的存储地址 并追加进图片数组中
+						//下标量自增
 						imageId++;
+						images[imageId] = res.url;
+						//js新建一个div 用于展示刚刚添加的图片
 						var newImgDiv = document.createElement('div');
+						//设置该div的id
 						newImgDiv.setAttribute('data-id', imageId);
+						//为该div设置相关的类
 						newImgDiv.classList.add('picture_display_chear');
+						//拼装一个图片标签展示图片
 						var html = '<img src="' + res.url +
 							'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+						//插入html
 						newImgDiv.innerHTML = html;
+						//在照片容器之前插入一个元素
 						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
 					});
 				})
-
 				//删除主图 
 				mui('#pic-container').on('tap', '.mui-close', function() {
 					var parentDiv = this.parentElement;
@@ -595,7 +721,6 @@
 					parentDiv.remove();
 					delete images[imgId];
 				})
-
 				document.getElementById('add_spec').addEventListener('tap', function() {
 					var newImgDiv = document.createElement('div');
 					newImgDiv.setAttribute('data-id', imageId);
@@ -618,15 +743,14 @@
 					document.getElementById('goods_spe').appendChild(newImgDiv);
 					specId++;
 				})
-
 				//移除规格
 				mui('.mui-content').on('tap', '.spec-remove', function() {
 					this.parentElement.remove();
 				})
-
-				//表单提交
+				//表单提交 上传商品
 				mui('.selection_function').on('tap', '.form-submit', function() {
 					status = this.dataset.status;
+					var goods_id=document.querySelector('input[id=goods_id]').value;
 					var goods_name = document.querySelector('textarea[name=name]').value;
 					var goods_price = document.querySelector('input[name=price]').value;
 					var goods_stock = document.querySelector('input[name=stock]').value;
@@ -695,6 +819,7 @@
 						spec[sid] = temp;
 					})
 					var submitData = {
+						goodId:goods_id,
 						name: goods_name,
 						images: images,
 						recommend: recommend,
@@ -710,19 +835,18 @@
 						status: status,
 						content: content
 					}
+					console.log(images);
 					formSubmit(submitData);
 				})
 			}
-
 			//获取商品分类
 			function getGoodsType() {
 				mui.post($ajaxUrl + 'goods', {
 					action: 'goods_category',
 					token: userInfo.token
 				}, function(res) {
-					console.log(JSON.stringify(res));
+					good_type_container = res.data;
 					if (res.errno == 0) {
-						console.log(1);
 						goodsType = res.data;
 						goodsTypeTitle = goodsType[0].text;
 						type_p = goodsType[0].value;
@@ -736,7 +860,6 @@
 					document.getElementById('goods_type').innerText = goodsTypeTitle;
 				}, 'json');
 			}
-
 			//选择商品分类
 			function goodsTypePick() {
 				var picker = new mui.PopPicker({
@@ -756,7 +879,6 @@
 					document.getElementById('goods_type').innerText = goodsTypeTitle;
 				})
 			}
-
 			//提交操作
 			function formSubmit(data) {
 				if (!flag) {
@@ -765,15 +887,16 @@
 				plus.nativeUI.showWaiting();
 				flag = false;
 				mui.post($ajaxUrl + 'goods', {
-					action: 'add',
+					action: 'update',
 					token: userInfo.token,
 					data: data
 				}, function(res) {
+					console.log(JSON.stringify(res));
 					if (res.errno == 0) {
-						message('添加成功!');
+						message('修改成功!');
 						setTimeout(function() {
-							plus.webview.close('goods_add');
-						}, 2000)
+							plus.webview.close('goods_edit');
+						}, 1000)
 					} else {
 						message(res.message);
 						flag = true;
