@@ -438,12 +438,15 @@
 			function eventInit() {
 				//商城首页
 				mui('.mui-content').on('tap', '#shop', function() {
-					fnOpenWin('shop_index.html', 'shop_index', {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, {page: 'my'}, 'slide-in-right');
-					setStatusBar('', 'dark');
+					var activation = checkMember();
+					if (activation) {
+						fnOpenWin('shop_index.html', 'shop_index', {
+							statusbar: {
+								background: '#F7F7F7'
+							}
+						}, {page: 'my'}, 'slide-in-right');
+						setStatusBar('', 'dark');
+					}
 				})
 
 				//目标
@@ -525,6 +528,7 @@
 							background: '#FFFFFF'
 						}
 					}, '', 'slide-in-right');
+					plus.navigator.setStatusBarStyle('dark');
 				});
 				
 			}

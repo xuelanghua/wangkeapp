@@ -11,11 +11,6 @@
 	</head>
 
 	<body>
-		<script src="../js/mui.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
-		
 		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;box-shadow: none;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #000000;"></a>
 			<h1 class="mui-title"style="color: #000000;">签到</h1>
@@ -56,8 +51,15 @@
 					<tbody id="idCalendar"></tbody>
 				</table>
 			</div>
-			<script type="text/javascript" src="js/rili.js"></script>
+			<script src="../js/mui.js"></script>
+			<!-- <script type="text/javascript" src="../js/rili.js"></script> -->
 			<script language="JavaScript">
+				mui.init({
+					swipeBack: true,
+					beforeback: function() {
+						plus.navigator.setStatusBarStyle('light');
+					}
+				})
 				var isSign = false;
 				var myday = new Array(); //已签到的数组
 	//			myday[0] = "1528646400"
