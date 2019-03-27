@@ -103,6 +103,7 @@
 					skip: skipNum,
 					limit: 5
 				}, function(res) {
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0 && skipNum == 1) {
 						muiCont.dataList = data;
@@ -129,7 +130,6 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						behaviorStatistics();
-						// logs(skipNum);
 						muiCont.dataList.splice(index,1)
 						message("已删除")
 					} else {
@@ -143,24 +143,16 @@
 			}
 			// 打开详情
 			function opDetail(detailId) {
-				fnOpenWin("dynamics_detail.html", "dynamics_detail", {
-					statusbar: {
-						background: '#f7f7f7'
-					}
-				}, {
+				openPage('dynamics_detail.html','dynamics_detail','#f7f7f7',{
 					aid: detailId
-				}, 'slide-in-right');
+				})
 			}
 			// 发布完新动态刷新列表页面
 			window.addEventListener('refresh', function(e) {
 				behaviorStatistics();
 			});
 			mui(".mui-content").on("tap", ".create-dynamics", function() {
-				fnOpenWin("issue_dynamics.html", "issue_dynamics", {
-					statusbar: {
-						background: '#f7f7f7'
-					}
-				}, '', 'slide-in-right');
+				openPage('issue_dynamics.html','issue_dynamics','#f7f7f7','')
 			})
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		</script>

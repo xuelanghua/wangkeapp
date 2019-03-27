@@ -39,18 +39,37 @@
 				</li>
 			</ul>
 		</div>
-		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript" src="../js/util.js"></script>
 		<script type="text/javascript">
-			mui.init();
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
 				viewport = 750
 			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			mui.init({
+				preloadPages: [{
+					url: "my_dynamics.html",
+					id: "my_dynamics"
+				}, {
+					url: "card_setting.html",
+					id: "card_setting"
+				}],
+				preloadLimit: 5
+			});
 			mui.plusReady(function() {
 				setUserCard();
+				setTimeout(function() {
+					var array = plus.webview.all();
+					if (array) {
+						for (var i = 0, len = array.length; i < len; i++) {
+							console.log(array[i].getURL());
+						}
+					}
+				}, 10000)
 			})
 
 			function setUserCard() {
@@ -58,16 +77,11 @@
 				document.getElementById("head-img").src = userInfo.avatarUrl;
 				document.getElementById("user-name").innerText = userInfo.nickName;
 			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
+
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			//主列表点击事件
 			mui(".mui-content").on("tap", ".edit", function() {
-				fnOpenWin('card_setting.html', 'card_setting', {
-					statusbar: {
-						background: '#f7f7f7'
-					}
-				}, '', 'slide-in-right');
+				openPage('card_setting.html', 'card_setting', '#ffffff', '');
 			})
 			mui(".mui-content").on("tap", ".share", function() {
 
@@ -76,11 +90,7 @@
 
 			})
 			mui(".mui-content").on("tap", ".issue", function() {
-				fnOpenWin('my_dynamics.html', 'my_dynamics', {
-					statusbar: {
-						background: '#f7f7f7'
-					}
-				}, '', 'slide-in-right');
+				openPage('my_dynamics.html', 'my_dynamics', '#f7f7f7', '');
 			})
 		</script>
 	</body>
