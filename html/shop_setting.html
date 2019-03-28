@@ -1,95 +1,104 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<style type="text/css">
-			p{
+			p {
 				margin-bottom: 0;
 			}
-			ul{
+
+			ul {
 				padding: 0;
 			}
-			a header{
+
+			a header {
 				margin: 0;
 			}
-			.clearfix{
+
+			.clearfix {
 				clear: both;
 			}
-			.mui-bar{
+
+			.mui-bar {
 				background-color: #FFFFFF;
 			}
-			.chart{
+
+			.chart {
 				width: 55px;
 				height: 55px;
 				border-radius: 50%;
 				margin-top: -3px;
 				margin-right: 0.625rem;
 			}
-			.header{
+
+			.header {
 				background-color: #FFFFFF;
 				margin-top: 0.8125rem;
 				font-size: 0.9375rem;
 				padding: 0.875rem 0.625rem;
 			}
-			.header p{
+
+			.header p {
 				font-size: 0.8125rem;
 				margin-top: 0.625rem;
 			}
-			.icon{
+
+			.icon {
 				font-size: 1rem;
 				color: #999999;
 				margin-top: -2.375rem;
 				margin-right: 0.25rem;
 			}
-			.title{
+
+			.title {
 				color: #333333;
 			}
-			
-			.function{
+
+			.function {
 				background-color: #FFFFFF;
 				margin-top: -3px;
 			}
-			.mui-media-object{
+
+			.mui-media-object {
 				width: 1.1875rem;
 				height: 1.1875rem;
 				margin-right: 0.9375rem;
 				margin-left: 0.5rem;
 			}
-			.mui-table-view-cell{
+
+			.mui-table-view-cell {
 				padding: 16px 0.625rem;
 			}
-			.tishi{
+
+			.tishi {
 				font-size: 15px;
 				color: #000000;
 			}
-			.mui-table-view-cell > a:not(.mui-btn){
+
+			.mui-table-view-cell>a:not(.mui-btn) {
 				margin: -16px -15px;
 			}
 		</style>
 	</head>
-
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">店铺管理</h1>
 		</header>
-		
 		<div class="mui-content">
 			<div class="header" id="store_setting">
 				<a href="javascript:void(0);">
-					<img class="chart mui-pull-left" src="../image/user_default.png">
+					<img class="chart mui-pull-left" id="avatar" src="../image/user_default.png">
 					<div class="mui-media-body">
-						<div class="title">小3食客</div>
-						<p class='mui-ellipsis mui-table-view-chevron'>小3食客传播休闲能量，也就是休闲吃作死玩...</p>
+						<div class="title" id="title">&nbsp;</div>
+						<p class='mui-ellipsis mui-table-view-chevron' id="description">&nbsp;</p>
 					</div>
 					<div class="mui-icon mui-icon-arrowright mui-pull-right icon"></div>
 				</a>
 			</div>
-			
 			<div class="function">
 				<ul class="mui-table-view-chevron">
 					<li class="mui-table-view-cell mui-media">
@@ -116,14 +125,66 @@
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			mui.init()
-			mui(".mui-content").on("tap","#store_setting",function(){
-				fnOpenWin("store_setting.html", "store_setting", {
-					statusbar: {
-						background: '#f7f7f7'
+			//页面加载完毕
+			mui.plusReady(function() {
+				eventinit();
+				getSelfStoreInfo();
+			});
+			/**
+			 * 绑定元素监听
+			 */
+			function eventinit() {
+				//点击自己店铺图标
+				mui(".mui-content").on("tap", "#store_setting", function() {
+					fnOpenWin("store_setting.html", "store_setting", {
+						statusbar: {
+							background: '#f7f7f7'
+						}
+					}, '', 'slide-in-right');
+				})
+			}
+			//获取用户信息
+			var userInfo = getUserInfo();
+			var uid = userInfo.id;
+			var utoken = userInfo.token;
+			//获取当前用户的店铺信息
+			function getSelfStoreInfo() {
+				var ajax_url = $ajaxUrl + 'store';
+				mui.ajax(ajax_url, {
+					data: {
+						action: 'getSelfStoreInfo',
+						token: utoken,
+					},
+					dataType: 'json',
+					type: 'post',
+					timeout: 10000,
+					success: function(ret) {
+						console.log(JSON.stringify('成功'));
+						console.log(JSON.stringify(ret));
+						if(ret.errno==1){
+							//提示后 跳转到店铺信息设置页面
+							message(ret.message);
+							fnOpenWin("store_setting.html", "store_setting", {
+								statusbar: {
+									background: '#f7f7f7'
+								}
+							}, '', 'slide-in-right');
+							plus.webview.close('shop_setting','none');
+						}
+						if(ret.errno==0){
+							console.log(ret.data.avatar);
+							document.getElementById('title').innerHTML=ret.data.store_name;
+							document.getElementById('avatar').src=ret.data.store_avatar;
+							document.getElementById('description').innerHTML=ret.data.store_description;
+							document.getElementById('title').innerHTML=ret.data.store_name;
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(JSON.stringify('失败'));
+						console.log(JSON.stringify(errorThrown));
 					}
-				}, '', 'slide-in-right');
-			})
+				});
+			}
 		</script>
 	</body>
-
 </html>
