@@ -33,13 +33,13 @@
 							<input type="number" value="0" v-model="srCoder"></input><label>个</label>
 						</div>
 					</div>
-					<div class="section-items"  v-if="userType==1||userType==2">
+					<div class="section-items" v-if="userType==1||userType==2">
 						<h2>服务站激活码</h2>
 						<div class="section-input">
 							<input type="number" value="0" v-model="znCoder"></input><label>个</label>
 						</div>
 					</div>
-					<div class="section-items"  v-if="userType==1||userType==2||userType==3">
+					<div class="section-items" v-if="userType==1||userType==2||userType==3">
 						<h2>创客激活码</h2>
 						<div class="section-input">
 							<input type="number" value="0" v-model="ckCoder"></input><label>个</label>
@@ -97,7 +97,8 @@
 					surplus: function() {
 						var num = 0;
 						if (this.userType == 1) {
-							num = parseInt((500000 - this.srCoder * 200000 - this.znCoder * 50000 - this.ckCoder * 9999 - this.vipCoder *199) / 199);
+							num = parseInt((500000 - this.srCoder * 200000 - this.znCoder * 50000 - this.ckCoder * 9999 - this.vipCoder *
+								199) / 199);
 							if (num >= 0) {
 								this.status = 1;
 								return num;
@@ -106,7 +107,7 @@
 								return Math.abs(num);
 							}
 						} else if (this.userType == 2) {
-							num = parseInt((200000 - this.znCoder * 50000 - this.ckCoder * 9999 - this.vipCoder *199) / 199);
+							num = parseInt((200000 - this.znCoder * 50000 - this.ckCoder * 9999 - this.vipCoder * 199) / 199);
 							if (num >= 0) {
 								this.status = 1;
 								return num;
@@ -115,7 +116,7 @@
 								return Math.abs(num);
 							}
 						} else if (this.userType == 3) {
-							num = parseInt(( 50000 - this.ckCoder * 9999 - this.vipCoder *199) / 199);
+							num = parseInt((50000 - this.ckCoder * 9999 - this.vipCoder * 199) / 199);
 							if (num >= 0) {
 								this.status = 1;
 								return num;
@@ -124,7 +125,7 @@
 								return Math.abs(num);
 							}
 						} else if (this.userType == 4) {
-							num = parseInt((9999 - this.vipCoder *199) / 199);
+							num = parseInt((9999 - this.vipCoder * 199) / 199);
 							if (num >= 0) {
 								this.status = 1;
 								return num;

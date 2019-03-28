@@ -14,7 +14,7 @@
 			<h1 class="mui-title"></h1>
 			<span class="mui-pull-right mui-icon">···</span>
 		</header>
-		<div  id="mui-content" class="mui-content friends-detail-container">
+		<div id="mui-content" class="mui-content friends-detail-container">
 			<!-- 名片样式一 -->
 			<div v-if="cardType=='cardType2'" class="first-card-container">
 				<div class="card">
@@ -77,7 +77,7 @@
 					</ul>
 					<p>最近{{friendData.card_count}}人浏览</p>
 				</div>
-				<div id="reliable-btn" class="browse-record-right" @tap="reliable">
+				<div :class="[is_reliable?'browse-record-right active':'browse-record-right']">
 					<span class="click-heart"></span>
 					<span>靠谱:{{friendData.like_count}}</span>
 				</div>
@@ -85,8 +85,8 @@
 			<h5 class="personality-desc">个性签名</h5>
 			<div class="personality-cont">
 				<p v-html="friendData.desc"></p>
-				<div class="user-info">
-					<div class="user-head-img"><img src="../image/kaol.jpg"></div>
+				<div class="user-info" v-if="friendData.voice_time!=0">
+					<div class="user-head-img"><img :src="friendData.avatar"></div>
 					<!-- 添加 play是播放状态的图标-->
 					<div id="audio-control" class="play-control">
 						<div class="left-arrow"></div>
@@ -96,7 +96,7 @@
 							<span id="timer-num">{{friendData.voice_time}}</span>
 						</div>
 					</div>
-					<div class="click-agree" @tap="clickAgree">
+					<div :class="[is_voice_like?'click-agree active':'click-agree']" id="clickAgree">
 						<span class="agree-icon"></span>
 						<span>点赞</span>
 					</div>
@@ -124,7 +124,7 @@
 			<div class="img-show">
 				<img :src="img" v-for="img in friendData.images">
 			</div>
-			<div class="add-friend-btn">
+			<div class="add-friend-btn" v-if="!is_friend">
 				<img src="../image/icon/add_friends_icon.png" class="constrain-img">
 				<span>添加好友</span>
 			</div>
@@ -141,16 +141,9 @@
 				viewport = 750
 			}
 			var fid = "";
+			var userInfo = getUserInfo();
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			// 跳转到更多页面
-			mui(".friends-detail-header").on("tap", "span", function() {
-				fnOpenWin('friends_detail_more.html', 'friends_detail_more', {
-					statusbar: {
-						background: '#f7f7f7'
-					}
-				}, '', 'slide-in-right');
-			})
 			// 实例化vue对象
 			var muiCont = new Vue({
 				el: '#mui-content',
@@ -159,9 +152,11 @@
 					friendData: {},
 					contName: '',
 					phoneNum: '',
-					audiourl: ""
+					audiourl: "",
+					is_friend: 0,
+					is_reliable: 0,
+					is_voice_like: 0
 				},
-				created: function() {},
 				mounted: function() {
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
@@ -198,13 +193,24 @@
 								$(".play-control").addClass("play");
 							}
 						})
+						// 跳转到更多页面
+						mui(".friends-detail-header").on("tap", "span", function() {
+							if(muiCont.is_friend==1){
+								openPage('friends_detail_more.html', 'friends_detail_more','#f7f7f7',{
+									token:userInfo.token,
+									fid:fid
+								});
+							}else{
+								message("添加好友才能进行后续操作！");
+							}
+						})
 					})
+					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 				}
 			});
-		
+
 			// 获取资料
 			function getFriendsInfo() {
-				var userInfo = getUserInfo();
 				mui.post($ajaxUrl + 'customer&action=detail&type=friend', {
 					token: userInfo.token,
 					user_id: fid
@@ -216,8 +222,11 @@
 						muiCont.contName = data.name;
 						muiCont.phoneNum = data.phone;
 						muiCont.friendData = data;
-						muiCont.audiourl=data.voice;
-						mui(".mui-title")[0].innerText=data.name;
+						muiCont.audiourl = data.voice;
+						muiCont.is_friend = data.is_friend;
+						muiCont.is_reliable = data.is_reliable;
+						muiCont.is_voice_like = data.is_voice_like;
+						mui(".mui-title")[0].innerText = data.name;
 					} else {
 						message(res.errno.message)
 					}
@@ -233,15 +242,27 @@
 				}
 				$(".card-info-container").slideToggle();
 			})
-			$("body").removeClass("mui-hidden");
-			// 点赞
-			function clickAgree() {
-				$(".click-agree").toggleClass('active');
-			}
 			// 靠谱
-			function reliable() {
-				$("#reliable-btn").toggleClass('active');
-			}
+			mui(".mui-content").on("tap", ".browse-record-right", function() {
+				mui.post($ajaxUrl + 'customer&action=like', {
+					token: userInfo.token,
+					to_uid: fid,
+					type: 3
+				}, function(res) {
+					getFriendsInfo();
+				}, 'json')
+			})
+
+			// 点赞
+			mui(".mui-content").on("tap", ".click-agree", function() {
+				mui.post($ajaxUrl + 'customer&action=like', {
+					token: userInfo.token,
+					to_uid: fid,
+					type: 1
+				}, function(res) {
+					getFriendsInfo();
+				}, 'json')
+			})
 			//  复制方法
 			function copy_fun(copy) {
 				//判断是安卓还是ios
