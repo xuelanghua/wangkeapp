@@ -22,7 +22,7 @@
 			<div class="segmentedControl-cont">
 				<!-- 第一个选项卡 -->
 				<div id="item1" class="mui-control-content mui-active">
-					<ul v-if="dataGroup" class="time-line-cont">
+					<ul v-if="contstatus" class="time-line-cont">
 						<li v-for="(item,key,index) in dataGroup" :key="index">
 							<div class="time-line-items-title">
 								<h5>{{key}}</h5>
@@ -306,23 +306,32 @@
 					limit: 10,
 					token: userInfo.token
 				}, function(res) {
-					 let _self = itemCont.this
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0 && pgNum == 1) {
 						itemCont.dataGroup = data;
-						mui.later(function(){
+						mui.later(function() {
 							// 下拉加载完成隐藏加载动画
 							mui('#item1').pullRefresh().endPulldown();
-						},1500)
-					} else if (res.errno == 0) {
+						}, 1500)
+					} else if (res.errno == 0 && pgNum > 1) {
 						for (list in data) {
 							Vue.set(itemCont.dataGroup, list, data[list]);
 						}
 						// 上拉加载完成隐藏加载动画
 						mui('#item1').pullRefresh().endPullupToRefresh();
 					} else {
-						// 没有更多数据了
-						mui('#item1').pullRefresh().endPullupToRefresh(true);
+						// 数据为空禁用上拉加载
+						mui('#item1').pullRefresh().disablePullupToRefresh();
+						// 判断数据是否为空
+						for(var item in itemCont.dataGroup){
+							itemCont.contstatus=true;
+							return ;
+							mui('#item1').pullRefresh().enablePullupToRefresh();
+							// 没有更多数据了
+							mui('#item1').pullRefresh().endPullupToRefresh(true);
+						}
+						
 					}
 				}, 'json')
 			}
@@ -338,8 +347,11 @@
 			// 实例化vue对象
 			var itemCont = new Vue({
 				el: '#item1',
-				data: {
-					dataGroup: []
+				data() {
+					return {
+						dataGroup: {},
+						contstatus:false
+					}
 				}
 			});
 			var showUserPickerButton = document.getElementById('showUserPicker');
@@ -351,14 +363,15 @@
 					behaviorStatistics();
 				});
 			}, false);
-			
+
 			// 下拉刷新具体业务实现
 			function pulldownRefresh() {
 				pgNum = 1;
 				businessCardBrowsingStatistics();
 				behaviorStatistics();
+				// mui('#item1').pullRefresh().enablePullupToRefresh();
 			}
-			
+
 			// 上拉加载具体业务实现
 			function pullupRefresh() {
 				pgNum += 1;

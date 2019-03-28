@@ -16,15 +16,16 @@
 		</header>
 		<div class="mui-content friends-more-container">
 			<form class="mui-input-group">
-					<div class="mui-input-row">
-						<label>备注名</label>
-						<input type="text" placeholder="请输入备注名称">
-					</div>
-				</form>
-			<button id="" class="mui-btn mui-btn-block ">解除好友关系</button>
+				<div class="mui-input-row">
+					<label>备注名</label>
+					<input type="text" name="name" placeholder="请输入备注名称">
+				</div>
+			</form>
+			<button class="mui-btn mui-btn-block unbind-friends">解除好友关系</button>
 		</div>
-		<script src="../js/mui.min.js"></script>
-		<script src="../js/Zepto.min.js"></script>
+		<script src="../js/mui.min.js" type="text/javascript"></script>
+		<script  src="../js/util.js" type="text/javascript"></script>
+		<script src="../js/Zepto.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			mui.init();
 			// 初始化字体大小
@@ -34,10 +35,43 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			$("body").removeClass("mui-hidden");
-			
-			mui(".detail-more-header").on("tap","span",function(){
-				mui.toast("确认修改备注名");
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				var fid = self.fid;
+				var token = self.token;
+				// 好友备注
+				mui(".detail-more-header").on("tap", "span", function() {
+					var remark = document.querySelector('input[name=name]').value;
+					remark = remark.replace(/^\s*|\s*$/g, "");
+					if (remark != '') {
+						mui.post($ajaxUrl + 'customer&action=friend_remark', {
+							token: token,
+							fid: fid,
+							name: remark
+						}, function(res) {
+							if(res.errno==0){
+								message("修改成功");
+								plus.key.hideSoftKeybord();
+								mui.back();
+							}
+						}, 'json')
+					} else {
+						message("请填写备注名字段")
+					}
+				})
+				// 解除好友关系
+				mui(".mui-content").on("tap", ".unbind-friends", function() {
+					mui.post($ajaxUrl + 'customer&action=friend_delete', {
+						token: token,
+						fid: fid
+					}, function(res) {
+						if(res.errno==0){
+							message("解除成功");
+							mui.back();
+						}
+					}, 'json')
+				})
 			})
 		</script>
 	</body>

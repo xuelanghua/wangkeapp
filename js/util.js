@@ -197,8 +197,9 @@ function openPage(url,id,color,extras){
 		url: url,
 		id: id,
 		styles: {
-			bounce: 'vertical',
+			bounce: 'none',
 			scrollsToTop: true,
+			popGesture: 'close',
 			statusbar: {
 				background: color
 			}
