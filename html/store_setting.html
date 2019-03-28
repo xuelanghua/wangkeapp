@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<title>店铺设置</title>
@@ -183,25 +182,23 @@
 			}
 		</style>
 	</head>
-
 	<body class="mui-hidden">
 		<header class="mui-bar mui-bar-nav store-manage-header">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">店铺设置</h1>
 		</header>
-
 		<div class="mui-content store-manage-container">
 			<h2 class="headline">基本信息</h2>
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell" id="store-img">
-					<div class="manage-left mui-navigate-right"><span>店铺图标</span><img class="sml-icon" src="../image/kaol.jpg"></div>
+					<div class="manage-left mui-navigate-right"><span>店铺图标</span><img class="sml-icon" id="store_avatar" src="../image/user_default.png"></div>
 				</li>
 				<li class="mui-table-view-cell" id="store-name">
-					<div class="manage-left mui-navigate-right"><span>店铺名称</span><span class="store-name">王花花</span></div>
+					<div class="manage-left mui-navigate-right"><span >店铺名称</span><span class="store-name" id="store_name"></span></div>
 				</li>
 				<li class="mui-table-view-cell" id="store-desc">
 					<div class="manage-left mui-navigate-right"><span>店铺介绍</span>
-						<p class="mui-ellipsis">店铺介绍,店铺介绍店铺介绍店铺介绍</p>
+						<p class="mui-ellipsis" id="store_description"></p>
 					</div>
 				</li>
 			</ul>
@@ -222,7 +219,9 @@
 	<script src="../js/util.js"></script>
 	<script src="../js/upload.js"></script>
 	<script type="text/javascript">
-		mui.init();
+		mui.init({
+			swipeBack: true
+		});
 		// 初始化字体大小
 		var imageId = 0;
 		var images = new Array();
@@ -233,64 +232,197 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
+		
+		//获取用户信息
+		var userInfo = getUserInfo();
+		var uid = userInfo.id;
+		var utoken = userInfo.token;
+		
 		mui.plusReady(function() {
+			//接收店铺名称修改返回的广播 刷新页面
+			window.addEventListener('changename',function(e){
+				window.location.reload();
+			});
+			//接收店铺介绍修改返回的广播 刷新页面
+			window.addEventListener('changdescription',function(e){
+				window.location.reload();
+			});
+			//监听图片裁剪返回的数据
+			window.addEventListener('cropperSuccess', function(e) {
+				//返回裁剪完成的图片上传后的地址
+				console.log(JSON.stringify(e.detail));
+				var image_url=e.detail.image;
+				//将返回的图片地址 给到个人店铺下的数据中
+				var ajax_url = $ajaxUrl + 'store';
+				mui.ajax(ajax_url, {
+					data: {
+						action: 'updateStoreInfo',
+						token: utoken,
+						store_avatar:image_url,
+						op:'store_avatar',
+					},
+					dataType: 'json',
+					type: 'post',
+					timeout: 10000,
+					success: function(ret) {
+						console.log(JSON.stringify('成功'));
+						console.log(JSON.stringify(ret));
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(JSON.stringify('失败'));
+						console.log(JSON.stringify(errorThrown));
+					}
+				});
+				document.getElementById('store_avatar').src=image_url;
+			});
+			eventInit();
 			userInfo = getUserInfo();
 			mui.previewImage();
+			getStoreInfo();
 		})
-		document.getElementById("store-img").addEventListener("tap", function() {
-			var editButtons = new Array();
-			editButtons.push({
-				title: "拍照上传",
-				style: "default"
-			});
-			editButtons.push({
-				title: "从相册选择",
-				style: "default"
-			});
-			plus.nativeUI.actionSheet({
-				cancel: "取消",
-				buttons: editButtons
-			}, function(e) {
-				var index = e.index;
-				switch (index) {
-					case 1:
-						getImage(); //拍照
-						break;
-					case 2:
-						galleryImage(); //相册选择
-						break;
+		
+		/**
+		 * 获取店铺信息
+		 */
+		function getStoreInfo(){
+			var ajax_url = $ajaxUrl + 'store';
+			mui.ajax(ajax_url, {
+				data: {
+					action: 'getStoreDetial',
+					token: utoken,
+				},
+				dataType: 'json',
+				type: 'post',
+				timeout: 10000,
+				success: function(ret) {
+					console.log(JSON.stringify('成功'));
+					console.log(JSON.stringify(ret));
+					//店铺头像
+					document.getElementById('store_avatar').src=ret.data.store_avatar;
+					//名称
+					document.getElementById('store_name').innerHTML=ret.data.store_name;
+					//介绍
+					document.getElementById('store_description').innerHTML=ret.data.store_description;
+					//广告图
+					var newImgDiv = document.createElement('div');
+					newImgDiv.setAttribute('data-id', imageId);
+					newImgDiv.classList.add('picture_display_chear');
+					var html = '<img src="' + ret.data.store_advertising +
+						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					newImgDiv.innerHTML = html;
+					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+					document.getElementById('add_pic').style.display = "none";
+				},
+				error: function(xhr, type, errorThrown) {
+					console.log(JSON.stringify('失败'));
+					console.log(JSON.stringify(errorThrown));
 				}
 			});
-		});
-		//上传图片
-		document.getElementById('add_pic').addEventListener('tap', function() {
-			imageUpload(function(res) {
-				images[imageId] = res.url;
-				imageId++;
-				var newImgDiv = document.createElement('div');
-				newImgDiv.setAttribute('data-id', imageId);
-				newImgDiv.classList.add('picture_display_chear');
-				var html = '<img src="' + res.url +
-					'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-				newImgDiv.innerHTML = html;
-				document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-				document.getElementById('add_pic').style.display = "none";
+		}
+
+		/**
+		 *初始化监听
+		 */
+		function eventInit() {
+			document.getElementById("store-img").addEventListener("tap", function() {
+				var editButtons = new Array();
+				editButtons.push({
+					title: "拍照上传",
+					style: "default"
+				});
+				editButtons.push({
+					title: "从相册选择",
+					style: "default"
+				});
+				plus.nativeUI.actionSheet({
+					cancel: "取消",
+					buttons: editButtons
+				}, function(e) {
+					var index = e.index;
+					switch (index) {
+						case 1:
+							getImage(); //拍照
+							break;
+						case 2:
+							galleryImage(); //相册选择
+							break;
+					}
+				});
 			});
-		})
-		//删除图片
-		mui('#pic-container').on('tap', '.mui-close', function() {
-			var parentDiv = this.parentElement;
-			var imgId = parentDiv.dataset.id;
-			parentDiv.remove();
-			delete images[imgId];
-			document.getElementById('add_pic').style.display = "block";
-		})
+			//上传图片
+			document.getElementById('add_pic').addEventListener('tap', function() {
+				imageUpload(function(res) {
+					images[imageId] = res.url;
+					imageId++;
+					var newImgDiv = document.createElement('div');
+					newImgDiv.setAttribute('data-id', imageId);
+					newImgDiv.classList.add('picture_display_chear');
+					var html = '<img src="' + res.url +
+						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					newImgDiv.innerHTML = html;
+					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+					document.getElementById('add_pic').style.display = "none";
+					//获取到url传到后台作为店铺广告的链接
+					console.log(JSON.stringify(res));
+					var ajax_url = $ajaxUrl + 'store';
+					mui.ajax(ajax_url, {
+						data: {
+							action: 'updateStoreInfo',
+							token: utoken,
+							store_advertising:res.url,
+							op:'store_advertising',
+						},
+						dataType: 'json',
+						type: 'post',
+						timeout: 10000,
+						success: function(ret) {
+							console.log(JSON.stringify('成功'));
+							console.log(JSON.stringify(ret));
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(JSON.stringify('失败'));
+							console.log(JSON.stringify(errorThrown));
+						}
+					});
+				});
+			})
+			//删除图片
+			mui('#pic-container').on('tap', '.mui-close', function() {
+				var parentDiv = this.parentElement;
+				var imgId = parentDiv.dataset.id;
+				parentDiv.remove();
+				delete images[imgId];
+				document.getElementById('add_pic').style.display = "block";
+			})
+			// 跳转修改店铺名称
+			mui(".mui-table-view").on("tap", "#store-name", function() {
+				fnOpenWin("change_store_name.html", "change_store_name", {
+					statusbar: {
+						background: '#f7f7f7'
+					}
+				}, {
+					name_string:document.getElementById('store_name').innerHTML,
+					utoken:utoken,
+				}, 'slide-in-right');
+			})
+			//跳转到店铺简介
+			mui(".mui-table-view").on("tap", "#store-desc", function() {
+				fnOpenWin("store_desc.html", "store_desc", {
+					statusbar: {
+						background: '#f7f7f7'
+					}
+				}, {
+					desc_string:document.getElementById('store_description').innerHTML,
+					utoken:utoken,
+				}, 'slide-in-right');
+			})
+		}
 		// 拍照获取图片
 		function getImage() {
 			var camera = plus.camera.getCamera();
 			camera.captureImage(function(e) {
 				plus.io.resolveLocalFileSystemURL(e, function(entry) {
-					cropperImg(entry.toLocalURL(), 'card_setting');
+					cropperImg(entry.toLocalURL(), 'store_setting');
 					// imageResize(entry.toLocalURL());
 					// 其他操作,比如预览展示
 				}, function(e) {
@@ -302,12 +434,11 @@
 				filename: "_doc/camera/"
 			})
 		}
-
 		// 从相册中选择图片 
 		function galleryImage(cb) {
 			// 从相册中选择图片
 			plus.gallery.pick(function(e) {
-				cropperImg(e, 'card_setting');
+				cropperImg(e, 'store_setting');
 			}, function(e) {
 				console.log("取消选择图片");
 			}, {
@@ -320,21 +451,6 @@
 				}
 			});
 		}
-		// 跳转
-		mui(".mui-table-view").on("tap", "#store-name", function() {
-			fnOpenWin("change_store_name.html", "change_store_name", {
-				statusbar: {
-					background: '#f7f7f7'
-				}
-			}, '', 'slide-in-right');
-		})
-		mui(".mui-table-view").on("tap", "#store-desc", function() {
-			fnOpenWin("store_desc.html", "store_desc", {
-				statusbar: {
-					background: '#f7f7f7'
-				}
-			}, '', 'slide-in-right');
-		})
 		//图片转base64
 		function canvasGen(image) {
 			var canvas = document.createElement('canvas');
