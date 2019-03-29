@@ -18,6 +18,9 @@
 			.void-tips {
 				margin-left: 0.15rem;
 			}
+			.lately-add-cont .between-info .user-name{
+				color:#333333;
+			}
 		</style>
 	</head>
 
@@ -31,7 +34,7 @@
 				<span class="mui-icon mui-icon-search"></span>
 				<input type="search" id="search" name="cont" class="mui-input-clear" placeholder="用户名/手机号搜索好友">
 			</div>
-			<div class="mui-row activation-container">
+			<div class="mui-row activation-container mui-hidden">
 				<div id="scan" class="mui-col-xs-6 activation-list">
 					<img src="../image/icon/scan-icon.png">
 					<span>扫名片码添加好友</span>
@@ -49,7 +52,7 @@
 							<img :src="user.avatar">
 						</div>
 						<div class="between-info">
-							<p>{{user.name}}</p>
+							<p class="user-name">{{user.name}}</p>
 							<p class="desc">{{user.remark}}</p>
 						</div>
 						<button v-if="user.apply_status==0" id="disAgree" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,-1)">拒绝</button>
