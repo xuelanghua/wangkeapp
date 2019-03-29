@@ -54,8 +54,8 @@
 						</div>
 						<button v-if="user.status==0" id="disAgree" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,2)">拒绝</button>
 						<button v-if="user.status==0" id="agreeAdd" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,1)">同意</button>
-						<span v-if="user.status==1" class="add-after mui-hidden">已添加</span>
-						<span v-if="user.status==3" class="add-after mui-hidden">已拒绝</span>
+						<span v-if="user.status==1" class="add-after">已添加</span>
+						<span v-if="user.status==2" class="add-after">已拒绝</span>
 					</li>
 				</ul>
 				<p v-else class="void-tips">暂无申请记录</p>
@@ -87,41 +87,47 @@
 				},
 				created: function() {
 					// 不要在created中使用plus相关接口,基座还未加载完成
-					mui.post($ajaxUrl + 'customer&action=friend_apply', {
-						token: token
-					}, function(res) {
-						logs(res);
-						if (res.errno == 0) {
-							app.lists = res.data;
-						} else {
-							app.result = false;
-						}
-					}, 'json')
+					createlist();
 				},
-				methods: {
-					handle: function(id, status) {
-						mui.post($ajaxUrl + 'customer&action=friend_confirm', {
-							token: token,
-							fid: id,
-							status: status
-						}, function(res) {
-							logs(res);
-							if (res.errno == 0) {
-								app.lists = res.data;
-							} else {
-								app.result = false;
-							}
-						}, 'json')
-					}
-				}
+				methods: {}
 			})
 			document.getElementById('myQrCode').addEventListener('tap', function() {
 				// 我的名片码
 			});
-			// 同意添加
-			mui(".lately-add-cont").on("tap", "#agreeAdd", function() {
-				mui.toast('同意添加');
-			})
+			// 获取最近添加列表
+			function createlist(){
+				mui.post($ajaxUrl + 'customer&action=friend_apply', {
+					token: token
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.lists = res.data;
+						app.result = true;
+					} else {
+						app.result = false;
+					}
+				}, 'json')
+			}
+			// 添加拒绝操作
+			function handle(id, status) {
+				mui.post($ajaxUrl + 'customer&action=friend_confirm', {
+					token: token,
+					fid: id,
+					status: status
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0 && status == 1) {
+						message("同意添加");
+						createlist();
+					} else if (res.errno == 0 && status == 2) {
+						message("已拒绝");
+						createlist();
+					} else {
+						message("请求失败，稍后重试");
+						createlist();
+					}
+				}, 'json')
+			}
 			// 搜索好友
 			mui.plusReady(function() {
 				document.getElementById("search").addEventListener("keypress", function(event) {

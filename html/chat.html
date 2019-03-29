@@ -520,46 +520,58 @@
 			mui.plusReady(function() {
 				userInfo = getUserInfo();
 				pageInit();
-				
+
 				logs(userInfo);
 				//自定义事件监听-首页新增客户点击
 				window.addEventListener('newCustomer', function() {
 					mui.trigger(document.querySelector('.switch1_content[data-id=customer]'), 'tap');
 				})
-				
+
 				document.getElementById('label_edit').addEventListener('tap', function() {
 					console.log(11111);
 				})
-				
+
 				document.getElementById('message').addEventListener('tap', function() {
-					fnOpenWin('message.html', 'message', {statusbar: {background: '#FFF'}}, {prePage: 'chat'}, 'slide-in-right');
+					fnOpenWin('message.html', 'message', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, {
+						prePage: 'chat'
+					}, 'slide-in-right');
 					plus.navigator.setStatusBarStyle('dark');
 				})
-				
+
 				document.querySelector('#customer_edit').addEventListener('tap', function() {
 					if (currentTab == 'friend') {
-						openPage('add_contacts.html','add_contacts','#f7f7f7','');
+						openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
 						plus.navigator.setStatusBarStyle('dark');
 					} else {
-						fnOpenWin('customer_entry.html', 'customer_entry', {statusbar: {background: '#FFFFFF'}}, {cid: 0}, 'slide-in-right');
+						fnOpenWin('customer_entry.html', 'customer_entry', {
+							statusbar: {
+								background: '#FFFFFF'
+							}
+						}, {
+							cid: 0
+						}, 'slide-in-right');
 						plus.navigator.setStatusBarStyle('dark');
 					}
 				})
-				
+
 				window.addEventListener('addInterval', function(e) {
 					console.log('addInterval');
 					timeInterval();
 				})
-				
+
 				window.addEventListener('addCustomer', function(e) {
 					getCustomerList();
 				})
-				
+
 				window.addEventListener('clearInterval', function(e) {
 					console.log('claerInterval');
 					clearTimeInterval();
 				})
-				
+
 				window.addEventListener('loginSuccess', function(e) {
 					console.log('loginSuccess');
 					getCustomerList();
@@ -571,7 +583,7 @@
 				var list = document.getElementById('list');
 				list.style.height = (document.body.offsetHeight - header.offsetHeight + 2) + 'px';
 				window.indexedList = new mui.IndexedList(list);
-				mui.trigger(document.getElementById(currentTab),'tap');
+				mui.trigger(document.getElementById(currentTab), 'tap');
 			}
 
 			function pageInit() {
@@ -590,7 +602,7 @@
 					showCustomer(customer_data.customer, 'customer');
 				}
 			}
-			
+
 			function eventInit() {
 				mui('.switch1').on('tap', '.switch1_content', function() {
 					var id = this.dataset.id;
@@ -600,7 +612,7 @@
 						item.classList.remove('xuanz');
 					})
 					this.classList.add('xuanz');
-					
+
 					var html = document.getElementById(id).innerHTML;
 					document.getElementById('list_container').innerHTML = html;
 					if (id == 'customer') {
@@ -624,7 +636,7 @@
 					indexInit();
 					currentTab = id;
 				})
-				
+
 				mui('.classify1').on('tap', '.classify1-content', function() {
 					label = this.dataset.label;
 					if (label == 'label') {
@@ -636,7 +648,7 @@
 						self.classList.remove('bian');
 						label = null;
 						currentLabel = 'empty';
-						
+
 						showCustomer(customer_data.crm, 'crm');
 						var html = document.getElementById('crm').innerHTML;
 						document.getElementById('list_container').innerHTML = html;
@@ -644,13 +656,13 @@
 						indexInit();
 						return;
 					}
-					
+
 					showCustomer(customer_data.crm, 'crm');
 					var html = document.getElementById('crm').innerHTML;
 					document.getElementById('list_container').innerHTML = html;
 					eventInit();
 					indexInit();
-					
+
 					var labelObj = document.getElementsByClassName('classify1-content');
 					mui.each(labelObj, function(index, item) {
 						item.classList.remove('bian');
@@ -661,35 +673,54 @@
 					currentObj.classList.add('bian');
 					currentLabel = label;
 				})
-				
+
 				mui('.mui-indexed-list-item').on('tap', 'a', function() {
 					var cid = this.dataset.id;
 					var type = this.dataset.type;
 					if (type == 'crm') {
 						var from = this.dataset.from;
 						if (from == 1) {
-							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {statusbar: {background: '#2289FF'}}, {cid: cid}, 'slide-in-right');
+							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
 						} else {
-							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {statusbar: {background: '#2289FF'}}, {cid: cid}, 'slide-in-right');
+							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
 						}
-						
+
 					} else if (type == 'friend') {
 						var fid = this.dataset.id;
-						openPage('friends_detail.html', 'friends_detail','#f7f7f7',{fid: fid})
+						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+							fid: fid
+						})
 						// fnOpenWin( {statusbar: {background: '#f7f7f7'}}, {fid: fid}, 'slide-in-right');
 					}
 				})
-				
+
 				mui('.mui-table-view').on('tap', '.new-customer', function() {
 					var cid = this.dataset.id;
 					var type = this.dataset.type;
-					fnOpenWin('customer_detail.html', 'customer_detail', {statusbar: {background: '#2289FF'}}, {cid: cid}, 'slide-in-right');
+					fnOpenWin('customer_detail.html', 'customer_detail', {
+						statusbar: {
+							background: '#2289FF'
+						}
+					}, {
+						cid: cid
+					}, 'slide-in-right');
 				})
-				// 好友详情
-// 				mui('.friends_detail').on('tap', '.mui-indexed-list-item', function() {
-// 					var fid = this.dataset.id;
-// 					fnOpenWin('friends_detail.html', 'friends_detail', {statusbar: {background: '#2289FF'}}, {fid: fid}, 'slide-in-right');
-// 				})
+				// 添加新朋友
+				mui(".mui-content").on("tap", ".new-friend", function() {
+					openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
+				})
 			}
 
 			function getCustomerList() {
@@ -709,6 +740,7 @@
 					indexInit();
 				}, 'json')
 			}
+
 			function showCustomer(data, type) {
 				if (!data) return;
 				if (type == 'crm') {
@@ -721,41 +753,46 @@
 							for (var i in list) {
 								if (list[i].mark == 2) {
 									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
-											temp += '<div class="mui-pull-left head-portrait">';
-											if (list[i].headimgurl.length == 0) {
-												temp += '<img src="../image/user_default.png">';
-											} else {
-												temp += '<img src="' + list[i].headimgurl + '">';
-											}
-											temp += '</div>';
-											temp += '<div class="mui-pull-right content">';
-												temp += '<div>';
-													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-														temp += '<span>' + list[i].name + '</span>';
-														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-													temp += '</span>';
-													if (list[i].mark == 1) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-													} else if (list[i].mark == 2) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-													}
-													temp += '<div class="clearfix"></div>';
-												temp += '</div>';
-												temp += '<div class="biaoqian">';
-													temp += '<button class="firm">' + list[i].company + '</button>';
-													temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-													if (list[i].pid == list[i].recommend_id) {
-														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
-													}
-												temp += '</div>';
-											temp += '</div>';
-										temp += '</a>';
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
+										'" class="mui-table-view-cell mui-indexed-list-item">';
+									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '">';
+									temp += '<div class="mui-pull-left head-portrait">';
+									if (list[i].headimgurl.length == 0) {
+										temp += '<img src="../image/user_default.png">';
+									} else {
+										temp += '<img src="' + list[i].headimgurl + '">';
+									}
+									temp += '</div>';
+									temp += '<div class="mui-pull-right content">';
+									temp += '<div>';
+									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+									temp += '<span>' + list[i].name + '</span>';
+									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+									temp += '</span>';
+									if (list[i].mark == 1) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+									} else if (list[i].mark == 2) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+									}
+									temp += '<div class="clearfix"></div>';
+									temp += '</div>';
+									temp += '<div class="biaoqian">';
+									temp += '<button class="firm">' + list[i].company + '</button>';
+									temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+									if (list[i].pid == list[i].recommend_id) {
+										temp += '<button style="background-color: #F96B5E;">下级会员</button>';
+									}
+									temp += '</div>';
+									temp += '</div>';
+									temp += '</a>';
 									temp += '</li>';
 								}
 								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
+										'</li>';
 									html += temp;
 								}
 							}
@@ -768,41 +805,46 @@
 							for (var i in list) {
 								if (list[i].mark == 1) {
 									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
-											temp += '<div class="mui-pull-left head-portrait">';
-											if (list[i].headimgurl.length == 0) {
-												temp += '<img src="../image/user_default.png">';
-											} else {
-												temp += '<img src="' + list[i].headimgurl + '">';
-											}
-											temp += '</div>';
-											temp += '<div class="mui-pull-right content">';
-												temp += '<div>';
-													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-														temp += '<span>' + list[i].name + '</span>';
-														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-													temp += '</span>';
-													if (list[i].mark == 1) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-													} else if (list[i].mark == 2) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-													}
-													temp += '<div class="clearfix"></div>';
-												temp += '</div>';
-												temp += '<div class="biaoqian">';
-													temp += '<button class="firm">' + list[i].company + '</button>';
-													temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-													if (list[i].pid == list[i].recommend_id) {
-														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
-													}
-												temp += '</div>';
-											temp += '</div>';
-										temp += '</a>';
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
+										'" class="mui-table-view-cell mui-indexed-list-item">';
+									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '">';
+									temp += '<div class="mui-pull-left head-portrait">';
+									if (list[i].headimgurl.length == 0) {
+										temp += '<img src="../image/user_default.png">';
+									} else {
+										temp += '<img src="' + list[i].headimgurl + '">';
+									}
+									temp += '</div>';
+									temp += '<div class="mui-pull-right content">';
+									temp += '<div>';
+									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+									temp += '<span>' + list[i].name + '</span>';
+									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+									temp += '</span>';
+									if (list[i].mark == 1) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+									} else if (list[i].mark == 2) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+									}
+									temp += '<div class="clearfix"></div>';
+									temp += '</div>';
+									temp += '<div class="biaoqian">';
+									temp += '<button class="firm">' + list[i].company + '</button>';
+									temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+									if (list[i].pid == list[i].recommend_id) {
+										temp += '<button style="background-color: #F96B5E;">下级会员</button>';
+									}
+									temp += '</div>';
+									temp += '</div>';
+									temp += '</a>';
 									temp += '</li>';
 								}
 								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
+										'</li>';
 									html += temp;
 								}
 							}
@@ -815,41 +857,46 @@
 							for (var i in list) {
 								if (list[i].is_member == 1) {
 									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
-											temp += '<div class="mui-pull-left head-portrait">';
-											if (list[i].headimgurl.length == 0) {
-												temp += '<img src="../image/user_default.png">';
-											} else {
-												temp += '<img src="' + list[i].headimgurl + '">';
-											}
-											temp += '</div>';
-											temp += '<div class="mui-pull-right content">';
-												temp += '<div>';
-													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-														temp += '<span>' + list[i].name + '</span>';
-														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-													temp += '</span>';
-													if (list[i].mark == 1) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-													} else if (list[i].mark == 2) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-													}
-													temp += '<div class="clearfix"></div>';
-												temp += '</div>';
-												temp += '<div class="biaoqian">';
-													temp += '<button class="firm">' + list[i].company + '</button>';
-													temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-													if (list[i].pid == list[i].recommend_id) {
-														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
-													}
-												temp += '</div>';
-											temp += '</div>';
-										temp += '</a>';
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
+										'" class="mui-table-view-cell mui-indexed-list-item">';
+									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '">';
+									temp += '<div class="mui-pull-left head-portrait">';
+									if (list[i].headimgurl.length == 0) {
+										temp += '<img src="../image/user_default.png">';
+									} else {
+										temp += '<img src="' + list[i].headimgurl + '">';
+									}
+									temp += '</div>';
+									temp += '<div class="mui-pull-right content">';
+									temp += '<div>';
+									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+									temp += '<span>' + list[i].name + '</span>';
+									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+									temp += '</span>';
+									if (list[i].mark == 1) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+									} else if (list[i].mark == 2) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+									}
+									temp += '<div class="clearfix"></div>';
+									temp += '</div>';
+									temp += '<div class="biaoqian">';
+									temp += '<button class="firm">' + list[i].company + '</button>';
+									temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+									if (list[i].pid == list[i].recommend_id) {
+										temp += '<button style="background-color: #F96B5E;">下级会员</button>';
+									}
+									temp += '</div>';
+									temp += '</div>';
+									temp += '</a>';
 									temp += '</li>';
 								}
 								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
+										'</li>';
 									html += temp;
 								}
 							}
@@ -862,41 +909,46 @@
 							for (var i in list) {
 								if (list[i].job.length != 0) {
 									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
-											temp += '<div class="mui-pull-left head-portrait">';
-											if (list[i].headimgurl.length == 0) {
-												temp += '<img src="../image/user_default.png">';
-											} else {
-												temp += '<img src="' + list[i].headimgurl + '">';
-											}
-											temp += '</div>';
-											temp += '<div class="mui-pull-right content">';
-												temp += '<div>';
-													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-														temp += '<span>' + list[i].name + '</span>';
-														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-													temp += '</span>';
-													if (list[i].mark == 1) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-													} else if (list[i].mark == 2) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-													}
-													temp += '<div class="clearfix"></div>';
-												temp += '</div>';
-												temp += '<div class="biaoqian">';
-													// temp += '<button class="firm">' + list[i].company + '</button>';
-													temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-// 													if (list[i].pid == list[i].recommend_id) {
-// 														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
-// 													}
-												temp += '</div>';
-											temp += '</div>';
-										temp += '</a>';
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
+										'" class="mui-table-view-cell mui-indexed-list-item">';
+									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '">';
+									temp += '<div class="mui-pull-left head-portrait">';
+									if (list[i].headimgurl.length == 0) {
+										temp += '<img src="../image/user_default.png">';
+									} else {
+										temp += '<img src="' + list[i].headimgurl + '">';
+									}
+									temp += '</div>';
+									temp += '<div class="mui-pull-right content">';
+									temp += '<div>';
+									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+									temp += '<span>' + list[i].name + '</span>';
+									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+									temp += '</span>';
+									if (list[i].mark == 1) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+									} else if (list[i].mark == 2) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+									}
+									temp += '<div class="clearfix"></div>';
+									temp += '</div>';
+									temp += '<div class="biaoqian">';
+									// temp += '<button class="firm">' + list[i].company + '</button>';
+									temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+									// 													if (list[i].pid == list[i].recommend_id) {
+									// 														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
+									// 													}
+									temp += '</div>';
+									temp += '</div>';
+									temp += '</a>';
 									temp += '</li>';
 								}
 								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
+										'</li>';
 									html += temp;
 								}
 							}
@@ -909,39 +961,44 @@
 							for (var i in list) {
 								if (list[i].label_id.length != 0) {
 									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
-											temp += '<div class="mui-pull-left head-portrait">';
-											if (list[i].headimgurl.length == 0) {
-												temp += '<img src="../image/user_default.png">';
-											} else {
-												temp += '<img src="' + list[i].headimgurl + '">';
-											}
-											temp += '</div>';
-											temp += '<div class="mui-pull-right content">';
-												temp += '<div>';
-													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-														temp += '<span>' + list[i].name + '</span>';
-														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-													temp += '</span>';
-													if (list[i].mark == 1) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-													} else if (list[i].mark == 2) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-													}
-													temp += '<div class="clearfix"></div>';
-												temp += '</div>';
-												temp += '<div class="biaoqian">';
-												for (var j = 0; j < list[i].label.length && j < 5; j++) {
-													temp += '<button style="background-color: #68B0FF;">' + list[i].label[j] + '</button>';
-												}
-												temp += '</div>';
-											temp += '</div>';
-										temp += '</a>';
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
+										'" class="mui-table-view-cell mui-indexed-list-item">';
+									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '">';
+									temp += '<div class="mui-pull-left head-portrait">';
+									if (list[i].headimgurl.length == 0) {
+										temp += '<img src="../image/user_default.png">';
+									} else {
+										temp += '<img src="' + list[i].headimgurl + '">';
+									}
+									temp += '</div>';
+									temp += '<div class="mui-pull-right content">';
+									temp += '<div>';
+									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+									temp += '<span>' + list[i].name + '</span>';
+									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+									temp += '</span>';
+									if (list[i].mark == 1) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+									} else if (list[i].mark == 2) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+									}
+									temp += '<div class="clearfix"></div>';
+									temp += '</div>';
+									temp += '<div class="biaoqian">';
+									for (var j = 0; j < list[i].label.length && j < 5; j++) {
+										temp += '<button style="background-color: #68B0FF;">' + list[i].label[j] + '</button>';
+									}
+									temp += '</div>';
+									temp += '</div>';
+									temp += '</a>';
 									temp += '</li>';
 								}
 								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
+										'</li>';
 									html += temp;
 								}
 							}
@@ -954,89 +1011,98 @@
 							for (var i in list) {
 								if (list[i].birthday.length != 0 || list[i].anniversay.length != 0) {
 									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-										temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +'" data-id="' + list[i].id + '">';
-											temp += '<div class="mui-pull-left head-portrait">';
-											if (list[i].headimgurl.length == 0) {
-												temp += '<img src="../image/user_default.png">';
-											} else {
-												temp += '<img src="' + list[i].headimgurl + '">';
-											}
-											temp += '</div>';
-											temp += '<div class="mui-pull-right content">';
-												temp += '<div>';
-													temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-														temp += '<span>' + list[i].name + '</span>';
-														<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-													temp += '</span>';
-													if (list[i].mark == 1) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-													} else if (list[i].mark == 2) {
-														temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-													}
-													temp += '<div class="clearfix"></div>';
-												temp += '</div>';
-												temp += '<div class="Birthday">';
-												if (list[i].birthday.length != 0) {
-													temp += '<span>';
-														temp += '<span>生日：</span>';
-														temp += '<span>' + list[i].birthday + '</span>';
-													temp += '</span>';
-												}
-												if (list[i].anniversary.length != 0) {	
-													temp += '<span style="margin-left: 15px;">';
-														temp += '<span>纪念日：</span>';
-														temp += '<span>' + list[i].anniversary + '</span>';
-													temp += '</span>';
-												}
-												temp += '</div>';
-											temp += '</div>';
-										temp += '</a>';
+									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
+										'" class="mui-table-view-cell mui-indexed-list-item">';
+									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '">';
+									temp += '<div class="mui-pull-left head-portrait">';
+									if (list[i].headimgurl.length == 0) {
+										temp += '<img src="../image/user_default.png">';
+									} else {
+										temp += '<img src="' + list[i].headimgurl + '">';
+									}
+									temp += '</div>';
+									temp += '<div class="mui-pull-right content">';
+									temp += '<div>';
+									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
+									temp += '<span>' + list[i].name + '</span>';
+									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+									temp += '</span>';
+									if (list[i].mark == 1) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+									} else if (list[i].mark == 2) {
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+									}
+									temp += '<div class="clearfix"></div>';
+									temp += '</div>';
+									temp += '<div class="Birthday">';
+									if (list[i].birthday.length != 0) {
+										temp += '<span>';
+										temp += '<span>生日：</span>';
+										temp += '<span>' + list[i].birthday + '</span>';
+										temp += '</span>';
+									}
+									if (list[i].anniversary.length != 0) {
+										temp += '<span style="margin-left: 15px;">';
+										temp += '<span>纪念日：</span>';
+										temp += '<span>' + list[i].anniversary + '</span>';
+										temp += '</span>';
+									}
+									temp += '</div>';
+									temp += '</div>';
+									temp += '</a>';
 									temp += '</li>';
 								}
 								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
+										'</li>';
 									html += temp;
 								}
 							}
 						}
 					} else {
 						for (var index in data) {
-							html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
+							html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
+								'</li>';
 							var list = data[index];
 							for (var i in list) {
-								html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-									html += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type + '" data-id="' + list[i].id + '">';
-										html += '<div class="mui-pull-left head-portrait">';
-										if (list[i].headimgurl.length == 0) {
-											html += '<img src="../image/user_default.png">';
-										} else {
-											html += '<img src="' + list[i].headimgurl + '">';
-										}
-											
-										html += '</div>';
-										html += '<div class="mui-pull-right content">';
-											html += '<div>';
-												html += '<span class="mui-pull-left" style="font-size: 15px;">';
-													html += '<span>' + list[i].name + '</span>';
-													<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-												html += '</span>';
-												if (list[i].mark == 1) {
-													html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-												} else if (list[i].mark == 2) {
-													html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-												}
-												html += '<div class="clearfix"></div>';
-											html += '</div>';
-											html += '<div class="biaoqian">';
-												html += '<button class="firm">' + list[i].company + '</button>';
-												html += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-												if (list[i].pid == list[i].recommend_id) {
-													html += '<button style="background-color: #F96B5E;">下级会员</button>';
-												}
-											html += '</div>';
-										html += '</div>';
-									html += '</a>';
+								html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
+									'" class="mui-table-view-cell mui-indexed-list-item">';
+								html += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
+									'" data-id="' + list[i].id + '">';
+								html += '<div class="mui-pull-left head-portrait">';
+								if (list[i].headimgurl.length == 0) {
+									html += '<img src="../image/user_default.png">';
+								} else {
+									html += '<img src="' + list[i].headimgurl + '">';
+								}
+
+								html += '</div>';
+								html += '<div class="mui-pull-right content">';
+								html += '<div>';
+								html += '<span class="mui-pull-left" style="font-size: 15px;">';
+								html += '<span>' + list[i].name + '</span>';
+								<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
+								html += '</span>';
+								if (list[i].mark == 1) {
+									html +=
+										'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+								} else if (list[i].mark == 2) {
+									html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+								}
+								html += '<div class="clearfix"></div>';
+								html += '</div>';
+								html += '<div class="biaoqian">';
+								html += '<button class="firm">' + list[i].company + '</button>';
+								html += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+								if (list[i].pid == list[i].recommend_id) {
+									html += '<button style="background-color: #F96B5E;">下级会员</button>';
+								}
+								html += '</div>';
+								html += '</div>';
+								html += '</a>';
 								html += '</li>';
 							}
 						}
@@ -1051,19 +1117,20 @@
 						html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
 						var list = data[index];
 						for (var i in list) {
-							html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin + '" class="mui-table-view-cell mui-indexed-list-item">';
-								html += '<a href="javascript:void(0);" class="detail" data-type="friend" data-id="' + list[i].fid + '">';
-									html += '<div class="mui-pull-left head-portrait">';
-									if (list[i].avatarUrl.length == 0) {
-										html += '<img src="../image/user_default.png">';
-									} else {
-										html += '<img src="' + list[i].avatarUrl + '">';
-									}
-									html += '</div>';
-									html += '<div class="mui-pull-right content">';
-										html += '<div class="good_friend_name">' + list[i].name + '</div>';
-									html += '</div>';
-								html += '</a>';
+							html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
+								'" class="mui-table-view-cell mui-indexed-list-item">';
+							html += '<a href="javascript:void(0);" class="detail" data-type="friend" data-id="' + list[i].fid + '">';
+							html += '<div class="mui-pull-left head-portrait">';
+							if (list[i].avatarUrl.length == 0) {
+								html += '<img src="../image/user_default.png">';
+							} else {
+								html += '<img src="' + list[i].avatarUrl + '">';
+							}
+							html += '</div>';
+							html += '<div class="mui-pull-right content">';
+							html += '<div class="good_friend_name">' + list[i].name + '</div>';
+							html += '</div>';
+							html += '</a>';
 							html += '</li>';
 						}
 					}
@@ -1074,7 +1141,7 @@
 				} else if (type == 'customer') {
 					for (var index in data) {
 						if (index == 'count') {
-							var customerTotal = document.querySelectorAll('.customer_total'); 
+							var customerTotal = document.querySelectorAll('.customer_total');
 							mui.each(customerTotal, function(sub, item) {
 								item.innerHTML = data[index].total;
 							})
@@ -1098,30 +1165,30 @@
 								} else {
 									html += '<div class="chart mui-pull-left"><img src="' + list[i].avatarUrl + '" ></div>';
 								}
-									html += '<div class="mui-pull-right customer-content">';
-										html += '<div class="customer_information">';
-											html += '<div class="mui-pull-left">';
-											if (list[i].is_boss == 1) {
-												html += '<span><img src="../image/bosi1.png" ></span>';
-											}
-												html += '<span class="customer_information_name">' + list[i].name + '</span>';
-											html += '</div>';
-											html += '<div class="mui-pull-right" style="color: #6A6A6A;">' + list[i].last_time + '前</div>';
-											html += '<div class="clearfix"></div>';
-										html += '</div>';
-										html += '<div style="font-size: 12px;margin-top: 8px;">';
-											html += '<span class="mui-pull-left">' + list[i].count + '次互动</span>';
-											if (index == 'new') {
-												html += '<span class="mui-pull-right"style="color: #4C7ABD;">进行中</span>';
-											} else if (index == 'follow') {
-												html += '<span class="mui-pull-right"style="color: #4C7ABD;">跟进中</span>';
-											} else if (index == 'intention') {
-												html += '<span class="mui-pull-right"style="color: #4C7ABD;">高意向</span>';
-											} else if (index == 'deal') {
-												html += '<span class="mui-pull-right"style="color: #4C7ABD;">完成</span>';
-											}
-										html += '</div>';
-									html += '</div>';
+								html += '<div class="mui-pull-right customer-content">';
+								html += '<div class="customer_information">';
+								html += '<div class="mui-pull-left">';
+								if (list[i].is_boss == 1) {
+									html += '<span><img src="../image/bosi1.png" ></span>';
+								}
+								html += '<span class="customer_information_name">' + list[i].name + '</span>';
+								html += '</div>';
+								html += '<div class="mui-pull-right" style="color: #6A6A6A;">' + list[i].last_time + '前</div>';
+								html += '<div class="clearfix"></div>';
+								html += '</div>';
+								html += '<div style="font-size: 12px;margin-top: 8px;">';
+								html += '<span class="mui-pull-left">' + list[i].count + '次互动</span>';
+								if (index == 'new') {
+									html += '<span class="mui-pull-right"style="color: #4C7ABD;">进行中</span>';
+								} else if (index == 'follow') {
+									html += '<span class="mui-pull-right"style="color: #4C7ABD;">跟进中</span>';
+								} else if (index == 'intention') {
+									html += '<span class="mui-pull-right"style="color: #4C7ABD;">高意向</span>';
+								} else if (index == 'deal') {
+									html += '<span class="mui-pull-right"style="color: #4C7ABD;">完成</span>';
+								}
+								html += '</div>';
+								html += '</div>';
 								html += '</li>';
 							}
 							html += '</ul>';
@@ -1140,19 +1207,14 @@
 					}
 				}
 			}
-			
+
 			function timeInterval() {
 				timer = window.setInterval('getCustomerList()', 20000);
 			}
-			
+
 			function clearTimeInterval() {
 				window.clearInterval(timer);
 			}
-			// 添加新朋友
-			mui("#friend").on("tap",".new-friend",function(){
-				openPage('add_contacts.html','add_contacts','#f7f7f7','');
-				message("sadf");
-			})
 		</script>
 	</body>
 
