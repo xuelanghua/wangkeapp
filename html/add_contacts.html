@@ -7,13 +7,16 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
-		<script type="text/javascript" src="../js/common.js"></script>
 		<style type="text/css">
 			#search {
 				display: inline-flex;
 				flex-grow: 1;
 				background-color: #FFFFFF;
 				text-align: left;
+			}
+
+			.void-tips {
+				margin-left: 0.15rem;
 			}
 		</style>
 	</head>
@@ -38,40 +41,29 @@
 					<span>我的名片码</span>
 				</div>
 			</div>
-			<div class="lately-add-cont">
-				<h5>最近添加</h5>
-				<ul>
-					<li class="mui-table-view-cell">
+			<div class="lately-add-cont" id="history">
+				<h5 @tap="handle(3,1)">最近添加</h5>
+				<ul v-if="result">
+					<li class="mui-table-view-cell" v-for="user in lists">
 						<div class="head-img">
-							<img src="../image/kaol.jpg">
+							<img :src="user.avatar">
 						</div>
 						<div class="between-info">
-							<p>菲菲啦</p>
-							<p class="desc">我是xxx</p>
+							<p>{{user.name}}</p>
+							<p class="desc">{{user.remark}}</p>
 						</div>
-						<button id="disAgree" class="mui-popup-button-bold mui-btn-blue">拒绝</button>
-						<button id="agreeAdd" class="mui-popup-button-bold mui-btn-blue">同意</button>
-						<span class="add-after mui-hidden">已添加</span>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="head-img">
-							<img src="../image/kaol.jpg">
-						</div>
-						<div class="between-info">
-							<p>菲菲啦</p>
-							<p class="desc">我是xxx</p>
-						</div>
-						<button id="agreeAdd" class="mui-popup-button-bold mui-btn-blue mui-hidden">同意</button>
-						<span class="add-after">已添加</span>
+						<button v-if="user.status==0" id="disAgree" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,2)">拒绝</button>
+						<button v-if="user.status==0" id="agreeAdd" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,1)">同意</button>
+						<span v-if="user.status==1" class="add-after mui-hidden">已添加</span>
+						<span v-if="user.status==3" class="add-after mui-hidden">已拒绝</span>
 					</li>
 				</ul>
+				<p v-else class="void-tips">暂无申请记录</p>
 			</div>
-			<ul id="history" class="dlist mui-hidden" style="text-align:left;">
-				<li id="nohistory" class="ditem" onclick="onempty()">无历史记录 </li>
-			</ul>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -80,50 +72,86 @@
 			if (viewport > 750) {
 				viewport = 750
 			}
-			var userInfo = getUserInfo();
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			var userInfo = getUserInfo();
+			var token = userInfo.token;
+			var app = new Vue({
+				el: "#history",
+				data() {
+					return {
+						lists: [],
+						result: true
+					}
+				},
+				created: function() {
+					// 不要在created中使用plus相关接口,基座还未加载完成
+					mui.post($ajaxUrl + 'customer&action=friend_apply', {
+						token: token
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							app.lists = res.data;
+						} else {
+							app.result = false;
+						}
+					}, 'json')
+				},
+				methods: {
+					handle: function(id, status) {
+						mui.post($ajaxUrl + 'customer&action=friend_confirm', {
+							token: token,
+							fid: id,
+							status: status
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								app.lists = res.data;
+							} else {
+								app.result = false;
+							}
+						}, 'json')
+					}
+				}
+			})
 			document.getElementById('myQrCode').addEventListener('tap', function() {
-				mui.openWindow({
-					url: 'data_statistics.html',
-					id: 'statistics'
-				});
+				// 我的名片码
 			});
 			// 同意添加
 			mui(".lately-add-cont").on("tap", "#agreeAdd", function() {
 				mui.toast('同意添加');
 			})
-			//打开扫一扫
-			var scan = document.getElementById('scan');
-			scan.addEventListener('tap', function() {
-				var paymentPage = plus.webview.create('scan.html', 'scan', {
-					top: '0',
-					bottom: '0',
-					scrollIndicator: 'none',
-					statusbar: {
-						background: '#000'
-					}
-				});
-				paymentPage.show('slide-in-right');
-				setStatusBar('#2289FF', 'light');
-			});
 			// 搜索好友
 			mui.plusReady(function() {
 				document.getElementById("search").addEventListener("keypress", function(event) {
 					var search = document.querySelector('input[name=cont]').value;
 					// var search = "刘与华";
 					var keyword = search.replace(/^\s*|\s*$/g, "");
-					if (event.keyCode == "13"&&keyword!='') {
+					if (event.keyCode == "13" && keyword != '') {
 						plus.key.hideSoftKeybord();
-						openPage('friend_search_result.html','friend_search_result','#F7F7F7',{
-							keyword:keyword
+						openPage('friend_search_result.html', 'friend_search_result', '#F7F7F7', {
+							keyword: keyword
 						})
 						// 阻止默认事件---阻止页面刷新
 						event.preventDefault();
-					}else{
-						message("请输入用户名或者电话。");
+					} else {
+						message("请输入用户名或者电话");
 					}
+				});
+				//打开扫一扫
+				var scan = document.getElementById('scan');
+				scan.addEventListener('tap', function() {
+					var paymentPage = plus.webview.create('scan.html', 'scan', {
+						top: '0',
+						bottom: '0',
+						scrollIndicator: 'none',
+						statusbar: {
+							background: '#000'
+						}
+					});
+					paymentPage.show('slide-in-right');
+					setStatusBar('#2289FF', 'light');
 				});
 			})
 		</script>
