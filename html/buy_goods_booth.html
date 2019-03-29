@@ -7,6 +7,39 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
+		<style type="text/css">
+			.amount-select {
+				display: inline-flex;
+				width: 3rem;
+				height: 0.6rem;
+				overflow: hidden;
+				align-items: center;
+				border-radius: 6px;
+			}
+
+			.amount-select input {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				border: none;
+				text-align: center;
+				background-color: #d1d1d1;
+				border-radius: 0;
+			}
+
+			.amount-select button {
+				height: 100%;
+				border: none;
+				padding: 0;
+				margin: 0;
+				width: 0.8rem;
+				background: #ECECEC;
+				flex-shrink: 0;
+				font-size: 0.4rem;
+				line-height: 0.6rem;
+				border-radius: 0;
+			}
+		</style>
 	</head>
 
 	<body class="mui-hidden">
@@ -21,10 +54,10 @@
 				<h2><span>&yen;</span>{{sum}}.00</h2>
 				<div class="buy-num-cont">
 					<span>购买数量</span>
-					<div class="mui-numbox" data-numbox-min="1">
-						<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
-						<input class="mui-input-numbox" v-model="total" type="number">
-						<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+					<div class="amount-select">
+						<button class="mui-btn" type="button" @tap="reduce" :disabled="total>1?false:true">-</button>
+						<input class="amount" v-model="total" v-on:input="watchNum" type="number">
+						<button class="mui-btn" type="button" @tap="adding">+</button>
 					</div>
 				</div>
 			</div>
@@ -57,20 +90,37 @@
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
 		mui.plusReady(function() {})
-		var app=new Vue({
-			el:"#goods-booth",
-			data(){
-				return{
-					total:1
+		var app = new Vue({
+			el: "#goods-booth",
+			data() {
+				return {
+					total: 1
 				}
 			},
 			computed: {
-				sum:function(){
-					var num=this.total*200;
-					return num;
+				sum: function() {
+					var sums = this.total * 200;
+					return sums;
+				}
+			},
+			methods: {
+				watchNum: function(e) {
+					// 监听输入
+					var re = /^[1-9]+[0-9]*]*$/;
+					if (!re.test(this.total)) {
+						message("请输入正整数");
+						this.total=1;
+						return false;
+					}
+				},
+				reduce: function() {
+					this.total -= 1;
+				},
+				adding: function() {
+					this.total += 1;
 				}
 			}
-			
+
 		})
 	</script>
 </html>
