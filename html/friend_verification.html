@@ -2,8 +2,8 @@
 <html>
 
 	<head>
-		<meta charset="utf-8">
 		<title>添加好友</title>
+		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
@@ -18,11 +18,11 @@
 		<div class="mui-content friend-verification-container">
 			<h5>发送验证请求，等对方通过</h5>
 			<div class="mui-input-row send-cont">
-				<input type="text" class="mui-input-clear" placeholder="验证信息">
+				<input type="text" class="mui-input-clear" name="info" placeholder="验证信息">
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
-		<script src="../js/Zepto.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			// 初始化字体大小
@@ -32,6 +32,32 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
+			var userInfo = getUserInfo();
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				var fid = self.fid;
+				mui(".mui-bar-nav").on("tap",".send-verification-btn",function(){
+				var info=document.querySelector('input[name=info]').value;
+					info = info.replace(/^\s*|\s*$/g, "");
+					logs(info);
+					if(fid!=''){
+						mui.post($ajaxUrl + 'customer&action=friend_add', {
+							token: userInfo.token,
+							fid:fid,
+							type:1,
+							remark: info
+						}, function(res) {
+							if(res.errno==0){
+								plus.key.hideSoftKeybord();
+								message("发送成功");
+								mui.back();
+							}
+						}, 'json')
+					}else{
+						message('添加的用户不存在');
+					}
+				})
+			})
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		</script>
 	</body>

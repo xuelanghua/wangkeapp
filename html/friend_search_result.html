@@ -27,6 +27,9 @@
 			.mui-table-view-cell.mui-active {
 				background-color: #FFFFFF;
 			}
+			#search .lately-add-cont ul{
+				min-height: 85.5vh;
+			}
 		</style>
 	</head>
 
@@ -36,30 +39,21 @@
 			<h1 class="mui-title">添加好友</h1>
 		</header>
 		<div id="search" class="mui-content add-contacts-container">
-			<div class="lately-add-cont">
+			<div class="lately-add-cont" v-if="result">
 				<h5>搜索结果</h5>
 				<ul>
-					<li class="mui-table-view-cell">
+					<li class="mui-table-view-cell" v-for="items in lists"  v-on:click.stop="toDetail(items.uid)">
 						<div class="head-img">
-							<img src="../image/kaol.jpg">
+							<img :src="items.avatar">
 						</div>
 						<div class="between-info">
-							<p>{{lists}}</p>
+							<p>{{items.name}}</p>
 						</div>
-						<button id="agreeAdd" class="mui-popup-button-bold mui-btn-blue">添加</button>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="head-img">
-							<img src="../image/kaol.jpg">
-						</div>
-						<div class="between-info">
-							<p>菲菲啦</p>
-						</div>
-						<button id="agreeAdd" class="mui-popup-button-bold mui-btn-blue">添加</button>
+						<button  class="mui-popup-button-bold mui-btn-blue agreeAdd" v-on:click.stop="addFriend(items.uid)">添加</button>
 					</li>
 				</ul>
 			</div>
-			<div class="no-history mui-hidden">没有搜索到该用户，请核对用户名或手机号后重试！</div>
+			<div class="no-history" v-else>没有搜索到该用户，请核对用户名或手机号后重试！</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -78,6 +72,7 @@
 				el: "#search",
 				data() {
 					return {
+						result:true,
 						lists: []
 					}
 				},
@@ -90,9 +85,11 @@
 								token: userInfo.token,
 								content: keyword
 							}, function(res) {
+								logs(res);
 								if (res.errno == 0) {
 									app.lists = res.data;
 								} else {
+									app.result=false;
 									message(res.message);
 								}
 							}, 'json')
@@ -103,6 +100,18 @@
 				},
 				mounted:function(){
 					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+				},
+				methods:{
+					toDetail:function(fid){
+						openPage('friends_detail.html','friends_detail','#f7f7f7',{
+							fid:fid
+						});
+					},
+					addFriend:function(fid){
+						openPage('friend_verification.html','friend_verification','#f7f7f7',{
+							fid:fid
+						});
+					}
 				}
 			})
 		</script>

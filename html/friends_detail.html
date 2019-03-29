@@ -107,12 +107,11 @@
 				<ul class="goods-lists" v-if="friendData.goods !== undefined && friendData.goods.length >0 ">
 					<li class="goods-item" v-for="(goods,index) in friendData.goods" :key="index">
 						<div class="goods-img">
-							<img src="../image/kaol.jpg">
+							<img :src="goods.cover">
 						</div>
 						<div class="goods-desc">
-							<p class="goods-title mui-ellipsis-2">旺课，旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课旺课</p>
-							<p class="spec">规格：默认</p>
-							<p class="price">&yen;<span id="goods-price">20.00</span></p>
+							<p class="goods-title mui-ellipsis-2">{{goods.name}}</p>
+							<p class="price">&yen;<span id="goods-price">{{goods.price}}</span></p>
 						</div>
 					</li>
 				</ul>
@@ -124,7 +123,7 @@
 			<div class="img-show">
 				<img :src="img" v-for="img in friendData.images">
 			</div>
-			<div class="add-friend-btn" v-if="!is_friend">
+			<div class="add-friend-btn" v-if="!is_friend" v-on:click.stop="addFriend">
 				<img src="../image/icon/add_friends_icon.png" class="constrain-img">
 				<span>添加好友</span>
 			</div>
@@ -206,6 +205,13 @@
 						})
 					})
 					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+				},
+				methods:{
+					addFriend:function(){
+						openPage('friend_verification.html','friend_verification','#f7f7f7',{
+							fid:fid
+						});
+					}
 				}
 			});
 
