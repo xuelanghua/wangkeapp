@@ -113,7 +113,7 @@
 				</div>
 			</div>
 			<!-- 我的目标弹窗开始-->
-			<div class="target-modal-frame">
+			<div class="target-modal-frame" >
 				<div class="mui-card my-target-card">
 					<div class="mui-card-header">
 						<h2>我的目标</h2>
@@ -176,8 +176,6 @@
 			$("body").removeClass("mui-hidden");
 
 			function userTargetStatistics() {
-				// logs(selectTime);
-				// logs(timeType);
 				mui.post($ajaxUrl + 'target', {
 					action: 'detail',
 					token: userInfo.token,
@@ -186,7 +184,6 @@
 				}, function(res) {
 					var plan = res.data.plan;
 					var finish = res.data.finish;
-					// logs(plan);
 					for (var index in plan) {
 						document.getElementById(index + '_number').innerText = finish[index] + '/' + plan[index];
 						document.getElementById(index + '_show').innerText = finish[index];

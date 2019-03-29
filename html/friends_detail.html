@@ -21,12 +21,12 @@
 					<img class="user-head-img" :src="friendData.avatar">
 					<div class="card-left-cont">
 						<ul>
-							<li id="first-row">{{friendData.company}}</li>
-							<li id="second-row">{{friendData.name}}</li>
-							<li id="third-row">{{friendData.job}}</li>
-							<li id="fourth-row">{{friendData.phone}}</li>
-							<li id="fifth-row">{{friendData.email}}</li>
-							<li id="sixth-row">{{friendData.company_address}}</li>
+							<li v-if="friendData.company" id="first-row">{{friendData.company}}</li>
+							<li v-if="friendData.name" id="second-row">{{friendData.name}}</li>
+							<li v-if="friendData.job" id="third-row">{{friendData.job}}</li>
+							<li v-if="friendData.phone" id="fourth-row">{{friendData.phone}}</li>
+							<li v-if="friendData.email" id="fifth-row">{{friendData.email}}</li>
+							<li v-if="friendData.company_address" id="sixth-row">{{friendData.company_address}}</li>
 						</ul>
 					</div>
 				</div>
@@ -141,6 +141,7 @@
 			}
 			var fid = "";
 			var userInfo = getUserInfo();
+			var audiourl = '';
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			// 实例化vue对象
@@ -151,8 +152,7 @@
 					friendData: {},
 					contName: '',
 					phoneNum: '',
-					audiourl: "",
-					is_friend: 0,
+					is_friend: 1,
 					is_reliable: 0,
 					is_voice_like: 0
 				},
@@ -164,52 +164,56 @@
 						// 音频播放
 						var voice = null;
 						var playstatus = 0;
-						var voice = plus.audio.createPlayer(muiCont.audiourl);
 						mui(".mui-content").on("tap", ".play-control", function() {
-							if (plus.audio == undefined) {
-								message("设备没有准备好！");
-								return;
-							}
-							if (playstatus == 0) {
-								voice.play(function() {
-									voice.stop();
-									// 播放完成停止播放
-									playstatus == 0;
-									$(".play-control").removeClass("play");
-								}, function(e) {
-									message("播放失败");
-									$(".play-control").removeClass("play");
-								});
-								playstatus = 1;
-								$(".play-control").addClass("play");
-							} else if (playstatus == 1) {
-								voice.pause();
+							voice = plus.audio.createPlayer(audiourl);
+							$(".play-control").addClass("play");
+							voice.play(function() {
+								voice.stop();
 								$(".play-control").removeClass("play");
-								playstatus = 2;
-							} else {
-								voice.resume();
-								playstatus = 1;
-								$(".play-control").addClass("play");
-							}
+							}, function(e) {
+								message("播放失败");
+								$(".play-control").removeClass("play");
+							});
+// 							if (playstatus == 0) {
+// 								// playstatus = 1;
+// 								$(".play-control").addClass("play");
+// 								voice.play(function() {
+// 									voice.stop();
+// 									// 播放完成停止播放
+// 									playstatus == 0;
+// 									$(".play-control").removeClass("play");
+// 								}, function(e) {
+// 									message("播放失败");
+// 									$(".play-control").removeClass("play");
+// 								});
+// 							} else if (playstatus == 1) {
+// 								voice.pause();
+// 								$(".play-control").removeClass("play");
+// 								playstatus = 2;
+// 							} else {
+// 								voice.resume();
+// 								playstatus = 1;
+// 								$(".play-control").addClass("play");
+// 							}
 						})
 						// 跳转到更多页面
 						mui(".friends-detail-header").on("tap", "span", function() {
-							if(muiCont.is_friend==1){
-								openPage('friends_detail_more.html', 'friends_detail_more','#f7f7f7',{
-									token:userInfo.token,
-									fid:fid
+							if (muiCont.is_friend == 1) {
+								openPage('friends_detail_more.html', 'friends_detail_more', '#f7f7f7', {
+									token: userInfo.token,
+									fid: fid
 								});
-							}else{
+							} else {
 								message("添加好友才能进行后续操作！");
 							}
 						})
 					})
 					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 				},
-				methods:{
-					addFriend:function(){
-						openPage('friend_verification.html','friend_verification','#f7f7f7',{
-							fid:fid
+				methods: {
+					addFriend: function() {
+						openPage('friend_verification.html', 'friend_verification', '#f7f7f7', {
+							fid: fid
 						});
 					}
 				}
@@ -228,7 +232,7 @@
 						muiCont.contName = data.name;
 						muiCont.phoneNum = data.phone;
 						muiCont.friendData = data;
-						muiCont.audiourl = data.voice;
+						audiourl = data.voice;
 						muiCont.is_friend = data.is_friend;
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;

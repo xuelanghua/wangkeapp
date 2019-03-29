@@ -44,7 +44,7 @@
 			<div class="lately-add-cont" id="history">
 				<h5 @tap="handle(3,1)">最近添加</h5>
 				<ul v-if="result">
-					<li class="mui-table-view-cell" v-for="user in lists">
+					<li class="mui-table-view-cell" v-for="user in lists" v-on:click.stop="toDetail(user.fid)">
 						<div class="head-img">
 							<img :src="user.avatar">
 						</div>
@@ -52,10 +52,10 @@
 							<p>{{user.name}}</p>
 							<p class="desc">{{user.remark}}</p>
 						</div>
-						<button v-if="user.status==0" id="disAgree" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,2)">拒绝</button>
-						<button v-if="user.status==0" id="agreeAdd" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,1)">同意</button>
-						<span v-if="user.status==1" class="add-after">已添加</span>
-						<span v-if="user.status==2" class="add-after">已拒绝</span>
+						<button v-if="user.apply_status==0" id="disAgree" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,-1)">拒绝</button>
+						<button v-if="user.apply_status==0" id="agreeAdd" class="mui-popup-button-bold mui-btn-blue" v-on:click.stop="handle(user.fid,1)">同意</button>
+						<span v-if="user.apply_status==1" class="add-after">已添加</span>
+						<span v-if="user.apply_status==-1" class="add-after">已拒绝</span>
 					</li>
 				</ul>
 				<p v-else class="void-tips">暂无申请记录</p>
@@ -89,7 +89,13 @@
 					// 不要在created中使用plus相关接口,基座还未加载完成
 					createlist();
 				},
-				methods: {}
+				methods: {
+					toDetail:function(fid){
+						openPage('friends_detail.html','friends_detail','#f7f7f7',{
+							fid:fid
+						});
+					}
+				}
 			})
 			document.getElementById('myQrCode').addEventListener('tap', function() {
 				// 我的名片码
@@ -110,6 +116,9 @@
 			}
 			// 添加拒绝操作
 			function handle(id, status) {
+				logs(status);
+				logs(id);
+				logs(token);
 				mui.post($ajaxUrl + 'customer&action=friend_confirm', {
 					token: token,
 					fid: id,
@@ -119,7 +128,7 @@
 					if (res.errno == 0 && status == 1) {
 						message("同意添加");
 						createlist();
-					} else if (res.errno == 0 && status == 2) {
+					} else if (res.errno == 0 && status == -1) {
 						message("已拒绝");
 						createlist();
 					} else {
@@ -132,7 +141,6 @@
 			mui.plusReady(function() {
 				document.getElementById("search").addEventListener("keypress", function(event) {
 					var search = document.querySelector('input[name=cont]').value;
-					// var search = "刘与华";
 					var keyword = search.replace(/^\s*|\s*$/g, "");
 					if (event.keyCode == "13" && keyword != '') {
 						plus.key.hideSoftKeybord();
