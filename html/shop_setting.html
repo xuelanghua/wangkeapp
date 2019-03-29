@@ -81,6 +81,21 @@
 			.mui-table-view-cell>a:not(.mui-btn) {
 				margin: -16px -15px;
 			}
+
+			.goods-position {
+				display: inline-block;
+				position: absolute;
+				right: 36px;
+				font-size: 12px;
+				top: 50%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				color: #666666;
+			}
+
+			.function .mui-table-view-cell.mui-media:after {
+				background-color: #f2f2f2;
+			}
 		</style>
 	</head>
 	<body>
@@ -101,6 +116,15 @@
 			</div>
 			<div class="function">
 				<ul class="mui-table-view-chevron">
+					<li class="mui-table-view-cell mui-media buy-goods-booth">
+						<a class='mui-navigate-right' href="javascript:;">
+							<img class="mui-media-object mui-pull-left" src="../image/goods-position-icon.png">
+							<div class="mui-media-body">
+								<p class='mui-ellipsis tishi'>购买商品位</p>
+							</div>
+							<span class="goods-position">当前拥有3个</span>
+						</a>
+					</li>
 					<li class="mui-table-view-cell mui-media">
 						<a class='mui-navigate-right' href="javascript:;">
 							<img class="mui-media-object mui-pull-left" src="../image/moneyz.png">
@@ -142,7 +166,12 @@
 						}
 					}, '', 'slide-in-right');
 				})
+				// 购买商品位
+				mui(".mui-content").on("tap", ".buy-goods-booth", function() {
+					openPage("buy_goods_booth.html", "buy_goods_booth", '#f7f7f7', '');
+				})
 			}
+
 			//获取用户信息
 			var userInfo = getUserInfo();
 			var uid = userInfo.id;
@@ -161,7 +190,7 @@
 					success: function(ret) {
 						console.log(JSON.stringify('成功'));
 						console.log(JSON.stringify(ret));
-						if(ret.errno==1){
+						if (ret.errno == 1) {
 							//提示后 跳转到店铺信息设置页面
 							message(ret.message);
 							fnOpenWin("store_setting.html", "store_setting", {
@@ -169,14 +198,14 @@
 									background: '#f7f7f7'
 								}
 							}, '', 'slide-in-right');
-							plus.webview.close('shop_setting','none');
+							plus.webview.close('shop_setting', 'none');
 						}
-						if(ret.errno==0){
+						if (ret.errno == 0) {
 							console.log(ret.data.avatar);
-							document.getElementById('title').innerHTML=ret.data.store_name;
-							document.getElementById('avatar').src=ret.data.store_avatar;
-							document.getElementById('description').innerHTML=ret.data.store_description;
-							document.getElementById('title').innerHTML=ret.data.store_name;
+							document.getElementById('title').innerHTML = ret.data.store_name;
+							document.getElementById('avatar').src = ret.data.store_avatar;
+							document.getElementById('description').innerHTML = ret.data.store_description;
+							document.getElementById('title').innerHTML = ret.data.store_name;
 						}
 					},
 					error: function(xhr, type, errorThrown) {
