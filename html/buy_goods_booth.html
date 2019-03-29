@@ -15,15 +15,15 @@
 			<h1 class="mui-title">商品位购买</h1>
 		</header>
 
-		<div class="mui-content goods-booth-container">
+		<div id="goods-booth" class="mui-content goods-booth-container">
 			<div class="page-head">
 				<h5>合计</h5>
-				<h2><span>&yen;</span>200.00</h2>
+				<h2><span>&yen;</span>{{sum}}.00</h2>
 				<div class="buy-num-cont">
 					<span>购买数量</span>
 					<div class="mui-numbox" data-numbox-min="1">
 						<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
-						<input class="mui-input-numbox" type="number">
+						<input class="mui-input-numbox" v-model="total" type="number">
 						<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
 					</div>
 				</div>
@@ -44,6 +44,7 @@
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script src="../js/util.js"></script>
 	<script type="text/javascript">
 		mui.init();
@@ -56,5 +57,20 @@
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
 		mui.plusReady(function() {})
+		var app=new Vue({
+			el:"#goods-booth",
+			data(){
+				return{
+					total:1
+				}
+			},
+			computed: {
+				sum:function(){
+					var num=this.total*200;
+					return num;
+				}
+			}
+			
+		})
 	</script>
 </html>
