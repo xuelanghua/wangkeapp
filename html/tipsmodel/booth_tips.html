@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/index.css" rel="stylesheet" />
+		<link href="../../icomoon/style.css" rel="stylesheet" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+		<style type="text/css">
+			.tips-cont{
+				width: 6.26rem;
+				height: 7.9rem;
+			}
+			.tips-cont .tips-body{
+				width: 6.26rem;
+				height: 6.6rem;
+				background: #ffffff url("../../image/tips-top-bg.jpg")center top no-repeat;
+				background-size:100% auto;
+				padding-top: 3.6rem;
+			}
+			.tips-cont .tips-body p{
+				color: #333333;
+				font-size: 0.3rem;
+				margin-bottom: 0.9rem;
+			}
+			.tips-cont .tips-body span{
+				width: 3.86rem;
+				height: 0.88;
+				background-color: #f5ca3a;
+				color: #FFFFFF;
+				font-size: 0.36rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content">
+			<div class="tips-cont">
+				<div class="tips-body">
+					<p>您的商品位已达上限，请购买更多商品位</p>
+					<span class="immediately">立即购买</span>
+				</div>
+				<img id="hide_qrcode" src="../../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
+			</div>
+		</div>
+	</body>
+	<script src="../../js/mui.min.js"></script>
+	<script src="../../js/util.js"></script>
+	<script>
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		var postType = 1;
+		var pgNum = 1;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		mui.init();
+		mui.plusReady(function() {
+			var tipsName=plus.webview.currentWebview();
+			mui(".mui-content").on("tap", "#hide_qrcode", function() {
+				plus.webview.close(tipsName, "auto", "", "");
+			})
+		});
+		mui(".mui-content").on("tap",".immediately",function(){
+			openPage("../buy_goods_booth.html",'buy_goods_booth','#f7f7f7','');
+			plus.webview.close('booth_tips', "auto", "", "");
+		})
+	</script>
+</html>

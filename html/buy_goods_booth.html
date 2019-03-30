@@ -99,8 +99,13 @@
 			},
 			computed: {
 				sum: function() {
-					var sums = this.total * 200;
-					return sums;
+					var price;
+					if (isNaN(this.total)) {
+						price = 200;
+					} else {
+						price = this.total * 200;
+					}
+					return price;
 				}
 			},
 			methods: {
@@ -108,9 +113,16 @@
 					// 监听输入
 					var re = /^[1-9]+[0-9]*]*$/;
 					if (!re.test(this.total)) {
-						message("请输入正整数");
-						this.total=1;
-						return false;
+						// message("请输入正整数");
+						// this.total=1;
+						this.total = parseInt(this.total);
+						if (this.total == 0||isNaN(this.total)) {
+							this.total = 1;
+						}else{
+							
+						}
+					} else {
+						this.total = parseInt(this.total);
 					}
 				},
 				reduce: function() {

@@ -6,13 +6,15 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
-		<link href="../icomoon/style.css" rel="stylesheet"/>
+		<link href="../icomoon/style.css" rel="stylesheet" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
+
 		<style>
 			.clearfix {
 				clear: both;
 			}
-			
+
 			.Notice {
 				position: relative;
 				height: 40px;
@@ -20,32 +22,32 @@
 				font-size: 12px;
 				padding: 5px;
 				color: #CC9C2D;
-				background-color: rgba(255,255,255,0.8);
+				background-color: rgba(255, 255, 255, 0.8);
 				display: none;
 			}
-			
+
 			.Notice-title {
 				position: absolute;
 				left: 5px;
 			}
-			
+
 			.Notice .notice-more {
 				position: absolute;
 				right: 5px;
 				top: 2px;
 			}
-			
+
 			.Notice .notice-more img {
 				width: 8px;
 			}
-			
+
 			.title {
 				width: 100%;
 				padding-top: 90px;
 				background: url(../image/store_management_header.png) no-repeat;
 				background-size: 100% 260px;
 			}
-			
+
 			.sum_of_money {
 				width: 80%;
 				padding: 0 41px 31px 41px;
@@ -54,70 +56,71 @@
 				border-radius: 0.3125rem;
 				background-color: #FFFFFF;
 			}
-			
+
 			.money {
 				padding-top: 23px;
 				font-size: 12px;
 			}
-			
+
 			.number {
 				color: #CC9C2D;
 				font-size: 25px;
 				margin-top: 15px;
 			}
-			
+
 			.receivables {
 				margin-top: 30px;
 				color: #333333;
 			}
-			
+
 			.numbers {
 				color: #CC9C2D;
 				font-size: 15px;
-				margin-top: 0.1875rem;
+				margin-top: 0.3rem;
 			}
-			
+
 			.money button {
 				width: 100%;
 				border: none;
 				padding: 15px 0;
 				border-radius: 25px;
-				font-size: 15px;
+				font-size: 0.3rem;
 				background-color: #F5CA3A;
 				margin-top: 27px;
 			}
-			
+
 			.bj {
 				height: 170px;
 				margin-top: -185px;
 				background-color: #FFFFFF;
 			}
-			
+
 			.shue {
-				font-size: 0.9375rem;
+				font-size: 14px;
 				color: #000000;
 			}
-			
+
 			.administration {
 				padding: 28px 0 16px 0;
 				margin-top: 10px;
 				font-size: 13px;
 				background-color: #FFFFFF;
 			}
+
 			.administration_content {
 				width: 25%;
 				float: left;
 				text-align: center;
 			}
-			
+
 			.administration_content img {
 				height: 27px;
 			}
-			
-			.mui-bar-tab .mui-tab-item.mui-active{
+
+			.mui-bar-tab .mui-tab-item.mui-active {
 				color: #F5CA3A;
 			}
-			
+
 			#notice_container {
 				margin: 0;
 				padding: 0;
@@ -125,10 +128,62 @@
 				height: 40px;
 				line-height: 40px;
 			}
-			
+
 			.swiper-slide {
 				position: relative;
 				top: -5px;
+			}
+
+			/* 弹窗样式 */
+
+			.mask-cont {
+				position: fixed;
+				width: 100%;
+				top: 0;
+				bottom: 0;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				justify-content: center;
+				background: rgba(0, 0, 0, .5);
+				z-index: 9;
+			}
+
+			.tips-cont {
+				width: 6.26rem;
+				height: 7.9rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.tips-cont .tips-body {
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				width: 6.26rem;
+				height: 6.6rem;
+				background: #ffffff url("../image/tips-top-bg.jpg")center top no-repeat;
+				background-size: 100% auto;
+				padding-top: 3.6rem;
+				border-radius: 0.1rem;
+			}
+
+			.tips-cont .tips-body p {
+				color: #333333;
+				font-size: 0.3rem;
+				margin-bottom: 0.9rem;
+			}
+
+			.tips-cont .tips-body .immediately {
+				width: 3.86rem;
+				height: 0.88rem;
+				background-color: #f5ca3a;
+				color: #FFFFFF;
+				font-size: 0.36rem;
+				line-height: 0.88rem;
+				text-align: center;
+				border-radius: 0.45rem;
 			}
 		</style>
 	</head>
@@ -173,7 +228,7 @@
 								<div class="shue" id="wait_send">0</div>
 								<div>待发货</div>
 							</div>
-							<div class="mui-pull-right"style="border-left: 1px solid #DDDDDD;width: 49%;text-align: right;">
+							<div class="mui-pull-right" style="border-left: 1px solid #DDDDDD;width: 49%;text-align: right;">
 								<div class="shue" id="view">0</div>
 								<div>浏览量</div>
 							</div>
@@ -185,30 +240,47 @@
 			</div>
 			<div class="administration">
 				<div class="administration_content" id="shop_manage">
-					<img src="../image/administration.png" >
+					<img src="../image/administration.png">
 					<div>店铺管理</div>
 				</div>
 				<div class="administration_content" id="goods_manage">
-					<img src="../image/administration1.png" >
+					<img src="../image/administration1.png">
 					<div>商品管理</div>
 				</div>
 				<div class="administration_content" id="order_manage">
-					<img src="../image/administration2.png" >
+					<img src="../image/administration2.png">
 					<div>订单管理</div>
 				</div>
 				<div class="administration_content" id="goods_add">
-					<img src="../image/administration3.png" >
+					<img src="../image/administration3.png">
 					<div>商品添加</div>
 				</div>
 				<div class="clearfix"></div>
 			</div>
-		</div> 
+			<div class="mask-cont mui-hidden">
+				<div class="tips-cont">
+					<div class="tips-body">
+						<p>您的商品位已达上限，请购买更多商品位</p>
+						<span class="immediately">立即购买</span>
+					</div>
+					<img class="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
 <script src="../js/mui.min.js"></script>
 <script src="../js/util.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
 <script>
+	// 初始化字体大小
+	var viewport = document.documentElement.clientWidth;
+	var postType = 1;
+	var pgNum = 1;
+	if (viewport > 750) {
+		viewport = 750
+	}
+	document.documentElement.style.fontSize = viewport / 7.5 + "px";
 	mui.init({
 		swipeBack: true,
 		beforeback: function() {
@@ -217,55 +289,83 @@
 			}
 		}
 	});
-	
+
 	var userInfo = getUserInfo();
-	mui.plusReady(function(){
+	var booth = 4;
+	mui.plusReady(function() {
 		eventInit();
 		getStatistics();
 		getNotice();
 	})
-	
+
 	//事件初始化
 	function eventInit() {
 		window.addEventListener('scrollTop', function(event) {
 			window.scrollTo(0, 0);
 		});
-		
+
 		//商品管理
 		document.getElementById('shop_manage').addEventListener('tap', function() {
-			fnOpenWin('shop_setting.html', 'shop_setting', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+			fnOpenWin('shop_setting.html', 'shop_setting', {
+				statusbar: {
+					background: '#FFF'
+				}
+			}, '', 'slide-in-right');
 		});
-		
+
 		//商品管理
 		document.getElementById('goods_manage').addEventListener('tap', function() {
-			fnOpenWin('goods_list.html', 'goods_list', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+			fnOpenWin('goods_list.html', 'goods_list', {
+				statusbar: {
+					background: '#FFF'
+				}
+			}, '', 'slide-in-right');
 		});
-		
+
 		//商品管理
 		document.getElementById('order_manage').addEventListener('tap', function() {
-			fnOpenWin('order_list.html', 'order_list', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+			fnOpenWin('order_list.html', 'order_list', {
+				statusbar: {
+					background: '#FFF'
+				}
+			}, '', 'slide-in-right');
 		});
-		
+
 		//添加商品
 		document.getElementById('goods_add').addEventListener('tap', function() {
-			fnOpenWin('goods_add.html', 'goods_add', {statusbar: {background: '#FFF'}}, '', 'slide-in-right');
+			if (booth < 3) {
+				openPage('goods_add.html', 'goods_add', '#ffffff', '');
+			} else {
+				document.querySelector(".mask-cont").classList.remove('mui-hidden'); 
+			}
 		});
-		
+
 		//查看公告
 		mui('.mui-content').on('tap', '.Notice', function() {
 			noticeDeail();
 		})
 	}
-	
+	// 立即购买商品位
+	mui(".mui-content").on("tap", ".immediately", function() {
+		document.querySelector(".mask-cont").classList.add('mui-hidden');
+		openPage("buy_goods_booth.html", 'buy_goods_booth', '#f7f7f7', '');
+	})
+	// 关闭提示弹窗
+	mui(".mui-content").on("tap", ".hide_qrcode", function() {
+		document.querySelector(".mask-cont").classList.add('mui-hidden');
+	})
 	//获取公告
-	function getNotice(){
-		mui.post($ajaxUrl + 'notice', {action: 'list'}, function(res) {
+	function getNotice() {
+		mui.post($ajaxUrl + 'notice', {
+			action: 'list'
+		}, function(res) {
 			if (res.errno == 0) {
 				notice = res.data;
 				noticeLen = notice.length;
 				var str = '<div class="swiper-container"><div class="swiper-wrapper">';
 				for (var i = 0; i < noticeLen; i++) {
-					str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '" style="height: 8px;">' + notice[i].title + '</div>';
+					str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '" style="height: 8px;">' +
+						notice[i].title + '</div>';
 				}
 				str += '</div></div>';
 				document.getElementById('notice_container').innerHTML = str;
@@ -276,32 +376,31 @@
 			}
 		}, 'json')
 	}
-	
+
 	//获取统计数据
 	function getStatistics() {
 		mui.post($ajaxUrl + 'shop', {
-				action: 'index',
-				token: userInfo.token
-			}, function(res){
-				var data= res.data;
-				for (var index in data) {
-					document.getElementById(index).innerText = data[index];
-				}
-			}, 'json'
-		);
+			action: 'index',
+			token: userInfo.token
+		}, function(res) {
+			var data = res.data;
+			for (var index in data) {
+				document.getElementById(index).innerText = data[index];
+			}
+		}, 'json');
 	}
-	
+
 	//公告滚动初始化
 	function scrollInit() {
 		var mySwiper = new Swiper('.swiper-container', {
-			autoplay: true,	//可选选项，自动滑动
-			loop : true,
-			direction : 'vertical',
+			autoplay: true, //可选选项，自动滑动
+			loop: true,
+			direction: 'vertical',
 			speed: 5000,
 			autoHeight: true,
 			watchOverflow: true,
 			on: {
-				slideChange: function(){
+				slideChange: function() {
 					var index = this.activeIndex;
 					if (index <= noticeLen) {
 						noticeIndex = index - 1;
@@ -312,10 +411,20 @@
 			}
 		})
 	}
-	
+
 	//查看公告详情
 	function noticeDeail() {
-		var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#FFF'}}, {notice: notice[noticeIndex], page: 'shop_index'});
+		var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {
+			top: '0',
+			bottom: '0',
+			scrollIndicator: 'none',
+			statusbar: {
+				background: '#FFF'
+			}
+		}, {
+			notice: notice[noticeIndex],
+			page: 'shop_index'
+		});
 		detailPage.show('slide-in-right');
 	}
 </script>
