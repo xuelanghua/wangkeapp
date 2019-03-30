@@ -100,7 +100,7 @@
 			computed: {
 				sum: function() {
 					var price;
-					if (isNaN(this.total)) {
+					if (this.total == 0 || isNaN(this.total)) {
 						price = 200;
 					} else {
 						price = this.total * 200;
@@ -111,16 +111,22 @@
 			methods: {
 				watchNum: function(e) {
 					// 监听输入
+					var figure;
 					var re = /^[1-9]+[0-9]*]*$/;
+					// 判断是否正整数
 					if (!re.test(this.total)) {
-						// message("请输入正整数");
+						// 如果不是正整数
 						if (this.total == 0 || isNaN(this.total)) {
 							this.total = 1;
-						} else {
-							this.total = parseInt(this.total);
+						} else if(this.total>1000){
+							this.total = 1000;
+						}else{
+							figure=parseInt(this.total);
+							this.total = Math.abs(figure);
 						}
 					} else {
-						this.total = parseInt(this.total);
+						figure=parseInt(this.total);
+						this.total = Math.abs(figure);
 					}
 				},
 				reduce: function() {
