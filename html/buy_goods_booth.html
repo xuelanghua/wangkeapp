@@ -57,7 +57,7 @@
 					<div class="amount-select">
 						<button class="mui-btn" type="button" @tap="reduce" :disabled="total>1?false:true">-</button>
 						<input class="amount" v-model="total" v-on:input="watchNum" type="number">
-						<button class="mui-btn" type="button" @tap="adding">+</button>
+						<button class="mui-btn" type="button" @tap="adding" :disabled="total<9999?false:true">+</button>
 					</div>
 				</div>
 			</div>
@@ -116,17 +116,21 @@
 					// 判断是否正整数
 					if (!re.test(this.total)) {
 						// 如果不是正整数
+						console.log("不是正整数");
 						if (this.total == 0 || isNaN(this.total)) {
 							this.total = 1;
-						} else if(this.total>1000){
-							this.total = 1000;
-						}else{
-							figure=parseInt(this.total);
+						} else {
+							figure = parseInt(this.total);
 							this.total = Math.abs(figure);
 						}
 					} else {
-						figure=parseInt(this.total);
-						this.total = Math.abs(figure);
+						console.log("正整数");
+						if (this.total < 10000) {
+							figure = parseInt(this.total);
+							this.total = Math.abs(figure);
+						} else {
+							this.total = 10000;
+						}
 					}
 				},
 				reduce: function() {

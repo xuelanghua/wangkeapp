@@ -114,82 +114,111 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">会员</h1>
 		</header>
-		
-		<div class="mui-content">
+
+		<div id="mui-content" class="mui-content">
 			<div class="member"></div>
 			<div class="member_chart">
-				<div class="member_title">VIP 会员</div>
+				<div class="member_title">{{memberInfo.group_name}}</div>
 				<div class="member_time">
 					<span>到期：</span>
-					<span>2019-12-20</span>
+					<span>{{memberInfo.expire_time}}</span>
 				</div>
 				<div class="member_chart_number">
 					<div class="mui-pull-left number">
 						<span>我的粉丝</span>
-						<span>2</span>
+						<span>{{memberInfo.fans_number}}</span>
 					</div>
 					<div class="mui-pull-right number1">
 						<span>本月推荐奖</span>
-						<span>120</span>
+						<span>{{memberInfo.recommended_award}}</span>
 					</div>
 					<div class="clearfix"></div>
 				</div>
-				<button class="button">会员续费￥69/年</button>
-				<img src="../image/member1.png" >
+				<button class="button">会员续费￥{{memberInfo.group_annual_fee}}/年</button>
+				<img src="../image/member1.png">
 			</div>
 			<div class="fans">
 				<div class="fans-title">我的粉丝</div>
-				<div class="fans_information">
+				<div class="fans_information" v-for="(lists,index) in fansLists" :key="index">
 					<div class="fans_information_chart mui-pull-left">
-						<img src="../image/bj.jpg" >
+						<img :src="lists.avatarUrl">
 					</div>
-					<div class="mui-pull-left"style="margin-left: 15px;">
+					<div class="mui-pull-left" style="margin-left: 15px;">
 						<div>
-							<span>强光头</span>
+							<span>{{lists.nickName}}</span>
 							<span>
-								<span class="vip">VIP</span>
+								<span class="vip">{{lists.group_name}}</span>
 							</span>
 						</div>
 						<div class="time">
 							<span>加入时间：</span>
-							<span>2018-02-08</span>
+							<span>{{lists.activation_time}}</span>
 						</div>
 					</div>
-					<div class="clearfix"></div>
-				</div>
-				
-				<div class="fans_information">
-					<div class="fans_information_chart mui-pull-left">
-						<img src="../image/bj.jpg" >
-					</div>
-					<div class="mui-pull-left"style="margin-left: 15px;">
-						<div>
-							<span>强光头</span>
-							<span>
-								<span class="vip">VIP</span>
-							</span>
-						</div>
-						<div class="time">
-							<span>加入时间：</span>
-							<span>2018-02-08</span>
-						</div>
-					</div>
-					<div class="mui-pull-right recommender">
+					<div class="mui-pull-right recommender" v-if="lists.direct==0">
 						<span>推荐人：</span>
-						<span>小飞飞</span>
+						<span>{{lists.recommend_user}}</span>
 					</div>
 					<div class="clearfix"></div>
 				</div>
-				
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
-		<script type="text/javascript" src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script type="text/javascript">
-			mui.init()
-			mui(".mui-content").on("tap",".button",function(){
-				openPage('renew.html','renew','#ffffff','');
+			var userInfo = getUserInfo(),
+				pageNum = 0;
+			var app = new Vue({
+				el: "#mui-content",
+				data() {
+					return {
+						memberInfo: {},
+						fansLists: []
+					}
+				},
+				created: () => {
+					mui.init();
+					mui.plusReady(function() {
+						getMemberInfo();
+						getFans();
+					})
+				},
+				mounted: () => {
+					mui(".mui-content").on("tap", ".button", function() {
+						openPage('renew.html', 'renew', '#ffffff', '');
+					})
+				}
 			})
+
+			function getMemberInfo() {
+				mui.post($ajaxUrl + 'member&action=member_info', {
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno) {
+						message(res.message);
+					} else {
+						// 请求成功
+						app.memberInfo = res.data;
+					}
+				}, 'json');
+			}
+
+			function getFans() {
+				pageNum += 1;
+				mui.post($ajaxUrl + 'member&action=fans', {
+					token: userInfo.token,
+					skip: pageNum,
+					limit: 30
+				}, function(res) {
+					if (res.errno) {
+						message(res.message);
+					} else {
+						// 请求成功
+						app.fansLists = res.data;
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 
