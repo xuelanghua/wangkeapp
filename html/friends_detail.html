@@ -161,41 +161,63 @@
 						var self = plus.webview.currentWebview();
 						fid = self.fid;
 						getFriendsInfo();
+
 						// 音频播放
-						var voice = null;
-						var playstatus = 0;
+						var voice = null,
+							playstatus = 0,
+							pausing = false,
+							audioUrl = 'https://raw.githubusercontent.com/centosl/imageslibrary/master/audio/20190311200902994.mp3',
+							downLoadurl = '_downloads/1.mp3',
+							downloader = plus.downloader.createDownload(audioUrl, {
+								filename: '_downloads/1.mp3'
+							}, function(d, status) {});
+							// 开始下载音频
+						downloader.start();
+
+
+						voice = plus.audio.createPlayer(downLoadurl);
 						mui(".mui-content").on("tap", ".play-control", function() {
-							voice = plus.audio.createPlayer(audiourl);
+							//监测暂停
+							if (pausing) {
+								voice.resume();
+								$(".play-control").addClass("play");
+								pausing = false;
+								return;
+							}
+							if (playstatus) {
+								pause();
+								return;
+							}
 							$(".play-control").addClass("play");
 							voice.play(function() {
 								voice.stop();
 								$(".play-control").removeClass("play");
+								pausing = false;
+								playstatus = 0;
 							}, function(e) {
 								message("播放失败");
 								$(".play-control").removeClass("play");
 							});
-// 							if (playstatus == 0) {
-// 								// playstatus = 1;
-// 								$(".play-control").addClass("play");
-// 								voice.play(function() {
-// 									voice.stop();
-// 									// 播放完成停止播放
-// 									playstatus == 0;
-// 									$(".play-control").removeClass("play");
-// 								}, function(e) {
-// 									message("播放失败");
-// 									$(".play-control").removeClass("play");
-// 								});
-// 							} else if (playstatus == 1) {
-// 								voice.pause();
-// 								$(".play-control").removeClass("play");
-// 								playstatus = 2;
-// 							} else {
-// 								voice.resume();
-// 								playstatus = 1;
-// 								$(".play-control").addClass("play");
-// 							}
+							playstatus = 1;
 						})
+
+						function pause() {
+							pausing = true;
+							voice.pause();
+							$(".play-control").removeClass("play");
+						}
+						//app切换到后台时暂停切换到前端时继续播放
+						document.addEventListener('pause', function() {
+							if (voice) {
+								pause();
+							}
+						});
+						document.addEventListener('resume', function() {
+							if (voice) {
+								play();
+							}
+						});
+						// 语音播放结束
 						// 跳转到更多页面
 						mui(".friends-detail-header").on("tap", "span", function() {
 							if (muiCont.is_friend == 1) {
