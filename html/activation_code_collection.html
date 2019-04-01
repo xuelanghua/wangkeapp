@@ -9,7 +9,6 @@
 		<link href="../css/vip-page.css" rel="stylesheet" />
 		<style type="text/css">
 			.collection-code-container .section-body .section-items .section-input input {
-				/* background-color: rgba(0, 0, 0, 0.3); */
 				min-width: 0.6rem;
 			}
 		</style>
@@ -27,28 +26,28 @@
 			</div>
 			<div class="section-body">
 				<div class="section-shell">
-					<div class="section-items" v-if="userType==1">
+					<div class="section-items" v-if="userType==5">
 						<h2>服务中心激活码</h2>
 						<div class="section-input">
-							<input type="number" value="0" v-model="srCoder"></input><label>个</label>
+							<input type="number" id="input1" value="0" v-model="submitarr[0].num"></input><label>个</label>
 						</div>
 					</div>
-					<div class="section-items" v-if="userType==1||userType==2">
+					<div class="section-items" v-if="userType==5||userType==4">
 						<h2>服务站激活码</h2>
 						<div class="section-input">
-							<input type="number" value="0" v-model="znCoder"></input><label>个</label>
+							<input type="number" id="input2" value="0" v-model="submitarr[1].num"></input><label>个</label>
 						</div>
 					</div>
-					<div class="section-items" v-if="userType==1||userType==2||userType==3">
+					<div class="section-items" v-if="userType==5||userType==4||userType==3">
 						<h2>创客激活码</h2>
 						<div class="section-input">
-							<input type="number" value="0" v-model="ckCoder"></input><label>个</label>
+							<input type="number" id="input3" value="0" v-model="submitarr[2].num"></input><label>个</label>
 						</div>
 					</div>
-					<div class="section-items" v-if="userType==1||userType==2||userType==3||userType==4">
+					<div class="section-items" v-if="userType==5||userType==4||userType==3">
 						<h2>VIP激活码</h2>
 						<div class="section-input">
-							<input maxlength="6" type="number" value="0" v-model="vipCoder"></input><label>个</label>
+							<input maxlength="6" id="input4" type="number" value="0" v-model="submitarr[3].num"></input><label>个</label>
 						</div>
 					</div>
 				</div>
@@ -56,7 +55,7 @@
 			<div class="confirm-section">
 				<p class="tips-info" v-if="status==1">您有<span>{{surplus}}</span>个VIP可以领取！</p>
 				<p class="tips-info" v-else>您领超了<span>{{surplus}}</span>个VIP！</p>
-				<button type="button">确定</button>
+				<span id="determined">确定</span>
 				<p>确定领取后将无法更改</p>
 			</div>
 		</div>
@@ -75,29 +74,40 @@
 			// 初始化字体大小结束
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// vue实例初始化
+			var userInfo = getUserInfo();
 			var collection = new Vue({
 				el: "#collections",
 				data() {
 					return {
-						srCoder: 0,
-						znCoder: 0,
-						ckCoder: 0,
-						vipCoder: 0,
-						userType: 1,
-						status: 1
+						userType: userInfo.group_id,
+						status: 1,
+						submitarr: [{
+							id: 4,
+							num: 0
+						}, {
+							id: 3,
+							num: 0
+						}, {
+							id: 2,
+							num: 0
+						}, {
+							id: 1,
+							num: 0
+						}]
 					}
 				},
 				mounted: function() {
 					mui.init();
 					mui.plusReady(function() {
-						logs("激活码领取")
+						// logs("激活码领取")
 					});
 				},
 				computed: {
 					surplus: function() {
 						var num = 0;
 						if (this.userType == 1) {
-							num = parseInt((500000 - this.srCoder * 200000 - this.znCoder * 50000 - this.ckCoder * 9999 - this.vipCoder *
+							num = parseInt((500000 - this.submitarr[0].num * 200000 - this.submitarr[1].num * 50000 - this.submitarr[2].num *
+								9999 - this.submitarr[3].num *
 								199) / 199);
 							if (num >= 0) {
 								this.status = 1;
@@ -107,7 +117,8 @@
 								return Math.abs(num);
 							}
 						} else if (this.userType == 2) {
-							num = parseInt((200000 - this.znCoder * 50000 - this.ckCoder * 9999 - this.vipCoder * 199) / 199);
+							num = parseInt((200000 - this.submitarr[1].num * 50000 - this.submitarr[2].num * 9999 - this.submitarr[3].num *
+								199) / 199);
 							if (num >= 0) {
 								this.status = 1;
 								return num;
@@ -116,7 +127,7 @@
 								return Math.abs(num);
 							}
 						} else if (this.userType == 3) {
-							num = parseInt((50000 - this.ckCoder * 9999 - this.vipCoder * 199) / 199);
+							num = parseInt((50000 - this.submitarr[2].num * 9999 - this.submitarr[3].num * 199) / 199);
 							if (num >= 0) {
 								this.status = 1;
 								return num;
@@ -125,7 +136,7 @@
 								return Math.abs(num);
 							}
 						} else if (this.userType == 4) {
-							num = parseInt((9999 - this.vipCoder * 199) / 199);
+							num = parseInt((9999 - this.submitarr[3].num * 199) / 199);
 							if (num >= 0) {
 								this.status = 1;
 								return num;
@@ -134,7 +145,6 @@
 								return Math.abs(num);
 							}
 						}
-
 					}
 				}
 			});
@@ -156,7 +166,37 @@
 			mui(".mui-content").on("tap", ".tips-cont", function() {
 
 			})
+			mui(".mui-content").on("tap", "#determined", function() {
+				document.getElementById("input1").blur();
+				document.getElementById("input2").blur();
+				document.getElementById("input3").blur();
+				document.getElementById("input4").blur();
+				logs(userInfo);
+				var lists = [];
+				for (i in collection.submitarr) {
+					if (collection.submitarr[i].num) {
+						lists.push(collection.submitarr[i]);
+					} else {
+
+					}
+				}
+				if (0 < lists.length) {
+					mui.post($ajaxUrl + 'member&action=get_code', {
+						token: userInfo.token,
+						code: lists
+					}, function(res) {
+						if(res.errno){
+							message(res.message);
+						}else{
+							message('领取成功！');
+							mui.back();
+						}
+					}, 'json');
+				} else {
+					message("请输入领取个数");
+				}
+			})
 		</script>
 	</body>
-
+ <!-- group_id 3-2 4-3 5-4 -->
 </html>

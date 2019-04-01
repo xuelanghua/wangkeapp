@@ -71,7 +71,7 @@
 				background-color: #F0DBA2;
 			}
 			.jihuo{
-				margin-top: -25px;
+				margin-top: -45px;
 			}
 			.jihuo button{
 				font-size: 12px;
@@ -332,37 +332,6 @@
 	</head>
 
 	<body>
-		<script src="../js/mui.min.js"></script>
-		<script type="text/javascript">
-			mui.init()
-			
-			function popDIV(showid,backdropid){
-				document.getElementById(showid).style.display="block";
-				document.getElementById(backdropid).style.display="block";
-				
-				var backdropiddiv = document.getElementById(backdropid);
-				backdropid.style.width = document.body.scrollWidth;
-				$("#"+backdropid).height($(document).height());
-			}
-			function hidediv(showid,backdropid){
-				document.getElementById(showid).style.display = 'none';
-				document.getElementById(backdropid).style.display = 'none';
-			}
-			
-			function popdiv(explainid,backdropid){
-				document.getElementById(explainid).style.display="block";
-				document.getElementById(backdropid).style.display="block";
-				
-				var backdropiddiv = document.getElementById(backdropid);
-				backdropid.style.width = document.body.scrollWidth;
-				$("#"+backdropid).height($(document).height());
-			}
-			function explaindiv(explainid,backdropid){
-				document.getElementById(explainid).style.display = 'none';
-				document.getElementById(backdropid).style.display = 'none';
-			}
-		</script>
-		
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<div class="mui-pull-right"style="font-size: 15px;margin-top: 10px;">我的权益</div>
@@ -396,7 +365,8 @@
 						</span>
 					</div>
 					<div class="jihuo mui-pull-right">
-						<button>VIP激活码:49/50</button>
+						<!-- <button>领取激活码</button> -->
+						<button>激活码</button>
 					</div>
 				</div>
 				<img class="maker_bj" src="../image/maker.png" >
@@ -420,7 +390,7 @@
 				<div class="record">
 					<div class="record_title">
 						<div class="mui-pull-left">
-							<span>本月战绩</span>
+							<span>我的战绩</span>
 							<span>
 								<span class="record_title_grade">达到目标获得奖励提升等级</span>
 								<span class="record_title_chart" onclick="popdiv('target','mui-backdrop1')">
@@ -505,9 +475,7 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
-				
 			</div>
-			
 		</div>
 		
 		<div id="mui-backdrop" onclick="hidediv('explain','mui-backdrop')"></div>
@@ -551,7 +519,40 @@
 			</div>
 			<button>知道了</button>
 		</div>
-		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			function popDIV(showid,backdropid){
+				document.getElementById(showid).style.display="block";
+				document.getElementById(backdropid).style.display="block";
+				
+				var backdropiddiv = document.getElementById(backdropid);
+				backdropid.style.width = document.body.scrollWidth;
+				$("#"+backdropid).height($(document).height());
+			}
+			function hidediv(showid,backdropid){
+				document.getElementById(showid).style.display = 'none';
+				document.getElementById(backdropid).style.display = 'none';
+			}
+			
+			function popdiv(explainid,backdropid){
+				document.getElementById(explainid).style.display="block";
+				document.getElementById(backdropid).style.display="block";
+				
+				var backdropiddiv = document.getElementById(backdropid);
+				backdropid.style.width = document.body.scrollWidth;
+				$("#"+backdropid).height($(document).height());
+			}
+			function explaindiv(explainid,backdropid){
+				document.getElementById(explainid).style.display = 'none';
+				document.getElementById(backdropid).style.display = 'none';
+			}
+			mui(".mui-content .jihuo").on("tap","button",function(){
+				openPage('activation_code_collection.html','activation_code_collection','#f7f7f7','');
+			})
+		</script>
 	</body>
 
 </html>
