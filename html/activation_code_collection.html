@@ -75,6 +75,7 @@
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// vue实例初始化
 			var userInfo = getUserInfo();
+			// userInfo.group_id=5;
 			var collection = new Vue({
 				el: "#collections",
 				data() {
@@ -105,7 +106,7 @@
 				computed: {
 					surplus: function() {
 						var num = 0;
-						if (this.userType == 1) {
+						if (this.userType == 5) {
 							num = parseInt((500000 - this.submitarr[0].num * 200000 - this.submitarr[1].num * 50000 - this.submitarr[2].num *
 								9999 - this.submitarr[3].num *
 								199) / 199);
@@ -116,7 +117,7 @@
 								this.status = 2;
 								return Math.abs(num);
 							}
-						} else if (this.userType == 2) {
+						} else if (this.userType == 4) {
 							num = parseInt((200000 - this.submitarr[1].num * 50000 - this.submitarr[2].num * 9999 - this.submitarr[3].num *
 								199) / 199);
 							if (num >= 0) {
@@ -128,15 +129,6 @@
 							}
 						} else if (this.userType == 3) {
 							num = parseInt((50000 - this.submitarr[2].num * 9999 - this.submitarr[3].num * 199) / 199);
-							if (num >= 0) {
-								this.status = 1;
-								return num;
-							} else {
-								this.status = 2;
-								return Math.abs(num);
-							}
-						} else if (this.userType == 4) {
-							num = parseInt((9999 - this.submitarr[3].num * 199) / 199);
 							if (num >= 0) {
 								this.status = 1;
 								return num;
@@ -171,7 +163,6 @@
 				document.getElementById("input2").blur();
 				document.getElementById("input3").blur();
 				document.getElementById("input4").blur();
-				logs(userInfo);
 				var lists = [];
 				for (i in collection.submitarr) {
 					if (collection.submitarr[i].num) {
@@ -185,6 +176,7 @@
 						token: userInfo.token,
 						code: lists
 					}, function(res) {
+						logs(res);
 						if(res.errno){
 							message(res.message);
 						}else{
