@@ -509,7 +509,7 @@
 			<button id="button">知道了</button>
 		</div>
 
-		<div id="mui-backdrop1" onclick="explaindiv('target','mui-backdrop1')"></div>
+		<div id="mui-backdrop1" onclick="hideDiv('explain','mui-backdrop1')"></div>
 		<div id="explain">
 			<div class="explain_chart">
 				<img src="../image/maker_explain.png">
@@ -518,7 +518,7 @@
 			<div class="explain_content">
 				<div>1年中任意3个月完成任务，奖励旅游活动一次超过3个每满3个月奖励一次。</div>
 			</div>
-			<button  @tap="hiedDiv('explain','mui-backdrop1')">知道了</button>
+			<button @tap="hideDiv('explain','mui-backdrop1')">知道了</button>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
@@ -543,15 +543,14 @@
 					})
 				},
 				methods: {
-					popdiv:function(explainid, backdropid) {
+					popdiv: function(explainid, backdropid) {
 						document.getElementById(explainid).style.display = "block";
 						document.getElementById(backdropid).style.display = "block";
-					
-						var backdropiddiv = document.getElementById(backdropid);
-						backdropiddiv.style.width = document.body.scrollWidth;
+
+						document.getElementById(backdropid).style.width = document.body.scrollWidth;
 						$("#" + backdropid).height($(document).height());
 					},
-					hiedDiv:function(explainid, backdropid) {
+					hideDiv: function(explainid, backdropid) {
 						logs("asdffa");
 						document.getElementById(explainid).style.display = 'none';
 						document.getElementById(backdropid).style.display = 'none';
