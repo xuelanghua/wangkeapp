@@ -5,7 +5,7 @@
 		<meta charset="utf-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.css" rel="stylesheet" />
 		<style>
 			.mui-bar,body,.mui-content{
 				background-color: #FFFFFF;
@@ -71,7 +71,7 @@
 				background-color: #F0DBA2;
 			}
 			.jihuo{
-				margin-top: -45px;
+				margin-top: -25px;
 			}
 			.jihuo button{
 				font-size: 12px;
@@ -327,6 +327,7 @@
 				padding: 12px 0;
 				font-size: 18px;
 				background-color: #856C22;
+				z-index: 999;
 			}
 		</style>
 	</head>
@@ -338,14 +339,14 @@
 			<h1 class="mui-title">会员中心</h1>
 		</header>
 
-		<div id="mui-content" class="mui-content mui-hidden">
+		<div id="mui-content" class="mui-content">
 			<div class="maker">
 				<div class="maker_name">
-					<span>{{memberInfo.group_name}}</span>
+					<s<span>{{memberInfo.group_name}}</span>
 					<span class="maker_position" v-if="memberInfo.position!=''">{{memberInfo.position}}</span>
 				</div>
 				<div class="maker1">
-					<img class="maker1_chart mui-pull-left" src="../image/maker1.png" @tap="popdiv('explain','mui-backdrop1')">
+					<img onclick="popDIV('explain','mui-backdrop')" class="maker1_chart mui-pull-left" src="../image/maker1.png">
 					<span>
 						<span class="mui-pull-left">今年达标次数</span>
 						<span style="font-size: 15px;">{{memberInfo.mark_number}}</span>
@@ -365,8 +366,8 @@
 						</span>
 					</div>
 					<div class="jihuo mui-pull-right">
-						<button v-if="memberInfo.activation_code!=''">{{memberInfo.activation_code}}</button>
-						<button v-else>激活码</button>
+						<button class="show-key" v-if="memberInfo.activation_code!=''">{{memberInfo.activation_code}}</button>
+						<button class="get-kay" v-else>激活码</button>
 					</div>
 				</div>
 				<img class="maker_bj" src="../image/maker.png">
@@ -390,10 +391,10 @@
 				<div class="record">
 					<div class="record_title">
 						<div class="mui-pull-left">
-							<span>我的战绩</span>
+							<span>本月战绩</span>
 							<span>
 								<span class="record_title_grade">达到目标获得奖励提升等级</span>
-								<span class="record_title_chart">
+								<span class="record_title_chart" onclick="popdiv('target','mui-backdrop1')">
 									<img src="../image/record.png">
 								</span>
 							</span>
@@ -429,28 +430,6 @@
 
 			<div class="fans">
 				<div class="fans-title">我的粉丝({{memberInfo.fans_number}})</div>
-				<!-- <div class="fans_information">
-					<div class="fans_information_chart mui-pull-left">
-						<img src="../image/bj.jpg">
-					</div>
-					<div class="mui-pull-left" style="margin-left: 15px;">
-						<div>
-							<span>强光头</span>
-							<span>
-								<span class="vip1">创客</span>
-							</span>
-						</div>
-						<div class="time">
-							<span>加入时间：</span>
-							<span>2018-02-08</span>
-						</div>
-					</div>
-					<div class="mui-pull-right recommender1">
-						<span>推荐收益：</span>
-						<span>50000</span>
-					</div>
-					<div class="clearfix"></div>
-				</div> -->
 
 				<div class="fans_information" v-for="(list,index) in fansLists" :key="index">
 					<div class="fans_information_chart mui-pull-left">
@@ -476,10 +455,12 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
+
 			</div>
+
 		</div>
 
-		<div id="mui-backdrop"></div>
+		<div id="mui-backdrop" onclick="hidediv('explain','mui-backdrop')"></div>
 		<div id="target">
 			<img src="../image/maker_target.png">
 			<div class="target_title">说明</div>
@@ -506,10 +487,10 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
-			<button id="button">知道了</button>
+			<button id="button" onclick="hidediv('explain','mui-backdrop')">知道了</button>
 		</div>
 
-		<div id="mui-backdrop1" onclick="hideDiv('explain','mui-backdrop1')"></div>
+		<div id="mui-backdrop1" onclick="explaindiv('target','mui-backdrop1')"></div>
 		<div id="explain">
 			<div class="explain_chart">
 				<img src="../image/maker_explain.png">
@@ -518,11 +499,11 @@
 			<div class="explain_content">
 				<div>1年中任意3个月完成任务，奖励旅游活动一次超过3个每满3个月奖励一次。</div>
 			</div>
-			<button @tap="hideDiv('explain','mui-backdrop1')">知道了</button>
+			<button onclick="explaindiv('target','mui-backdrop1')">知道了</button>
 		</div>
-		<script src="../js/mui.min.js"></script>
-		<script src="../js/util.js"></script>
+		<script src="../js/mui.js"></script>
 		<script src="../js/vue.min.js"></script>
+		<script src="../js/util.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo(),
@@ -542,27 +523,38 @@
 						getFans();
 					})
 				},
-				methods: {
-					popdiv: function(explainid, backdropid) {
-						document.getElementById(explainid).style.display = "block";
-						document.getElementById(backdropid).style.display = "block";
-
-						document.getElementById(backdropid).style.width = document.body.scrollWidth;
-						$("#" + backdropid).height($(document).height());
-					},
-					hideDiv: function(explainid, backdropid) {
-						logs("asdffa");
-						document.getElementById(explainid).style.display = 'none';
-						document.getElementById(backdropid).style.display = 'none';
-					}
-				},
 				mounted: () => {
-					mui(".mui-content .jihuo").on("tap", "button", function() {
-						openPage('activation_code_collection.html', 'activation_code_collection', '#f7f7f7', '');
-					})
 					document.querySelector(".mui-content").classList.remove('mui-hidden');
 				}
 			})
+
+			function popDIV(showid, backdropid) {
+				document.getElementById(showid).style.display = "block";
+				document.getElementById(backdropid).style.display = "block";
+
+				var backdropiddiv = document.getElementById(backdropid);
+				backdropiddiv.style.width = document.body.scrollWidth;
+				$("#" + backdropid).height($(document).height());
+			}
+
+			function hidediv(showid, backdropid) {
+				document.getElementById(showid).style.display = 'none';
+				document.getElementById(backdropid).style.display = 'none';
+			}
+
+			function popdiv(explainid, backdropid) {
+				document.getElementById(explainid).style.display = "block";
+				document.getElementById(backdropid).style.display = "block";
+
+				var backdropiddiv = document.getElementById(backdropid);
+				backdropiddiv.style.width = document.body.scrollWidth;
+				$("#" + backdropid).height($(document).height());
+			}
+
+			function explaindiv(explainid, backdropid) {
+				document.getElementById(explainid).style.display = 'none';
+				document.getElementById(backdropid).style.display = 'none';
+			}
 
 			function getMemberInfo() {
 				mui.post($ajaxUrl + 'member&action=member_info', {
@@ -576,6 +568,14 @@
 					}
 				}, 'json');
 			}
+			// 显示激活码
+			mui(".mui-content .jihuo").on("tap", ".show-key", function() {
+				openPage('activate_code.html', 'activate_code', '#ffffff', '');
+			})
+			// 领取激活码
+			mui(".mui-content .jihuo").on("tap", ".get-key", function() {
+				openPage('activation_code_collection.html', 'activation_code_collection', '#f7f7f7', '');
+			})
 
 			function getFans() {
 				pageNum += 1;

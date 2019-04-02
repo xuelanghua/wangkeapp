@@ -24,6 +24,17 @@
 				border-radius: 0;
 				box-shadow: none;
 				background-color: #ffffff;
+				text-align: center;
+				position: fixed;
+				z-index: 9;
+			}
+
+			#middlePopover .mui-table-view-cell {
+				justify-content: center;
+			}
+
+			#middlePopover .mui-table-view-cell:after {
+				right: 15px;
 			}
 
 			.mui-popover .mui-table-view {
@@ -39,6 +50,7 @@
 			}
 
 			#wayMiddlePopover {
+				position: fixed;
 				width: 6.36rem;
 				height: 7.98rem;
 				border-radius: 0.1rem;
@@ -145,6 +157,17 @@
 			#item1 .mui-table-view-cell span {
 				color: #333333;
 			}
+
+			.mui-segmented-control {
+				position: fixed;
+				z-index: 9;
+			}
+
+			#item1 ul,
+			#item2 ul {
+				overflow-y: scroll;
+				padding-top: 44px;
+			}
 		</style>
 	</head>
 
@@ -153,133 +176,224 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">激活码</a></h1>
 		</header>
-		<div class="mui-content activate-container">
+		<div id="mui-content" class="mui-content activate-container">
 			<div class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
 				<a class="mui-control-item mui-active" href="#item1">未使用（30）</a>
 				<a class="mui-control-item" href="#item2">已使用（20）</a>
 			</div>
 			<div class="segmentedControl-cont">
-				<!-- 第一个选项卡 -->
-				<div id="item1" class="mui-control-content mui-active">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell"><span>E85214</span><button type="button" class="mui-btn mui-btn-primary mui-btn-outlined">赠送</button></li>
-						<li class="mui-table-view-cell"><span>E85213</span><button type="button" class="mui-btn mui-btn-outlined action">激活</button></li>
-						<li class="mui-table-view-cell"><span>E85212</span><button type="button" class="mui-btn mui-btn-outlined action">激活</button></li>
-					</ul>
-				</div>
-				<div id="item2" class="mui-control-content">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell">
-							<div class="left-cont">
-								<div class="head-img">
-									<img src="../image/kaol.jpg">
+				<div class="mui-slider-group">
+					<!-- 第一个选项卡 -->
+					<div id="item1" class="mui-control-content mui-active">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" v-for="(list,index) in keylist" :key="index"><span>{{list.code}}</span>
+								<button v-if="list.activate_status" type="button" class="mui-btn mui-btn-primary mui-btn-outlined">赠送</button>
+								<button v-else type="button" class="mui-btn mui-btn-outlined action">激活</button>
+							</li>
+						</ul>
+					</div>
+					<!-- 第二个选项卡 -->
+					<div id="item2" class="mui-control-content">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" v-for="(item,serial) in keylist" :key="serial">
+								<div class="left-cont">
+									<div class="head-img">
+										<img :src="item.avtivate_user_avatar">
+									</div>
+									<div>
+										<h5>{{item.avtivate_user_nickname}}</h5>
+										<p>{{item.activate_time}}</p>
+									</div>
 								</div>
-								<div>
-									<h5>小飞飞</h5>
-									<p>2019-03-23</p>
-								</div>
-							</div>
-							<span>E85213</span>
-						</li>
-						<li class="mui-table-view-cell">
-							<div class="left-cont">
-								<div class="head-img">
-									<img src="../image/kaol.jpg">
-								</div>
-								<div>
-									<h5>小飞飞</h5>
-									<p>2019-03-23</p>
-								</div>
-							</div>
-							<span>E85213</span>
-						</li>
-					</ul>
+								<span>{{item.code}}</span>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div id="middlePopover" class="mui-popover first-popover">
-			<div class="mui-scroll-wrapper">
+			<div id="middlePopover" class="mui-popover first-popover">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell"><a href="#">服务中心激活码</a></li>
-					<li class="mui-table-view-cell"><a href="#">服务站激活码</a></li>
-					<li class="mui-table-view-cell"><a href="#">创客激活码</a></li>
-					<li class="mui-table-view-cell active"><a href="#">VIP激活码</a></li>
+					<li class="mui-table-view-cell" v-if="group_id>index+1" v-for="(item,index) in keyType" @tap="getlist(item.id)"
+					 :class="[item.id==1?'active':'']" :key="index">{{item.name}}</li>
 				</ul>
 			</div>
-		</div>
-		<!-- 支付方式选择 -->
-		<div id="wayMiddlePopover" class="mui-popover">
-			<h2>E85213激活</h2>
-			<form class="mui-input-group">
-				<div class="mui-input-row mui-radio">
-					<label><img src="../image/Alipay.png"><span>支付宝</span></label>
-					<input name="radio1" type="radio" value="1" checked="checked">
+			<!-- 支付方式选择 -->
+			<div id="wayMiddlePopover" class="mui-popover">
+				<h2>{{keyDesc}}激活</h2>
+				<form class="mui-input-group">
+					<div class="mui-input-row mui-radio">
+						<label><img src="../image/Alipay.png"><span>支付宝</span></label>
+						<input name="radio1" type="radio" value="1" checked="checked">
+					</div>
+					<div class="mui-input-row mui-radio">
+						<label><img src="../image/WeChat.png"><span>微信</span></label>
+						<input name="radio1" type="radio" value="2">
+					</div>
+					<div class="mui-input-row mui-radio">
+						<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
+						<input name="radio1" type="radio" value="3">
+					</div>
+				</form>
+				<div class="surplus-cont">
+					<h5>合计</h5>
+					<h3>&yen;&nbsp;20</h3>
+					<button type="button" class="mui-btn mui-btn-blue mui-btn-block">确认支付</button>
 				</div>
-				<div class="mui-input-row mui-radio">
-					<label><img src="../image/WeChat.png"><span>微信</span></label>
-					<input name="radio1" type="radio" value="2">
-				</div>
-				<div class="mui-input-row mui-radio">
-					<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
-					<input name="radio1" type="radio" value="3">
-				</div>
-			</form>
-			<div class="surplus-cont">
-				<h5>合计</h5>
-				<h3>&yen;&nbsp;20</h3>
-				<button type="button" class="mui-btn mui-btn-blue mui-btn-block">确认支付</button>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/mui.pullToRefresh.js"></script>
+		<script src="../js/mui.pullToRefresh.material.js"></script>
 		<script src="../js/mui.picker.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
-			var ishow = true;
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-			userInfo = getUserInfo();
-			mui.plusReady(function() {
-				plus.webview.currentWebview().setStyle({
-					statusbar: {
-						background: '#ff0000'
-					},
-					top: 0,
-					bottom: 0
-				});
-			});
-			mui('#middlePopover,.mui-segmented-control').on('tap', 'a', function() {
-				mui('#middlePopover').popover('hide');
-				mui('#wayMiddlePopover').popover('hide');
-				var btn = mui("#action-btn");
-				btn[0].classList.remove('active');
-			});
-			// 监听遮罩是否显示 为了让顶部的箭头处于正常位置
-			window.addEventListener('tap', function(e) {
-				if(e.target.className == 'mui-backdrop mui-active'){
-					var btn = mui("#action-btn");
-					btn[0].classList.remove('active');
-				}else{
+			var userInfo = getUserInfo(),
+				pageNum = 1,
+				selectId = 1,
+				status = 1;
+// 			mui.ready(function() {
+// 				mui.each(document.querySelectorAll('.mui-content .mui-control-content'), function(index, pullRefreshEl) {
+// 					mui(pullRefreshEl).pullToRefresh({
+// 						down: {
+// 							style: 'circle',
+// 							height: 10,
+// 							auto: false,
+// 							callback: function() {
+// 								pageNum = 1;
+// 								getlist(selectId, pageNum);
+// 								this.endPullDownToRefresh();
+// 							}
+// 						},
+// 						up: {
+// 							style: 'circle',
+// 							height: 10,
+// 							auto: false,
+// 							contentrefresh: "正在加载...",
+// 							contentnomore: '没有更多数据了',
+// 							callback: function() {
+// 								pageNum += 1;
+// 								getlist(selectId, pageNum);
+// 								this.endPullUpToRefresh();
+// 							}
+// 						}
+// 					})
+// 				})
+// 			});
+			var app = new Vue({
+				el: "#mui-content",
+				data() {
+					return {
+						// 控制显示几个激活码选项
+						group_id: 5,
+						keylist: [],
+						keyDesc:'',
+						keyType: [{
+							name: '服务中心激活码',
+							id: 4
+						}, {
+							name: '服务站激活码',
+							id: 3
+						}, {
+							name: '创客激活码',
+							id: 2
+						}, {
+							name: 'VIP激活码',
+							id: 1
+						}]
+					}
+				},
+				created: () => {
+					var ishow = true;
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+					mui.plusReady(function() {
+						plus.webview.currentWebview().setStyle({
+							statusbar: {
+								background: '#ff0000'
+							},
+							top: 0,
+							bottom: 0
+						});
+					});
+					getlist(1);
+				},
+				mounted: () => {
+					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+					mui('#middlePopover').on('tap', 'li', function() {
+						mui('#middlePopover').popover('hide');
+						mui('#wayMiddlePopover').popover('hide');
+						var btn = mui("#action-btn");
+						btn[0].classList.remove('active');
+					});
+					// 切换选项卡请求接口
+					mui('.mui-segmented-control').on('tap', 'a', function(e) {
+						mui('#middlePopover').popover('hide');
+						mui('#wayMiddlePopover').popover('hide');
+						var btn = mui("#action-btn");
+						btn[0].classList.remove('active');
+						if (status) {
+							status = 0;
+						} else {
+							status = 1;
+						}
+						pageNum = 1;
+						getlist(selectId);
+					});
+					// 监听遮罩是否显示 为了让顶部的箭头处于正常位置
+					window.addEventListener('tap', function(e) {
+						if (e.target.className == 'mui-backdrop mui-active') {
+							var btn = mui("#action-btn");
+							btn[0].classList.remove('active');
+						} else {}
+					}, true)
+					mui("#middlePopover").on("tap", "li", function() {
+						mui("#middlePopover li").each(function() {
+							this.classList.remove('active');
+						});
+						this.classList.add('active');
+					});
+					mui("#item1").on("tap", "button.action", function() {
+						mui('#wayMiddlePopover').popover('show');
+					});
+					mui(".mui-bar").on('tap', '#action-btn', function() {
+						this.classList.toggle('active');
+					})
 				}
-			}, true)
-			mui("#middlePopover").on("tap", "li", function() {
-				mui("#middlePopover li").each(function() {
-					this.classList.remove('active');
-				});
-				this.classList.add('active');
-			});
-			mui("#item1").on("tap", "button.action", function() {
-				mui('#wayMiddlePopover').popover('show');
-			});
-			mui(".mui-bar").on('tap', '#action-btn', function() {
-				this.classList.toggle('active');
 			})
+
+			function getlist(id, Num) {
+				selectId = id;
+				mui.post($ajaxUrl + 'member&action=activation_code', {
+					token: userInfo.token,
+					group_id: selectId,
+					skip: pageNum,
+					status: status,
+					limit: 60
+				}, function(res) {
+					var data = res.data;
+					logs(data);
+					logs(id);
+					logs(pageNum);
+					if (res.errno) {
+						logs(res.message);
+					} else {
+						if (pageNum == 1) {
+							app.keylist = data;
+						} else {
+							app.keylist = app.keylist.concat(data);
+						}
+					}
+				}, 'json');
+			}
+			function actionKey(key,keyid){
+				app.keyDesc=key;
+			}
 		</script>
 	</body>
 
