@@ -56,7 +56,7 @@
 <script src="../js/Zepto.min.js"></script>
 <script src="../js/util.js"></script>
 <script language="JavaScript">
-	mui.init({});
+	mui.init({swipeBack: true});
 	mui.plusReady(function() {
 		// alert('同步完成');
 		// initCalendar();
@@ -155,7 +155,7 @@
 					//显示金额提示
 					document.getElementById('daily_tips').style = "margin-top: 40px; visibility: visible;"
 					$$("sign-txt").innerHTML = '已签到';
-					alert('今天已经签到了')
+					message('今天已经签到了', 'center')
 				}
 				var res = 0;
 				var utoken = userInfo.token;
@@ -182,6 +182,7 @@
 							mui.toast('今天已经签到过了');
 						}
 						if (ret.data.code == '200') {
+							mui.fire(plus.webview.getWebviewById('user'), 'signSuccess');
 							mui.toast('签到成功');
 						}
 						console.log(JSON.stringify(ret));
@@ -192,7 +193,7 @@
 					}
 				});
 			} else {
-				alert('今天已经签到了')
+				message('今天已经签到了', '')
 			}
 		}
 	}

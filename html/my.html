@@ -372,7 +372,7 @@
 						<img src="../image/Store-management.png">
 						<span>店铺管理</span>
 					</li>
-					<li>
+					<li id="boss">
 						<img src="../image/Marketing-code.png">
 						<span>boss</span>
 					</li>
@@ -436,6 +436,11 @@
 
 			//事件初始化
 			function eventInit() {
+				//签到成功监听
+				window.addEventListener('signSuccess', function() {
+					getMemberInfo();
+				})
+				
 				//商城首页
 				mui('.mui-content').on('tap', '#shop', function() {
 					var activation = checkMember();
@@ -448,12 +453,22 @@
 						setStatusBar('', 'dark');
 					}
 				})
+				
+				//boss 
+				mui('.mui-content').on('tap', '#boss', function() {
+					fnOpenWin('webview.html', 'webview', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, {title: 'boss', statusBarStyle: 'light', url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=1&m=longbing_card'}, 'slide-in-right');
+					setStatusBar('', 'dark');
+				})
 
 				//目标
 				mui('.mui-content').on('tap', '#target', function() {
 					fnOpenWin('target.html', 'target', {
 						statusbar: {
-							background: '#F7F7F7'
+							background: '#FFF'
 						}
 					}, {
 						page: 'my'
@@ -477,6 +492,7 @@
 				mui('.mui-content').on('tap', '.Notice', function() {
 					noticeDeail();
 				})
+				
 				// 雷达页面
 				mui('.mui-content').on('tap', '#data_statistics', function() {
 					openPage('data_statistics.html', 'data_statistics','#ffffff','');
@@ -488,15 +504,18 @@
 					openPage('red_packet.html', 'red_packet', '#f7f7f7', '');
 					setStatusBar('', 'dark');
 				})
+				
 				// 资产管理
 				mui('.mui-content').on('tap', '#asset_management', function() {
 					openPage('asset_management.html', 'asset_management', '#2289ff', '');
 				})
+				
 				// 名片管理
 				mui('.mui-content').on('tap', '#card_manage', function() {
 					openPage('card_manage.html', 'card_manage', '#f7f7f7', '');
 					setStatusBar('', 'dark');
 				})
+				
 				// 数据统计
 				mui('.mui-content').on('tap', '#dat_statistics', function() {
 					// 激活码使用情况
@@ -629,8 +648,9 @@
 				setStatusBar('', 'dark');
 			}
 			mui(".goods").on("tap", ".goodsL", function() {
-				group_id = 3;
+				// group_id = 3;
 				if (group_id == 0) {
+					checkMember();
 				} else if (group_id == 1) {
 					fnOpenWin('member.html', 'member', {
 						statusbar: {

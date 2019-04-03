@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/public.css" rel="stylesheet" />
+		<link href="../css/signin.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;box-shadow: none;">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #000000;"></div>
+			<h1 class="mui-title" style="color: #000000;"></h1>
+		</header>
+		
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					plus.navigator.setStatusBarStyle(plus.webview.currentWebview().statusBarStyle);
+				}
+			})
+			
+			mui.plusReady(function () {
+			    var self = plus.webview.currentWebview();
+				var title = self.title;
+				var url = self.url;
+				var statusBarHeight = plus.navigator.getStatusbarHeight();
+				var offsetTop = statusBarHeight + 44 + 'px';
+				document.querySelector('.mui-title').innerText = title;
+				
+				fnOpenWin(url, '', {top: offsetTop, bottom: 0, progress: {color:'#2289FF', height: '2px'}}, '');
+			})
+		</script>
+	</body>
+</html>

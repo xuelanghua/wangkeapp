@@ -80,13 +80,8 @@
 	</head>
 
 	<body>
-		<script src="../js/mui.min.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
-		
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">红包管理</h1>
 		</header>
 		
@@ -99,70 +94,41 @@
 							<button>充值</button>
 						</span>
 					</div>
-					<h2>00.0</h2>
+					<h2>{{ balance }}</h2>
 				</div>
 				<div class="category">
 					<span class="mui-pull-left">
 						<div>今日拓客红包</div>
-						<div>0.00</div>
+						<div>{{ promote }}</div>
 					</span>
 					<span>
 						<div>今日聊天红包</div>
-						<div style="font-size: 15px;">198.00</div>
+						<div style="font-size: 15px;">{{ chat }}</div>
 					</span>
 				</div>
 			</div>
 			
 			<div>
-				<div id="segmentedControl" class="mui-segmented-control">
-					<a class="mui-control-item mui-active" href="#item1">拓客红包</a>
-					<a class="mui-control-item" href="#item2">聊天红包</a>
+				<div class="mui-segmented-control">
+					<span class="mui-control-item mui-active" data-type="promote">拓客红包</span>
+					<span class="mui-control-item" data-type="chat">聊天红包</span>
 				</div>
 			</div>
-			<div>
-				<div id="item1" class="mui-control-content mui-active">
-					<div id="scroll" class="mui-scroll-wrapper">
+			<div id="record_container">
+				<div class="mui-control-content mui-active">
+					<div class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<ul class="mui-table-view">
-								<li class="mui-table-view-cell">
-									<img class="mui-pull-left" src="../image/visit2.png" >
+								<li class="mui-table-view-cell" v-for="(item, index) in recordList" :key="index">
+									<img class="mui-pull-left" :src="item.avatarUrl" >
 									<div class="mui-pull-left none">
 										<div style="font-size: 15px;padding-bottom: 5px;">
-											<span class="mui-pull-left">熊大</span>
-											<span class="mui-pull-right">100.00元</span>
+											<span class="mui-pull-left">{{ item.nickName }}</span>
+											<span class="mui-pull-right">{{ item.fee }}元</span>
 											<div class="clearfix"></div>
 										</div>
 										<div style="color: #999999;">
-											<span>2018-11-20 </span>
-											<span style="margin-left: 10px;">18:20</span>
-										</div>
-									</div>
-								</li>
-								<li class="mui-table-view-cell">
-									<img class="mui-pull-left" src="../image/visit2.png" >
-									<div class="mui-pull-left none">
-										<div style="font-size: 15px;padding-bottom: 5px;">
-											<span class="mui-pull-left">熊大</span>
-											<span class="mui-pull-right">100.00元</span>
-											<div class="clearfix"></div>
-										</div>
-										<div style="color: #999999;">
-											<span>2018-11-20 </span>
-											<span style="margin-left: 10px;">18:20</span>
-										</div>
-									</div>
-								</li>
-								<li class="mui-table-view-cell">
-									<img class="mui-pull-left" src="../image/visit2.png" >
-									<div class="mui-pull-left none">
-										<div style="font-size: 15px;padding-bottom: 5px;">
-											<span class="mui-pull-left">熊大</span>
-											<span class="mui-pull-right">100.00元</span>
-											<div class="clearfix"></div>
-										</div>
-										<div style="color: #999999;">
-											<span>2018-11-20 </span>
-											<span style="margin-left: 10px;">18:20</span>
+											<span>{{ item.pay_time }}</span>
 										</div>
 									</div>
 								</li>
@@ -170,40 +136,101 @@
 						</div>
 					</div>
 				</div>
-				<div id="item2" class="mui-control-content">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell">
-							<img class="mui-pull-left" src="../image/visit2.png" >
-							<div class="mui-pull-left none">
-								<div style="font-size: 15px;padding-bottom: 5px;">
-									<span class="mui-pull-left">辛巴</span>
-									<span class="mui-pull-right">100.00元</span>
-									<div class="clearfix"></div>
-								</div>
-								<div style="color: #999999;">
-									<span>2018-11-20 </span>
-									<span style="margin-left: 10px;">18:20</span>
-								</div>
-							</div>
-						</li>
-						<li class="mui-table-view-cell">
-							<img class="mui-pull-left" src="../image/visit2.png" >
-							<div class="mui-pull-left none">
-								<div style="font-size: 15px;padding-bottom: 5px;">
-									<span class="mui-pull-left">先把</span>
-									<span class="mui-pull-right">100.00元</span>
-									<div class="clearfix"></div>
-								</div>
-								<div style="color: #999999;">
-									<span>2018-11-20 </span>
-									<span style="margin-left: 10px;">18:20</span>
-								</div>
-							</div>
-						</li>
-					</ul>
-				</div>
 			</div>
 		</div>
-		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					plus.navigator.setStatusBarStyle('light');
+				},
+				pullRefresh: {
+					container: "#record_container",
+					up: {
+						style: 'circle',
+						color: '#2289FF',
+						height: '50px',
+						auto: false,
+						contentrefresh: "正在加载...",
+						contentnomore: '没有更多数据了',
+						callback: function() {
+							skip++;
+							getRedpackInfo();
+							mui("#record_container").pullRefresh().endPullupToRefresh();
+						}
+					}
+				}
+			})
+			var skip = 1;
+			var limit = 5;
+			var type = '1,2';
+			var userInfo = getUserInfo();
+			var vm = new Vue({
+				el: ".mui-content",
+				data() {
+					return {
+						balance: '0.00',
+						promote: '0.00',
+						chat: '0.00',
+						recordList: [],
+					}
+				},
+				created: () => {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+					mui.plusReady(function() {
+						getRedpackInfo();
+					});
+				},
+				mounted: () => {
+					// 切换选项卡请求接口
+					mui('.mui-segmented-control').on('tap', 'span', function() {
+						var rtype = this.dataset.type;
+						if (rtype == 'promote') {
+							type = '1,2';
+						} else {
+							type = '3';
+						}
+						skip = 1;
+						getRedpackInfo();
+						mui('#record_container').pullRefresh().refresh(true);
+					});
+				}
+			})
+			
+			//获取红包信息
+			function getRedpackInfo() {
+				mui.post($ajaxUrl + 'member', {
+						action: 'redpack_record',
+						token: userInfo.token,
+						type: type,
+						skip: skip,
+						limit: limit
+					}, function(res){
+						var data = res.data;
+						if (data.record.length == 0) {
+							mui("#record_container").pullRefresh().endPullupToRefresh(true);
+						} else {
+							vm.balance = data.balance;
+							vm.promote = data.promote;
+							vm.chat = data.chat;
+							if (skip == 1) {
+								vm.recordList = data.record;
+							} else {
+								vm.recordList = vm.recordList.concat(data.record);
+							}
+						}
+					}, 'json'
+				);
+			}
+		</script>
 	</body>
 </html>
