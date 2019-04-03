@@ -291,7 +291,6 @@
 	});
 
 	var userInfo = getUserInfo();
-	var booth = 4;
 	mui.plusReady(function() {
 		eventInit();
 		getStatistics();
@@ -333,11 +332,18 @@
 
 		//添加商品
 		document.getElementById('goods_add').addEventListener('tap', function() {
-			if (booth < 3) {
-				openPage('goods_add.html', 'goods_add', '#ffffff', '');
-			} else {
-				document.querySelector(".mask-cont").classList.remove('mui-hidden'); 
-			}
+			mui.get($ajaxUrl + 'member', {
+					action: 'check_goods_number',
+					token: userInfo.token
+				}, function(res){
+					logs(res); 
+					if (res.errno == 0) {
+						openPage('goods_add.html', 'goods_add', '#ffffff', '');
+					} else {
+						document.querySelector(".mask-cont").classList.remove('mui-hidden');
+					}
+				}, 'json'
+			);
 		});
 
 		//查看公告

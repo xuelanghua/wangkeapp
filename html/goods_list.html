@@ -165,6 +165,58 @@
 				border-radius: 0.3125rem;
 				border: 1px solid #DDD;
 			}
+			
+			/* 弹窗样式 */
+			
+			.mask-cont {
+				position: fixed;
+				width: 100%;
+				top: 0;
+				bottom: 0;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				justify-content: center;
+				background: rgba(0, 0, 0, .5);
+				z-index: 9;
+			}
+			
+			.tips-cont {
+				width: 6.26rem;
+				height: 7.9rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			
+			.tips-cont .tips-body {
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				width: 6.26rem;
+				height: 6.6rem;
+				background: #ffffff url("../image/tips-top-bg.jpg")center top no-repeat;
+				background-size: 100% auto;
+				padding-top: 3.6rem;
+				border-radius: 0.1rem;
+			}
+			
+			.tips-cont .tips-body p {
+				color: #333333;
+				font-size: 0.3rem;
+				margin-bottom: 0.9rem;
+			}
+			
+			.tips-cont .tips-body .immediately {
+				width: 3.86rem;
+				height: 0.88rem;
+				background-color: #f5ca3a;
+				color: #FFFFFF;
+				font-size: 0.36rem;
+				line-height: 0.88rem;
+				text-align: center;
+				border-radius: 0.45rem;
+			}
 		</style>
 	</head>
 	<body id="body_tap">
@@ -338,6 +390,16 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="mask-cont mui-hidden">
+			<div class="tips-cont">
+				<div class="tips-body">
+					<p>您的商品位已达上限，请购买更多商品位</p>
+					<span class="immediately">立即购买</span>
+				</div>
+				<img class="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
+			</div>
+		</div>
 	</body>
 </html>
 <script src="../js/mui.js"></script>
@@ -360,6 +422,13 @@
 			}
 		}
 	});
+	
+	var viewport = document.documentElement.clientWidth;
+	if (viewport > 750) {
+		viewport = 750
+	}
+	document.documentElement.style.fontSize = viewport / 7.5 + "px";
+	
 	var goodsName = '';
 	var userInfo = getUserInfo();
 	mui.plusReady(function() {
@@ -509,11 +578,32 @@
 		})
 		//添加商品
 		document.getElementById('add_goods').addEventListener('tap', function() {
-			fnOpenWin('goods_add.html', 'goods_add', {
-				statusbar: {
-					background: '#FFF'
-				}
-			}, '', 'slide-in-right');
+			mui.get($ajaxUrl + 'member', {
+					action: 'check_goods_number',
+					token: userInfo.token
+				}, function(res){
+					logs(res); 
+					if (res.errno == 0) {
+						fnOpenWin('goods_add.html', 'goods_add', {
+							statusbar: {
+								background: '#FFF'
+							}
+						}, '', 'slide-in-right');
+					} else {
+						document.querySelector(".mask-cont").classList.remove('mui-hidden');
+					}
+				}, 'json'
+			);
+			
+		})
+		// 立即购买商品位
+		mui(".mask-cont").on("tap", ".immediately", function() {
+			document.querySelector(".mask-cont").classList.add('mui-hidden');
+			openPage("buy_goods_booth.html", 'buy_goods_booth', '#f7f7f7', '');
+		})
+		// 关闭提示弹窗
+		mui(".mask-cont").on("tap", ".hide_qrcode", function() {
+			document.querySelector(".mask-cont").classList.add('mui-hidden');
 		})
 	}
 	//获取商品列表
