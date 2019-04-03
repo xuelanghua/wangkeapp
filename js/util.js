@@ -192,7 +192,7 @@ function formatDate(format, date) {
 }
 
 // 打开窗口
-function openPage(url,id,color,extras){
+function openPage(url, id, color, extras) {
 	mui.openWindow({
 		url: url,
 		id: id,
@@ -221,4 +221,119 @@ function openPage(url,id,color,extras){
 			autoShow: false
 		}
 	})
+}
+
+// 分享操作
+function share(param, type) {
+	plus.share.getServices(function(s) {
+		var shareService = {};
+		for (var i in s) {
+			var t = s[i];
+			shareService[t.id] = t;
+		}
+		
+		var shareBtns = [];
+		// 更新分享列表
+		var ss = shareService['weixin'];
+		ss && ss.nativeClient && (shareBtns.push({
+				title: '微信朋友圈',
+				s: ss,
+				x: 'WXSceneTimeline'
+			}),
+			shareBtns.push({
+				title: '微信好友',
+				s: ss,
+				x: 'WXSceneSession'
+			}));
+		ss = shareService['qq'];
+		ss && ss.nativeClient && shareBtns.push({
+			title: 'QQ',
+			s: ss
+		});
+		// 弹出分享列表
+		shareBtns.length > 0 ? plus.nativeUI.actionSheet({
+			title: '分享',
+			cancel: '取消',
+			buttons: shareBtns
+		}, function(e) {
+			(e.index > 0) && shareAction(shareBtns[e.index - 1], param, type);
+		}) : plus.nativeUI.alert('当前环境无法支持分享链接操作!');
+		
+	}, function(e) {
+		plus.nativeUI.alert("获取分享服务列表失败：" + e.message);
+	});
+}
+
+/**
+ * 分享操作
+ * @param {JSON} sb 分享操作对象s.s为分享通道对象(plus.share.ShareService)
+ * @param {Boolean} bh 是否分享链接
+ */
+function shareAction(sb, param, type) {
+	if (!sb || !sb.s) {
+		plus.nativeUI.alert("无效的分享服务！");
+		return;
+	}
+	
+	var msg = {
+		type: type,
+		title: '',
+		content: '',
+		href: '',
+		thumbs: [],
+		picture: [],
+		media: '',
+		extra: {
+			scene: sb.x ? sb.x : ''
+		},
+		miniProgram:{}
+	};
+	
+	if (type == 'web') {
+		msg.title = param.title;
+		msg.content = param.content;
+		msg.thumbs = param.thumbs;
+		msg.href = param.href;
+	} else if (type == 'text') {
+		mgs.content = param.content;
+	} else if (type == 'image') {
+		msg.pictures = param.pictures;
+	} else if (type == 'music' || type == 'video') {
+		msg.title = param.title;
+		msg.content = param.content;
+		msg.thumbs = param.thumbs;
+		msg.media = param.media;
+	} else if (type == 'miniProgram') {
+		msg.title = param.title;
+		msg.content = param.content;
+		msg.thumbs = param.thumbs;
+		msg.miniProgram = param.miniProgram;
+	}
+
+	// 发送分享
+	if (sb.s.authenticated) {
+		//alert("---已授权---");
+		shareMessage(msg, sb.s);
+	} else {
+		//alert("---未授权---");
+		sb.s.authorize(function() {
+			shareMessage(msg, sb.s);
+		}, function(e) {
+			plus.nativeUI.alert("认证授权失败：" + e.code + " - " + e.message);
+		});
+	}
+}
+
+/**
+ * 发送分享消息
+ * @param {JSON} msg
+ * @param {plus.share.ShareService} s
+ */
+function shareMessage(msg, s) {
+	console.log(JSON.stringify(msg));
+	s.send(msg, function() {
+		message("分享到\"" + s.description + "\"成功", 'center');
+	}, function(e) {
+		plus.nativeUI.alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+	});
 }

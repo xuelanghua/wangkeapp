@@ -519,17 +519,17 @@
 		
 		<div id="popover" class="mui-popover">
 			<div class="Pop-up-menu">
-				<li>
+				<li id="quik_sharing">
 					<img src="../image/share.png" >
 					<span>分享</span>
 					<div class="clearfix"></div>
 				</li>
-				<li>
+				<li id="quik_receipt">
 					<img src="../image/receipt.png" style="height: 17px;" >
 					<span>收款码</span>
 					<div class="clearfix"></div>
 				</li>
-				<li style="border-bottom: none;">
+				<li style="border-bottom: none;" id="quik_scan">
 					<img src="../image/scan.png" >
 					<span>扫一扫</span>
 					<div class="clearfix"></div>
@@ -650,6 +650,28 @@
 			//查看消息
 			document.getElementById('message').addEventListener('tap', function() {
 				fnOpenWin('message.html', 'message', {statusbar: {background: '#FFF'}}, {prePage: 'home'}, 'slide-in-right');
+			})
+			
+			//快捷分享
+			document.getElementById('quik_sharing').addEventListener('tap', function() {
+				share({title: '旺客', content: '王天下之客,让营销更简单!', thumbs:['https://app.wangkeapp.cn/attachment/headimg_6.jpg'], href: $ajaxUrl + 'download'}, 'web');
+				mui('#popover').popover('hide');
+			})
+			
+			//快捷扫一扫
+			document.getElementById('quik_scan').addEventListener('tap', function() {
+				fnOpenWin('scan.html', 'scan', {statusbar: {background: '#000'}}, '', 'slide-in-right')
+				setStatusBar('#2289FF', 'light');
+				mui('#popover').popover('hide');
+				// document.getElementById('popover').classList.add('mui-hidden'); 
+			})
+			
+			//快捷收款
+			document.getElementById('quik_receipt').addEventListener('tap', function() {
+				fnOpenWin('payment_code.html', 'payment_code', {statusbar: {background: '#2289FF'}}, '', 'slide-in-right');
+				setStatusBar('#2289FF', 'light');
+				mui('#popover').popover('hide');
+				// document.getElementById('popover').classList.add('mui-hidden');
 			})
 		});
 		
