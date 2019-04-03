@@ -82,9 +82,7 @@
 						<span class="mui-navigate-right">
 							关于旺客
 						</span>
-						<span class="last-desc">
-							版本号3.25
-						</span>
+						<span class="last-desc" id="app_version"></span>
 					</li>
 				</ul>
 			</div>
@@ -113,12 +111,20 @@
 		mui.plusReady(function() {
 			// 注销登录
 			mui(".setting-container").on("tap", ".logout", function(e) {
-				// var users = localStorage.getItem('user');
-				// plus.storage.removeItem("user");
-				var users=plus.storage.getLength();
-				console.log(users)
-				// openPage('login.html','login','','');
+				// fnOpenWin('login.html', 'login', '', '');
+				var wvs = plus.webview.all();
+				for (var i = 0; i < wvs.length; i++) {
+					if (wvs[i].id == 'home'||wvs[i].id == 'setting') {
+						continue;
+					}
+					logs(wvs[i].id)
+					// plus.webview.close(wvs[i].id,'','','')
+				}
+				// plus.webview.close('user','','','')
+				// plus.webview.close('setting','','','')
+				// fnOpenWin('login.html', 'login', '', '');
 			})
+			mui('#app_version')[0].innerHTML = '版本号' + plus.runtime.version;
 		})
 		mui(".setting-container").on("tap", ".change-num", function(e) {
 			openPage('chang_phone_number.html', 'chang_phone_number', '#f7f7f7', '');
