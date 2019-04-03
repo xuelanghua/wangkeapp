@@ -7,69 +7,83 @@
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
 			body {
-			  background: rgba(0, 0, 0, 0.5);
-			  min-height: 100%;
-			  width: 100%;
+				background: rgba(0, 0, 0, 0.5);
+				min-height: 100%;
+				width: 100%;
 			}
+
 			.mui-content {
-			  position: fixed;
-			  width: 100%;
-			  top: 0;
-			  bottom: 0;
-			  display: flex;
-			  align-items: center;
-			  flex-direction: column;
-			  justify-content: center;
+				position: fixed;
+				width: 100%;
+				top: 0;
+				bottom: 0;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				justify-content: center;
 			}
+
 			.tips-cont {
-			  width: 5.91rem;
-			  height: 9.57rem;
-			  text-align: center;
-			  border-radius: 0.2rem;
+				width: 5.91rem;
+				height: 9.57rem;
+				text-align: center;
+				border-radius: 0.2rem;
 			}
+
 			.tips-cont .tips-body {
-			  height:7.95rem;
-			  padding: 2rem 0.46rem  0;
-			  border-radius: 0.24rem;
-			  width: 100%;
-			  background: url(../../image/tipspg-img-01.png) center center no-repeat;
-			  background-size: contain;
-			  overflow: hidden;
-			  display: flex;
-			  align-items: flex-start;
-			  flex-direction: column;
-			  position: relative;
+				height: 7.95rem;
+				padding: 2rem 0.46rem 0;
+				border-radius: 0.24rem;
+				width: 100%;
+				background: url(../../image/tipspg-img-01.png) center center no-repeat;
+				background-size: contain;
+				overflow: hidden;
+				display: flex;
+				align-items: flex-start;
+				flex-direction: column;
+				position: relative;
+				overflow: hidden;
 			}
+
 			.tips-cont .tips-body h2 {
-			  font-size: 0.47rem;
-			  font-weight: normal;
-			  color: #2a3239;
-			  margin-bottom: 0.6rem;
+				font-size: 0.47rem;
+				font-weight: normal;
+				color: #2a3239;
+				margin-bottom: 0.6rem;
 			}
+
 			.tips-cont .tips-body p:first-of-type {
-			  margin: 0;
-			  font-size: 0.28rem;
-			  color: #2a3239;
+				margin: 0;
+				font-size: 0.28rem;
+				color: #2a3239;
 			}
+
 			.tips-cont .tips-body p:last-of-type {
-			  margin: 0;
-			  font-size: 0.21rem;
-			  color: #2a3239;
+				margin: 0;
+				font-size: 0.21rem;
+				color: #2a3239;
 			}
+
+			.tips-cont .tips-body .btn-cont {
+				width: 100%;
+				display: flex;
+				flex-grow: 1;
+				align-items: flex-end;
+				justify-content: center;
+				padding-bottom: 0.65rem;
+			}
+
 			.tips-cont .tips-body span {
-			  width: 2.4rem;
-			  height: 0.8rem;
-			  font-size: 0.36rem;
-			  line-height: 0.8rem;
-			  border-radius: 0.44rem;
-			  margin-top: 0.3rem;
-			  background-color: #405160;
-			  color: #ffffff;
-			  display: flex;
-			  justify-content: center;
-			  align-self:center;
-			  position: absolute;
-			  bottom: 0.8rem;
+				width: 2.4rem;
+				height: 0.8rem;
+				font-size: 0.36rem;
+				line-height: 0.89rem;
+				border-radius: 0.44rem;
+				color: #ffffff;
+				background-color: #405160;
+				display: inline-flex;
+				justify-content: center;
+				flex-shrink: 0;
 			}
 		</style>
 	</head>
@@ -80,7 +94,9 @@
 					<h2>旺客VIP</h2>
 					<p>此功能需要开通会员才能使用</p>
 					<p>开通会员尊享多项权益</p>
-					<span id="opening">立即开通</span>
+					<div class="btn-cont">
+						<span id="opening">立即开通</span>
+					</div>
 				</div>
 				<img id="hide_qrcode" src="../../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
 			</div>
@@ -98,32 +114,31 @@
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		mui.init();
-		
+
 		var userInfo = getUserInfo();
 		mui.plusReady(function() {
 			mui(".mui-content").on("tap", "#hide_qrcode", function() {
 				plus.webview.close("opening_model", "auto", "", "");
 			})
-			
+
 			mui(".mui-content").on("tap", "#opening", function() {
 				mui.get($ajaxUrl + 'member', {
-						action: 'check_apply',
-						token: userInfo.token
-					}, function(res){
-						if (res.errno == 0) {
-							var statusBarStyle = plus.navigator.getStatusBarStyle();
-							fnOpenWin('../activation.html', 'activation', '', {
-								statusBarStyle: statusBarStyle
-							}, 'slide-in-bottom');
-							setStatusBar('', 'light');
-							plus.webview.close("opening_model", "auto", "", "");
-						} else {
-							plus.nativeUI.alert(res.message, function() {
-								mui.back();
-							})
-						}
-					},'json'
-				);
+					action: 'check_apply',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						var statusBarStyle = plus.navigator.getStatusBarStyle();
+						fnOpenWin('../activation.html', 'activation', '', {
+							statusBarStyle: statusBarStyle
+						}, 'slide-in-bottom');
+						setStatusBar('', 'light');
+						plus.webview.close("opening_model", "auto", "", "");
+					} else {
+						plus.nativeUI.alert(res.message, function() {
+							mui.back();
+						})
+					}
+				}, 'json');
 			})
 		});
 	</script>

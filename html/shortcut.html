@@ -60,7 +60,7 @@
 <body>
 	<div class="mui-content">
 		<div id="shortcut">
-			<li>
+			<li id="add_customer">
 				<img src="../image/entry-customer.png" >
 				<p>录入客户</p>
 			</li>
@@ -68,11 +68,11 @@
 				<img src="../image/Targetmanagement.png" >
 				<p>目标管理</p>
 			</li> -->
-			<li>
+			<li id="rapid_sharing">
 				<img src="../image/rapid_sharing.png" >
 				<p>快速分享</p>
 			</li>
-			<li>
+			<li id="my_income">
 				<img src="../image/my_income.png" >
 				<p>我的收益</p>
 			</li>
@@ -98,6 +98,16 @@
 		//阻止div区域的点击事件
 		document.getElementById('shortcut').addEventListener('tap', function(e) {
 			e.stopPropagation();
+		})
+		
+		document.getElementById('add_customer').addEventListener('tap', function() {
+			fnOpenWin('customer_entry.html', 'customer_entry', {
+				statusbar: {
+					background: '#FFFFFF'
+				}
+			}, {
+				cid: 0
+			}, 'slide-in-right');
 		})
 	});
 </script>
