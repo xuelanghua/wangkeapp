@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>区域修改</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
+		<style type="text/css">
+			.segment {
+				padding-top: 0.3rem;
+			}
+
+			.mui-table-view:after,
+			.mui-table-view:before {
+				height: 0;
+			}
+
+			.mui-table-view-cell {
+				height: 1rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 0.2rem;
+				position: relative;
+			}
+
+			.mui-table-view-cell span {
+				font-size: 0.3rem;
+				color: #999999;
+			}
+
+			.mui-table-view-cell.active span {
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.mui-navigate-right:after {
+				font-size: 0.4rem;
+				right: 0.1rem;
+				color: #999999;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #f9f9f9;
+			}
+
+			.confirm-btn {
+				margin: 0.25rem auto 0;
+				background-color: #2289ff;
+				border-radius: 0.1rem;
+				height: 0.98rem;
+				line-height: 0.98rem;
+				padding: 0;
+				font-size: 0.3rem;
+				border: none;
+				width: 7.1rem;
+			}
+
+			.confirm-btn.mui-btn-blue:enabled:active {
+				border: none;
+			}
+
+			p {
+				margin: 0.2rem;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">区域修改</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="segment">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" id="regionai-changes">
+						<span class="mui-navigate-right" id="select-regionai">
+							云南省 昆明市 官渡区
+						</span>
+					</li>
+				</ul>
+			</div>
+			<p>一年只能修改一次</p>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block confirm-btn">确定</button>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<script src="../js/mui.poppicker.js"></script>
+	<script src="../js/city.data-3.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		// 区域修改
+		mui.ready(function() {
+			var _getParam = function(obj, param) {
+				return obj[param] || '';
+			};
+			var showCityPickerButton = document.getElementById('regionai-changes');
+			var cityResult = document.getElementById('select-regionai');
+			showCityPickerButton.addEventListener('tap', function(event) {
+				var cityPicker = new mui.PopPicker({
+					layer: 3
+				});
+				cityPicker.setData(cityData3);
+				cityPicker.show(function(items) {
+					cityResult.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(
+						items[2], 'text');
+				});
+			}, false);
+		})
+	</script>
+</html>

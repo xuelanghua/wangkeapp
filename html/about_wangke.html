@@ -3,19 +3,15 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>设置</title>
+		<title>关于旺客</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
 		<style type="text/css">
-			.segment {
-				padding-top: 0.3rem;
-			}
-
-			.mui-table-view:after,
+			/* .mui-table-view:after,
 			.mui-table-view:before {
 				height: 0;
-			}
+			} */
 
 			.mui-table-view-cell {
 				height: 1rem;
@@ -31,12 +27,6 @@
 				color: #333333;
 			}
 
-			.mui-table-view-cell .last-desc {
-				font-size: 0.26rem;
-				color: #999999;
-				margin-right: 0.35rem;
-			}
-
 			.mui-navigate-right:after {
 				font-size: 0.4rem;
 				right: 0.1rem;
@@ -46,52 +36,51 @@
 			.mui-table-view-cell.mui-active {
 				background-color: #f9f9f9;
 			}
+
+			.segment-header {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				padding: 0.7rem 0;
+				background-color: #ffffff;
+			}
+
+			.segment-header img {
+				width: 1.4rem;
+				height: auto;
+			}
+
+			.segment-header p {
+				font-size: 0.3rem;
+				color: #999999;
+				margin-top: 0.3rem;
+			}
 		</style>
 	</head>
 
 	<body class="mui-hidden">
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">设置</h1>
+			<h1 class="mui-title">关于旺客</h1>
 		</header>
 
 		<div class="mui-content setting-container">
-			<div class="segment">
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell change-num">
-						<span class="mui-navigate-right">
-							更换手机号
-						</span>
-						<span class="last-desc">
-							13700696591
-						</span>
-					</li>
-					<li class="mui-table-view-cell change-position">
-						<span class="mui-navigate-right">
-							区域修改
-						</span>
-						<span class="last-desc">
-							云南省 昆明市 官渡区
-						</span>
-					</li>
-				</ul>
+			<div class="segment-header">
+				<img src="../image/abou-pagelogo-pic.png">
+				<p>版本号 3.25</p>
 			</div>
 			<div class="segment">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell about">
+					<li class="mui-table-view-cell" id="check-updates">
 						<span class="mui-navigate-right">
-							关于旺客
-						</span>
-						<span class="last-desc">
-							版本号3.25
+							检查更新
 						</span>
 					</li>
-				</ul>
-			</div>
-			<div class="segment">
-				<ul class="mui-table-view logout">
-					<li class="mui-table-view-cell" style="justify-content: center;">
-						<span>退出登录</span>
+					<li class="mui-table-view-cell" id="confirmBtn">
+						<span class="mui-navigate-right">
+							客服电话
+						</span>
 					</li>
 				</ul>
 			</div>
@@ -111,23 +100,29 @@
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
 		mui.plusReady(function() {
-			// 注销登录
-			mui(".setting-container").on("tap", ".logout", function(e) {
-				// var users = localStorage.getItem('user');
-				// plus.storage.removeItem("user");
-				var users=plus.storage.getLength();
-				console.log(users)
-				// openPage('login.html','login','','');
-			})
+			document.getElementById("confirmBtn").addEventListener('tap', function() {
+				if (mui.os.plus) {
+					plus.device.dial("0871-64586569");
+				} else {
+					location.href = 'tel:0871-64586569';
+				}
+				//var btnArray = ['拨打', '取消'];
+				//mui.confirm('0871-64586569', '', btnArray, function(e) {
+				//	if (e.index == 1) {
+				//		// 取消操作
+				//	} else {
+				//		if (mui.os.plus) {
+				//			plus.device.dial("0871-64586569");
+				//		} else {
+				//			location.href = 'tel:0871-64586569';
+				//		}
+				//	}
+				//})
+			});
 		})
-		mui(".setting-container").on("tap", ".change-num", function(e) {
-			openPage('chang_phone_number.html', 'chang_phone_number', '#f7f7f7', '');
-		})
-		mui(".setting-container").on("tap", ".change-position", function(e) {
-			openPage('regionai_changes.html', 'regionai_changes', '#f7f7f7', '')
-		})
-		mui(".setting-container").on("tap", ".about", function(e) {
-			openPage('about_wangke.html', 'about_wangke', '#f7f7f7', '')
+		// 检查更新
+		mui(".mui-content").on("tap","#check-updates",function(){
+			message("暂无更新!");
 		})
 	</script>
 </html>
