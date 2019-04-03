@@ -16,11 +16,6 @@
 				list-style: none;
 			}
 
-			.message {
-				width: 25px;
-				height: 22px;
-				margin-top: 11px;
-			}
 
 			#btn_show {
 				margin-right: 16px;
@@ -279,18 +274,36 @@
 			#QR-code a {
 				font-size: 13px;
 			}
+
+			#setting-btn {
+				/* background-color: #00CCFF; */
+			}
+
+			#setting-btn img {
+				width: auto;
+				height: 20px;
+			}
+
+			.usercenter-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: transparent;
+			}
+
+			.usercenter-header .message {
+				width: 25px;
+				height: 22px;
+			}
 		</style>
 	</head>
 	<body>
-		<header id="header" class="mui-bar mui-bar-transparent mui-active" style="background-color: rgba(34,137,255,0);">
+		<header id="header" class="mui-bar mui-bar-transparent mui-active usercenter-header">
 			<img id="message" class="message" src="../image/Message-icon.png">
-			<a href="#popover" id="openPopover">
-				<img class="message mui-pull-right" src="../image/Add-Icon.png" style="width: 20px; height: 20px;margin-right: 10px;margin-left: 10px;">
-			</a>
-			<span id="btn_show" class="mui-right mui-pull-right" onclick="ycit()">
-				<img id="btn_show" src="../image/QR-code.png">
-			</span>
 			<h1 class="mui-title" style="color: #fff;">我的</h1>
+			<span id="setting-btn" class="mui-right mui-pull-right">
+				<img src="../image/icon/mypagesetting-icon.png">
+			</span>
 		</header>
 
 		<div class="mui-content">
@@ -519,21 +532,21 @@
 
 			}
 
-			function ycit() {
-				var zt = document.getElementById("cover").style.display;
-				var zt = document.getElementById("QR-code").style.display;
-				if (zt == "block") {
-					document.getElementById("cover").style.display = "none";
-				} else {
-					document.getElementById("cover").style.display = "block";
-				}
-				if (zt == "block") {
-					document.getElementById("QR-code").style.display = "none";
-				} else {
-					document.getElementById("QR-code").style.display = "block";
-				}
-			}
-
+			// 			function ycit() {
+			// 				var zt = document.getElementById("cover").style.display;
+			// 				var zt = document.getElementById("QR-code").style.display;
+			// 				if (zt == "block") {
+			// 					document.getElementById("cover").style.display = "none";
+			// 				} else {
+			// 					document.getElementById("cover").style.display = "block";
+			// 				}
+			// 				if (zt == "block") {
+			// 					document.getElementById("QR-code").style.display = "none";
+			// 				} else {
+			// 					document.getElementById("QR-code").style.display = "block";
+			// 				}
+			// 			}
+			// 
 			function yc() {
 				var zt = document.getElementById("cover").style.display;
 				var zt = document.getElementById("QR-code").style.display;
@@ -630,6 +643,7 @@
 				detailPage.show('slide-in-right');
 				setStatusBar('', 'dark');
 			}
+			// 跳转到会员中心
 			mui(".goods").on("tap", ".goodsL", function() {
 				if (group_id == 0) {
 					message("敬请期待");
@@ -647,6 +661,11 @@
 				} else {
 					console.log(group_id);
 				}
+			})
+			// 跳转到设置
+			mui("#header").on("tap","#setting-btn",function(){
+				openPage('setting.html','setting','#f7f7f7','');
+				plus.navigator.setStatusBarStyle('dark');
 			})
 		</script>
 	</body>
