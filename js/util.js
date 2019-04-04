@@ -265,6 +265,32 @@ function share(param, type) {
 }
 
 /**
+ * 分享到小程序
+ * @param param 分享参数
+ */
+function shareToMiniprogram(param) {
+	plus.share.getServices(function(s) {
+		var shareService = {};
+		for (var i in s) {
+			var t = s[i];
+			shareService[t.id] = t;
+		}
+		
+		var shareBtns = [];
+		// 更新分享列表
+		var ss = shareService['weixin'];
+		ss && ss.nativeClient && shareBtns.push(
+			{
+				s: ss,
+				x: 'WXSceneSession'
+			});
+		shareAction(shareBtns[0], param, 'miniProgram');
+	}, function(e) {
+		plus.nativeUI.alert("获取分享服务列表失败：" + e.message);
+	});
+}
+
+/**
  * 分享操作
  * @param {JSON} sb 分享操作对象s.s为分享通道对象(plus.share.ShareService)
  * @param {Boolean} bh 是否分享链接

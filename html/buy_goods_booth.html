@@ -69,11 +69,11 @@
 					</div> -->
 					<div class="mui-input-row mui-radio">
 						<label><img src="../image/WeChat.png"><span>微信</span></label>
-						<input name="radio1" type="radio" value="wxpay">
+						<input name="radio1" type="radio" value="wxpay" checked>
 					</div>
 					<!-- <div class="mui-input-row mui-radio">
 						<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
-						<input name="radio1" type="radio" value="3">
+						<input name="radio1" type="radio" value="balance">
 					</div> -->
 				</form>
 			</div>
@@ -129,7 +129,11 @@
 					
 					//支付
 					mui('.mui-content').on('tap', '.mui-pay', function() {
-						payType = document.querySelector('input[name=radio1]').value;
+						payType = document.querySelector('input[name=radio1]:checked').value;
+						if (payType.length == 0) {
+							message('请选择支付方式!', 'center');
+							return;
+						}
 						if (payType == 'balance') {
 							
 						} else {
@@ -233,10 +237,8 @@
 					};
 		
 					plus.payment.request(channel, param, function(result) {
-						//                  	console.log(JSON.stringify(result));
 						plus.nativeUI.alert("支付成功！", function() {
 							plus.navigator.setStatusBarStyle('dark');
-							mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'activationSuccess');
 							mui.back();
 						});
 					}, function(error) {

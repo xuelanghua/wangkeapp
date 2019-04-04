@@ -31,9 +31,9 @@
 				<li class="mui-table-view-cell share">
 					<div class="manage-left mui-navigate-right"><img class="sml-icon" src="../image/icon/share-icon-icon.png"><span>转发名片</span></div>
 				</li>
-				<li class="mui-table-view-cell business-card">
+				<!-- <li class="mui-table-view-cell business-card">
 					<div class="manage-left mui-navigate-right"><img class="sml-icon" src="../image/icon/my-qr-code-icon.png"><span>名片码</span></div>
-				</li>
+				</li> -->
 				<li class="mui-table-view-cell issue">
 					<div class="manage-left mui-navigate-right"><img class="sml-icon" src="../image/icon/dynamic-icon.png"><span>发布动态</span></div>
 				</li>
@@ -50,6 +50,7 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
+			
 			mui.init({
 				preloadPages: [{
 					url: "my_dynamics.html",
@@ -74,17 +75,43 @@
 				}],
 				preloadLimit: 5
 			});
+			
+			var userInfo = getUserInfo();
 			mui.plusReady(function() {
 				setUserCard();
 				plus.navigator.setStatusBarStyle('dark');
-// 				setTimeout(function() {
-// 					var array = plus.webview.all();
-// 					if (array) {
-// 						for (var i = 0, len = array.length; i < len; i++) {
-// 							console.log(array[i].getURL());
-// 						}
-// 					}
-// 				}, 10000)
+				// 				setTimeout(function() {
+				// 					var array = plus.webview.all();
+				// 					if (array) {
+				// 						for (var i = 0, len = array.length; i < len; i++) {
+				// 							console.log(array[i].getURL());
+				// 						}
+				// 					}
+				// 				}, 10000)
+
+				document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+				//主列表点击事件
+				mui(".mui-content").on("tap", ".edit", function() {
+					openPage('card_setting.html', 'card_setting', '#f7f7f7', '');
+				})
+				mui(".mui-content").on("tap", ".share", function() {
+					shareToMiniprogram({
+						title: userInfo.nickName + '的旺客名片',
+						content: '王天下之客,让营销更简单!',
+						thumbs: [userInfo.avatarUrl],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/index/index?to_uid=' + userInfo.id + '&is_qr=1&currentTabBar=toCard',
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				})
+				mui(".mui-content").on("tap", ".business-card", function() {
+
+				})
+				mui(".mui-content").on("tap", ".issue", function() {
+					openPage('my_dynamics.html', 'my_dynamics', '#f7f7f7', '');
+				})
 			})
 
 			function setUserCard() {
@@ -92,21 +119,6 @@
 				document.getElementById("head-img").src = userInfo.avatarUrl;
 				document.getElementById("user-name").innerText = userInfo.nickName;
 			}
-
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-			//主列表点击事件
-			mui(".mui-content").on("tap", ".edit", function() {
-				openPage('card_setting.html', 'card_setting', '#f7f7f7', '');
-			})
-			mui(".mui-content").on("tap", ".share", function() {
-
-			})
-			mui(".mui-content").on("tap", ".business-card", function() {
-
-			})
-			mui(".mui-content").on("tap", ".issue", function() {
-				openPage('my_dynamics.html', 'my_dynamics', '#f7f7f7', '');
-			})
 		</script>
 	</body>
 
