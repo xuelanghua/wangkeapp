@@ -1,132 +1,149 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>快捷方式</title>
-    <link href="../css/mui.min.css" rel="stylesheet"/>
-    <link href="../css/index.css" rel="stylesheet"/>
-	<style>
-		body {
-			width: 100%;
-			height: 100%;
-			margin: 0;
-			padding: 0;
-			background-color: transparent;
-			
-		}
-		.mui-content{
-			position: relative;
-			display: -webkit-flex;
-			display: flex;
-			width: 100%;
-			min-height: 100vh;
-			justify-content: center;
-			background-color: rgba(0,0,0,0.1);
-		}
-		#shortcut{
-			margin: 0;
-			padding: 0;
-			position: fixed;
-			bottom: 10px;
-			width: auto;
-			box-shadow: 0 0 15px 3px #D1D1D3;
-			border-radius: 20px;
-			background-color: #ffffff;
-			z-index: 9999;
-			display: -webkit-flex;
-			display: flex;
-			justify-content: center;
-		}
-		
-		#shortcut li{
-			padding: 15px 20px;
-			flex-shrink: 0;
-			display: inline-flex;
-			flex-direction: column;
-			align-items: center;
-			line-height: 0;
-		}
-		
-		#shortcut li img{
-			position: relative;
-			height: 22px;
-			margin-top: 3px;
-		}
-		
-		#shortcut li p{
-			font-size: 10px;
-			color: #000000;
-			margin-bottom: 0;
-			line-height: 1.2;
-			margin-top: 8px;
-		}
-		
-		.jiantou{
-			width: 19px;
-			position: absolute;
-			bottom: -10px;
-		}
-	</style>
-</head>
-<body>
-	<div class="mui-content">
-		<ul id="shortcut">
-			<li id="add_customer">
-				<img src="../image/entry-customer.png" >
-				<p>录入客户</p>
-			</li>
-			<!-- <li>
-				<img src="../image/Targetmanagement.png" >
-				<p>目标管理</p>
-			</li> -->
-			<li id="rapid_sharing">
-				<img src="../image/rapid_sharing.png" >
-				<p>快速分享</p>
-			</li>
-			<li id="my_income">
-				<img src="../image/my_income.png" >
-				<p>我的收益</p>
-			</li>
-			<img class="jiantou" src="../image/quickxia.png" >
-		</ul>
-	</div>
-</body>
-<script src="../js/mui.min.js"></script>
-<script src="../js/util.js"></script>
-<script>
-	mui.init({
-		swipeBack: false
-	});
-	
-	mui.plusReady(function() {
-		document.addEventListener('tap', function(e) {
-			//首页id=H54F3E71F
-			var index = plus.webview.getWebviewById('H54F3E71F');
-			mui.fire(index, 'closeShortcut');
-		})
-		
-		document.getElementById('add_customer').addEventListener('tap', function(e) {
-			fnOpenWin('customer_entry.html', 'customer_entry', {
-				statusbar: {
-					background: '#FFFFFF'
-				}
-			}, {
-				cid: 0
-			}, 'slide-in-right');
-			// 阻止冒泡
-			e.stopPropagation();
-		})
-		
-		document.getElementById('rapid_sharing').addEventListener('tap', function(e) {
-			share({title: '旺客', content: '旺天下之客,让营销更简单!', thumbs:['https://app.wangkeapp.cn/attachment/headimg_6.jpg'], href: $ajaxUrl + 'download'}, 'web');
-			e.stopPropagation();
-		})
-		
-		document.getElementById('my_income').addEventListener('tap', function(e) {
-			fnOpenWin('asset_management.html', 'asset_management', {statusbar: {background: '#2289ff'}}, '', 'slide-in-right');
-			e.stopPropagation();
-		})
-	});
-</script>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>快捷方式</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/index.css" rel="stylesheet" />
+		<style>
+			body {
+				width: 100%;
+				margin: 0;
+				padding: 0;
+				background-color: transparent;
+			}
+
+			.mui-content {
+				position: relative;
+				display: -webkit-flex;
+				width: 100%;
+				min-height: 100vh;
+				background-color: rgba(0, 0, 0, 0.1);
+			}
+
+			.li-container {
+				width: 100%;
+				position: absolute;
+				margin: 0;
+				padding: 10px;
+				bottom: 0;
+			}
+
+			#shortcut {
+				margin: 0;
+				padding: 0;
+				box-shadow: 0 0 15px 3px #D1D1D3;
+				border-radius: 20px;
+				background-color: #ffffff;
+				display: -webkit-inline-flex;
+				display: inline-flex;
+				align-self: center;
+				position: relative;
+			}
+
+			#shortcut li {
+				padding: 15px 20px;
+				flex-shrink: 0;
+				display: inline-flex;
+				flex-direction: column;
+				align-items: center;
+				flex-grow: 1;
+				line-height: 0;
+			}
+
+			#shortcut li img {
+				position: relative;
+				height: 22px;
+				margin-top: 3px;
+			}
+
+			#shortcut li p {
+				font-size: 10px;
+				color: #000000;
+				margin-bottom: 0;
+				line-height: 1.2;
+				margin-top: 8px;
+			}
+
+			.jiantou {
+				width: 19px;
+				position: absolute;
+				bottom: -10px;
+				left: 50%;
+				margin-left: -9.1px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content" id="mui-content">
+			<div class="li-container">
+				<ul id="shortcut">
+					<li id="add_customer">
+						<img src="../image/entry-customer.png">
+						<p>录入客户</p>
+					</li>
+					<!-- <li>
+					<img src="../image/Targetmanagement.png" >
+					<p>目标管理</p>
+				</li> -->
+					<li id="rapid_sharing">
+						<img src="../image/rapid_sharing.png">
+						<p>快速分享</p>
+					</li>
+					<li id="my_income">
+						<img src="../image/my_income.png">
+						<p>我的收益</p>
+					</li>
+					<img class="jiantou" src="../image/quickxia.png">
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script>
+		mui.init({
+			swipeBack: false
+		});
+
+		mui.plusReady(function() {
+			document.getElementById('mui-content').addEventListener('tap', function(e) {
+				//首页id=H54F3E71F
+				var index = plus.webview.getWebviewById('H54F3E71F');
+				mui.fire(index, 'closeShortcut');
+			})
+
+			document.getElementById('add_customer').addEventListener('tap', function(e) {
+				fnOpenWin('customer_entry.html', 'customer_entry', {
+					statusbar: {
+						background: '#FFFFFF'
+					}
+				}, {
+					cid: 0
+				}, 'slide-in-right');
+				// 阻止冒泡
+				e.stopPropagation();
+			})
+
+			document.getElementById('rapid_sharing').addEventListener('tap', function(e) {
+				share({
+					title: '旺客',
+					content: '旺天下之客,让营销更简单!',
+					thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
+					href: $ajaxUrl + 'download'
+				}, 'web');
+				e.stopPropagation();
+			})
+
+			document.getElementById('my_income').addEventListener('tap', function(e) {
+				fnOpenWin('asset_management.html', 'asset_management', {
+					statusbar: {
+						background: '#2289ff'
+					}
+				}, '', 'slide-in-right');
+				e.stopPropagation();
+			})
+		});
+	</script>
 </html>
