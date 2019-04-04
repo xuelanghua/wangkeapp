@@ -161,14 +161,14 @@
 	</head>
 	<body>
 		<!-- <div style="margin-bottom: 100px;"> -->
-			<header class="mui-bar mui-bar-nav" style="background-color: #fff;box-shadow: 0 0 0 #fff;">
-				<!-- <img src="../image//index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;"> -->
-				<h1 class="mui-title">自媒体</h1>
-				<!-- <img src="../image//index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;"> -->
-			</header>
-			<div class="mui-content">
-				<div id="slider" class="mui-slider">
-					<!-- <div class="mui-slider-group mui-slider-loop">
+		<header class="mui-bar mui-bar-nav" style="background-color: #fff;box-shadow: 0 0 0 #fff;">
+			<!-- <img src="../image//index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;"> -->
+			<h1 class="mui-title">自媒体</h1>
+			<!-- <img src="../image//index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;"> -->
+		</header>
+		<div class="mui-content">
+			<div id="slider" class="mui-slider">
+				<!-- <div class="mui-slider-group mui-slider-loop">
 				
 				<div class="mui-slider-item mui-slider-item-duplicate">
 					<a href="#">
@@ -199,12 +199,12 @@
                 <div class="mui-indicator mui-active"></div>
                 <div class="mui-indicator"></div>
             </div> -->
-				</div>
-				<div class="subMenu">
-					<div class=" inner mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted"
-					 style="background-color: #F5F6F8;">
-						<div class="mui-scroll" style="color: #000000;" id="classification">
-							<!-- <a class="mui-control-item mui-active">
+			</div>
+			<div class="subMenu">
+				<div class=" inner mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted"
+				 style="background-color: #F5F6F8;">
+					<div class="mui-scroll" style="color: #000000;" id="classification">
+						<!-- <a class="mui-control-item mui-active">
 						推荐
 					</a>
 					<a class="mui-control-item">
@@ -222,12 +222,12 @@
 					<a class="mui-control-item">
 						科技
 					</a> -->
-						</div>
 					</div>
 				</div>
+			</div>
 
-				<div class="Information_list" id="article_list">
-					<!-- <div class="list1">
+			<div class="Information_list" id="article_list">
+				<!-- <div class="list1">
 					<div class="list1L">
 						<img src="../image//bj.jpg" >
 					</div>
@@ -245,9 +245,9 @@
 					</div>
 					<div class="clearfix"></div>
 				</div> -->
-				</div>
-				<div id="article_bottom" class="mui-scroll-wrapper"></div>
 			</div>
+			<div id="article_bottom" class="mui-scroll-wrapper"></div>
+		</div>
 		<!-- </div> -->
 	</body>
 	<script src="../js/mui.js"></script>
@@ -277,15 +277,12 @@
 					}
 				},
 				down: {
-					style:'circle',//单webview模式的下拉刷新 
+					style: 'circle', //单webview模式的下拉刷新 
 					color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
 					callback: function() {
 						pullfresh_function(false, true)
 					}
 				}
-			},
-			beforeback: function() {
-				return false;
 			}
 		});
 		/* var gallery = mui('.mui-slider');
@@ -293,18 +290,36 @@
 		interval:1000//自动轮播周期，若为0则不自动播放，默认为0；
 		}); */
 		mui.plusReady(function() {
-			mui.showLoading("正在加载..","div");
+			// 重写返回
+			var first = null;
+			mui.back = function() {
+				if (!first) {
+					first = (new Date()).getTime();
+					logs(first);
+					mui.toast('再按一次退出应用');
+					setTimeout(function() {
+						first = null;
+					}, 1000);
+				} else {
+					var timer = (new Date()).getTime() - first;
+					if (timer < 1000) {
+						plus.runtime.quit();
+					}
+				}
+			};
+
+			mui.showLoading("正在加载..", "div");
 			window.addEventListener('scrollTop', function(event) {
 				window.scrollTo(0, 0);
 			});
-			
+
 			window.addEventListener('advSettingFinish', function() {
 				console.log('advSettingFinish');
 				window.location.reload();
 			})
 			slideReady(); //幻灯片
 			class_list(); //文章分类
-			
+
 			//监听分类点击事件
 			mui("#classification").on('tap', 'a', function() {
 				//获取id
@@ -321,7 +336,7 @@
 					bottom: 0
 				};
 				var extras = {
-					article_id:id
+					article_id: id
 				};
 				var w = plus.webview.create('article.html', 'article.html', styles, extras);
 				w.show(); // 显示窗口
@@ -346,19 +361,22 @@
 							str +=
 								'<div class="mui-slider-group"><div class="mui-slider-item"><a href="javascript: void(0);"><img src="../image/bj.jpg" alt=""><p class="mui-slider-title">只是精神不滑坡，办法总比困难多</p></a></div></div>';
 						} else if (data.data.length == 1) {
-							str += '<div class="mui-slider-group"><div class="mui-slider-item"><a href="javascript: void(0);"><img src="' + data.data[0].pic + '" alt=""><p class="mui-slider-title">' + data.data[0].title +
+							str += '<div class="mui-slider-group"><div class="mui-slider-item"><a href="javascript: void(0);"><img src="' +
+								data.data[0].pic + '" alt=""><p class="mui-slider-title">' + data.data[0].title +
 								'</p></a></div></div>';
 						} else if (data.data.length > 1) {
 							str += '<div class="mui-slider-group mui-slider-loop">';
 							var k = data.data.length - 1;
-							str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' + data.data[k].pic + '" alt=""><p class="mui-slider-title">' + data.data[k].title +
+							str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' +
+								data.data[k].pic + '" alt=""><p class="mui-slider-title">' + data.data[k].title +
 								'</p></a></div>';
 							var i = 0;
 							for (i in data.data) {
 								str += '<div class="mui-slider-item"><a href="javascript: void(0);"><img src="' + data.data[i].pic +
-								'" alt=""><p class="mui-slider-title">' + data.data[i].title + '</p></a></div>';
+									'" alt=""><p class="mui-slider-title">' + data.data[i].title + '</p></a></div>';
 							}
-							str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' + data.data[0].pic + '" alt=""><p class="mui-slider-title">' + data.data[0].title +
+							str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' +
+								data.data[0].pic + '" alt=""><p class="mui-slider-title">' + data.data[0].title +
 								'</p></a></div>';
 							str += '</div>';
 							str += '<div class="mui-slider-indicator mui-text-right">';
@@ -406,10 +424,10 @@
 					}
 				}
 				document.getElementById('classification').innerHTML = str;
-				
-				setTimeout(function(){
+
+				setTimeout(function() {
 					mui.hideLoading();
-				},500);
+				}, 500);
 			}, 'json');
 		}
 
