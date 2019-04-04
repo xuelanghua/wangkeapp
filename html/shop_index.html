@@ -87,6 +87,7 @@
 				font-size: 0.3rem;
 				background-color: #F5CA3A;
 				margin-top: 27px;
+				color: #ffffff;
 			}
 
 			.bj {
@@ -222,7 +223,7 @@
 							</div>
 							<div class="clearfix"></div>
 						</div>
-						<button>资产中心</button>
+						<button id="asset-center">资产中心</button>
 						<div class="receivables">
 							<div class="mui-pull-left">
 								<div class="shue" id="wait_send">0</div>
@@ -333,17 +334,16 @@
 		//添加商品
 		document.getElementById('goods_add').addEventListener('tap', function() {
 			mui.get($ajaxUrl + 'member', {
-					action: 'check_goods_number',
-					token: userInfo.token
-				}, function(res){
-					logs(res); 
-					if (res.errno == 0) {
-						openPage('goods_add.html', 'goods_add', '#ffffff', '');
-					} else {
-						document.querySelector(".mask-cont").classList.remove('mui-hidden');
-					}
-				}, 'json'
-			);
+				action: 'check_goods_number',
+				token: userInfo.token
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					openPage('goods_add.html', 'goods_add', '#ffffff', '');
+				} else {
+					document.querySelector(".mask-cont").classList.remove('mui-hidden');
+				}
+			}, 'json');
 		});
 
 		//查看公告
@@ -433,4 +433,7 @@
 		});
 		detailPage.show('slide-in-right');
 	}
+	document.getElementById('asset-center').addEventListener('tap', function() {
+		openPage('asset_management.html', 'asset_management', '#2289ff', '');
+	})
 </script>

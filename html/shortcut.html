@@ -15,45 +15,54 @@
 			background-color: transparent;
 			
 		}
-		
-		.clearfix {
-			clear: both;
+		.mui-content{
+			display: -webkit-flex;
+			display: flex;
+			justify-content: center;
 		}
-		
 		#shortcut{
 			position: fixed;
-			left: 20%;
-			bottom: 9px;
-			width: 60%;
+			bottom: 10px;
+			width: auto;
 			box-shadow: 0 0 15px 3px #D1D1D3;
 			border-radius: 20px;
 			background-color: #fff;
-			/* display: none; */
 			margin-top: -133px;
 			z-index: 9999;
+			display: -webkit-flex;
+			display: flex;
+			justify-content: center;
 		}
 		
 		#shortcut li{
-			width: 33.333%;
-			float: left;
-			margin-top: 15px;
+			padding: 15px 15px;
+			flex-grow: 1;
+			display: inline-flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin: 0 5px;
+			line-height: 0;
 		}
 		
 		#shortcut li img{
 			position: relative;
-			left: -10px;
 			height: 22px;
+			margin-top: 3px;
 		}
 		
 		#shortcut li p{
 			font-size: 10px;
 			color: #000000;
+			margin-bottom: 0;
+			line-height: 1.2;
+			margin-top: 8px;
 		}
 		
-		.jiandou{
+		.jiantou{
 			width: 19px;
 			position: absolute;
-			margin-left: -12px;
+			bottom: -10px;
 		}
 	</style>
 </head>
@@ -76,8 +85,7 @@
 				<img src="../image/my_income.png" >
 				<p>我的收益</p>
 			</li>
-			<div class="clearfix"></div>
-			<img class="jiandou" src="../image/quickxia.png" >
+			<img class="jiantou" src="../image/quickxia.png" >
 		</div>
 	</div>
 </body>
@@ -111,12 +119,10 @@
 		})
 		
 		document.getElementById('rapid_sharing').addEventListener('tap', function() {
-			share({title: '旺客', content: '王天下之客,让营销更简单!', thumbs:['https://app.wangkeapp.cn/attachment/headimg_6.jpg'], href: $ajaxUrl + 'download'}, 'web');
+			share({title: '旺客', content: '旺天下之客,让营销更简单!', thumbs:['https://app.wangkeapp.cn/attachment/headimg_6.jpg'], href: $ajaxUrl + 'download'}, 'web');
 		})
 			
 		document.getElementById('my_income').addEventListener('tap', function() {
-			fnOpenWin('asset_management.html', 'asset_management', {
-				statusbar: {
 					background: '#FFFFFF'
 				}
 			}, {

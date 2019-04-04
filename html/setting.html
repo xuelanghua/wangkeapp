@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
-		<style type="text/css">
+		<style type="text/css" lang="less">
 			.segment {
 				padding-top: 0.3rem;
 			}
@@ -87,7 +87,7 @@
 				</ul>
 			</div>
 			<div class="segment">
-				<ul class="mui-table-view logout">
+				<ul class="mui-table-view logout" id="exit">
 					<li class="mui-table-view-cell" style="justify-content: center;">
 						<span>退出登录</span>
 					</li>
@@ -110,20 +110,50 @@
 		// 初始化字体大小结束
 		mui.plusReady(function() {
 			// 注销登录
-			mui(".setting-container").on("tap", ".logout", function(e) {
-				// fnOpenWin('login.html', 'login', '', '');
-				var wvs = plus.webview.all();
-				for (var i = 0; i < wvs.length; i++) {
-					if (wvs[i].id == 'home'||wvs[i].id == 'setting') {
-						continue;
+			document.getElementById('exit').addEventListener('tap', function() {
+				// 	if (mui.os.ios) {
+				// 		localStorage.removeItem("user");
+				// 		mui.openWindow({
+				// 			url: 'login.html',
+				// 			id: 'login',
+				// 			show: {
+				// 				aniShow: 'pop-in'
+				// 			},
+				// 			waiting: {
+				// 				autoShow: false
+				// 			}
+				// 		});
+				// 		return;
+				// 	}
+				var btnArray = [{
+					title: "注销当前账号"
+				}, {
+					title: "关闭旺客"
+				}];
+				plus.nativeUI.actionSheet({
+					cancel: "取消",
+					buttons: btnArray
+				}, function(event) {
+					var index = event.index;
+					switch (index) {
+						case 1:
+							//注销账号
+							localStorage.removeItem("user");
+							// plus.webview.getLaunchWebview().show("pop-in");
+							mui.openWindow({
+								url: 'login.html',
+								id: 'login',
+								show: {
+									aniShow: 'pop-in'
+								}
+							});
+							break;
+						case 2:
+							plus.runtime.quit();
+							break;
 					}
-					logs(wvs[i].id)
-					// plus.webview.close(wvs[i].id,'','','')
-				}
-				// plus.webview.close('user','','','')
-				// plus.webview.close('setting','','','')
-				// fnOpenWin('login.html', 'login', '', '');
-			})
+				});
+			}, false);
 			mui('#app_version')[0].innerHTML = '版本号' + plus.runtime.version;
 		})
 		mui(".setting-container").on("tap", ".change-num", function(e) {
