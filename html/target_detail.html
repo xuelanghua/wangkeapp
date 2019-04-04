@@ -113,7 +113,7 @@
 				</div>
 			</div>
 			<!-- 我的目标弹窗开始-->
-			<div class="target-modal-frame" >
+			<div class="target-modal-frame">
 				<div class="mui-card my-target-card">
 					<div class="mui-card-header">
 						<h2>我的目标</h2>
@@ -182,6 +182,7 @@
 					date: selectTime, //"01" 
 					pattern: timeType // 1天 2月 3年
 				}, function(res) {
+					logs(res);
 					var plan = res.data.plan;
 					var finish = res.data.finish;
 					for (var index in plan) {
@@ -190,7 +191,7 @@
 						// 进度条控制
 						// mui("#" + index + "_progress").progressbar().setProgress(finish[index]/plan[index]);
 						mui("#" + index + "_progress").progressbar().setProgress(plan[index]);
-						
+
 						var rate = parseFloat((finish[index] / plan[index]).toFixed(1));
 						if (rate < 1) {
 							document.getElementById(index + '_text').innerText = '未达标';
@@ -215,8 +216,8 @@
 					top: 0,
 					bottom: 0
 				});
+				userTargetStatistics();
 			});
-			userTargetStatistics();
 			// 年月日切换
 			mui(".target-detail-heade").on("tap", ".mui-col-xs-4", function(e) {
 				var typs = this.getAttribute('timeType');
