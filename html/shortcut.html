@@ -16,18 +16,23 @@
 			
 		}
 		.mui-content{
+			position: relative;
 			display: -webkit-flex;
 			display: flex;
+			width: 100%;
+			min-height: 100vh;
 			justify-content: center;
+			background-color: rgba(0,0,0,0.1);
 		}
 		#shortcut{
+			margin: 0;
+			padding: 0;
 			position: fixed;
 			bottom: 10px;
 			width: auto;
 			box-shadow: 0 0 15px 3px #D1D1D3;
 			border-radius: 20px;
 			background-color: #fff;
-			margin-top: -133px;
 			z-index: 9999;
 			display: -webkit-flex;
 			display: flex;
@@ -35,13 +40,11 @@
 		}
 		
 		#shortcut li{
-			padding: 15px 15px;
-			flex-grow: 1;
+			padding: 15px 20px;
+			flex-shrink: 0;
 			display: inline-flex;
 			flex-direction: column;
-			justify-content: center;
 			align-items: center;
-			margin: 0 5px;
 			line-height: 0;
 		}
 		
@@ -68,7 +71,7 @@
 </head>
 <body>
 	<div class="mui-content">
-		<div id="shortcut">
+		<ul id="shortcut">
 			<li id="add_customer">
 				<img src="../image/entry-customer.png" >
 				<p>录入客户</p>
@@ -86,7 +89,7 @@
 				<p>我的收益</p>
 			</li>
 			<img class="jiantou" src="../image/quickxia.png" >
-		</div>
+		</ul>
 	</div>
 </body>
 <script src="../js/mui.min.js"></script>
@@ -104,11 +107,8 @@
 		})
 		
 		//阻止div区域的点击事件
-		document.getElementById('shortcut').addEventListener('tap', function(e) {
-			e.stopPropagation();
-		})
 		
-		document.getElementById('add_customer').addEventListener('tap', function() {
+		document.getElementById('add_customer').addEventListener('tap', function(e) {
 			fnOpenWin('customer_entry.html', 'customer_entry', {
 				statusbar: {
 					background: '#FFFFFF'
@@ -116,18 +116,17 @@
 			}, {
 				cid: 0
 			}, 'slide-in-right');
+			e.stopPropagation();
 		})
 		
-		document.getElementById('rapid_sharing').addEventListener('tap', function() {
+		document.getElementById('rapid_sharing').addEventListener('tap', function(e) {
 			share({title: '旺客', content: '旺天下之客,让营销更简单!', thumbs:['https://app.wangkeapp.cn/attachment/headimg_6.jpg'], href: $ajaxUrl + 'download'}, 'web');
+			e.stopPropagation();
 		})
 		
-		document.getElementById('my_income').addEventListener('tap', function() {
-			fnOpenWin('asset_management.html', 'asset_management', '{
-				statusbar: {
-					background: '#2289ff'
-				}
-			}', '', 'slide-in-right');
+		document.getElementById('my_income').addEventListener('tap', function(e) {
+			fnOpenWin('asset_management.html', 'asset_management', {statusbar: {background: '#2289ff'}}, '', 'slide-in-right');
+			e.stopPropagation();
 		})
 	});
 </script>
