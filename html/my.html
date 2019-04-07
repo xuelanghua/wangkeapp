@@ -594,12 +594,13 @@
 
 			//获取用户信息
 			function getMemberInfo() {
+				logs(userInfo);
 				mui.post($ajaxUrl + 'member', {
 					action: 'detail',
 					token: userInfo.token
 				}, function(res) {
 					var memberInfo = res.data;
-					// group_id=memberInfo.group_id;
+					group_id = memberInfo.group_id;
 					document.getElementById('nickname').innerText = memberInfo.nickName;
 					document.getElementById('avatar').src = memberInfo.avatarUrl;
 					if (!memberInfo.group) {
@@ -679,13 +680,17 @@
 				if (group_id == 0) {
 					checkMember();
 				} else if (group_id == 1) {
+					openPage('member.html', 'member', '#ffffff', '');
 					console.log(group_id);
 				} else if (group_id == 2) {
+					openPage('maker.html', 'maker', '#ffffff', '');
 					console.log(group_id);
 				} else if (group_id == 3) {
-					openPage('member.html', 'member', '#ffffff', '');
+					// openPage('member.html', 'member', '#ffffff', '');
+					openPage('agent.html', 'agent', '#ffffff', '');
 				} else if (group_id == 4) {
-					openPage('maker.html', 'maker', '#ffffff', '');
+					openPage('agent.html', 'agent', '#ffffff', '');
+					// openPage('maker.html', 'maker', '#ffffff', '');
 				} else if (group_id == 5) {
 					openPage('agent.html', 'agent', '#ffffff', '');
 				} else {

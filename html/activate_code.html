@@ -188,7 +188,7 @@
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell" v-for="(list,index) in keylist" :key="index"><span>{{list.code}}</span>
 								<button v-if="list.activate_status==1" type="button" class="mui-btn mui-btn-primary mui-btn-outlined">赠送</button>
-								<button v-else type="button" class="mui-btn mui-btn-outlined action" @tap="actionKey(list.code,list.id)">激活</button>
+								<button v-else type="button" class="mui-btn mui-btn-outlined action" @tap="actionKey(list.code,list.id,list.group_id)">激活</button>
 							</li>
 						</ul>
 					</div>
@@ -227,17 +227,17 @@
 					</div> -->
 					<div class="mui-input-row mui-radio">
 						<label><img src="../image/WeChat.png"><span>微信</span></label>
-						<input name="radio1" type="radio" value="wxpay">
+						<input name="radio1" type="radio" checked value="wxpay">
 					</div>
-					<div class="mui-input-row mui-radio">
+					<!-- <div class="mui-input-row mui-radio">
 						<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
 						<input name="radio1" type="radio" value="3">
-					</div>
+					</div> -->
 				</form>
 				<div class="surplus-cont">
 					<h5>合计</h5>
-					<h3>&yen;&nbsp;20</h3>
-					<button type="button" class="mui-btn mui-btn-blue mui-btn-block">确认支付</button>
+					<h3>&yen;&nbsp;{{ fee }}</h3>
+					<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">确认支付</button>
 				</div>
 			</div>
 		</div>
@@ -252,13 +252,15 @@
 				pageNum = 1,
 				selectId = 1,
 				status = 1,
+				codeId = 0,	
+				groupInfo = null,
 				//支付相关变量
 				payType = 'wxpay',
 				wxChannel = null, // 微信支付
 				aliChannel = null, // 支付宝支付
 				channel = null, //支付通道
-				ALIPAYSERVER = $ajaxUrl + 'member&action=activation',
-				WXPAYSERVER = $ajaxUrl + 'member&action=activation';
+				ALIPAYSERVER = $ajaxUrl + 'member&action=code_activate',
+				WXPAYSERVER = $ajaxUrl + 'member&action=code_activate';
 			mui.init({
 				pullRefresh: {
 					container: "#mui-content",
@@ -297,6 +299,7 @@
 						keyDesc: '',
 						unusedNum: 0,
 						usedNum: 0,
+						fee: 0,
 						keyType: [{
 							name: '服务中心激活码',
 							id: 4
@@ -329,6 +332,7 @@
 							top: 0,
 							bottom: 0
 						});
+						getGroupInfo();
 						getlist(1);
 						// 支付相关
 						// 获取支付通道  
@@ -399,6 +403,9 @@
 				}, function(res) {
 					var data = res.data.list;
 					if (res.errno) {
+						if (pageNum == 1) {
+							app.keylist = [];
+						}
 						mui("#mui-content").pullRefresh().endPullupToRefresh(true);
 					} else {
 						app.unusedNum = res.data.valid;
@@ -415,9 +422,16 @@
 					}
 				}, 'json');
 			}
+			
 			// 弹出支付
-			function actionKey(key, keyid) {
+			function actionKey(key, keyid, group_id) {
 				mui('#wayMiddlePopover').popover('show');
+				codeId = keyid;
+				mui.each(groupInfo, function(index, item) {
+					if (item.id == group_id) {
+						app.fee = parseFloat((item.activation_fee * 10 / 100));
+					}
+				})
 				app.keyDesc = key;
 			}
 			// 选择支付方式
@@ -427,9 +441,15 @@
 					message(payTarget[i].value);
 				}
 			}
+			
 			mui('.mui-content').on('tap', '.mui-pay', function() {
+				if (payType.length == 0) {
+					message('请选择支付方式!');
+					return;
+				}
+				mui('#wayMiddlePopover').popover('hide');
 				pay(payType);
-			})
+			}) 
 			// 监听选择的支付方式
 			// 2. 发起支付请求  
 			function pay(id) {
@@ -447,16 +467,14 @@
 					message("不支持此支付通道!", 'center');
 					return;
 				}
-
 				var waiting = plus.nativeUI.showWaiting();
 				mui.post(PAYSERVER, {
-					group_id: groupId,
-					price: activationFee,
-					fee: activationFee,
+					code_id: codeId,
+					fee: app.fee,
 					pay_type: payType,
 					token: userInfo.token
 				}, function(res) {
-					// console.log(JSON.stringify(res));
+					console.log(JSON.stringify(res));
 					waiting.close();
 					if (res.errno == 0) {
 						var data = res.data;
@@ -485,6 +503,15 @@
 						plus.nativeUI.alert(res.message, null, '提示');
 					}
 				}, 'json')
+			}
+			
+			function getGroupInfo() {
+				mui.get($ajaxUrl + 'member',{
+						action: 'group_info'
+					}, function(res){
+						groupInfo = res.data;
+					}, 'json'
+				);
 			}
 		</script>
 	</body>
