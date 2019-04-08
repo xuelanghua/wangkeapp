@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Boss</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.team-container{
+				min-height: 100vh;
+				background-color: #ffffff;
+			}
+			.head-img {
+				width: 100%;
+				height: auto;
+				padding-top: 1.8rem;
+				display: flex;
+				justify-content: center;
+				height: 6.5rem;
+			}
+
+			.head-img img {
+				width: 5rem;
+				height: auto;
+			}
+			.no-team-reminders{
+				margin: 0.1rem 0;
+				text-align: center;
+				font-size: 0.3rem;
+				color: #999999;
+			}
+			.mui-btn-outlined,.mui-btn-blue{
+				width: 7.1rem;
+				height: 0.99rem;
+				padding: 0;
+				margin: 0.3rem auto 0;
+				border-radius: 0.1rem;
+				font-size: 0.3rem;
+			}
+			.mui-btn-outlined{
+				margin-top: 1.45rem;
+				color: #2289ff;
+				background-color: #ffffff;
+				border-color: #2289FF;
+			}
+			.mui-btn:enabled:active,.mui-btn-outlined:active{
+				background-color: #ffffff;
+				color: #2289ff;
+			}
+			.mui-btn:enabled:active,.mui-btn-blue:active{
+				background-color: #2289ff;
+				color: #ffffff;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">Boss</h1>
+		</header>
+
+		<div class="mui-content team-container">
+			<div class="head-img">
+				<img src="../image/boos-team-img01.png">
+			</div>
+			<p class="no-team-reminders">您目前没有团队</p>
+			<button type="button" class="mui-btn mui-btn-outlined mui-btn-block">加入团队</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block">创建团队</button>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		mui.plusReady(function() {})
+		// 加入团队
+		mui(".mui-content").on("tap",".mui-btn-outlined",function(){
+			openPage('join_team.html','join_team','#f7f7f7','');
+		})
+		// 创建团队
+		mui(".mui-content").on("tap",".mui-btn-blue",function(){
+			openPage('create_team.html','create_team','#f7f7f7','');
+		})
+	</script>
+</html>

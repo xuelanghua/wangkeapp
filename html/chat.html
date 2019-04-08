@@ -517,7 +517,7 @@
 			mui.plusReady(function() {
 				var first = null;
 				mui.back = function() {
-					if (!first) { 
+					if (!first) {
 						first = (new Date()).getTime();
 						mui.toast('再按一次退出应用');
 						setTimeout(function() {
@@ -529,8 +529,8 @@
 						}
 					}
 				};
-				
-				
+
+
 				userInfo = getUserInfo();
 				pageInit();
 
@@ -687,9 +687,43 @@
 					currentLabel = label;
 				})
 
-				mui('.mui-indexed-list-item').on('tap', 'a', function() {
+				// mui('.mui-indexed-list-item').on('tap', 'a', function() {
+				// 	var cid = this.dataset.id;
+				// 	var type = this.dataset.type;
+				// 	if (type == 'crm') {
+				// 		var from = this.dataset.from;
+				// 		if (from == 1) {
+				// 			fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
+				// 				statusbar: {
+				// 					background: '#2289FF'
+				// 				}
+				// 			}, {
+				// 				cid: cid
+				// 			}, 'slide-in-right');
+				// 		} else {
+				// 			fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+				// 				statusbar: {
+				// 					background: '#2289FF'
+				// 				}
+				// 			}, {
+				// 				cid: cid
+				// 			}, 'slide-in-right');
+				// 		}
+				// 
+				// 	} else if (type == 'friend') {
+				// 		var fid = this.dataset.id;
+				// 		openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+				// 			fid: fid
+				// 		})
+				// 		// fnOpenWin( {statusbar: {background: '#f7f7f7'}}, {fid: fid}, 'slide-in-right');
+				// 	}
+				// })
+
+				// 点击头像进详情
+				mui('.mui-indexed-list-item').on('tap', '.user-head-img', function() {
 					var cid = this.dataset.id;
 					var type = this.dataset.type;
+					console.log(type)
 					if (type == 'crm') {
 						var from = this.dataset.from;
 						if (from == 1) {
@@ -709,17 +743,54 @@
 								cid: cid
 							}, 'slide-in-right');
 						}
-
 					} else if (type == 'friend') {
-						var fid = this.dataset.id;
 						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-							fid: fid
+							fid: cid
 						})
-						// fnOpenWin( {statusbar: {background: '#f7f7f7'}}, {fid: fid}, 'slide-in-right');
+					}
+				})
+				// 点击右半部分进入聊天
+				mui('.mui-indexed-list-item').on('tap', '.user-left-cont', function() {
+					var cid = this.dataset.id,
+						type = this.dataset.type,
+						chatName = this.dataset.name,
+						avatar = this.dataset.avatar;
+					if (type == 'crm') {
+						var from = this.dataset.from;
+						if (from == 1) {
+							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
+						} else {
+							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
+						}
+					} else if (type == 'friend') {
+						fnOpenWin('dialog.html', 'dialog', {
+							statusbar: {
+								background: '#F7F7F7'
+							}
+						}, {
+							cid: cid,
+							chatName: chatName,
+							avatar: avatar,
+							barStyle: 'light'
+						}, 'slide-in-right');
+						plus.navigator.setStatusBarStyle('dark');
 					}
 				})
 
-				mui('.mui-table-view').on('tap', '.new-customer', function() {
+				// 打开新增客户详情页
+				mui('.mui-table-view').on('tap', '.customer-head-img', function() {
 					var cid = this.dataset.id;
 					var type = this.dataset.type;
 					fnOpenWin('customer_detail.html', 'customer_detail', {
@@ -730,10 +801,32 @@
 						cid: cid
 					}, 'slide-in-right');
 				})
+				// 打开新增客户聊天
+				mui('.mui-table-view').on('tap', '.customer-right-cont', function() {
+					var cid = this.dataset.id,
+						type = this.dataset.type,
+						chatName = this.dataset.name,
+						avatar = this.dataset.avatar;
+					fnOpenWin('dialog.html', 'dialog', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						cid: cid,
+						chatName: chatName,
+						avatar: avatar,
+						barStyle: 'light'
+					}, 'slide-in-right');
+					plus.navigator.setStatusBarStyle('dark');
+				})
 				// 添加新朋友
 				mui(".mui-content").on("tap", ".new-friend", function() {
 					openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
 					plus.navigator.setStatusBarStyle("dark");
+				})
+				// 客户crm跳转
+				mui('.mui-table-view').on('tap', '.customer-head-img', function() {
+					
 				})
 			}
 
@@ -743,6 +836,7 @@
 					action: 'list',
 					token: userInfo.token
 				}, function(res) {
+					// logs(res);
 					customer_data = res.data;
 					localStorage.setItem('customer', JSON.stringify(customer_data));
 					showCustomer(customer_data.crm, 'crm');
@@ -773,12 +867,12 @@
 										'" data-id="' + list[i].id + '">';
 									temp += '<div class="mui-pull-left head-portrait">';
 									if (list[i].headimgurl.length == 0) {
-										temp += '<img src="../image/user_default.png">';
+										temp += '<img class="user-head-img" src="../image/user_default.png">';
 									} else {
-										temp += '<img src="' + list[i].headimgurl + '">';
+										temp += '<img class="user-head-img" src="' + list[i].headimgurl + '">';
 									}
 									temp += '</div>';
-									temp += '<div class="mui-pull-right content">';
+									temp += '<div class="mui-pull-right content user-left-cont">';
 									temp += '<div>';
 									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
 									temp += '<span>' + list[i].name + '</span>';
@@ -825,12 +919,12 @@
 										'" data-id="' + list[i].id + '">';
 									temp += '<div class="mui-pull-left head-portrait">';
 									if (list[i].headimgurl.length == 0) {
-										temp += '<img src="../image/user_default.png">';
+										temp += '<img  class="user-head-img" src="../image/user_default.png">';
 									} else {
-										temp += '<img src="' + list[i].headimgurl + '">';
+										temp += '<img  class="user-head-img" src="' + list[i].headimgurl + '">';
 									}
 									temp += '</div>';
-									temp += '<div class="mui-pull-right content">';
+									temp += '<div class="mui-pull-right content user-left-cont">';
 									temp += '<div>';
 									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
 									temp += '<span>' + list[i].name + '</span>';
@@ -1136,12 +1230,15 @@
 							html += '<a href="javascript:void(0);" class="detail" data-type="friend" data-id="' + list[i].fid + '">';
 							html += '<div class="mui-pull-left head-portrait">';
 							if (list[i].avatarUrl.length == 0) {
-								html += '<img src="../image/user_default.png">';
+								html += '<img class="user-head-img" src="../image/user_default.png"  data-type="friend" data-id="' + list[i].fid +
+									'">';
 							} else {
-								html += '<img src="' + list[i].avatarUrl + '">';
+								html += '<img class="user-head-img" class="ddff" src="' + list[i].avatarUrl + '"  data-type="friend" data-id="' +
+									list[i].fid + '">';
 							}
 							html += '</div>';
-							html += '<div class="mui-pull-right content">';
+							html += '<div class="mui-pull-right content user-left-cont" data-type="friend" data-id="' + list[i].fid +
+								'" data-name="' + list[i].name + '" data-avatar="' + list[i].avatarUrl + '">';
 							html += '<div class="good_friend_name">' + list[i].name + '</div>';
 							html += '</div>';
 							html += '</a>';
@@ -1175,11 +1272,14 @@
 							for (var i in list) {
 								html += '<li class="mui-table-view-cell new-customer" data-type="customer" data-id="' + list[i].id + '">';
 								if (list[i].avatarUrl.length == 0) {
-									html += '<div class="chart mui-pull-left"><img src="../image/user_default.png" ></div>';
+									html += '<div class="chart mui-pull-left customer-head-img" data-id="' + list[i].id +
+										'" data-type="customer"><img src="../image/user_default.png" ></div>';
 								} else {
-									html += '<div class="chart mui-pull-left"><img src="' + list[i].avatarUrl + '" ></div>';
+									html += '<div class="chart mui-pull-left customer-head-img" data-id="' + list[i].id +
+										'" data-type="customer"><img src="' + list[i].avatarUrl + '" ></div>';
 								}
-								html += '<div class="mui-pull-right customer-content">';
+								html += '<div class="mui-pull-right customer-content customer-right-cont" data-type="customer" data-name="' +
+									list[i].name + '" data-avatar="' + list[i].avatarUrl + '">';
 								html += '<div class="customer_information">';
 								html += '<div class="mui-pull-left">';
 								if (list[i].is_boss == 1) {
@@ -1225,7 +1325,6 @@
 			function timeInterval() {
 				timer = window.setInterval('getCustomerList()', 20000);
 			}
-
 			function clearTimeInterval() {
 				window.clearInterval(timer);
 			}

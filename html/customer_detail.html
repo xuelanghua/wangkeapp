@@ -173,12 +173,12 @@
 				width: 100%;
 				position: fixed;
 				bottom: 0;
-				padding: 10px 15px 8px 15px;
+				padding: 10px;
 				border-top: 1px solid #F2F2F2;
 				background-color: #FFFFFF;
 			}
 			.input{
-				width: 50%;
+				width: 40%;
 				background-color: #F5F6F8;
 				padding: 7px 0 7px 11px;
 				color: #999999;
@@ -191,12 +191,14 @@
 				height: 18px;
 			}
 			.comment-inputr{
-				width: 50%;
+				width: 60%;
 				font-size: 12px;
+				display: flex;
 			}
 			.comment-inputr div{
-				width: 33.33%;
+				width: auto;
 				float: left;
+				padding: 0 10px;
 				text-align: center;
 			}
 			.comment-inputr button{
@@ -204,7 +206,21 @@
 				border: none;
 				font-size: 15px;
 				border-radius: 5px;
+				padding:0 10px;
 				margin-top: 5px;
+				margin-right: 12px;
+				height: 30px;
+				color: #2289FF;
+				border: 1px solid #2289FF;
+			}
+			.comment-inputr button:active{
+					color: #2289FF;
+				border: 1px solid #2289FF;
+				background-color: #ffffff;
+			}
+			.comment-inputr button:last-of-type{
+				margin-right: 0;
+				color: #FFFFFF;
 				background-color: #2289FF;
 			}
 			.comment-inputr img{
@@ -531,20 +547,20 @@
 				</div>
 			</div>
 
-			<div class="comment-input">
+			<div class="comment-input mui-clearfix">
 				<div class="input mui-pull-left">
 					<img src="../image/shuru.png">
 					<span style="margin-left: 10px;">跟进记录...</span>
 				</div>
 				<div class="comment-inputr mui-pull-right">
-					<div style="margin-left: 10px;" id="deal_flag">
+					<div id="deal_flag">
 						<!-- <img src="../image/wdeal.png"> -->
 						<span id="deal_icon" style="margin-top: 3px;margin-bottom: 2px;"><i class="iconfont icon-user-flag" style="font-size: 23px;"></i></span>
 						<span id="deal_title" id="deal_title">未成交</span>
 					</div>
-					<button class="mui-pull-right" id="call_up">电话</button>
+					<button id="share_card">分享名片</button>
+					<button id="call_up">电话</button>
 				</div>
-				<div class="clearfix"></div>
 			</div>
 
 			<!-- 弹出框 -->
@@ -575,7 +591,7 @@
 			cid = self.cid;
 
 			getCustomerInfo();
-			
+
 			window.addEventListener('editCustomer', function() {
 				getCustomerInfo();
 			})
@@ -591,25 +607,45 @@
 			})
 
 			document.querySelector('#write_button').addEventListener('tap', function() {
-				fnOpenWin('customer_entry.html', 'customer_entry', {statusbar: {background: '#FFF'}}, {cid: cid}, 'slide-in-right');
+				fnOpenWin('customer_entry.html', 'customer_entry', {
+					statusbar: {
+						background: '#FFF'
+					}
+				}, {
+					cid: cid
+				}, 'slide-in-right');
 				plus.navigator.setStatusBarStyle('dark');
 			})
-			
+
 			document.querySelector('#send_button').addEventListener('tap', function() {
 				// console.log('openWin');
-				fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: cid, chatName: chatName, avatar: avatar, barStyle: 'light'}, 'slide-in-right');
+				fnOpenWin('dialog.html', 'dialog', {
+					statusbar: {
+						background: '#F7F7F7'
+					}
+				}, {
+					cid: cid,
+					chatName: chatName,
+					avatar: avatar,
+					barStyle: 'light'
+				}, 'slide-in-right');
 				plus.navigator.setStatusBarStyle('dark');
 			})
-			
+
 			document.getElementById('cover').addEventListener('tap', function() {
 				this.style.display = 'none';
 				document.querySelector('.tanchu').style.display = 'none';
 			})
-			
+
 			document.querySelector('#deal_forcast').addEventListener('tap', function() {
 				var dt = datePick(function(e) {
-					var selectedDate = e.value; 
-					mui.post($ajaxUrl + 'customer', {action: 'forcast1', date: selectedDate, token: userInfo.token, cid: cid}, function(res) {
+					var selectedDate = e.value;
+					mui.post($ajaxUrl + 'customer', {
+						action: 'forcast1',
+						date: selectedDate,
+						token: userInfo.token,
+						cid: cid
+					}, function(res) {
 						logs(res);
 						if (res.errno == 0) {
 							message('设置成功!');
@@ -678,7 +714,7 @@
 					}
 				}, 'json')
 			})
-			
+
 			mui('.mui-content').on('tap', '#notice_button', function() {
 				document.getElementById('cover').style.display = 'none';
 				document.querySelector('.guaih').style.display = 'none';
@@ -715,12 +751,18 @@
 					}, 'json')
 				}
 			})
-			
+
 			mui('header').on('tap', '#crm_edit', function() {
-				fnOpenWin('customer_edit.html', 'customer_edit', {statusbar: {background: '#FFF'}}, {cid: cid}, 'slide-in-right');
+				fnOpenWin('customer_edit.html', 'customer_edit', {
+					statusbar: {
+						background: '#FFF'
+					}
+				}, {
+					cid: cid
+				}, 'slide-in-right');
 				plus.navigator.setStatusBarStyle('dark');
 			})
-			
+
 			hd = document.getElementsByClassName("hd")[0].getElementsByTagName("li");
 			bd = document.getElementsByClassName("bd")[0].getElementsByTagName("li");
 			for (var i = 0; i < hd.length; i++) {
@@ -729,7 +771,7 @@
 				})
 			}
 		})
-		
+
 		function datePick(callback) {
 			var dtpicker = new mui.DtPicker({
 				type: "date", //设置日历初始视图模式
@@ -808,176 +850,177 @@
 								html += '</div>';
 								html += '<div class="xinahsi">' + follow[i].content + '</div>';
 								html += '</div>';
-								html += '<div class="clearfix"></div>'; 
+								html += '<div class="clearfix"></div>';
 							}
 						}
 					} else {
 						html += '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
 					}
 					document.querySelector('#follow_container').innerHTML = html;
-					
+
 					var viewHtml = '';
 					if (data.view.length > 0) {
 						var viewList = data.view;
 						for (var k in viewList) {
-							viewHtml +='<div class="current_chart mui-pull-left">';
-								if (data.avatarUrl.length != 0) {
-									viewHtml += '<img src="' + data.avatarUrl + '" >';
+							viewHtml += '<div class="current_chart mui-pull-left">';
+							if (data.avatarUrl.length != 0) {
+								viewHtml += '<img src="' + data.avatarUrl + '" >';
+							} else {
+								viewHtml += '<img src="../image/user_default.png" >';
+							}
+							viewHtml += '</div>';
+							viewHtml += '<div class="Record_list mui-pull-right" style="width: 85%;">';
+							viewHtml += '<div class="mui-pull-left shuj" style="width: 70%;">';
+							if (viewList[k].sign == 'praise' && viewList[k].type == 1) {
+								viewHtml += 'TA给你的<span>录音</span>点赞了, 看来TA对你的介绍<span>非常感兴趣</span>';
+							} else if (viewList[k].sign == 'praise' && viewList[k].type == 2) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次查看</span>你的<span>名片</span>,TA正在了解你';
+								} else if (viewList[k].count > 1 && viewList[k].count < 5) {
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>名片</span>,你成功的吸引了TA';
 								} else {
-									viewHtml += '<img src="../image/user_default.png" >';
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>名片</span>,高意向客户,立即主动沟通';
 								}
-							viewHtml +='</div>';
-							viewHtml +='<div class="Record_list mui-pull-right" style="width: 85%;">';
-								viewHtml +='<div class="mui-pull-left shuj" style="width: 70%;">';
-									if (viewList[k].sign == 'praise' && viewList[k].type == 1) {
-										viewHtml +='TA给你的<span>录音</span>点赞了, 看来TA对你的介绍<span>非常感兴趣</span>';
-									} else if (viewList[k].sign == 'praise' && viewList[k].type == 2) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次查看</span>你的<span>名片</span>,TA正在了解你';
-										} else if (viewList[k].count > 1 && viewList[k].count < 5) {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你的<span>名片</span>,你成功的吸引了TA';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你的<span>名片</span>,高意向客户,立即主动沟通';
-										}
-									} else if (viewList[k].sign == 'praise' && viewList[k].type == 3) {
-										viewHtml +='TA给你点赞了, 看来TA觉得你<span>非常靠谱</span>';
-									} else if (viewList[k].sign == 'praise' && viewList[k].type == 4) {
-										if (viewList[k].count == 1) {
-											viewHtml +='<span>首次分享</span>了你的<span>名片</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次分享</span>了你的<span>名片</span>';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 1) {
-										if (viewList[k].count == 1) {
-											viewHtml +='TA<span>首次</span>保存了你的电话, 请随时保持电话畅通';
-										} else {
-											viewHtml +='TA<span>第' + viewList[k].count + '次</span>保存了你的电话, 请随时保持电话畅通';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 2) {
-										if (viewList[k].count == 1) {
-											viewHtml +='<span>首次拨打</span>你的<span>手机号</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次拨打</span>你的<span>手机号</span>';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 3) {
-										if (viewList[k].count == 1) {
-											viewHtml +='<span>首次拨打</span>你的<span>座机号</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次拨打</span>你的<span>座机号</span>';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 4) {
-										if (viewList[k].count == 1) {
-											viewHtml +='TA<span>首次</span>复制了你的微信, 请随时查看微信通讯录';
-										} else {
-											viewHtml +='TA<span>第' + viewList[k].count + '次</span>复制了你的微信, 请随时查看微信通讯录';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 5) {
-										if (viewList[k].count == 1) {
-											viewHtml +='TA<span>首次</span>复制了你的邮箱, 可随时邮寄文件给你';
-										} else {
-											viewHtml +='TA<span>第' + viewList[k].count + '次</span>复制了你的邮箱, 可随时邮寄文件给你';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 6) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次复制</span>你公司的<span>名称</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次复制</span>你公司的<span>名称</span>';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 7) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次查看</span>你公司的<span>定位</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你公司的<span>定位</span>';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 8) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次咨询</span>你的<span>产品</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次咨询</span>你的<span>产品</span>';
-										}
-									} else if (viewList[k].sign == 'copy' && viewList[k].type == 9) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次播放</span>你的<span>语音</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次播放</span>你的<span>语音</span>';
-										}
-									} else if (viewList[k].sign == 'view' && viewList[k].type == 1) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次查看</span>你的<span>商城</span>,尽快把握商机';
-										} else if (viewList[k].count == 2) {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,潜在购买客户';
-										} else if (viewList[k].count == 3) {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,高意向客户成交在望';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,购买欲望强烈';
-										}
-									} else if (viewList[k].sign == 'view' && viewList[k].type == 2) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次查看</span>你的<span>商品(' + viewList[k].target_name + ')详情</span>,尽快把握商机';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你的<span>商品(' + viewList[k].target_name + ')详情</span>,尽快把握商机';
-										}
-									} else if (viewList[k].sign == 'view' && viewList[k].type == 3) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次查看</span>你的<span>动态</span>';
-										} else if (viewList[k].count == 2) {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你的<span>动态</span>,赶快主动沟通';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次查看</span>你的<span>动态</span>,高意向客户成交在望';
-										}
-									} else if (viewList[k].sign == 'view' && viewList[k].type == 4) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次点赞</span>了你的<span>动态</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次点赞</span>了你的<span>动态</span>';
-										}
-									} else if (viewList[k].sign == 'view' && viewList[k].type == 5) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次评论</span>了你的<span>动态</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次评论</span>了你的<span>动态</span>';
-										}
-									} else if (viewList[k].sign == 'view' && viewList[k].type == 6) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次查看公司官网</span>,看来他对公司感兴趣';
-										} else if (viewList[k].count == 2) {
-											viewHtml +='<span>第' + viewList[k].count + '次查看公司官网</span>,赶快主动沟通';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次查看公司官网</span>,高意向客户成交在望';
-										}
-									} else if (viewList[k].sign == 'view' && viewList[k].type == 7) {
-										if (viewList[k].count == 1) { 
-											viewHtml +='<span>首次浏览</span>你的<span>动态(' + viewList[k].target_name + ')详情</span>';
-										} else {
-											viewHtml +='<span>第' + viewList[k].count + '次浏览</span>你的<span>动态(' + viewList[k].target_name + ')详情</span>';
-										}
-									}
-								viewHtml +='</div>';
-								viewHtml +='<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 10px;">';
-									viewHtml +='<span>' + viewList[k].create_time + '</span>';
-								viewHtml +='</div>';
-							viewHtml +='</div>';
-							viewHtml +='<div class="clearfix"></div>';
+							} else if (viewList[k].sign == 'praise' && viewList[k].type == 3) {
+								viewHtml += 'TA给你点赞了, 看来TA觉得你<span>非常靠谱</span>';
+							} else if (viewList[k].sign == 'praise' && viewList[k].type == 4) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次分享</span>了你的<span>名片</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次分享</span>了你的<span>名片</span>';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 1) {
+								if (viewList[k].count == 1) {
+									viewHtml += 'TA<span>首次</span>保存了你的电话, 请随时保持电话畅通';
+								} else {
+									viewHtml += 'TA<span>第' + viewList[k].count + '次</span>保存了你的电话, 请随时保持电话畅通';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 2) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次拨打</span>你的<span>手机号</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次拨打</span>你的<span>手机号</span>';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 3) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次拨打</span>你的<span>座机号</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次拨打</span>你的<span>座机号</span>';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 4) {
+								if (viewList[k].count == 1) {
+									viewHtml += 'TA<span>首次</span>复制了你的微信, 请随时查看微信通讯录';
+								} else {
+									viewHtml += 'TA<span>第' + viewList[k].count + '次</span>复制了你的微信, 请随时查看微信通讯录';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 5) {
+								if (viewList[k].count == 1) {
+									viewHtml += 'TA<span>首次</span>复制了你的邮箱, 可随时邮寄文件给你';
+								} else {
+									viewHtml += 'TA<span>第' + viewList[k].count + '次</span>复制了你的邮箱, 可随时邮寄文件给你';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 6) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次复制</span>你公司的<span>名称</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次复制</span>你公司的<span>名称</span>';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 7) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次查看</span>你公司的<span>定位</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你公司的<span>定位</span>';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 8) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次咨询</span>你的<span>产品</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次咨询</span>你的<span>产品</span>';
+								}
+							} else if (viewList[k].sign == 'copy' && viewList[k].type == 9) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次播放</span>你的<span>语音</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次播放</span>你的<span>语音</span>';
+								}
+							} else if (viewList[k].sign == 'view' && viewList[k].type == 1) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次查看</span>你的<span>商城</span>,尽快把握商机';
+								} else if (viewList[k].count == 2) {
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,潜在购买客户';
+								} else if (viewList[k].count == 3) {
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,高意向客户成交在望';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,购买欲望强烈';
+								}
+							} else if (viewList[k].sign == 'view' && viewList[k].type == 2) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次查看</span>你的<span>商品(' + viewList[k].target_name + ')详情</span>,尽快把握商机';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商品(' + viewList[k].target_name +
+										')详情</span>,尽快把握商机';
+								}
+							} else if (viewList[k].sign == 'view' && viewList[k].type == 3) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次查看</span>你的<span>动态</span>';
+								} else if (viewList[k].count == 2) {
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>动态</span>,赶快主动沟通';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>动态</span>,高意向客户成交在望';
+								}
+							} else if (viewList[k].sign == 'view' && viewList[k].type == 4) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次点赞</span>了你的<span>动态</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次点赞</span>了你的<span>动态</span>';
+								}
+							} else if (viewList[k].sign == 'view' && viewList[k].type == 5) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次评论</span>了你的<span>动态</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次评论</span>了你的<span>动态</span>';
+								}
+							} else if (viewList[k].sign == 'view' && viewList[k].type == 6) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次查看公司官网</span>,看来他对公司感兴趣';
+								} else if (viewList[k].count == 2) {
+									viewHtml += '<span>第' + viewList[k].count + '次查看公司官网</span>,赶快主动沟通';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次查看公司官网</span>,高意向客户成交在望';
+								}
+							} else if (viewList[k].sign == 'view' && viewList[k].type == 7) {
+								if (viewList[k].count == 1) {
+									viewHtml += '<span>首次浏览</span>你的<span>动态(' + viewList[k].target_name + ')详情</span>';
+								} else {
+									viewHtml += '<span>第' + viewList[k].count + '次浏览</span>你的<span>动态(' + viewList[k].target_name + ')详情</span>';
+								}
+							}
+							viewHtml += '</div>';
+							viewHtml += '<div class="mui-pull-right" style="font-size: 14px;color: #999999;margin-top: 10px;">';
+							viewHtml += '<span>' + viewList[k].create_time + '</span>';
+							viewHtml += '</div>';
+							viewHtml += '</div>';
+							viewHtml += '<div class="clearfix"></div>';
 						}
 					} else {
 						viewHtml += '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
 					}
 					document.querySelector('#view_container').innerHTML = viewHtml;
-					
+
 					var dealHtml = '';
 					if (data.deal.length > 0) {
 						var dealList = data.deal;
 						for (var j in dealList) {
 							dealHtml += '<div class="Record_list">';
-								dealHtml += '<div>';
-									dealHtml += '<span class="mui-pull-left">' + dealList[j].name + '</span>';
-									dealHtml += '<span class="mui-pull-right">' + dealList[j].total_price + '</span>';
-									dealHtml += '<div class="clearfix"></div>';
-								dealHtml += '</div>';
-								dealHtml += '<div style="font-size: 14px;color: #999999;margin-top: 10px;">';
-									dealHtml += '<span class="mui-pull-right">' + dealList[j].create_time + '</span>';
-									dealHtml += '<div class="clearfix"></div>';
-								dealHtml += '</div>';
+							dealHtml += '<div>';
+							dealHtml += '<span class="mui-pull-left">' + dealList[j].name + '</span>';
+							dealHtml += '<span class="mui-pull-right">' + dealList[j].total_price + '</span>';
+							dealHtml += '<div class="clearfix"></div>';
+							dealHtml += '</div>';
+							dealHtml += '<div style="font-size: 14px;color: #999999;margin-top: 10px;">';
+							dealHtml += '<span class="mui-pull-right">' + dealList[j].create_time + '</span>';
+							dealHtml += '<div class="clearfix"></div>';
+							dealHtml += '</div>';
 							dealHtml += '</div>';
 						}
 					} else {
@@ -991,9 +1034,9 @@
 						document.getElementById('deal_title').style.color = 'red';
 						dealFlag = 1;
 					}
-					
-// 					document.getElementById('deal_time').innerText = data.date;
-// 					document.getElementById('deal_percent').innerText = data.rate;
+
+					// 					document.getElementById('deal_time').innerText = data.date;
+					// 					document.getElementById('deal_percent').innerText = data.rate;
 					if (data.member == 1) {
 						document.getElementById('crm_member').innerText = '下级会员';
 					} else {
@@ -1020,5 +1063,25 @@
 				}
 			}
 		}
+		// 分享
+		document.getElementById('share_card').addEventListener('tap', function(e) {
+			shareToMiniprogram({
+				title: userInfo.nickName + '的旺客名片',
+				content: '王天下之客,让营销更简单!',
+				thumbs: [userInfo.avatarUrl],
+				miniProgram: {
+					id: 'gh_9fa5f42ab939',
+					path: '/longbing_card/pages/index/index?to_uid=' + userInfo.id + '&is_qr=1&currentTabBar=toCard',
+					webUrl: 'https://app.wangkeapp.cn/'
+				}
+			}, 'miniProgram');
+			// share({
+			// 	title: '旺客',
+			// 	content: '旺天下之客,让营销更简单!',
+			// 	thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
+			// 	href: $ajaxUrl + 'download'
+			// }, 'web');
+			e.stopPropagation();
+		})
 	</script>
 </html>
