@@ -370,22 +370,35 @@
 								'<div class="mui-slider-group"><div class="mui-slider-item"><a href="javascript: void(0);"><img src="../image/bj.jpg" alt=""><p class="mui-slider-title">只是精神不滑坡，办法总比困难多</p></a></div></div>';
 						} else if (data.data.length == 1) {
 							str += '<div class="mui-slider-group"><div class="mui-slider-item"><a href="javascript: void(0);"><img src="' +
-								data.data[0].pic + '" alt=""><p class="mui-slider-title">' + data.data[0].title +
-								'</p></a></div></div>';
+								data.data[0].pic + '" alt="">';
+							if (data.data[0].show_title == 1 && data.data[0].title.length > 0) {
+								str += '<p class="mui-slider-title">' + data.data[0].title + '</p>';
+							}
+							str += '</a></div></div>';
 						} else if (data.data.length > 1) {
 							str += '<div class="mui-slider-group mui-slider-loop">';
 							var k = data.data.length - 1;
 							str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' +
-								data.data[k].pic + '" alt=""><p class="mui-slider-title">' + data.data[k].title +
-								'</p></a></div>';
+								data.data[k].pic + '" alt="">';
+							if (data.data[k].show_title == 1 && data.data[k].title.length > 0) {
+								str += '<p class="mui-slider-title">' + data.data[k].title + '</p>';
+							}
+							str += '</a></div>';
 							var i = 0;
 							for (i in data.data) {
-								str += '<div class="mui-slider-item"><a href="javascript: void(0);"><img src="' + data.data[i].pic +
-									'" alt=""><p class="mui-slider-title">' + data.data[i].title + '</p></a></div>';
+								str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' +
+									data.data[i].pic + '" alt="">';
+								if (data.data[i].show_title == 1 && data.data[i].title.length > 0) {
+									str += '<p class="mui-slider-title">' + data.data[i].title + '</p>';
+								}
+								str += '</a></div>';
 							}
 							str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' +
-								data.data[0].pic + '" alt=""><p class="mui-slider-title">' + data.data[0].title +
-								'</p></a></div>';
+								data.data[0].pic + '" alt="">';
+							if (data.data[0].show_title == 1 && data.data[0].title.length > 0) {
+								str += '<p class="mui-slider-title">' + data.data[0].title + '</p>';
+							}
+							str += '</a></div>';
 							str += '</div>';
 							str += '<div class="mui-slider-indicator mui-text-right">';
 							var j = 0;
@@ -413,7 +426,7 @@
 		function slider_play() {
 			var gallery = mui('.mui-slider');
 			gallery.slider({
-				interval: 1000 //自动轮播周期，若为0则不自动播放，默认为0；
+				interval: 2000 //自动轮播周期，若为0则不自动播放，默认为0；
 			});
 		}
 
