@@ -86,6 +86,7 @@
 			mui.init({
 				swipeBack: true,
 			});
+			
 			var scan;
 			if(window.plus) {
 				plusready();
@@ -95,23 +96,44 @@
 
 			function onmarked(type, result) { //回调
 				if(result) {
-					alert(result);
+					console.log(type);
+					console.log(result);
 					scan.close();
-					plus.webview.currentWebview().close();
+					var param = parseUrl(result);
+					var Sparam = JSON.stringify(param);
+					if (Sparam.indexOf('currentTabBar') != -1) {
+						fnCloseWin('scan');
+						fnOpenWin('friends_detail.html', 'friends_detail', {statusbar: {background: '#f7f7f7'}}, {
+							fid: param.to_uid
+						}, 'slide-in-right');
+						setStatusBar('', 'dark');
+					} else if (Sparam.indexOf('type') != -1) {
+						var type = param.type;
+						if (type == 'receipt') {
+							fnCloseWin('scan');
+							fnOpenWin('payment.html', 'payment', {statusbar: {background: '#f7f7f7'}}, {
+								uid: param.uid,
+								fee: param.fee
+							}, 'slide-in-right');
+							setStatusBar('', 'dark');
+						}
+					}
 				}
 			}
 
 			function plusready() {
 				setTimeout(function() {
-					scan = new plus.barcode.Barcode('mask');
+					scan = new plus.barcode.Barcode('mask', '', {frameColor: '#2289FF', scanbarColor: '#2289FF'});
 					scan.onmarked = onmarked;
 					scan.start();
 				}, 200);
+				
 				//处理返回事件
 				plus.key.addEventListener('backbutton', function() {
 					plus.webview.currentWebview().close();
 				})
 			}
+			
 			//闪光灯
 			document.querySelector('#scan2 img').addEventListener('tap', function() {
 				if(/scan_off.png/.test(this.src)) {
@@ -122,6 +144,7 @@
 					scan.setFlash(false);
 				}
 			})
+			
 			//添加本地图片
 			document.querySelector('#scan1 img').addEventListener('tap', function() {
 				plus.gallery.pick(function(path) {
@@ -134,7 +157,8 @@
 					plus.nativeUI.alert('Failed: ' + err.message);
 				});
 			})
-			var close=document.getElementById('colse');
+			
+			var close = document.getElementById('colse');
 			close.addEventListener('tap', function() {
 				setStatusBar('#FFF', 'dark');
 				plus.webview.currentWebview().close();

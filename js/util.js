@@ -363,3 +363,22 @@ function shareMessage(msg, s) {
 		plus.nativeUI.alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
 	});
 }
+
+
+/**
+ * 解析url
+ * @param url 要解析的url
+ */
+function parseUrl(url) {
+  var str = url.split("?")[1],
+    items = str.split("&");
+  var arr, name, value;
+  var param = {};
+  for (var i = 0, l = items.length; i < l; i++) {
+    arr = items[i].split("=");
+    name = arr[0];
+    value = arr[1];
+    param[name] = value;
+  }
+  return param;
+}

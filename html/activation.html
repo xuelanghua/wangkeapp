@@ -74,7 +74,7 @@
 					<li class="mui-table-view-cell"><span>应付金额</span><span class="price">&yen;<span id="activation_fee">199</span></span></li>
 					<li class="mui-table-view-cell pay-type"><span>支付方式</span><span style="font-weight: normal;" class="pay-title">微信</span></li>
 					<li id="area-select" class="mui-table-view-cell"><span>区域选择</span><span style="font-weight: normal;" id="area-desc"
-						 class="area-desc mui-navigate-right">云南省 昆明市 官渡区</span></li>
+						 class="area-desc mui-navigate-right">点击选择</span></li>
 				</ul>
 			</div>
 			<div class="mui-content-padded">
@@ -170,13 +170,16 @@
 			var activationFee = 0;
 			var groupData = null;
 			var userInfo = getUserInfo();
+			var provinceId = 0;
+			var cityId = 0;
+			var areaId = 0;
 			//支付相关变量
 			var payType = 'wxpay';
 			var wxChannel = null; // 微信支付
 			var aliChannel = null; // 支付宝支付
 			var channel = null; //支付通道
 			var ALIPAYSERVER = $ajaxUrl + 'member&action=activation';
-			var WXPAYSERVER = $ajaxUrl + 'member&action=activation';;
+			var WXPAYSERVER = $ajaxUrl + 'member&action=activation';
 			mui.plusReady(function() {
 				// 获取支付通道  
 				plus.payment.getChannels(function(channels) {
@@ -321,7 +324,10 @@
 					price: activationFee,
 					fee: activationFee,
 					pay_type: payType,
-					token: userInfo.token
+					token: userInfo.token,
+					province_id: provinceId,
+					city_id: cityId,
+					area_id: areaId,
 				}, function(res) {
 					// console.log(JSON.stringify(res));
 					waiting.close();
@@ -353,6 +359,7 @@
 					}
 				}, 'json') 
 			}
+			
 			// 城市选择
 			mui.ready(function() {
 				var _getParam = function(obj, param) {
@@ -366,6 +373,9 @@
 					});
 					cityPicker.setData(cityData3);
 					cityPicker.show(function(items) {
+						provinceId = _getParam(items[0], 'value');
+						cityId = _getParam(items[1], 'value');
+						areaId = _getParam(items[2], 'value');
 						cityResult.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(
 							items[2], 'text');
 					});

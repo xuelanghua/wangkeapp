@@ -72,27 +72,26 @@
 
 	<body style="background-color: #2289FF;">
 		<header class="mui-bar mui-bar-nav" style="background-color: #2289FF;box-shadow: none;">
-			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;" id="closed"></span>
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;"></div>
 			<h1 class="mui-title"style="color: #FFFFFF;">收款码</h1>
 		</header>
 		
 		<div class="mui-content" style="background-color: #2289FF;">
 			<div class="content">
 				<h4>
-					<span>￥</span>
-					<span>80</span>
+					<span>{{ receipt }}</span>
 				</h4>
 				<div class="QR-code">
-					<img src="../image//QR_code.png" >
+					<img src="../image/QR.png" >
 				</div>
 				<div class="Amount-of-money">
-					<input type="text" placeholder="设置收款金额"/>
-					<div class="Eliminate">清除</div>
+					<input type="number" v-model="fee" placeholder="设置收款金额"/>
+					<div class="Eliminate" @tap="clear">清除</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="Collection_records">
 					<span>
-						<img src="../image//collection_records.png" >
+						<img src="../image/collection_records.png" >
 					</span>
 					<span>收款记录</span>
 					<img class="mui-pull-right tujt" src="../image//iconrighth.png" >
@@ -105,17 +104,57 @@
 </html>
 <script src="../js/mui.min.js"></script>
 <script src="../js/util.js"></script>
+<script src="../js/vue.min.js"></script>
 <script type="text/javascript">
 	mui.init({
 		swipeBack: true,
 		beforeback: function() {
+			clearInterval();
 			setStatusBar('#FFF', 'dark');
 		}	
 	});
-	mui.plusReady(function () {
-	    document.getElementById('closed').addEventListener('tap', function() {
-			setStatusBar('#FFF', 'dark');
-			mui.back();
-		})
+	
+	var userInfo = getUserInfo();
+	var vm = new Vue({
+		el: '.mui-content',
+		data() {
+			return {
+				fee: ''
+			}
+		},
+		mounted: function() {
+			mui.plusReady(function () {
+				getReceiptQrcode();
+				setInterval(function() {
+					getReceiptQrcode();
+				}, 20000)
+			})
+		},
+		methods: {
+			clear: function() {
+				this.fee = '';
+				getReceiptQrcode();
+			}
+		},
+		computed: {
+			receipt: function() {
+				if (parseFloat(this.fee) > 0) {
+					getReceiptQrcode();
+					return '￥' + this.fee;
+				}
+			}
+		}
 	})
+	
+	/**
+	 * 获取收款二维码
+	 */
+	function getReceiptQrcode() {
+		mui.post($ajaxUrl + 'userqrcode&action=receipt', {fee: vm.fee, token: userInfo.token}, function(res) {
+			if (res.errno == 0) {
+				var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+				document.querySelector('.QR-code img').setAttribute('src', url);
+			}
+		}, 'json');
+	}
 </script>

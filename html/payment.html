@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>商品位购买</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
+		<style type="text/css">
+			.amount-select {
+				display: inline-flex;
+				width: 3rem;
+				height: 0.6rem;
+				overflow: hidden;
+				align-items: center;
+				border-radius: 6px;
+			}
+
+			.amount-select input {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				border: none;
+				text-align: center;
+				background-color: #d1d1d1;
+				border-radius: 0;
+			}
+
+			.amount-select button {
+				height: 100%;
+				border: none;
+				padding: 0;
+				margin: 0;
+				width: 0.8rem;
+				background: #ECECEC;
+				flex-shrink: 0;
+				font-size: 0.4rem;
+				line-height: 0.6rem;
+				border-radius: 0;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">商品位购买</h1>
+		</header>
+
+		<div id="goods-booth" class="mui-content goods-booth-container">
+			<div class="page-head">
+				<h5>合计</h5>
+				<h2><span>&yen;</span>{{sum}}.00</h2>
+				<div class="buy-num-cont">
+					<span>购买数量</span>
+					<div class="amount-select">
+						<button class="mui-btn" type="button" @tap="reduce" :disabled="total>1?false:true">-</button>
+						<input class="amount" v-model="total" v-on:input="watchNum" type="number">
+						<button class="mui-btn" type="button" @tap="adding" :disabled="total<9999?false:true">+</button>
+					</div>
+				</div>
+			</div>
+			<div class="pattern-of-payment">
+				<form class="mui-input-group">
+					<!-- <div class="mui-input-row mui-radio">
+						<label><img src="../image/Alipay.png"><span>支付宝</span></label>
+						<input name="radio1" type="radio" value="1" >
+					</div> -->
+					<div class="mui-input-row mui-radio">
+						<label><img src="../image/WeChat.png"><span>微信</span></label>
+						<input name="radio1" type="radio" checked="checked" value="wxpay">
+					</div>
+					<!-- <div class="mui-input-row mui-radio">
+						<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
+						<input name="radio1" type="radio" value="balance">
+					</div> -->
+				</form>
+			</div>
+			<button type="button" class="mui-btn mui-btn-yellow mui-btn-block mui-pay">支付</button>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		
+		var userInfo = getUserInfo();
+		//支付相关变量
+		var payType = 'wxpay';
+		var wxChannel = null; // 微信支付
+		var aliChannel = null; // 支付宝支付
+		var channel = null; //支付通道
+		var ALIPAYSERVER = $ajaxUrl + 'member&action=goods_number';
+		var WXPAYSERVER = $ajaxUrl + 'member&action=goods_number';
+		var fee = 0.00;
+		var app = new Vue({
+			el: "#goods-booth",
+			data() {
+				return {
+					total: 1,
+					price: 100
+				}
+			},
+			created: () => {
+				mui.plusReady(function() {
+					getGoodsBoothPrice();
+					
+					plus.payment.getChannels(function(channels) {
+						for (var i in channels) {
+							if (channels[i].id == "wxpay") {
+								wxChannel = channels[i];
+							} else {
+								aliChannel = channels[i];
+							}
+						}
+					}, function(e) {
+						plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
+					});
+					
+					//支付
+					mui('.mui-content').on('tap', '.mui-pay', function() {
+						payType = document.querySelector('input[name=radio1]:checked').value;
+						if (payType.length == 0) {
+							message('请选择支付方式!', 'center');
+							return;
+						}
+						if (payType == 'balance') {
+							
+						} else {
+							pay(payType);
+						}
+					})
+				});
+			},
+			computed: {
+				sum: function() {
+					if (this.total == 0 || isNaN(this.total)) {
+						fee = this.price;
+					} else {
+						fee = this.total * this.price;
+					}
+					return fee;
+				}
+			},
+			methods: {
+				watchNum: function(e) {
+					// 监听输入
+					var figure;
+					var re = /^[1-9]+[0-9]*]*$/;
+					// 判断是否正整数
+					if (!re.test(this.total)) {
+						// 如果不是正整数
+						console.log("不是正整数");
+						if (this.total == 0 || isNaN(this.total)) {
+							this.total = 1;
+						} else {
+							figure = parseInt(this.total);
+							this.total = Math.abs(figure);
+						}
+					} else {
+						console.log("正整数");
+						if (this.total < 10000) {
+							figure = parseInt(this.total);
+							this.total = Math.abs(figure);
+						} else {
+							this.total = 10000;
+						}
+					}
+				},
+				reduce: function() {
+					this.total--;
+				},
+				adding: function() {
+					this.total++;
+				}
+			}
+		})
+		
+		//获取商品位的价格
+		function getGoodsBoothPrice() {
+			mui.get($ajaxUrl + 'goods', {
+					action: 'booth',
+					token: userInfo.token
+				}, function(res){
+					app.price = res.data;
+				}, 'json'
+			);
+		}
+		
+		// 2. 发起支付请求  
+		function pay(id) {
+			// 从服务器请求支付订单
+			var PAYSERVER = '';
+			if (id == 'alipay') {
+				message("暂不支持支付宝支付!", 'center');
+				return;
+				PAYSERVER = ALIPAYSERVER;
+				channel = aliChannel;
+			} else if (id == 'wxpay') {
+				PAYSERVER = WXPAYSERVER;
+				channel = wxChannel;
+			} else {
+				message("不支持此支付通道!", 'center');
+				return;
+			}
+		
+			var waiting = plus.nativeUI.showWaiting();
+			mui.post(PAYSERVER, {
+				number: app.total,
+				price: app.price,
+				fee: fee,
+				pay_type: payType,
+				token: userInfo.token
+			}, function(res) {
+				// console.log(JSON.stringify(res));
+				waiting.close();
+				if (res.errno == 0) {
+					var data = res.data;
+					var param = {
+						appid: data.appid,
+						noncestr: data.nonce_str,
+						package: 'Sign=WXPay',
+						partnerid: data.mch_id,
+						prepayid: data.prepay_id,
+						timestamp: data.timeStamp,
+						sign: data.paySign
+					};
+		
+					plus.payment.request(channel, param, function(result) {
+						plus.nativeUI.alert("支付成功！", function() {
+							plus.navigator.setStatusBarStyle('dark');
+							mui.back();
+						});
+					}, function(error) {
+						console.log(JSON.stringify(error));
+						plus.nativeUI.alert("支付失败：" + error.code);
+					});
+				} else {
+					plus.nativeUI.alert(res.message, null, '提示');
+				}
+			}, 'json') 
+		}
+	</script>
+</html>
