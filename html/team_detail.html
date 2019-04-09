@@ -1,0 +1,473 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>团队详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.team-detail-header {
+				height: 3rem;
+				background: #ffffff url("../image/team-detail-img01.jpg")center top no-repeat;
+				background-size: contain;
+				padding: 0.9rem 0.3rem 0;
+				color: #ffffff;
+				font-size: 0.4rem;
+			}
+
+			.team-number {
+				font-size: 0.24rem;
+				color: #ffffff;
+				margin-top: 0.18rem;
+			}
+
+			.team-detail-header .mui-pull-left img,
+			.title-img {
+				width: 0.28rem;
+				height: auto;
+			}
+
+			.title-img {
+				margin-left: 0.1rem;
+			}
+
+			.team-detail-header .mui-pull-right {
+				width: 0.42rem;
+				height: 0.42rem;
+			}
+
+			.notice-cont {
+				padding: 0 0.2rem;
+				background-color: #ffffff;
+			}
+
+			.headline {
+				font-size: 0.3rem;
+				color: #373737;
+				margin: 0;
+				line-height: 1.4;
+				font-weight: normal;
+				padding-top: 0.03rem;
+				overflow: hidden;
+			}
+
+			.headline:before {
+				content: '';
+				display: inline-block;
+				width: 4px;
+				background-color: #2889ff;
+				height: 0.3rem;
+				margin-right: 0.1rem;
+				margin-bottom: -2px;
+			}
+
+			.notice-cont p {
+				padding: 0.2rem 0 0.4rem;
+				font-size: 0.24rem;
+				color: #333333;
+				text-align: justify;
+			}
+
+			.headline p {
+				margin: 0;
+				padding: 0;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+			}
+
+			.headline .mui-icon {
+				margin-top: -0.05rem;
+				font-size: 20px;
+			}
+
+			.team-members {
+				background-color: #FFFFFF;
+				padding: 0.3rem 0.2rem;
+				width: 100%;
+				display: block;
+			}
+
+			.team-members span {
+				display: flex;
+				align-items: center;
+			}
+
+			.user-head-img {
+				width: 0.82rem;
+				height: 0.82rem;
+				overflow: hidden;
+				border-radius: 50%;
+			}
+
+			.user-head-img img {
+				width: 100%;
+				height: 100%;
+			}
+
+			.team-members ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+				flex-direction: row;
+				flex-wrap: wrap;
+				width: 100%;
+				overflow: hidden;
+			}
+
+
+			.team-members li {
+				display: inline-flex;
+				position: relative;
+				padding-top: 0.1rem;
+				padding-right: 0.1rem;
+				margin-right: 0.09rem;
+				margin-top: 0.2rem;
+			}
+
+			.team-members li .mui-icon {
+				position: absolute;
+				right: 5px;
+				top: 5px;
+				color: #ffffff;
+				background-color: #f42d2d;
+				border-radius: 50%;
+				padding: 0;
+				font-size: 14px;
+			}
+
+			.validation-messages {
+				margin-top: 0.2rem;
+				background-color: #FFFFFF;
+				padding: 0.3rem 0.2rem;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				height: 0;
+			}
+
+			.mui-table-view-cell {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.58rem 0;
+			}
+
+			.member-left img {
+				width: 0.78rem;
+				height: 0.78rem;
+				border-radius: 50%;
+			}
+
+			.member-left {
+				display: flex;
+				align-items: center;
+			}
+
+			.member-left p {
+				margin-left: 0.1rem;
+				font-size: 0.24rem;
+			}
+
+			.member-left p.name {
+				color: #333333;
+				font-size: 0.3rem;
+			}
+
+			.member-right .mui-btn {
+				width: 0.88rem;
+				height: 0.59rem;
+				padding: 0;
+				font-size: 0.24rem;
+			}
+
+			.member-right .mui-btn:first-of-type {
+				margin-right: 0.2rem;
+			}
+
+			.member-right span {
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.quit-the-team {
+				width: 7.1rem;
+				height: 0.99rem;
+				border-radius: 0.1rem;
+				background-color: #2289ff;
+				padding: 0;
+				font-size: 0.3rem;
+				margin: 1rem auto 0.5rem;
+			}
+
+			/* 验证弹窗 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 996;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				background: rgba(0, 0, 0, 0.6);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+
+
+			.verift-body {
+				width: 80%;
+				background-color: #ffffff;
+				border-radius: 0.2rem;
+				position: relative;
+				overflow: hidden;
+				padding-top: 0.1rem;
+			}
+
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.verift-body textarea {
+				margin-bottom: 0;
+				border-color: #fefefe;
+				margin-bottom: 1px;
+				font-size: 0.3rem;
+			}
+
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 0.3rem 0.2rem;
+			}
+
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+
+			/* 团队名称编辑*/
+			.team-name-input {
+				font-size: 0.3rem;
+				color: #333333;
+				margin: 0.2rem 0 !important;
+			}
+		</style>
+
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">团队详情</h1>
+		</header>
+
+		<div id="mui-content" class="mui-content team-detail-container">
+			<div class="team-detail-header">
+				<div class="mui-clearfix">
+					<div class="mui-pull-left">
+						<span class="team-name">{{teamName}}</span>
+						<img v-if="role" src="../image/team-detail-img03.png" @tap="iseditName=!iseditName">
+					</div>
+					<img class="mui-pull-right" src="../image/team-detail-img04.png" alt="">
+				</div>
+				<p class="team-number">5968713</p>
+			</div>
+			<div class="notice-cont">
+				<h2 class="headline">
+					公告<img v-if="role" class="title-img" src="../image/team-detail-img02.png" @tap="showEdit">
+				</h2>
+				<p>{{desc}}</p>
+			</div>
+			<div class="team-members">
+				<h2 class="headline">团队成员<p class="mui-pull-right">共2人<span class="mui-icon mui-icon-arrowright"></span></p>
+				</h2>
+				<ul>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img member-selection">
+							<img type="image" src="../image/team-detail-img05.png" />
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="validation-messages" v-if="role">
+				<h2 class="headline">验证消息</h2>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<div class="member-left">
+							<img src="../image/kaol.jpg" alt="">
+							<div>
+								<p class="name">德莱厄斯</p>
+								<p>我是诺克萨斯力量的象征</p>
+							</div>
+						</div>
+						<div class="member-right">
+							<!-- <button type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button> -->
+							<!-- <button type="button" class="mui-btn mui-btn-blue">同意</button> -->
+							<!-- <span>已拒绝</span> -->
+							<span>已添加</span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="member-left">
+							<img src="../image/kaol.jpg" alt="">
+							<div>
+								<p class="name">德莱厄斯</p>
+								<p>我是诺克萨斯力量的象征</p>
+							</div>
+						</div>
+						<div class="member-right">
+							<button type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
+							<button type="button" class="mui-btn mui-btn-blue">同意</button>
+							<!-- <span>已拒绝</span> -->
+							<!-- <span>已添加</span> -->
+						</div>
+					</li>
+				</ul>
+			</div>
+			<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team">退出团队</button>
+			<!-- 公告编辑 -->
+			<div class="join-team-verify" v-if="iseditDesc">
+				<div class="verift-body">
+					<textarea rows="3" placeholder="请输入团队公告" v-model="conts" :value="desc"></textarea>
+					<div class="verift-footer">
+						<button type="button" class="mui-btn mui-btn-link close-verify-window" @tap="iseditDesc=!iseditDesc">取消</button>
+						<button type="button" class="mui-btn mui-btn-link send-verify" @tap="confirmEditor">确定</button>
+					</div>
+				</div>
+			</div>
+			<!-- 团队名称编辑 -->
+			<div class="join-team-verify" v-if="iseditName">
+				<div class="verift-body">
+					<input id="teamNames" :value="teamName" class="team-name-input" type="text" maxlength="12" placeholder="请输入团队名"
+					 style="border: none;">
+					<!-- <p>名字长度不超过十二个字</p> -->
+					<div class="verift-footer">
+						<button type="button" class="mui-btn mui-btn-link close-verify-window" @tap="iseditName=!iseditName">取消</button>
+						<button type="button" class="mui-btn mui-btn-link send-verify" @tap="confirmName">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		mui.plusReady(function() {})
+		var app = new Vue({
+			el: "#mui-content",
+			data() {
+				return {
+					desc: "队长页面有团队申请列表,可做同意和拒绝操作;首页展示团队信息(名看团队成员,可查看队友详情,可添加好友）",
+					teamName: "房东的猫",
+					iseditDesc: false,
+					iseditName: false,
+					conts: '',
+					role: 0
+				}
+			},
+			methods: {
+				showEdit: function() {
+					this.iseditDesc = true;
+					this.conts = this.desc;
+				},
+				confirmEditor: function() {
+					this.desc = this.conts;
+					this.iseditDesc = false;
+				},
+				confirmName: function() {
+					this.iseditName = false;
+					var inside = document.getElementById("teamNames").value;
+					this.teamName = inside;
+				}
+			}
+		})
+	</script>
+</html>

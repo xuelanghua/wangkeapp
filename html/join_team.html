@@ -102,7 +102,7 @@
 			.mui-pull-left span {
 				font-size: 0.3rem;
 				color: #333333;
-				
+
 			}
 
 			.mui-pull-left .num-cont {
@@ -113,7 +113,7 @@
 				color: #FFFFFF;
 				font-size: 0.2rem;
 				height: 0.29rem;
-				padding: 3px 5px;
+				padding: 0 5px;
 				overflow: hidden;
 				margin-left: 0.05rem;
 			}
@@ -142,6 +142,77 @@
 			.mui-table-view-cell {
 				padding-top: 0.3rem;
 			}
+
+			/* 验证弹窗 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 996;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				background: rgba(0, 0, 0, 0.6);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				display: none;
+			}
+
+
+			.verift-body {
+				width: 80%;
+				background-color: #ffffff;
+				border-radius: 0.2rem;
+				position: relative;
+				overflow: hidden;
+				padding-top: 0.1rem;
+			}
+
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.verift-body textarea {
+				margin-bottom: 0;
+				border-color: #fefefe;
+				margin-bottom: 1px;
+				font-size: 0.3rem;
+			}
+
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 0.3rem 0.2rem;
+			}
+
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
 		</style>
 	</head>
 
@@ -164,12 +235,12 @@
 						<div class="mui-pull-left">
 							<div class="team-section">
 								<span>奥飞的团队</span>
-								<span class="num-cont"><img src="../image/boos-team-img03.png" alt="">600人</span>
+								<span class="num-cont"><img src="../image/boos-team-img03.png" alt="">613人</span>
 							</div>
 							<p class="team-num">团队号:8370258</p>
 						</div>
 						<div class="mui-pull-right">
-							<button type="button" class="mui-btn mui-btn-outlined ">加入</button>
+							<button type="button" class="mui-btn mui-btn-outlined" onclick="join('12345')">加入</button>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
@@ -196,8 +267,16 @@
 							<button type="button" class="mui-btn mui-btn-outlined ">加入</button>
 						</div>
 					</li>
-
 				</ul>
+			</div>
+			<div class="join-team-verify">
+				<div class="verift-body">
+					<textarea rows="3" placeholder="请输入验证信息"></textarea>
+					<div class="verift-footer">
+						<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+						<button type="button" class="mui-btn mui-btn-link send-verify">发送</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
@@ -207,6 +286,7 @@
 		mui.init();
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
+		var teamid = '';
 		if (viewport > 750) {
 			viewport = 750
 		}
@@ -214,5 +294,24 @@
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
 		mui.plusReady(function() {})
+		// 创建团队
+		mui(".mui-bar").on("tap", ".create-team-btn", function() {
+			openPage('create_team.html', 'create_team', '#f7f7f7', '');
+		})
+		// 关闭验证弹窗
+		mui(".mui-content").on("tap", ".close-verify-window", function(e) {
+			mui(".join-team-verify")[0].style.display = "none";
+		})
+		// 发送验证
+		mui(".mui-content").on("tap", ".send-verify", function(e) {
+			message('请求的id:' + teamid);
+			mui(".join-team-verify")[0].style.display = "none";
+		})
+
+		function join(e) {
+			mui('.join-team-verify')[0].style.display = "flex";
+			teamid = e;
+			console.log(e);
+		}
 	</script>
 </html>

@@ -7,7 +7,114 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
-			
+			.create-team-container {
+				/* min-height: 100vh; */
+				background-color: #ffffff;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			input.team-name[type=text] {
+				width: 5.5rem;
+				border: none;
+				border-bottom: 1px solid #2289FF;
+				border-radius: 0;
+				margin-top: 1rem;
+				margin-bottom: 0.9rem;
+				text-align: center;
+				font-size: 0.35rem;
+				color:#333333;
+			}
+
+			input.team-name::-webkit-input-placeholder,
+			textarea::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.3rem;
+				text-align: center;
+			}
+
+			textarea::-webkit-input-placeholder {
+				text-align: justify;
+			}
+
+			.team-notice {
+				width: 5.5rem;
+				border-color: #2289FF;
+				border-radius: 0.1rem;
+				font-size: 0.3rem;
+				color: #333333;
+				padding: 0.15rem;
+				margin-bottom: 0.5rem;
+			}
+
+			.invite-team-members {
+				width: 100%;
+				display: block;
+				padding: 0.8rem 0.2rem;
+			}
+
+			.user-head-img {
+				width: 0.82rem;
+				height: 0.82rem;
+				overflow: hidden;
+				border-radius: 50%;
+			}
+
+			.user-head-img img {
+				width: 100%;
+				height: 100%;
+			}
+
+			.invite-team-members ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+				flex-direction: row;
+				flex-wrap: wrap;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			.invite-team-members h2 {
+				font-size: 0.3rem;
+				color: #333333;
+				font-weight: normal;
+				margin-bottom: 0.1rem;
+			}
+
+			.invite-team-members li {
+				display: inline-flex;
+				position: relative;
+				padding-top: 0.1rem;
+				padding-right: 0.1rem;
+				margin-right: 0.09rem;
+				margin-top: 0.2rem;
+			}
+
+			.invite-team-members li .mui-icon {
+				position: absolute;
+				right: 5px;
+				top: 5px;
+				color: #ffffff;
+				background-color: #f42d2d;
+				border-radius: 50%;
+				padding: 0;
+				font-size:14px;
+			}
+			.mui-btn{
+				width: 7.1rem;
+				height: 0.99rem;
+				border-radius: 0.1rem;
+				background-color: #2289ff;
+				padding: 0;
+				font-size: 0.3rem;
+				margin-top: 0.45rem;
+				margin-bottom: 0.45rem;
+			}
 		</style>
 	</head>
 
@@ -17,8 +124,68 @@
 			<h1 class="mui-title">创建团队</h1>
 		</header>
 
-		<div class="mui-content join-team-container">
-			创建团队
+		<div id="create-team" class="mui-content create-team-container">
+			<input class="team-name" type="text" name="" id="" value="" placeholder="填写团队名称（2~10个字）" />
+			<textarea class="team-notice" rows="6" cols="3" maxlength="150" placeholder="填写团队公告"></textarea>
+			<div class="invite-team-members">
+				<h2 class="title">邀请团队成员(7)</h2>
+				<ul>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img">
+							<img type="image" src="../image/bj.jpg" />
+						</div>
+						<span class="mui-icon mui-icon-closeempty"></span>
+					</li>
+					<li>
+						<div class="user-head-img member-selection">
+							<img type="image" src="../image/team-detail-img05.png" />
+						</div>
+					</li>
+				</ul>
+			</div>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block">提交</button>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -34,5 +201,9 @@
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
 		mui.plusReady(function() {})
+		
+		mui(".mui-content").on('tap','.member-selection',function(){
+			openPage('team_member_selection.html','team_member_selection','#f7f7f7','')
+		})
 	</script>
 </html>
