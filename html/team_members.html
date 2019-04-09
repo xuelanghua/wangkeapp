@@ -1,0 +1,407 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>团队成员</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.indexedlist.css" />
+		<style type="text/css">
+			html,
+			body {
+				height: 100%;
+				overflow: hidden;
+			}
+
+			.mui-bar {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+
+			#done.mui-disabled {
+				color: gray;
+			}
+
+			.create-team-btn {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				color: #2289ff;
+				font-size: 0.3rem;
+				position: relative;
+				z-index: 999;
+			}
+
+			.mui-indexed-list-bar {
+				top: 0.66rem;
+			}
+
+			.mui-indexed-list-search {
+				width: 100%;
+			}
+
+			.mui-indexed-list-search input {
+				width: 100%;
+				background-color: #f2f2f2;
+				border-radius: 6px;
+				color: #333333;
+				font-size: 0.3rem;
+			}
+
+			.mui-search .mui-placeholder {
+				color: #909090;
+				border-radius: 0;
+				text-align: left;
+				font-size: 0.3rem;
+			}
+
+			.mui-table-view-cell {
+				display: flex;
+				align-items: center;
+			}
+
+			.mui-table-view-cell img {
+				width: 0.78rem;
+				height: 0.78rem;
+				margin: 0 0.1rem;
+				border-radius: 50%;
+				overflow: hidden;
+			}
+
+			.mui-table-view-cell.mui-checkbox input[type=checkbox] {
+				position: relative;
+				top: 0;
+				left: 0;
+			}
+
+			.mui-table-view-cell.mui-checkbox.mui-left {
+				padding-left: 0.2rem;
+			}
+
+			.mui-checkbox input[type=checkbox]:checked:before,
+			.mui-radio input[type=radio]:checked:before {
+				color: #2889ff;
+			}
+
+			.mui-indexed-list-search {
+				margin-bottom: 0.1rem;
+				border-radius: 6px;
+				padding: 0 0.2rem;
+			}
+
+			.mui-search .mui-placeholder .mui-icon {
+				margin-left: 0.28rem;
+			}
+
+			.mui-search.mui-active:before {
+				margin-left: 0.18rem;
+				top: 16px;
+			}
+
+			#topPopover .mui-popover-arrow:after {
+				background: #333333;
+			}
+
+			#topPopover .mui-table-view-cell:after {
+				right: 10px;
+				left: 10px;
+			}
+
+			#topPopover .mui-table-view-cell {
+				font-size: 0.3rem;
+				padding: 0.25rem 0.5rem;
+			}
+
+			#topPopover .mui-table-view-cell.mui-active {
+				font-size: 0.3rem;
+				color: #ffffff;
+				background-color: #222222;
+			}
+
+			.operate-item {
+				font-size: 0.58rem;
+				color: #666666;
+			}
+
+			.cancel-btn {
+				color: #999999;
+			}
+
+			/* 解散弹窗 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 996;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				background: rgba(0, 0, 0, 0.6);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+
+
+			.verift-body {
+				width: 80%;
+				background-color: #ffffff;
+				border-radius: 0.2rem;
+				position: relative;
+				overflow: hidden;
+				padding-top: 0.1rem;
+			}
+			.verift-body .tips{
+				width: 100%;
+				padding: 0.4rem 0.2rem 0.3rem;
+				text-align: justify;
+			}
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 0.3rem 0.2rem;
+			}
+
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+			.add-member{
+				color: #323333;
+				font-size: 0.3rem;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<div id="mui-content">
+			<header class="mui-bar mui-bar-nav">
+				<a v-if="identity" class="mui-pull-left create-team-btn cancel-btn" @tap="cancelOperate">取消</a>
+				<div v-else class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+				<h1 class="mui-title">团队成员</h1>
+				<span v-show="iscaptain">
+					<span v-show="identity" class="mui-pull-right create-team-btn mui-disabled" id="done">删除</span>
+					<a v-show="!identity" class="mui-pull-right create-team-btn operate-item" href="#topPopover">···</a>
+				</span>
+				<a v-show="!iscaptain" class="mui-pull-right create-team-btn add-member" @tap="addMember">添加成员</a>
+			</header>
+
+			<div class="mui-content setting-container">
+				<div id='list' class="mui-indexed-list">
+					<div class="mui-indexed-list-search mui-input-row mui-search">
+						<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
+					</div>
+					<div class="mui-indexed-list-bar">
+						<a>A</a>
+						<a>B</a>
+						<a>C</a>
+						<a>D</a>
+						<a>E</a>
+						<a>F</a>
+						<a>G</a>
+						<a>H</a>
+						<a>I</a>
+						<a>J</a>
+						<a>K</a>
+						<a>L</a>
+						<a>M</a>
+						<a>N</a>
+						<a>O</a>
+						<a>P</a>
+						<a>Q</a>
+						<a>R</a>
+						<a>S</a>
+						<a>T</a>
+						<a>U</a>
+						<a>V</a>
+						<a>W</a>
+						<a>X</a>
+						<a>Y</a>
+						<a>Z</a>
+					</div>
+					<div class="mui-indexed-list-alert"></div>
+					<div class="mui-indexed-list-inner">
+						<div class="mui-indexed-list-empty-alert">没有数据</div>
+						<ul class="mui-table-view">
+							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">队长</li>
+							<li @tap="viewDetails" data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+								<img src="../image/kaol.jpg" alt="">
+								阿克苏机场
+							</li>
+							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
+							<li @tap="viewDetails" data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+								<input v-if="identity" type="checkbox" value="1" data-avatar="img/ijmll" />
+								<img src="../image/kaol.jpg" alt="">
+								阿克苏机场
+							</li>
+							<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
+							<li @tap="viewDetails" data-value="BLT" data-tags="bulaite" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+								<input v-if="identity" type="checkbox" value="2" data-avatar="img/ijml002" />
+								<img src="../image/kaol.jpg" alt="">
+								布莱特
+							</li>
+							<li @tap="viewDetails" data-value="AKU" data-tags="bushi" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+								<input v-if="identity" type="checkbox" value="3" data-avatar="img/ijml003" />
+								<img src="../image/kaol.jpg" alt="">
+								布施
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--右上角弹出菜单-->
+			<div id="topPopover" class="mui-popover">
+				<div class="mui-popover-arrow"></div>
+				<ul class="mui-table-view" style="background-color: #333333; color: #FFFFFF;">
+					<li class="mui-table-view-cell" @tap="delMember">
+						删除成员
+					</li>
+					<li class="mui-table-view-cell" @tap="addMember">
+						添加成员
+					</li>
+					<li class="mui-table-view-cell" @tap="dissolveTeam">
+						解散团队
+					</li>
+				</ul>
+			</div>
+			<!-- 解散通知 -->
+			<div class="join-team-verify" v-show="dissolve">
+				<div class="verift-body">
+					<div class="tips">
+						<span>解散团队后所有数据将一并清除，是否继续？</span>
+					</div>
+					<div class="verift-footer">
+						<button type="button" class="mui-btn mui-btn-link close-verify-window" @tap="dissolve=!dissolve">取消</button>
+						<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/mui.indexedlist.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		mui.plusReady(function() {})
+		var app = new Vue({
+			el: "#mui-content",
+			data() {
+				return {
+					identity: false,
+					dissolve:false,
+					iscaptain:true
+				}
+			},
+			methods: {
+				cancelOperate: function() {
+					this.identity = false;
+				},
+				delMember: function() {
+					this.identity = true;
+					mui('#topPopover').popover('hide');
+				},
+				dissolveTeam:function(){
+					mui('#topPopover').popover('hide');
+					this.dissolve=true;
+				},
+				addMember:function(){
+					mui('#topPopover').popover('hide');
+					openPage('team_member_selection.html','team_member_selection','#f7f7f7','');
+				},
+				viewDetails:function(cid){
+					if(this.identity==false){
+						openPage('friends_detail.html','friends_detail','#f7f7f7',{
+							// cid:cid
+							cid:1
+						});
+					}else{
+						
+					}
+				}
+			},
+			mounted: function() {
+				mui.ready(function() {
+					var header = document.querySelector('header.mui-bar');
+					var list = document.getElementById('list');
+					var done = document.getElementById('done');
+					//calc hieght
+					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+					//create
+					window.indexedList = new mui.IndexedList(list);
+					//done event
+					done.addEventListener('tap', function() {
+						var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
+						var checkedValues = [];
+						var checkedAvatar = [];
+						checkboxArray.forEach(function(box) {
+							if (box.checked) {
+								// 获取id
+								checkedValues.push(box.value);
+								// 获取头像地址
+								checkedAvatar.push(box.dataset.avatar);
+
+							}
+						});
+						if (checkedValues.length > 0) {
+							mui.alert('你选择了: ' + checkedValues + '头像地址：' + checkedAvatar);
+						} else {
+							mui.alert('你没选择任何机场');
+						}
+					}, false);
+					mui('.mui-indexed-list-inner').on('change', 'input', function() {
+						var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+						var value = count ? "删除(" + count + ")" : "删除";
+						done.innerHTML = value;
+						if (count) {
+							if (done.classList.contains("mui-disabled")) {
+								done.classList.remove("mui-disabled");
+							}
+						} else {
+							if (!done.classList.contains("mui-disabled")) {
+								done.classList.add("mui-disabled");
+							}
+						}
+					});
+				});
+			}
+		})
+	</script>
+</html>
