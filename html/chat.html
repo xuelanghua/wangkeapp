@@ -824,9 +824,64 @@
 					openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
 					plus.navigator.setStatusBarStyle("dark");
 				})
+				// 客户crm头像跳转
+				mui('.mui-table-view').on('tap', '.crm-user-head', function() {
+					var cid = this.dataset.id;
+					var type = this.dataset.type;
+					console.log(type);
+					if (type == 'crm') {
+						var from = this.dataset.from;
+						if (from == 1) {
+							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
+						} else {
+							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
+						}
+					} else if (type == 'friend') {
+						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+							fid: cid
+						})
+					}
+				})
 				// 客户crm跳转
-				mui('.mui-table-view').on('tap', '.customer-head-img', function() {
-					
+				mui('.mui-table-view').on('tap', '.crm-left-cont', function() {
+					var cid = this.dataset.id,
+						avatar = this.dataset.avatar,
+						type = this.dataset.type,
+						chatName = this.dataset.name,
+						from = this.dataset.from;
+					if (from == 1) {
+						fnOpenWin('dialog.html', 'dialog', {
+							statusbar: {
+								background: '#F7F7F7'
+							}
+						}, {
+							cid: cid,
+							chatName: chatName,
+							avatar: avatar,
+							barStyle: 'light'
+						}, 'slide-in-right');
+						plus.navigator.setStatusBarStyle('dark');
+					} else {
+						fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+							statusbar: {
+								background: '#2289FF'
+							}
+						}, {
+							cid: cid
+						}, 'slide-in-right');
+					}
 				})
 			}
 
@@ -867,12 +922,15 @@
 										'" data-id="' + list[i].id + '">';
 									temp += '<div class="mui-pull-left head-portrait">';
 									if (list[i].headimgurl.length == 0) {
-										temp += '<img class="user-head-img" src="../image/user_default.png">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="../image/user_default.png">';
 									} else {
-										temp += '<img class="user-head-img" src="' + list[i].headimgurl + '">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="' + list[i].headimgurl + '">';
 									}
 									temp += '</div>';
-									temp += '<div class="mui-pull-right content user-left-cont">';
+									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
 									temp += '<div>';
 									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
 									temp += '<span>' + list[i].name + '</span>';
@@ -918,13 +976,17 @@
 									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
 										'" data-id="' + list[i].id + '">';
 									temp += '<div class="mui-pull-left head-portrait">';
+
 									if (list[i].headimgurl.length == 0) {
-										temp += '<img  class="user-head-img" src="../image/user_default.png">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="../image/user_default.png">';
 									} else {
-										temp += '<img  class="user-head-img" src="' + list[i].headimgurl + '">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="' + list[i].headimgurl + '">';
 									}
 									temp += '</div>';
-									temp += '<div class="mui-pull-right content user-left-cont">';
+									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
 									temp += '<div>';
 									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
 									temp += '<span>' + list[i].name + '</span>';
@@ -971,12 +1033,15 @@
 										'" data-id="' + list[i].id + '">';
 									temp += '<div class="mui-pull-left head-portrait">';
 									if (list[i].headimgurl.length == 0) {
-										temp += '<img src="../image/user_default.png">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="../image/user_default.png">';
 									} else {
-										temp += '<img src="' + list[i].headimgurl + '">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="' + list[i].headimgurl + '">';
 									}
 									temp += '</div>';
-									temp += '<div class="mui-pull-right content">';
+									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
 									temp += '<div>';
 									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
 									temp += '<span>' + list[i].name + '</span>';
@@ -1023,12 +1088,15 @@
 										'" data-id="' + list[i].id + '">';
 									temp += '<div class="mui-pull-left head-portrait">';
 									if (list[i].headimgurl.length == 0) {
-										temp += '<img src="../image/user_default.png">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="../image/user_default.png">';
 									} else {
-										temp += '<img src="' + list[i].headimgurl + '">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="' + list[i].headimgurl + '">';
 									}
 									temp += '</div>';
-									temp += '<div class="mui-pull-right content">';
+									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
 									temp += '<div>';
 									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
 									temp += '<span>' + list[i].name + '</span>';
@@ -1075,12 +1143,15 @@
 										'" data-id="' + list[i].id + '">';
 									temp += '<div class="mui-pull-left head-portrait">';
 									if (list[i].headimgurl.length == 0) {
-										temp += '<img src="../image/user_default.png">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="../image/user_default.png">';
 									} else {
-										temp += '<img src="' + list[i].headimgurl + '">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="' + list[i].headimgurl + '">';
 									}
 									temp += '</div>';
-									temp += '<div class="mui-pull-right content">';
+									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
 									temp += '<div>';
 									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
 									temp += '<span>' + list[i].name + '</span>';
@@ -1125,12 +1196,15 @@
 										'" data-id="' + list[i].id + '">';
 									temp += '<div class="mui-pull-left head-portrait">';
 									if (list[i].headimgurl.length == 0) {
-										temp += '<img src="../image/user_default.png">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="../image/user_default.png">';
 									} else {
-										temp += '<img src="' + list[i].headimgurl + '">';
+										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+											'" src="' + list[i].headimgurl + '">';
 									}
 									temp += '</div>';
-									temp += '<div class="mui-pull-right content">';
+									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
+										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
 									temp += '<div>';
 									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
 									temp += '<span>' + list[i].name + '</span>';
@@ -1182,13 +1256,16 @@
 									'" data-id="' + list[i].id + '">';
 								html += '<div class="mui-pull-left head-portrait">';
 								if (list[i].headimgurl.length == 0) {
-									html += '<img src="../image/user_default.png">';
+									html += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+										'" src="../image/user_default.png">';
 								} else {
-									html += '<img src="' + list[i].headimgurl + '">';
+									html += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
+										'" src="' + list[i].headimgurl + '">';
 								}
 
 								html += '</div>';
-								html += '<div class="mui-pull-right content">';
+								html += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
+									'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
 								html += '<div>';
 								html += '<span class="mui-pull-left" style="font-size: 15px;">';
 								html += '<span>' + list[i].name + '</span>';
@@ -1325,6 +1402,7 @@
 			function timeInterval() {
 				timer = window.setInterval('getCustomerList()', 20000);
 			}
+
 			function clearTimeInterval() {
 				window.clearInterval(timer);
 			}
