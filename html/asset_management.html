@@ -6,6 +6,7 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" type="text/css" rel="stylesheet" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
 		<link href="../icomoon/style.css" type="text/css" rel="stylesheet"/>
 		<style>
 			body {
@@ -512,8 +513,6 @@
 	</head>
 
 	<body>
-
-
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">资产管理</h1>
@@ -541,12 +540,12 @@
 					<div class="balance mui-left mui-pull-left">
 						<div class="income-title">
 							<p>余额(元)</p>
-							<div class="nr">0.00</div>
+							<div class="nr">{{ balance }}</div>
 						</div>
 						<div class="function_button">
-							<button class="mui-pull-left">充值</button>
+							<button class="mui-pull-left" id="recharge">充值</button>
 							<div class="recharge"></div>
-							<button class="mui-pull-right money">提现</button>
+							<button class="mui-pull-right money" id="cash">提现</button>
 							<div class="clearfix"></div>
 						</div>
 					</div>
@@ -554,9 +553,9 @@
 					<div class="mui-right mui-pull-right tug">
 						<div class="income-title">
 							<p>旺旺</p>
-							<div class="nr">0</div>
+							<div class="nr">{{ wang }}</div>
 						</div>
-						<button>兑换</button>
+						<button id="exchange">兑换</button>
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -565,13 +564,13 @@
 			<div class="Detailed">
 				<div class="example">
 					<div class="hd">
-						<li class="current">
+						<li class="current" data-type="balance">
 							<span>
 								<span class="icon-money"></span>
 								<span>余额</span>
 							</span>
 						</li>
-						<li>
+						<li data-type="wang">
 							<span>
 								<span class="icon-wangwang"></span>
 								<span>旺旺</span>
@@ -580,237 +579,103 @@
 						<div class="clearfix"></div>
 					</div>
 					<div class="bd">
-						<li class="current">
+						<li class="current" data-type="balance">
 							<div class="more">
 								<div class="moreL mui-left mui-pull-left">
-									<div style="font-size: 15px;color: #333333;">
-										2018-10
-										<div class="xiatu mui-icon mui-icon-arrowdown"></div>
-									</div>
+									<div style="font-size: 15px;color: #333333;">{{ date }}</div>
 									<span class="income">
 										<span>收入 ￥</span>
-										<span>4,500</span>
+										<span>{{ income }}</span>
 									</span>
 									<span class="income" style="margin-left: 15px;">
 										<span>支出 ￥</span>
-										<span>4,500</span>
+										<span>{{ expend }}</span>
 									</span>
 								</div>
 								<div class="mui-pull-right screen">
 									<div class="xian"></div>
-									<div class="screenR">
-										<div class="mui-pull-left">筛选</div>
+									<div class="screenR" id="balance_more">
+										<div class="mui-pull-left">更多</div>
 										<div class="mui-icon mui-icon-arrowright"></div>
 										<div class="clearfix"></div>
 									</div>
 								</div>
 								<div class="clearfix"></div>
 							</div>
-
-							<div class="Detailed1">
-								<div class="Detailed1l mui-pull-left">
-									<img src="../image/detailed1.png" alt="">
-								</div>
-								<div class="Detailed1r mui-pull-right">
-									<div class="Detailed1rl mui-pull-left">
-										<div style="font-size: 14px;">广告收益</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-											<span>10月15</span>
-											<span>18:20</span>
+							<template v-for="(blog, key, index) in balanceLog" :key="key">
+								<div class="Detailed1">
+									<div class="Detailed1l mui-pull-left">
+										<img v-if="blog.type==1" src="../image/detailed1.png" alt="">
+										<img v-else-if="blog.type==2" src="../image/detailed2.png" alt="">
+										<img v-else-if="blog.type==3" src="../image/detailed3.png" alt="">
+										<img v-else-if="blog.type==4" src="../image/detailed4.png" alt="">
+										<img v-else-if="blog.type==5" src="../image/detailed5.png" alt="">
+										<img v-else-if="blog.type==6" src="../image/detailed6.png" alt="">
+									</div>
+									<div class="Detailed1r mui-pull-right">
+										<div class="Detailed1rl mui-pull-left">
+											<div style="font-size: 14px;">{{ blog.remark }}</div>
+											<div style="font-size: 12px;color: #BDBDBD;">
+												<span>{{ blog.create_time_str }}</span>
+											</div>
+										</div>
+										<div class="Detailed1rr mui-pull-right" style="padding-right: 10px;">
+											<div style="font-size: 15px;color: #E62C2C;font-weight: 600;">
+												<span v-if="blog.number > 0">+{{ blog.number }}</span>
+												<span v-else>{{ blog.number }}</span>
+											</div>
+											<!-- <div style="font-size: 12px;color: #BDBDBD;">
+												曝光1000次
+											</div> -->
 										</div>
 									</div>
-									<div class="Detailed1rr mui-pull-right" style="padding-right: 10px;">
-										<div style="font-size: 15px;color: #E62C2C;font-weight: 600;">
-											<span>+</span>
-											<span>10,000</span>
-										</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-											曝光1000次
-										</div>
-									</div>
+									<div class="clearfix"></div>
 								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="Detailed1">
-								<div class="Detailed1l mui-pull-left">
-									<img src="../image/detailed2.png" alt="">
-								</div>
-								<div class="Detailed1r mui-pull-right">
-									<div class="Detailed1rl mui-pull-left">
-										<div style="font-size: 14px;">店铺收入</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-											<span>10月15</span>
-											<span>18:20</span>
-										</div>
-									</div>
-									<div class="Detailed1rr mui-pull-right" style="padding-right: 10px;">
-										<div style="font-size: 15px;color: #E62C2C;font-weight: 600;">
-											<span>+</span>
-											<span>150</span>
-										</div>
-
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="Detailed1">
-								<div class="Detailed1l mui-pull-left">
-									<img src="../image/detailed3.png" alt="">
-								</div>
-								<div class="Detailed1r mui-pull-right">
-									<div class="Detailed1rl mui-pull-left">
-										<div style="font-size: 14px;">收款二维码</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-											<span>10月15</span>
-											<span>18:20</span>
-										</div>
-									</div>
-									<div class="Detailed1rr mui-pull-right" style="padding-right: 10px;">
-										<div style="font-size: 15px;color: #E62C2C;font-weight: 600;">
-											<span>+</span>
-											<span>400</span>
-										</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-
-										</div>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="Detailed1">
-								<div class="Detailed1l mui-pull-left">
-									<img src="../image/detailed4.png" alt="">
-								</div>
-								<div class="Detailed1r mui-pull-right">
-									<div class="Detailed1rl mui-pull-left">
-										<div style="font-size: 14px;">提现</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-											<span>10月15</span>
-											<span>18:20</span>
-										</div>
-									</div>
-									<div class="Detailed1rr mui-pull-right" style="padding-right: 10px;">
-										<div style="font-size: 15px;color: #3BB324;font-weight: 600;">
-											<span>-</span>
-											<span>500</span>
-										</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-
-										</div>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="Detailed1">
-								<div class="Detailed1l mui-pull-left">
-									<img src="../image/detailed5.png" alt="">
-								</div>
-								<div class="Detailed1r mui-pull-right">
-									<div class="Detailed1rl mui-pull-left">
-										<div style="font-size: 14px;">推广金提现</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-											<span>10月15</span>
-											<span>18:20</span>
-										</div>
-									</div>
-									<div class="Detailed1rr mui-pull-right" style="padding-right: 10px;">
-										<div style="font-size: 15px;color: #000000;font-weight: 600;">
-											<span>-</span>
-											<span>500</span>
-										</div>
-										<div style="font-size: 12px;color: #FF8324;">
-											审核中
-										</div>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="Detailed1">
-								<div class="Detailed1l mui-pull-left">
-									<img src="../image/detailed5.png" alt="">
-								</div>
-								<div class="Detailed1r mui-pull-right">
-									<div class="Detailed1rl mui-pull-left">
-										<div style="font-size: 14px;">推广金充值</div>
-										<div style="font-size: 12px;color: #BDBDBD;">
-											<span>10月15</span>
-											<span>18:20</span>
-										</div>
-									</div>
-									<div class="Detailed1rr mui-pull-right" style="padding-right: 10px;">
-										<div style="font-size: 15px;color: #F5CA3A;font-weight: 600;">
-											<span>-</span>
-											<span>500</span>
-										</div>
-										<div style="font-size: 12px;color: #FF8324;">
-
-										</div>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
+							</template>
 						</li>
-						<li>
-							<div class="wangwang_title">
+						<li data-type="wang">
+							<div class="more">
+								<div class="moreL mui-left mui-pull-left" style="margin-top: 17px;">
+									旺旺收入 {{profit}}
+								</div>
+								<div class="mui-pull-right screen">
+									<div class="xian"></div>
+									<div class="screenR" id="wang_more">
+										<div class="mui-pull-left">更多</div>
+										<div class="mui-icon mui-icon-arrowright"></div>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							<!-- <div class="wangwang_title">
 								<span>累计分红收益</span>
 								<span style="color: #ED3F32;">258元</span>
-							</div>
-							<div class="wangwang_obtain">
-								<div class="mui-pull-left">
-									<img src="../image/obtain1.png">
-								</div>
-								<div class="wangwang_obtainR mui-pull-right">
-									<div class="wangwang_explain">
-										<span>会员激活(创客)</span>
-										<span class="mui-pull-right" style="font-size: 15px;color: #E62C2C;">+10,000</span>
+							</div> -->
+							<template v-for="(wlog, key, index) in wangLog" :key="key">
+								<div class="wangwang_obtain">
+									<div class="mui-pull-left">
+										<img v-if="wlog.type==1" src="../image/obtain1.png">
+										<img v-else-if="wlog.type==2" src="../image/obtain2.png">
+										<img v-else-if="wlog.type==3" src="../image/obtain2.png">
 									</div>
-									<div class="wangwang_date">
-										<span>10月15</span>
-										<span>18:20</span>
+									<div class="wangwang_obtainR mui-pull-right">
+										<div class="wangwang_explain">
+											<span>{{ wlog.remark }}</span>
+											<span class="mui-pull-right" style="font-size: 15px;color: #E62C2C;">+{{ wlog.number }}</span>
+										</div>
+										<div class="wangwang_date">
+											<span>{{ wlog.create_time_str }}</span>
+										</div>
 									</div>
+									<div class="clearfix"></div>
 								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="wangwang_obtain">
-								<div class="mui-pull-left">
-									<img src="../image/obtain2.png">
-								</div>
-								<div class="wangwang_obtainR mui-pull-right">
-									<div class="wangwang_explain">
-										<span>签到</span>
-										<span class="mui-pull-right" style="font-size: 15px;color: #E62C2C;">+150</span>
-									</div>
-									<div class="wangwang_date">
-										<span>10月15</span>
-										<span>18:20</span>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="wangwang_obtain">
-								<div class="mui-pull-left">
-									<img src="../image/obtain3.png">
-								</div>
-								<div class="wangwang_obtainR mui-pull-right">
-									<div class="wangwang_explain">
-										<span>分红</span>
-										<span class="mui-pull-right" style="font-size: 15px;color: #3BB324;">-10,150</span>
-									</div>
-									<div class="wangwang_date">
-										<span>10月15</span>
-										<span>18:20</span>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="tips">系统仅展示最近30天的收益</div>
+							</template>
+							<!-- <div class="tips">系统仅展示最近30天的收益</div> -->
 						</li>
 					</div>
 				</div>
-
 			</div>
-
-		</div>
 
 		<!-- 筛选 -->
 		<div id="cover"></div>
@@ -855,44 +720,120 @@
 				<button class="qd">确 定</button>
 			</div>
 		</div>
-
 	</body>
 	<script src="../js/mui.js"></script>
-	<script src="../plugins/jquery-3.1.1.slim.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script>
-		mui.init()
-		var hd = document.getElementsByClassName("hd")[0].getElementsByTagName("li");
-		var bd = document.getElementsByClassName("bd")[0].getElementsByTagName("li");
-		for (var i = 0; i < hd.length; i++) {
-			hd[i].onclick = function() {
-				doTabs(this);
-			}
-		}
-
-		function doTabs(obj) {
-			for (var i = 0; i < hd.length; i++) {
-				if (hd[i] == obj) {
-					hd[i].className = "current";
-					bd[i].className = "current";
-				} else {
-					hd[i].className = "";
-					bd[i].className = "";
+		mui.init({
+			swipeBack: true
+		})
+		
+		var userInfo = getUserInfo();
+		var vm = new Vue({
+			el: '.mui-content',
+			data() {
+				return {
+					balance: userInfo.balance,
+					wang: userInfo.wang,
+					date: formatDate('y-m', ''),
+					type: 1,
+					expend: 0,
+					income: 0,
+					profit: 0,
+					balanceLog: null,
+					wangLog: null
 				}
+			},
+			mounted: function() {
+				mui.plusReady(function () {
+				    eventInit();
+					getUserBalanceLog();
+					getUserWangLog();
+				})
 			}
-		}
-
-		/* 筛选 */
-		$(document).ready(function() {
-			$("#cover").click(function() {
-				$(".screent").hide();
-				$(this).hide;
-				$("#cover").hide();
-			});
-			$(".screen").click(function() {
-				$(".screent").show();
-				$(this).show;
-				$("#cover").show();
+		})
+		
+		//事件初始化
+		function eventInit() {
+			mui('.hd').on('tap', 'li', function() {
+				var type = this.dataset.type;
+				if (type == 'wang') {
+					document.querySelector('.hd li[data-type=balance]').classList.remove('current');
+					document.querySelector('.bd li[data-type=balance]').classList.remove('current');
+					document.querySelector('.bd li[data-type=wang]').classList.add('current');
+				} else {
+					document.querySelector('.hd li[data-type=wang]').classList.remove('current');
+					document.querySelector('.bd li[data-type=wang]').classList.remove('current');
+					document.querySelector('.bd li[data-type=balance]').classList.add('current');
+				}
+				this.classList.add('current');
 			})
-		});
+			
+			mui('.mui-content').on('tap', '#exchange', function() {
+				message('旺旺可用于年终分红!', 'center');
+			})
+			
+			mui('.mui-content').on('tap', '#recharge', function() {
+				message('充值!', 'center');
+			})
+			
+			mui('.mui-content').on('tap', '#cash', function() {
+				message('提现!', 'center');
+			})
+			
+			mui('.mui-content').on('tap', '#balance_more', function() {
+				message('查看更多余额!', 'center');
+			})
+			
+			mui('.mui-content').on('tap', '#wang_more', function() {
+				message('查看更多旺旺!', 'center');
+			})
+		}
+		
+		//获取用户余额日志
+		function getUserBalanceLog() {
+			mui.get($ajaxUrl  + 'member', {
+					action: 'balance_log',
+					token: userInfo.token,
+					type: vm.type,
+					date: vm.date,
+					skip: 1,
+					limit: 30
+				}, function(res) {
+					if (res.errno == 0) {
+						var balanceData = res.data;
+						for (var index in balanceData) {
+							vm.expend = balanceData[index].expend;
+							vm.income = balanceData[index].income;
+							vm.balanceLog = balanceData[index].list;
+							break;
+						}
+					}
+				}, 'json'
+			);
+		}
+		
+		//获取用户余额日志
+		function getUserWangLog() {
+			mui.get($ajaxUrl  + 'member', {
+					action: 'wang_log',
+					token: userInfo.token,
+					date: vm.date,
+					skip: 1,
+					limit: 30
+				}, function(res){
+					if (res.errno == 0) {
+						var wangData = res.data;
+						for (var key in wangData) {
+							vm.profit = wangData[key].income;
+							vm.wangLog = wangData[key].list;
+							break;
+						}
+					}
+				}, 'json'
+			);
+		}
 	</script>
 </html>
