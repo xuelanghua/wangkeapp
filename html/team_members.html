@@ -151,11 +151,13 @@
 				overflow: hidden;
 				padding-top: 0.1rem;
 			}
-			.verift-body .tips{
+
+			.verift-body .tips {
 				width: 100%;
 				padding: 0.4rem 0.2rem 0.3rem;
 				text-align: justify;
 			}
+
 			.verift-footer:before {
 				content: '';
 				display: block;
@@ -194,7 +196,8 @@
 				transform: scaleX(0.5);
 				-webkit-transform: scaleX(0.5);
 			}
-			.add-member{
+
+			.add-member {
 				color: #323333;
 				font-size: 0.3rem;
 			}
@@ -312,6 +315,8 @@
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		mui.init();
+		var userInfo = getUserInfo();
+		var tid = '';
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -326,8 +331,8 @@
 			data() {
 				return {
 					identity: false,
-					dissolve:false,
-					iscaptain:true
+					dissolve: false,
+					iscaptain: true
 				}
 			},
 			methods: {
@@ -338,26 +343,30 @@
 					this.identity = true;
 					mui('#topPopover').popover('hide');
 				},
-				dissolveTeam:function(){
+				dissolveTeam: function() {
 					mui('#topPopover').popover('hide');
-					this.dissolve=true;
+					this.dissolve = true;
 				},
-				addMember:function(){
+				addMember: function() {
 					mui('#topPopover').popover('hide');
-					openPage('team_member_selection.html','team_member_selection','#f7f7f7','');
+					openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', '');
 				},
-				viewDetails:function(cid){
-					if(this.identity==false){
-						openPage('friends_detail.html','friends_detail','#f7f7f7',{
+				viewDetails: function(cid) {
+					if (this.identity == false) {
+						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
 							// cid:cid
-							cid:1
+							cid: 1
 						});
-					}else{
-						
+					} else {
+
 					}
 				}
 			},
 			mounted: function() {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					tid = self.tid;
+				});
 				mui.ready(function() {
 					var header = document.querySelector('header.mui-bar');
 					var list = document.getElementById('list');
@@ -402,6 +411,15 @@
 					});
 				});
 			}
+		})
+		mui('.join-team-verify').on("tap", ".send-verify", function() {
+			mui.post($ajaxUrl + 'team&action=delete', {
+				token: userInfo.token,
+				team_id: tid
+			}, function(res) {
+				app.dissolve = false;
+				message(res.message);			
+			}, 'json');
 		})
 	</script>
 </html>

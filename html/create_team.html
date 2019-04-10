@@ -8,7 +8,6 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
 			.create-team-container {
-				/* min-height: 100vh; */
 				background-color: #ffffff;
 				display: flex;
 				flex-direction: column;
@@ -20,11 +19,11 @@
 				border: none;
 				border-bottom: 1px solid #2289FF;
 				border-radius: 0;
-				margin-top: 1rem;
-				margin-bottom: 0.9rem;
+				margin-top: 0.9rem;
+				margin-bottom: 0.8rem;
 				text-align: center;
 				font-size: 0.35rem;
-				color:#333333;
+				color: #333333;
 			}
 
 			input.team-name::-webkit-input-placeholder,
@@ -103,9 +102,10 @@
 				background-color: #f42d2d;
 				border-radius: 50%;
 				padding: 0;
-				font-size:14px;
+				font-size: 14px;
 			}
-			.mui-btn{
+
+			.mui-btn {
 				width: 7.1rem;
 				height: 0.99rem;
 				border-radius: 0.1rem;
@@ -125,8 +125,8 @@
 		</header>
 
 		<div id="create-team" class="mui-content create-team-container">
-			<input class="team-name" type="text" name="" id="" value="" placeholder="填写团队名称（2~10个字）" />
-			<textarea class="team-notice" rows="6" cols="3" maxlength="150" placeholder="填写团队公告"></textarea>
+			<input class="team-name" type="text" v-model="teamName" placeholder="填写团队名称（2~10个字）" />
+			<textarea class="team-notice" rows="6" cols="3" v-model="notice" maxlength="150" placeholder="填写团队公告"></textarea>
 			<div class="invite-team-members">
 				<h2 class="title">邀请团队成员(7)</h2>
 				<ul>
@@ -185,25 +185,52 @@
 					</li>
 				</ul>
 			</div>
-			<button type="button" class="mui-btn mui-btn-blue mui-btn-block">提交</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="create-team">提交</button>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		mui.init();
+		var userInfo = getUserInfo();
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		mui.plusReady(function() {})
-		
-		mui(".mui-content").on('tap','.member-selection',function(){
-			openPage('team_member_selection.html','team_member_selection','#f7f7f7','')
+		var app = new Vue({
+			el: '#create-team',
+			data() {
+				return {
+					headImg: [],
+					uids: ["8"],
+					teamName: '',
+					notice: ''
+				}
+			},
+			created: function() {},
+			mounted: function() {
+				document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+				document.addEventListener('combination', function(e) {
+					console.log(e);
+				});
+			}
+		})
+		mui(".mui-content").on('tap', '.member-selection', function() {
+			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', '')
+		})
+		mui(".mui-content").on('tap', '#create-team', function() {
+			mui.post($ajaxUrl + 'team&action=create', {
+				name: app.teamName,
+				notice: app.notice,
+				uids: app.uids,
+				token: userInfo.token
+			}, function(data) {
+				logs(data);
+			}, 'json');
 		})
 	</script>
 </html>

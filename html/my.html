@@ -441,7 +441,7 @@
 				// 重写返回
 				var first = null;
 				mui.back = function() {
-					if (!first) { 
+					if (!first) {
 						first = (new Date()).getTime();
 						mui.toast('再按一次退出应用');
 						setTimeout(function() {
@@ -464,30 +464,44 @@
 				window.addEventListener('signSuccess', function() {
 					getMemberInfo();
 				})
-				
+
 				//商城首页
 				mui('.mui-content').on('tap', '#shop', function() {
-// 					var activation = checkMember();
-// 					if (activation) {
-						fnOpenWin('shop_index.html', 'shop_index', {
-							statusbar: {
-								background: '#F7F7F7'
-							}
-						}, {
-							page: 'my'
-						}, 'slide-in-right');
-						setStatusBar('', 'dark');
+					// 					var activation = checkMember();
+					// 					if (activation) {
+					fnOpenWin('shop_index.html', 'shop_index', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						page: 'my'
+					}, 'slide-in-right');
+					setStatusBar('', 'dark');
 					// }
 				})
-				
+
 				//boss 
 				mui('.mui-content').on('tap', '#boss', function() {
-					fnOpenWin('webview.html', 'webview', {
-						statusbar: {
-							background: '#FFF'
+					mui.post($ajaxUrl + 'team&action=team_info', {
+						token: userInfo.token
+					}, function(res) {
+						if (res.errno == 0) {
+							fnOpenWin('webview.html', 'webview', {
+								statusbar: {
+									background: '#FFF'
+								}
+							}, {
+								title: 'boss',
+								statusBarStyle: 'light',
+								url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=1&m=longbing_card'
+							}, 'slide-in-right');
+							setStatusBar('', 'dark');
+						} else {
+							openPage('boss_team.html', 'boss_team', '#f7f7f7', '')
 						}
-					}, {title: 'boss', statusBarStyle: 'light', url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=1&m=longbing_card'}, 'slide-in-right');
-					setStatusBar('', 'dark');
+					}, 'json');
+					
+					// openPage('boss_team.html', 'boss_team', '#f7f7f7', '')
 				})
 
 				//目标
@@ -518,7 +532,7 @@
 				mui('.mui-content').on('tap', '.Notice', function() {
 					noticeDeail();
 				})
-				
+
 				// 雷达页面
 				mui('.mui-content').on('tap', '#data_statistics', function() {
 					openPage('data_statistics.html', 'data_statistics', '#ffffff', '');
@@ -530,18 +544,18 @@
 					openPage('red_packet.html', 'red_packet', '#f7f7f7', '');
 					setStatusBar('', 'dark');
 				})
-				
+
 				// 资产管理
 				mui('.mui-content').on('tap', '#asset_management', function() {
 					openPage('asset_management.html', 'asset_management', '#2289ff', '');
 				})
-				
+
 				// 名片管理
 				mui('.mui-content').on('tap', '#card_manage', function() {
 					openPage('card_manage.html', 'card_manage', '#f7f7f7', '');
 					setStatusBar('', 'dark');
 				})
-				
+
 				// 数据统计
 				mui('.mui-content').on('tap', '#dat_statistics', function() {
 					// 激活码使用情况
@@ -700,8 +714,8 @@
 				}
 			})
 			// 跳转到设置
-			mui("#header").on("tap","#setting-btn",function(){
-				openPage('setting.html','setting','#f7f7f7','');
+			mui("#header").on("tap", "#setting-btn", function() {
+				openPage('setting.html', 'setting', '#f7f7f7', '');
 				plus.navigator.setStatusBarStyle('dark');
 			})
 		</script>

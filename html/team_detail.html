@@ -300,7 +300,7 @@
 					</div>
 					<img class="mui-pull-right team-qrCode" src="../image/team-detail-img04.png" alt="">
 				</div>
-				<p class="team-number">5968713</p>
+				<p class="team-number">{{tid}}</p>
 			</div>
 			<div class="notice-cont">
 				<h2 class="headline">
@@ -309,56 +309,13 @@
 				<p>{{desc}}</p>
 			</div>
 			<div class="team-members">
-				<h2 class="headline">团队成员<p class="mui-pull-right">共2人<span class="mui-icon mui-icon-arrowright"></span></p>
+				<h2 class="headline">团队成员<p class="more-member mui-pull-right">共2人<span class="mui-icon mui-icon-arrowright"></span></p>
 				</h2>
 				<ul>
-					<li>
+					<li v-for="(items,index) in teamMember" :key="index">
 						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
+							<img :src="items.avatarUrl" />
 						</div>
-						<span class="mui-icon mui-icon-closeempty"></span>
-					</li>
-					<li>
-						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
-						</div>
-						<span class="mui-icon mui-icon-closeempty"></span>
-					</li>
-					<li>
-						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
-						</div>
-						<span class="mui-icon mui-icon-closeempty"></span>
-					</li>
-					<li>
-						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
-						</div>
-						<span class="mui-icon mui-icon-closeempty"></span>
-					</li>
-					<li>
-						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
-						</div>
-						<span class="mui-icon mui-icon-closeempty"></span>
-					</li>
-					<li>
-						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
-						</div>
-						<span class="mui-icon mui-icon-closeempty"></span>
-					</li>
-					<li>
-						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
-						</div>
-						<span class="mui-icon mui-icon-closeempty"></span>
-					</li>
-					<li>
-						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
-						</div>
-						<span class="mui-icon mui-icon-closeempty"></span>
 					</li>
 					<li>
 						<div class="user-head-img member-selection">
@@ -369,12 +326,12 @@
 			</div>
 			<div class="validation-messages" v-if="role">
 				<h2 class="headline">验证消息</h2>
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell">
+				<ul v-if="applyList.lenght>0" class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(list,index) in applyList" :key="index">
 						<div class="member-left">
 							<img src="../image/kaol.jpg" alt="">
 							<div>
-								<p class="name">德莱厄斯</p>
+								<p class="name">{{applyList}}</p>
 								<p>我是诺克萨斯力量的象征</p>
 							</div>
 						</div>
@@ -385,22 +342,10 @@
 							<span>已添加</span>
 						</div>
 					</li>
-					<li class="mui-table-view-cell">
-						<div class="member-left">
-							<img src="../image/kaol.jpg" alt="">
-							<div>
-								<p class="name">德莱厄斯</p>
-								<p>我是诺克萨斯力量的象征</p>
-							</div>
-						</div>
-						<div class="member-right">
-							<button type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
-							<button type="button" class="mui-btn mui-btn-blue">同意</button>
-							<!-- <span>已拒绝</span> -->
-							<!-- <span>已添加</span> -->
-						</div>
-					</li>
 				</ul>
+				<div v-else style="width: 100%;margin: 0.6rem 0;text-align: center;color: #999999;">
+					暂无验证消息
+				</div>
 			</div>
 			<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team">退出团队</button>
 			<!-- 公告编辑 -->
@@ -416,7 +361,7 @@
 			<!-- 团队名称编辑 -->
 			<div class="join-team-verify" v-if="iseditName">
 				<div class="verift-body">
-					<input id="teamNames" :value="teamName" class="team-name-input" type="text" maxlength="12" placeholder="请输入团队名"
+					<input id="teamNames" :value="teamName" v-model="newTeamName" class="team-name-input" type="text" maxlength="12" placeholder="请输入团队名"
 					 style="border: none;">
 					<!-- <p>名字长度不超过十二个字</p> -->
 					<div class="verift-footer">
@@ -432,6 +377,7 @@
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		mui.init();
+		var userInfo = getUserInfo();
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -445,13 +391,20 @@
 			el: "#mui-content",
 			data() {
 				return {
-					desc: "队长页面有团队申请列表,可做同意和拒绝操作;首页展示团队信息(名看团队成员,可查看队友详情,可添加好友）",
-					teamName: "房东的猫",
+					desc: '',
+					teamName: '',
 					iseditDesc: false,
 					iseditName: false,
 					conts: '',
-					role: 0
+					role: 1,
+					tid: '',
+					teamMember: [],
+					applyList: [],
+					newTeamName:''
 				}
+			},
+			created: function() {
+				getInfo();
 			},
 			methods: {
 				showEdit: function() {
@@ -459,18 +412,92 @@
 					this.conts = this.desc;
 				},
 				confirmEditor: function() {
-					this.desc = this.conts;
-					this.iseditDesc = false;
+					mui.post($ajaxUrl + 'team&action=edit_notice', {
+						token: userInfo.token,
+						team_id:this.tid,
+						notice:this.conts
+					}, function(res) {
+						if (res.errno == 0) {
+							app.iseditDesc = false;
+							getInfo();
+						}
+					}, 'json');
 				},
 				confirmName: function() {
-					this.iseditName = false;
-					var inside = document.getElementById("teamNames").value;
-					this.teamName = inside;
+					mui.post($ajaxUrl + 'team&action=edit_name', {
+						token: userInfo.token,
+						team_id:this.tid,
+						name:this.newTeamName
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							app.iseditName = false;
+							getInfo();
+						}
+					}, 'json');
 				}
 			}
 		})
-		mui(".mui-content").on("tap",".team-qrCode",function(){
-			openPage('team_qr_code.html','team_qr_code','#f7f7f7','');
+		mui(".mui-content").on("tap", ".team-qrCode", function() {
+			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', '');
 		})
+		// 添加团队成员
+		mui(".mui-content").on("tap", ".member-selection", function() {
+			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', '');
+		})
+		// 更多成员
+		mui(".mui-content").on("tap", ".more-member", function() {
+			openPage('team_members.html', 'team_members', '#f7f7f7', {
+				tid:app.tid
+			});
+		})
+		function getInfo(){
+			// 获取团队信息
+			mui.post($ajaxUrl + 'team&action=team_info', {
+				token: userInfo.token
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					app.teamName = res.data.name;
+					app.desc = res.data.notice;
+					app.tid = res.data.id;
+					var captainId = res.data.captain_uid;
+					if (userInfo.id == captainId) {
+						app.role = 1;
+					} else {
+						app.role = 0;
+					}
+				}
+			}, 'json');
+			// 获取团队成员以及申请列表
+			var timer = setInterval(function() {
+				mui.post($ajaxUrl + 'team&action=member_list', {
+					token: userInfo.token,
+					team_id: app.tid
+				}, function(res) {
+					if (res.errno == 0) {
+						app.teamMember = res.data;
+					} else {
+						// app.teamMember=[];
+					}
+				}, 'json');
+				// 申请列表
+				mui.post($ajaxUrl + 'team&action=apply_list', {
+					token: userInfo.token,
+					team_id: app.tid
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.applyList = res.data;
+					} else {
+						app.applyList = [];
+						// message(res.message);
+					}
+				}, 'json');
+				if (app.tid) {
+					clearInterval(timer);
+				}
+			}, 1000);
+		}
 	</script>
 </html>

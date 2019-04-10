@@ -8,12 +8,25 @@
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/public.css" rel="stylesheet" />
 		<link href="../css/signin.css" rel="stylesheet" />
+		<style type="text/css">
+			.team-detail{
+				height: 100%;
+				display: flex;
+				align-items: center;
+				font-size: 14px;
+				color: #333333;
+				padding: 0 10px;
+				position: relative;
+				z-index: 999;
+			}
+		</style>
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;box-shadow: none;">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #000000;"></div>
 			<h1 class="mui-title" style="color: #000000;"></h1>
+			<span class="team-detail mui-pull-right">团队详情</span>
 		</header>
 		<div id="container">
 			
@@ -38,6 +51,9 @@
 				document.querySelector('.mui-title').innerText = title;
 				
 				fnOpenWin(url, '', {top: offsetTop, bottom: 0, progress: {color:'#2289FF', height: '2px'}}, '');
+			})
+			mui(".mui-bar-nav").on("tap",".team-detail",function(){
+				openPage('team_detail.html','team_detail','#f7f7f7','');
 			})
 		</script>
 	</body>

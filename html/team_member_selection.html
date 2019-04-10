@@ -93,7 +93,8 @@
 			.mui-search .mui-placeholder .mui-icon {
 				margin-left: 0.28rem;
 			}
-			.mui-search.mui-active:before{
+
+			.mui-search.mui-active:before {
 				margin-left: 0.18rem;
 				top: 16px;
 			}
@@ -104,7 +105,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">成员选择</h1>
-			<span class="mui-pull-right create-team-btn" id="done">确定</span>
+			<span class="mui-pull-right create-team-btn mui-disabled" id="done">确定</span>
 		</header>
 
 		<div class="mui-content setting-container">
@@ -144,23 +145,26 @@
 				<div class="mui-indexed-list-inner">
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-						<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-							<input type="checkbox" value="1" data-avatar="img/ijmll" />
-							<img src="../image/kaol.jpg" alt="">
-							阿克苏机场
-						</li>
-						<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
+						<template v-for="(vel,key,i) in lists" :key="i">
+							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
+							<li data-value="AKU" data-tags="AKeSu" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+								<input type="checkbox" :value="items.uid" :data-avatar="items.avatarUrl" />
+								<img :src="items.avatarUrl" alt="头像">
+								<span>{{items.name}}</span>
+							</li>
+						</template>
+						<!-- <li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
 						<li data-value="BLT" data-tags="bulaite" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
 							<input type="checkbox" value="2" data-avatar="img/ijml002" />
 							<img src="../image/kaol.jpg" alt="">
 							布莱特
 						</li>
+
 						<li data-value="AKU" data-tags="bushi" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
 							<input type="checkbox" value="3" data-avatar="img/ijml003" />
 							<img src="../image/kaol.jpg" alt="">
 							布施
-						</li>
+						</li> -->
 					</ul>
 				</div>
 			</div>
@@ -169,59 +173,92 @@
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/mui.indexedlist.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		mui.init();
+		var userInfo = getUserInfo();
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-		// 初始化字体大小结束
-		mui.plusReady(function() {})
-		mui.ready(function() {
-			var header = document.querySelector('header.mui-bar');
-			var list = document.getElementById('list');
-			var done = document.getElementById('done');
-			//calc hieght
-			list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
-			//create
-			window.indexedList = new mui.IndexedList(list);
-			//done event
-			done.addEventListener('tap', function() {
-				var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
-				var checkedValues = [];
-				var checkedAvatar = [];
-				checkboxArray.forEach(function(box) {
-					if (box.checked) {
-						// 获取id
-						checkedValues.push(box.value);
-						// 获取头像地址
-						checkedAvatar.push(box.dataset.avatar);
-
+		var app = new Vue({
+			el: "#list",
+			data() {
+				return {
+					lists: {}
+				}
+			},
+			created: function() {
+				mui.post($ajaxUrl + 'customer', {
+					action: 'list',
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.lists = res.data.friend;
 					}
+				}, 'json')
+			},
+			mounted: function() {
+				mui.plusReady(function() {})
+				mui.ready(function() {
+					var header = document.querySelector('header.mui-bar');
+					var list = document.getElementById('list');
+					var done = document.getElementById('done');
+					//calc hieght
+					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+					//create
+					window.indexedList = new mui.IndexedList(list);
+					//done event
+					done.addEventListener('tap', function() {
+						var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
+						var checkedValues = [];
+						var checkedAvatar = [];
+						checkboxArray.forEach(function(box) {
+							if (box.checked) {
+								// 获取id
+								checkedValues.push(box.value);
+								// 获取头像地址
+								checkedAvatar.push(box.dataset.avatar);
+							}
+						});
+						if (checkedValues.length > 0) {
+							// var pageId;
+							// if (pageId) {
+							// var pageId = plus.webview.getWebviewById('create_team.html');
+							var pageId = plus.webview.currentWebview().opener().id;
+							// }
+							// console.log(pageId);
+							mui.fire(pageId, 'combination', {
+								id: "123",
+								lngs: "lng",
+								lats: "lat",
+								addresss: "address"
+							});
+							// mui.back();
+						} else {
+							mui.alert('你没选择任何成员');
+						}
+					}, false);
+					mui('.mui-indexed-list-inner').on('change', 'input', function() {
+						var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+						var value = count ? "完成(" + count + ")" : "完成";
+						done.innerHTML = value;
+						if (count) {
+							if (done.classList.contains("mui-disabled")) {
+								done.classList.remove("mui-disabled");
+							}
+						} else {
+							if (!done.classList.contains("mui-disabled")) {
+								done.classList.add("mui-disabled");
+							}
+						}
+					});
 				});
-				if (checkedValues.length > 0) {
-					mui.alert('你选择了: ' + checkedValues + '头像地址：' + checkedAvatar);
-				} else {
-					mui.alert('你没选择任何机场');
-				}
-			}, false);
-			mui('.mui-indexed-list-inner').on('change', 'input', function() {
-				var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
-				var value = count ? "完成(" + count + ")" : "完成";
-				done.innerHTML = value;
-				if (count) {
-					if (done.classList.contains("mui-disabled")) {
-						done.classList.remove("mui-disabled");
-					}
-				} else {
-					if (!done.classList.contains("mui-disabled")) {
-						done.classList.add("mui-disabled");
-					}
-				}
-			});
-		});
+				document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			}
+		})
 	</script>
 </html>
