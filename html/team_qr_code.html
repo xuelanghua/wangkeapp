@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>团队二维码</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.team-qr-code {
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				padding-top: 44px;
+				background-color: #2889FF;
+				overflow: hidden;
+			}
+
+			.qr-code-body {
+				width: 6rem;
+				height: 7.4rem;
+				position: relative;
+				border-radius: 0.1rem;
+				margin: 1.2rem auto;
+				background: #FFFFFF url("../image/scana-qr-bottom-bg.png")center bottom no-repeat;
+				background-size: contain;
+				overflow: hidden;
+				padding: 0.3rem 0;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.qr-code-body h2 {
+				font-size: 0.35rem;
+				color: #323333;
+				font-weight: normal;
+				margin: 0 0.2rem 0.1rem;
+			}
+
+			.qr-code-body p {
+				margin: 0.2rem;
+				font-size: 0.3rem;
+				color: #999999;
+			}
+
+
+			.qr-code-body .qr-img {
+				width: 4.2rem;
+				height: 4.2rem;
+				margin: 0.3rem auto 0.3rem;
+				align-self: center;
+			}
+
+			.qr-code-body .logo-img {
+				width: 1.24rem;
+				height: auto;
+				align-self: center;
+			}
+
+			.linellae {
+				width: 100%;
+				overflow: hidden;
+				text-align: justify;
+				display: flex;
+				align-items: center;
+			}
+
+			.line {
+				border-top: 1px dashed #999999;
+				width: 100%;
+				height: 0;
+			}
+
+			.left-semicircle,
+			.right-semicircle {
+				width: 0.15rem;
+				height: 0.3rem;
+				background-color: #2889FF;
+				border-radius: 0 0.3rem 0.3rem 0;
+			}
+
+			.right-semicircle {
+				border-radius: 0.3rem 0 0 0.3rem;
+			}
+
+			.operation-section {
+				width: 100%;
+				padding: 0 0.53rem;
+				display: flex;
+			}
+
+			.operation-section .mui-btn,
+			.operation-section .mui-btn:active {
+				flex-grow: 1;
+				margin: 0 0.2rem;
+				height: 0.79rem;
+				border-radius: 0.1rem;
+				color: #333333;
+				background-color: #FFFFFF;
+				outline: none;
+				border: none;
+			}
+
+			.operation-section .mui-btn-outlined,
+			.operation-section .mui-btn-outlined:active {
+				color: #ffffff;
+				background-color: rgba(255, 255, 255, 0);
+				border: 1px solid #ffffff;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">团队二维码</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="team-qr-code">
+				<div class="qr-code-body">
+					<h2>肖飞的团队</h2>
+					<p>扫二维码加入团队</p>
+					<div class="linellae">
+						<div class="left-semicircle"></div>
+						<div class="line"></div>
+						<div class="right-semicircle"></div>
+					</div>
+					<img class="qr-img" src="../image/scan-qr.png">
+					<img class="logo-img" src="../image/wangkelogo.png">
+				</div>
+				<div class="operation-section">
+					<button type="button" class="mui-btn mui-btn-outlined">保存到手机</button>
+					<button type="button" class="mui-btn ">分享二维码</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		mui.plusReady(function() {})
+	</script>
+</html>

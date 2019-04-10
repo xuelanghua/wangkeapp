@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>付款</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.payment-content {
+				width: 7.1rem;
+				height: 6rem;
+				background-color: #FFFFFF;
+				margin: 0.52rem auto;
+				padding: 0.3rem;
+				border-radius: 0.1rem;
+			}
+
+			.payment-header {
+				margin-bottom: 0.88rem;
+			}
+
+			.payment-header img {
+				width: 0.9rem;
+				height: 0.9rem;
+				overflow: hidden;
+				border-radius: 50%;
+			}
+
+			.payment-content p {
+				font-size: 0.24rem;
+				color: #999999;
+				margin: 0;
+			}
+
+			.payment-content h2 {
+				font-weight: normal;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.payment-body {
+				position: relative;
+				display: flex;
+				align-items: baseline;
+				padding-bottom: 2px;
+				margin-top: 0.3rem;
+			}
+
+			.payment-body::after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+
+			}
+
+			.payment-content .payment-body .pay-money {
+				border: none;
+				border-radius: 0;
+				margin-bottom: 0;
+				padding: 0 0.1rem 0;
+				height: 25px;
+				line-height: 1.2;
+			}
+
+			.cny-unit {
+				font-size: 0.4rem;
+				color: #333333;
+			}
+
+			.mui-btn-blue {
+				margin-top: 0.69rem;
+				height: 0.9rem;
+				border-radius: 0.1rem;
+				padding: 0;
+				font-size: 0.3rem;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">付款</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="payment-content">
+				<div class="payment-header mui-clearfix">
+					<div class="mui-pull-left">
+						<h2>付款给</h2>
+						<p>刘备备</p>
+					</div>
+					<div class="mui-pull-right">
+						<img src="../image/kaol.jpg" alt="">
+					</div>
+				</div>
+				<p>金额</p>
+				<div class="payment-body">
+					<span class="cny-unit">&yen;</span>
+					<!-- 如果有金额就不允许修改 -->
+					<input class="pay-money" type="number" value="256" disabled="disabled">
+				</div>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block">付款</button>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		mui.plusReady(function() {})
+	</script>
+</html>
