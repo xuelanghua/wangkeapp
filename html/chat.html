@@ -472,9 +472,10 @@
 				<div class="newly_added">
 					<div id="segmentedControl" class="mui-segmented-control">
 						<a class="mui-control-item mui-active" href="#item1">新增客户</a>
-						<a class="mui-control-item" href="#item2">跟进中</a>
-						<a class="mui-control-item" href="#item3">高意向</a>
-						<a class="mui-control-item" href="#item4">成交</a>
+						<a class="mui-control-item" href="#item2">推荐锁定</a>
+						<a class="mui-control-item" href="#item3">跟进中</a>
+						<a class="mui-control-item" href="#item4">高意向</a>
+						<a class="mui-control-item" href="#item5">成交</a>
 					</div>
 				</div>
 				<div class="list-container">
@@ -482,6 +483,7 @@
 					<div id="item2" class="mui-control-content"></div>
 					<div id="item3" class="mui-control-content"></div>
 					<div id="item4" class="mui-control-content"></div>
+					<div id="item5" class="mui-control-content"></div>
 				</div>
 			</div>
 		</div>
@@ -1362,13 +1364,20 @@
 								if (list[i].is_boss == 1) {
 									html += '<span><img src="../image/bosi1.png" ></span>';
 								}
-								html += '<span class="customer_information_name">' + list[i].name + '</span>';
+								html += '<span class="customer_information_name">' + (list[i].name || list[i].nickName) + '</span>';
 								html += '</div>';
-								html += '<div class="mui-pull-right" style="color: #6A6A6A;">' + list[i].last_time + '前</div>';
+								if (index != 'recommend') {
+									html += '<div class="mui-pull-right" style="color: #6A6A6A;">' + list[i].last_time + '前</div>';
+								}
 								html += '<div class="clearfix"></div>';
 								html += '</div>';
 								html += '<div style="font-size: 12px;margin-top: 8px;">';
-								html += '<span class="mui-pull-left">' + list[i].count + '次互动</span>';
+								if (index != 'recommend') {
+									html += '<span class="mui-pull-left">' + list[i].count + '次互动</span>';
+								} else {
+									html += '<span class="mui-pull-left">' + list[i].create_time + '</span>';
+								}
+								
 								if (index == 'new') {
 									html += '<span class="mui-pull-right"style="color: #4C7ABD;">进行中</span>';
 								} else if (index == 'follow') {
@@ -1377,6 +1386,8 @@
 									html += '<span class="mui-pull-right"style="color: #4C7ABD;">高意向</span>';
 								} else if (index == 'deal') {
 									html += '<span class="mui-pull-right"style="color: #4C7ABD;">完成</span>';
+								} else if (index == 'recommend') {
+									html += '<span class="mui-pull-right"style="color: #4C7ABD;">' + list[i].end_time + '</span>';
 								}
 								html += '</div>';
 								html += '</div>';
@@ -1388,19 +1399,21 @@
 						}
 						if (index == 'new') {
 							document.getElementById('item1').innerHTML = html;
-						} else if (index == 'follow') {
+						} else if (index == 'recommend') {
 							document.getElementById('item2').innerHTML = html;
-						} else if (index == 'intention') {
+						} else if (index == 'follow') {
 							document.getElementById('item3').innerHTML = html;
-						} else if (index == 'deal') {
+						} else if (index == 'intention') {
 							document.getElementById('item4').innerHTML = html;
+						} else if (index == 'deal') {
+							document.getElementById('item5').innerHTML = html;
 						}
 					}
 				}
 			}
 
 			function timeInterval() {
-				timer = window.setInterval('getCustomerList()', 20000);
+				timer = window.setInterval('getCustomerList()', 30000);
 			}
 
 			function clearTimeInterval() {
