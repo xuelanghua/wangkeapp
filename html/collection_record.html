@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>收款记录</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<style type="text/css">
+			.mui-table-view::before,
+			.mui-table-view::after {
+				height: 0;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0;
+			}
+
+			.mui-table-view-cell.record-title {
+				background-color: #f2f2f2;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.2rem;
+			}
+
+			.mui-table-view-cell.record-title .desc {
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.mui-table-view-cell.record-title .mui-icon {
+				font-size: 0.38rem;
+				color: #333333;
+			}
+
+			.mui-table-view-cell.record-title:after {
+				height: 0;
+			}
+
+			.mui-table-view-cell .mui-btn,
+			.mui-table-view-cell .mui-btn:active {
+				position: relative;
+				right: 0;
+				-webkit-transform: translateY(0);
+				transform: translateY(0);
+				border: none;
+				background: transparent;
+				font-size: 0.3rem;
+				color: #333333;
+				padding-right: 0;
+				padding-left: 0;
+			}
+
+			.time-screen {
+				display: flex;
+				align-items: center;
+			}
+
+			.mui-table-view-cell.items {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.3rem 0.2rem;
+			}
+
+			.mui-table-view-cell.items img {
+				width: 0.78rem;
+				height: 0.78rem;
+				border-radius: 50%;
+				flex-shrink: 0;
+			}
+
+			.mui-table-view-cell.items::after {
+				left: 1.2rem;
+				background-color: #dddddd;
+			}
+
+			.name-timer {
+				flex-grow: 1;
+				padding-left: 0.2rem;
+			}
+
+			.mui-table-view-cell .user-name {
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.mui-table-view-cell .money {
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.clinch-time {
+				font-size: 0.24rem;
+				color: #999999;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">收款记录</h1>
+		</header>
+
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell record-title">
+					<div class="time-screen">
+						<button data-options="{&quot;type&quot;:&quot;month&quot;}" class="btn mui-btn">2018-10</button>
+						<span class="mui-icon mui-icon-arrowdown"></span>
+					</div>
+					<span class="desc">收款50笔，合计258.01元</span>
+				</li>
+				<li class="mui-table-view-cell items">
+					<img src="../image/kaol.jpg">
+					<div class="name-timer">
+						<p class="user-name">小飞飞</p>
+						<p class="clinch-time">10月25日 12：58</p>
+					</div>
+					<span class="money">&yen;50.00</span>
+				</li>
+				<li class="mui-table-view-cell items">
+					<img src="../image/kaol.jpg">
+					<div class="name-timer">
+						<p class="user-name">小飞飞</p>
+						<p class="clinch-time">10月25日 12：58</p>
+					</div>
+					<span class="money">&yen;50.00</span>
+				</li>
+				<li class="mui-table-view-cell record-title">
+					<div class="time-screen">
+						<button data-options="{&quot;type&quot;:&quot;month&quot;}" class="btn mui-btn">2018-10</button>
+						<span class="mui-icon mui-icon-arrowdown"></span>
+					</div>
+					<span class="desc">收款50笔，合计258.01元</span>
+				</li>
+				<li class="mui-table-view-cell items">
+					<img src="../image/kaol.jpg">
+					<div class="name-timer">
+						<p class="user-name">小飞飞</p>
+						<p class="clinch-time">10月25日 12：58</p>
+					</div>
+					<span class="money">&yen;50.00</span>
+				</li>
+				<li class="mui-table-view-cell items">
+					<img src="../image/kaol.jpg">
+					<div class="name-timer">
+						<p class="user-name">小飞飞</p>
+						<p class="clinch-time">10月25日 12：58</p>
+					</div>
+					<span class="money">&yen;50.00</span>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		mui.plusReady(function() {});
+		
+		var btns = mui('.mui-btn');
+		btns.each(function(i, btn) {
+			btn.addEventListener('tap', function() {
+				var _self = this;
+				if (_self.picker) {
+					_self.picker.show(function(rs) {
+						btn.innerText=rs.text;
+						_self.picker.dispose();
+						_self.picker = null;
+					});
+				} else {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+					var options = JSON.parse(optionsJson);
+					_self.picker = new mui.DtPicker(options);
+					_self.picker.show(function(rs) {
+						btn.innerText=rs.text;
+						_self.picker.dispose();
+						_self.picker = null;
+					});
+				}
+			}, false);
+		})
+	</script>
+</html>
