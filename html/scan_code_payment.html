@@ -95,26 +95,29 @@
 				<div class="payment-header mui-clearfix">
 					<div class="mui-pull-left">
 						<h2>付款给</h2>
-						<p>刘备备</p>
+						<p>{{ nickname }}</p>
 					</div>
 					<div class="mui-pull-right">
-						<img src="../image/kaol.jpg" alt="">
+						<img :src="avatar" alt="">
 					</div>
 				</div>
 				<p>金额</p>
 				<div class="payment-body">
 					<span class="cny-unit">&yen;</span>
 					<!-- 如果有金额就不允许修改 -->
-					<input class="pay-money" type="number" value="256" disabled="disabled">
+					<input class="pay-money" type="number" v-model="fee" :value="fee" :disabled="disable">
 				</div>
-				<button type="button" class="mui-btn mui-btn-blue mui-btn-block">付款</button>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">付款</button>
 			</div>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
-		mui.init();
+		mui.init({
+			swipeBack: true
+		});
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -123,6 +126,128 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		mui.plusReady(function() {})
+		
+		//支付相关变量
+		var payType = 'wxpay';
+		var wxChannel = null; // 微信支付
+		var aliChannel = null; // 支付宝支付
+		var channel = null; //支付通道
+		var ALIPAYSERVER = $ajaxUrl + 'member&action=receipt';
+		var WXPAYSERVER = $ajaxUrl + 'member&action=receipt';
+		
+		var userInfo = getUserInfo();
+		var vm = new Vue({
+			el: '.mui-content',
+			data() {
+				return {
+					fee: 0,
+					user_id: 0,
+					nickname: '',
+					avatar: '',
+					disable: true
+				}
+			},
+			mounted: function() {
+				mui.plusReady(function() {
+					// 获取支付通道  
+					plus.payment.getChannels(function(channels) {
+						for (var i in channels) {
+							if (channels[i].id == "wxpay") {
+								wxChannel = channels[i];
+							} else {
+								aliChannel = channels[i];
+							}
+						}
+					}, function(e) {
+						plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
+					});
+					
+					var self = plus.webview.currentWebview();
+					vm.fee = parseInt(self.fee);
+					vm.user_id = parseInt(self.uid);
+					if (self.fee == 0) {
+						vm.disable = false;
+					}
+					getPaymentUserInfo();
+					
+					//支付
+					mui('.mui-content').on('tap', '.mui-pay', function() {
+						pay(payType);
+					})
+				})
+			}
+		})
+		
+		//获取收款用户信息
+		function getPaymentUserInfo() {
+			mui.get($ajaxUrl + 'member', {
+					action: 'user_info',
+					user_id: vm.user_id,
+					token: userInfo.token
+				}, function(res){
+					if (res.errno == 0) {
+						vm.nickname = res.data.nickName;
+						if (typeof res.data.name != "undefined") {
+							vm.nickname += '(' + res.data.name + ')';
+						}
+						vm.avatar = res.data.avatar || res.data.avatarUrl;
+					}
+				}, 'json'
+			);
+		}
+		
+		// 2. 发起支付请求  
+		function pay(id) {
+			// 从服务器请求支付订单
+			var PAYSERVER = '';
+			if (id == 'alipay') {
+				message("暂不支持支付宝支付!", 'center');
+				return;
+				PAYSERVER = ALIPAYSERVER;
+				channel = aliChannel;
+			} else if (id == 'wxpay') {
+				PAYSERVER = WXPAYSERVER;
+				channel = wxChannel;
+			} else {
+				message("不支持此支付通道!", 'center');
+				return;
+			}
+		
+			var waiting = plus.nativeUI.showWaiting();
+			mui.post(PAYSERVER, {
+				fee: vm.fee,
+				pay_type: payType,
+				token: userInfo.token,
+				to_uid: vm.user_id
+			}, function(res) {
+				// console.log(JSON.stringify(res));
+				waiting.close();
+				if (res.errno == 0) {
+					var data = res.data;
+					var param = {
+						appid: data.appid,
+						noncestr: data.nonce_str,
+						package: 'Sign=WXPay',
+						partnerid: data.mch_id,
+						prepayid: data.prepay_id,
+						timestamp: data.timeStamp,
+						sign: data.paySign
+					};
+		
+					plus.payment.request(channel, param, function(result) {
+						//                  	console.log(JSON.stringify(result));
+						plus.nativeUI.alert("支付成功！", function() {
+							plus.navigator.setStatusBarStyle('dark');
+							mui.back();
+						});
+					}, function(error) {
+						console.log(JSON.stringify(error));
+						plus.nativeUI.alert("支付失败：" + error.code);
+					});
+				} else {
+					plus.nativeUI.alert(res.message, null, '提示');
+				}
+			}, 'json') 
+		}
 	</script>
 </html>

@@ -96,8 +96,6 @@
 
 			function onmarked(type, result) { //回调
 				if(result) {
-					console.log(type);
-					console.log(result);
 					scan.close();
 					var param = parseUrl(result);
 					var Sparam = JSON.stringify(param);
@@ -111,12 +109,26 @@
 						var type = param.type;
 						if (type == 'receipt') {
 							fnCloseWin('scan');
-							fnOpenWin('payment.html', 'payment', {statusbar: {background: '#f7f7f7'}}, {
+							fnOpenWin('scan_code_payment.html', 'scan_code_payment', {statusbar: {background: '#f7f7f7'}}, {
 								uid: param.uid,
 								fee: param.fee
 							}, 'slide-in-right');
 							setStatusBar('', 'dark');
 						}
+					} else if (result.indexOf('http') != -1) {
+						mui.get($ajaxUrl + 'util',{
+								action: 'url_title'
+							},function(res){
+								fnOpenWin('webview.html', 'webview', {
+									statusbar: {
+										background: '#FFF'
+									}
+								}, {title: res.data, statusBarStyle: 'light', url: result}, 'slide-in-right');
+								setStatusBar('', 'dark');
+							},'json'
+						);
+					} else {
+						message('扫描失败!', 'center');
 					}
 				}
 			}
