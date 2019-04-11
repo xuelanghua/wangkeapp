@@ -201,6 +201,19 @@
 				color: #323333;
 				font-size: 0.3rem;
 			}
+
+			.mui-backdrop {
+				background-color: transparent;
+			}
+
+			.operate-item,
+			#done,
+			.add-member {
+				padding: 0 0.2rem;
+				margin-right: -0.2rem;
+				position: relative;
+				z-index: 999;
+			}
 		</style>
 	</head>
 
@@ -254,28 +267,23 @@
 					<div class="mui-indexed-list-inner">
 						<div class="mui-indexed-list-empty-alert">没有数据</div>
 						<ul class="mui-table-view">
-							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">队长</li>
-							<li @tap="viewDetails" data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<img src="../image/kaol.jpg" alt="">
-								阿克苏机场
-							</li>
-							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-							<li @tap="viewDetails" data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input v-if="identity" type="checkbox" value="1" data-avatar="img/ijmll" />
-								<img src="../image/kaol.jpg" alt="">
-								阿克苏机场
-							</li>
-							<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
-							<li @tap="viewDetails" data-value="BLT" data-tags="bulaite" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input v-if="identity" type="checkbox" value="2" data-avatar="img/ijml002" />
-								<img src="../image/kaol.jpg" alt="">
-								布莱特
-							</li>
-							<li @tap="viewDetails" data-value="AKU" data-tags="bushi" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input v-if="identity" type="checkbox" value="3" data-avatar="img/ijml003" />
-								<img src="../image/kaol.jpg" alt="">
-								布施
-							</li>
+							<template v-for="(items,key,index) in userList" :key="index">
+								<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">队长</li>
+								<li v-if="list.is_captain==1" :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" @tap="viewDetails(list.uid)"
+								 class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+									<img :src="list.avatar?list.avatar:list.avatarUrl" alt="">
+									<span>{{list.name}}</span>
+								</li>
+							</template>
+							<template v-for="(items,key,index) in userList" :key="index">
+								<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
+								<li v-if="list.is_captain==0" :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" @tap="viewDetails(list.uid)"
+								 class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+									<input v-if="identity" type="checkbox" :value="list.uid" :data-avatar="list.avatarUrl?list.avatarUrl:list.avatar" />
+									<img :src="list.avatarUrl?list.avatarUrl:list.avatar" alt="">
+									<span>{{list.name}}</span>
+								</li>
+							</template>
 						</ul>
 					</div>
 				</div>
@@ -332,7 +340,9 @@
 				return {
 					identity: false,
 					dissolve: false,
-					iscaptain: true
+					iscaptain: true,
+					userData: userInfo,
+					userList: {}
 				}
 			},
 			methods: {
@@ -354,8 +364,7 @@
 				viewDetails: function(cid) {
 					if (this.identity == false) {
 						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-							// cid:cid
-							cid: 1
+							fid: cid
 						});
 					} else {
 
@@ -366,6 +375,7 @@
 				mui.plusReady(function() {
 					var self = plus.webview.currentWebview();
 					tid = self.tid;
+					getUserData();
 				});
 				mui.ready(function() {
 					var header = document.querySelector('header.mui-bar');
@@ -390,7 +400,23 @@
 							}
 						});
 						if (checkedValues.length > 0) {
-							mui.alert('你选择了: ' + checkedValues + '头像地址：' + checkedAvatar);
+							// logs(JSON.stringify(checkedValues));
+							var checkedValues=['1','2','3']
+							b = checkedValues.join(',');
+							logs(b);
+							mui.post($ajaxUrl + 'team&action=delete_member', {
+								token: userInfo.token,
+								team_id: tid,
+								uids: JSON.stringify(checkedValues)
+							}, function(res) {
+								logs(res);
+								if(res.errno==0){
+									message(res.message);
+									app.identity=false;
+									getUserData();
+								}
+							}, 'json');
+							// mui.alert('你选择了: ' + checkedValues + '头像地址：' + checkedAvatar);
 						} else {
 							mui.alert('你没选择任何机场');
 						}
@@ -418,8 +444,21 @@
 				team_id: tid
 			}, function(res) {
 				app.dissolve = false;
-				message(res.message);			
+				message(res.message);
 			}, 'json');
 		})
+
+		function getUserData() {
+			mui.post($ajaxUrl + 'team&action=member_list', {
+				token: userInfo.token,
+				team_id:tid,
+				type:1
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					app.userList = res.data;
+				}
+			}, 'json');
+		}
 	</script>
 </html>

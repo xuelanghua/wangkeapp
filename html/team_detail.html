@@ -441,14 +441,12 @@
 					}, 'json');
 				},
 				examine:function(status,userId){
-					// message(userId);
 					mui.post($ajaxUrl + 'team&action=check', {
 						token: userInfo.token,
 						team_id: app.tid,
 						user_id:userId,
 						status:status
 					}, function(res) {
-						logs(res);
 						if (res.errno == 0) {
 							message(res.message);
 							getInfo();
@@ -467,7 +465,6 @@
 						token: userInfo.token,
 						team_id: app.tid
 					}, function(res) {
-						// logs(res);
 						if (res.errno == 0) {
 							app.teamMember = res.data;
 						} else {
@@ -479,7 +476,6 @@
 						token: userInfo.token,
 						team_id: app.tid
 					}, function(res) {
-						logs(res);
 						if (res.errno == 0) {
 							app.applyList = res.data;
 						} else {

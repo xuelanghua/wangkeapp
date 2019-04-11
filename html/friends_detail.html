@@ -123,7 +123,7 @@
 			<div class="img-show">
 				<img :src="img" v-for="img in friendData.images">
 			</div>
-			<div class="add-friend-btn" v-if="!is_friend" v-on:click.stop="addFriend">
+			<div class="add-friend-btn" v-if="addshow" v-on:click.stop="addFriend">
 				<img src="../image/icon/add_friends_icon.png" class="constrain-img">
 				<span>添加好友</span>
 			</div>
@@ -156,14 +156,18 @@
 					phoneNum: '',
 					is_friend: 1,
 					is_reliable: 0,
-					is_voice_like: 0
+					is_voice_like: 0,
+					addshow:false
 				},
 				mounted: function() {
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						fid = self.fid;
+						var selfid=userInfo.id;
+						if(fid!=selfid&&muiCont.is_friend!=1){
+							muiCont.addshow=true;
+						}
 						getFriendsInfo();
-
 						// 音频播放
 						var voice = null,
 							playstatus = 0,
