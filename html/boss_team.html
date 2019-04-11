@@ -91,12 +91,18 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		mui.plusReady(function() {})
+		mui.plusReady(function() {
+			var self = plus.webview.currentWebview();
+			if (self.teamInfo) {
+				document.querySelector(".mui-btn-outlined").style.display="none";
+				document.querySelector(".mui-btn-blue").style.display="none";
+			} else {
+				
+			}
+		})
 		// 加入团队
 		mui(".mui-content").on("tap", ".mui-btn-outlined", function() {
-			openPage('join_team.html', 'join_team', '#f7f7f7', {
-				team_id: 100000
-			});
+			openPage('join_team.html', 'join_team', '#f7f7f7', '');
 		})
 		// 创建团队
 		mui(".mui-content").on("tap", ".mui-btn-blue", function() {

@@ -267,21 +267,21 @@
 					<div class="mui-indexed-list-inner">
 						<div class="mui-indexed-list-empty-alert">没有数据</div>
 						<ul class="mui-table-view">
+							<li class="mui-table-view-divider mui-indexed-list-group">队长</li>
 							<template v-for="(items,key,index) in userList" :key="index">
-								<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">队长</li>
-								<li v-if="list.is_captain==1" :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" @tap="viewDetails(list.uid)"
-								 class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+								<li v-if="list.is_captain==1" :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items"
+								 :key="i" @tap="viewDetails(list.uid)" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
 									<img :src="list.avatar?list.avatar:list.avatarUrl" alt="">
-									<span>{{list.name}}</span>
+									<span>{{list.name||list.nickName}}</span>
 								</li>
 							</template>
 							<template v-for="(items,key,index) in userList" :key="index">
 								<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
-								<li v-if="list.is_captain==0" :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" @tap="viewDetails(list.uid)"
+								<li :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" @tap="viewDetails(list.uid)"
 								 class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-									<input v-if="identity" type="checkbox" :value="list.uid" :data-avatar="list.avatarUrl?list.avatarUrl:list.avatar" />
-									<img :src="list.avatarUrl?list.avatarUrl:list.avatar" alt="">
-									<span>{{list.name}}</span>
+									<input v-if="identity&&list.is_captain==0" type="checkbox" :value="list.uid" :data-avatar="list.avatar?list.avatar:list.avatarUrl" />
+									<img :src="list.avatar?list.avatar:list.avatarUrl" alt="">
+									<span>{{list.name||list.nickName}}</span>
 								</li>
 							</template>
 						</ul>
@@ -359,7 +359,9 @@
 				},
 				addMember: function() {
 					mui('#topPopover').popover('hide');
-					openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', '');
+					openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', {
+						tid: tid
+					});
 				},
 				viewDetails: function(cid) {
 					if (this.identity == false) {
@@ -400,19 +402,15 @@
 							}
 						});
 						if (checkedValues.length > 0) {
-							// logs(JSON.stringify(checkedValues));
-							var checkedValues=['1','2','3']
-							b = checkedValues.join(',');
-							logs(b);
 							mui.post($ajaxUrl + 'team&action=delete_member', {
 								token: userInfo.token,
 								team_id: tid,
-								uids: JSON.stringify(checkedValues)
+								uids: checkedValues.join(',')
 							}, function(res) {
 								logs(res);
-								if(res.errno==0){
+								if (res.errno == 0) {
 									message(res.message);
-									app.identity=false;
+									app.identity = false;
 									getUserData();
 								}
 							}, 'json');
@@ -451,8 +449,8 @@
 		function getUserData() {
 			mui.post($ajaxUrl + 'team&action=member_list', {
 				token: userInfo.token,
-				team_id:tid,
-				type:1
+				team_id: tid,
+				type: 1
 			}, function(res) {
 				logs(res);
 				if (res.errno == 0) {

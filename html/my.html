@@ -487,20 +487,24 @@
 					mui.post($ajaxUrl + 'team&action=team_info', {
 						token: userInfo.token
 					}, function(res) {
-						logs(res);
 						if (res.errno == 0) {
-							fnOpenWin('webview.html', 'webview', {
-								statusbar: {
-									background: '#FFF'
-								}
-							}, {
-								tid: res.data.id,
-								title: 'boss',
-								statusBarStyle: 'light',
-								url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=' + res.data.id +
-									'&m=longbing_card'
-							}, 'slide-in-right');
-							setStatusBar('', 'dark');
+							if (res.data.join_status) {
+								fnOpenWin('webview.html', 'webview', {
+									statusbar: {
+										background: '#FFF'
+									}
+								}, {
+									title: 'boss',
+									statusBarStyle: 'light',
+									url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=' + res.data.id +
+										'&m=longbing_card'
+								}, 'slide-in-right');
+								setStatusBar('', 'dark');
+							} else {
+								openPage('boss_team.html', 'boss_team', '#f7f7f7', {
+									teamInfo: res.data
+								})
+							}
 						} else {
 							openPage('boss_team.html', 'boss_team', '#f7f7f7', '')
 						}
