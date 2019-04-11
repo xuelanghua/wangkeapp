@@ -536,7 +536,6 @@
 				userInfo = getUserInfo();
 				pageInit();
 
-				logs(userInfo);
 				//自定义事件监听-首页新增客户点击
 				window.addEventListener('newCustomer', function() {
 					mui.trigger(document.querySelector('.switch1_content[data-id=customer]'), 'tap');
@@ -939,11 +938,9 @@
 									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 									temp += '</span>';
 									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 									}
 									temp += '<div class="clearfix"></div>';
 									temp += '</div>';
@@ -995,11 +992,9 @@
 									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 									temp += '</span>';
 									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 									}
 									temp += '<div class="clearfix"></div>';
 									temp += '</div>';
@@ -1160,11 +1155,9 @@
 									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 									temp += '</span>';
 									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 									}
 									temp += '<div class="clearfix"></div>';
 									temp += '</div>';
@@ -1213,11 +1206,9 @@
 									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 									temp += '</span>';
 									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 									}
 									temp += '<div class="clearfix"></div>';
 									temp += '</div>';
@@ -1274,8 +1265,7 @@
 								<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 								html += '</span>';
 								if (list[i].mark == 1) {
-									html +=
-										'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+									html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 								} else if (list[i].mark == 2) {
 									html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 								}
@@ -1350,7 +1340,7 @@
 							html = '<ul class="mui-table-view">';
 							for (var i in list) {
 								html += '<li class="mui-table-view-cell new-customer" data-type="customer" data-id="' + list[i].id + '">';
-								if (list[i].avatarUrl.length == 0) {
+								if (!list[i].avatarUrl) {
 									html += '<div class="chart mui-pull-left customer-head-img" data-id="' + list[i].id +
 										'" data-type="customer"><img src="../image/user_default.png" ></div>';
 								} else {
@@ -1358,7 +1348,7 @@
 										'" data-type="customer"><img src="' + list[i].avatarUrl + '" ></div>';
 								}
 								html += '<div class="mui-pull-right customer-content customer-right-cont" data-type="customer" data-name="' +
-									list[i].name + '" data-avatar="' + list[i].avatarUrl + '">';
+									(list[i].name || list[i].nickName) + '" data-avatar="' + list[i].avatarUrl + '" data-id="' + list[i].id + '">';
 								html += '<div class="customer_information">';
 								html += '<div class="mui-pull-left">';
 								if (list[i].is_boss == 1) {

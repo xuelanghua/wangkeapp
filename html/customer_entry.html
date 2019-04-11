@@ -205,7 +205,8 @@
 				})
 				
 				mui('.mui-content').on('tap', '.contact', function() {
-					fnOpenWin('contact.html', 'contact');
+					// getContacts();
+					// fnOpenWin('contact.html', 'contact');
 				})
 				
 				
@@ -264,30 +265,26 @@
 
 			//获取通讯录
 			function getContacts() {
-				var content = "";
-				try {
-					plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function(addressbook) {
-						addressbook.find(["displayName", "phoneNumbers"], function(contacts) {
-							content = "联系人数量：" + contacts.length;
-							content += "<br>";
-							for (var i = 0; i < contacts.length; i++) {
-								for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-									var str = "<p><span style='display:inline_block';width:120px;'>姓名:" + contacts[i].displayName +
-										"</span>号码:" + contacts[i].phoneNumbers[j].value + "</p>";
-								}
-								content += str;
-							}
-						}, function() {
-							content = "error";
-						}, {
-							multiple: true
-						});
-					}, function(e) {
-						content = "Get address book failed: " + e.message;
+				plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function(addressbook) {
+					addressbook.find(["displayName", "phoneNumbers"], function(contacts) {
+						// logs(contacts);
+// 						content = "联系人数量：" + contacts.length;
+// 						content += "<br>";
+// 						for (var i = 0; i < contacts.length; i++) {
+// 							for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+// 								var str = "<p><span style='display:inline_block';width:120px;'>姓名:" + contacts[i].displayName +
+// 									"</span>号码:" + contacts[i].phoneNumbers[j].value + "</p>";
+// 							}
+// 							content += str;
+// 						}
+					}, function() {
+						message('查找联系人失败!');
+					}, {
+						multiple: true
 					});
-				} catch (e) {
-					content += e.message;
-				}
+				}, function(e) {
+					message('获取通讯录失败!');
+				});
 			}
 			
 			//提交数据

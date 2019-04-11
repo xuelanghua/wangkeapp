@@ -449,7 +449,7 @@
 							</div>
 							<div class="rain"></div>
 						</div> -->
-						<div id="weather_img" style="margin-left: 10px;"></div>
+						<div id="weather_img" style="margin-left: 10px;"><div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div></div>
 						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -55px;">今天</span>
 						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -35px;">
 							<font id="temperature">1°~7°</font>
@@ -765,8 +765,8 @@
 			plus.geolocation.getCurrentPosition(function(p) {
 				getTodayWeather(p.coords.longitude + ',' + p.coords.latitude);
 			}, function(e) {
-				getTodayWeather('102.746571' + ',' + '24.980774');
-				mui.alert('Geolocation error: ' + e.message);
+				message(e.message, 'center');
+				getTodayWeather('102.746571,24.980774');
 			});
 		}
 
@@ -837,14 +837,11 @@
 						var str = '';
 						if (weather.indexOf("晴") != -1) {
 							if (weather.indexOf("云") != -1) {
-								str +=
-									'<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div>';
+								str += '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div>';
 							} else if (weather.indexOf("雨") != -1) {
-								str +=
-									'<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>';
+								str += '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>';
 							} else if (weather.indexOf('雪') != -1) {
-								str +=
-									'<div class="icon flurries"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="snow"><div class="flake"></div></div>';
+								str += '<div class="icon flurries"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="snow"><div class="flake"></div></div>';
 							} else {
 								str += '<div class="icon sun-shower"><div class="sun"><div class="rays"></div></div></div>';
 							}
@@ -858,8 +855,7 @@
 							str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
 							// str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
 						} else if (weather.indexOf("雪") != -1) {
-							str +=
-								'<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
+							str += '<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
 						}
 						document.getElementById('weather_img').innerHTML = str;
 					}

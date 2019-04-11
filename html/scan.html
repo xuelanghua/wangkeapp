@@ -87,7 +87,7 @@
 				swipeBack: true,
 			});
 			
-			var scan;
+			var scan = null;
 			if(window.plus) {
 				plusready();
 			} else {
@@ -97,39 +97,54 @@
 			function onmarked(type, result) { //回调
 				if(result) {
 					scan.close();
-					var param = parseUrl(result);
-					var Sparam = JSON.stringify(param);
-					if (Sparam.indexOf('currentTabBar') != -1) {
-						fnCloseWin('scan');
-						fnOpenWin('friends_detail.html', 'friends_detail', {statusbar: {background: '#f7f7f7'}}, {
-							fid: param.to_uid
-						}, 'slide-in-right');
-						setStatusBar('', 'dark');
-					} else if (Sparam.indexOf('type') != -1) {
-						var type = param.type;
-						if (type == 'receipt') {
+					if (result.indexOf('http') != -1) {
+						var param = parseUrl(result);
+						var Sparam = JSON.stringify(param);
+						if (Sparam.indexOf('currentTabBar') != -1) {
 							fnCloseWin('scan');
-							fnOpenWin('scan_code_payment.html', 'scan_code_payment', {statusbar: {background: '#f7f7f7'}}, {
-								uid: param.uid,
-								fee: param.fee
+							fnOpenWin('friends_detail.html', 'friends_detail', {statusbar: {background: '#f7f7f7'}}, {
+								fid: param.to_uid
 							}, 'slide-in-right');
 							setStatusBar('', 'dark');
-						}
-					} else if (result.indexOf('http') != -1) {
-						mui.get($ajaxUrl + 'util',{
-								action: 'url_title'
-							},function(res){
-								fnOpenWin('webview.html', 'webview', {
-									statusbar: {
-										background: '#FFF'
-									}
-								}, {title: res.data, statusBarStyle: 'light', url: result}, 'slide-in-right');
+						} else if (Sparam.indexOf('type') != -1) {
+							var type = param.type;
+							if (type == 'receipt') {
+								fnCloseWin('scan');
+								fnOpenWin('scan_code_payment.html', 'scan_code_payment', {statusbar: {background: '#f7f7f7'}}, {
+									uid: param.uid,
+									fee: param.fee
+								}, 'slide-in-right');
 								setStatusBar('', 'dark');
-							},'json'
-						);
+							} else if (type == 'team') {
+								fnCloseWin('scan');
+								fnOpenWin('join_team.html', 'join_team', {statusbar: {background: '#f7f7f7'}}, {
+									team_id: param.team_id,
+								}, 'slide-in-right');
+								setStatusBar('', 'dark');
+							}
+						} else {
+							mui.get($ajaxUrl + 'util', {
+									action: 'url_title',
+									url: result
+								}, function(res){
+									fnCloseWin('scan');
+									fnOpenWin('webview.html', 'webview', {
+										statusbar: {
+											background: '#FFF'
+										}
+									}, {title: res.data, statusBarStyle: 'light', url: result}, 'slide-in-right');
+									setStatusBar('', 'dark');
+								},'json'
+							);
+						}
 					} else {
 						message('扫描失败!', 'center');
+						setTimeout(function() {
+							mui.back();
+						}, 1000)
 					}
+				} else {
+					
 				}
 			}
 

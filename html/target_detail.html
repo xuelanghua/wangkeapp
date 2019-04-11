@@ -121,7 +121,7 @@
 					<div class="mui-card-content">
 						<div class="target-list">
 							<ul>
-								<li><i class="target-tag-icon"></i><span>保时捷911价值1000000元将用600天来完成来完成来完成</span></li>
+								<li><i class="target-tag-icon"></i><span id="target_title">我的目标</span></li>
 								<li>
 									<i class="audio-tag-icon"></i>
 									<audio class="mui-hidden" id="audio" controls="controls" src=""></audio>
@@ -130,7 +130,7 @@
 										<i class="play-status"></i>
 										<div class="right-info mui-pull-right">
 											<i></i>
-											<span>30</span>
+											<span id="target_record_time">5</span>
 										</div>
 									</div>
 								</li>
@@ -139,15 +139,15 @@
 						<div class="target-tips">
 							<h2 class="title">根据大数据计算</h2>
 							<ol>
-								<li>1、你需要每天开发3个客户</li>
-								<li>2、每天沟通回访10个客户</li>
-								<li>3、每天平均收款10000元</li>
+								<li>1、你需要每天开发<span id="target_new_customer">0</span>个客户</li>
+								<li>2、每天沟通回访<span id="target_communication">0</span>个客户</li>
+								<li>3、每天平均收款<span id="target_deal">0</span>元</li>
 							</ol>
 						</div>
 					</div>
 					<div class="mui-card-footer">
 						<button type="button" class="mui-btn mui-btn-blue close-btn">关闭</button>
-						<button type="button" class="mui-btn mui-btn-blue">修改</button>
+						<!-- <button type="button" class="mui-btn mui-btn-blue">修改</button> -->
 					</div>
 				</div>
 			</div>
@@ -182,7 +182,7 @@
 					date: selectTime, //"01" 
 					pattern: timeType // 1天 2月 3年
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					var plan = res.data.plan;
 					var finish = res.data.finish;
 					for (var index in plan) {
@@ -217,6 +217,7 @@
 					bottom: 0
 				});
 				userTargetStatistics();
+				getTargetInfo();
 			});
 			// 年月日切换
 			mui(".target-detail-heade").on("tap", ".mui-col-xs-4", function(e) {
@@ -316,7 +317,17 @@
 			}, false);
 			// 显示我的目标
 			mui(".mui-bar-nav").on("tap", ".my-target-menu", function(e) {
-				$(".target-modal-frame").addClass("active");
+				if (this.innerText == '设定目标') {
+					if (checkMember()) {
+						fnOpenWin('target_manage_index.html', 'target_manage_index', {
+							statusbar: {
+								background: '#FFF'
+							}
+						}, '', 'slide-in-right');
+					}
+				} else {
+					$(".target-modal-frame").addClass("active");
+				}
 			})
 			// 关闭我的目标
 			mui(".my-target-card .mui-card-footer").on("tap", ".close-btn", function() {
@@ -388,6 +399,27 @@
 				audio.addEventListener("ended", function() {
 					$("#audio-control .play-status").removeClass("active");
 				}, false)
+			}
+			
+			//获取目标信息
+			function getTargetInfo() {
+				mui.get($ajaxUrl + 'target', {
+						action: 'target_info',
+						token: userInfo.token
+					}, function(res){
+						if (res.errno == 0) {
+							var data = res.data;
+							document.getElementById('target_title').innerText = data.target_name;
+							document.getElementById('target_new_customer').innerText = data.new_customer;
+							document.getElementById('target_communication').innerText = data.communication;
+							document.getElementById('target_deal').innerText = data.deal;
+							document.getElementById('target_record_time').innerText = data.target_record_time;
+							document.getElementById('audio').src = data.target_record_url;
+						} else {
+							document.querySelector('.my-target-menu').innerText = '设定目标';
+						}
+					}, 'json'
+				);
 			}
 		</script>
 	</body>

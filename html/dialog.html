@@ -831,6 +831,7 @@
 								user_id: userInfo.id,
 								target_id: chatId
 							};
+							logs(t);
 							ws.send(JSON.stringify(t));
 						}, this.timeout);
 					}
@@ -840,7 +841,7 @@
 				function WebSocketInit() {
 					if ("WebSocket" in window) {
 						// 打开一个 web socket
-						ws = new WebSocket("wss://wangke.ynhost.cn/wss");
+						ws = new WebSocket("wss://app.wangkeapp.cn/wss");
 						ws.onopen = function() {
 							if (ws.readyState == WebSocket.OPEN) {
 								console.log("连接已打开...");
@@ -866,10 +867,13 @@
 								}
 							}
 						};
-						ws.onclose = function() {
+						ws.onclose = function(e) {
 							// 关闭 websocket
 							console.log("连接已关闭...");
 						};
+						ws.onerror = function(e) {
+							logs(e);
+						}
 					} else {
 						message("您的手机不支持 WebSocket!");
 					}
