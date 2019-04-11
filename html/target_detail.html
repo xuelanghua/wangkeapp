@@ -8,7 +8,93 @@
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/mui.picker.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.dtpicker.css" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style type="text/css">
+			.progress {
+				height: 0.2rem;
+				background: #eeeeee;
+				padding: 0;
+				overflow: visible;
+				border-radius: 0;
+				/* margin-top: 0.5rem; */
+				width: 100%;
+				display: flex;
+				flex-grow: 1;
+			}
+
+			.progress .progress-bar {
+				border-radius: 0;
+				position: relative;
+				height: 100%;
+				width: 0;
+			}
+
+			.progress .progress-value {
+				display: block;
+				padding: 3px 0;
+				font-size: 0.24rem;
+				color: #fff;
+				border-radius: 4px;
+				position: absolute;
+				top: -20px;
+				right: 0;
+				transform: translateX(100%);
+				-webkit-transform: translateX(100%);
+				color: #666666;
+			}
+
+			/* .progress .progress-value:after {
+				content: "";
+				border-top: 0.1rem solid #191919;
+				border-left: 0.1rem solid transparent;
+				border-right: 0.1rem solid transparent;
+				position: absolute;
+				bottom: -6px;
+				left: 26%;
+			} */
+
+			.progress-bar.active {
+				animation: animate-positive 2s ease-in;
+				background: linear-gradient(to right, #a6f0ff, #159cef);
+				height: 100%;
+			}
+
+			@-webkit-keyframes animate-positive {
+				0% {
+					width: 0;
+				}
+			}
+
+			@keyframes animate-positive {
+				0% {
+					width: 0;
+				}
+			}
+
+			.box {
+				padding: 0 0.2rem;
+				display: flex;
+				align-items: flex-end;
+				justify-content: space-between;
+				margin: 0.5rem 0;
+			}
+
+			.box span {
+				display: inline-flex;
+				width: 1.2rem;
+				flex-shrink: 0;
+				font-size: 0.26rem;
+				justify-content: center;
+				color: #333333;
+				line-height: 1;
+				margin-bottom: -2px;
+			}
+
+			.box span.left {
+				justify-content: flex-start;
+			}
+		</style>
 	</head>
 
 	<body class="mui-hidden">
@@ -39,59 +125,17 @@
 					<div class="mui-card-header">
 						<span>进度</span>
 					</div>
-					<div id="progress-container" class="mui-card-content progress-container">
-						<ul id="progress-lists">
-							<li class="progress-items exposure">
-								<span class="title">曝光</span>
-								<div class="progress-section">
-									<p class="desc" id="exposure_rate_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in" id="exposure_rate_progress">
-										<span></span>
-									</p>
-								</div>
-								<span class="data-desc" id="exposure_rate_text"></span>
-							</li>
-							<li class="progress-items toker">
-								<span class="title">拓客</span>
-								<div class="progress-section">
-									<p class="desc" id="new_customer_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in" id="new_customer_progress"><span></span></p>
-								</div>
-								<span class="data-desc" id="new_customer_text"></span>
-							</li>
-							<li class="progress-items evolve">
-								<span class="title">客户跟进</span>
-								<div class="progress-section">
-									<p class="desc" id="customer_follow_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in" id="customer_follow_progress"><span></span></p>
-								</div>
-								<span class="data-desc" id="customer_follow_text"></span>
-							</li>
-							<li class="progress-items communicate">
-								<span class="title">有效沟通</span>
-								<div class="progress-section">
-									<p class="desc" id="communication_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in" id="communication_progress"><span></span></p>
-								</div>
-								<span class="data-desc" id="communication_text"></span>
-							</li>
-							<li class="progress-items reporting">
-								<span class="title">转介绍</span>
-								<div class="progress-section">
-									<p class="desc" id="share_card_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in" id="share_card_progress"><span></span></p>
-								</div>
-								<span class="data-desc" id="share_card_text"></span>
-							</li>
-							<li class="progress-items deal">
-								<span class="title">成交</span>
-								<div class="progress-section">
-									<p class="desc" id="deal_number">0/0</p>
-									<p class="mui-progressbar mui-progressbar-in" id="deal_progress"><span></span></p>
-								</div>
-								<span class="data-desc" id="deal_text"></span>
-							</li>
-						</ul>
+					<div class="box" v-for="(item,key,index) in finish" :key="index">
+						<span class="left">{{titles[index]}}</span>
+						<div class="progress">
+							<div class="progress-bar active" v-bind:style="{width:item/plan[key]*100+'%'}">
+								<div class="progress-value">{{item+'/'+plan[key]}}</div>
+							</div>
+						</div>
+						<span v-if="item/plan[key]<1">未达标</span>
+						<span v-else-if="item/plan[key]>1&&item/plan[key]<1.1">已达标</span>
+						<span v-else-if="item/plan[key]>1.1&&item/plan[key]<1.5">优秀</span>
+						<span v-else>英雄</span>
 					</div>
 				</div>
 				<div class="mui-card">
@@ -101,12 +145,12 @@
 					<div class="mui-card-content-inner sale-detail-list">
 						<ul>
 							<ul>
-								<li>曝光&nbsp;<span id="exposure_rate_show"></span></li>
-								<li>拓客&nbsp;<span id="new_customer_show"></span></li>
-								<li>客户跟进&nbsp;<span id="customer_follow_show"></span></li>
-								<li>有效沟通&nbsp;<span id="communication_show"></span></li>
-								<li>转介绍&nbsp;<span id="share_card_show"></span></li>
-								<li>成交金额&nbsp;<span id="deal_show"></span></li>
+								<li>曝光&nbsp;{{finish.exposure_rate}}</li>
+								<li>拓客&nbsp;{{finish.new_customer}}</li>
+								<li>客户跟进&nbsp;{{finish.customer_follow}}</li>
+								<li>有效沟通&nbsp;{{finish.share_card}}</li>
+								<li>转介绍&nbsp;{{finish.communication}}</li>
+								<li>成交金额&nbsp;{{finish.deal}}</li>
 							</ul>
 						</ul>
 					</div>
@@ -157,6 +201,7 @@
 		<script src="../js/Zepto.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			// 初始化字体大小
@@ -173,7 +218,152 @@
 				"type": "date"
 			};
 			var myDate = new Date();
-			$("body").removeClass("mui-hidden");
+			var app = new Vue({
+				el: "#targetDetail",
+				data() {
+					return {
+						plan: {
+							exposure_rate: 0,
+							new_customer: 0,
+							customer_follow: 0,
+							communication: 0,
+							share_card: 0,
+							deal: 0
+						},
+						finish: {
+							exposure_rate: 0,
+							new_customer: 0,
+							customer_follow: 0,
+							share_card: 0,
+							communication: 0,
+							deal: 0
+						},
+						titles: ['曝光', '拓客', '客户跟进', '有效沟通', '转介绍', '成交']
+					}
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						plus.webview.currentWebview().setStyle({
+							statusbar: {
+								background: '#ffffff'
+							},
+							top: 0,
+							bottom: 0
+						});
+						userTargetStatistics();
+					});
+					// 日期选择器
+					// 年月日切换
+					mui(".target-detail-heade").on("tap", ".mui-col-xs-4", function(e) {
+						$(".progress-bar").removeClass("active");
+						setTimeout(function() {
+							$(".progress-bar").addClass("active");
+						}, 10)
+						var typs = this.getAttribute('timeType'),
+							isYear = myDate.getFullYear(),
+							isMonth = myDate.getMonth() + 1,
+							isDay = myDate.getDate();
+						$(this).siblings('.mui-col-xs-4').children('i').removeClass("active");
+						$(this).children('i').addClass('active');
+						// logs(typs);
+						if (typs == "year") {
+							optionsCont = "year";
+							selectTime = isYear + '-01';
+							timeType = "3";
+							userTargetStatistics();
+						} else if (typs == "month") {
+							optionsCont = {
+								"type": "month",
+								"beginYear": 2019,
+								"endYear": 2029
+							}
+							selectTime = isYear + "-" + isMonth;
+							timeType = "2";
+							userTargetStatistics();
+						} else {
+							optionsCont = {
+								"type": "date",
+								"beginYear": 2019,
+								"endYear": 2029
+							}
+							var itYear = myDate.getFullYear();
+							selectTime = "" + isYear + "-" + isMonth + "-" + isDay;
+							timeType = "1";
+							userTargetStatistics();
+						}
+					})
+					// 选择器
+					var yearPicker = new mui.PopPicker();
+					yearPicker.setData([{
+						value: '2019',
+						text: '2019'
+					}, {
+						value: '2020',
+						text: '2020'
+					}, {
+						value: '2021',
+						text: '2021'
+					}, {
+						value: '2022',
+						text: '2022'
+					}, {
+						value: '2023',
+						text: '2023'
+					}, {
+						value: '2024',
+						text: '2024'
+					}, {
+						value: '2025',
+						text: '2025'
+					}, {
+						value: '2026',
+						text: '2026'
+					}, {
+						value: '2027',
+						text: '2027'
+					}, {
+						value: '2028',
+						text: '2028'
+					}, {
+						value: '2029',
+						text: '2029'
+					}]);
+					mui('.mui-content').on('tap', '#select-time', function() {
+						var _self = this;
+						if (optionsCont == "year") {
+							// 年选择
+							yearPicker.show(function(items) {
+								mui("#select-time")[0].innerText = " " + items[0].text + " ";
+								selectTime = items[0].text;
+								timeType = "3";
+								userTargetStatistics();
+							});
+						} else {
+							// 年月日选择
+							_self.picker = new mui.DtPicker(optionsCont);
+							_self.picker.show(function(res) {
+								mui("#select-time")[0].innerText = res.text;
+								selectTime = res.text;
+								timeType = "2";
+								userTargetStatistics();
+								_self.picker = null;
+							});
+						}
+					}, false);
+					// 显示我的目标
+					mui(".mui-bar-nav").on("tap", ".my-target-menu", function(e) {
+						$(".target-modal-frame").addClass("active");
+					})
+					// 关闭我的目标
+					mui(".my-target-card .mui-card-footer").on("tap", ".close-btn", function() {
+						var audio = document.getElementById("audio");
+						$(".target-modal-frame").removeClass("active");
+						$(".play-control .play-status").removeClass("active");
+						$("#audio-control").addClass("play").removeClass("pause");
+					})
+					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+				}
+			})
 
 			function userTargetStatistics() {
 				mui.post($ajaxUrl + 'target', {
@@ -182,212 +372,10 @@
 					date: selectTime, //"01" 
 					pattern: timeType // 1天 2月 3年
 				}, function(res) {
-					logs(res);
-					var plan = res.data.plan;
-					var finish = res.data.finish;
-					for (var index in plan) {
-						document.getElementById(index + '_number').innerText = finish[index] + '/' + plan[index];
-						document.getElementById(index + '_show').innerText = finish[index];
-						// 进度条控制
-						// mui("#" + index + "_progress").progressbar().setProgress(finish[index]/plan[index]);
-						mui("#" + index + "_progress").progressbar().setProgress(plan[index]);
-
-						var rate = parseFloat((finish[index] / plan[index]).toFixed(1));
-						if (rate < 1) {
-							document.getElementById(index + '_text').innerText = '未达标';
-						} else if (rate >= 1 && rate < 1.1) {
-							document.getElementById(index + '_text').innerText = '已达标';
-							document.getElementById(index + '_text').style.color = '#267CFF';
-						} else if (rate >= 1.1 && rate < 1.5) {
-							document.getElementById(index + '_text').innerText = '优秀';
-							document.getElementById(index + '_text').style.color = '#267CFF';
-						} else {
-							document.getElementById(index + '_text').innerText = '英雄';
-							document.getElementById(index + '_text').style.color = '#267CFF';
-						}
-					}
+					// logs(res);
+					app.plan = res.data.plan;
+					app.finish = res.data.finish;
 				}, 'json')
-			}
-			mui.plusReady(function() {
-				plus.webview.currentWebview().setStyle({
-					statusbar: {
-						background: '#ffffff'
-					},
-					top: 0,
-					bottom: 0
-				});
-				userTargetStatistics();
-			});
-			// 年月日切换
-			mui(".target-detail-heade").on("tap", ".mui-col-xs-4", function(e) {
-				var typs = this.getAttribute('timeType');
-				var isYear = myDate.getFullYear();
-				var isMonth = myDate.getMonth() + 1;
-				var isDay = myDate.getDate();
-				$(this).siblings('.mui-col-xs-4').children('i').removeClass("active");
-				$(this).children('i').addClass('active');
-				// logs(typs);
-				if (typs == "year") {
-					optionsCont = "year";
-					selectTime = isYear + '-01';
-					timeType = "3";
-					userTargetStatistics();
-				} else if (typs == "month") {
-					optionsCont = {
-						"type": "month",
-						"beginYear": 2019,
-						"endYear": 2029
-					}
-					selectTime = isYear + "-" + isMonth;
-					timeType = "2";
-					userTargetStatistics();
-				} else {
-					optionsCont = {
-						"type": "date",
-						"beginYear": 2019,
-						"endYear": 2029
-					}
-					var itYear = myDate.getFullYear();
-					selectTime = "" + isYear + "-" + isMonth + "-" + isDay;
-					timeType = "1";
-					userTargetStatistics();
-				}
-			})
-			// 选择器
-			var userPicker = new mui.PopPicker();
-			userPicker.setData([{
-				value: '2019',
-				text: '2019'
-			}, {
-				value: '2020',
-				text: '2020'
-			}, {
-				value: '2021',
-				text: '2021'
-			}, {
-				value: '2022',
-				text: '2022'
-			}, {
-				value: '2023',
-				text: '2023'
-			}, {
-				value: '2024',
-				text: '2024'
-			}, {
-				value: '2025',
-				text: '2025'
-			}, {
-				value: '2026',
-				text: '2026'
-			}, {
-				value: '2027',
-				text: '2027'
-			}, {
-				value: '2028',
-				text: '2028'
-			}, {
-				value: '2029',
-				text: '2029'
-			}]);
-			// 日期选择器
-			var btns = document.getElementById("select-time");
-			btns.addEventListener('tap', function() {
-				var _self = this;
-				// logs(optionsCont);
-				if (optionsCont == "year") {
-					// 年选择
-					userPicker.show(function(items) {
-						btns.innerText = " " + items[0].text + " ";
-						selectTime = items[0].text;
-						timeType = "3";
-						userTargetStatistics();
-					});
-				} else {
-					// 年月日选择
-					_self.picker = new mui.DtPicker(optionsCont);
-					_self.picker.show(function(res) {
-						btns.innerText = res.text;
-						selectTime = res.text;
-						timeType = "2";
-						userTargetStatistics();
-						_self.picker = null;
-					});
-				}
-			}, false);
-			// 显示我的目标
-			mui(".mui-bar-nav").on("tap", ".my-target-menu", function(e) {
-				$(".target-modal-frame").addClass("active");
-			})
-			// 关闭我的目标
-			mui(".my-target-card .mui-card-footer").on("tap", ".close-btn", function() {
-				var audio = document.getElementById("audio");
-				$(".target-modal-frame").removeClass("active");
-				$(".play-control .play-status").removeClass("active");
-				$("#audio-control").addClass("play").removeClass("pause");
-				getSong();
-			})
-			// 播放
-			mui(".target-modal-frame .target-list").on("tap", ".play-control", function() {
-				clicks();
-			})
-			// 获取音频
-
-			// 渐变进度条
-			// 	var progres = [90, 60, 70, 80, 60, 90];
-			// 	var className = ["exposure", "toker", "evolve", "communicate", "reporting", "deal"];
-			// 	mui.each(className, function(i, names) {
-			// 		var p = 0;
-			// 		var myVar = setInterval(function() {
-			// 			p += 1;
-			// 			mui('.progress-items.' + names + ' .progress-section').progressbar().setProgress(p);
-			// 			if (p == progres[i]) {
-			// 				p = 0;
-			// 				clearInterval(myVar);
-			// 			}
-			// 		}, 20);
-			// 	});
-			//获取语音链接并插入dom中
-			function getSong() {
-				var audio = document.getElementById("audio");
-				audio.src = "https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3";
-				// audio.loop = true;
-				playCotrol();
-			}
-			getSong();
-
-			//点击播放/暂停
-			function clicks() {
-				var audio = document.getElementById("audio");
-				if ($("#audio-control").hasClass("play")) {
-					$("#audio-control").addClass("pause").removeClass("play");
-					audio.play();
-					$(".target-modal-frame .target-list .play-status").addClass("active");
-				} else {
-					$("#audio-control").addClass("play").removeClass("pause");
-					$(".target-modal-frame .target-list .play-status").removeClass("active");
-					audio.pause();
-				}
-			}
-
-			//播放事件监听
-			function playCotrol() {
-				var audio = document.getElementById("audio");
-				audio.addEventListener("loadeddata",
-					function() {
-						$("#control").addClass("play").removeClass("color_gray");
-						var allTime = parseInt(audio.duration);
-						$(".right-info span").text(allTime);
-					}, false);
-				audio.addEventListener("pause",
-					function() {
-						if (audio.currentTime == audio.duration) {
-							audio.stop();
-							audio.currentTime = 0;
-						}
-					}, false);
-				audio.addEventListener("ended", function() {
-					$("#audio-control .play-status").removeClass("active");
-				}, false)
 			}
 		</script>
 	</body>

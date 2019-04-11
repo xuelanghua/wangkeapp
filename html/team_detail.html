@@ -296,7 +296,7 @@
 				<div class="mui-clearfix">
 					<div class="mui-pull-left">
 						<span class="team-name">{{teamName}}</span>
-						<img v-if="role" src="../image/team-detail-img03.png" @tap="iseditName=!iseditName">
+						<img v-if="role" src="../image/team-detail-img03.png" @tap="editTname">
 					</div>
 					<img class="mui-pull-right team-qrCode" src="../image/team-detail-img04.png" alt="">
 				</div>
@@ -309,7 +309,7 @@
 				<p>{{desc}}</p>
 			</div>
 			<div class="team-members">
-				<h2 class="headline">团队成员<p class="more-member mui-pull-right">共2人<span class="mui-icon mui-icon-arrowright"></span></p>
+				<h2 class="headline">团队成员<p class="more-member mui-pull-right">共{{teamNum}}人<span class="mui-icon mui-icon-arrowright"></span></p>
 				</h2>
 				<ul>
 					<li v-for="(items,index) in teamMember" :key="index">
@@ -326,20 +326,20 @@
 			</div>
 			<div class="validation-messages" v-if="role">
 				<h2 class="headline">验证消息</h2>
-				<ul v-if="applyList.lenght>0" class="mui-table-view">
+				<ul v-if="applyList.length>0" class="mui-table-view">
 					<li class="mui-table-view-cell" v-for="(list,index) in applyList" :key="index">
 						<div class="member-left">
-							<img src="../image/kaol.jpg" alt="">
+							<img :src="list.avatar!=null?list.avatar:list.avatarUrl" alt="">
 							<div>
-								<p class="name">{{applyList}}</p>
-								<p>我是诺克萨斯力量的象征</p>
+								<p class="name">{{list.name!=null?list.name:list.nickName}}</p>
+								<p>{{list.remark}}</p>
 							</div>
 						</div>
 						<div class="member-right">
-							<!-- <button type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button> -->
-							<!-- <button type="button" class="mui-btn mui-btn-blue">同意</button> -->
-							<!-- <span>已拒绝</span> -->
-							<span>已添加</span>
+							<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
+							<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button>
+							<span v-else-if="list.status==1">已添加</span>
+							<span v-else>已拒绝</span>
 						</div>
 					</li>
 				</ul>
@@ -361,8 +361,8 @@
 			<!-- 团队名称编辑 -->
 			<div class="join-team-verify" v-if="iseditName">
 				<div class="verift-body">
-					<input id="teamNames" :value="teamName" v-model="newTeamName" class="team-name-input" type="text" maxlength="12" placeholder="请输入团队名"
-					 style="border: none;">
+					<input id="teamNames" :value="teamName" v-model="newTeamName" class="team-name-input" type="text" maxlength="12"
+					 placeholder="请输入团队名" style="border: none;">
 					<!-- <p>名字长度不超过十二个字</p> -->
 					<div class="verift-footer">
 						<button type="button" class="mui-btn mui-btn-link close-verify-window" @tap="iseditName=!iseditName">取消</button>
@@ -393,6 +393,7 @@
 				return {
 					desc: '',
 					teamName: '',
+					newTeamName: '',
 					iseditDesc: false,
 					iseditName: false,
 					conts: '',
@@ -400,7 +401,7 @@
 					tid: '',
 					teamMember: [],
 					applyList: [],
-					newTeamName:''
+					teamNum: 1
 				}
 			},
 			created: function() {
@@ -411,11 +412,15 @@
 					this.iseditDesc = true;
 					this.conts = this.desc;
 				},
+				editTname:function(){
+					this.iseditName=true;
+					this.newTeamName = this.teamName;
+				},
 				confirmEditor: function() {
 					mui.post($ajaxUrl + 'team&action=edit_notice', {
 						token: userInfo.token,
-						team_id:this.tid,
-						notice:this.conts
+						team_id: this.tid,
+						notice: this.conts
 					}, function(res) {
 						if (res.errno == 0) {
 							app.iseditDesc = false;
@@ -426,16 +431,63 @@
 				confirmName: function() {
 					mui.post($ajaxUrl + 'team&action=edit_name', {
 						token: userInfo.token,
-						team_id:this.tid,
-						name:this.newTeamName
+						team_id: this.tid,
+						name: this.newTeamName
 					}, function(res) {
-						logs(res);
 						if (res.errno == 0) {
 							app.iseditName = false;
 							getInfo();
 						}
 					}, 'json');
+				},
+				examine:function(status,userId){
+					// message(userId);
+					mui.post($ajaxUrl + 'team&action=check', {
+						token: userInfo.token,
+						team_id: app.tid,
+						user_id:userId,
+						status:status
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							message(res.message);
+							getInfo();
+						}else{
+							message(res.message);
+						}
+					}, 'json');
 				}
+			},
+			mounted: function() {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					app.tid = self.teamid;
+					// 获取团队成员以及申请列表
+					mui.post($ajaxUrl + 'team&action=member_list', {
+						token: userInfo.token,
+						team_id: app.tid
+					}, function(res) {
+						// logs(res);
+						if (res.errno == 0) {
+							app.teamMember = res.data;
+						} else {
+							// app.teamMember=[];
+						}
+					}, 'json');
+					// 申请列表
+					mui.post($ajaxUrl + 'team&action=apply_list', {
+						token: userInfo.token,
+						team_id: app.tid
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							app.applyList = res.data;
+						} else {
+							app.applyList = [];
+							// message(res.message);
+						}
+					}, 'json');
+				})
 			}
 		})
 		mui(".mui-content").on("tap", ".team-qrCode", function() {
@@ -448,19 +500,19 @@
 		// 更多成员
 		mui(".mui-content").on("tap", ".more-member", function() {
 			openPage('team_members.html', 'team_members', '#f7f7f7', {
-				tid:app.tid
+				tid: app.tid
 			});
 		})
-		function getInfo(){
+
+		function getInfo() {
 			// 获取团队信息
 			mui.post($ajaxUrl + 'team&action=team_info', {
 				token: userInfo.token
-			}, function(res) {
-				// logs(res);
+			}, function(res) { 
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
-					app.tid = res.data.id;
+					app.teamNum = res.data.current_number;
 					var captainId = res.data.captain_uid;
 					if (userInfo.id == captainId) {
 						app.role = 1;
@@ -469,35 +521,6 @@
 					}
 				}
 			}, 'json');
-			// 获取团队成员以及申请列表
-			var timer = setInterval(function() {
-				mui.post($ajaxUrl + 'team&action=member_list', {
-					token: userInfo.token,
-					team_id: app.tid
-				}, function(res) {
-					if (res.errno == 0) {
-						app.teamMember = res.data;
-					} else {
-						// app.teamMember=[];
-					}
-				}, 'json');
-				// 申请列表
-				mui.post($ajaxUrl + 'team&action=apply_list', {
-					token: userInfo.token,
-					team_id: app.tid
-				}, function(res) {
-					logs(res);
-					if (res.errno == 0) {
-						app.applyList = res.data;
-					} else {
-						app.applyList = [];
-						// message(res.message);
-					}
-				}, 'json');
-				if (app.tid) {
-					clearInterval(timer);
-				}
-			}, 1000);
 		}
 	</script>
 </html>

@@ -21,6 +21,14 @@
 				z-index: 999;
 			}
 
+			.search-cont .mui-icon-search {
+				position: absolute;
+				left: 0.25rem;
+				color: #999999;
+				top: 50%;
+				transform: translateY(-50%);
+			}
+
 			.search-cont {
 				position: relative;
 				display: flex;
@@ -51,11 +59,7 @@
 				font-size: 0.3rem;
 			}
 
-			.search-cont .mui-icon-search {
-				position: absolute;
-				left: 0.25rem;
-				color: #999999;
-			}
+
 
 			.mui-input-row .mui-input-clear~.mui-icon-clear {
 				position: absolute;
@@ -213,6 +217,13 @@
 				transform: scaleX(0.5);
 				-webkit-transform: scaleX(0.5);
 			}
+
+			.void-tips {
+				width: 100%;
+				padding: 2rem 0;
+				text-align: center;
+				color: #999999;
+			}
 		</style>
 	</head>
 
@@ -223,55 +234,45 @@
 			<span class="mui-pull-right create-team-btn">创建团队</span>
 		</header>
 
-		<div class="mui-content join-team-container">
+		<div id="mui-content" class="mui-content join-team-container">
 			<div class="mui-input-row search-cont">
 				<span class="mui-icon mui-icon-search"></span>
-				<input type="text" class="mui-input-clear" placeholder="团队名称/团队号">
-				<img src="../image/boos-team-img02.png" id="open-scan">
+				<input id="search" type="text" v-model="keywords" class="mui-input-clear" placeholder="团队名称/团队号">
+				<img id="open-scan" src="../image/boos-team-img02.png">
 			</div>
 			<div class="search-result">
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell">
+				<ul class="mui-table-view" v-if="result.length>0">
+					<!-- <ul class="mui-table-view"> -->
+					<li class="mui-table-view-cell" v-for="(items,index) in result" :key="index">
 						<div class="mui-pull-left">
 							<div class="team-section">
-								<span>奥飞的团队</span>
-								<span class="num-cont"><img src="../image/boos-team-img03.png" alt="">613人</span>
+								<span>{{items.name}}</span>
+								<span class="num-cont"><img src="../image/boos-team-img03.png" alt="">{{items.current_number}}人</span>
 							</div>
-							<p class="team-num">团队号:8370258</p>
+							<p class="team-num">团队号:{{items.id}}</p>
 						</div>
 						<div class="mui-pull-right">
-							<button type="button" class="mui-btn mui-btn-outlined" onclick="join('12345')">加入</button>
+							<button type="button" class="mui-btn mui-btn-outlined" @tap="join(items.id)">加入</button>
 						</div>
 					</li>
-					<li class="mui-table-view-cell">
+					<!-- <li class="mui-table-view-cell">
 						<div class="mui-pull-left">
 							<div class="team-section">
-								<span>奥飞的团队</span>
-								<span class="num-cont"><img src="../image/boos-team-img03.png" alt="">600人</span>
+								<span>我的小队</span>
+								<span class="num-cont"><img src="../image/boos-team-img03.png" alt="">69人</span>
 							</div>
-							<p class="team-num">团队号:8370258</p>
+							<p class="team-num">团队号:123456</p>
 						</div>
 						<div class="mui-pull-right">
-							<button type="button" class="mui-btn mui-btn-outlined ">加入</button>
+							<button type="button" class="mui-btn mui-btn-outlined" @tap="join('12345')">加入</button>
 						</div>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="mui-pull-left">
-							<div class="team-section">
-								<span>奥飞的团队</span>
-								<span class="num-cont"><img src="../image/boos-team-img03.png" alt="">600人</span>
-							</div>
-							<p class="team-num">团队号:8370258</p>
-						</div>
-						<div class="mui-pull-right">
-							<button type="button" class="mui-btn mui-btn-outlined ">加入</button>
-						</div>
-					</li>
+					</li> -->
 				</ul>
+				<div v-else class="void-tips">暂无相关结果~</div>
 			</div>
-			<div class="join-team-verify">
+			<div class="join-team-verify" v-show="isVerify">
 				<div class="verift-body">
-					<textarea rows="3" placeholder="请输入验证信息"></textarea>
+					<textarea v-model="remark" rows="3" placeholder="请输入验证信息"></textarea>
 					<div class="verift-footer">
 						<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
 						<button type="button" class="mui-btn mui-btn-link send-verify">发送</button>
@@ -282,9 +283,11 @@
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		mui.init();
 		// 初始化字体大小
+		var userInfo = getUserInfo();
 		var viewport = document.documentElement.clientWidth;
 		var teamid = '';
 		if (viewport > 750) {
@@ -294,24 +297,91 @@
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
 		mui.plusReady(function() {})
-		// 创建团队
-		mui(".mui-bar").on("tap", ".create-team-btn", function() {
-			openPage('create_team.html', 'create_team', '#f7f7f7', '');
-		})
-		// 关闭验证弹窗
-		mui(".mui-content").on("tap", ".close-verify-window", function(e) {
-			mui(".join-team-verify")[0].style.display = "none";
-		})
-		// 发送验证
-		mui(".mui-content").on("tap", ".send-verify", function(e) {
-			message('请求的id:' + teamid);
-			mui(".join-team-verify")[0].style.display = "none";
-		})
 
-		function join(e) {
-			mui('.join-team-verify')[0].style.display = "flex";
-			teamid = e;
-			console.log(e);
-		}
+		var app = new Vue({
+			el: "#mui-content",
+			data() {
+				return {
+					keywords: '',
+					result: [],
+					isVerify: false,
+					teamId: '',
+					remark: ''
+				}
+			},
+			methods: {
+				join: function(e) {
+					mui('.join-team-verify')[0].style.display = "flex";
+					this.teamId = e;
+				}
+			},
+			mounted: function() {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					if (self.team_id) {
+						app.keywords = self.team_id;
+						mui.post($ajaxUrl + 'team&action=search', {
+							token: userInfo.token,
+							team: app.keywords
+						}, function(res) {
+							if (res.errno == 0) {
+								app.result = res.data;
+							} else {
+								message(res.message);
+								app.result = [];
+							}
+						}, 'json')
+					}
+					document.getElementById("search").addEventListener("keypress", function(event) {
+						var keywords = '';
+						keywords = app.keywords.replace(/^\s*|\s*$/g, "");
+						if (event.keyCode == "13" && keywords != '') {
+							plus.key.hideSoftKeybord();
+							mui.post($ajaxUrl + 'team&action=search', {
+								token: userInfo.token,
+								team: keywords
+							}, function(res) {
+								logs(res);
+								if (res.errno == 0) {
+									app.result = res.data;
+								} else {
+									message(res.message);
+									app.result = [];
+								}
+							}, 'json')
+							// 阻止默认事件---阻止页面刷新
+							event.preventDefault();
+						} else {
+							message("请输入团队id或者团队名");
+						}
+					})
+				})
+				// 创建团队
+				mui(".mui-bar").on("tap", ".create-team-btn", function() {
+					openPage('create_team.html', 'create_team', '#f7f7f7', '');
+				})
+				// 关闭验证弹窗
+				mui(".mui-content").on("tap", ".close-verify-window", function(e) {
+					mui(".join-team-verify")[0].style.display = "none";
+				})
+				// 发送验证
+				mui(".mui-content").on("tap", ".send-verify", function(e) {
+					mui.post($ajaxUrl + 'team&action=apply', {
+						token: userInfo.token,
+						team_id: app.teamId,
+						remark: app.remark
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							app.result = res.data;
+						} else {
+							message(res.message);
+						}
+					}, 'json')
+					// message('请求的id:' + app.teamId);
+					mui(".join-team-verify")[0].style.display = "none";
+				})
+			}
+		})
 	</script>
 </html>
