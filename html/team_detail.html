@@ -450,6 +450,7 @@
 						if (res.errno == 0) {
 							message(res.message);
 							getInfo();
+							getApplyList();
 						}else{
 							getInfo();
 							message(res.message);
@@ -473,22 +474,12 @@
 						}
 					}, 'json');
 					// 申请列表
-					mui.post($ajaxUrl + 'team&action=apply_list', {
-						token: userInfo.token,
-						team_id: app.tid
-					}, function(res) {
-						if (res.errno == 0) {
-							app.applyList = res.data;
-						} else {
-							app.applyList = [];
-							// message(res.message);
-						}
-					}, 'json');
+					getApplyList();
 				})
 			}
 		})
 		mui(".mui-content").on("tap", ".team-qrCode", function() {
-			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', '');
+			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', {teamId: app.tid, teamName: app.teamName});
 		})
 		// 添加团队成员
 		mui(".mui-content").on("tap", ".member-selection", function() {
@@ -516,6 +507,20 @@
 					} else {
 						app.role = 0;
 					}
+				}
+			}, 'json');
+		}
+		
+		function getApplyList() {
+			mui.post($ajaxUrl + 'team&action=apply_list', {
+				token: userInfo.token,
+				team_id: app.tid
+			}, function(res) {
+				if (res.errno == 0) {
+					app.applyList = res.data;
+				} else {
+					app.applyList = [];
+					// message(res.message);
 				}
 			}, 'json');
 		}

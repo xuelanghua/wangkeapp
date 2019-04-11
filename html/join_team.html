@@ -352,7 +352,7 @@
 							// 阻止默认事件---阻止页面刷新
 							event.preventDefault();
 						} else {
-							message("请输入团队id或者团队名");
+							// message("请输入团队id或者团队名");
 						}
 					})
 				})
@@ -375,6 +375,10 @@
 						if (res.errno == 0) {
 							app.result = res.data;
 							message(res.message);
+							mui.fire(plus.webview.getWebviewById('boss_team'), 'joinSuccess');
+							setTimeout(function() {
+								mui.back();
+							}, 2000)
 						} else {
 							message(res.message);
 						}

@@ -9,7 +9,7 @@
 		<link href="../css/public.css" rel="stylesheet" />
 		<link href="../css/signin.css" rel="stylesheet" />
 		<style type="text/css">
-			.team-detail{
+			.team-detail {
 				height: 100%;
 				display: flex;
 				align-items: center;
@@ -23,45 +23,52 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;box-shadow: none;">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"style="color: #000000;"></div>
+		<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;box-shadow: none;">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #000000;"></div>
 			<h1 class="mui-title" style="color: #000000;"></h1>
 			<span class="team-detail mui-pull-right">团队详情</span>
 		</header>
 		<div id="container">
-			
+
 		</div>
-		
+
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
-			var tid=0;
+			var tid = 0;
 			mui.init({
 				swipeBack: true,
 				beforeback: function() {
 					plus.navigator.setStatusBarStyle(plus.webview.currentWebview().statusBarStyle);
 				}
 			})
-			
-			mui.plusReady(function () {
-			    var self = plus.webview.currentWebview();
+
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
 				var title = self.title;
 				var url = self.url;
-				tid=self.tid;
+				tid = self.tid;
 				// 如果没有团队id就隐藏
-				if(!tid){
-					mui(".team-detail")[0].style.display="none";
+				if (!tid) {
+					mui(".team-detail")[0].style.display = "none";
 				}
 				var statusBarHeight = plus.navigator.getStatusbarHeight();
 				var offsetTop = statusBarHeight + 44 + 'px';
 				document.querySelector('.mui-title').innerText = title;
-				
-				fnOpenWin(url, '', {top: offsetTop, bottom: 0, progress: {color:'#2289FF', height: '2px'}}, '');
-				
-				mui(".mui-bar-nav").on("tap",".team-detail",function(){
+
+				fnOpenWin(url, '', {
+					top: offsetTop,
+					bottom: 0,
+					progress: {
+						color: '#2289FF',
+						height: '2px'
+					}
+				}, '');
+
+				mui(".mui-bar-nav").on("tap", ".team-detail", function() {
 					// message(tid);
-					openPage('team_detail.html','team_detail','#f7f7f7',{
-						teamid:tid
+					openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+						teamid: tid
 					});
 				})
 			})

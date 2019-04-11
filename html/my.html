@@ -487,14 +487,14 @@
 					mui.post($ajaxUrl + 'team&action=team_info', {
 						token: userInfo.token
 					}, function(res) {
-						logs(res);
 						if (res.errno == 0) {
-							if (res.data.join_status) {
+							if (res.data.join_status == 1) {
 								fnOpenWin('webview.html', 'webview', {
 									statusbar: {
 										background: '#FFF'
 									}
 								}, {
+									tid: res.data.id,
 									title: 'boss',
 									statusBarStyle: 'light',
 									url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=' + res.data.id +
@@ -504,10 +504,12 @@
 							} else {
 								openPage('boss_team.html', 'boss_team', '#f7f7f7', {
 									teamInfo: res.data
-								})
+								});
+								setStatusBar('', 'dark');
 							}
 						} else {
-							openPage('boss_team.html', 'boss_team', '#f7f7f7', '')
+							openPage('boss_team.html', 'boss_team', '#f7f7f7', '');
+							setStatusBar('', 'dark');
 						}
 					}, 'json');
 					// openPage('boss_team.html', 'boss_team', '#f7f7f7', '')
@@ -585,36 +587,6 @@
 					plus.navigator.setStatusBarStyle('dark');
 				});
 
-			}
-
-			// 			function ycit() {
-			// 				var zt = document.getElementById("cover").style.display;
-			// 				var zt = document.getElementById("QR-code").style.display;
-			// 				if (zt == "block") {
-			// 					document.getElementById("cover").style.display = "none";
-			// 				} else {
-			// 					document.getElementById("cover").style.display = "block";
-			// 				}
-			// 				if (zt == "block") {
-			// 					document.getElementById("QR-code").style.display = "none";
-			// 				} else {
-			// 					document.getElementById("QR-code").style.display = "block";
-			// 				}
-			// 			}
-			// 
-			function yc() {
-				var zt = document.getElementById("cover").style.display;
-				var zt = document.getElementById("QR-code").style.display;
-				if (zt == "block") {
-					document.getElementById("cover").style.display = "none";
-				} else {
-					document.getElementById("cover").style.display = "block";
-				}
-				if (zt == "block") {
-					document.getElementById("QR-code").style.display = "none";
-				} else {
-					document.getElementById("QR-code").style.display = "block";
-				}
 			}
 
 			//获取用户信息
@@ -701,6 +673,7 @@
 			}
 			// 跳转到会员中心
 			mui(".goods").on("tap", ".goodsL", function() {
+				message(group_id);
 				// group_id = 3;
 				if (group_id == 0) {
 					checkMember();

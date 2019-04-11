@@ -120,14 +120,16 @@
 		<div class="mui-content">
 			<div class="team-qr-code">
 				<div class="qr-code-body">
-					<h2>肖飞的团队</h2>
+					<!-- <h2>肖飞的团队</h2> -->
+					<h2>{{ teamName }}</h2>
 					<p>扫二维码加入团队</p>
 					<div class="linellae">
 						<div class="left-semicircle"></div>
 						<div class="line"></div>
 						<div class="right-semicircle"></div>
 					</div>
-					<img class="qr-img" src="../image/scan-qr.png">
+					<!-- <img class="qr-img" src="../image/scan-qr.png"> -->
+					<img class="qr-img" :src="qrcodeImage">
 					<img class="logo-img" src="../image/wangkelogo.png">
 				</div>
 				<div class="operation-section mui-hidden">
@@ -139,8 +141,11 @@
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
-		mui.init();
+		mui.init({
+			swipeBack: true
+		});
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -149,6 +154,38 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		mui.plusReady(function() {})
+		
+		var userInfo = getUserInfo();
+		var vm = new Vue({
+			el: '.mui-content',
+			data() {
+				return {
+					teamName: '',
+					teamId: 0,
+					qrcodeImage: '../image/scan-qr.png'
+				}
+			},
+			mounted: function() {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					vm.teamId = self.teamId;
+					vm.teamName = self.teamName;
+					getQrcode();
+				})
+			}
+		})
+		
+		function getQrcode() {
+			mui.get($ajaxUrl + 'userqrcode',{
+					action: 'team',
+					token: userInfo.token,
+					team_id: vm.teamId
+				}, function(res){
+					if (res.errno == 0) {
+						vm.qrcodeImage = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+					}
+				},'json'
+			);
+		}
 	</script>
 </html>

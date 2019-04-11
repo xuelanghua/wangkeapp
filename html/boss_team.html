@@ -82,7 +82,12 @@
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
 	<script type="text/javascript">
-		mui.init();
+		mui.init({
+			swipeBack: true,
+			beforeback: function() {
+				plus.navigator.setStatusBarStyle('light');
+			}
+		});
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -90,15 +95,32 @@
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		var userInfo = getUserInfo();
 		// 初始化字体大小结束
 		mui.plusReady(function() {
+			window.addEventListener('joinSuccess', function() {
+				mui.post($ajaxUrl + 'team&action=team_info', {
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						if (res.data.join_status == 0) {
+							document.querySelector(".mui-btn-outlined").style.display = "none";
+							document.querySelector(".mui-btn-blue").style.display = "none";
+							document.querySelector(".no-team-reminders").innerHTML = "您加入<span style='color:#2289ff'>" + res.data.name +
+								"</span>的申请正在审核中";
+						}
+					}
+				}, 'json');
+			})
+			
 			var self = plus.webview.currentWebview();
 			if (self.teamInfo) {
-				document.querySelector(".mui-btn-outlined").style.display="none";
-				document.querySelector(".mui-btn-blue").style.display="none";
-				document.querySelector(".no-team-reminders").innerHTML="您加入<span style='color:#2289ff'>"+teamInfo.name+"</span>";
+				document.querySelector(".mui-btn-outlined").style.display = "none";
+				document.querySelector(".mui-btn-blue").style.display = "none";
+				document.querySelector(".no-team-reminders").innerHTML = "您加入<span style='color:#2289ff'>" + self.teamInfo.name +
+					"</span>的申请正在审核中";
 			} else {
-				
+
 			}
 		})
 		// 加入团队
