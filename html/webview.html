@@ -35,6 +35,7 @@
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
+			var tid=0;
 			mui.init({
 				swipeBack: true,
 				beforeback: function() {
@@ -46,14 +47,23 @@
 			    var self = plus.webview.currentWebview();
 				var title = self.title;
 				var url = self.url;
+				tid=self.tid;
+				// 如果没有团队id就隐藏
+				if(!tid){
+					mui(".team-detail")[0].style.display="none";
+				}
 				var statusBarHeight = plus.navigator.getStatusbarHeight();
 				var offsetTop = statusBarHeight + 44 + 'px';
 				document.querySelector('.mui-title').innerText = title;
 				
 				fnOpenWin(url, '', {top: offsetTop, bottom: 0, progress: {color:'#2289FF', height: '2px'}}, '');
-			})
-			mui(".mui-bar-nav").on("tap",".team-detail",function(){
-				openPage('team_detail.html','team_detail','#f7f7f7','');
+				
+				mui(".mui-bar-nav").on("tap",".team-detail",function(){
+					// message(tid);
+					openPage('team_detail.html','team_detail','#f7f7f7',{
+						teamid:tid
+					});
+				})
 			})
 		</script>
 	</body>
