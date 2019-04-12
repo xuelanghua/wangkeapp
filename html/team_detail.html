@@ -386,7 +386,6 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		mui.plusReady(function() {})
 		var app = new Vue({
 			el: "#mui-content",
 			data() {
@@ -403,14 +402,6 @@
 					applyList: [],
 					teamNum: 1
 				}
-			},
-			created: function() {
-				getInfo();
-				mui.plusReady(function() {
-					var self = plus.webview.currentWebview();
-					app.tid = self.teamid;
-					getMember();
-				})
 			},
 			methods: {
 				showEdit: function() {
@@ -464,9 +455,14 @@
 				}
 			},
 			mounted: function() {
-				getInfo();
-				getMember();
 			}
+		})
+		mui.plusReady(function() {
+			var self = plus.webview.currentWebview();
+			app.tid = self.teamid;
+			getInfo();
+			getMember();
+			getApplyList();
 		})
 		mui(".mui-content").on("tap", ".team-qrCode", function() {
 			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', {
@@ -480,11 +476,11 @@
 		})
 		// 更多成员
 		mui(".mui-content").on("tap", ".more-member", function() {
+			logs(app.tid);
 			openPage('team_members.html', 'team_members', '#f7f7f7', {
 				tid: app.tid
 			});
 		})
-
 		// 获取团队信息
 		function getInfo() {
 			mui.post($ajaxUrl + 'team&action=team_info', {
@@ -509,7 +505,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.applyList = res.data;
 				} else {
@@ -520,6 +516,7 @@
 		}
 		// 获取团队成员
 		function getMember() {
+			logs(app.tid);
 			mui.post($ajaxUrl + 'team&action=member_list', {
 				token: userInfo.token,
 				team_id: app.tid
@@ -535,7 +532,6 @@
 		window.addEventListener('doit', function(e) {
 			getInfo();
 			getMember();
-			alert("doit");
 			var checkedValues = e.detail.idGroup;
 			mui.post($ajaxUrl + 'team&action=add_member', {
 				token: userInfo.token,

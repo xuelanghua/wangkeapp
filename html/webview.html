@@ -48,6 +48,7 @@
 				var title = self.title;
 				var url = self.url;
 				tid = self.tid;
+				// logs(tid);
 				// 如果没有团队id就隐藏
 				if (!tid) {
 					mui(".team-detail")[0].style.display = "none";
@@ -56,7 +57,7 @@
 				var offsetTop = statusBarHeight + 44 + 'px';
 				document.querySelector('.mui-title').innerText = title;
 
-				fnOpenWin(url, '', {
+				fnOpenWin(url, 'weburl', {
 					top: offsetTop,
 					bottom: 0,
 					progress: {
@@ -66,7 +67,7 @@
 				}, '');
 
 				mui(".mui-bar-nav").on("tap", ".team-detail", function() {
-					// message(tid);
+					logs(tid);
 					openPage('team_detail.html', 'team_detail', '#f7f7f7', {
 						teamid: tid
 					});
