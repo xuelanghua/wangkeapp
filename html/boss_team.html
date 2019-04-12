@@ -112,9 +112,11 @@
 					}
 				}, 'json');
 			})
-			
+
 			var self = plus.webview.currentWebview();
-			if (self.teamInfo) {
+			logs(self.teamInfo);
+			if (self.teamInfo.join_status == 0) {
+				logs(self.teamInfo);
 				document.querySelector(".mui-btn-outlined").style.display = "none";
 				document.querySelector(".mui-btn-blue").style.display = "none";
 				document.querySelector(".no-team-reminders").innerHTML = "您加入<span style='color:#2289ff'>" + self.teamInfo.name +
@@ -130,6 +132,7 @@
 		// 创建团队
 		mui(".mui-content").on("tap", ".mui-btn-blue", function() {
 			openPage('create_team.html', 'create_team', '#f7f7f7', '');
+			// openPage('team_detail.html', 'team_detail', '#f7f7f7', '');
 		})
 	</script>
 </html>

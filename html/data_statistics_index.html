@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>数据统计</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.mui-content>.mui-table-view:first-child{
+				margin-top: 0;
+			}
+			.mui-table-view:before,.mui-table-view:after{
+				height: 0;
+			}
+			.mui-table-view-cell{
+				display: flex;
+				align-items: center;
+				min-height: 1.2rem;
+			}
+			.mui-table-view-cell img{
+				width: 0.43rem;
+				height: 0.43rem;
+				margin-right: 0.2rem;
+			}
+			.mui-table-view-cell span{
+				font-size: 0.3rem;
+				color: #333333;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">数据统计</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell the-store-ales"><img src="../image/icon/data_statistics_inquiry-img-01.png"><span
+					 class="mui-navigate-right">店铺营收</span></li>
+				<li class="mui-table-view-cell self-media"><img src="../image/icon/data_statistics_inquiry-img-02.png"><span class="mui-navigate-right">自媒体广告</span></li>
+			</ul>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		mui.plusReady(function() {})
+		// 店铺营收
+		mui('.mui-content').on('tap', '.the-store-ales', function() {
+			openPage('the_store_ales.html', 'the_store_ales', '#f7f7f7', '');
+		})
+		// 自媒体广告
+		mui('.mui-content').on('tap', '.self-media', function() {
+			openPage('self_media_statistics.html', 'self_media_statistics', '#f7f7f7', '');
+		})
+	</script>
+</html>

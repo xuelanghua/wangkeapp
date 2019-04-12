@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>自媒体广告</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style>
+			h2{
+				font-size: 0.3rem;
+				color: #333333;
+				font-weight: normal;
+				padding: 0.36rem 0.2rem;
+				line-height: 1.4;
+			}
+			.total-data{
+				padding: 0 0.2rem;
+				background-color: #FFFFFF;
+			}
+			.total-data ul{
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-direction: row;
+				flex-wrap:wrap;
+				padding: 0.5rem 0;
+				position: relative;
+				margin-bottom: 0.56rem;
+			}
+			.total-data ul:after{
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			.total-data ul li{
+				display: flex;
+				width: 50%;
+				font-size: 0.28rem;
+				align-items: center;
+				justify-content: flex-start;
+				margin: 0.2rem 0;
+				padding-left: 0.7rem;
+				color: #333333;
+			}
+			.total-data ul li span{
+				display: inline-flex;
+				align-items: center;
+				color: #999999;
+			}
+			.total-data span:before{
+				content: '';
+				display: inline-flex;
+				width: 0.12rem;
+				height: 0.12rem;
+				background-color: #87cefa;
+				margin-right: 0.12rem;
+				border-radius: 50%;
+			}
+			.total-data span.odd:before{
+				background-color: #ff7f50;
+			}
+			.change-data-cont{
+				display: flex;
+				justify-content: center;
+				align-items: flex-start;
+				padding:0.6rem 0 ;
+			}
+			.change-data-cont .mui-btn{
+				margin: 0 0.3rem;
+				border-radius: 0.1rem;
+				color: #333333;
+				background-color: #ffffff;
+				width: 1.32rem;
+				height: 0.49rem;
+				padding: 0;
+				font-size: 0.24rem;
+			}
+			.change-data-cont .mui-btn:active{
+				background-color: #eeeeee;
+				color: #666666;
+			}
+			.change-data-cont .mui-btn.active{
+				background-color: #eef6ff;
+				color: #2289ff;
+				border-color: #2289ff;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">自媒体广告</h1>
+		</header>
+
+		<div class="mui-content">
+			<h2>腾讯悄然上线“微信支付分”，誓要与芝麻信用分一较高下？</h2>
+			<div class="total-data">
+				<ul>
+					<li><span class="odd">总点击量:</span>500</li>
+					<li><span>总分享量:</span>200</li>
+					<li><span class="odd">月点击量:</span>100</li>
+					<li><span>月分享量:</span>20</li>
+					<li><span class="odd">周点击量:</span>322</li>
+					<li><span>周分享量:</span>120</li>
+				</ul>
+				<div>
+					图表~~
+				</div>
+				<div class="change-data-cont">
+					<button type="button" class="mui-btn mui-btn-outlined active">月统计</button>
+					<button type="button" class="mui-btn mui-btn-outlined">周统计</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		// 初始化字体大小
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		// 初始化字体大小结束
+		mui.plusReady(function() {})
+		mui(".mui-content").on('tap', '.mui-btn-outlined', function() {
+			mui(".mui-btn-outlined")[0].classList.remove("active");
+			mui(".mui-btn-outlined")[1].classList.remove("active");
+			this.classList.add("active");
+		})
+	</script>
+</html>

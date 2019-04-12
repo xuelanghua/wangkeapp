@@ -314,7 +314,7 @@
 				<ul>
 					<li v-for="(items,index) in teamMember" :key="index">
 						<div class="user-head-img">
-							<img :src="items.avatarUrl" />
+							<img :src="items.avatar||items.avatarUrl" />
 						</div>
 					</li>
 					<li>
@@ -406,14 +406,19 @@
 			},
 			created: function() {
 				getInfo();
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					app.tid = self.teamid;
+					getMember();
+				})
 			},
 			methods: {
 				showEdit: function() {
 					this.iseditDesc = true;
 					this.conts = this.desc;
 				},
-				editTname:function(){
-					this.iseditName=true;
+				editTname: function() {
+					this.iseditName = true;
 					this.newTeamName = this.teamName;
 				},
 				confirmEditor: function() {
@@ -440,18 +445,18 @@
 						}
 					}, 'json');
 				},
-				examine:function(status,userId){
+				examine: function(status, userId) {
 					mui.post($ajaxUrl + 'team&action=check', {
 						token: userInfo.token,
 						team_id: app.tid,
-						user_id:userId,
-						status:status
+						user_id: userId,
+						status: status
 					}, function(res) {
 						if (res.errno == 0) {
 							message(res.message);
 							getInfo();
 							getApplyList();
-						}else{
+						} else {
 							getInfo();
 							message(res.message);
 						}
@@ -459,27 +464,15 @@
 				}
 			},
 			mounted: function() {
-				mui.plusReady(function() {
-					var self = plus.webview.currentWebview();
-					app.tid = self.teamid;
-					// 获取团队成员以及申请列表
-					mui.post($ajaxUrl + 'team&action=member_list', {
-						token: userInfo.token,
-						team_id: app.tid
-					}, function(res) {
-						if (res.errno == 0) {
-							app.teamMember = res.data;
-						} else {
-							// app.teamMember=[];
-						}
-					}, 'json');
-					// 申请列表
-					getApplyList();
-				})
+				getInfo();
+				getMember();
 			}
 		})
 		mui(".mui-content").on("tap", ".team-qrCode", function() {
-			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', {teamId: app.tid, teamName: app.teamName});
+			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', {
+				teamId: app.tid,
+				teamName: app.teamName
+			});
 		})
 		// 添加团队成员
 		mui(".mui-content").on("tap", ".member-selection", function() {
@@ -492,11 +485,11 @@
 			});
 		})
 
+		// 获取团队信息
 		function getInfo() {
-			// 获取团队信息
 			mui.post($ajaxUrl + 'team&action=team_info', {
 				token: userInfo.token
-			}, function(res) { 
+			}, function(res) {
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
@@ -510,12 +503,13 @@
 				}
 			}, 'json');
 		}
-		
+		// 获取验证信息
 		function getApplyList() {
 			mui.post($ajaxUrl + 'team&action=apply_list', {
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					app.applyList = res.data;
 				} else {
@@ -524,5 +518,42 @@
 				}
 			}, 'json');
 		}
+		// 获取团队成员
+		function getMember() {
+			mui.post($ajaxUrl + 'team&action=member_list', {
+				token: userInfo.token,
+				team_id: app.tid
+			}, function(res) {
+				if (res.errno == 0) {
+					app.teamMember = res.data;
+				} else {
+					app.teamMember = [];
+				}
+			}, 'json');
+		}
+		// 添加成员
+		window.addEventListener('doit', function(e) {
+			getInfo();
+			getMember();
+			alert("doit");
+			var checkedValues = e.detail.idGroup;
+			mui.post($ajaxUrl + 'team&action=add_member', {
+				token: userInfo.token,
+				team_id: app.tid,
+				uids: checkedValues.join(',')
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					message("添加成功");
+				} else {
+					message("添加失败，请稍后重试");
+				}
+			}, 'json');
+		});
+		// 删除成员
+		window.addEventListener('remove', function(e) {
+			getInfo();
+			getMember();
+		});
 	</script>
 </html>

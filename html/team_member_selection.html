@@ -148,23 +148,11 @@
 						<template v-for="(vel,key,i) in lists" :key="i">
 							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
 							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input type="checkbox" :value="items.uid" :data-avatar="items.avatarUrl?items.avatarUrl:items.avatar" />
-								<img :src="items.avatarUrl?items.avatarUrl:items.avatar" alt="头像">
+								<input type="checkbox" :value="items.uid" :data-avatar="items.avatar||items.avatarUrl" />
+								<img :src="items.avatar||items.avatarUrl" alt="头像">
 								<span>{{items.name}}</span>
 							</li>
 						</template>
-						<!-- <li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
-						<li data-value="BLT" data-tags="bulaite" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-							<input type="checkbox" value="2" data-avatar="img/ijml002" />
-							<img src="../image/kaol.jpg" alt="">
-							布莱特
-						</li>
-
-						<li data-value="AKU" data-tags="bushi" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-							<input type="checkbox" value="3" data-avatar="img/ijml003" />
-							<img src="../image/kaol.jpg" alt="">
-							布施
-						</li> -->
 					</ul>
 				</div>
 			</div>
@@ -177,7 +165,7 @@
 	<script type="text/javascript">
 		mui.init();
 		var userInfo = getUserInfo();
-		var tid='';
+		var tid = '';
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -195,18 +183,6 @@
 				mui.plusReady(function() {
 					var self = plus.webview.currentWebview();
 					tid = self.tid;
-					function getUserList() {
-						mui.post($ajaxUrl + 'team&action=friend_list', {
-							token: userInfo.token
-						}, function(res) {
-							logs(res);
-							if (res.errno == 0) {
-								app.lists = res.data;
-							}else{
-								
-							}
-						}, 'json');
-					}
 					getUserList();
 				})
 				mui.ready(function() {
@@ -231,31 +207,16 @@
 							}
 						});
 						if (checkedValues.length > 0) {
-							mui.post($ajaxUrl + 'team&action=add_member', {
-								token: userInfo.token,
-								team_id:tid,
-								uids:'3'
-							}, function(res) {
-								logs(res);
-								if (res.errno == 0) {
-									message("添加成功");
-								}else{
-									message("添加失败，请稍后重试");
-								}
-							}, 'json');
-							// var pageId;
-							// if (pageId) {
-							// var pageId = plus.webview.getWebviewById('create_team.html');
-							// var pageId = plus.webview.currentWebview().opener().id;
-							// }
-							// console.log(pageId);
-// 							mui.fire(pageId, 'combination', {
-// 								id: "123",
-// 								lngs: "lng",
-// 								lats: "lat",
-// 								addresss: "address"
-// 							});
-							// mui.back();
+							var view = plus.webview.currentWebview().opener();
+							mui.fire(view, 'doit', {
+								imagePath: checkedAvatar,
+								idGroup: checkedValues
+							});
+							
+							var detailPage = plus.webview.getWebviewById('team_detail');
+							// logs(detailPage);
+							mui.fire(detailPage, 'doit');
+							mui.back();
 						} else {
 							mui.alert('你没选择任何成员');
 						}
@@ -278,5 +239,17 @@
 				document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			}
 		})
+		function getUserList() {
+			mui.post($ajaxUrl + 'team&action=friend_list', {
+				token: userInfo.token
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					app.lists = res.data;
+				} else {
+		
+				}
+			}, 'json');
+		}
 	</script>
 </html>
