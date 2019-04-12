@@ -376,6 +376,7 @@
 				mui.plusReady(function() {
 					var self = plus.webview.currentWebview();
 					tid = self.tid;
+					logs(tid);
 					getUserData();
 					// 解散团队
 					mui('.join-team-verify').on("tap", ".send-verify", function() {
@@ -388,8 +389,7 @@
 								plus.webview.close('webview');
 								plus.webview.close('team_members');
 								plus.webview.close('team_detail');
-								plus.webview.close(
-									'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=100003&m=longbing_card');
+								plus.webview.close('weburl');
 								mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'changeMy');
 							} else {
 								app.dissolve = false;
@@ -461,18 +461,6 @@
 				});
 			}
 		})
-
-		function getUserData() {
-			mui.post($ajaxUrl + 'team&action=member_list', {
-				token: userInfo.token,
-				team_id: tid,
-				type: 1
-			}, function(res) {
-				if (res.errno == 0) {
-					app.userList = res.data;
-				}
-			}, 'json');
-		}
 		// 添加成员
 		window.addEventListener('doit', function(e) {
 			var checkedValues = e.detail.idGroup;
@@ -489,5 +477,18 @@
 				}
 			}, 'json');
 		});
+		function getUserData() {
+			// logs(tid);
+			mui.post($ajaxUrl + 'team&action=member_list', {
+				token: userInfo.token,
+				team_id: tid,
+				type: 1
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					app.userList = res.data;
+				}
+			}, 'json');
+		}
 	</script>
 </html>

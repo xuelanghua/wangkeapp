@@ -230,12 +230,13 @@
 			mui.post($ajaxUrl + 'team&action=create', {
 				name: app.teamName,
 				notice: app.notice,
-				uids: app.uids,
+				uids: app.uids.join(","),
 				token: userInfo.token
 			}, function(res) {
 				if (res.errno == 0) {
 					message("创建成功！");
 					plus.webview.close('create_team');
+					plus.webview.close('boss_team');
 					openPage('team_detail.html','team_detail','#f7f7f7','');
 				} else {
 					message(res.message);
