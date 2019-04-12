@@ -83,6 +83,9 @@
 				width: 200px;
 				margin-right: 8px;
 			}
+			.underline {
+				color: red;
+			}
 		</style>
 	</head>
 
@@ -110,14 +113,14 @@
 				联系信息
 			</div>
 			<div class="conetnt_list">
-				<span class="mui-pull-left name">客户姓名*</span>
+				<span class="mui-pull-left name">客户姓名<span class="underline">*</span></span>
 				<span class="mui-pull-right">
 					<input type="text" name="name" />
 				</span>
 				<div class="clearfix"></div>
 			</div>
 			<div class="conetnt_list">
-				<span class="mui-pull-left name">电话*</span>
+				<span class="mui-pull-left name">电话<span class="underline">*</span></span>
 				<span class="mui-pull-right">
 					<input type="text" name="mobile" />
 				</span>
@@ -135,14 +138,14 @@
 				基本信息
 			</div>
 			<div class="conetnt_list">
-				<span class="mui-pull-left name">公司名称*</span>
+				<span class="mui-pull-left name">公司名称<span class="underline">*</span></span>
 				<span class="mui-pull-right">
 					<input type="text" name="company" />
 				</span>
 				<div class="clearfix"></div>
 			</div>
 			<div class="conetnt_list">
-				<span class="mui-pull-left name">职位*</span>
+				<span class="mui-pull-left name">职位<span class="underline">*</span></span>
 				<span class="mui-pull-right">
 					<input type="text" name="job" />
 				</span>
@@ -171,7 +174,9 @@
 				<input type="text" name="anniversary" class="mui-pull-right" style="width: 120px;" readonly value="">
 				<div class="clearfix"></div>
 			</div>
-
+			<div style="text-align: center;margin-top: 25px;">
+				<button type="button" class="mui-btn mui-btn-primary contact" style="background-color: #2289ff;">从通讯录导入</button>
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/mui.picker.js"></script>
@@ -184,7 +189,7 @@
 					plus.navigator.setStatusBarStyle('light');
 				}
 			})
-			
+
 			var submitFlag = true;
 			var userInfo = null;
 			var self = null;
@@ -203,13 +208,15 @@
 						document.querySelector('input[name=' + type + ']').value = e.value;
 					})
 				})
-				
+
 				mui('.mui-content').on('tap', '.contact', function() {
-					// getContacts(); 
-					// fnOpenWin('contact.html', 'contact');
+					nativeCommon.contacts.getContact(function(name, phoneNumber){
+						flag = true;
+						mui('input[name=name]')[0].value = name;
+						mui('input[name=mobile]')[0].value = phoneNumber;
+					});
 				})
-				
-				
+
 				document.getElementById('save').addEventListener('tap', function() {
 					if (!submitFlag) return;
 					var submitData = {
@@ -263,36 +270,17 @@
 				})
 			}
 
-			//获取通讯录
-			function getContacts() {
-				plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function(addressbook) {
-					addressbook.find(["displayName", "phoneNumbers"], function(contacts) {
-						// logs(contacts);
-// 						content = "联系人数量：" + contacts.length;
-// 						content += "<br>";
-// 						for (var i = 0; i < contacts.length; i++) {
-// 							for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-// 								var str = "<p><span style='display:inline_block';width:120px;'>姓名:" + contacts[i].displayName +
-// 									"</span>号码:" + contacts[i].phoneNumbers[j].value + "</p>";
-// 							}
-// 							content += str;
-// 						}
-					}, function() {
-						message('查找联系人失败!');
-					}, {
-						multiple: true
-					});
-				}, function(e) {
-					message('获取通讯录失败!');
-				});
-			}
-			
 			//提交数据
 			function fnSubmit(data) {
 				submitFlag = false;
 				if (cid != 0) {}
 				// plus.nativeUI.showWaiting('数据处理中!', 'div');
-				mui.post($ajaxUrl + 'customer', {action: 'add', type: type, token: userInfo.token, data: data}, function(res) {
+				mui.post($ajaxUrl + 'customer', {
+					action: 'add',
+					type: type,
+					token: userInfo.token,
+					data: data
+				}, function(res) {
 					// logs(res);
 					if (res.errno == 0) {
 						message('录入成功!');
@@ -301,7 +289,7 @@
 							plus.webview.close('customer_entry');
 						}, 2000);
 					} else {
-						message(res.message); 
+						message(res.message);
 						submitFlag = true;
 					}
 					// plus.nativeUI.closeWaiting();

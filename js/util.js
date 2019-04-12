@@ -231,7 +231,7 @@ function share(param, type) {
 			var t = s[i];
 			shareService[t.id] = t;
 		}
-		
+
 		var shareBtns = [];
 		// 更新分享列表
 		var ss = shareService['weixin'];
@@ -258,7 +258,7 @@ function share(param, type) {
 		}, function(e) {
 			(e.index > 0) && shareAction(shareBtns[e.index - 1], param, type);
 		}) : plus.nativeUI.alert('当前环境无法支持分享链接操作!');
-		
+
 	}, function(e) {
 		plus.nativeUI.alert("获取分享服务列表失败：" + e.message);
 	});
@@ -275,15 +275,14 @@ function shareToMiniprogram(param) {
 			var t = s[i];
 			shareService[t.id] = t;
 		}
-		
+
 		var shareBtns = [];
 		// 更新分享列表
 		var ss = shareService['weixin'];
-		ss && ss.nativeClient && shareBtns.push(
-			{
-				s: ss,
-				x: 'WXSceneSession'
-			});
+		ss && ss.nativeClient && shareBtns.push({
+			s: ss,
+			x: 'WXSceneSession'
+		});
 		shareAction(shareBtns[0], param, 'miniProgram');
 	}, function(e) {
 		plus.nativeUI.alert("获取分享服务列表失败：" + e.message);
@@ -300,7 +299,7 @@ function shareAction(sb, param, type) {
 		plus.nativeUI.alert("无效的分享服务！");
 		return;
 	}
-	
+
 	var msg = {
 		type: type,
 		title: '',
@@ -312,9 +311,9 @@ function shareAction(sb, param, type) {
 		extra: {
 			scene: sb.x ? sb.x : ''
 		},
-		miniProgram:{}
+		miniProgram: {}
 	};
-	
+
 	if (type == 'web') {
 		msg.title = param.title;
 		msg.content = param.content;
@@ -370,15 +369,198 @@ function shareMessage(msg, s) {
  * @param url 要解析的url
  */
 function parseUrl(url) {
-  var str = url.split("?")[1],
-    items = str.split("&");
-  var arr, name, value;
-  var param = {};
-  for (var i = 0, l = items.length; i < l; i++) {
-    arr = items[i].split("=");
-    name = arr[0];
-    value = arr[1];
-    param[name] = value;
-  }
-  return param;
+	var str = url.split("?")[1],
+		items = str.split("&");
+	var arr, name, value;
+	var param = {};
+	for (var i = 0, l = items.length; i < l; i++) {
+		arr = items[i].split("=");
+		name = arr[0];
+		value = arr[1];
+		param[name] = value;
+	}
+	return param;
+}
+
+/**
+ * 获取手机通讯录 
+ * 调用方法：nativeCommon.contacts.getContact(function callBack(name, phoneNumber));
+ */
+var nativeCommon = {
+	contacts: {
+		getContact: function(callBack) {
+			switch (plus.os.name) {
+				case "iOS":
+					if (plus.device.model === "iPhoneSimulator") {
+						//模拟器
+						nativeCommon.contacts.ios.visitContacts(function(name, phoneNumber) {
+							var phone = phoneNumber.replace('+86', '').replace(/\s/g, '').replace(/-/g, '');
+							callBack(name, phone);
+						});
+					} else {
+						//真机
+						nativeCommon.contacts.ios.visitAddressBook(function(name, phoneNumber) {
+							var phone = phoneNumber.replace('+86', '').replace(/\s/g, '').replace(/-/g, '');
+							callBack(name, phone);
+						});
+					}
+					break;
+				case "Android":
+					nativeCommon.contacts.android.visitContacts(function(name, phoneNumber) {
+						var phone = phoneNumber.replace('+86', '').replace(/\s/g, '').replace(/-/g, '');
+						callBack(name, phone);
+					});
+					break;
+				default:
+					break;
+			}
+		},
+		ios: { //供iOS系统调用
+			/**
+			 * 访问通讯录，将获取的联系人信息通过callBack返回
+			 * 仅限模拟器使用（Native.js 的bug）
+			 * @param {Object} callBack回调
+			 */
+			visitContacts: function(callBack) {
+				var contactPickerVC = plus.ios.newObject("CNContactPickerViewController");
+				//实现代理方法【- (void)contactPicker:(CNContactPickerViewController *)picker didSelectContact:(CNContact *)contact;】
+				//同时生成遵守CNContactPickerDelegate协议的代理对象delegate
+				var delegate = plus.ios.implements("CNContactPickerDelegate", {
+					"contactPicker:didSelectContact:": function(picker, contact) {
+						console.log(JSON.stringify(picker));
+						console.log(JSON.stringify(contact));
+						//姓名
+						var name = "";
+						//姓氏
+						var familyName = contact.plusGetAttribute("familyName");
+						//名字
+						var givenName = contact.plusGetAttribute("givenName");
+						name = familyName + givenName;
+						//电话号码
+						var phoneNo = "";
+						var phoneNumbers = contact.plusGetAttribute("phoneNumbers");
+						if (phoneNumbers.plusGetAttribute("count") > 0) {
+							var phone = phoneNumbers.plusGetAttribute("firstObject");
+							var phoneNumber = phone.plusGetAttribute("value");
+							phoneNo = phoneNumber.plusGetAttribute("stringValue");
+						}
+						if (callBack) {
+							callBack(name, phoneNo);
+						}
+					}
+				});
+				//给通讯录控制器contactPickerVC设置代理
+				plus.ios.invoke(contactPickerVC, "setDelegate:", delegate);
+				//获取当前UIWebView视图
+				var currentWebview = plus.ios.currentWebview();
+				//根据当前UIWebView视图获取当前控制器
+				var currentVC = nativeCommon.contacts.ios.getViewControllerByView(currentWebview);
+				//由当前控制器present到通讯录控制器
+				plus.ios.invoke(currentVC, "presentViewController:animated:completion:", contactPickerVC, true, null);
+			},
+			/**
+			 * 访问通讯录，将获取的联系人信息通过callBack返回
+			 * 仅限真机使用（Native.js 的bug）
+			 * @param {Object} callBack
+			 */
+			visitAddressBook: function(callBack) {
+				var peoplePickerNavController = plus.ios.newObject("ABPeoplePickerNavigationController");
+				//实现代理方法【- (void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker didSelectPerson:(ABRecordRef)person;】
+				//同时生成遵守ABPeoplePickerNavigationControllerDelegate协议的代理对象peoplePickerDelegate
+				var peoplePickerDelegate = plus.ios.implements("ABPeoplePickerNavigationControllerDelegate", {
+					"peoplePickerNavigationController:didSelectPerson:": function(peoplePicker, person) {
+						//这里的peoplePicker竟然是CNContact实例对象，person是undefined
+						console.log(JSON.stringify(peoplePicker));
+						console.log(JSON.stringify(person));
+						console.log(typeof person);
+
+						//所以之前的代码不用改
+						var contact = peoplePicker;
+						//姓名
+						var name = "";
+						//姓氏
+						var familyName = contact.plusGetAttribute("familyName");
+						//名字
+						var givenName = contact.plusGetAttribute("givenName");
+						name = familyName + givenName;
+						//电话号码
+						var phoneNo = "";
+						var phoneNumbers = contact.plusGetAttribute("phoneNumbers");
+						if (phoneNumbers.plusGetAttribute("count") > 0) {
+							var phone = phoneNumbers.plusGetAttribute("firstObject");
+							var phoneNumber = phone.plusGetAttribute("value");
+							phoneNo = phoneNumber.plusGetAttribute("stringValue");
+						}
+						if (callBack) {
+							callBack(name, phoneNo);
+						}
+					}
+				});
+				//给通讯录控制器peoplePickerNavController设置代理
+				plus.ios.invoke(peoplePickerNavController, "setPeoplePickerDelegate:", peoplePickerDelegate);
+				//获取当前UIWebView视图
+				var currentWebview = plus.ios.currentWebview();
+				//根据当前UIWebView视图获取当前控制器
+				var currentVC = nativeCommon.contacts.ios.getViewControllerByView(currentWebview);
+				//由当前控制器present到通讯录控制器
+				plus.ios.invoke(currentVC, "presentViewController:animated:completion:", peoplePickerNavController, true, null);
+			},
+			/**
+			 * 根据view获取到当前控制器
+			 * @param {Object} view
+			 */
+			getViewControllerByView: function(view) {
+				if (plus.os.name != "iOS") {
+					return null;
+				}
+				//UIViewController类对象
+				var UIViewController = plus.ios.invoke("UIViewController", "class");
+				while (view) {
+					var responder = plus.ios.invoke(view, "nextResponder");
+					if (plus.ios.invoke(responder, "isKindOfClass:", UIViewController)) {
+						return responder;
+					}
+					view = plus.ios.invoke(view, "superview");
+				}
+				return null;
+			}
+		},
+		android: { //供android系统调用
+			visitContacts: function(callBack) {
+				var REQUESTCODE = 1000;
+				main = plus.android.runtimeMainActivity();
+				var Intent = plus.android.importClass('android.content.Intent');
+				var ContactsContract = plus.android.importClass('android.provider.ContactsContract');
+				var intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+				main.onActivityResult = function(requestCode, resultCode, data) {
+					if (REQUESTCODE == requestCode) {
+						var phoneNumber = "";
+						var resultString = "";
+						var context = main;
+						plus.android.importClass(data);
+						var contactData = data.getData();
+						var resolver = context.getContentResolver();
+						plus.android.importClass(resolver);
+						var cursor = resolver.query(contactData, null, null, null, null);
+						plus.android.importClass(cursor);
+						cursor.moveToFirst();
+						//姓名
+						var givenName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)) || "";
+						var contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+						var pCursor = resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds
+							.Phone.CONTACT_ID + " = " + contactId, null, null);
+						if (pCursor.moveToNext()) {
+							phoneNumber = pCursor.getString(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						}
+						if (callBack) {
+							callBack(givenName, phoneNumber);
+						}
+						cursor.close();
+						pCursor.close();
+					}
+				};
+				main.startActivityForResult(intent, REQUESTCODE);
+			}
+		}
+	}
 }

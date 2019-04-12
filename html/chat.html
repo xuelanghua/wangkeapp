@@ -514,6 +514,7 @@
 			var currentLabel = 'empty';
 			var currentTab = 'crm';
 			var userInfo = null;
+			var winHeight = 0;
 			var customer_data = null;
 			var timer = null;
 			mui.plusReady(function() {
@@ -532,13 +533,18 @@
 					}
 				};
 
-
+				winHeight = document.querySelector("body").offsetHeight;
+				// message(winHeight);
 				userInfo = getUserInfo();
 				pageInit();
 
 				//自定义事件监听-首页新增客户点击
 				window.addEventListener('newCustomer', function() {
 					mui.trigger(document.querySelector('.switch1_content[data-id=customer]'), 'tap');
+				})
+				
+				window.addEventListener('resize', function() {
+					// message(document.querySelector("body").offsetHeight);
 				})
 
 				document.getElementById('label_edit').addEventListener('tap', function() {
@@ -571,6 +577,10 @@
 						plus.navigator.setStatusBarStyle('dark');
 					}
 				})
+				
+				mui('.mui-content').on('blur', '#search', function() {
+					alert(222);
+				})
 
 				window.addEventListener('addInterval', function(e) {
 					console.log('addInterval');
@@ -595,7 +605,8 @@
 			function indexInit() {
 				var header = document.querySelector('header.mui-bar');
 				var list = document.getElementById('list');
-				list.style.height = (document.body.offsetHeight - header.offsetHeight + 2) + 'px';
+				// list.style.height = (document.body.offsetHeight - header.offsetHeight + 2) + 'px';
+				list.style.height = (winHeight - header.offsetHeight + 2) + 'px';
 				window.indexedList = new mui.IndexedList(list);
 				mui.trigger(document.getElementById(currentTab), 'tap');
 			}
@@ -1403,11 +1414,13 @@
 			}
 
 			function timeInterval() {
-				timer = window.setInterval('getCustomerList()', 30000);
+				timer = setInterval(function() {
+					getCustomerList();
+				}, 30000);
 			}
 
 			function clearTimeInterval() {
-				window.clearInterval(timer);
+				clearInterval(timer);
 			}
 		</script>
 	</body>
