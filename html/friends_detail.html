@@ -163,10 +163,6 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						fid = self.fid;
-						var selfid=userInfo.id;
-						if(fid!=selfid&&muiCont.is_friend!=1){
-							muiCont.addshow=true;
-						}
 						getFriendsInfo();
 						// 音频播放
 						var voice = null,
@@ -265,6 +261,10 @@
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;
 						mui(".mui-title")[0].innerText = data.name;
+						var selfid=userInfo.id;
+						if(fid!=selfid&&muiCont.is_friend!=1){
+							muiCont.addshow=true;
+						}
 					} else {
 						message(res.errno.message)
 					}

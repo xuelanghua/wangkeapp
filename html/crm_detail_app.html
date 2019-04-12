@@ -98,7 +98,73 @@
 				margin-right: 10px;
 				background-color: #2188FF;
 			}
-			
+			.comment-input{
+				width: 100%;
+				position: fixed;
+				bottom: 0;
+				padding: 10px;
+				border-top: 1px solid #F2F2F2;
+				background-color: #FFFFFF;
+			}
+			.input{
+				width: 40%;
+				background-color: #F5F6F8;
+				padding: 7px 0 7px 11px;
+				color: #999999;
+				font-size: 15px;
+				margin-top: 4px;
+				border-radius: 25px;
+			}
+			.input img{
+				width: 17px;
+				height: 18px;
+			}
+			.comment-inputr{
+				width: 60%;
+				font-size: 12px;
+				display: flex;
+			}
+			.comment-inputr div{
+				width: auto;
+				float: left;
+				padding: 0 10px;
+				text-align: center;
+			}
+			.comment-inputr button{
+				color: #FFFFFF;
+				border: none;
+				font-size: 15px;
+				border-radius: 5px;
+				padding:0 10px;
+				margin-top: 5px;
+				margin-right: 12px;
+				height: 30px;
+				color: #2289FF;
+				border: 1px solid #2289FF;
+			}
+			.comment-inputr button:active{
+				color: #2289FF;
+				border: 1px solid #2289FF;
+				background-color: #ffffff;
+			}
+			.comment-inputr button:last-of-type{
+				margin-right: 0;
+				color: #FFFFFF;
+				background-color: #2289FF;
+			}
+			.comment-inputr img{
+				height: 21px;
+			}
+			.comment-inputr span{
+				display: block;
+				color: #999999;
+				margin-top: -5px;
+			}
+			.comment-content{
+				margin-bottom: 50px;
+				padding-bottom: 20px;
+			}
+			/* 
 			.comment-input{
 				width: 100%;
 				position: fixed;
@@ -148,7 +214,7 @@
 			.comment-content{
 				margin-bottom: 50px;
 				padding-bottom: 20px;
-			}
+			} */
 			
 			.guaih{
 				border-radius: 8px;
@@ -378,7 +444,8 @@
 						<span id="deal_icon" style="margin-top: 3px;margin-bottom: 2px;"><i class="iconfont icon-user-flag" style="font-size: 23px;"></i></span>
 						<span id="deal_title">未成交</span>
 					</div>
-					<button class="mui-pull-right" data-phone="" id="call_up">电话</button>
+					<button id="share_card">分享名片</button>
+					<button id="call_up">电话</button>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -564,6 +631,27 @@
 			mui('header').on('tap', '#crm_edit', function() {
 				fnOpenWin('customer_edit.html', 'customer_edit', {statusbar: {background: '#FFF'}}, {cid: cid}, 'slide-in-right');
 				plus.navigator.setStatusBarStyle('dark');
+			})
+			
+			// 分享
+			document.getElementById('share_card').addEventListener('tap', function(e) {
+				shareToMiniprogram({
+					title: userInfo.nickName + '的旺客名片',
+					content: '王天下之客,让营销更简单!',
+					thumbs: [userInfo.avatarUrl],
+					miniProgram: {
+						id: 'gh_9fa5f42ab939',
+						path: '/longbing_card/pages/index/index?to_uid=' + userInfo.id + '&is_qr=1&currentTabBar=toCard',
+						webUrl: 'https://app.wangkeapp.cn/'
+					}
+				}, 'miniProgram');
+				// share({
+				// 	title: '旺客',
+				// 	content: '旺天下之客,让营销更简单!',
+				// 	thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
+				// 	href: $ajaxUrl + 'download'
+				// }, 'web');
+				e.stopPropagation();
 			})
 		})
 
