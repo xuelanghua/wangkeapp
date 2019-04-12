@@ -130,13 +130,13 @@
 			<div class="invite-team-members">
 				<h2 class="title">邀请团队成员(0)</h2>
 				<ul>
-					<!-- <li>
+					<li v-for="(list,index) in imagePath" :key="index" @tap="delChecked(index)">
 						<div class="user-head-img">
-							<img type="image" src="../image/bj.jpg" />
+							<img :src="list" />
 						</div>
 						<span class="mui-icon mui-icon-closeempty"></span>
 					</li>
-					<li>
+					<!--<li>
 						<div class="user-head-img">
 							<img type="image" src="../image/bj.jpg" />
 						</div>
@@ -185,7 +185,7 @@
 					</li>
 				</ul>
 			</div>
-			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="create-team">提交</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="create-group">提交</button>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -206,32 +206,47 @@
 			data() {
 				return {
 					headImg: [],
-					uids: ["8"],
+					uids: [],
 					teamName: '',
-					notice: ''
+					notice: '',
+					imagePath: []
 				}
 			},
-			created: function() {},
 			mounted: function() {
 				document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-				document.addEventListener('combination', function(e) {
-					console.log(e);
-				});
+			},
+			methods: {
+				delChecked: function(i) {
+					this.imagePath.splice(i, 1);
+					this.uids.splice(i, 1);
+				}
 			}
 		})
 		mui(".mui-content").on('tap', '.member-selection', function() {
 			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', '')
 		})
-		mui(".mui-content").on('tap', '#create-team', function() {
+		// 创建团队
+		mui(".mui-content").on('tap', '#create-group', function() {
 			mui.post($ajaxUrl + 'team&action=create', {
 				name: app.teamName,
 				notice: app.notice,
 				uids: app.uids,
 				token: userInfo.token
 			}, function(res) {
-				logs(res);
-				message(res.message);
+				if (res.errno == 0) {
+					message("创建成功！");
+					plus.webview.close('create_team');
+					openPage('team_detail.html','team_detail','#f7f7f7','');
+				} else {
+					message(res.message);
+				}
 			}, 'json');
 		})
+		window.addEventListener('doit', function(e) {
+			//获取参数值
+			app.imagePath = e.detail.imagePath;
+			app.uids = e.detail.idGroup;
+			// logs(e.detail)
+		});
 	</script>
 </html>

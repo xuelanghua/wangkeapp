@@ -271,7 +271,7 @@
 							<template v-for="(items,key,index) in userList" :key="index">
 								<li v-if="list.is_captain==1" :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items"
 								 :key="i" @tap="viewDetails(list.uid)" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-									<img :src="list.avatar?list.avatar:list.avatarUrl" alt="">
+									<img :src="list.avatar||list.avatarUrl" alt="">
 									<span>{{list.name||list.nickName}}</span>
 								</li>
 							</template>
@@ -279,8 +279,8 @@
 								<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
 								<li :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" @tap="viewDetails(list.uid)"
 								 class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-									<input v-if="identity&&list.is_captain==0" type="checkbox" :value="list.uid" :data-avatar="list.avatar?list.avatar:list.avatarUrl" />
-									<img :src="list.avatar?list.avatar:list.avatarUrl" alt="">
+									<input v-if="identity&&list.is_captain==0" type="checkbox" :value="list.uid" :data-avatar="list.avatar||list.avatarUrl" />
+									<img :src="list.avatar||list.avatarUrl" alt="">
 									<span>{{list.name||list.nickName}}</span>
 								</li>
 							</template>
@@ -333,7 +333,6 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		mui.plusReady(function() {})
 		var app = new Vue({
 			el: "#mui-content",
 			data() {
@@ -378,6 +377,26 @@
 					var self = plus.webview.currentWebview();
 					tid = self.tid;
 					getUserData();
+					// 解散团队
+					mui('.join-team-verify').on("tap", ".send-verify", function() {
+						mui.post($ajaxUrl + 'team&action=delete', {
+							token: userInfo.token,
+							team_id: tid
+						}, function(res) {
+							if (res.errno==0) {
+								app.dissolve = false;
+								plus.webview.close('webview');
+								plus.webview.close('team_members');
+								plus.webview.close('team_detail');
+								plus.webview.close(
+									'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=100003&m=longbing_card');
+								mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'changeMy');
+							} else {
+								app.dissolve = false;
+								message(res.message);
+							}
+						}, 'json');
+					})
 				});
 				mui.ready(function() {
 					var header = document.querySelector('header.mui-bar');
@@ -407,16 +426,22 @@
 								team_id: tid,
 								uids: checkedValues.join(',')
 							}, function(res) {
-								logs(res);
 								if (res.errno == 0) {
-									message(res.message);
 									app.identity = false;
 									getUserData();
+									message(res.message);
+									// 删除成员
+									var view = plus.webview.currentWebview().opener();
+									mui.fire(view, 'remove', {
+										imagePath: checkedAvatar,
+										idGroup: checkedValues
+									});
+									mui.back()
 								}
 							}, 'json');
 							// mui.alert('你选择了: ' + checkedValues + '头像地址：' + checkedAvatar);
 						} else {
-							mui.alert('你没选择任何机场');
+							mui.alert('你没选择任何人');
 						}
 					}, false);
 					mui('.mui-indexed-list-inner').on('change', 'input', function() {
@@ -436,15 +461,6 @@
 				});
 			}
 		})
-		mui('.join-team-verify').on("tap", ".send-verify", function() {
-			mui.post($ajaxUrl + 'team&action=delete', {
-				token: userInfo.token,
-				team_id: tid
-			}, function(res) {
-				app.dissolve = false;
-				message(res.message);
-			}, 'json');
-		})
 
 		function getUserData() {
 			mui.post($ajaxUrl + 'team&action=member_list', {
@@ -452,11 +468,26 @@
 				team_id: tid,
 				type: 1
 			}, function(res) {
-				logs(res);
 				if (res.errno == 0) {
 					app.userList = res.data;
 				}
 			}, 'json');
 		}
+		// 添加成员
+		window.addEventListener('doit', function(e) {
+			var checkedValues = e.detail.idGroup;
+			mui.post($ajaxUrl + 'team&action=add_member', {
+				token: userInfo.token,
+				team_id: tid,
+				uids: checkedValues.join(',')
+			}, function(res) {
+				if (res.errno == 0) {
+					message("添加成功");
+					getUserData();
+				} else {
+					message("添加失败，请稍后重试");
+				}
+			}, 'json');
+		});
 	</script>
 </html>

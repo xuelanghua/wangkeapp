@@ -292,46 +292,46 @@
 							userTargetStatistics();
 						}
 					})
-					// 选择器
-					var yearPicker = new mui.PopPicker();
-					yearPicker.setData([{
-						value: '2019',
-						text: '2019'
-					}, {
-						value: '2020',
-						text: '2020'
-					}, {
-						value: '2021',
-						text: '2021'
-					}, {
-						value: '2022',
-						text: '2022'
-					}, {
-						value: '2023',
-						text: '2023'
-					}, {
-						value: '2024',
-						text: '2024'
-					}, {
-						value: '2025',
-						text: '2025'
-					}, {
-						value: '2026',
-						text: '2026'
-					}, {
-						value: '2027',
-						text: '2027'
-					}, {
-						value: '2028',
-						text: '2028'
-					}, {
-						value: '2029',
-						text: '2029'
-					}]);
 					mui('.mui-content').on('tap', '#select-time', function() {
 						var _self = this;
 						if (optionsCont == "year") {
 							// 年选择
+							// 选择器
+							var yearPicker = new mui.PopPicker();
+							yearPicker.setData([{
+								value: '2019',
+								text: '2019'
+							}, {
+								value: '2020',
+								text: '2020'
+							}, {
+								value: '2021',
+								text: '2021'
+							}, {
+								value: '2022',
+								text: '2022'
+							}, {
+								value: '2023',
+								text: '2023'
+							}, {
+								value: '2024',
+								text: '2024'
+							}, {
+								value: '2025',
+								text: '2025'
+							}, {
+								value: '2026',
+								text: '2026'
+							}, {
+								value: '2027',
+								text: '2027'
+							}, {
+								value: '2028',
+								text: '2028'
+							}, {
+								value: '2029',
+								text: '2029'
+							}]);
 							yearPicker.show(function(items) {
 								mui("#select-time")[0].innerText = " " + items[0].text + " ";
 								selectTime = items[0].text;
@@ -372,140 +372,10 @@
 					date: selectTime, //"01" 
 					pattern: timeType // 1天 2月 3年
 				}, function(res) {
-					// logs(res);
-<<<<<<< HEAD
-					var plan = res.data.plan;
-					var finish = res.data.finish;
-					for (var index in plan) {
-						document.getElementById(index + '_number').innerText = finish[index] + '/' + plan[index];
-						document.getElementById(index + '_show').innerText = finish[index];
-						// 进度条控制
-						// mui("#" + index + "_progress").progressbar().setProgress(finish[index]/plan[index]);
-						mui("#" + index + "_progress").progressbar().setProgress(plan[index]);
-
-						var rate = parseFloat((finish[index] / plan[index]).toFixed(1));
-						if (rate < 1) {
-							document.getElementById(index + '_text').innerText = '未达标';
-						} else if (rate >= 1 && rate < 1.1) {
-							document.getElementById(index + '_text').innerText = '已达标';
-							document.getElementById(index + '_text').style.color = '#267CFF';
-						} else if (rate >= 1.1 && rate < 1.5) {
-							document.getElementById(index + '_text').innerText = '优秀';
-							document.getElementById(index + '_text').style.color = '#267CFF';
-						} else {
-							document.getElementById(index + '_text').innerText = '英雄';
-							document.getElementById(index + '_text').style.color = '#267CFF';
-						}
-					}
+					app.plan = res.data.plan;
+					app.finish = res.data.finish;
 				}, 'json')
 			}
-			mui.plusReady(function() {
-				plus.webview.currentWebview().setStyle({
-					statusbar: {
-						background: '#ffffff'
-					},
-					top: 0,
-					bottom: 0
-				});
-				userTargetStatistics();
-				getTargetInfo();
-			});
-			// 年月日切换
-			mui(".target-detail-heade").on("tap", ".mui-col-xs-4", function(e) {
-				var typs = this.getAttribute('timeType');
-				var isYear = myDate.getFullYear();
-				var isMonth = myDate.getMonth() + 1;
-				var isDay = myDate.getDate();
-				$(this).siblings('.mui-col-xs-4').children('i').removeClass("active");
-				$(this).children('i').addClass('active');
-				// logs(typs);
-				if (typs == "year") {
-					optionsCont = "year";
-					selectTime = isYear + '-01';
-					timeType = "3";
-					userTargetStatistics();
-				} else if (typs == "month") {
-					optionsCont = {
-						"type": "month",
-						"beginYear": 2019,
-						"endYear": 2029
-					}
-					selectTime = isYear + "-" + isMonth;
-					timeType = "2";
-					userTargetStatistics();
-				} else {
-					optionsCont = {
-						"type": "date",
-						"beginYear": 2019,
-						"endYear": 2029
-					}
-					var itYear = myDate.getFullYear();
-					selectTime = "" + isYear + "-" + isMonth + "-" + isDay;
-					timeType = "1";
-					userTargetStatistics();
-				}
-			})
-			// 选择器
-			var userPicker = new mui.PopPicker();
-			userPicker.setData([{
-				value: '2019',
-				text: '2019'
-			}, {
-				value: '2020',
-				text: '2020'
-			}, {
-				value: '2021',
-				text: '2021'
-			}, {
-				value: '2022',
-				text: '2022'
-			}, {
-				value: '2023',
-				text: '2023'
-			}, {
-				value: '2024',
-				text: '2024'
-			}, {
-				value: '2025',
-				text: '2025'
-			}, {
-				value: '2026',
-				text: '2026'
-			}, {
-				value: '2027',
-				text: '2027'
-			}, {
-				value: '2028',
-				text: '2028'
-			}, {
-				value: '2029',
-				text: '2029'
-			}]);
-			// 日期选择器
-			var btns = document.getElementById("select-time");
-			btns.addEventListener('tap', function() {
-				var _self = this;
-				// logs(optionsCont);
-				if (optionsCont == "year") {
-					// 年选择
-					userPicker.show(function(items) {
-						btns.innerText = " " + items[0].text + " ";
-						selectTime = items[0].text;
-						timeType = "3";
-						userTargetStatistics();
-					});
-				} else {
-					// 年月日选择
-					_self.picker = new mui.DtPicker(optionsCont);
-					_self.picker.show(function(res) {
-						btns.innerText = res.text;
-						selectTime = res.text;
-						timeType = "2";
-						userTargetStatistics();
-						_self.picker = null;
-					});
-				}
-			}, false);
 			// 显示我的目标
 			mui(".mui-bar-nav").on("tap", ".my-target-menu", function(e) {
 				if (this.innerText == '设定目标') {
@@ -528,69 +398,6 @@
 				$("#audio-control").addClass("play").removeClass("pause");
 				getSong();
 			})
-			// 播放
-			mui(".target-modal-frame .target-list").on("tap", ".play-control", function() {
-				clicks();
-			})
-			// 获取音频
-
-			// 渐变进度条
-			// 	var progres = [90, 60, 70, 80, 60, 90];
-			// 	var className = ["exposure", "toker", "evolve", "communicate", "reporting", "deal"];
-			// 	mui.each(className, function(i, names) {
-			// 		var p = 0;
-			// 		var myVar = setInterval(function() {
-			// 			p += 1;
-			// 			mui('.progress-items.' + names + ' .progress-section').progressbar().setProgress(p);
-			// 			if (p == progres[i]) {
-			// 				p = 0;
-			// 				clearInterval(myVar);
-			// 			}
-			// 		}, 20);
-			// 	});
-			//获取语音链接并插入dom中
-			function getSong() {
-				var audio = document.getElementById("audio");
-				audio.src = "https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3";
-				// audio.loop = true;
-				playCotrol();
-			}
-			getSong();
-
-			//点击播放/暂停
-			function clicks() {
-				var audio = document.getElementById("audio");
-				if ($("#audio-control").hasClass("play")) {
-					$("#audio-control").addClass("pause").removeClass("play");
-					audio.play();
-					$(".target-modal-frame .target-list .play-status").addClass("active");
-				} else {
-					$("#audio-control").addClass("play").removeClass("pause");
-					$(".target-modal-frame .target-list .play-status").removeClass("active");
-					audio.pause();
-				}
-			}
-
-			//播放事件监听
-			function playCotrol() {
-				var audio = document.getElementById("audio");
-				audio.addEventListener("loadeddata",
-					function() {
-						$("#control").addClass("play").removeClass("color_gray");
-						var allTime = parseInt(audio.duration);
-						$(".right-info span").text(allTime);
-					}, false);
-				audio.addEventListener("pause",
-					function() {
-						if (audio.currentTime == audio.duration) {
-							audio.stop();
-							audio.currentTime = 0;
-						}
-					}, false);
-				audio.addEventListener("ended", function() {
-					$("#audio-control .play-status").removeClass("active");
-				}, false)
-			}
 			
 			//获取目标信息
 			function getTargetInfo() {
@@ -599,25 +406,14 @@
 						token: userInfo.token
 					}, function(res){
 						if (res.errno == 0) {
-							var data = res.data;
-							document.getElementById('target_title').innerText = data.target_name;
-							document.getElementById('target_new_customer').innerText = data.new_customer;
-							document.getElementById('target_communication').innerText = data.communication;
-							document.getElementById('target_deal').innerText = data.deal;
-							document.getElementById('target_record_time').innerText = data.target_record_time;
-							document.getElementById('audio').src = data.target_record_url;
+							app.plan = res.data.plan;
+							app.finish = res.data.finish;
 						} else {
 							document.querySelector('.my-target-menu').innerText = '设定目标';
 						}
 					}, 'json'
 				);
 			}
-=======
-					app.plan = res.data.plan;
-					app.finish = res.data.finish;
-				}, 'json')
-			}
->>>>>>> daacb4528ef4648bd5f29b40d33bf53bad300d9f
 		</script>
 	</body>
 
