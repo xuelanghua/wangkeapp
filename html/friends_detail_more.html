@@ -23,7 +23,7 @@
 			<button class="mui-btn mui-btn-block unbind-friends">解除好友关系</button>
 		</div>
 		<script src="../js/mui.min.js" type="text/javascript"></script>
-		<script  src="../js/util.js" type="text/javascript"></script>
+		<script src="../js/util.js" type="text/javascript"></script>
 		<script src="../js/Zepto.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -49,10 +49,12 @@
 							fid: fid,
 							name: remark
 						}, function(res) {
-							if(res.errno==0){
+							if (res.errno == 0) {
 								message("修改成功");
 								plus.key.hideSoftKeybord();
 								mui.back();
+							} else {
+								message("修改失败，请稍后重试！");
 							}
 						}, 'json')
 					} else {
@@ -65,7 +67,7 @@
 						token: token,
 						fid: fid
 					}, function(res) {
-						if(res.errno==0){
+						if (res.errno == 0) {
 							message("解除成功");
 							mui.back();
 						}

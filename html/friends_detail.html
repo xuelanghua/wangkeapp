@@ -19,6 +19,9 @@
 			<div v-if="cardType=='cardType2'" class="first-card-container">
 				<div class="card">
 					<img class="user-head-img" :src="friendData.avatar">
+					<div class="user-qr-code mui-pull-right">
+						<img src="../image/Marketing-code-01.png" >
+					</div>
 					<div class="card-left-cont">
 						<ul>
 							<li v-if="friendData.company" id="first-row">{{friendData.company}}</li>
@@ -36,6 +39,9 @@
 			<div class="second-card-container" v-else>
 				<div class="card">
 					<img class="user-head-img" :src="friendData.avatar">
+					<div class="user-qr-code mui-pull-right">
+						<img src="../image/Marketing-code-01.png" >
+					</div>
 					<div class="user-info">
 						<h4>{{friendData.name}}</h4>
 						<p>{{friendData.job==''?'还未填写':friendData.job}}</p>
@@ -120,8 +126,10 @@
 				</div>
 			</div>
 			<h5 class="personality-desc">图片展示</h5>
-			<div class="img-show">
-				<img :src="img" v-for="img in friendData.images">
+			<div class="img-show" id="img-show">
+				<ul>
+					<li v-for="img in friendData.images"><img :src="img"></li>
+				</ul>
 			</div>
 			<div class="add-friend-btn" v-if="addshow" v-on:click.stop="addFriend">
 				<img src="../image/icon/add_friends_icon.png" class="constrain-img">
@@ -132,6 +140,8 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
+		<script src="../js/mui.zoom.js"></script>
+		<script src="../js/mui.previewimage.js"></script>
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: true
@@ -157,7 +167,7 @@
 					is_friend: 1,
 					is_reliable: 0,
 					is_voice_like: 0,
-					addshow:false
+					addshow: false
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -215,11 +225,9 @@
 						});
 						document.addEventListener('resume', function() {
 							if (voice) {
-								play();
+								// play();
 							}
 						});
-						// 语音播放结束
-
 						// 跳转到更多页面
 						mui(".friends-detail-header").on("tap", "span", function() {
 							if (muiCont.is_friend == 1) {
@@ -227,10 +235,31 @@
 									token: userInfo.token,
 									fid: fid
 								});
+							} else if (fid == userInfo.id) {
+								message("不能修改自己备注!");
 							} else {
-								message("添加好友才能进行后续操作！");
+								message("请先添加好友！");
 							}
 						})
+						// 预览图片
+						var self = plus.webview.currentWebview();
+						tid = self.aid;
+						setTimeout(function() {
+							var images = [].slice.call(document.querySelectorAll('#img-show img'));
+							var urls = [];
+							images.forEach(function(item) {
+								urls.push(item.src);
+							});
+							mui('.img-show').on('tap', 'img', function() {
+								var index = images.indexOf(this);
+								plus.navigator.setStatusBarBackground("#000000")
+								plus.nativeUI.previewImage(urls, {
+									current: index,
+									loop: true,
+									indicator: 'number',
+								});
+							});
+						}, 200)
 					})
 					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 				},
@@ -242,7 +271,6 @@
 					}
 				}
 			});
-
 			// 获取资料
 			function getFriendsInfo() {
 				mui.post($ajaxUrl + 'customer&action=detail&type=friend', {
@@ -261,9 +289,9 @@
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;
 						mui(".mui-title")[0].innerText = data.name;
-						var selfid=userInfo.id;
-						if(fid!=selfid&&muiCont.is_friend!=1){
-							muiCont.addshow=true;
+						var selfid = userInfo.id;
+						if (fid != selfid && muiCont.is_friend != 1) {
+							muiCont.addshow = true;
 						}
 					} else {
 						message(res.errno.message)
@@ -356,6 +384,11 @@
 					message("添加失败");
 				});
 			}
+			// 去名片二维码页面
+			mui(".mui-content").on('tap','.user-qr-code',function(){
+				message("kljklj");
+				// openPage('business_card.html','business_card','#f7f7f7','');
+			})
 		</script>
 	</body>
 </html>
