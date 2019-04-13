@@ -307,7 +307,6 @@
 				height: auto;
 			}
 			/* 清除聊天记录 */
-			/* 解散弹窗 */
 			.join-team-verify {
 				position: fixed;
 				z-index: 996;
@@ -315,7 +314,7 @@
 				bottom: 0;
 				width: 100%;
 				background: rgba(0, 0, 0, 0.6);
-				display: flex;
+				display: none;
 				align-items: center;
 				justify-content: center;
 				flex-direction: column;
@@ -325,15 +324,15 @@
 			.verift-body {
 				width: 80%;
 				background-color: #ffffff;
-				border-radius: 0.2rem;
+				border-radius: 10px;
 				position: relative;
 				overflow: hidden;
-				padding-top: 0.1rem;
+				padding-top: 5px;
 			}
 			
 			.verift-body .tips {
 				width: 100%;
-				padding: 0.4rem 0.2rem 0.3rem;
+				padding: 20px 10px 15px;
 				text-align: justify;
 			}
 			
@@ -359,7 +358,7 @@
 			.verift-footer .mui-btn {
 				width: 100%;
 				height: 100%;
-				padding: 0.3rem 0.2rem;
+				padding: 15px 10px;
 			}
 			
 			.close-verify-window:before {
@@ -375,6 +374,7 @@
 				transform: scaleX(0.5);
 				-webkit-transform: scaleX(0.5);
 			}
+			
 		</style>
 	</head>
 
@@ -420,6 +420,18 @@
 		</script>
 		<div class="mui-content">
 			<div id='msg-list'>
+			</div>
+			<!-- 清除聊天记录确认弹窗 -->
+			<div class="join-team-verify">
+				<div class="verift-body">
+					<div class="tips">
+						<span>清除聊天记录后将无法找回，是否继续？</span>
+					</div>
+					<div class="verift-footer">
+						<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+						<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
+					</div>
+				</div>
 			</div>
 		</div>
 		<footer>
@@ -968,6 +980,15 @@
 			});
 			mui('.mui-content').on("longtap",".msg-content",function(){
 				message("asdfasdf");
+			})
+			
+			// 显示清除消息弹窗
+			mui('.mui-bar-nav').on("tap",".clear-chatting-records",function(){
+				mui('.join-team-verify')[0].style.display="flex";
+			})
+			// 取消清除聊天记录
+			mui('.mui-content').on("tap",".close-verify-window",function(){
+				mui('.join-team-verify')[0].style.display="none";
 			})
 		</script>
 	</body>
