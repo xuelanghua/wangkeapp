@@ -6,7 +6,124 @@
 		<title>二维码名片</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../css/vip-page.css"/>
+		<style type="text/css">
+			.team-qr-code {
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				padding-top: 44px;
+				background-color: #2889FF;
+				overflow: hidden;
+			}
+
+			.qr-code-body {
+				width: 6rem;
+				height: 7.4rem;
+				position: relative;
+				border-radius: 0.1rem;
+				margin: 1.2rem auto;
+				background: #FFFFFF url("../image/scana-qr-bottom-bg.png")center bottom no-repeat;
+				background-size: contain;
+				overflow: hidden;
+				padding: 0.3rem 0;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.qr-code-body h2 {
+				font-size: 0.35rem;
+				color: #323333;
+				font-weight: normal;
+				margin-bottom: 0.1rem;
+			}
+
+			.qr-code-body p {
+				margin: 0;
+				font-size: 0.3rem;
+				color: #999999;
+			}
+
+
+			.qr-code-body .qr-img {
+				width: 4.2rem;
+				height: 4.2rem;
+				margin: 0.3rem auto 0.3rem;
+				align-self: center;
+			}
+
+			.qr-code-body .logo-img {
+				width: 1.24rem;
+				height: auto;
+				align-self: center;
+			}
+
+			.linellae {
+				width: 100%;
+				overflow: hidden;
+				text-align: justify;
+				display: flex;
+				align-items: center;
+			}
+
+			.line {
+				border-top: 1px dashed #999999;
+				width: 100%;
+				height: 0;
+			}
+
+			.left-semicircle,
+			.right-semicircle {
+				width: 0.15rem;
+				height: 0.3rem;
+				background-color: #2889FF;
+				border-radius: 0 0.3rem 0.3rem 0;
+			}
+
+			.right-semicircle {
+				border-radius: 0.3rem 0 0 0.3rem;
+			}
+
+			.operation-section {
+				width: 100%;
+				padding: 0 0.53rem;
+				display: flex;
+			}
+
+			.operation-section .mui-btn,
+			.operation-section .mui-btn:active {
+				flex-grow: 1;
+				margin: 0 0.2rem;
+				height: 0.79rem;
+				border-radius: 0.1rem;
+				color: #333333;
+				background-color: #FFFFFF;
+				outline: none;
+				border: none;
+			}
+
+			.operation-section .mui-btn-outlined,
+			.operation-section .mui-btn-outlined:active {
+				color: #ffffff;
+				background-color: rgba(255, 255, 255, 0);
+				border: 1px solid #ffffff;
+			}
+
+			.qrcode-section {
+				display: flex;
+				align-items: center;
+				padding-left: 0.2rem;
+			}
+
+			.user-head-img {
+				width: 0.8rem;
+				height: 0.8rem;
+				border-radius: 0.1rem;
+				margin-right: 0.1rem;
+				border: 1px solid #eeeeee;
+				box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
+			}
+		</style>
 	</head>
 
 	<body class="mui-hidden">
@@ -14,14 +131,38 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">二维码名片</h1>
 		</header>
-
-		<div class="mui-content setting-container">
-			<h2 class="headline">二维码名片</h2>
+		<div class="mui-content">
+			<div class="team-qr-code">
+				<div class="qr-code-body">
+					<div class="qrcode-section">
+						<img id="user-head-img" class="user-head-img" src="../image/kaol.jpg">
+						<div>
+							<h2 id="user-name">肖飞的团队</h2>
+							<p>扫二维码加我好友</p>
+						</div>
+					</div>
+					<div class="linellae">
+						<div class="left-semicircle"></div>
+						<div class="line"></div>
+						<div class="right-semicircle"></div>
+					</div>
+					<img id="qr-img" class="qr-img" src="">
+					<img class="logo-img" src="../image/wangkelogo.png">
+				</div>
+				<div class="operation-section mui-hidden">
+					<button type="button" class="mui-btn mui-btn-outlined">保存到手机</button>
+					<button type="button" class="mui-btn ">分享二维码</button>
+				</div>
+			</div>
 		</div>
-		<script src="../js/mui.min.js"></script>
-		<script src="../js/util.js"></script>
-		<script type="text/javascript">
-		mui.init();
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script type="text/javascript">
+		mui.init({
+			swipeBack: true
+		});
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -30,8 +171,20 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		mui.plusReady(function() {})
+
+		var userInfo = getUserInfo();
+
+		mui.post($ajaxUrl + 'userqrcode&action=make_url', {
+			type: 'card',
+			token: userInfo.token
+		}, function(res) {
+			if (res.errno == 0) {
+				var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+				document.getElementById('qr-img').setAttribute('src', url);
+			} else {}
+		}, 'json');
+		logs(userInfo);
+		document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
+		document.getElementById('user-name').innerText = userInfo.nickName;
 	</script>
-	</body>
-	
 </html>
