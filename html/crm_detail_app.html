@@ -514,7 +514,11 @@
 
 			document.getElementById('call_up').addEventListener('tap', function() {
 				var phone = this.dataset.phone;
-				plus.device.dial(phone);
+				if(phone){
+					plus.device.dial(phone);
+				}else{
+					message('该客户很神秘，没有电话哟！')
+				}
 			})
 
 			document.querySelector('.input').addEventListener('tap', function() {

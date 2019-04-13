@@ -38,12 +38,11 @@
 			.infoL{
 				width: 49%;
 				font-size: 10px;
-				margin-top: 6px;
+				position: relative;
 			}
 			.infoR{
 				width: 49%;
 				font-size: 10px;
-				margin-top: -55px;
 			}
 			.rig{
 				margin-left: 5px;
@@ -52,8 +51,12 @@
 			.xian{
 				width: 1px;
 				height: 40px;
-				margin: 20px auto 0;
+				right: 0;
+				margin: 0;
+				position: absolute;
 				background-color: #DDDDDD;
+				top: 50%;
+				margin-top: -20px;
 			}
 			.infoL img{
 				height: 25px;
@@ -110,7 +113,7 @@
 			}
 			
 			.function{
-				padding: 26% 10px 26px 10px;
+				padding: 30% 10px 26px 10px;
 				font-size: 12px;
 				color: #999999;
 				background-color: #FFFFFF;
@@ -391,7 +394,7 @@
 						<span>
 							<img src="../image/dianhua.png">
 						</span>
-						<span id="crm_mobile">13888888888</span>
+						<span id="crm_mobile"></span>
 					</div>
 					<div class="Grade" id="crm_member">下级会员</div>
 				</div>
@@ -402,8 +405,8 @@
 						<span>预计成交日期</span>
 						<span class="rig" id="deal_time">01/20</span>
 					</div>
+					<div class="xian"></div>
 				</div>
-				<div class="xian"></div>
 				<div class="infoR mui-pull-right">
 					<img src="../image/infoR.png">
 					<div>
@@ -598,7 +601,11 @@
 
 			document.getElementById('call_up').addEventListener('tap', function() {
 				var phone = this.dataset.phone;
-				plus.device.dial(phone);
+				if (phone) {
+					plus.device.dial(phone);
+				} else {
+					message('该客户未进行电话授权！')
+				}
 			})
 
 			document.querySelector('.input').addEventListener('tap', function() {
@@ -764,7 +771,8 @@
 			})
 
 			hd = document.getElementsByClassName("hd")[0].getElementsByTagName("li");
-			bd = document.getElementsByClassName("bd")[0].getElementsByTagName("li");
+			bd = document.getElementsByClassName(
+				"bd")[0].getElementsByTagName("li");
 			for (var i = 0; i < hd.length; i++) {
 				hd[i].addEventListener('tap', function() {
 					doTabs(this);
@@ -803,6 +811,7 @@
 					}
 					document.getElementById('crm_name').innerText = data.nickName;
 					if (data.mobile.length != 0) {
+						document.getElementById('call_up').dataset.phone = data.mobile;
 						document.getElementById('crm_mobile').innerText = data.mobile;
 					} else {
 						document.getElementById('crm_mobile').innerText = '未授权';
@@ -992,7 +1001,8 @@
 								if (viewList[k].count == 1) {
 									viewHtml += '<span>首次浏览</span>你的<span>动态(' + viewList[k].target_name + ')详情</span>';
 								} else {
-									viewHtml += '<span>第' + viewList[k].count + '次浏览</span>你的<span>动态(' + viewList[k].target_name + ')详情</span>';
+									viewHtml += '<span>第' + viewList[k].count + '次浏览</span>你的<span>动态(' + viewList[k].target_name +
+										')详情</span>';
 								}
 							}
 							viewHtml += '</div>';
