@@ -60,6 +60,32 @@
 			.table-item p:last-of-type{
 				font-size: 0.24rem;
 			}
+			.table-header {
+				width: 100%;
+				height: 45px;
+				line-height: 45px;
+				margin: 0;
+				padding: 0;
+				background-color: #489eff;
+				/* border-bottom: 0.01rem solid #EEE; */
+			}
+			.table-header-container {
+				display: flex;
+				flex-direction: row;
+				align-items:
+				width: 50%;
+				height: 100%;
+				padding: 0;
+				margin: 0;
+				padding-left: 25%;
+			}
+			.table-header-container .item {
+				width: 33.333%;
+				color: #CCC;
+				font-size: 14px;
+			}
+			.table-header-container .active {
+				color: #FFF!important;
 		</style>
 	</head>
 
@@ -71,33 +97,43 @@
 
 		<div class="mui-content">
 			<div class="container">
+				<div class="table-header">
+					<div class="table-header-container">
+						<div class="item" :class="{active: item1}" @tap="changeDays(7)" >7天</div>
+						<div class="item" :class="{active: item2}" @tap="changeDays(15)">15天</div>
+						<div class="item" :class="{active: item3}" @tap="changeDays(30)">30天</div>
+					</div>
+				</div>
 				<div id="main" style="width: 100%;height:300px;"></div>
 				<div class="table-desc">
 					<div class="table-item">
-						<p><span class="unit">&yen;</span>0.00</p>
-						<p>90天收入</p>
+						<p><span class="unit">&yen;</span>{{ total }}</p>
+						<p>{{ days }}天收入</p>
 					</div>
 					<div class="table-item">
-						<p><span class="unit">&yen;</span>0.00</p>
+						<p><span class="unit">&yen;</span>{{ unit }}</p>
 						<p>单日最高</p>
 					</div>
 					<div class="table-item">
-						<p><span class="unit">&yen;</span>0.00</p>
+						<p><span class="unit">&yen;</span>{{ average }}</p>
 						<p>日均</p>
 					</div>
 				</div>
-			</div>
-			<div class="mui-table-view-cell">
-				<span class="mui-navigate-right">我的资产</span>
+				<div class="mui-table-view-cell">
+					<span class="mui-navigate-right">我的资产</span>
+				</div>
 			</div>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script src="../js/echarts.min.js"></script>
 	<script src="../js/macarons.js"></script>
 	<script type="text/javascript">
-		mui.init();
+		mui.init({
+			swipeBack: true
+		});
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -110,44 +146,117 @@
 		mui('.mui-content').on('tap', '.mui-table-view-cell', function() {
 			openPage('asset_management.html', 'asset_management', '#2289ff', '');
 		})
-		// 图表
-		var myChart = echarts.init(document.getElementById('main'), 'macarons');
+
+		var userInfo = getUserInfo();
+		var myChart = null;
 		var option = {
+			title: {
+				text: '商城订单统计',
+				textStyle: {
+					fontSize: '14px'
+				}
+			},
+			tooltip: {
+				trigger: 'axis'
+			},
 			toolbox: {
 				show: false,
 				feature: {
-					mark: {
-						show: true
+					dataZoom: {
+						yAxisIndex: 'none'
 					},
 					dataView: {
-						show: true,
 						readOnly: false
 					},
-					restore: {
-						show: true
+					magicType: {
+						type: ['line', 'bar']
 					},
-					saveAsImage: {
-						show: true
-					}
+					restore: {},
+					saveAsImage: {}
 				}
 			},
 			xAxis: {
-				data: ["1", "2", "3", "4", "5", "6"]
+				type: 'category',
+				boundaryGap: false,
+				data: ['1', '', '', '', '', '', '7']
 			},
-			yAxis: [{
+			yAxis: {
 				type: 'value',
-				splitArea: {
-					show: true
+				axisLabel: {
+					formatter: '￥{value}'
 				}
-			}],
-
+			},
 			series: [{
-				name: '销量',
+				name: '平均收入',
 				type: 'line',
-				data: [5, 20, 36, 10, 10, 20, 30, 26, 36]
+				data: [0, 0, 0, 0, 0, 0, 0],
 			}]
 		};
 
-		myChart.setOption(option);
+
+		var vm = new Vue({
+			el: '.mui-content',
+			data() {
+				return {
+					days: 7,
+					item1: true,
+					item2: false,
+					item3: false,
+					total: 0.00,
+					unit: 0.00,
+					average: 0.00,
+				}
+			},
+			mounted: function() {
+				myChart = echarts.init(document.getElementById('main'), 'macarons');
+				myChart.setOption(option);
+				mui.plusReady(function () {
+				   shopOrderStatistics(); 
+				})
+			},
+			methods: {
+				changeDays: function(days) {
+					vm.days = days;
+					if (days == 7) {
+						vm.item1 = true;
+						vm.item2 = false;
+						vm.item3 = false;
+					} else if (days == 15) {
+						vm.item1 = false;
+						vm.item2 = true;
+						vm.item3 = false;
+					} else {
+						vm.item1 = false;
+						vm.item2 = false;
+						vm.item3 = true;
+					}
+					option.series = [{
+						name: '平均收入',
+						type: 'line',
+						data: [11, 25, 15, 13, 12, 13, 20],
+					}];
+					shopOrderStatistics();
+				}
+			}
+		});
+		
+		//获取数据统计
+		function shopOrderStatistics() {
+			mui.get($ajaxUrl + 'order', {
+					action: 'statistic',
+					token: userInfo.token,
+					days: vm.days
+				}, function(res){
+					if (res.errno == 0) {
+						option.xAxis.data = res.data.date;
+						option.series[0].data = res.data.fee;
+						vm.total = res.data.total;
+						vm.unit = res.data.unit;
+						vm.average = res.data.average;
+					}
+					myChart.setOption(option);
+				}, 'json'
+			);
+		}
 	</script>
 </html>
