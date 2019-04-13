@@ -37,7 +37,7 @@
 				content: '';
 				-webkit-transform: scaleY(.5);
 				transform: scaleY(.5);
-				background-color: #c8c7cc;
+				background-color: #e5e5e5;
 			}
 			.total-data ul li{
 				display: flex;
@@ -70,7 +70,7 @@
 				display: flex;
 				justify-content: center;
 				align-items: flex-start;
-				padding:0.6rem 0 ;
+				padding:0.4rem 0 0.6rem;
 			}
 			.change-data-cont .mui-btn{
 				margin: 0 0.3rem;
@@ -90,6 +90,11 @@
 				background-color: #eef6ff;
 				color: #2289ff;
 				border-color: #2289ff;
+			}
+			.chart {
+				height: 200px;
+				margin: 0px;
+				padding: 0px;
 			}
 		</style>
 	</head>
@@ -111,33 +116,95 @@
 					<li><span class="odd">周点击量:</span>322</li>
 					<li><span>周分享量:</span>120</li>
 				</ul>
-				<div>
-					图表~~
-				</div>
+				<div class="chart" id="barChart"></div>
 				<div class="change-data-cont">
 					<button type="button" class="mui-btn mui-btn-outlined active">月统计</button>
 					<button type="button" class="mui-btn mui-btn-outlined">周统计</button>
 				</div>
 			</div>
 		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/echarts.min.js"></script>
+		<script type="text/javascript" src="../js/macarons.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			// 初始化字体大小结束
+			mui.plusReady(function() {})
+			mui(".mui-content").on('tap', '.mui-btn-outlined', function() {
+				mui(".mui-btn-outlined")[0].classList.remove("active");
+				mui(".mui-btn-outlined")[1].classList.remove("active");
+				this.classList.add("active");
+			})
+			var getOption = function(chartType) {
+				var chartOption = {
+					legend: {
+						data: ['点击量', '分享量']
+					},
+					grid: {
+						x: 35,
+						x2: 10,
+						y: 30,
+						y2: 25
+					},
+					toolbox: {
+						show: false,
+						feature: {
+							mark: {
+								show: true
+							},
+							dataView: {
+								show: true,
+								readOnly: false
+							},
+							magicType: {
+								show: true,
+								type: ['line', 'bar']
+							},
+							restore: {
+								show: true
+							},
+							saveAsImage: {
+								show: true
+							}
+						}
+					},
+					calculable: false,
+					xAxis: [{
+						type: 'category',
+						data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+					}],
+					yAxis: [{
+						type: 'value',
+						splitArea: {
+							show: true
+						}
+					}],
+					series: [{
+						name: '点击量',
+						type: chartType,
+						data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+					}, {
+						name: '分享量',
+						type: chartType,
+						data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+					}]
+				};
+				return chartOption;
+			};
+			var byId = function(id) {
+				return document.getElementById(id);
+			};
+			var barChart = echarts.init(byId('barChart'),'lan');
+			barChart.setOption(getOption('bar'));
+		</script>
 	</body>
-	<script src="../js/mui.min.js"></script>
-	<script src="../js/util.js"></script>
-	<script type="text/javascript">
-		mui.init();
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-		// 初始化字体大小结束
-		mui.plusReady(function() {})
-		mui(".mui-content").on('tap', '.mui-btn-outlined', function() {
-			mui(".mui-btn-outlined")[0].classList.remove("active");
-			mui(".mui-btn-outlined")[1].classList.remove("active");
-			this.classList.add("active");
-		})
-	</script>
+
 </html>
