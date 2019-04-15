@@ -174,7 +174,6 @@
 			footer .mui-icon-paperplane {
 				/*-webkit-transform: rotateZ(45deg);
 				transform: rotateZ(45deg);*/
-				
 				font-size: 16px;
 				word-break: keep-all;
 				line-height: 100%;
@@ -374,7 +373,31 @@
 				transform: scaleX(0.5);
 				-webkit-transform: scaleX(0.5);
 			}
-			
+			/* 操作菜单样式 */
+			.mui-backdrop.mui-active{
+				background-color: rgba(0,0,0,0);
+			}
+			.mui-table-view:before,.mui-table-view:after{
+				height: 0;
+			}
+			.mui-table-view-cell{
+				font-size: 14px;
+				color: #333333;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.mui-table-view-cell:after{
+				left: 0;
+			}
+			.mui-popover.mui-active{
+				min-width: 90px;
+				box-shadow: 0 0 5px 0 rgba(0,0,0,0.1);
+			}
+			.mui-popover-arrow.mui-bottom{
+				transform: translateX(-25%);
+				-webkit-transform: translateX(-25%);
+			}
 		</style>
 	</head>
 
@@ -383,7 +406,7 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title" id="dialog_name">聊天</h1>
 			<div class="clear-chatting-records mui-pull-right">
-				<img src="../image/icon/clear-chatting-records-icon.png" >
+				<img src="../image/icon/clear-chatting-records-icon.png">
 			</div>
 		</header>
 		<pre id='h'></pre>
@@ -392,14 +415,14 @@
 				<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
 					<div style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
 					<% for (var i in record[index]) { var item = record[index][i]; %>
-					<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
+					<div id="<%= ('parent'+item.message_id) %>" class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 						<% if(item.sender=='self' ) { %>
 							<!-- <i class="msg-user mui-icon mui-icon-person"></i> -->
 							<img class="msg-user-img msg-user" src="<%= (avatar.user) %>" alt="" />
 						<% } else { %>
 							<img class="msg-user-img" src="<%= (avatar.target) %>" alt="" />
 						<% } %>
-						<div class="msg-content">
+						<div class="msg-content" id="<%= (item.message_id) %>">
 							<div class="msg-content-inner">
 								<% if(item.type=='text' ) { %>
 									<%=( item.content|| '&nbsp;&nbsp;') %>
@@ -432,6 +455,12 @@
 						<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
 					</div>
 				</div>
+			</div>
+			<!-- 操作菜单 -->
+			<div id="middlePopover" class="mui-popover">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell del-btn">删 除</li>
+				</ul>
 			</div>
 		</div>
 		<footer>
@@ -481,7 +510,10 @@
 			var chatData = null;
 			var skip = 1;
 			var limit = 15;
-			var recordData = {avatar: null, data: null};
+			var recordData = {
+				avatar: null,
+				data: null
+			};
 			var lastIndex = '';
 			var msgHeight = 0;
 			mui.plusReady(function() {
@@ -491,7 +523,7 @@
 					// 解决在ios上fixed元素focusin时位置出现错误的问题 
 					document.addEventListener('DOMContentLoaded', function() {
 						var footerDom = document.querySelector('footer');
-				
+
 						document.addEventListener('focusin', function() {
 							footerDom.style.position = 'absolute';
 						});
@@ -500,10 +532,10 @@
 						});
 					});
 				}
-				
+
 				WebSocketInit();
 				// scrollInit(); //滚动优化从scroll着手
-				
+
 				//滚动初始化
 				function scrollInit() {
 					mui('.mui-scroll-wrapper').scroll({
@@ -516,7 +548,7 @@
 						bounce: true //是否启用回弹
 					});
 				}
-				
+
 				var self = plus.webview.currentWebview();
 				self.setStyle({
 					softinputMode: "adjustResize"
@@ -525,17 +557,26 @@
 				chatId = self.cid;
 				chatAvatar = self.avatar;
 				document.getElementById('dialog_name').innerText = chatName;
-				
-				var avatar = {user: userInfo.avatarUrl, target: chatAvatar};
+
+				var avatar = {
+					user: userInfo.avatarUrl,
+					target: chatAvatar
+				};
 				recordData.avatar = avatar;
-				chatData = {user_id: userInfo.id, target_id: chatId, type: 'text', content: '', uniacid: userInfo.uniacid};
+				chatData = {
+					user_id: userInfo.id,
+					target_id: chatId,
+					type: 'text',
+					content: '',
+					uniacid: userInfo.uniacid
+				};
 				getRecordList(false);
-				
-				document.addEventListener("pause", function () {
+
+				document.addEventListener("pause", function() {
 					heartCheck.reset();
 				}, false);
-				
-				document.addEventListener("resume", function () {
+
+				document.addEventListener("resume", function() {
 					WebSocketInit();
 				}, false);
 
@@ -545,7 +586,7 @@
 						getRecordList(true);
 					}
 				}, false);
-				
+
 				var showKeyboard = function() {
 					if (mui.os.ios) {
 						var webView = plus.webview.currentWebview().nativeInstanceObject();
@@ -577,7 +618,7 @@
 					h: document.querySelector('#h'),
 					content: document.querySelector('.mui-content')
 				};
-			
+
 				ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
 				var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
 				var msgItemTap = function(msgItem, event) {
@@ -657,7 +698,7 @@
 						event.preventDefault();
 					}
 				});
-				
+
 				ui.footerRight.addEventListener('release', function(event) {
 					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 						if (ui.boxMsgText.value.length == 0) {
@@ -669,7 +710,7 @@
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
-						
+
 						send({
 							sender: 'self',
 							type: 'text',
@@ -699,7 +740,7 @@
 						}, 150);
 					}
 				}, false);
-				
+
 				ui.footerLeft.addEventListener('tap', function(event) {
 					imageUpload(function(res) {
 						var imgMsg = {
@@ -712,41 +753,41 @@
 						chatData.content = res.url;
 						ws.send(JSON.stringify(chatData));
 					})
-// 					var btnArray = [{
-// 						title: "拍照"
-// 					}, {
-// 						title: "从相册选择"
-// 					}];
-// 					plus.nativeUI.actionSheet({
-// 						title: "选择照片",
-// 						cancel: "取消",
-// 						buttons: btnArray
-// 					}, function(e) {
-// 						var index = e.index;
-// 						switch (index) {
-// 							case 0:
-// 								break;
-// 							case 1:
-// 								var cmr = plus.camera.getCamera();
-// 								cmr.captureImage(function(path) {
-// 									send({
-// 										sender: 'self',
-// 										type: 'image',
-// 										content: "file://" + plus.io.convertLocalFileSystemURL(path)
-// 									});
-// 								}, function(err) {});
-// 								break;
-// 							case 2:
-// 								plus.gallery.pick(function(path) {
-// 									send({
-// 										sender: 'self',
-// 										type: 'image',
-// 										content: path
-// 									});
-// 								}, function(err) {}, null);
-// 								break;
-// 						}
-// 					});
+					//	var btnArray = [{
+					//		title: "拍照"
+					//	}, {
+					//		title: "从相册选择"
+					//	}];
+					//	plus.nativeUI.actionSheet({
+					//		title: "选择照片",
+					//		cancel: "取消",
+					//		buttons: btnArray
+					//	}, function(e) {
+					//		var index = e.index;
+					//		switch (index) {
+					//			case 0:
+					//				break;
+					//			case 1:
+					//				var cmr = plus.camera.getCamera();
+					//				cmr.captureImage(function(path) {
+					//					send({
+					//						sender: 'self',
+					//						type: 'image',
+					//						content: "file://" + plus.io.convertLocalFileSystemURL(path)
+					//					});
+					//				}, function(err) {});
+					//				break;
+					//			case 2:
+					//				plus.gallery.pick(function(path) {
+					//					send({
+					//						sender: 'self',
+					//						type: 'image',
+					//						content: path
+					//					});
+					//				}, function(err) {}, null);
+					//				break;
+					//		}
+					//	});
 				}, false);
 
 				var setSoundAlertVisable = function(show) {
@@ -793,7 +834,7 @@
 						plus.nativeUI.toast("录音时出现异常: " + e.message);
 					});
 				}, false);
-				
+
 				ui.body.addEventListener('drag', function(event) {
 					//console.log('drag');
 					if (Math.abs(event.detail.deltaY) > 50) {
@@ -814,7 +855,7 @@
 						}
 					}
 				}, false);
-				
+
 				ui.boxMsgSound.addEventListener('release', function(event) {
 					if (audio_tips.classList.contains("cancel")) {
 						audio_tips.classList.remove("cancel");
@@ -835,7 +876,7 @@
 					recorder.stop();
 				}, false);
 				ui.boxMsgSound.addEventListener("touchstart", function(e) {
-					//console.log("start....");
+					// console.log("start....");
 					e.preventDefault();
 				});
 				ui.boxMsgText.addEventListener('input', function(event) {
@@ -857,14 +898,32 @@
 					}, 1000);
 					event.detail.gesture.preventDefault();
 				}, false);
-				
+
 				//点击消息列表，关闭键盘
 				ui.areaMsgList.addEventListener('tap', function(event) {
 					if (!focus) {
 						ui.boxMsgText.blur();
 					}
 				})
-				
+				// 清除全部聊天记录
+				mui('.mui-content').on("tap", ".send-verify", function() {
+					logs(userInfo.id);
+					logs(userInfo.token);
+					mui.post($ajaxUrl + 'chat&action=delete_all', {
+						token: userInfo.token,
+						user_id: chatId
+					}, function(res) {
+						logs(res);
+						mui('.join-team-verify')[0].style.display = "none";
+						if (res.errno == 0) {
+							window.location.reload();
+							getRecordList();
+							message('已清除');
+						} else {
+							message('清除失败，请稍后重试');
+						}
+					}, 'json');
+				})
 				//获取聊天记录
 				function getRecordList(loadMore) {
 					if (loadMore) {
@@ -875,41 +934,41 @@
 						limit = 15;
 					}
 					mui.post($ajaxUrl + 'chat', {
-							action: 'record_list',
-							token: userInfo.token,
-							user_id: userInfo.id,
-							target_id: chatId,
-							skip: skip,
-							limit: limit
-						}, function(res){
-							if (res.errno == 0) {
-								if (loadMore) {
-									var moreData = res.data;
-									var temp = recordData.data;
-									Object.assign(moreData, temp);
-									recordData.data = moreData;
-									bindMsgList();
-									ui.areaMsgList.scrollTop = 300;
-								} else {
-									recordData.data = res.data;
-									for (var index in res.data) {
-										lastIndex = index;
-									}
-									bindMsgList();
-									// scrollInit();
-								}
+						action: 'record_list',
+						token: userInfo.token,
+						user_id: userInfo.id,
+						target_id: chatId,
+						skip: skip,
+						limit: limit
+					}, function(res) {
+						// logs(res);
+						if (res.errno == 0) {
+							if (loadMore) {
+								var moreData = res.data;
+								var temp = recordData.data;
+								Object.assign(moreData, temp);
+								recordData.data = moreData;
+								bindMsgList();
+								ui.areaMsgList.scrollTop = 300;
 							} else {
-								if (!loadMore) {
-									recordData.data = res.data;
-									for (var index in res.data) {
-										lastIndex = index;
-									}
+								recordData.data = res.data;
+								for (var index in res.data) {
+									lastIndex = index;
+								}
+								bindMsgList();
+								// scrollInit();
+							}
+						} else {
+							if (!loadMore) {
+								recordData.data = res.data;
+								for (var index in res.data) {
+									lastIndex = index;
 								}
 							}
-						}, 'json'
-					);
+						}
+					}, 'json');
 				}
-				
+
 				var timer = 0
 				//websocket 心跳检测
 				var heartCheck = {
@@ -933,9 +992,10 @@
 							// logs(t);
 							ws.send(JSON.stringify(t));
 						}, this.timeout);
-					}
+					},
+
 				};
-				
+
 				//socket初始化
 				function WebSocketInit() {
 					if ("WebSocket" in window) {
@@ -971,24 +1031,43 @@
 							// console.log("连接已关闭...");
 						};
 						ws.onerror = function(e) {
-							// logs(e);
+							logs(e);
 						}
 					} else {
 						message("您的手机不支持 WebSocket!");
 					}
 				}
 			});
-			mui('.mui-content').on("longtap",".msg-content",function(){
-				message("asdfasdf");
+			// 长按显示操作菜单
+			var message_id = 0;
+			mui('.mui-content').on("longtap", ".msg-content", function() {
+				mui("#middlePopover").popover('toggle', document.getElementById(this.id));
+				message_id = this.id;
 			})
-			
+			// 删除单条聊天记录
+			mui(".mui-content").on("tap", ".del-btn", function() {
+				mui.post($ajaxUrl + 'chat&action=delete', {
+					token: userInfo.token,
+					message_id: message_id
+				}, function(res) {
+					mui('#middlePopover').popover('hide');
+					if (res.errno == 0) {
+						document.getElementById('parent' + message_id).style.display = "none";
+						message('已删除');
+					} else {
+						message('删除失败，请稍后重试');
+					}
+				}, 'json');
+			})
 			// 显示清除消息弹窗
-			mui('.mui-bar-nav').on("tap",".clear-chatting-records",function(){
-				mui('.join-team-verify')[0].style.display="flex";
+			mui('.mui-bar-nav').on("tap", ".clear-chatting-records", function() {
+				mui('.join-team-verify')[0].style.display = "flex";
+				var input = document.getElementById("msg-text");
+				input.blur();
 			})
 			// 取消清除聊天记录
-			mui('.mui-content').on("tap",".close-verify-window",function(){
-				mui('.join-team-verify')[0].style.display="none";
+			mui('.mui-content').on("tap", ".close-verify-window", function() {
+				mui('.join-team-verify')[0].style.display = "none";
 			})
 		</script>
 	</body>
