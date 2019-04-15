@@ -167,7 +167,8 @@
 					is_friend: 1,
 					is_reliable: 0,
 					is_voice_like: 0,
-					addshow: false
+					addshow: false,
+					audioUrl:''
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -178,15 +179,19 @@
 						var voice = null,
 							playstatus = 0,
 							pausing = false,
-							audioUrl = 'https://raw.githubusercontent.com/centosl/imageslibrary/master/audio/20190311200902994.mp3',
-							downLoadurl = '_downloads/1.mp3',
-							downloader = plus.downloader.createDownload(audioUrl, {
-								filename: '_downloads/1.mp3'
-							}, function(d, status) {});
-						// 开始下载音频
-						downloader.start();
+							downLoadurl = '_downloads/voice1.mp3',
+							timer=setInterval(function(){
+								if(muiCont.audioUrl){
+									downloader = plus.downloader.createDownload(muiCont.audioUrl, {
+										filename: "_downloads/voice1.mp3"
+									}, function() {});
+									clearInterval(timer);
+									// 开始下载音频
+									downloader.start();
+									voice = plus.audio.createPlayer(downLoadurl);
+								}
+							},100);
 						// 创建音频对象
-						voice = plus.audio.createPlayer(downLoadurl);
 						mui(".mui-content").on("tap", ".play-control", function() {
 							//监测暂停
 							if (pausing) {
@@ -277,7 +282,7 @@
 					token: userInfo.token,
 					user_id: fid
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0) {
 						muiCont.cardType = data.card_type;
@@ -288,6 +293,7 @@
 						muiCont.is_friend = data.is_friend;
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;
+						muiCont.audioUrl=data.voice;
 						mui(".mui-title")[0].innerText = data.name;
 						var selfid = userInfo.id;
 						if (fid != selfid && muiCont.is_friend != 1) {
