@@ -42,6 +42,13 @@
 		.mui-table-view-cell:last-child:after{
 			height: 1px;
 		}
+		.empty-container {
+			width: 100%;
+			height: 300px;
+			line-height: 300px;
+			text-align: center;
+			color: #999;
+		}
 		</style>
 	</head>
 
@@ -52,18 +59,20 @@
 		</header>
 
 		<div class="mui-content">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
-					<img src="../image/5E0eH.png">
-					<div>
-						<p class="mui-ellipsis-2">京城今儿恍如初非夏，明天将有弱冷空气</p>
-						<div class="mui-clearfix">
-							<div class="mui-pull-left"><img src="../image/icon/data-statistics-inquiry-img-04.png">总点击量：500</div>
-							<div class="mui-pull-right"><img src="../image/icon/data-statistics-inquiry-img-03.png">总分享量：500</div>
+			<ul class="mui-table-view" v-if="articleList">
+				<template v-for="(item, key) in articleList" :key="key">
+					<li class="mui-table-view-cell">
+						<img src="../image/5E0eH.png">
+						<div>
+							<p class="mui-ellipsis-2">{{ item.title }}</p>
+							<div class="mui-clearfix">
+								<div class="mui-pull-left"><img src="../image/icon/data-statistics-inquiry-img-04.png">总点击量：{{ item.share_times }}</div>
+								<div class="mui-pull-right"><img src="../image/icon/data-statistics-inquiry-img-03.png">总分享量：{{ item.click }}</div>
+							</div>
 						</div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
+					</li>
+				</template>
+				<!-- <li class="mui-table-view-cell">
 					<img src="../image/5E0eH.png">
 					<div>
 						<p class="mui-ellipsis-2">京城今儿恍如初非夏，明天将有弱冷空气明天将有弱冷空气明天将有弱冷空气明天将有弱冷空气</p>
@@ -72,11 +81,15 @@
 							<div class="mui-pull-right"><img src="../image/icon/data-statistics-inquiry-img-03.png">总分享量：500</div>
 						</div>
 					</div>
-				</li>
+				</li> -->
 			</ul>
+			<div v-else class="empty-container">
+				没有数据
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			// 初始化字体大小
@@ -87,10 +100,40 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
-			mui.plusReady(function() {})
-			mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
-				openPage('self_media_statistics_detail.html', 'self_media_statistics_detail', '#f7f7f7', '')
-			})
+			
+			var userInfo = getUserInfo();
+			var vm = new Vue({
+				el: '.nui-content',
+				data() {
+					return {
+						articleList: null,
+					}
+				},
+				mounted:function() {
+					mui.plusReady(function() {
+						eventInit();
+						// userArticleList();
+					})
+				}
+			});
+			
+			//事件初始化
+			function eventInit() {
+				mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
+					var id = this.dataset.id;
+					openPage('self_media_statistics_detail.html', 'self_media_statistics_detail', '#f7f7f7', {id: id})
+				})
+			}
+			
+			function userArticleList() {
+				mui.get($ajaxUrl + 'article', {
+						action: 'user_article',
+						token: userInfo.token
+					}, function(res){
+						vm.articleList = res.data;
+					}, 'json'
+				);
+			}
 		</script>
 	</body>
 
