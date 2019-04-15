@@ -415,7 +415,7 @@
 		<script id='msg-template' type="text/template">
 			<div class="msg-container">
 				<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
-					<div style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
+					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
 					<% for (var i in record[index]) { var item = record[index][i]; %>
 					<div id="<%= ('parent'+item.message_id) %>" class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 						<% if(item.sender=='self' ) { %>
@@ -424,7 +424,7 @@
 						<% } else { %>
 							<img class="msg-user-img" src="<%= (avatar.target) %>" alt="" />
 						<% } %>
-						<div class="msg-content" id="<%= (item.message_id) %>">
+						<div class="msg-content" id="<%= ('message'+item.message_id) %>" data-tag=<%= (item.message_id) %>>
 							<div class="msg-content-inner">
 								<% if(item.type=='text' ) { %>
 									<%=( item.content|| '&nbsp;&nbsp;') %>
@@ -525,7 +525,6 @@
 					// 解决在ios上fixed元素focusin时位置出现错误的问题 
 					document.addEventListener('DOMContentLoaded', function() {
 						var footerDom = document.querySelector('footer');
-
 						document.addEventListener('focusin', function() {
 							footerDom.style.position = 'absolute';
 						});
@@ -1045,10 +1044,18 @@
 			});
 			// 长按显示操作菜单
 			var message_id = 0;
+			var isFocus = null;
+			// 监听输入框是否获得焦点
+			document.getElementById("msg-text").addEventListener("focus", function() {
+				isFocus = true;
+			});
+			document.getElementById("msg-text").addEventListener("blur", function() {
+				isFocus = false;
+			});
 			mui('.mui-content').on("longtap", ".msg-content", function() {
 				mui('#middlePopover').popover('hide');
 				mui("#middlePopover").popover('toggle', document.getElementById(this.id));
-				message_id = this.id;
+				message_id = this.dataset.tag;
 			})
 			// 删除单条聊天记录
 			mui(".mui-content").on("tap", ".del-btn", function() {
@@ -1058,7 +1065,21 @@
 				}, function(res) {
 					mui('#middlePopover').popover('hide');
 					if (res.errno == 0) {
-						document.getElementById('parent' + message_id).style.display = "none";
+						var mols = document.getElementById('parent' + message_id).previousElementSibling;
+						var brother = document.getElementById('parent' + message_id).nextElementSibling;
+						var mcls = mols.className;
+						var bcls='';
+						if (brother) {
+							bcls = brother.className;
+						}else{
+							bcls = 'data-time';
+						}
+						if (bcls == 'data-time' && mcls == 'data-time') {
+							mols.style.display = "none";
+							document.getElementById('parent' + message_id).style.display = "none";
+						} else {
+							document.getElementById('parent' + message_id).style.display = "none";
+						}
 						message('已删除');
 					} else {
 						message('删除失败，请稍后重试');
