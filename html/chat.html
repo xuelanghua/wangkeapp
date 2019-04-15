@@ -565,7 +565,7 @@
 				window.addEventListener('newCustomer', function() {
 					mui.trigger(document.querySelector('.switch1_content[data-id=customer]'), 'tap');
 				})
-				
+
 				window.addEventListener('resize', function() {
 					// message(document.querySelector("body").offsetHeight);
 				})
@@ -600,11 +600,10 @@
 						plus.navigator.setStatusBarStyle('dark');
 					}
 				})
-				
+
 				mui('.mui-content').on('blur', '#search', function() {
 					alert(222);
 				})
-
 				window.addEventListener('addInterval', function(e) {
 					console.log('addInterval');
 					timeInterval();
@@ -623,6 +622,19 @@
 					console.log('loginSuccess');
 					getCustomerList();
 				})
+				//获取原始窗口的高度
+				var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+				window.onresize = function() {
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+					if (resizeHeight * 1 < originalHeight * 1) {
+						plus.webview.currentWebview().setStyle({
+							height: originalHeight
+						});
+					}
+				}
+				// 固定底部的菜单栏
+				document.getElementById('bar').style.top = (plus.display.resolutionHeight - 50) + "px";
 			})
 
 			function indexInit() {
@@ -972,9 +984,11 @@
 									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 									temp += '</span>';
 									if (list[i].mark == 1) {
-										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 									} else if (list[i].mark == 2) {
-										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 									}
 									temp += '<div class="clearfix"></div>';
 									temp += '</div>';
@@ -1026,9 +1040,11 @@
 									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 									temp += '</span>';
 									if (list[i].mark == 1) {
-										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 									} else if (list[i].mark == 2) {
-										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 									}
 									temp += '<div class="clearfix"></div>';
 									temp += '</div>';
@@ -1189,9 +1205,11 @@
 									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 									temp += '</span>';
 									if (list[i].mark == 1) {
-										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 									} else if (list[i].mark == 2) {
-										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 									}
 									temp += '<div class="clearfix"></div>';
 									temp += '</div>';
@@ -1240,9 +1258,11 @@
 									<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 									temp += '</span>';
 									if (list[i].mark == 1) {
-										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 									} else if (list[i].mark == 2) {
-										temp += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
+										temp +=
+											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 									}
 									temp += '<div class="clearfix"></div>';
 									temp += '</div>';
@@ -1299,7 +1319,8 @@
 								<!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
 								html += '</span>';
 								if (list[i].mark == 1) {
-									html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
+									html +=
+										'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
 								} else if (list[i].mark == 2) {
 									html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
 								}
@@ -1401,7 +1422,7 @@
 								} else {
 									html += '<span class="mui-pull-left">' + list[i].create_time + '</span>';
 								}
-								
+
 								if (index == 'new') {
 									html += '<span class="mui-pull-right"style="color: #4C7ABD;">进行中</span>';
 								} else if (index == 'follow') {

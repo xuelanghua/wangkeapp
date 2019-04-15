@@ -466,6 +466,11 @@
 		read_comment.addEventListener('tap', function() {
 			document.getElementById('cover').style.display = "block";
 			document.getElementById('tanchu').style.display = "block";
+			setTimeout(function() {
+				try {
+					document.getElementById('release_content').focus();
+				} catch (e) {}
+			}, 100);
 		})
 
 		var cover = document.getElementById('cover');
@@ -485,6 +490,7 @@
 			document.getElementById('cover').style.display = "none";
 			document.getElementById('tanchu').style.display = "none";
 		})
+
 	});
 
 	function addtime() {
@@ -539,12 +545,12 @@
 				document.getElementById('article_addtime').innerHTML = data.data.add_time;
 				document.getElementById('article_content').innerHTML = data.data.content;
 				document.getElementById('article_click').innerHTML = data.data.click;
-				
+
 				document.getElementById('sharehref').value = data.data.share_link;
 				document.getElementById('sharehrefTitle').value = data.data.title;
 				document.getElementById('sharehrefDes').value = data.data.desc;
 				document.getElementById('sharehrefImg').value = data.data.thumb;
-				
+
 				var str = '';
 				if (data.data.read_img.length < 8) {
 					for (i in data.data.read_img) {
@@ -562,7 +568,8 @@
 					for (i in data.data.comment) {
 						commentStr += '<div class="comment1"><div class="commentl mui-pull-left"><img src="' + data.data.comment[i].headimgurl +
 							'" ></div><div class="commentr mui-pull-right"><div class="commentr-title"><span style="color: #2C8EFF;">' +
-							data.data.comment[i].nickname + '</span></div><div style="line-height: 25px;font-size: 15px;margin-top: 5px;">' +
+							data.data.comment[i].nickname +
+							'</span></div><div style="line-height: 25px;font-size: 15px;margin-top: 5px;">' +
 							data.data.comment[i].comment + '</div><div class="time"><span>' + data.data.comment[i].add_time +
 							'</span></div></div><div class="clearfix"></div></div>';
 					}
@@ -579,7 +586,7 @@
 					plus.webview.close(ws);
 				}, 2000);
 			}
-			
+
 			document.querySelector('.mui-content').classList.remove('mui-hidden');
 		}, 'json');
 	}
@@ -718,7 +725,7 @@
 			alert("无效的分享服务！");
 			return;
 		}
-		
+
 		var sharehref = document.getElementById('sharehref');
 		var sharehrefDes = document.getElementById('sharehrefDes');
 		var sharehrefTitle = document.getElementById('sharehrefTitle');
@@ -743,7 +750,7 @@
 		} else {
 			msg.pictures = [sharehrefImg.value];
 		}
-		
+
 		// 发送分享
 		if (sb.s.authenticated) {
 			//alert("---已授权---");
@@ -772,7 +779,7 @@
 			alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
 		});
 	}
-	
+
 	// 分析链接
 	function shareHref() {
 		var shareBts = [];
