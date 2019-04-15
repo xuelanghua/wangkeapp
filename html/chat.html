@@ -311,7 +311,7 @@
 			.new-friend-title{
 				flex-grow: 1;
 			}
-			.new-msg-tips{
+			/* .new-msg-tips{
 				flex-shrink: 0;
 				border-radius: 50%;
 				min-width: 15px;
@@ -324,7 +324,7 @@
 				margin-right: 10px;
 				align-items: baseline;
 				justify-content: center;
-			}
+			} */
 		</style>
 	</head>
 
@@ -517,7 +517,7 @@
 				<div class="mui-pull-left new-friend-title" style="margin-left: 18px;">
 					<div class="good_friend_name">新朋友</div>
 				</div>
-				<div class="mui-pull-right new-msg-tips">12</div>
+				<div class="mui-pull-right mui-badge mui-badge-danger new-msg-tips" style="display: none;">0</div>
 			</div>
 			<div class="mui-indexed-list-inner good_friend">
 				<div class="mui-indexed-list-empty-alert">没有数据</div>
@@ -646,7 +646,7 @@
 
 			function pageInit() {
 				// setTimeout('getCustomerList()', 20000);
-				// localStorage.removeItem('customer');
+				localStorage.removeItem('customer');
 				customer_data = JSON.parse(localStorage.getItem('customer'));
 				if (!customer_data) {
 					getCustomerList();
@@ -938,6 +938,13 @@
 				}, function(res) {
 					// logs(res);
 					customer_data = res.data;
+					var tipsObj = document.querySelector('.new-msg-tips');
+					if (customer_data.message > 0) {
+						tipsObj.innerText = customer_data.message;
+						tipsObj.style.display = 'block';
+					} else {
+						tipsObj.style.display = 'none';
+					}
 					localStorage.setItem('customer', JSON.stringify(customer_data));
 					showCustomer(customer_data.crm, 'crm');
 					showCustomer(customer_data.customer, 'customer');

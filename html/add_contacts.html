@@ -69,7 +69,12 @@
 		<script src="../js/vue.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					plus.navigator.setStatusBarStyle('light');
+				}
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -129,10 +134,12 @@
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0 && status == 1) {
-						message("同意添加");
+						message("添加成功");
+						mui.fire(plus.webview.getWebviewById('chat'), 'addCustomer');
 						createlist();
 					} else if (res.errno == 0 && status == -1) {
 						message("已拒绝");
+						mui.fire(plus.webview.getWebviewById('chat'), 'addCustomer');
 						createlist();
 					} else {
 						message("请求失败，稍后重试");
