@@ -557,7 +557,7 @@
 				};
 
 				winHeight = document.querySelector("body").offsetHeight;
-				// message(winHeight);
+				// winHeight = document.documentElement.clientHeight || document.body.clientHeight;
 				userInfo = getUserInfo();
 				pageInit();
 
@@ -622,17 +622,17 @@
 					console.log('loginSuccess');
 					getCustomerList();
 				})
-				//获取原始窗口的高度
-				var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-				window.onresize = function() {
-					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-					var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-					if (resizeHeight * 1 < originalHeight * 1) {
-						plus.webview.currentWebview().setStyle({
-							height: originalHeight
-						});
-					}
-				}
+				// 				//获取原始窗口的高度
+// 				var originalHeight = document.querySelector("body").offsetHeight;
+// 				window.onresize = function() {
+// 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+// 					var resizeHeight = document.querySelector("body").offsetHeight;
+// 					if (resizeHeight * 1 < originalHeight * 1) {
+// 						plus.webview.currentWebview().setStyle({
+// 							height: originalHeight
+// 						});
+// 					}
+// 				}
 			})
 
 			function indexInit() {
@@ -640,8 +640,12 @@
 				var list = document.getElementById('list');
 				// list.style.height = (document.body.offsetHeight - header.offsetHeight + 2) + 'px';
 				list.style.height = (winHeight - header.offsetHeight + 2) + 'px';
+				// list.style.height = (winHeight - header.offsetHeight - 50) + 'px';
+				// list.style.backgroundColor = "#ff0000";
 				window.indexedList = new mui.IndexedList(list);
 				mui.trigger(document.getElementById(currentTab), 'tap');
+				// var arrv = plus.webview.all();
+				// console.log(arrv);
 			}
 
 			function pageInit() {

@@ -413,7 +413,7 @@
 		</header>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
-			<div class="msg-container">
+			<div class="msg-container" id="msg-container">
 				<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
 					<% for (var i in record[index]) { var item = record[index][i]; %>
@@ -1045,17 +1045,19 @@
 			// 长按显示操作菜单
 			var message_id = 0;
 			var isFocus = null;
-			// 监听输入框是否获得焦点
-			document.getElementById("msg-text").addEventListener("focus", function() {
-				isFocus = true;
-			});
-			document.getElementById("msg-text").addEventListener("blur", function() {
-				isFocus = false;
-			});
+			// 获取原来的高度
+			var oglHeight = document.querySelector("body").offsetHeight;
 			mui('.mui-content').on("longtap", ".msg-content", function() {
-				mui('#middlePopover').popover('hide');
-				mui("#middlePopover").popover('toggle', document.getElementById(this.id));
-				message_id = this.dataset.tag;
+				// 获取高度
+				var tempHeight = document.querySelector("body").offsetHeight;
+				if (tempHeight == oglHeight) {
+					mui('#middlePopover').popover('hide');
+					mui("#middlePopover").popover('toggle', document.getElementById(this.id));
+					message_id = this.dataset.tag;
+				} else {
+					var input = document.getElementById("msg-text");
+					input.blur();
+				}
 			})
 			// 删除单条聊天记录
 			mui(".mui-content").on("tap", ".del-btn", function() {
@@ -1067,18 +1069,19 @@
 					if (res.errno == 0) {
 						var mols = document.getElementById('parent' + message_id).previousElementSibling;
 						var brother = document.getElementById('parent' + message_id).nextElementSibling;
+						var selfDom = document.getElementById('parent' + message_id);
 						var mcls = mols.className;
-						var bcls='';
+						var bcls = '';
 						if (brother) {
 							bcls = brother.className;
-						}else{
+						} else {
 							bcls = 'data-time';
 						}
 						if (bcls == 'data-time' && mcls == 'data-time') {
-							mols.style.display = "none";
-							document.getElementById('parent' + message_id).style.display = "none";
+							mols.parentNode.removeChild(mols);
+							selfDom.parentNode.removeChild(selfDom);
 						} else {
-							document.getElementById('parent' + message_id).style.display = "none";
+							selfDom.parentNode.removeChild(selfDom);
 						}
 						message('已删除');
 					} else {

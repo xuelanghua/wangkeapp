@@ -69,7 +69,7 @@
 				</ul>
 			</div>
 			<div class="operation-btn-cont">
-				<button type="button" @tap="share">分享名片</button>
+				<button type="button">分享名片</button>
 				<button type="button" @tap="addAddressList">同步到通讯录</button>
 			</div>
 			<!-- 浏览记录 -->
@@ -163,13 +163,12 @@
 					cardType: 'cardType1',
 					friendData: {},
 					contName: '',
-					avatar: '',
 					phoneNum: '',
 					is_friend: 1,
 					is_reliable: 0,
 					is_voice_like: 0,
 					addshow: false,
-					audioUrl:''
+					audioUrl: ''
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -180,19 +179,19 @@
 						var voice = null,
 							playstatus = 0,
 							pausing = false,
-							downLoadurl = '_downloads/voice1.mp3',
-							timer=setInterval(function(){
-								if(muiCont.audioUrl){
+							downLoadurl = '_downloads/' + Date.parse(new Date()) + '.mp3',
+							timer = setInterval(function() {
+								if (muiCont.audioUrl) {
 									downloader = plus.downloader.createDownload(muiCont.audioUrl, {
 										filename: downLoadurl
 									}, function() {});
 									clearInterval(timer);
 									// 开始下载音频
 									downloader.start();
+									// 创建音频对象
 									voice = plus.audio.createPlayer(downLoadurl);
 								}
-							},100);
-						// 创建音频对象
+							}, 100);
 						mui(".mui-content").on("tap", ".play-control", function() {
 							//监测暂停
 							if (pausing) {
@@ -206,6 +205,10 @@
 								return;
 							}
 							$(".play-control").addClass("play");
+							play();
+						})
+
+						function play() {
 							voice.play(function() {
 								voice.stop();
 								$(".play-control").removeClass("play");
@@ -216,7 +219,7 @@
 								$(".play-control").removeClass("play");
 							});
 							playstatus = 1;
-						})
+						}
 
 						function pause() {
 							pausing = true;
@@ -231,7 +234,7 @@
 						});
 						document.addEventListener('resume', function() {
 							if (voice) {
-								// play();
+								play();
 							}
 						});
 						// 跳转到更多页面
@@ -274,18 +277,6 @@
 						openPage('friend_verification.html', 'friend_verification', '#f7f7f7', {
 							fid: fid
 						});
-					},
-					share: function() {
-						shareToMiniprogram({
-							title: muiCont.friendData.name + '的旺客名片',
-							content: '王天下之客,让营销更简单!',
-							thumbs: [muiCont.friendData.avatar],
-							miniProgram: {
-								id: 'gh_9fa5f42ab939',
-								path: '/longbing_card/pages/index/index?to_uid=' + fid + '&is_qr=1&currentTabBar=toCard',
-								webUrl: 'https://app.wangkeapp.cn/'
-							}
-						}, 'miniProgram');
 					}
 				}
 			});
@@ -306,7 +297,7 @@
 						muiCont.is_friend = data.is_friend;
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;
-						muiCont.audioUrl=data.voice;
+						muiCont.audioUrl = data.voice;
 						mui(".mui-title")[0].innerText = data.name;
 						var selfid = userInfo.id;
 						if (fid != selfid && muiCont.is_friend != 1) {
@@ -403,10 +394,9 @@
 					message("添加失败");
 				});
 			}
-			
 			// 跳转名片二维码页面
 			mui(".mui-content").on("tap", ".user-qr-code", function() {
-				openPage('business_card.html','business_card','#f7f7f7','');
+				openPage('business_card.html', 'business_card', '#f7f7f7', '');
 			})
 		</script>
 	</body>
