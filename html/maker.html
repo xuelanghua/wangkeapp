@@ -334,7 +334,7 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<div class="mui-pull-right" style="font-size: 15px;margin-top: 10px;">我的权益</div>
 			<h1 class="mui-title">会员中心</h1>
 		</header>
@@ -506,6 +506,12 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script type="text/javascript">
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					plus.navigator.setStatusBarStyle('light');
+				}
+			});
 			var userInfo = getUserInfo(),
 				pageNum = 0;
 			var app = new Vue({

@@ -14,7 +14,7 @@
 	</head>
 	<body>
 		<div class="mui-content">
-			<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;">
+			<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;z-index: 99999;">
 				<div class="mui-tab-item mui-active tab-item" data-id="home">
 					<span class="mui-icon icon-home-page-s" style="font-size: 18px;margin-top: 2px;"></span>
 					<span class="mui-tab-label">首页</span>
@@ -50,17 +50,11 @@
 		var currentTab = null;
 		var current = '';
 		var tabs = {};
-		var styles = {
-			top: '0',
-			bottom: '51px',
-			statusbar: {
-				background: '#FFFFFF'
-			}
-		};
+		var bottomHeight = document.getElementById('bar').offsetHeight;
+
 		var tabsConfig = {
 			home: {
 				url: 'html/home.html',
-				styles: styles,
 				default: true,
 				icon: 'icon-home-page',
 				selected: 'icon-home-page-s',
@@ -72,26 +66,11 @@
 					scrollIndicator: 'none',
 					statusbar: {
 						background: '#FFFFFF'
-					},
-					// pullToRefresh: {
-					// 	support:true,
-					// 	height:'50px',
-					// 	range:'200px',
-					// 	contentdown:{
-					// 		caption:'下拉可以刷新'
-					// 	},
-					// 	contentover:{
-					// 		caption:'释放立即刷新'
-					// 	},
-					// 	contentrefresh:{
-					// 		caption:'正在刷新...'
-					// 	},
-					// }
+					}
 				}
 			},
 			chat: {
 				url: 'html/chat.html',
-				styles: styles,
 				icon: 'icon-chat',
 				selected: 'icon-chat-s',
 				background: '#CCC',
@@ -107,7 +86,6 @@
 			},
 			media: {
 				url: 'html/self_media.html',
-				styles: styles,
 				icon: 'icon-selfmedia',
 				selected: 'icon-selfmedia-s',
 				background: '#FFFFFF',
@@ -123,7 +101,6 @@
 			},
 			user: {
 				url: 'html/my.html',
-				styles: styles,
 				icon: 'icon-my',
 				selected: 'icon-my-s',
 				background: '#CCC',
@@ -193,7 +170,7 @@
 
 			// localStorage.removeItem('user');
 			var userInfo = getUserInfo();
-			logs(userInfo);
+			// logs(userInfo);
 			if (!userInfo) {
 				login();
 			} else if (userInfo.mobile.length == 0) {
@@ -295,22 +272,6 @@
 
 		function bindMobile() {
 			fnOpenWin('html/mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
-		}
-
-		function judgeLogin() {
-			localStorage.removeItem('user');
-			//判断是否已经登录成功//localstorage在页面关闭的时候也同样存在，sessionstorage页面关闭数据不存在
-			var userInfo = getUserInfo();
-			if (!userInfo) {
-				fnOpenWin('html/login.html', 'login', {
-					statusbar: {
-						background: '#122c9a'
-					}
-				}, '', 'slide-in-bottom');
-				return;
-			} else if (userInfo.mobile.length == 0) {
-				fnOpenWin('html/mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
-			}
 		}
 	</script>
 </html>

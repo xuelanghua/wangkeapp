@@ -564,3 +564,68 @@ var nativeCommon = {
 		}
 	}
 }
+
+//绑定个推clientid
+function bindClientId() {
+	var clientInfo = plus.push.getClientInfo();
+	var clientId = clientInfo.clientid;
+	var clientType = plus.os.name;
+	var userInfo = getUserInfo();
+	mui.post($ajaxUrl + 'member', {
+		action: 'bind_client_id',
+		token: userInfo.token,
+		client_id: clientId,
+		client_type: clientType
+	}, function(res) {
+		logs(res);
+		if (res.errno == 1) {
+			setTimeout(function() {
+				bindClientId();
+			}, 3000)
+		}
+	}, 'json');
+}
+
+//消息推送初始化
+function pushInit() {
+	if (plus.os.name == 'iOS') {
+		plus.push.clear();
+	}
+	plus.push.addEventListener('receive', function(msg) {
+		try {
+			if (!msg.payload) {
+				return;
+			}
+			if (plus.os.name == "Android") {
+				msg.payload = JSON.parse(msg.payload);
+			}
+			logs(msg);
+		} catch (e) {
+			console.log(e.message)
+		}
+	})
+
+	plus.push.addEventListener('click', function(msg) {
+		try {
+			if (plus.os.name == "Android") {
+				msg.payload = JSON.parse(msg.payload);
+			}
+			logs(msg);
+			// pushCallback(data);
+		} catch (e) {
+			console.log(e.message);
+		}
+	})
+}
+
+//推送执行方法  
+function pushCallback(data) {
+	try {
+		alert(data.type);
+		if (data.type == 'openWindow') {
+			data.url && redirect(data.url);
+		}
+	} catch (e) {
+		alert(e.message);
+	}
+}
