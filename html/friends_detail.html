@@ -185,12 +185,18 @@
 									logs(muiCont.audioUrl);
 									downloader = plus.downloader.createDownload(muiCont.audioUrl, {
 										filename: downLoadurl
-									}, function() {});
+									}, function(d, status) {
+										logs(d);
+										if (status == 200) {
+											voice = plus.audio.createPlayer(downLoadurl);
+										} else {
+											message('音频初始化失败');
+										}
+									});
 									clearInterval(timer);
 									// 开始下载音频
 									downloader.start();
 									// 创建音频对象
-									voice = plus.audio.createPlayer(downLoadurl);
 								}
 							}, 100);
 						mui(".mui-content").on("tap", ".play-control", function() {
