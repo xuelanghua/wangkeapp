@@ -556,8 +556,8 @@
 					}
 				};
 
-				winHeight = document.querySelector("body").offsetHeight;
-				// winHeight = document.documentElement.clientHeight || document.body.clientHeight;
+				// winHeight = document.querySelector("body").offsetHeight;
+				winHeight = document.documentElement.clientHeight || document.body.clientHeight;
 				userInfo = getUserInfo();
 				pageInit();
 
@@ -622,17 +622,19 @@
 					console.log('loginSuccess');
 					getCustomerList();
 				})
-				// 				//获取原始窗口的高度
-// 				var originalHeight = document.querySelector("body").offsetHeight;
-// 				window.onresize = function() {
-// 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-// 					var resizeHeight = document.querySelector("body").offsetHeight;
-// 					if (resizeHeight * 1 < originalHeight * 1) {
-// 						plus.webview.currentWebview().setStyle({
-// 							height: originalHeight
-// 						});
-// 					}
-// 				}
+				
+				//获取原始窗口的高度
+				var originalHeight = document.querySelector("body").offsetHeight;
+				window.onresize = function() {
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					var resizeHeight = document.querySelector("body").offsetHeight;
+					if (resizeHeight * 1 < originalHeight * 1) {
+						plus.webview.currentWebview().setStyle({
+							height: originalHeight
+						});
+					}
+				}
+
 			})
 
 			function indexInit() {

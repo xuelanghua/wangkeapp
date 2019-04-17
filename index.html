@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<div class="mui-content">
-			<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;z-index: 99999;">
+			<nav id="bar" class="mui-bar mui-bar-tab" style="background-color: #FFFFFF;box-shadow: 0 0 5px 3px #DDDDDD;">
 				<div class="mui-tab-item mui-active tab-item" data-id="home">
 					<span class="mui-icon icon-home-page-s" style="font-size: 18px;margin-top: 2px;"></span>
 					<span class="mui-tab-label">首页</span>
@@ -56,6 +56,8 @@
 				styles: {
 					top: '0px',
 					bottom: '51px',
+					scrollIndicator: 'none',
+					// softinputMode: "adjustResize",
 					statusbar: {
 						background: '#FFFFFF'
 					}
@@ -70,6 +72,8 @@
 				styles: {
 					top: '0px',
 					bottom: '51px',
+					scrollIndicator: 'none',
+					// softinputMode: "adjustResize",
 					statusbar: {
 						background: '#2289FF'
 					}
@@ -84,6 +88,8 @@
 				styles: {
 					top: '0px',
 					bottom: '51px',
+					scrollIndicator: 'none',
+					// softinputMode: "adjustResize",
 					statusbar: {
 						background: '#FFFFFF'
 					}
@@ -98,6 +104,8 @@
 				styles: {
 					top: '0px',
 					bottom: '51px',
+					scrollIndicator: 'none',
+					// softinputMode: "adjustResize",
 					statusbar: {
 						background: '#2289FF'
 					}
@@ -106,7 +114,6 @@
 		};
 
 		mui.plusReady(function() {
-			// document.getElementById('bar').style.top = (plus.display.resolutionHeight - 75) + "px";
 			//自定义事件监听快捷菜单页面点击
 			window.addEventListener('closeShortcut', function() {
 				document.getElementById('short_cut').dataset.status = 0;
@@ -117,8 +124,9 @@
 				currentTab.classList.add('mui-active');
 			})
 			// 固定底部的菜单栏
-			document.getElementById('bar').style.top = (plus.display.resolutionHeight - 70) + "px";
-			document.getElementById('bar').style.height = 50 + "px";
+			var heights = document.documentElement.clientHeight || document.body.clientHeight;
+			document.getElementById('bar').style.top = (heights - 50) + "px";
+			// document.getElementById('bar').style.height = 50 + "px";
 
 			//自定义事件监听-首页新增客户点击
 			window.addEventListener('newCustomer', function() {
@@ -195,7 +203,7 @@
 			}
 			shortcutWebview = plus.webview.create('html/shortcut.html', 'shortcut', {
 				top: '0px',
-				bottom: '150px',
+				bottom: '50px',
 				background: 'transparent'
 			});
 		}
