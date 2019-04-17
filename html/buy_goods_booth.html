@@ -39,6 +39,74 @@
 				line-height: 0.6rem;
 				border-radius: 0;
 			}
+
+			.set-meal {
+				padding: 0.2rem 0.2rem;
+				background-color: #FFFFFF;
+				margin-bottom: 0.2rem;
+			}
+
+			.position-num {
+				border: 1px solid #dddddd;
+				border-radius: 0.1rem;
+				height: auto;
+				padding: 0.2rem 0;
+				margin: 0.3rem 0;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.position-num span {
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.position-num .price {
+				color: #e84828;
+			}
+
+			.position-num .tag {
+				width: 1.6rem;
+				height: 0.4rem;
+				color: #FFFFFF;
+				background-color: #f5ca3a;
+				position: absolute;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: absolute;
+				font-size: 0.24rem;
+				left: -0.5rem;
+				top: 0.1rem;
+				transform: rotate(-45deg);
+				-webkit-transform: rotate(-45deg);
+			}
+
+			.set-meal .mui-input-row.mui-radio input[type=radio] {
+				top: 50%;
+				right: 0.2rem;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+			}
+
+			.position-num.mui-radio label {
+				display: flex;
+				justify-content: space-between;
+				padding-left: 0.55rem;
+			}
+
+			.position-num.mui-radio input[type=radio]:checked:before {
+				color: #f5ca3a;
+			}
+
+			.goods-booth-container .page-head {
+				margin-bottom: 0;
+				position: relative;
+			}
+
+			.goods-booth-container .mui-btn-yellow {
+				color: #FFFFFF;
+			}
 		</style>
 	</head>
 
@@ -49,17 +117,21 @@
 		</header>
 
 		<div id="goods-booth" class="mui-content goods-booth-container">
+			<div class="set-meal" id="meal">
+				<div class="mui-input-row mui-radio position-num">
+					<div class="tag mui-hidden">荐</div>
+					<label><span>3个商品位</span><span class="price">&yen;19</span></label>
+					<input name="meal" type="radio" checked="checked" value="19" @change=itemChange('19')>
+				</div>
+				<div class="mui-input-row mui-radio position-num">
+					<div class="tag">荐</div>
+					<label><span>所有商品位</span><span class="price">&yen;98</span></label>
+					<input name="meal" type="radio" value="98" @change=itemChange('98')>
+				</div>
+			</div>
 			<div class="page-head">
 				<h5>合计</h5>
-				<h2><span>&yen;</span>{{sum}}.00</h2>
-				<div class="buy-num-cont">
-					<span>购买数量</span>
-					<div class="amount-select">
-						<button class="mui-btn" type="button" @tap="reduce" :disabled="total>1?false:true">-</button>
-						<input class="amount" v-model="total" v-on:input="watchNum" type="number">
-						<button class="mui-btn" type="button" @tap="adding" :disabled="total<9999?false:true">+</button>
-					</div>
-				</div>
+				<h2><span>&yen;</span>{{price}}</h2>
 			</div>
 			<div class="pattern-of-payment">
 				<form class="mui-input-group">
@@ -93,7 +165,7 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		
+
 		var userInfo = getUserInfo();
 		//支付相关变量
 		var payType = 'wxpay';
@@ -108,13 +180,15 @@
 			data() {
 				return {
 					total: 1,
-					price: 100
+					price: 0
 				}
 			},
 			created: () => {
+
+			},
+			mounted: function() {
 				mui.plusReady(function() {
 					getGoodsBoothPrice();
-					
 					plus.payment.getChannels(function(channels) {
 						for (var i in channels) {
 							if (channels[i].id == "wxpay") {
@@ -126,7 +200,7 @@
 					}, function(e) {
 						plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
 					});
-					
+
 					//支付
 					mui('.mui-content').on('tap', '.mui-pay', function() {
 						payType = document.querySelector('input[name=radio1]:checked').value;
@@ -135,68 +209,31 @@
 							return;
 						}
 						if (payType == 'balance') {
-							
+
 						} else {
 							pay(payType);
 						}
 					})
 				});
-			},
-			computed: {
-				sum: function() {
-					if (this.total == 0 || isNaN(this.total)) {
-						fee = this.price;
-					} else {
-						fee = this.total * this.price;
-					}
-					return fee;
-				}
+				this.price = document.querySelector('input[name=meal]:checked').value;
 			},
 			methods: {
-				watchNum: function(e) {
-					// 监听输入
-					var figure;
-					var re = /^[1-9]+[0-9]*]*$/;
-					// 判断是否正整数
-					if (!re.test(this.total)) {
-						// 如果不是正整数
-						console.log("不是正整数");
-						if (this.total == 0 || isNaN(this.total)) {
-							this.total = 1;
-						} else {
-							figure = parseInt(this.total);
-							this.total = Math.abs(figure);
-						}
-					} else {
-						console.log("正整数");
-						if (this.total < 10000) {
-							figure = parseInt(this.total);
-							this.total = Math.abs(figure);
-						} else {
-							this.total = 10000;
-						}
-					}
-				},
-				reduce: function() {
-					this.total--;
-				},
-				adding: function() {
-					this.total++;
+				itemChange:function(e){
+					this.price=e;
 				}
 			}
 		})
-		
+
 		//获取商品位的价格
 		function getGoodsBoothPrice() {
 			mui.get($ajaxUrl + 'goods', {
-					action: 'booth',
-					token: userInfo.token
-				}, function(res){
-					app.price = res.data;
-				}, 'json'
-			);
+				action: 'booth',
+				token: userInfo.token
+			}, function(res) {
+				// app.price = res.data;
+			}, 'json');
 		}
-		
+
 		// 2. 发起支付请求  
 		function pay(id) {
 			// 从服务器请求支付订单
@@ -213,7 +250,7 @@
 				message("不支持此支付通道!", 'center');
 				return;
 			}
-		
+
 			var waiting = plus.nativeUI.showWaiting();
 			mui.post(PAYSERVER, {
 				number: app.total,
@@ -235,7 +272,7 @@
 						timestamp: data.timeStamp,
 						sign: data.paySign
 					};
-		
+
 					plus.payment.request(channel, param, function(result) {
 						plus.nativeUI.alert("支付成功！", function() {
 							plus.navigator.setStatusBarStyle('dark');
@@ -248,7 +285,7 @@
 				} else {
 					plus.nativeUI.alert(res.message, null, '提示');
 				}
-			}, 'json') 
+			}, 'json')
 		}
 	</script>
 </html>

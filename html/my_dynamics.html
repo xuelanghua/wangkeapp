@@ -7,6 +7,13 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style type="text/css">
+			.dynamics-void {
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+			}
+		</style>
 	</head>
 
 	<body class="mui-hidden">
@@ -39,7 +46,8 @@
 				</li>
 			</ul>
 			<div v-if="voidDy" class="dynamics-void">
-				<span>暂无动态</span>
+				<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-data.png">
+				<p style="text-align: center;">暂无动态</p>
 			</div>
 			<div class="create-dynamics">新建动态</div>
 		</div>
@@ -106,6 +114,7 @@
 					skip: skipNum,
 					limit: 5
 				}, function(res) {
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0 && skipNum == 1) {
 						muiCont.dataList = data;
@@ -120,6 +129,7 @@
 						}
 						mui('#mui-content').pullRefresh().endPullupToRefresh();
 					} else {
+						muiCont.voidDy = true;
 						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 					}
 				}, 'json')
