@@ -600,6 +600,7 @@ function pushInit() {
 				msg.payload = JSON.parse(msg.payload);
 			}
 			logs(msg);
+			alert(JSON.stringify(msg));
 		} catch (e) {
 			console.log(e.message)
 		}
@@ -611,6 +612,7 @@ function pushInit() {
 				msg.payload = JSON.parse(msg.payload);
 			}
 			logs(msg);
+			alert(JSON.stringify(msg));
 			// pushCallback(data);
 		} catch (e) {
 			console.log(e.message);
