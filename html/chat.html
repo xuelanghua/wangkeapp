@@ -540,7 +540,16 @@
 			var winHeight = 0;
 			var customer_data = null;
 			var timer = null;
+			var self = null;
 			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				self.addEventListener('show', function() {
+					timeInterval();
+				})
+				self.addEventListener('hide', function() {
+					clearTimeInterval();
+				})
+
 				var first = null;
 				mui.back = function() {
 					if (!first) {
@@ -604,36 +613,27 @@
 				mui('.mui-content').on('blur', '#search', function() {
 					alert(222);
 				})
-				window.addEventListener('addInterval', function(e) {
-					console.log('addInterval');
-					timeInterval();
-				})
 
 				window.addEventListener('addCustomer', function(e) {
 					getCustomerList();
-				})
-
-				window.addEventListener('clearInterval', function(e) {
-					console.log('claerInterval');
-					clearTimeInterval();
 				})
 
 				window.addEventListener('loginSuccess', function(e) {
 					console.log('loginSuccess');
 					getCustomerList();
 				})
-				
-				//获取原始窗口的高度
-				var originalHeight = document.querySelector("body").offsetHeight;
-				window.onresize = function() {
-					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-					var resizeHeight = document.querySelector("body").offsetHeight;
-					if (resizeHeight * 1 < originalHeight * 1) {
-						plus.webview.currentWebview().setStyle({
-							height: originalHeight
-						});
-					}
-				}
+
+				// 获取原始窗口的高度
+// 				var originalHeight = document.querySelector("body").offsetHeight;
+// 				window.onresize = function() {
+// 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+// 					var resizeHeight = document.querySelector("body").offsetHeight;
+// 					if (resizeHeight * 1 < originalHeight * 1) {
+// 						plus.webview.currentWebview().setStyle({
+// 							height: originalHeight
+// 						});
+// 					}
+// 				}
 
 			})
 
