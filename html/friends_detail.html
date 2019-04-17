@@ -122,7 +122,8 @@
 					</li>
 				</ul>
 				<div v-else style="font-size: 0.28rem;color: #999999;">
-					暂无商品
+					<img style="width: 45%;display: block;margin: 10% auto 0;" class="no-friends" src="../image/icon/void-data.png">
+					<p style="text-align: center;">暂无数据</p>
 				</div>
 			</div>
 			<h5 class="personality-desc">图片展示</h5>
@@ -153,7 +154,6 @@
 			}
 			var fid = "";
 			var userInfo = getUserInfo();
-			var audiourl = '';
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			// 实例化vue对象
@@ -182,6 +182,7 @@
 							downLoadurl = '_downloads/' + Date.parse(new Date()) + '.mp3',
 							timer = setInterval(function() {
 								if (muiCont.audioUrl) {
+									logs(muiCont.audioUrl);
 									downloader = plus.downloader.createDownload(muiCont.audioUrl, {
 										filename: downLoadurl
 									}, function() {});
@@ -193,6 +194,7 @@
 								}
 							}, 100);
 						mui(".mui-content").on("tap", ".play-control", function() {
+							// logs(voice);
 							//监测暂停
 							if (pausing) {
 								voice.resume();
@@ -205,10 +207,10 @@
 								return;
 							}
 							$(".play-control").addClass("play");
-							play();
+							playler();
 						})
 
-						function play() {
+						function playler() {
 							voice.play(function() {
 								voice.stop();
 								$(".play-control").removeClass("play");
@@ -234,7 +236,7 @@
 						});
 						document.addEventListener('resume', function() {
 							if (voice) {
-								play();
+								playler();
 							}
 						});
 						// 跳转到更多页面
@@ -293,7 +295,6 @@
 						muiCont.contName = data.name;
 						muiCont.phoneNum = data.phone;
 						muiCont.friendData = data;
-						audiourl = data.voice;
 						muiCont.is_friend = data.is_friend;
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;
