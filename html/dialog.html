@@ -551,9 +551,11 @@
 				}
 
 				var self = plus.webview.currentWebview();
-				self.setStyle({
-					softinputMode: "adjustResize"
-				});
+				if (plus.os.name != 'iOS') {
+					self.setStyle({
+						softinputMode: "adjustResize"
+					});
+				}
 				var chatName = self.chatName;
 				chatId = self.cid;
 				chatAvatar = self.avatar;

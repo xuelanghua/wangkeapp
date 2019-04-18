@@ -466,12 +466,12 @@
 						<div>
 							<div class="sign">
 								<span class="sign_chart mui-pull-left"></span>
-								<span class="sign_name">总用户数:<span class="customer_total">10</span></span>
+								<span class="sign_name">总用户数:<span class="customer_total">0</span></span>
 								<div class="clearfix"></div>
 							</div>
 							<div class="sign">
 								<span class="sign_chart1 mui-pull-left"></span>
-								<span class="sign_name">跟进数量:<span class="customer_follow">3</span></span>
+								<span class="sign_name">跟进数量:<span class="customer_follow">0 </span></span>
 								<div class="clearfix"></div>
 							</div>
 							<div class="sign">
@@ -483,9 +483,9 @@
 						</div>
 						<div class="number_surface">
 							<div class="trapezium"></div>
-							<div class="trapezium_content">用户总数:<span class="customer_total">50</span></div>
+							<div class="trapezium_content">用户总数:<span class="customer_total">0</span></div>
 							<div class="trapezium1"></div>
-							<div class="trapezium_content1">跟进数量:<span class="customer_follow">3</span></div>
+							<div class="trapezium_content1">跟进数量:<span class="customer_follow">0</span></div>
 							<div class="trapezium2"></div>
 							<div class="trapezium_content2">成交数量:<span class="customer_deal">0</span></div>
 						</div>
@@ -493,19 +493,19 @@
 				</div>
 				<div class="newly_added">
 					<div id="segmentedControl" class="mui-segmented-control">
-						<a class="mui-control-item mui-active" href="#item1">新增客户</a>
-						<a class="mui-control-item" href="#item2">推荐锁定</a>
-						<a class="mui-control-item" href="#item3">跟进中</a>
-						<a class="mui-control-item" href="#item4">高意向</a>
-						<a class="mui-control-item" href="#item5">成交</a>
+						<a data-id="1" class="mui-control-item mui-active" href="#item1">新增客户</a>
+						<a data-id="2" class="mui-control-item" href="#item2">推荐锁定</a>
+						<a data-id="3" class="mui-control-item" href="#item3">跟进中</a>
+						<a data-id="4" class="mui-control-item" href="#item4">高意向</a>
+						<a data-id="5" class="mui-control-item" href="#item5">成交</a>
 					</div>
 				</div>
 				<div class="list-container">
-					<div id="item1" class="mui-control-content mui-active"></div>
-					<div id="item2" class="mui-control-content"></div>
-					<div id="item3" class="mui-control-content"></div>
-					<div id="item4" class="mui-control-content"></div>
-					<div id="item5" class="mui-control-content"></div>
+					<div data-id="1" id="item1" class="mui-control-content mui-active"></div>
+					<div data-id="2" id="item2" class="mui-control-content"></div>
+					<div data-id="3" id="item3" class="mui-control-content"></div>
+					<div data-id="4" id="item4" class="mui-control-content"></div>
+					<div data-id="5" id="item5" class="mui-control-content"></div>
 				</div>
 			</div>
 		</div>
@@ -536,6 +536,8 @@
 			var label = null;
 			var currentLabel = 'empty';
 			var currentTab = 'crm';
+			var customerCurrentTab = 1;
+			var refresh = false;
 			var userInfo = null;
 			var winHeight = 0;
 			var customer_data = null;
@@ -543,12 +545,13 @@
 			var self = null;
 			mui.plusReady(function() {
 				self = plus.webview.currentWebview();
-				self.addEventListener('show', function() {
-					timeInterval();
-				})
-				self.addEventListener('hide', function() {
-					clearTimeInterval();
-				})
+				self.setStyle({bottom: 51})
+// 				self.addEventListener('show', function() {
+// 					timeInterval();
+// 				})
+// 				self.addEventListener('hide', function() {
+// 					clearTimeInterval();
+// 				})
 
 				var first = null;
 				mui.back = function() {
@@ -573,6 +576,22 @@
 				//自定义事件监听-首页新增客户点击
 				window.addEventListener('newCustomer', function() {
 					mui.trigger(document.querySelector('.switch1_content[data-id=customer]'), 'tap');
+				})
+				
+				//自定义事件监听-首页新增朋友点击
+				window.addEventListener('newFriend', function() {
+					mui.trigger(document.querySelector('.switch1_content[data-id=fiend]'), 'tap');
+				})
+				
+				//自定义事件监听-刷新新增客户
+				window.addEventListener('refreshCustomer', function() {
+					logs('refreshCustomer');
+					getCustomerList('customer', true);
+				})
+				
+				//自定义事件监听-刷新新增客户
+				window.addEventListener('refreshFriend', function() {
+					getCustomerList('friend', false);
 				})
 
 				window.addEventListener('resize', function() {
@@ -610,17 +629,16 @@
 					}
 				})
 
-				mui('.mui-content').on('blur', '#search', function() {
-					alert(222);
-				})
-
 				window.addEventListener('addCustomer', function(e) {
-					getCustomerList();
+					logs('addCustomer');
+					getFriendApply();
 				})
 
 				window.addEventListener('loginSuccess', function(e) {
 					console.log('loginSuccess');
-					getCustomerList();
+					getCustomerList('crm', false);
+					getCustomerList('customer', false);
+					getCustomerList('friend', false);
 				})
 
 				// 获取原始窗口的高度
@@ -634,7 +652,6 @@
 // 						});
 // 					}
 // 				}
-
 			})
 
 			function indexInit() {
@@ -651,20 +668,17 @@
 			}
 
 			function pageInit() {
-				// setTimeout('getCustomerList()', 20000);
-				localStorage.removeItem('customer');
-				customer_data = JSON.parse(localStorage.getItem('customer'));
-				if (!customer_data) {
-					getCustomerList();
-				} else {
-					showCustomer(customer_data.crm, 'crm');
-					var html = document.getElementById('crm').innerHTML;
-					document.getElementById('list_container').innerHTML = html;
-					eventInit();
-					indexInit();
-					showCustomer(customer_data.friend, 'friend');
-					showCustomer(customer_data.customer, 'customer');
-				}
+// 				showCustomer(customer_data.crm, 'crm');
+// 				var html = document.getElementById('crm').innerHTML;
+// 				document.getElementById('list_container').innerHTML = html;
+				// eventInit();
+				getFriendApply();
+				getCustomerList('customer', false);
+				getCustomerList('crm', false);
+				getCustomerList('friend', false);
+				// indexInit();
+				// showCustomer(customer_data.friend, 'friend');
+				// showCustomer(customer_data.customer, 'customer');
 			}
 
 			function eventInit() {
@@ -713,19 +727,19 @@
 						label = null;
 						currentLabel = 'empty';
 
-						showCustomer(customer_data.crm, 'crm');
-						var html = document.getElementById('crm').innerHTML;
-						document.getElementById('list_container').innerHTML = html;
-						eventInit();
-						indexInit();
+						showCustomer(customer_data, 'crm');
+// 						var html = document.getElementById('crm').innerHTML;
+// 						document.getElementById('list_container').innerHTML = html;
+// 						eventInit();
+// 						indexInit();
 						return;
 					}
 
-					showCustomer(customer_data.crm, 'crm');
-					var html = document.getElementById('crm').innerHTML;
-					document.getElementById('list_container').innerHTML = html;
-					eventInit();
-					indexInit();
+					showCustomer(customer_data, 'crm');
+// 					var html = document.getElementById('crm').innerHTML;
+// 					document.getElementById('list_container').innerHTML = html;
+// 					eventInit();
+// 					indexInit();
 
 					var labelObj = document.getElementsByClassName('classify1-content');
 					mui.each(labelObj, function(index, item) {
@@ -800,6 +814,7 @@
 						})
 					}
 				})
+				
 				// 点击右半部分进入聊天
 				mui('.mui-indexed-list-item').on('tap', '.user-left-cont', function() {
 					var cid = this.dataset.id,
@@ -852,6 +867,7 @@
 						cid: cid
 					}, 'slide-in-right');
 				})
+				
 				// 打开新增客户聊天
 				mui('.mui-table-view').on('tap', '.customer-right-cont', function() {
 					var cid = this.dataset.id,
@@ -870,11 +886,13 @@
 					}, 'slide-in-right');
 					plus.navigator.setStatusBarStyle('dark');
 				})
+				
 				// 添加新朋友
 				mui(".mui-content").on("tap", ".new-friend", function() {
 					openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
 					plus.navigator.setStatusBarStyle("dark");
 				})
+				
 				// 客户crm头像跳转
 				mui('.mui-table-view').on('tap', '.crm-user-head', function() {
 					var cid = this.dataset.id;
@@ -905,6 +923,7 @@
 						})
 					}
 				})
+				
 				// 客户crm跳转
 				mui('.mui-table-view').on('tap', '.crm-left-cont', function() {
 					var cid = this.dataset.id,
@@ -934,31 +953,51 @@
 						}, 'slide-in-right');
 					}
 				})
+				
+				//新增好友条目点击记录
+				mui('.newly_added').on('tap', '#segmentedControl a', function() {
+					var tabId = this.dataset.id; 
+					customerCurrentTab = tabId;
+				})
 			}
 
-			function getCustomerList() {
+			function getCustomerList(type, refresh) {
+				refresh = refresh;
 				if (!userInfo) return;
 				mui.post($ajaxUrl + 'customer', {
 					action: 'list',
-					token: userInfo.token
+					token: userInfo.token,
+					type: type
 				}, function(res) {
 					// logs(res);
-					customer_data = res.data;
+					if (type == 'crm') {
+						customer_data = res.data;
+					}
+					showCustomer(res.data, type);
+					// showCustomer(customer_data.customer, 'customer');
+					// showCustomer(customer_data.friend, 'friend');
+// 					var html = document.getElementById(currentTab).innerHTML;
+// 					document.getElementById('list_container').innerHTML = html;
+// 					eventInit();
+// 					indexInit();
+				}, 'json')
+			}
+			
+			//获取好友申请条目
+			function getFriendApply() {
+				if (!userInfo) return;
+				mui.post($ajaxUrl + 'customer', {
+					action: 'friend_apply_count',
+					token: userInfo.token,
+				}, function(res) {
 					var tipsObj = document.querySelector('.new-msg-tips');
-					if (customer_data.message > 0) {
-						tipsObj.innerText = customer_data.message;
+					if (res.data > 0) {
+						tipsObj.innerText = res.data;
 						tipsObj.style.display = 'block';
 					} else {
+						tipsObj.innerText = 0;
 						tipsObj.style.display = 'none';
 					}
-					localStorage.setItem('customer', JSON.stringify(customer_data));
-					showCustomer(customer_data.crm, 'crm');
-					showCustomer(customer_data.customer, 'customer');
-					showCustomer(customer_data.friend, 'friend');
-					var html = document.getElementById(currentTab).innerHTML;
-					document.getElementById('list_container').innerHTML = html;
-					eventInit();
-					indexInit();
 				}, 'json')
 			}
 
@@ -972,6 +1011,9 @@
 							var flag = false;
 							var temp = '';
 							for (var i in list) {
+								if (!list[i].name) {
+									continue;
+								}
 								if (list[i].mark == 2) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
@@ -1027,6 +1069,9 @@
 							var flag = false;
 							var temp = '';
 							for (var i in list) {
+								if (!list[i].name) {
+									continue;
+								}
 								if (list[i].mark == 1) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
@@ -1083,6 +1128,9 @@
 							var flag = false;
 							var temp = '';
 							for (var i in list) {
+								if (!list[i].name) {
+									continue;
+								}
 								if (list[i].is_member == 1) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
@@ -1138,6 +1186,9 @@
 							var flag = false;
 							var temp = '';
 							for (var i in list) {
+								if (!list[i].name) {
+									continue;
+								}
 								if (list[i].job.length != 0) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
@@ -1193,6 +1244,9 @@
 							var flag = false;
 							var temp = '';
 							for (var i in list) {
+								if (!list[i].name) {
+									continue;
+								}
 								if (list[i].label_id.length != 0) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
@@ -1246,7 +1300,10 @@
 							var flag = false;
 							var temp = '';
 							for (var i in list) {
-								if (list[i].birthday.length != 0 || list[i].anniversay.length != 0) {
+								if (!list[i].name) {
+									continue;
+								}
+								if (list[i].birthday || list[i].anniversay) {
 									flag = true;
 									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
 										'" class="mui-table-view-cell mui-indexed-list-item">';
@@ -1308,6 +1365,9 @@
 								'</li>';
 							var list = data[index];
 							for (var i in list) {
+								if (!list[i].name) {
+									continue;
+								}
 								html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
 									'" class="mui-table-view-cell mui-indexed-list-item">';
 								html += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
@@ -1338,8 +1398,12 @@
 								html += '<div class="clearfix"></div>';
 								html += '</div>';
 								html += '<div class="biaoqian">';
-								html += '<button class="firm">' + list[i].company + '</button>';
-								html += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+								if (list[i].company) {
+									html += '<button class="firm">' + list[i].company + '</button>';
+								}
+								if (list[i].job) {
+									html += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
+								}
 								if (list[i].pid == list[i].recommend_id) {
 									html += '<button style="background-color: #F96B5E;">下级会员</button>';
 								}
@@ -1405,6 +1469,9 @@
 							var list = data[index];
 							html = '<ul class="mui-table-view">';
 							for (var i in list) {
+								if (!list[i].name && !list[i].nickName) {
+									continue;
+								}
 								html += '<li class="mui-table-view-cell new-customer" data-type="customer" data-id="' + list[i].id + '">';
 								if (!list[i].avatarUrl) {
 									html += '<div class="chart mui-pull-left customer-head-img" data-id="' + list[i].id +
@@ -1417,9 +1484,6 @@
 									(list[i].name || list[i].nickName) + '" data-avatar="' + list[i].avatarUrl + '" data-id="' + list[i].id + '">';
 								html += '<div class="customer_information">';
 								html += '<div class="mui-pull-left">';
-								if (list[i].is_boss == 1) {
-									html += '<span><img src="../image/bosi1.png" ></span>';
-								}
 								html += '<span class="customer_information_name">' + (list[i].name || list[i].nickName) + '</span>';
 								html += '</div>';
 								if (index != 'recommend') {
@@ -1454,28 +1518,53 @@
 							html = '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
 						}
 						if (index == 'new') {
-							document.getElementById('item1').innerHTML = html;
+							document.querySelector('#customer #item1').innerHTML = html;
 						} else if (index == 'recommend') {
-							document.getElementById('item2').innerHTML = html;
+							document.querySelector('#customer #item2').innerHTML = html;
 						} else if (index == 'follow') {
-							document.getElementById('item3').innerHTML = html;
+							document.querySelector('#customer #item3').innerHTML = html;
 						} else if (index == 'intention') {
-							document.getElementById('item4').innerHTML = html;
+							document.querySelector('#customer #item4').innerHTML = html;
 						} else if (index == 'deal') {
-							document.getElementById('item5').innerHTML = html;
+							document.querySelector('#customer #item5').innerHTML = html;
 						}
 					}
+					
+					//更新时保持下方选项卡为之前选中
+					mui('#customer #segmentedControl a').each(function(index, item) {
+						this.classList.remove('mui-active');
+					})
+					mui('#customer .list-container div').each(function(index, item) {
+						this.classList.remove('mui-active');
+					})
+					
+					mui('#customer #segmentedControl a').each(function(index, item) {
+						if (this.dataset.id == customerCurrentTab) {
+							this.classList.add('mui-active');
+						}
+					})
+					mui('#customer .list-container div').each(function(index, item) {
+						if (this.dataset.id == customerCurrentTab) {
+							this.classList.add('mui-active');
+						}
+					})
+				}
+				if (type == currentTab) {
+					var list = document.getElementById(currentTab).innerHTML;
+					document.getElementById('list_container').innerHTML = list;
+					eventInit();
+					indexInit();
 				}
 			}
 
 			function timeInterval() {
 				timer = setInterval(function() {
-					getCustomerList();
-				}, 30000);
+					getCustomerList('customer');
+				}, 30000); 
 			}
 
 			function clearTimeInterval() {
-				clearInterval(timer);
+				clearInterval(timer); 
 			}
 		</script>
 	</body>
