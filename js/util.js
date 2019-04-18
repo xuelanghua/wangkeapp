@@ -602,7 +602,7 @@ function pushInit() {
 			logs(msg);
 			alert(JSON.stringify(msg));
 		} catch (e) {
-			console.log(e.message)
+			console.log(e.message);
 		}
 	})
 
