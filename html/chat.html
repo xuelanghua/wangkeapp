@@ -169,7 +169,9 @@
 			.good_friend_name{
 				/* margin-top: 18px; */
 			}
-			
+			.user-left-cont{
+				height: 100%;
+			}
 			/* 新增客户 */
 			.number{
 				margin-top: 10px;
@@ -325,6 +327,24 @@
 				align-items: baseline;
 				justify-content: center;
 			} */
+			a.detail{
+				display: flex !important;
+				align-items: center;
+			}
+			.head-portrait{
+				margin-right: 10px;
+			}
+			.user-left-cont.bosom-friend{
+				display: flex;
+				position: relative;
+				height: 50px;
+				width: 100%;
+				flex-grow: 1;
+				align-items: center;
+			}
+			.mui-indexed-list-item{
+				padding-right: 20px;
+			}
 		</style>
 	</head>
 
@@ -642,16 +662,17 @@
 				})
 
 				// 获取原始窗口的高度
-// 				var originalHeight = document.querySelector("body").offsetHeight;
-// 				window.onresize = function() {
-// 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-// 					var resizeHeight = document.querySelector("body").offsetHeight;
-// 					if (resizeHeight * 1 < originalHeight * 1) {
-// 						plus.webview.currentWebview().setStyle({
-// 							height: originalHeight
-// 						});
-// 					}
-// 				}
+				// 				var originalHeight = document.querySelector("body").offsetHeight;
+				// 				window.onresize = function() {
+				// 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+				// 					var resizeHeight = document.querySelector("body").offsetHeight;
+				// 					if (resizeHeight * 1 < originalHeight * 1) {
+				// 						plus.webview.currentWebview().setStyle({
+				// 							height: originalHeight
+				// 						});
+				// 					}
+				// 				}
+
 			})
 
 			function indexInit() {
@@ -1427,7 +1448,7 @@
 							html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
 								'" class="mui-table-view-cell mui-indexed-list-item">';
 							html += '<a href="javascript:void(0);" class="detail" data-type="friend" data-id="' + list[i].fid + '">';
-							html += '<div class="mui-pull-left head-portrait">';
+							html += '<div class="head-portrait">';
 							if (list[i].avatarUrl.length == 0) {
 								html += '<img class="user-head-img" src="../image/user_default.png"  data-type="friend" data-id="' + list[i].fid +
 									'">';
@@ -1436,9 +1457,9 @@
 									list[i].fid + '">';
 							}
 							html += '</div>';
-							html += '<div class="mui-pull-right content user-left-cont" data-type="friend" data-id="' + list[i].fid +
-								'" data-name="' + list[i].name + '" data-avatar="' + list[i].avatarUrl + '">';
-							html += '<div class="good_friend_name">' + list[i].name + '</div>';
+							html += '<div class="content user-left-cont bosom-friend" data-type="friend" data-id="' + list[i].fid +
+								'" data-name="' + list[i].name + '" data-avatar="' + list[i].avatarUrl + '">' + list[i].name + '</div>';
+							// html += '<div class="good_friend_name ">' ;
 							html += '</div>';
 							html += '</a>';
 							html += '</li>';

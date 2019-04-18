@@ -72,7 +72,8 @@
 			.Label img{
 				position: relative;
 				top: 2px;
-				width: 15px
+				width: 15px;
+				margin-right:4px;
 			}
 			.tishi{
 				font-size: 12px;
@@ -310,17 +311,27 @@
 					}
 				}
 			})
-			
+
 			var userInfo = getUserInfo();
 			mui.plusReady(function() {
 				getChatList();
-				
+
 				mui('#chat_message').on('tap', '.Record_list', function() {
 					var cid = this.dataset.cid;
 					var chatName = this.dataset.name;
-					fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: cid, chatName: chatName, barStyle: 'dark'}, 'slide-in-right');
+					var avatar = this.dataset.avatar;
+					fnOpenWin('dialog.html', 'dialog', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						cid: cid,
+						chatName: chatName,
+						barStyle: 'dark',
+						avatar: avatar
+					}, 'slide-in-right');
 				})
-				
+
 				mui('header').on('tap', 'li', function() {
 					var type = this.dataset.type;
 					this.className = 'current';
@@ -334,70 +345,75 @@
 						document.querySelector('.bd li[data-type=chat]').className = 'current';
 					}
 				})
-				
-// 				document.getElementById('back_chat').addEventListener('tap', function() {
-// 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'showChat');
-// 					plus.webview.close('message');
-// 				})
+
+				// 				document.getElementById('back_chat').addEventListener('tap', function() {
+				// 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'showChat');
+				// 					plus.webview.close('message');
+				// 				})
 			})
-			
+
 			function getChatList() {
 				plus.nativeUI.showWaiting();
-				mui.post($ajaxUrl + 'chat', {action: 'list', token: userInfo.token}, function(res) {
+				mui.post($ajaxUrl + 'chat', {
+					action: 'list',
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
 					var html = '';
 					if (res.errno == 0) {
 						var chatList = res.data;
 						var total = chatList.length;
 						document.getElementById('chat_total').innerText = '(' + total + ')';
 						for (var i = 0; i < total; i++) {
-							html += '<div class="Record_list" data-cid="' + chatList[i].user.id + '" data-name="' + chatList[i].user.nickName + '">';
-								html += '<div class="Record_listL mui-pull-left">';
-								if (!chatList[i].user.avatarUrl) {
-									html += '<img src="../image/user_default.png">';
+							html += '<div class="Record_list" data-avatar="' + chatList[i].user.avatarUrl + '" data-cid="' + chatList[i].user.id + '" data-name="' + chatList[i].user.nickName +
+								'">';
+							html += '<div class="Record_listL mui-pull-left">';
+							if (!chatList[i].user.avatarUrl) {
+								html += '<img src="../image/user_default.png">';
+							} else {
+								html += '<img src="' + chatList[i].user.avatarUrl + '">';
+							}
+
+							html += '</div>';
+							html += '<div class="Record_listR mui-pull-right">';
+							html += '<div>';
+							html += '<span class="mui-pull-left">';
+							html += '<span class="Label">';
+							if (chatList[i].type == 'friend') {
+								html += '<img src="../image/newsb3.png">';
+							} else if (chatList[i].type == 'customer') {
+								html += '<img src="../image/newsb2.png">';
+							} else {
+								html += '<img src="../image/newsb1.png">';
+							}
+							html += '</span>';
+							html += '<span style="font-size: 15px;">' + chatList[i].user.nickName + '</span>';
+							if (chatList[i].name) {
+								html += '<span style="color: #2289FF;font-size: 15px;">(' + chatList[i].name + ')</span>';
+							}
+							html += '</span>';
+							html += '<span class="mui-pull-right date">' + chatList[i].time + '</span>';
+							html += '<div class="clearfix"></div>';
+							html += '</div>';
+							html += '<div class="tishi">';
+							if (chatList[i].message !== 'empty') {
+								if (chatList[i].message.message_type == 'text') {
+									html += '<span class="mui-pull-left">' + chatList[i].message.content + '</span>';
 								} else {
-									html += '<img src="' + chatList[i].user.avatarUrl + '">';
+									html += '<span class="mui-pull-left">[图片]</span>';
 								}
-									
-								html += '</div>';
-								html += '<div class="Record_listR mui-pull-right">';
-									html += '<div>';
-										html += '<span class="mui-pull-left">';
-											html += '<span class="Label">';
-											if (chatList[i].type == 'friend') {
-												html += '<img src="../image/newsb3.png">';
-											} else if (chatList[i].type == 'customer') {
-												html += '<img src="../image/newsb2.png">';
-											} else {
-												html += '<img src="../image/newsb1.png">';
-											}
-											html += '</span>';
-											html += '<span style="font-size: 15px;">' + chatList[i].user.nickName + '</span>';
-											if (chatList[i].name) {
-												html += '<span style="color: #2289FF;font-size: 15px;">(' + chatList[i].name + ')</span>';
-											}
-										html += '</span>';
-										html += '<span class="mui-pull-right date">' + chatList[i].time + '</span>';
-										html += '<div class="clearfix"></div>';
-									html += '</div>';
-									html += '<div class="tishi">';
-									if (chatList[i].message !== 'empty') {
-										if (chatList[i].message.message_type == 'text') {
-											html += '<span class="mui-pull-left">' + chatList[i].message.content + '</span>';
-										} else {
-											html += '<span class="mui-pull-left">[图片]</span>';
-										}
-										if (chatList[i].message.count > 0) {
-											html += '<p class="mui-badge mui-pull-right">' + chatList[i].message.count + '</p>';
-										}
-										html += '<div class="clearfix"></div>';
-									} else {
-										html += '<span class="mui-pull-left">  </span>';
-										// html += '<p class="mui-badge mui-pull-right"></p>';
-										html += '<div class="clearfix"></div>';
-									}
-									html += '</div>';
-								html += '</div>';
+								if (chatList[i].message.count > 0) {
+									html += '<p class="mui-badge mui-pull-right">' + chatList[i].message.count + '</p>';
+								}
 								html += '<div class="clearfix"></div>';
+							} else {
+								html += '<span class="mui-pull-left">  </span>';
+								// html += '<p class="mui-badge mui-pull-right"></p>';
+								html += '<div class="clearfix"></div>';
+							}
+							html += '</div>';
+							html += '</div>';
+							html += '<div class="clearfix"></div>';
 							html += '</div>';
 						}
 					} else {

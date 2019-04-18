@@ -21,27 +21,22 @@
 				width: 100%;
 				display: flex;
 				flex-grow: 1;
+				/* border-radius: 10px; */
+				position: relative;
 			}
 
 			.progress .progress-bar {
-				border-radius: 0;
+				/* border-radius: 10px; */
 				position: relative;
 				height: 100%;
 				width: 0;
 			}
 
-			.progress .progress-value {
-				display: block;
-				padding: 3px 0;
+			.box .progress-value {
+				display: inline-flex;
 				font-size: 0.24rem;
-				color: #fff;
-				border-radius: 4px;
-				position: absolute;
-				top: -20px;
-				right: 0;
-				transform: translateX(100%);
-				-webkit-transform: translateX(100%);
 				color: #666666;
+				margin-bottom: 1px;
 			}
 
 			/* .progress .progress-value:after {
@@ -56,8 +51,31 @@
 
 			.progress-bar.active {
 				animation: animate-positive 2s ease-in;
-				background: linear-gradient(to right, #a6f0ff, #159cef);
 				height: 100%;
+			}
+
+			.progress-bar.active.progress-bar0 {
+				background: linear-gradient(to right, #a0e2f1, #159cef);
+			}
+
+			.progress-bar.active.progress-bar1 {
+				background: linear-gradient(to right, #a6f0ff, #3763ff);
+			}
+
+			.progress-bar.active.progress-bar2 {
+				background: linear-gradient(to right, #decdff, #8940cc);
+			}
+
+			.progress-bar.active.progress-bar3 {
+				background: linear-gradient(to right, #ffcce1, #f11da6);
+			}
+
+			.progress-bar.active.progress-bar4 {
+				background: linear-gradient(to right, #ffe0bc, #f16e1c);
+			}
+
+			.progress-bar.active.progress-bar5 {
+				background: linear-gradient(to right, #e2f37f, #eed715);
 			}
 
 			@-webkit-keyframes animate-positive {
@@ -127,15 +145,16 @@
 					</div>
 					<div class="box" v-for="(item,key,index) in finish" :key="index">
 						<span class="left">{{titles[index]}}</span>
-						<div class="progress">
-							<div class="progress-bar active" v-bind:style="{width:item/plan[key]*100+'%'}">
-								<div class="progress-value">{{item+'/'+plan[key]}}</div>
+						<div style="display: flex;flex-grow: 1;flex-direction: column;align-items: center;">
+							<span class="progress-value">{{item+'/'+plan[key]}}</span>
+							<div class="progress">
+								<div class="progress-bar active" :class="'progress-bar'+index" v-bind:style="{width:item/plan[key]*100+'%'}"></div>
 							</div>
 						</div>
-						<span v-if="item/plan[key]<1">未达标</span>
-						<span v-else-if="item/plan[key]>1&&item/plan[key]<1.1">已达标</span>
-						<span v-else-if="item/plan[key]>1.1&&item/plan[key]<1.5">优秀</span>
-						<span v-else>英雄</span>
+						<span style="justify-content: flex-end;" v-if="item/plan[key]<1">未达标</span>
+						<span style="justify-content: flex-end;" v-else-if="item/plan[key]>1&&item/plan[key]<1.1">已达标</span>
+						<span style="justify-content: flex-end;" v-else-if="item/plan[key]>1.1&&item/plan[key]<1.5">优秀</span>
+						<span style="justify-content: flex-end;" v-else>英雄</span>
 					</div>
 				</div>
 				<div class="mui-card">
@@ -231,12 +250,12 @@
 							deal: 0
 						},
 						finish: {
-							exposure_rate: 0,
-							new_customer: 0,
-							customer_follow: 0,
-							share_card: 0,
-							communication: 0,
-							deal: 0
+							exposure_rate: 3,
+							new_customer: 1,
+							customer_follow: 1,
+							share_card: 1,
+							communication: 2,
+							deal: 10
 						},
 						titles: ['曝光', '拓客', '客户跟进', '有效沟通', '转介绍', '成交']
 					}
@@ -373,7 +392,7 @@
 					pattern: timeType // 1天 2月 3年
 				}, function(res) {
 					app.plan = res.data.plan;
-					app.finish = res.data.finish;
+					// app.finish = res.data.finish;
 				}, 'json')
 			}
 			// 显示我的目标
@@ -398,21 +417,20 @@
 				$("#audio-control").addClass("play").removeClass("pause");
 				getSong();
 			})
-			
+
 			//获取目标信息
 			function getTargetInfo() {
 				mui.get($ajaxUrl + 'target', {
-						action: 'target_info',
-						token: userInfo.token
-					}, function(res){
-						if (res.errno == 0) {
-							app.plan = res.data.plan;
-							app.finish = res.data.finish;
-						} else {
-							document.querySelector('.my-target-menu').innerText = '设定目标';
-						}
-					}, 'json'
-				);
+					action: 'target_info',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						app.plan = res.data.plan;
+						app.finish = res.data.finish;
+					} else {
+						document.querySelector('.my-target-menu').innerText = '设定目标';
+					}
+				}, 'json');
 			}
 		</script>
 	</body>
