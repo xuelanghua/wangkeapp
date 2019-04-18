@@ -704,7 +704,7 @@
 				ui.footerRight.addEventListener('release', function(event) {
 					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 						if (ui.boxMsgText.value.length == 0) {
-							message('发送内容不能为空!');
+							// message('发送内容不能为空!');
 							return;
 						}
 						// showKeyboard();
@@ -946,7 +946,7 @@
 						skip: skip,
 						limit: limit
 					}, function(res) {
-						// logs(res);
+						logs(res);
 						if (res.errno == 0) {
 							if (loadMore) {
 								var moreData = res.data;
@@ -956,6 +956,7 @@
 								bindMsgList();
 								ui.areaMsgList.scrollTop = 300;
 							} else {
+								recordData.data=[];
 								recordData.data = res.data;
 								for (var index in res.data) {
 									lastIndex = index;
@@ -965,6 +966,7 @@
 							}
 						} else {
 							if (!loadMore) {
+								recordData.data=[];
 								recordData.data = res.data;
 								for (var index in res.data) {
 									lastIndex = index;
@@ -1033,7 +1035,7 @@
 						};
 						ws.onclose = function(e) {
 							// 关闭 websocket
-							// console.log("连接已关闭...");
+							console.log("连接已关闭...");
 						};
 						ws.onerror = function(e) {
 							logs(e);

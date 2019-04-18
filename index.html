@@ -125,8 +125,11 @@
 			})
 			
 			// 固定底部的菜单栏
-			// document.getElementById('bar').style.top = (plus.display.resolutionHeight - 50) + "px";
-			// document.getElementById('bar').style.height = 50 + "px";
+			if (plus.os.name == 'iOS') {
+				logs('iOS');
+				document.getElementById('bar').style.top = (plus.display.resolutionHeight - 50) + "px";
+				document.getElementById('bar').style.height = 50 + "px";
+			}
 
 			//自定义事件监听-首页新增客户点击
 			window.addEventListener('newCustomer', function() {

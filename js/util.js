@@ -577,7 +577,7 @@ function bindClientId() {
 		client_id: clientId,
 		client_type: clientType
 	}, function(res) {
-		logs(res);
+		// logs(res);
 		if (res.errno == 1) {
 			setTimeout(function() {
 				bindClientId();
@@ -592,6 +592,7 @@ function pushInit() {
 		plus.push.clear();
 	}
 	plus.push.addEventListener('receive', function(msg) {
+		console.log(JSON.stringify(msg));
 		try {
 			if (!msg.payload) {
 				return;
@@ -599,35 +600,87 @@ function pushInit() {
 			if (plus.os.name == "Android") {
 				msg.payload = JSON.parse(msg.payload);
 			}
-			logs(msg);
-			alert(JSON.stringify(msg));
+			pushCallback(msg.payload, 'receive');
 		} catch (e) {
 			console.log(e.message);
 		}
 	})
 
 	plus.push.addEventListener('click', function(msg) {
+		console.log(JSON.stringify(msg));
 		try {
+			if (plus.os.name == 'iOS') {
+				plus.push.clear();
+			}
+			if (!msg.payload) {
+				return;
+			}
 			if (plus.os.name == "Android") {
 				msg.payload = JSON.parse(msg.payload);
 			}
-			logs(msg);
-			alert(JSON.stringify(msg));
-			// pushCallback(data);
+			pushCallback(msg.payload, 'click');
 		} catch (e) {
 			console.log(e.message);
 		}
 	})
 }
 
-//推送执行方法  
-function pushCallback(data) {
+/**
+ * 消息推送处理
+ * event: click,receive
+ * type:jump, refren
+ * url:dialog, chat
+ * chat:crm, customer, friend
+ */
+function pushCallback(data, event) {
 	try {
-		alert(data.type);
-		if (data.type == 'openWindow') {
-			data.url && redirect(data.url);
+		var type = data.type;
+		var url = data.url;
+		var extra = data.extra;
+// 		logs(type);
+// 		logs(url);
+// 		logs(extra);
+// 		logs(event);
+		if (event == 'click') {
+			if (type == 'jump') {
+				if (url == 'chat') {
+					if (type == 'customer') {
+						mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
+						mui.fire(plus.webview.getWebviewById('chat'), 'newCustomer');
+					} else if (type == 'friend') {
+						mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
+						mui.fire(plus.webview.getWebviewById('chat'), 'newFriend');
+					}
+				} else if (url == 'dialog') {
+					mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+					mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+					mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+					fnOpenWin('html/' + url + '.html', url, {statusbar: {background: '#F7F7F7'}}, extra, '');
+				} else {
+					if (url) {
+						logs(url);
+						fnOpenWin('html/' + url + '.html', url, '', extra, '');
+					}
+				}
+			} else if (type == 'refresh') {
+				mui.fire(plus.webview.getWebviewById(url), 'refresh');
+			} 
+		} else if (event == 'receive') {
+			if (url == 'dialog') {
+				mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+			} else if (url == 'chat') {
+				if (data.chat == 'customer') {
+					mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
+				} else if (data.chat == 'friend') {
+					mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
+				}
+			} else {
+				mui.fire(plus.webview.getWebviewById(url), 'refresh');
+			}
 		}
 	} catch (e) {
-		alert(e.message);
+		console.log(e.message);
 	}
 }
