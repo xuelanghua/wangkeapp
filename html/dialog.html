@@ -704,7 +704,7 @@
 				ui.footerRight.addEventListener('release', function(event) {
 					if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 						if (ui.boxMsgText.value.length == 0) {
-							message('发送内容不能为空!');
+							// message('发送内容不能为空!');
 							return;
 						}
 						// showKeyboard();
@@ -723,7 +723,6 @@
 						ws.send(JSON.stringify(chatData)); //向服务器发送消息
 						ui.boxMsgText.value = '';
 						mui.trigger(ui.boxMsgText, 'input', null);
-						getRecordList();
 					} else if (ui.btnMsgType.classList.contains('mui-icon-mic')) {
 						ui.btnMsgType.classList.add('mui-icon-compose');
 						ui.btnMsgType.classList.remove('mui-icon-mic');
@@ -731,7 +730,6 @@
 						ui.boxMsgSound.style.display = 'block';
 						ui.boxMsgText.blur();
 						document.body.focus();
-						getRecordList();
 					} else if (ui.btnMsgType.classList.contains('mui-icon-compose')) {
 						ui.btnMsgType.classList.add('mui-icon-mic');
 						ui.btnMsgType.classList.remove('mui-icon-compose');
@@ -742,7 +740,6 @@
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
-						getRecordList();
 					}
 				}, false);
 
@@ -946,7 +943,7 @@
 						skip: skip,
 						limit: limit
 					}, function(res) {
-						// logs(res);
+						logs(res);
 						if (res.errno == 0) {
 							if (loadMore) {
 								var moreData = res.data;
@@ -1033,7 +1030,7 @@
 						};
 						ws.onclose = function(e) {
 							// 关闭 websocket
-							// console.log("连接已关闭...");
+							console.log("连接已关闭...");
 						};
 						ws.onerror = function(e) {
 							logs(e);
