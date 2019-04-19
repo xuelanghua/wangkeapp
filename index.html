@@ -126,7 +126,6 @@
 			
 			// 固定底部的菜单栏
 			if (plus.os.name == 'iOS') {
-				logs('iOS');
 				document.getElementById('bar').style.top = (plus.display.resolutionHeight - 50) + "px";
 				document.getElementById('bar').style.height = 50 + "px";
 			}
@@ -199,6 +198,7 @@
 			plus.nativeUI.showWaiting();
 			for (var id in tabsConfig) {
 				tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles, {webviewHeight: webviewHeight});
+				// tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
 				if (tabsConfig[id]['default']) {
 					self.append(tabs[id]);
 					current = id;

@@ -427,7 +427,7 @@
 		<div style="margin-bottom: 50px;">
 			<header class="mui-bar mui-bar-nav" style="height:120px; background-color: #fff;box-shadow: 0 0 0 #fff;">
 				<img id="message" src="../image/index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;">
-				<span class="mui-badge mui-badge-danger">12</span>
+				<span class="mui-badge mui-badge-danger" style="display: none;" id="unread_message">0</span>
 				<h1 class="mui-title">旺客</h1>
 				<a href="#popover" class="add-btn mui-pull-right" id="openPopover">
 					<img src="../image/index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;margin-right: 10px;">
@@ -606,10 +606,19 @@
 		var qrType = 'card';
 		var userInfo = getUserInfo();
 		mui.plusReady(function() {
+			var self = plus.webview.currentWebview();
+			self.setStyle({
+				bottom: 51
+			})
+			getUnreadMessage();
 			getNotice();
 			weatherInit(); //天气初始化
 			slideInit(false); //幻灯片初始化 
 
+			window.addEventListener('refreshNotice', function() {
+				getUnreadMessage();
+			})
+			
 			//打开扫一扫
 			var scan = document.getElementById('scan');
 			scan.addEventListener('tap', function() {
@@ -1007,6 +1016,24 @@
 			});
 			newPage.show('slide-in-bottom');
 			hideQrcode();
+		}
+		
+		//获取未读消息
+		function getUnreadMessage() {
+			mui.get( $ajaxUrl + 'member',{
+					action: 'unread_message',
+					token: userInfo.token
+				},function(res){
+					var tipObj = document.getElementById('unread_message');
+					if (res.data > 0) {
+						tipObj.innerText = res.data;
+						tipObj.style.display = 'block';
+					} else {
+						tipObj.innerText = 0;
+						tipObj.style.display = 'none';
+					}
+				},'json'
+			);
 		}
 	</script>
 </html>

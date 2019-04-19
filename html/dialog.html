@@ -575,6 +575,7 @@
 					uniacid: userInfo.uniacid
 				};
 				getRecordList(false);
+				readMessage();
 
 				document.addEventListener("pause", function() {
 					heartCheck.reset();
@@ -1040,6 +1041,24 @@
 					} else {
 						message("您的手机不支持 WebSocket!");
 					}
+				}
+				
+				
+				//修改当前聊天消息状态
+				function readMessage() {
+					mui.post($ajaxUrl + 'chat',{
+							action: 'read_message',
+							user_id: chatId,
+							token: userInfo.token
+						}, function(res){
+							if (res.errno == 0) {
+								mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+								mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+								mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+								mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+							}
+						}, 'json'
+					);
 				}
 			});
 			// 长按显示操作菜单
