@@ -168,6 +168,20 @@
 			.mui-slider-group {
 				height: auto;
 			}
+
+			.publish-article {
+				height: 44px;
+				width: 80px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				padding-right: 10px;
+				margin-right: -10px;
+				font-size: 14px;
+				color: #666666;
+				z-index: 12;
+			}
 		</style>
 	</head>
 	<body>
@@ -175,6 +189,9 @@
 		<header class="mui-bar mui-bar-nav" style="background-color: #fff;box-shadow: 0 0 0 #fff;">
 			<!-- <img src="../image//index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;"> -->
 			<h1 class="mui-title">自媒体</h1>
+			<span class="publish-article mui-pull-right">
+				发布文章
+			</span>
 			<!-- <img src="../image//index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;"> -->
 		</header>
 		<div class="mui-content">
@@ -346,15 +363,15 @@
 			mui("#article_list").on('tap', '.list1', function() {
 				//获取id
 				var id = this.getAttribute("data-id");
-// 				var styles = {
-// 					top: 20,
-// 					bottom: 0
-// 				};
-// 				var extras = {
-// 					article_id: id
-// 				};
-// 				var w = plus.webview.create('article.html', 'article.html', styles, extras);
-// 				w.show(); // 显示窗口
+				// 	var styles = {
+				// 		top: 20,
+				// 		bottom: 0
+				// 	};
+				// 	var extras = {
+				// 		article_id: id
+				// 	};
+				// 	var w = plus.webview.create('article.html', 'article.html', styles, extras);
+				// 	w.show(); // 显示窗口
 				openPage('article.html', 'article', '#ffffff', {
 					article_id: id
 				})
@@ -561,5 +578,8 @@
 				}
 			}, 'json');
 		}
+		mui(".mui-bar-nav").on("tap",".publish-article",function(){
+			openPage('publish_article.html','publish_article','#f7f7f7','');
+		})
 	</script>
 </html>
