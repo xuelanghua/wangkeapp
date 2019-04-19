@@ -139,7 +139,7 @@
 						<img id="user-head-img" class="user-head-img" src="../image/kaol.jpg">
 						<div>
 							<h2 id="user-name">肖飞的团队</h2>
-							<p>扫二维码加我好友</p>
+							<p id="type_desc">扫二维码加我好友</p>
 						</div>
 					</div>
 					<div class="linellae">
@@ -175,16 +175,28 @@
 
 		var userInfo = getUserInfo();
 
-		mui.post($ajaxUrl + 'userqrcode&action=make_url', {
-			type: 'card',
+		mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
 			token: userInfo.token
 		}, function(res) {
+			logs(res);
 			if (res.errno == 0) {
+				var type = res.data.type;
 				var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 				document.getElementById('qr-img').setAttribute('src', url);
-			} else {}
+				if (type == 'card') {
+					document.getElementById('type_desc').innerText = '扫二维码领红包';
+				} else if (type == 'card') {
+					document.getElementById('type_desc').innerText = '扫二维码领加我好友';
+				} else if (type == 'link') {
+					document.getElementById('type_desc').innerText = '扫二维码了解更多精彩';
+				} else if (type == 'pic') {
+					document.getElementById('type_desc').innerText = '扫二维码看美图';
+				}
+			} else {
+				
+			}
 		}, 'json');
-		logs(userInfo);
+		// logs(userInfo);
 		document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
 		document.getElementById('user-name').innerText = userInfo.nickName;
 	</script>
