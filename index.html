@@ -123,7 +123,7 @@
 				document.getElementById('short_cut').classList.remove('mui-active');
 				currentTab.classList.add('mui-active');
 			})
-			
+
 			// 固定底部的菜单栏
 			if (plus.os.name == 'iOS') {
 				document.getElementById('bar').style.top = (plus.display.resolutionHeight - 50) + "px";
@@ -197,7 +197,9 @@
 		function initTabitemWebviews() {
 			plus.nativeUI.showWaiting();
 			for (var id in tabsConfig) {
-				tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles, {webviewHeight: webviewHeight});
+				tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles, {
+					webviewHeight: webviewHeight
+				});
 				// tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
 				if (tabsConfig[id]['default']) {
 					self.append(tabs[id]);
@@ -256,12 +258,12 @@
 				current = this.dataset.id;
 				currentTab = this;
 
-// 				//向聊天页面传递清除定时器自定义事件
-// 				if (current == 'chat') {
-// 					mui.fire(plus.webview.getWebviewById('chat'), 'addInterval');
-// 				} else {
-// 					mui.fire(plus.webview.getWebviewById('chat'), 'clearInterval');
-// 				}
+				// 				//向聊天页面传递清除定时器自定义事件
+				// 				if (current == 'chat') {
+				// 					mui.fire(plus.webview.getWebviewById('chat'), 'addInterval');
+				// 				} else {
+				// 					mui.fire(plus.webview.getWebviewById('chat'), 'clearInterval');
+				// 				}
 			});
 		}
 
