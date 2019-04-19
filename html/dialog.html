@@ -551,11 +551,9 @@
 				}
 
 				var self = plus.webview.currentWebview();
-				if (plus.os.name != 'iOS') {
-					self.setStyle({
-						softinputMode: "adjustResize"
-					});
-				}
+				self.setStyle({
+					softinputMode: "adjustResize"
+				});
 				var chatName = self.chatName;
 				chatId = self.cid;
 				chatAvatar = self.avatar;
@@ -726,6 +724,7 @@
 						ws.send(JSON.stringify(chatData)); //向服务器发送消息
 						ui.boxMsgText.value = '';
 						mui.trigger(ui.boxMsgText, 'input', null);
+						getRecordList();
 					} else if (ui.btnMsgType.classList.contains('mui-icon-mic')) {
 						ui.btnMsgType.classList.add('mui-icon-compose');
 						ui.btnMsgType.classList.remove('mui-icon-mic');
@@ -733,6 +732,7 @@
 						ui.boxMsgSound.style.display = 'block';
 						ui.boxMsgText.blur();
 						document.body.focus();
+						getRecordList();
 					} else if (ui.btnMsgType.classList.contains('mui-icon-compose')) {
 						ui.btnMsgType.classList.add('mui-icon-mic');
 						ui.btnMsgType.classList.remove('mui-icon-compose');
@@ -743,6 +743,7 @@
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
+						getRecordList();
 					}
 				}, false);
 
@@ -956,6 +957,7 @@
 								bindMsgList();
 								ui.areaMsgList.scrollTop = 300;
 							} else {
+								recordData.data=[];
 								recordData.data = res.data;
 								for (var index in res.data) {
 									lastIndex = index;
@@ -965,6 +967,7 @@
 							}
 						} else {
 							if (!loadMore) {
+								recordData.data=[];
 								recordData.data = res.data;
 								for (var index in res.data) {
 									lastIndex = index;
