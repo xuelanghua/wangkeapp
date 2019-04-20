@@ -182,6 +182,16 @@
 				color: #666666;
 				z-index: 12;
 			}
+
+			.operation-btn {
+				width: 45px;
+				height: 45px;
+				position: fixed;
+				bottom: 0;
+				left: 50%;
+				margin-left: -20px;
+				opacity: 0.96;
+			}
 		</style>
 	</head>
 	<body>
@@ -275,6 +285,7 @@
 				</div> -->
 			</div>
 			<div id="article_bottom" class="mui-scroll-wrapper"></div>
+			<img class="operation-btn mui-hidden" src="../image/icon/plus-sign.svg" alt="">
 		</div>
 		<!-- </div> -->
 	</body>
@@ -578,8 +589,40 @@
 				}
 			}, 'json');
 		}
-		mui(".mui-bar-nav").on("tap",".publish-article",function(){
-			openPage('publish_article.html','publish_article','#f7f7f7','');
+		mui(".mui-bar-nav").on("tap", ".publish-article", function() {
+			openPage('publish_article.html', 'publish_article', '#f7f7f7', '');
+		})
+		mui(".mui-content").on("tap", ".operation-btn", function() {
+			mui.openWindow({
+				url: "article_operation.html",
+				id: "article_operation",
+				styles: {
+					bounce: 'none',
+					scrollsToTop: true,
+					popGesture: 'close',
+					// background: '#ffffff',
+					background: 'transparent',
+					statusbar: {
+						background: "#ffffff"
+					}
+				},
+				extras: '',
+				createNew: false,
+				show: {
+					autoShow: true,
+					aniShow: 'slide-in-bottom',
+					duration: 300,
+					event: 'titleUpdate',
+					extras: {
+						acceleration: 'auto',
+						capture: '',
+						otherCapture: ''
+					}
+				},
+				waiting: {
+					autoShow: false
+				}
+			})
 		})
 	</script>
 </html>
