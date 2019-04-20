@@ -358,7 +358,7 @@
 						<img src="../image/touxiang.png" id="crm_avatar">
 					</div>
 					<div class="name" id="crm_name">
-						购多少
+						万贤
 					</div>
 				</div>
 				<div class="function">
@@ -499,6 +499,7 @@
 		})
 
 		var cid = 0;
+		var customerInfo = null;
 		var dealFlag = 0;
 		var noticeStatus = 0;
 		var userInfo = getUserInfo();
@@ -516,7 +517,7 @@
 				var phone = this.dataset.phone;
 				if(phone){
 					plus.device.dial(phone);
-				}else{
+				} else {
 					message('该客户很神秘，没有电话哟！')
 				}
 			})
@@ -640,12 +641,12 @@
 			// 分享
 			document.getElementById('share_card').addEventListener('tap', function(e) {
 				shareToMiniprogram({
-					title: userInfo.nickName + '的旺客名片',
+					title: customerInfo.name + '的旺客名片',
 					content: '王天下之客,让营销更简单!',
-					thumbs: [userInfo.avatarUrl],
+					thumbs: ['../image/app_logo.png'],
 					miniProgram: {
 						id: 'gh_9fa5f42ab939',
-						path: '/longbing_card/pages/index/index?to_uid=' + userInfo.id + '&is_qr=1&currentTabBar=toCard',
+						path: '/longbing_card/pages/index/index?to_uid=' + cid + '&is_qr=1&currentTabBar=toCustomer',
 						webUrl: 'https://app.wangkeapp.cn/'
 					}
 				}, 'miniProgram');
@@ -669,6 +670,7 @@
 			}, function(res) {
 				if (res.errno == 0) {
 					var data = res.data;
+					customerInfo = res.data;
 					if (data.headimgurl.length != 0) {
 						document.getElementById('crm_avatar').src = data.headimgurl;
 					}

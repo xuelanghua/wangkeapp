@@ -93,7 +93,7 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">客户编辑</h1>
 			<span class="mui-pull-right" style="margin-top: 11px;font-size: 15px;" id="save">保存</span>
 		</header>
@@ -328,8 +328,9 @@
 				}, function(res) {
 					// logs(res);
 					if (res.errno == 0) {
-						mui.fire(plus.webview.getWebviewById('customer_detail_app'), 'editCustomer');
-						mui.fire(plus.webview.getWebviewById('customer_detail_miniapp'), 'editCustomer');
+						mui.fire(plus.webview.getWebviewById('crm_detail_app'), 'editCustomer');
+						mui.fire(plus.webview.getWebviewById('crm_detail_miniapp'), 'editCustomer');
+						mui.fire(plus.webview.getWebviewById('chat'), 'addCrm');
 						message('编辑成功!');
 						setTimeout(function() {
 							plus.webview.close('customer_edit');

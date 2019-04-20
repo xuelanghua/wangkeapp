@@ -637,10 +637,10 @@ function pushCallback(data, event) {
 		var type = data.type;
 		var url = data.url;
 		var extra = data.extra;
-// 		logs(type);
-// 		logs(url);
-// 		logs(extra);
-// 		logs(event);
+		logs(type);
+		logs(url);
+		logs(extra);
+		logs(event);
 		if (event == 'click') {
 			if (type == 'jump') {
 				if (url == 'chat') {
@@ -671,11 +671,13 @@ function pushCallback(data, event) {
 				mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
 				
+				plus.device.beep();
 				playNoticeAudio();
 			} else if (url == 'chat') {
 				if (data.chat == 'customer') {
 					mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
 				} else if (data.chat == 'friend') {
+					logs(data);
 					mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
 				}
 				
@@ -693,14 +695,20 @@ function playNoticeAudio() {
 	if (plus.os.name == 'Android') {
 		var context = plus.android.runtimeMainActivity();
 		var RingtoneManager = plus.android.importClass('android.media.RingtoneManager');  
-		var uri = RingtoneManager.getActualDefaultRingtoneUri(context,RingtoneManager.TYPE_NOTIFICATION);  
+		var uri = RingtoneManager.getActualDefaultRingtoneUri(context,RingtoneManager.TYPE_NOTIFICATION);
 		plus.android.importClass(uri);  
-		var p = plus.audio.createPlayer(uri.toString() );  
-		p.play( function () {  
-			// alert( "Audio play success!" );   
-		}, function ( e ) {  
-			// alert( "Audio play error: " + e.message );   
-		} ) 
+		var p = plus.audio.createPlayer(uri.toString());
+		var flag = true;
+		p.play(function() {
+			flag = false;
+			logs("Audio play success!");   
+		}, function(e) {  
+			logs("Audio play error: " + e.message);
+		})
+		if (flag) {
+			logs(33333);
+			plus.device.vibrate();
+		}
 	} else {
 		plus.ios.invoke(null,"AudioServicesPlaySystemSound", 1002);  
 	}

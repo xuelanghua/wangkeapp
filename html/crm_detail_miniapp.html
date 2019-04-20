@@ -679,6 +679,7 @@
 		})
 
 		var cid = 0;
+		var customerInfo = null;
 		var userId = 0;
 		var chatName = '';
 		var avatar = '';
@@ -852,12 +853,12 @@
 			// 分享
 			document.getElementById('share_card').addEventListener('tap', function(e) {
 				shareToMiniprogram({
-					title: userInfo.nickName + '的旺客名片',
+					title: customerInfo.name + '的资料',
 					content: '王天下之客,让营销更简单!',
-					thumbs: [userInfo.avatarUrl],
+					thumbs: [customerInfo.headimgurl],
 					miniProgram: {
 						id: 'gh_9fa5f42ab939',
-						path: '/longbing_card/pages/index/index?to_uid=' + userInfo.id + '&is_qr=1&currentTabBar=toCard',
+						path: '/longbing_card/pages/index/index?to_uid=' + cid + '&is_qr=1&currentTabBar=toCustomer',
 						webUrl: 'https://app.wangkeapp.cn/'
 					}
 				}, 'miniProgram');
@@ -895,6 +896,7 @@
 				// logs(res);
 				if (res.errno == 0) {
 					var data = res.data;
+					customerInfo = res.data;
 					chatName = data.name;
 					userId = data.uid;
 					avatar = data.headimgurl;
