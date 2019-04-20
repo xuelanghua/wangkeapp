@@ -671,7 +671,6 @@ function pushCallback(data, event) {
 				mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
 				
-				plus.device.beep();
 				playNoticeAudio();
 			} else if (url == 'chat') {
 				if (data.chat == 'customer') {
@@ -705,10 +704,9 @@ function playNoticeAudio() {
 		}, function(e) {  
 			logs("Audio play error: " + e.message);
 		})
-		if (flag) {
-			logs(33333);
-			plus.device.vibrate();
-		}
+// 		if (flag) {
+// 			plus.device.beep();
+// 		}
 	} else {
 		plus.ios.invoke(null,"AudioServicesPlaySystemSound", 1002);  
 	}

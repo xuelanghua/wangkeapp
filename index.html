@@ -33,7 +33,7 @@
 				<div class="mui-tab-item tab-item" data-id="chat" id="chat">
 					<span class="mui-icon icon-chat" style="font-size: 18px;margin-top: 2px;"></span>
 					<span class="mui-tab-label">人脉</span>
-					<span class="mui-badge">12</span>
+					<span class="mui-badge" id="message_tip" style="display: none;">0</span>
 				</div>
 				<div class="mui-tab-item" id="short_cut" data-status='0'>
 					<span class="mui-icon icon-quick" style="font-size: 18px;margin-top: 2px;"></span>
@@ -64,6 +64,7 @@
 		var tabs = {};
 		var winHeight = document.documentElement.clientHeight || document.body.clientHeight;
 		var webviewHeight = winHeight - 51;
+		var userInfo = null;
 		var tabsConfig = {
 			home: {
 				url: 'html/home.html',
@@ -178,6 +179,10 @@
 				// currentTab.children[0].classList.remove(tabsConfig[current].icon);
 				// currentTab.children[0].classList.add(tabsConfig[current].selected);
 			})
+			
+			window.addEventListener('refreshNotice', function() {
+				getUnreadMessage();
+			})
 
 			//设置currentTab
 			currentTab = mui('#bar .tab-item')[0];
@@ -187,7 +192,7 @@
 			plus.screen.lockOrientation("portrait-primary");
 
 			// localStorage.removeItem('user');
-			var userInfo = getUserInfo();
+			userInfo = getUserInfo();
 			if (!userInfo) {
 				login();
 			} else if (userInfo.mobile.length == 0) {
@@ -195,6 +200,7 @@
 			} else {
 				bindClientId();
 				initIndexView();
+				getUnreadMessage();
 			}
 			//判断是否已经登陆,若没有登陆将预加载登陆页面
 			// judgeLogin();
@@ -294,6 +300,44 @@
 
 		function bindMobile() {
 			fnOpenWin('html/mobile_bind.html', 'mobile_bind', '', '', 'slide-in-bottom');
+		}
+		
+		//获取未读消息
+		function getUnreadMessage() {
+			if (!userInfo) return;
+			mui.get($ajaxUrl + 'member', {
+				action: 'unread_message',
+				token: userInfo.token
+			}, function(res) {
+				var tipsObj = document.getElementById('message_tip');
+				if (res.data > 0) {
+					tipsObj.innerText = res.data;
+					getFriendApply();
+				} else {
+					tipsObj.innerText = 0;
+					getFriendApply();
+				}
+			}, 'json');
+		}
+		
+		//获取好友申请条目
+		function getFriendApply() {
+			if (!userInfo) return;
+			mui.post($ajaxUrl + 'customer', {
+				action: 'friend_apply_count',
+				token: userInfo.token,
+			}, function(res) {
+				var tipsObj = document.getElementById('message_tip');
+				var number = tipsObj.innerText;
+				var total = parseInt(res.data) + parseInt(number);
+				if (total > 0) {
+					tipsObj.innerText = total;
+					tipsObj.style.display = 'block';
+				} else {
+					tipsObj.innerText = 0;
+					tipsObj.style.display = 'none'; 
+				}
+			}, 'json')
 		}
 	</script>
 </html>
