@@ -9,29 +9,199 @@
 		<style type="text/css">
 			body {
 				background-color: #FFFFFF;
-				/* background: transparent; */
 			}
+
+			@keyframes myrotate {
+				from {
+					transform: rotate(0deg);
+				}
+
+				to {
+					transform: rotate(-135deg) scale(1.1);
+				}
+			}
+
+			@-webkit-keyframes myrotate {
+				from {
+					transform: rotate(0deg);
+				}
+
+				to {
+					transform: rotate(-135deg) scale(1.1);
+				}
+			}
+
+			@keyframes myrotates {
+				from {
+					transform: rotate(-135deg) scale(1.1);
+
+				}
+
+				to {
+					transform: rotate(0deg);
+				}
+
+			}
+
+			@-webkit-keyframes myrotates {
+				from {
+					transform: rotate(-135deg) scale(1.1);
+				}
+
+				to {
+					transform: rotate(0deg);
+				}
+
+			}
+
+			@keyframes movetop {
+				from {
+					transform: translate(0) scale(0);
+				}
+
+				to {
+					transform: translateY(-135px) scale(1);
+				}
+			}
+
+			@-webkit-keyframes movetop {
+				from {
+					transform: translate(0) scale(0);
+				}
+
+				to {
+					transform: translateY(-135px) scale(1);
+				}
+			}
+
+			@keyframes movetops {
+				from {
+					transform: translateY(-135px) scale(1);
+
+				}
+
+				to {
+					transform: translate(0) scale(0);
+				}
+			}
+
+			@-webkit-keyframes movetops {
+				from {
+					transform: translateY(-135px) scale(1);
+				}
+
+				to {
+					transform: translate(0) scale(0);
+
+				}
+
+			}
+
 			.operation-btn {
 				width: 45px;
 				height: 45px;
 				position: fixed;
-				bottom: 51px;
+				bottom: 51.2px;
 				left: 50%;
-				margin-left: -20px;
+				margin-left: -22.5px;
 				opacity: 0.96;
+				animation: myrotate 150ms ease-in-out 200ms;
+				-webkit-animation: myrotate 150ms ease-in-out 200ms;
+				animation-fill-mode: forwards;
+			}
+
+			.operation-btn.active {
+				animation: myrotates 100ms ease-in;
+				-webkit-animation: myrotates 100ms ease-in;
+				animation-fill-mode: forwards;
+			}
+
+			.groups {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				display: flex;
+				position: fixed;
+				left: 0;
+				bottom: 30px;
+				width: 100%;
+				transform: scale(0);
+				animation: movetop 200ms ease-in-out 200ms;
+				-webkit-animation: movetop 200ms ease-in-out 200ms;
+				animation-fill-mode: forwards;
+			}
+
+			.groups.active {
+				animation: movetops 200ms ease-in-out;
+				-webkit-animation: movetops 200ms ease-in-out;
+				animation-fill-mode: forwards;
+			}
+
+			.groups li {
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				flex-grow: 1;
+			}
+
+			.groups li img {
+				width: 100%;
+				height: 100%;
+			}
+
+			.groups li p {
+				margin-bottom: 0;
+			}
+
+			.groups .article-option {
+				width: 1.2rem;
+				height: 1.2rem;
+				margin-bottom: 0.16rem;
+				overflow: hidden;
+				border-radius: 50%;
+				padding: 0.32rem;
+				overflow: hidden;
+			}
+
+			.groups li:nth-of-type(1) .article-option {
+				background-color: #ff6261;
+			}
+
+			.groups li:nth-of-type(2) .article-option {
+				background-color: #318cff;
+			}
+
+			.groups li:nth-of-type(3) .article-option {
+				background-color: #00cbbb;
 			}
 		</style>
 	</head>
 
 	<body class="mui-hidden">
 		<div class="mui-content setting-container">
-			<h2 class="headline">caozzuo</h2>
+			<h2 class="headline"></h2>
+			<ul class="groups">
+				<li id="my-article">
+					<div class="article-option"><img src="../image/icon/article-01.png" alt=""></div>
+					<p>我的文章</p>
+				</li>
+				<li class="mui-hidden" id="article-manage">
+					<div class="article-option"><img src="../image/icon/article-02.png" alt=""></div>
+					<p>文章管理</p>
+				</li>
+				<li id="article-writing">
+					<div class="article-option"><img src="../image/icon/article-03.png" alt=""></div>
+					<p>文章创作</p>
+				</li>
+			</ul>
 			<img class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			mui.init();
+			var status = true;
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -40,6 +210,22 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
+			mui(".mui-content").on('tap', '.operation-btn', function() {
+				document.querySelector(".operation-btn").classList.toggle("active");
+				document.querySelector(".groups").classList.toggle("active");
+				setTimeout(function() {
+					// mui.back();
+					plus.webview.close( 'article_operation','fade-out');
+				}, 160)
+			})
+			// 我的文章
+			mui(".mui-content").on('tap', '#my-article', function() {
+				openPage('my_article.html','my_article','#f7f7f7','');
+			})
+			// 文章创作
+			mui(".mui-content").on('tap', '#article-writing', function() {
+				openPage('publish_article.html', 'publish_article', '#f7f7f7', '');
+			})
 		</script>
 	</body>
 
