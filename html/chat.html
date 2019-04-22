@@ -601,8 +601,11 @@
 			var customer_data = null;
 			var timer = null;
 			var self = null;
+			var webviewHeight = 0;
 			mui.plusReady(function() {
+				// originalHeight = document.querySelector("body").offsetHeight;
 				self = plus.webview.currentWebview();
+				webviewHeight = self.webviewHeight;
 				self.setStyle({
 					bottom: 51
 				})
@@ -719,18 +722,33 @@
 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 					getUnreadMessage();
 				})
+				
+				window.addEventListener('resizeWindow', function(e) {
+					console.log('resizeWindow');
+					console.log(webviewHeight);
+					plus.webview.currentWebview().setStyle({
+						height: webviewHeight
+					});
+				})
 
 				// 获取原始窗口的高度
-				// 				var originalHeight = document.querySelector("body").offsetHeight;
-				// 				window.onresize = function() {
-				// 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-				// 					var resizeHeight = document.querySelector("body").offsetHeight;
-				// 					if (resizeHeight * 1 < originalHeight * 1) {
-				// 						plus.webview.currentWebview().setStyle({
-				// 							height: originalHeight
-				// 						});
-				// 					}
-				// 				}
+				// var originalHeight = document.querySelector("body").offsetHeight;
+				// originalHeight = 681;
+				window.onresize = function() {
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					// var resizeHeight = document.querySelector("body").offsetHeight;
+					var resizeHeight =  document.documentElement.clientHeight || document.body.clientHeight;
+					console.log(11111);
+					console.log(resizeHeight);
+					if (resizeHeight * 1 != webviewHeight * 1) {
+					// if (resizeHeight * 1 < originalHeight * 1) {
+						console.log('resetWindowHeight');
+						console.log(resizeHeight);
+						plus.webview.currentWebview().setStyle({
+							height: webviewHeight
+						});
+					}
+				}
 
 			})
 

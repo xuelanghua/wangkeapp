@@ -172,27 +172,30 @@
 		</header>
 
 		<div id="mui-content" class="mui-content">
-			<ul class="mui-table-view">
-				<li id="index==1?'koutp':''" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
-				 :key="index">
-					<div class="mui-slider-right mui-disabled">
-						<span class="mui-btn mui-btn-red" @tap="delArticle(article.id)">删除</span>
-						<span class="mui-btn mui-btn-blue" @tap="editArticle(article.id)">编辑</span>
-					</div>
-					<div class="mui-slider-handle">
-						<div class="article-img-cont">
-							<img class="article-img" :src="article.thumb" alt="">
+			<div id="article_container">
+				<ul class="mui-table-view" v-if="">
+					<li id="index==1?'koutp':''" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
+					 :key="index">
+						<div class="mui-slider-right mui-disabled">
+							<span class="mui-btn mui-btn-red" @tap="delArticle(article.id)">删除</span>
+							<span class="mui-btn mui-btn-blue" @tap="editArticle(article.id)">编辑</span>
 						</div>
-						<div class="left-desc">
-							<p class="mui-ellipsis-2">{{article.title}}</p>
-							<div class="bottom-data mui-clearfix">
-								<span>{{article.add_time}}</span>
-								<span class="mui-pull-right"><img src="../image//eye.png">{{article.click}}</span>
+						<div class="mui-slider-handle">
+							<div class="article-img-cont">
+								<img class="article-img" :src="article.thumb" alt="">
+							</div>
+							<div class="left-desc">
+								<p class="mui-ellipsis-2">{{article.title}}</p>
+								<div class="bottom-data mui-clearfix">
+									<span>{{article.add_time}}</span>
+									<span class="mui-pull-right"><img src="../image//eye.png">{{article.click}}</span>
+								</div>
 							</div>
 						</div>
-					</div>
-				</li>
-			</ul>
+					</li>
+				</ul>
+			</div>
+			
 			<div class="join-team-verify" v-show="del">
 				<div class="verift-body">
 					<div class="tips">
@@ -209,7 +212,28 @@
 		<script src="../js/util.js"></script>
 		<script type="text/javascript" src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				swipeBack: false, //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
+				pullRefresh: {
+					container: "#article_container", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+					up: {
+						height: 50,
+						auto: true,
+						contentrefresh: "正在加载...",
+						contentnomore: '没有更多数据了',
+						callback: function() {
+							getArticleList(true, false)
+						}
+					},
+					down: {
+						style: 'circle', //单webview模式的下拉刷新 
+						color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+						callback: function() {
+							getArticleList(false, true)
+						}
+					}
+				}
+			});
 			var articleId = 0
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
@@ -220,39 +244,63 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
-			mui.plusReady(function() {
-				plus.webview.hide('article_operation', 'none');
-				plus.webview.close('article_operation', 'none');
-			})
+			
 			var app = new Vue({
 				el: "#mui-content",
 				data() {
 					return {
+						skip: 1,
+						limit: 7,
 						articles: [],
 						articleStatus: true,
 						del: false
 					}
 				},
-				created: function() {
-					mui.post($ajaxUrl + 'article', {
-						token: userInfo.token,
-						action: 'article_list',
-						recommend: 1,
-						hot: 0,
-						cid: 0,
-						skip: 1,
-						limit: 10
-					}, function(res) {
-						if (res.errno == 0) {
-							app.articles = res.data;
-						} else {
-							app.articleStatus = false;
-						}
-					}, 'json');
+				mounted: function() {
+					mui.plusReady(function() {
+						plus.webview.hide('article_operation', 'none');
+						plus.webview.close('article_operation', 'none');
+						
+						mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
+							var articleId = this.dataset.article;
+							openPage('article.html', 'article', '#ffffff', {
+								article_id: articleId
+							});
+						})
+						
+						mui(".mui-content").on("tap",".mui-pull-right",function(e){
+							console.log("asdfasdf");
+							e.stopPropagation();
+						})
+						
+						// 取消删除
+						mui(".mui-content").on('tap', '.close-verify-window', function() {
+							app.del = false;
+							var alex = document.querySelector('.mui-pull-right');
+							mui.trigger(alex, 'tap');
+						})
+						
+						mui(".mui-content").on('tap', '.send-verify', function() {
+							app.del = false;
+							mui.post($ajaxUrl + 'article',{
+									action: 'article_delete',
+									token: userInfo.token,
+									article_id: articleId
+								}, function(res){
+									if (res.errno == 0) {
+										getArticleList(false, true);
+									} else {
+										message('删除失败!', 'center')
+									}
+								}, 'json'
+							);
+						})
+						
+						getArticleList(false, false);
+					})
 				},
 				methods: {
 					delArticle: function(arid) {
-						// message(arid)
 						articleId = arid;
 						app.del = true;
 					},
@@ -263,22 +311,45 @@
 					}
 				}
 			})
-			mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
-				var articleId = this.dataset.article;
-				openPage('article.html', 'article', '#ffffff', {
-					article_id: articleId
-				});
-			})
-			mui(".mui-content").on("tap",".mui-pull-right",function(e){
-				console.log("asdfasdf");
-				e.stopPropagation();
-			})
-			// 取消删除
-			mui(".mui-content").on('tap', '.close-verify-window', function() {
-				app.del = false;
-				var alex = document.querySelector('.mui-pull-right');
-				mui.trigger(alex, 'tap');
-			})
+			
+			function getArticleList(up, down) {
+				if (up) {
+					app.skip++;
+				}
+				if (down) {
+					app.skip = 1;
+				}
+				mui.post($ajaxUrl + 'article', {
+					token: userInfo.token,
+					action: 'article_list',
+					recommend: 0,
+					uid: userInfo.id,
+					hot: 0,
+					cid: 0,
+					skip: app.skip,
+					limit: app.limit
+				}, function(res) {
+					if (res.errno == 0) {
+						if (up) {
+							app.articles = app.articles.concat(res.data);
+						} else {
+							app.articles = res.data;
+						}
+					} else {
+						app.articleStatus = false;
+					}
+					if (!app.articleStatus && up) {
+						mui('#article_container').pullRefresh().endPullupToRefresh(true);
+					} else if (app.articleStatus && up) {
+						mui('#article_container').pullRefresh().endPullupToRefresh(false);
+					} else if (down) {
+						mui('#article_container').pullRefresh().endPulldownToRefresh();
+						if (app.articleStatus) {
+							mui('#article_container').pullRefresh().endPullupToRefresh(false);
+						}
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 

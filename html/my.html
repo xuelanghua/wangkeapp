@@ -448,8 +448,10 @@
 
 			var userInfo = getUserInfo();
 			var group_id = userInfo.group_id;
+			var webviewHeight = 0;
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
+				webviewHeight = self.webviewHeight;
 				self.setStyle({
 					bottom: 51
 				})
@@ -476,6 +478,26 @@
 
 			//事件初始化
 			function eventInit() {
+				window.addEventListener('resizeWindow', function(e) {
+					console.log('resizeWindow');
+					console.log(webviewHeight);
+					plus.webview.currentWebview().setStyle({
+						height: webviewHeight
+					});
+				})
+				
+				window.onresize = function() {
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					var resizeHeight = document.querySelector("body").offsetHeight;
+					if (resizeHeight * 1 != webviewHeight * 1) {
+						console.log('resetWindowHeight');
+						console.log(resizeHeight);
+						plus.webview.currentWebview().setStyle({
+							height: webviewHeight
+						});
+					}
+				}
+				
 				//签到成功监听
 				window.addEventListener('signSuccess', function() {
 					getMemberInfo();

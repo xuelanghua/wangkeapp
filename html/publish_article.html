@@ -222,15 +222,17 @@
 				</div>
 			</div>
 			<div class="bottom-operation">
-				<button type="button" class="mui-btn mui-btn-primary mui-btn-block">提交</button>
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block" id="add_submit">提交</button>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/upload.js"></script>
 		<script type="text/javascript">
-			mui.init();
-			var content = '';
+			mui.init({
+				swipeBack: true
+			});
+			
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -239,9 +241,22 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
+			
+			var userInfo = getUserInfo();
+			var content = '';
+			var title = '';
+			var thumb = '';
+			var articleId = 0;
 			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				if (self.articleId) {
+					articleId = self.articleId;
+					getArticleInfo();
+				}
+				
 				plus.webview.hide('article_operation', 'none');
 				plus.webview.close('article_operation', 'none');
+				
 				window.addEventListener('editDetail', function(event) {
 					content = event.detail.content;
 					if (content.length != 0) {
@@ -250,23 +265,102 @@
 						document.getElementById('edit-article').innerText = '添加正文内容';
 					}
 				})
+				
+				mui(".mui-content").on('tap', '.add-text', function() {
+					openPage('edit_article_detail.html', 'edit_article_detail', '#f7f7f7', {
+						content: content
+					});
+				})
+				
+				mui('.mui-content').on('tap', '#add-thumbnail,#thumbnail-cont', function() {
+					imageUpload(function(res) {
+						if (res.url != '') {
+							mui('#thumbnail')[0].src = res.url;
+							thumb = res.filename;
+							document.getElementById('add-thumbnail').style.display = "none";
+							mui('#thumbnail-cont')[0].style.display = "block";
+						} else {
+							message("上传失败，请重试！")
+						}
+					});
+				})
+				
+				mui('.mui-content').on('tap', '#add_submit', function() {
+					document.querySelector('textarea').blur();
+					title = document.querySelector('textarea').value;
+					articleAddSubmit();
+				})
 			})
-			mui(".mui-content").on('tap', '.add-text', function() {
-				openPage('edit_article_detail.html', 'edit_article_detail', '#f7f7f7', {
-					content: content
-				});
-			})
-			mui('.mui-content').on('tap', '#add-thumbnail,#thumbnail-cont', function() {
-				imageUpload(function(res) {
-					if (res.url != '') {
-						mui('#thumbnail')[0].src = res.url;
+			
+			//添加文章提交
+			function articleAddSubmit() {
+				if (title.length == 0) {
+					message('请输入文章标题!', 'center');
+					return;
+				}
+				if (thumb.length == 0) {
+					message('请选择文章缩略图!', 'center');
+					return;
+				}
+				if (content.length == 0) {
+					message('请添加文章内容!', 'center');
+					return;
+				}
+				
+				
+				
+				mui.post($ajaxUrl + 'article', {
+						action: "article_add",
+						token: userInfo.token,
+						title: title,
+						thumb: thumb,
+						content: content,
+						id: articleId
+					}, function(res){
+						logs(res);
+						if (res.errno == 0) {
+							message('操作成功!', 'center');
+							setTimeout(function() {
+								openPage('my_article.html','my_article','#f7f7f7','');
+								plus.webview.close('publish_article');
+							}, 2000)
+						} else {
+							message(res.message, 'center');
+						}
+					}, 'json'
+				);
+			}
+			
+			//获取文章详情
+			function getArticleInfo() {
+				if (!articleId) {
+					return;
+				}
+				mui.get($ajaxUrl + 'article', {
+					token: userInfo.token,
+					action: 'article_info',
+					id: articleId
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						title = res.data.title;
+						thumb = res.data.thumb_path;
+						content = res.data.content;
+						
+						document.querySelector('textarea').value = title;
+						
+						mui('#thumbnail')[0].src = res.data.thumb;
 						document.getElementById('add-thumbnail').style.display = "none";
 						mui('#thumbnail-cont')[0].style.display = "block";
-					} else {
-						message("上传失败，请重试！")
+						
+						if (content.length != 0) {
+							document.getElementById('edit-article').innerText = '修改正文内容';
+						} else {
+							document.getElementById('edit-article').innerText = '添加正文内容';
+						}
 					}
-				});
-			})
+				}, 'json')
+			}
 		</script>
 	</body>
 
