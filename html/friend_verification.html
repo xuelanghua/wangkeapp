@@ -36,26 +36,29 @@
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
 				var fid = self.fid;
-				mui(".mui-bar-nav").on("tap",".send-verification-btn",function(){
-				var info=document.querySelector('input[name=info]').value;
+				mui(".mui-bar-nav").on("tap", ".send-verification-btn", function() {
+					document.querySelector('input[name=info]').blur();
+					var info = document.querySelector('input[name=info]').value;
 					info = info.replace(/^\s*|\s*$/g, "");
 					logs(info);
-					if(fid!=''){
+					if (fid != '') {
 						mui.post($ajaxUrl + 'customer&action=friend_add', {
 							token: userInfo.token,
-							fid:fid,
-							type:1,
+							fid: fid,
+							type: 1,
 							remark: info
 						}, function(res) {
-							if(res.errno==0){
+							if (res.errno == 0) {
 								plus.key.hideSoftKeybord();
 								message("发送成功");
-								plus.webview.close('add_contacts');
-								plus.webview.close('friend_search_result');
-								plus.webview.close('friend_verification');
+								setTimeout(function() {
+									plus.webview.close('add_contacts');
+									plus.webview.close('friend_search_result');
+									plus.webview.close('friend_verification');
+								}, 2000)
 							}
 						}, 'json')
-					}else{
+					} else {
 						message('添加的用户不存在');
 					}
 				})

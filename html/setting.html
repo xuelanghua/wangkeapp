@@ -62,18 +62,18 @@
 						<span class="mui-navigate-right">
 							更换手机号
 						</span>
-						<span class="last-desc">
-							13700696591
+						<span class="last-desc" id="mobile">
+							15398699237
 						</span>
 					</li>
-					<li class="mui-table-view-cell change-position">
+					<!-- <li class="mui-table-view-cell change-position">
 						<span class="mui-navigate-right">
 							区域修改
 						</span>
 						<span class="last-desc">
 							云南省 昆明市 官渡区
 						</span>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 			<div class="segment">
@@ -104,6 +104,7 @@
 				plus.navigator.setStatusBarStyle('light');
 			}
 		});
+		
 		var userInfo = getUserInfo();
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
@@ -113,7 +114,17 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
+		
 		mui.plusReady(function() {
+			
+			updateUserInfo();
+			userInfo = getUserInfo();
+			logs(userInfo);
+			window.addEventListener('changeMobileSuccess', function() {
+				userInfo = getUserInfo();
+				mui('#mobile')[0].innerHTML = userInfo.mobile;
+			})
+			
 			// 注销登录
 			document.getElementById('exit').addEventListener('tap', function() {
 				// 	if (mui.os.ios) {
@@ -159,16 +170,23 @@
 					}
 				});
 			}, false);
+			
 			mui('#app_version')[0].innerHTML = '版本号' + plus.runtime.version;
+			mui('#mobile')[0].innerHTML = userInfo.mobile;
+			
+			mui(".setting-container").on("tap", ".change-num", function(e) {
+				openPage('chang_phone_number.html', 'chang_phone_number', '#f7f7f7', '');
+			})
+			
+// 			mui(".setting-container").on("tap", ".change-position", function(e) {
+// 				openPage('regionai_changes.html', 'regionai_changes', '#f7f7f7', '')
+// 			})
+			
+			mui(".setting-container").on("tap", ".about", function(e) {
+				openPage('about_wangke.html', 'about_wangke', '#f7f7f7', '')
+			})
 		})
-		mui(".setting-container").on("tap", ".change-num", function(e) {
-			openPage('chang_phone_number.html', 'chang_phone_number', '#f7f7f7', '');
-		})
-		mui(".setting-container").on("tap", ".change-position", function(e) {
-			openPage('regionai_changes.html', 'regionai_changes', '#f7f7f7', '')
-		})
-		mui(".setting-container").on("tap", ".about", function(e) {
-			openPage('about_wangke.html', 'about_wangke', '#f7f7f7', '')
-		})
+		
+		
 	</script>
 </html>

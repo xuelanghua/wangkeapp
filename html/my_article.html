@@ -181,29 +181,29 @@
 			<h1 class="mui-title">我的文章</h1>
 		</header>
 		<div id="mui-content" class="mui-content">
-
-<div id="article_container">
-			<ul class="mui-table-view">
-				<li :id="'article'+article.id" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
-				 :key="index">
-					<div class="mui-slider-right mui-disabled">
-						<span class="mui-btn mui-btn-red" @tap="delArticle(article.id,index)">删除</span>
-						<!-- <span class="mui-btn mui-btn-blue" @tap="editArticle(article.id)">编辑</span> -->
-						<span class="mui-btn mui-btn-blue" v-on:tap.stop="editArticle(article.id)">编辑</span>
-					</div>
-					<div class="mui-slider-handle">
-						<!-- <div class="article-img-cont">
-							<img class="article-img" :src="article.thumb" alt="">
-						</div> -->
+			<div id="article_container">
+				<ul class="mui-table-view">
+					<li :id="'article'+article.id" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
+					 :key="index">
+						<div class="mui-slider-right mui-disabled">
+							<span class="mui-btn mui-btn-red" @tap="delArticle(article.id,index)">删除</span>
+							<!-- <span class="mui-btn mui-btn-blue" @tap="editArticle(article.id)">编辑</span> -->
+							<span class="mui-btn mui-btn-blue" v-on:tap.stop="editArticle(article.id)">编辑</span>
+						</div>
 						<div class="mui-slider-handle">
-							<div class="article-img-cont">
+							<!-- <div class="article-img-cont">
 								<img class="article-img" :src="article.thumb" alt="">
-							</div>
-							<div class="left-desc">
-								<p class="mui-ellipsis-2">{{article.title}}</p>
-								<div class="bottom-data mui-clearfix">
-									<span>{{article.add_time}}</span>
-									<span class="mui-pull-right"><img src="../image//eye.png">{{article.click}}</span>
+							</div> -->
+							<div class="mui-slider-handle">
+								<div class="article-img-cont">
+									<img class="article-img" :src="article.thumb" alt="">
+								</div>
+								<div class="left-desc">
+									<p class="mui-ellipsis-2">{{article.title}}</p>
+									<div class="bottom-data mui-clearfix">
+										<span>{{article.add_time}}</span>
+										<span class="mui-pull-right"><img src="../image//eye.png">{{article.click}}</span>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -270,7 +270,7 @@
 				el: "#mui-content",
 				data() {
 					return {
-						skip: 0,
+						skip: 1,
 						limit: 7,
 						articles: [],
 						articleStatus: true
@@ -280,6 +280,10 @@
 					mui.plusReady(function() {
 						plus.webview.hide('article_operation', 'none');
 						plus.webview.close('article_operation', 'none');
+						
+						mui('.mui-content').on('dragstart', '.mui-table-view-cell', function(e) {
+							cancelId = this.id;
+						})
 						
 						mui(".mui-content").on("tap",".mui-pull-right",function(e){
 							console.log("asdfasdf");
@@ -302,11 +306,13 @@
 						
 						// 取消删除
 						mui("#verift-body").on('tap', '.close-verify-window', function() {
+							// alert(222);
 							var article = document.getElementById('article' + articleId);
 							mui.swipeoutClose(article);
 							mask.close();
 						})
 						
+						// 确认删除
 						mui(".mui-content").on('tap', '.send-verify', function() {
 							mask.close();
 							mui.post($ajaxUrl + 'article',{
@@ -342,11 +348,6 @@
 							articleId: arid
 						});
 					}
-				},
-				mounted: function() {
-					mui('.mui-content').on('dragstart', '.mui-table-view-cell', function(e) {
-						cancelId = this.id;
-					})
 				}
 			})
 			

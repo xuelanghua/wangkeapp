@@ -108,11 +108,11 @@
 			<div class="segment">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
-						<input type="number" placeholder="输入新的手机号码">
+						<input type="number" class="mobile" placeholder="输入新的手机号码">
 					</li>
 					<li class="mui-table-view-cell">
 						<input type="number" class="verification-code" placeholder="输入6位数字短信密码" />
-						<button type="button" class="mui-btn mui-btn-blue">点击获取</button>
+						<button type="button" class="mui-btn mui-btn-blue get-code">点击获取</button>
 						<!-- <span class="get-again">重新获取（60S）</span> -->
 					</li>
 				</ul>
@@ -132,6 +132,95 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		mui.plusReady(function() {})
+		
+		var flag = false;
+		var phoneNumber = /^[1][\d]{10}$/;
+		var userInfo = null;
+		var timer = null;
+		var num = 60;
+		var userInfo = getUserInfo();
+		mui.plusReady(function(){
+			userInfo = getUserInfo();
+			mui('.mui-content').on('tap', '.get-code', function() {
+				getVerifyCode();
+			})
+			
+			mui('.mui-content').on('tap', '.confirm-btn', function() {
+				mobileBind();
+			})
+		})
+		
+		function getVerifyCode() {
+			//获取短信验证
+		    if (flag) {
+		        return;
+		    }
+		    var mobile = mui('.mobile')[0].value;
+		    if (mobile.length == 0) {
+		        mui.toast('请输入手机号码!');
+		        return;
+		    } else if (!phoneNumber.test(mobile)) {
+		        mui.toast('手机号码格式错误!');
+		        return;
+		    }
+			
+			mui.post($ajaxUrl + 'verifycode', {receiver: mobile, token: userInfo.token}, function(res) {
+				if (res.errno == 1) {
+					mui.toast(res.message);
+					return;
+				} else {
+					mui.toast(res.message);
+					clearInterval(timer);
+		            timer = setInterval(function() {
+		                flag = true;
+		                if (num > 0) {
+		                    num--;
+		                    mui('.get-code')[0].innerHTML = num + '重新获取';
+		                    mui('.get-code')[0].style.color = '#999';
+		                } else if (num <= 1) {
+		                    clearInterval(timer);
+		                    mui('.get-code')[0].innerHTML = '重新获取';
+		                    mui('.get-code')[0].style.color = '#2289FF';
+		                    num = 60;
+		                    flag = false;
+		                }
+		            }, 1000);
+				}
+			}, 'json');
+		}
+		
+		function mobileBind() {
+			var vmobile = mui('.mobile')[0].value;
+			var vcode = mui('.verification-code')[0].value;
+			if (vmobile.length == 0) {
+		        mui.toast('请输入手机号码!');
+		        return;
+		    } else if (!phoneNumber.test(vmobile)) {
+		        mui.toast('手机号码格式错误!');
+		        return;
+		    }
+		    if (vcode.length == 0) {
+		    	mui.toast('请输入验证码!');
+		    	return;
+		    } else if (vcode.length != 6) {
+		    	mui.toast('验证码位数输入错误!');
+		    	return;
+		    }
+		    
+		    mui.post($ajaxUrl + 'member&action=bind', {mobile: vmobile, code: vcode, token: userInfo.token}, function(res) {
+		    	if (res.errno == 0) { 
+		    		mui.toast(res.message);
+					userInfo.mobile = vmobile;
+					localStorage.setItem('user', JSON.stringify(userInfo));
+					mui.fire(plus.webview.getWebviewById('setting'), 'changeMobileSuccess');
+					setTimeout(function() {
+						mui.back();
+					}, 1000)
+		    	} else {
+		    		mui.toast(res.message);
+		    		return;
+		    	}
+		    }, 'json');
+		}
 	</script>
 </html>
