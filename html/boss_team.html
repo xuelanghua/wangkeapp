@@ -131,7 +131,11 @@
 		})
 		// 创建团队
 		mui(".mui-content").on("tap", ".mui-btn-blue", function() {
-			openPage('create_team.html', 'create_team', '#f7f7f7', '');
+			if (userInfo.group_id < 2) {
+				message('您还没有创建团队的权限呢!', 'center');
+			} else {
+				openPage('create_team.html', 'create_team', '#f7f7f7', '');
+			}
 			// openPage('team_detail.html', 'team_detail', '#f7f7f7', '');
 		})
 	</script>

@@ -648,6 +648,9 @@ function pushCallback(data, event) {
 						mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
 					} else if (type == 'friend') {
 						mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
+					} else if (data.chat == 'crm') {
+						logs(data);
+						mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 					}
 				} else if (url == 'dialog') {
 					mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
@@ -678,6 +681,9 @@ function pushCallback(data, event) {
 				} else if (data.chat == 'friend') {
 					logs(data);
 					mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
+				} else if (data.chat == 'crm') {
+					logs(data);
+					mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 				}
 				
 				playNoticeAudio();
