@@ -186,7 +186,8 @@
 				 :key="index">
 					<div class="mui-slider-right mui-disabled">
 						<span class="mui-btn mui-btn-red" @tap="delArticle(article.id,index)">删除</span>
-						<span class="mui-btn mui-btn-blue" @tap="editArticle(article.id)">编辑</span>
+						<!-- <span class="mui-btn mui-btn-blue" @tap="editArticle(article.id)">编辑</span> -->
+						<span class="mui-btn mui-btn-blue" v-on:tap.stop="editArticle(article.id)">编辑</span>
 					</div>
 					<div class="mui-slider-handle">
 						<div class="article-img-cont">
@@ -222,6 +223,7 @@
 			mui.init();
 			var articleId = 0;
 			var articleIndex = 0;
+			var cancelId = '';
 			var mask = mui.createMask(function() {
 				document.getElementById("verift-body").style.display = "none";
 			});
@@ -271,26 +273,36 @@
 						document.getElementById("verift-body").style.display = "flex";
 					},
 					editArticle: function(arid) {
+						var article = document.getElementById('article' + arid);
+						mui.swipeoutClose(article);
 						openPage('publish_article.html', 'publish_article', '#f7f7f7', {
 							articleId: arid
 						});
 					}
 				},
-				mounted:function(){
+				mounted: function() {
+					mui('.mui-content').on('dragstart', '.mui-table-view-cell', function(e) {
+						cancelId = this.id;
+					})
 				}
 			})
 			// 去详情页
-			mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
+			mui(".mui-content").on('tap', '.mui-table-view-cell', function(e) {
 				var articleId = this.dataset.article;
-				openPage('article.html', 'article', '#ffffff', {
-					article_id: articleId
-				});
+				var selectId = document.getElementById(this.id);
+				var elmod = document.querySelector('.mui-selected');
+				if (elmod != null) {
+					mui.swipeoutClose(selectId);
+				} else {
+					openPage('article.html', 'article', '#ffffff', {
+						article_id: articleId
+					});
+				}
 			})
 			// 取消删除
 			mui("#verift-body").on('tap', '.close-verify-window', function() {
-				// document.getElementById("verift-body").style.display = "none";
 				var article = document.getElementById('article' + articleId);
-				mui.trigger(article,'swiperight');
+				mui.swipeoutClose(article);
 				mask.close();
 			})
 			// 确认删除
