@@ -96,10 +96,12 @@
 			/* 清除聊天记录 */
 			.join-team-verify {
 				position: fixed;
-				z-index: 996;
-				top: 0;
-				bottom: 0;
-				width: 100%;
+				z-index: 999;
+				top: 50%;
+				width: 80%;
+				left: 10%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -108,7 +110,7 @@
 
 
 			.verift-body {
-				width: 80%;
+				width: 100%;
 				background-color: #ffffff;
 				border-radius: 10px;
 				position: relative;
@@ -116,12 +118,16 @@
 				padding-top: 5px;
 				box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
 				animation: zoomIn 150ms ease-in-out;
+				z-index: 1045;
 			}
 
 			.verift-body .tips {
 				width: 100%;
-				padding: 20px 10px 15px;
-				text-align: justify;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 1.6rem;
 			}
 
 			.verift-footer:before {
@@ -162,6 +168,10 @@
 				transform: scaleX(0.5);
 				-webkit-transform: scaleX(0.5);
 			}
+
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
+			}
 		</style>
 	</head>
 
@@ -170,13 +180,12 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">我的文章</h1>
 		</header>
-
 		<div id="mui-content" class="mui-content">
 			<ul class="mui-table-view">
-				<li id="index==1?'koutp':''" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
+				<li :id="'article'+article.id" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
 				 :key="index">
 					<div class="mui-slider-right mui-disabled">
-						<span class="mui-btn mui-btn-red" @tap="delArticle(article.id)">删除</span>
+						<span class="mui-btn mui-btn-red" @tap="delArticle(article.id,index)">删除</span>
 						<span class="mui-btn mui-btn-blue" @tap="editArticle(article.id)">编辑</span>
 					</div>
 					<div class="mui-slider-handle">
@@ -193,24 +202,29 @@
 					</div>
 				</li>
 			</ul>
-			<div class="join-team-verify" v-show="del">
-				<div class="verift-body">
-					<div class="tips">
-						<span>文章删除之后将无法找回，是否继续？</span>
-					</div>
-					<div class="verift-footer">
-						<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
-						<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
-					</div>
+		</div>
+		<div id="verift-body" class="join-team-verify" style="display: none;">
+			<div class="verift-body">
+				<div class="tips">
+					<span>文章删除之后将无法找回，是否继续？</span>
+				</div>
+				<div class="verift-footer">
+					<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+					<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
 				</div>
 			</div>
 		</div>
-		<script src="../js/mui.min.js"></script>
+		<!-- <script src="../js/mui.min.js"></script> -->
+		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript" src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
-			var articleId = 0
+			var articleId = 0;
+			var articleIndex = 0;
+			var mask = mui.createMask(function() {
+				document.getElementById("verift-body").style.display = "none";
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -229,8 +243,7 @@
 				data() {
 					return {
 						articles: [],
-						articleStatus: true,
-						del: false
+						articleStatus: true
 					}
 				},
 				created: function() {
@@ -251,33 +264,40 @@
 					}, 'json');
 				},
 				methods: {
-					delArticle: function(arid) {
-						// message(arid)
+					delArticle: function(arid, idx) {
 						articleId = arid;
-						app.del = true;
+						articleIndex = idx;
+						mask.show();
+						document.getElementById("verift-body").style.display = "flex";
 					},
 					editArticle: function(arid) {
 						openPage('publish_article.html', 'publish_article', '#f7f7f7', {
 							articleId: arid
 						});
 					}
+				},
+				mounted:function(){
 				}
 			})
+			// 去详情页
 			mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
 				var articleId = this.dataset.article;
 				openPage('article.html', 'article', '#ffffff', {
 					article_id: articleId
 				});
 			})
-			mui(".mui-content").on("tap",".mui-pull-right",function(e){
-				console.log("asdfasdf");
-				e.stopPropagation();
-			})
 			// 取消删除
-			mui(".mui-content").on('tap', '.close-verify-window', function() {
-				app.del = false;
-				var alex = document.querySelector('.mui-pull-right');
-				mui.trigger(alex, 'tap');
+			mui("#verift-body").on('tap', '.close-verify-window', function() {
+				// document.getElementById("verift-body").style.display = "none";
+				var article = document.getElementById('article' + articleId);
+				mui.trigger(article,'swiperight');
+				mask.close();
+			})
+			// 确认删除
+			mui("#verift-body").on('tap', '.send-verify', function() {
+				var article = document.getElementById('article' + articleId);
+				article.parentNode.removeChild(article);
+				mask.close();
 			})
 		</script>
 	</body>
