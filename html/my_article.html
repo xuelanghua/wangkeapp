@@ -1,0 +1,395 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>我的文章</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-btn-red {
+				background-color: #ff6560;
+			}
+
+			.mui-btn-blue {
+				background-color: #2289FF;
+			}
+
+			.mui-slider-handle {
+				display: flex;
+				align-items: flex-start;
+				justify-content: space-between;
+				position: relative;
+			}
+
+			.article-img-cont {
+				width: 2.26rem;
+				height: 1.6rem;
+				overflow: hidden;
+				flex-shrink: 0;
+				margin-right: 0.2rem;
+			}
+
+			.article-img {
+				width: 100%;
+				height: auto;
+			}
+
+			.left-desc {
+				display: block;
+				flex-grow: 1;
+			}
+
+			.left-desc p {
+				font-size: 0.3rem;
+				color: #333333;
+				line-height: 1.4;
+			}
+
+			.bottom-data {
+				padding-left: 0.2rem;
+				margin-top: 0.36rem;
+			}
+
+			.bottom-data span {
+				font-size: 0.26rem;
+				color: #999999;
+			}
+
+			.bottom-data img {
+				width: 0.36rem;
+				margin-right: 0.2rem;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0;
+			}
+
+			.mui-table-view:before {
+				height: 0;
+			}
+
+			@-webkit-keyframes zoomIn {
+				from {
+					opacity: 0;
+					-webkit-transform: scale3d(0.3, 0.3, 0.3);
+					transform: scale3d(0.3, 0.3, 0.3);
+				}
+
+				50% {
+					opacity: 1;
+				}
+			}
+
+			@keyframes zoomIn {
+				from {
+					opacity: 0;
+					-webkit-transform: scale3d(0.3, 0.3, 0.3);
+					transform: scale3d(0.3, 0.3, 0.3);
+				}
+
+				50% {
+					opacity: 1;
+				}
+			}
+
+			/* 清除聊天记录 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 999;
+				top: 50%;
+				width: 80%;
+				left: 10%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+
+
+			.verift-body {
+				width: 100%;
+				background-color: #ffffff;
+				border-radius: 10px;
+				position: relative;
+				overflow: hidden;
+				padding-top: 5px;
+				box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
+				animation: zoomIn 150ms ease-in-out;
+				z-index: 1045;
+			}
+
+			.verift-body .tips {
+				width: 100%;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 1.6rem;
+			}
+
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 15px 10px;
+			}
+
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">我的文章</h1>
+		</header>
+		<div id="mui-content" class="mui-content">
+
+<div id="article_container">
+			<ul class="mui-table-view">
+				<li :id="'article'+article.id" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
+				 :key="index">
+					<div class="mui-slider-right mui-disabled">
+						<span class="mui-btn mui-btn-red" @tap="delArticle(article.id,index)">删除</span>
+						<!-- <span class="mui-btn mui-btn-blue" @tap="editArticle(article.id)">编辑</span> -->
+						<span class="mui-btn mui-btn-blue" v-on:tap.stop="editArticle(article.id)">编辑</span>
+					</div>
+					<div class="mui-slider-handle">
+						<!-- <div class="article-img-cont">
+							<img class="article-img" :src="article.thumb" alt="">
+						</div> -->
+						<div class="mui-slider-handle">
+							<div class="article-img-cont">
+								<img class="article-img" :src="article.thumb" alt="">
+							</div>
+							<div class="left-desc">
+								<p class="mui-ellipsis-2">{{article.title}}</p>
+								<div class="bottom-data mui-clearfix">
+									<span>{{article.add_time}}</span>
+									<span class="mui-pull-right"><img src="../image//eye.png">{{article.click}}</span>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			
+			<div id="verift-body" class="join-team-verify" style="display: none;">
+				<div class="verift-body">
+					<div class="tips">
+						<span>文章删除之后将无法找回，是否继续？</span>
+					</div>
+					<div class="verift-footer">
+						<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+						<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false, //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
+				pullRefresh: {
+					container: "#article_container", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+					up: {
+						height: 50,
+						auto: true,
+						contentrefresh: "正在加载...",
+						contentnomore: '没有更多数据了',
+						callback: function() {
+							getArticleList(true, false)
+						}
+					},
+					down: {
+						style: 'circle', //单webview模式的下拉刷新 
+						color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+						callback: function() {
+							getArticleList(false, true)
+						}
+					}
+				}
+			});
+			var articleId = 0;
+			var articleIndex = 0;
+			var cancelId = '';
+			var mask = mui.createMask(function() {
+				document.getElementById("verift-body").style.display = "none";
+			});
+			
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			var userInfo = getUserInfo();
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			// 初始化字体大小结束
+			
+			var app = new Vue({
+				el: "#mui-content",
+				data() {
+					return {
+						skip: 0,
+						limit: 7,
+						articles: [],
+						articleStatus: true
+					}
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						plus.webview.hide('article_operation', 'none');
+						plus.webview.close('article_operation', 'none');
+						
+						mui(".mui-content").on("tap",".mui-pull-right",function(e){
+							console.log("asdfasdf");
+							e.stopPropagation();
+						})
+						
+						// 去详情页
+						mui(".mui-content").on('tap', '.mui-table-view-cell', function(e) {
+							var articleId = this.dataset.article;
+							var selectId = document.getElementById(this.id);
+							var elmod = document.querySelector('.mui-selected');
+							if (elmod != null) {
+								mui.swipeoutClose(selectId);
+							} else {
+								openPage('article.html', 'article', '#ffffff', {
+									article_id: articleId
+								});
+							}
+						})
+						
+						// 取消删除
+						mui("#verift-body").on('tap', '.close-verify-window', function() {
+							var article = document.getElementById('article' + articleId);
+							mui.swipeoutClose(article);
+							mask.close();
+						})
+						
+						mui(".mui-content").on('tap', '.send-verify', function() {
+							mask.close();
+							mui.post($ajaxUrl + 'article',{
+									action: 'article_delete',
+									token: userInfo.token,
+									article_id: articleId
+								}, function(res){
+									if (res.errno == 0) {
+										var article = document.getElementById('article' + articleId);
+										article.parentNode.removeChild(article);
+										// getArticleList(false, true);
+									} else {
+										message('删除失败!', 'center')
+									}
+								}, 'json'
+							);
+						})
+						
+						getArticleList(false, false);
+					})
+				},
+				methods: {
+					delArticle: function(arid, idx) {
+						articleId = arid;
+						articleIndex = idx;
+						mask.show();
+						document.getElementById("verift-body").style.display = "flex";
+					},
+					editArticle: function(arid) {
+						var article = document.getElementById('article' + arid);
+						mui.swipeoutClose(article);
+						openPage('publish_article.html', 'publish_article', '#f7f7f7', {
+							articleId: arid
+						});
+					}
+				},
+				mounted: function() {
+					mui('.mui-content').on('dragstart', '.mui-table-view-cell', function(e) {
+						cancelId = this.id;
+					})
+				}
+			})
+			
+			function getArticleList(up, down) {
+				if (up) {
+					app.skip++;
+				}
+				if (down) {
+					app.skip = 1;
+				}
+				mui.post($ajaxUrl + 'article', {
+					token: userInfo.token,
+					action: 'article_list',
+					recommend: 0,
+					uid: userInfo.id,
+					hot: 0,
+					cid: 0,
+					skip: app.skip,
+					limit: app.limit
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						if (up) {
+							app.articles = app.articles.concat(res.data);
+						} else {
+							app.articles = res.data;
+						}
+					} else {
+						app.articleStatus = false;
+					}
+					if (!app.articleStatus && up) {
+						mui('#article_container').pullRefresh().endPullupToRefresh(true);
+					} else if (app.articleStatus && up) {
+						mui('#article_container').pullRefresh().endPullupToRefresh(false);
+					} else if (down) {
+						mui('#article_container').pullRefresh().endPulldownToRefresh();
+						if (app.articleStatus) {
+							mui('#article_container').pullRefresh().endPullupToRefresh(false);
+						}
+					}
+				}, 'json');
+			}
+		</script>
+	</body>
+
+</html>

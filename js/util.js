@@ -637,19 +637,20 @@ function pushCallback(data, event) {
 		var type = data.type;
 		var url = data.url;
 		var extra = data.extra;
-// 		logs(type);
-// 		logs(url);
-// 		logs(extra);
-// 		logs(event);
+		logs(type);
+		logs(url);
+		logs(extra);
+		logs(event);
 		if (event == 'click') {
 			if (type == 'jump') {
 				if (url == 'chat') {
 					if (type == 'customer') {
-						mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
-						mui.fire(plus.webview.getWebviewById('chat'), 'newCustomer');
+						mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
 					} else if (type == 'friend') {
-						mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
-						mui.fire(plus.webview.getWebviewById('chat'), 'newFriend');
+						mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
+					} else if (data.chat == 'crm') {
+						logs(data);
+						mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 					}
 				} else if (url == 'dialog') {
 					mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
@@ -667,15 +668,25 @@ function pushCallback(data, event) {
 			} 
 		} else if (event == 'receive') {
 			if (url == 'dialog') {
+				// plus.device.beep();
+				// plus.device.vibrate();
 				mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+				
+				playNoticeAudio();
 			} else if (url == 'chat') {
 				if (data.chat == 'customer') {
 					mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
 				} else if (data.chat == 'friend') {
+					logs(data);
 					mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
+				} else if (data.chat == 'crm') {
+					logs(data);
+					mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 				}
+				
+				playNoticeAudio();
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
@@ -684,3 +695,27 @@ function pushCallback(data, event) {
 		console.log(e.message);
 	}
 }
+
+function playNoticeAudio() {
+	if (plus.os.name == 'Android') {
+		var context = plus.android.runtimeMainActivity();
+		var RingtoneManager = plus.android.importClass('android.media.RingtoneManager');  
+		var uri = RingtoneManager.getActualDefaultRingtoneUri(context,RingtoneManager.TYPE_NOTIFICATION);
+		plus.android.importClass(uri);  
+		var p = plus.audio.createPlayer(uri.toString());
+		var flag = true;
+		p.play(function() {
+			flag = false;
+			logs("Audio play success!");   
+		}, function(e) {  
+			logs("Audio play error: " + e.message);
+		})
+// 		if (flag) {
+// 			plus.device.beep();
+// 		}
+	} else {
+		plus.ios.invoke(null,"AudioServicesPlaySystemSound", 1002);  
+	}
+}
+
+

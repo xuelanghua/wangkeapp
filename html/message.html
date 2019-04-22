@@ -314,6 +314,9 @@
 
 			var userInfo = getUserInfo();
 			mui.plusReady(function() {
+				window.addEventListener('refreshNotice', function(e) {
+					getChatList();
+				})
 				getChatList();
 
 				mui('#chat_message').on('tap', '.Record_list', function() {
@@ -358,7 +361,7 @@
 					action: 'list',
 					token: userInfo.token
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					var html = '';
 					if (res.errno == 0) {
 						var chatList = res.data;

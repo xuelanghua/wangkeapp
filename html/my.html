@@ -103,7 +103,7 @@
 				font-size: 12px;
 				margin-top: -15px;
 				background-color: #DDDEDE;
-				/* display: none; */
+				overflow: hidden;
 			}
 
 			.Notice-title {
@@ -309,7 +309,7 @@
 	</head>
 	<body>
 		<header id="header" class="mui-bar mui-bar-transparent mui-active usercenter-header">
-			<span class="mui-badge mui-badge-danger">12</span>
+			<span class="mui-badge mui-badge-danger" style="display: none;" id="unread_message">0</span>
 			<img id="message" class="message" src="../image/Message-icon.png">
 			<h1 class="mui-title" style="color: #fff;">我的</h1>
 			<span id="setting-btn" class="mui-right mui-pull-right">
@@ -448,7 +448,13 @@
 
 			var userInfo = getUserInfo();
 			var group_id = userInfo.group_id;
+			var webviewHeight = 0;
 			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				webviewHeight = self.webviewHeight;
+				self.setStyle({
+					bottom: 51
+				})
 				// 重写返回
 				var first = null;
 				mui.back = function() {
@@ -467,13 +473,38 @@
 				eventInit();
 				getMemberInfo();
 				getNotice();
+				getUnreadMessage();
 			})
 
 			//事件初始化
 			function eventInit() {
+				window.addEventListener('resizeWindow', function(e) {
+					console.log('resizeWindow');
+					console.log(webviewHeight);
+					plus.webview.currentWebview().setStyle({
+						height: webviewHeight
+					});
+				})
+				
+				window.onresize = function() {
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					var resizeHeight = document.querySelector("body").offsetHeight;
+					if (resizeHeight * 1 != webviewHeight * 1) {
+						console.log('resetWindowHeight');
+						console.log(resizeHeight);
+						plus.webview.currentWebview().setStyle({
+							height: webviewHeight
+						});
+					}
+				}
+				
 				//签到成功监听
 				window.addEventListener('signSuccess', function() {
 					getMemberInfo();
+				})
+				
+				window.addEventListener('refreshNotice', function() {
+					getUnreadMessage();
 				})
 
 				//商城首页
@@ -682,6 +713,25 @@
 				detailPage.show('slide-in-right');
 				setStatusBar('', 'dark');
 			}
+			
+			//获取未读消息
+			function getUnreadMessage() {
+				mui.get( $ajaxUrl + 'member',{
+						action: 'unread_message',
+						token: userInfo.token
+					},function(res){
+						var tipObj = document.getElementById('unread_message');
+						if (res.data > 0) {
+							tipObj.innerText = res.data;
+							tipObj.style.display = 'block';
+						} else {
+							tipObj.innerText = 0;
+							tipObj.style.display = 'none';
+						}
+					},'json'
+				);
+			}
+			
 			// 跳转到会员中心
 			mui(".goods").on("tap", ".goodsL", function() {
 				// message(group_id);

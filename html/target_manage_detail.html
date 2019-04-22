@@ -118,10 +118,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>每天曝光</label>
-						<input type="text" id='field-range1-input' value='60' readonly="readonly">
+						<input type="text" id='field-range1-input' value='0' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range1' value="60" min="0" max="1000" disabled="disabled" />
+						<input type="range" id='field-range1' value="0" min="0" max="500" />
 					</div>
 				</div>
 			</div>
@@ -129,10 +129,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>每天拓客</label>
-						<input type="text" id='field-range2-input' value='60' readonly="readonly">
+						<input type="text" id='field-range2-input' value='0' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range2' value="60" min="0" max="1000" disabled="disabled" />
+						<input type="range" id='field-range2' value="0" min="0" max="500" />
 					</div>
 				</div>
 			</div>
@@ -140,10 +140,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>客户跟进</label>
-						<input type="text" id='field-range3-input' value='60' readonly="readonly">
+						<input type="text" id='field-range3-input' value='0' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range3' value="60" min="0" max="1000" disabled="disabled" />
+						<input type="range" id='field-range3' value="0" min="0" max="500" />
 					</div>
 				</div>
 			</div>
@@ -151,10 +151,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>有效沟通</label>
-						<input type="text" id='field-range4-input' value='10' readonly="readonly">
+						<input type="text" id='field-range4-input' value='0' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range4' value="10" min="0" max="1000" disabled="disabled" />
+						<input type="range" id='field-range4' value="0" min="0" max="500" />
 					</div>
 				</div>
 			</div>
@@ -162,10 +162,10 @@
 				<div class="mui-input-row mui-input-range field-contain">
 					<div>
 						<label>每天转介绍</label>
-						<input type="text" id='field-range5-input' value='60' readonly="readonly">
+						<input type="text" id='field-range5-input' value='0' readonly="readonly">
 					</div>
 					<div>
-						<input type="range" id='field-range5' value="60" min="0" max="1000" disabled="disabled" />
+						<input type="range" id='field-range5' value="0" min="0" max="500" />
 					</div>
 				</div>
 			</div>
@@ -240,19 +240,24 @@
 					var cardinal_money = (daily_money / cardinal_number).toFixed(0);
 					//计算曝光
 					$('#field-range1-input').val((cardinal_money * ret.data.exposure_rate));
+					$('#field-range1').attr('max', (cardinal_money * ret.data.exposure_rate * 3));
 					$('#field-range1').val((cardinal_money * ret.data.exposure_rate));
 					//计算拓客
 					$('#field-range2-input').val((cardinal_money * ret.data.new_customer));
+					$('#field-range2').attr('max', (cardinal_money * ret.data.new_customer * 3));
 					$('#field-range2').val((cardinal_money * ret.data.new_customer));
 					$('#daily_customer_num').html((cardinal_money * ret.data.new_customer));
 					//计算跟进
 					$('#field-range3-input').val((cardinal_money * ret.data.customer_follow));
+					$('#field-range3').attr('max', (cardinal_money * ret.data.customer_follow * 3));
 					$('#field-range3').val((cardinal_money * ret.data.customer_follow));
 					//计算沟通
 					$('#field-range4-input').val((cardinal_money * ret.data.communication));
+					$('#field-range4').attr('max', (cardinal_money * ret.data.communication * 3));
 					$('#field-range4').val((cardinal_money * ret.data.communication));
 					//计算转介绍
 					$('#field-range5-input').val((cardinal_money * ret.data.share_card));
+					$('#field-range5').attr('max', (cardinal_money * ret.data.share_card * 3));
 					$('#field-range5').val((cardinal_money * ret.data.share_card));
 					console.log(cardinal_money);
 					//获取总价值
@@ -337,15 +342,19 @@
 				type: 'post',
 				timeout: 10000,
 				success: function(ret) {
-					if (ret.data == 1) {
+					logs(ret);
+					if (ret.errno == 0) {
 						console.log(JSON.stringify('成功'));
 						console.log(JSON.stringify(ret));
 						message('设置成功！');
+						mui.fire(plus.webview.getWebviewById('target'), 'newTarget');
 						//添加自定义事件
 						plus.webview.close('target_manage_index');
-						plus.webview.close('target');
-						var self = plus.webview.currentWebview();
-						self.close();
+						plus.webview.close('target_detail');
+						setTimeout(function() {
+							var self = plus.webview.currentWebview();
+							self.close();
+						}, 2000);
 					} else {
 						message('参数错误！');
 					}

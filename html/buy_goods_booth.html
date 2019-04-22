@@ -118,7 +118,14 @@
 
 		<div id="goods-booth" class="mui-content goods-booth-container">
 			<div class="set-meal" id="meal">
-				<div class="mui-input-row mui-radio position-num">
+				<template v-for="(item, key) in list" :key="key">
+					<div class="mui-input-row mui-radio position-num">
+						<div v-if="item.is_recommend==1" class="tag">荐</div>
+						<label><span>{{ item.number }}个商品位</span><span class="price">&yen;{{ item.price }}</span></label>
+						<input name="meal" type="radio" :checked="key==0" :value="item.price" v-modal="price" @change="itemChange(item.price, item.number)">
+					</div>
+				</template>
+				<!-- <div class="mui-input-row mui-radio position-num">
 					<div class="tag mui-hidden">荐</div>
 					<label><span>3个商品位</span><span class="price">&yen;19</span></label>
 					<input name="meal" type="radio" checked="checked" value="19" @change=itemChange('19')>
@@ -127,11 +134,11 @@
 					<div class="tag">荐</div>
 					<label><span>所有商品位</span><span class="price">&yen;98</span></label>
 					<input name="meal" type="radio" value="98" @change=itemChange('98')>
-				</div>
+				</div> -->
 			</div>
 			<div class="page-head">
 				<h5>合计</h5>
-				<h2><span>&yen;</span>{{price}}</h2>
+				<h2><span>&yen;</span>{{ price }}</h2>
 			</div>
 			<div class="pattern-of-payment">
 				<form class="mui-input-group">
@@ -174,13 +181,13 @@
 		var channel = null; //支付通道
 		var ALIPAYSERVER = $ajaxUrl + 'member&action=goods_number';
 		var WXPAYSERVER = $ajaxUrl + 'member&action=goods_number';
-		var fee = 0.00;
 		var app = new Vue({
 			el: "#goods-booth",
 			data() {
 				return {
-					total: 1,
-					price: 0
+					number: 0,
+					price: 0,
+					list: null
 				}
 			},
 			created: () => {
@@ -188,7 +195,7 @@
 			},
 			mounted: function() {
 				mui.plusReady(function() {
-					getGoodsBoothPrice();
+					getGoodsBoothPriceList();
 					plus.payment.getChannels(function(channels) {
 						for (var i in channels) {
 							if (channels[i].id == "wxpay") {
@@ -215,21 +222,28 @@
 						}
 					})
 				});
-				this.price = document.querySelector('input[name=meal]:checked').value;
+				// this.price = document.querySelector('input[name=meal]:checked').value;
 			},
 			methods: {
-				itemChange:function(e){
-					this.price=e;
+				itemChange:function(p, n){
+					this.price = p;
+					this.number = n;
 				}
 			}
 		})
 
 		//获取商品位的价格
-		function getGoodsBoothPrice() {
+		function getGoodsBoothPriceList() {
 			mui.get($ajaxUrl + 'goods', {
-				action: 'booth',
+				action: 'booth_list',
 				token: userInfo.token
 			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					app.list = res.data;
+					app.price = res.data[0].price
+					app.number = res.data[0].number
+				}
 				// app.price = res.data;
 			}, 'json');
 		}
@@ -253,9 +267,9 @@
 
 			var waiting = plus.nativeUI.showWaiting();
 			mui.post(PAYSERVER, {
-				number: app.total,
+				number: app.number,
 				price: app.price,
-				fee: fee,
+				fee: app.price,
 				pay_type: payType,
 				token: userInfo.token
 			}, function(res) {

@@ -679,6 +679,7 @@
 		})
 
 		var cid = 0;
+		var customerInfo = null;
 		var userId = 0;
 		var chatName = '';
 		var avatar = '';
@@ -851,23 +852,36 @@
 			
 			// 分享
 			document.getElementById('share_card').addEventListener('tap', function(e) {
-				shareToMiniprogram({
-					title: userInfo.nickName + '的旺客名片',
-					content: '王天下之客,让营销更简单!',
-					thumbs: [userInfo.avatarUrl],
-					miniProgram: {
-						id: 'gh_9fa5f42ab939',
-						path: '/longbing_card/pages/index/index?to_uid=' + userInfo.id + '&is_qr=1&currentTabBar=toCard',
-						webUrl: 'https://app.wangkeapp.cn/'
-					}
-				}, 'miniProgram');
-				// share({
-				// 	title: '旺客',
-				// 	content: '旺天下之客,让营销更简单!',
-				// 	thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
-				// 	href: $ajaxUrl + 'download'
-				// }, 'web');
-				e.stopPropagation();
+				mui.post($ajaxUrl + 'customer',{
+						action: 'follow',
+						token: userInfo.token,
+						cid: cid,
+						content: '我分享了他的名片',
+					}, function(res){
+						if (res.errno == 0) {
+							shareToMiniprogram({
+								title: customerInfo.name + '的资料',
+								content: '王天下之客,让营销更简单!',
+								thumbs: [customerInfo.headimgurl],
+								miniProgram: {
+									id: 'gh_9fa5f42ab939',
+									path: '/longbing_card/pages/index/index?to_uid=' + cid + '&follow_id=' + res.data + '&is_qr=1&currentTabBar=toCustomer',
+									webUrl: 'https://app.wangkeapp.cn/'
+								}
+							}, 'miniProgram');
+							getCustomerInfo();
+							// share({
+							// 	title: '旺客',
+							// 	content: '旺天下之客,让营销更简单!',
+							// 	thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
+							// 	href: $ajaxUrl + 'download'
+							// }, 'web');
+							e.stopPropagation();
+						} else {
+							message('分享失败!', 'center');
+						}
+					}, 'json'
+				);
 			})
 		})
 		
@@ -895,6 +909,7 @@
 				// logs(res);
 				if (res.errno == 0) {
 					var data = res.data;
+					customerInfo = res.data;
 					chatName = data.name;
 					userId = data.uid;
 					avatar = data.headimgurl;

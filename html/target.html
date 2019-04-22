@@ -248,46 +248,54 @@
 			})
 			//事件初始化
 			function eventInit() {
+				window.addEventListener('newTarget', function() {
+					userTargetStatistics();
+				})
 				//点击的定目标按钮
 				document.getElementById('my_target_unit').addEventListener('tap', function() {
 					//先检查会员
 					// console.log(checkMember());
 					// checkMember();
 					if (checkMember()) {
-						var userInfo = getUserInfo();
-						var url = $ajaxUrl + "target";
-						mui.ajax(url, {
-							data: {
-								action: 'check_user_target_state',
-								token: userInfo.token
-							},
-							dataType: 'json', //服务器返回json格式数据
-							type: 'post', //HTTP请求类型
-							timeout: 10000, //超时时间设置为10秒；
-							success: function(res) {
-								// console.log(JSON.stringify(res));
-								//已经设置目标
-								if (res.code == '200') {
-									fnOpenWin('target_detail.html', 'target_detail', {
-										statusbar: {
-											background: '#FFF'
-										}
-									}, '', 'slide-in-right');
-								}
-								//用户未设置目标
-								if (res.code == '404') {
-									fnOpenWin('target_manage_index.html', 'target_manage_index', {
-										statusbar: {
-											background: '#FFF'
-										}
-									}, '', 'slide-in-right');
-								}
-							},
-							error: function(xhr, type, errorThrown) {
-								console.log(JSON.stringify(errorThrown));
+						fnOpenWin('target_manage_index.html', 'target_manage_index', {
+							statusbar: {
+								background: '#FFF'
 							}
-						});
+						}, '', 'slide-in-right');
 						
+// 						var userInfo = getUserInfo();
+// 						var url = $ajaxUrl + "target";
+// 						mui.ajax(url, {
+// 							data: {
+// 								action: 'check_user_target_state',
+// 								token: userInfo.token
+// 							},
+// 							dataType: 'json', //服务器返回json格式数据
+// 							type: 'post', //HTTP请求类型
+// 							timeout: 10000, //超时时间设置为10秒；
+// 							success: function(res) {
+// 								// console.log(JSON.stringify(res));
+// 								//已经设置目标
+// 								if (res.code == '200') {
+// 									fnOpenWin('target_detail.html', 'target_detail', {
+// 										statusbar: {
+// 											background: '#FFF'
+// 										}
+// 									}, '', 'slide-in-right');
+// 								}
+// 								//用户未设置目标
+// 								if (res.code == '404') {
+// 									fnOpenWin('target_manage_index.html', 'target_manage_index', {
+// 										statusbar: {
+// 											background: '#FFF'
+// 										}
+// 									}, '', 'slide-in-right');
+// 								}
+// 							},
+// 							error: function(xhr, type, errorThrown) {
+// 								console.log(JSON.stringify(errorThrown));
+// 							}
+// 						});
 					}
 					return false;
 				});

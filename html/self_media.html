@@ -168,6 +168,30 @@
 			.mui-slider-group {
 				height: auto;
 			}
+
+			.publish-article {
+				height: 44px;
+				width: 80px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				padding-right: 10px;
+				margin-right: -10px;
+				font-size: 14px;
+				color: #666666;
+				z-index: 12;
+			}
+
+			.operation-btn {
+				width: 45px;
+				height: 45px;
+				position: fixed;
+				bottom: 0;
+				left: 50%;
+				margin-left: -22.5px;
+				opacity: 0.96;
+			}
 		</style>
 	</head>
 	<body>
@@ -175,6 +199,9 @@
 		<header class="mui-bar mui-bar-nav" style="background-color: #fff;box-shadow: 0 0 0 #fff;">
 			<!-- <img src="../image//index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;"> -->
 			<h1 class="mui-title">自媒体</h1>
+			<!-- <span class="publish-article mui-pull-right">
+				发布文章
+			</span> -->
 			<!-- <img src="../image//index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;"> -->
 		</header>
 		<div class="mui-content">
@@ -258,6 +285,7 @@
 				</div> -->
 			</div>
 			<div id="article_bottom" class="mui-scroll-wrapper"></div>
+			<img class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
 		</div>
 		<!-- </div> -->
 	</body>
@@ -300,13 +328,19 @@
 		gallery.slider({
 		interval:1000//自动轮播周期，若为0则不自动播放，默认为0；
 		}); */
+		var webviewHeight = 0;
 		mui.plusReady(function() {
+			var self = plus.webview.currentWebview();
+			webviewHeight = self.webviewHeight;
+			self.setStyle({
+				bottom: 51
+			})
 			// 重写返回
 			var first = null;
 			mui.back = function() {
 				if (!first) {
 					first = (new Date()).getTime();
-					logs(first);
+					// logs(first);
 					mui.toast('再按一次退出应用');
 					setTimeout(function() {
 						first = null;
@@ -342,19 +376,39 @@
 			mui("#article_list").on('tap', '.list1', function() {
 				//获取id
 				var id = this.getAttribute("data-id");
-// 				var styles = {
-// 					top: 20,
-// 					bottom: 0
-// 				};
-// 				var extras = {
-// 					article_id: id
-// 				};
-// 				var w = plus.webview.create('article.html', 'article.html', styles, extras);
-// 				w.show(); // 显示窗口
+				// 	var styles = {
+				// 		top: 20,
+				// 		bottom: 0
+				// 	};
+				// 	var extras = {
+				// 		article_id: id
+				// 	};
+				// 	var w = plus.webview.create('article.html', 'article.html', styles, extras);
+				// 	w.show(); // 显示窗口
 				openPage('article.html', 'article', '#ffffff', {
 					article_id: id
 				})
 			})
+			
+			window.addEventListener('resizeWindow', function(e) {
+				console.log('resizeWindow');
+				console.log(webviewHeight);
+				plus.webview.currentWebview().setStyle({
+					height: webviewHeight
+				});
+			})
+			
+			window.onresize = function() {
+				//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+				var resizeHeight = document.querySelector("body").offsetHeight;
+				if (resizeHeight * 1 != webviewHeight * 1) {
+					console.log('resetWindowHeight');
+					console.log(resizeHeight);
+					plus.webview.currentWebview().setStyle({
+						height: webviewHeight
+					});
+				}
+			}
 		})
 
 		function slideReady() {
@@ -538,7 +592,7 @@
 				skip: skip,
 				limit: limit
 			}, function(data) {
-				// console.log(JSON.stringify(data));
+				console.log(JSON.stringify(data));
 				if (data.errno == '0') {
 					var str = '';
 					for (i in data.data) {
@@ -557,5 +611,37 @@
 				}
 			}, 'json');
 		}
+		mui(".mui-content").on("tap", ".operation-btn", function() {
+			mui.openWindow({
+				url: "article_operation.html",
+				id: "article_operation",
+				styles: {
+					bounce: 'none',
+					scrollsToTop: true,
+					popGesture: 'close',
+					background: '#ffffff',
+					// background: 'transparent',
+					statusbar: {
+						background: "#ffffff"
+					}
+				},
+				extras: '',
+				createNew: false,
+				show: {
+					autoShow: true,
+					aniShow: 'slide-in-bottom',
+					duration: 300,
+					event: 'titleUpdate',
+					extras: {
+						acceleration: 'auto',
+						capture: '',
+						otherCapture: ''
+					}
+				},
+				waiting: {
+					autoShow: false
+				}
+			})
+		})
 	</script>
 </html>

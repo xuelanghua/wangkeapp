@@ -210,7 +210,7 @@
 					</div>
 					<div class="mui-card-footer">
 						<button type="button" class="mui-btn mui-btn-blue close-btn">关闭</button>
-						<!-- <button type="button" class="mui-btn mui-btn-blue">修改</button> -->
+						<button type="button" class="mui-btn mui-btn-blue target-edit">修改</button>
 					</div>
 				</div>
 			</div>
@@ -380,6 +380,19 @@
 						$(".play-control .play-status").removeClass("active");
 						$("#audio-control").addClass("play").removeClass("pause");
 					})
+					
+					//编辑目标
+					mui(".my-target-card .mui-card-footer").on("tap", ".target-edit", function() {
+						var audio = document.getElementById("audio");
+						$(".target-modal-frame").removeClass("active");
+						$(".play-control .play-status").removeClass("active");
+						$("#audio-control").addClass("play").removeClass("pause");
+						fnOpenWin('target_manage_index.html', 'target_manage_index', {
+							statusbar: {
+								background: '#FFF'
+							}
+						}, '', 'slide-in-right');
+					})
 					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 				}
 			})
@@ -409,13 +422,13 @@
 					$(".target-modal-frame").addClass("active");
 				}
 			})
+			
 			// 关闭我的目标
 			mui(".my-target-card .mui-card-footer").on("tap", ".close-btn", function() {
 				var audio = document.getElementById("audio");
 				$(".target-modal-frame").removeClass("active");
 				$(".play-control .play-status").removeClass("active");
 				$("#audio-control").addClass("play").removeClass("pause");
-				getSong();
 			})
 
 			//获取目标信息

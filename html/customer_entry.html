@@ -211,7 +211,6 @@
 
 				mui('.mui-content').on('tap', '.contact', function() {
 					nativeCommon.contacts.getContact(function(name, phoneNumber){
-						flag = true;
 						mui('input[name=name]')[0].value = name;
 						mui('input[name=mobile]')[0].value = phoneNumber;
 					});
@@ -284,7 +283,7 @@
 					// logs(res);
 					if (res.errno == 0) {
 						message('录入成功!');
-						mui.fire(plus.webview.getWebviewById('chat'), 'addCustomer');
+						mui.fire(plus.webview.getWebviewById('chat'), 'addCrm');
 						setTimeout(function() {
 							plus.webview.close('customer_entry');
 						}, 2000);
