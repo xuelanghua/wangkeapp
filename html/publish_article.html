@@ -165,11 +165,13 @@
 			.mui-table-view-cell.add-text .mui-navigate-right:after {
 				font-size: 0.48rem;
 			}
-			#thumbnail-cont{
+
+			#thumbnail-cont {
 				width: 2.27rem;
 				height: 1.6rem;
 				overflow: hidden;
 			}
+
 			#thumbnail {
 				width: 100%;
 				min-height: 100%;
@@ -232,7 +234,7 @@
 			mui.init({
 				swipeBack: true
 			});
-			
+
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -241,7 +243,7 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
-			
+
 			var userInfo = getUserInfo();
 			var content = '';
 			var title = '';
@@ -253,10 +255,10 @@
 					articleId = self.articleId;
 					getArticleInfo();
 				}
-				
+
 				plus.webview.hide('article_operation', 'none');
 				plus.webview.close('article_operation', 'none');
-				
+
 				window.addEventListener('editDetail', function(event) {
 					content = event.detail.content;
 					if (content.length != 0) {
@@ -265,13 +267,13 @@
 						document.getElementById('edit-article').innerText = '添加正文内容';
 					}
 				})
-				
+
 				mui(".mui-content").on('tap', '.add-text', function() {
 					openPage('edit_article_detail.html', 'edit_article_detail', '#f7f7f7', {
 						content: content
 					});
 				})
-				
+
 				mui('.mui-content').on('tap', '#add-thumbnail,#thumbnail-cont', function() {
 					imageUpload(function(res) {
 						if (res.url != '') {
@@ -284,14 +286,14 @@
 						}
 					});
 				})
-				
+
 				mui('.mui-content').on('tap', '#add_submit', function() {
 					document.querySelector('textarea').blur();
 					title = document.querySelector('textarea').value;
 					articleAddSubmit();
 				})
 			})
-			
+
 			//添加文章提交
 			function articleAddSubmit() {
 				if (title.length == 0) {
@@ -306,31 +308,28 @@
 					message('请添加文章内容!', 'center');
 					return;
 				}
-				
-				
-				
 				mui.post($ajaxUrl + 'article', {
-						action: "article_add",
-						token: userInfo.token,
-						title: title,
-						thumb: thumb,
-						content: content,
-						id: articleId
-					}, function(res){
-						logs(res);
-						if (res.errno == 0) {
-							message('操作成功!', 'center');
-							setTimeout(function() {
-								openPage('my_article.html','my_article','#f7f7f7','');
-								plus.webview.close('publish_article');
-							}, 2000)
-						} else {
-							message(res.message, 'center');
-						}
-					}, 'json'
-				);
+					action: "article_add",
+					token: userInfo.token,
+					title: title,
+					thumb: thumb,
+					content: content,
+					id: articleId
+				}, function(res) {
+					if (res.errno == 0) {
+						message('操作成功!', 'center');
+						var articleList = plus.webview.currentWebview().opener();
+						plus.webview.hide('my_article', 'none');
+						plus.webview.close('my_article', 'none');
+						setTimeout(function() {
+							openPage('my_article.html','my_article','#f7f7f7','');
+						}, 1200)
+					} else {
+						message(res.message, 'center');
+					}
+				}, 'json');
 			}
-			
+
 			//获取文章详情
 			function getArticleInfo() {
 				if (!articleId) {
@@ -341,18 +340,18 @@
 					action: 'article_info',
 					id: articleId
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						title = res.data.title;
 						thumb = res.data.thumb_path;
 						content = res.data.content;
-						
+
 						document.querySelector('textarea').value = title;
-						
+
 						mui('#thumbnail')[0].src = res.data.thumb;
 						document.getElementById('add-thumbnail').style.display = "none";
 						mui('#thumbnail-cont')[0].style.display = "block";
-						
+
 						if (content.length != 0) {
 							document.getElementById('edit-article').innerText = '修改正文内容';
 						} else {

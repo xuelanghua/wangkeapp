@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>会员中心</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style>
@@ -69,6 +69,25 @@
 			}
 			.fans-title{
 				padding: 10px 0 18px 0;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			.fans-title .mui-navigate-right{
+				display: inline-flex;
+				padding-right: 20px;
+				font-size: 13px;
+				color: #999999;
+				position: relative;
+			}
+			.fans-title .mui-navigate-right:after{
+				right: 0;
+				top: 50%;
+				transform: translateY(-55%);
+				-webkit-transform: translateY(-55%);
+				font-size: 16px;
+				color: #999999;
 			}
 			.fans_information{
 				padding: 20px 10px;
@@ -112,7 +131,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">会员</h1>
+			<h1 class="mui-title">会员中心</h1>
 		</header>
 
 		<div id="mui-content" class="mui-content">
@@ -126,19 +145,19 @@
 				<div class="member_chart_number">
 					<div class="mui-pull-left number">
 						<span>我的粉丝</span>
-						<span>{{memberInfo.fans_number}}</span>
+						<span>{{memberInfo.fans_number||0}}</span>
 					</div>
 					<div class="mui-pull-right number1">
-						<span>本月推荐奖</span>
-						<span>{{memberInfo.recommended_award}}</span>
+						<span>推荐奖累计</span>
+						<span>{{memberInfo.recommended_award||'0'}}</span>
 					</div>
 					<div class="clearfix"></div>
 				</div>
-				<button class="button">会员续费￥{{memberInfo.group_annual_fee}}/年</button>
+				<button class="button">续费/升级</button>
 				<img src="../image/member1.png">
 			</div>
 			<div class="fans">
-				<div class="fans-title">我的粉丝</div>
+				<div class="fans-title"><span>我的粉丝</span> <span class="mui-pull-right mui-navigate-right">更多</span></div>
 				<div class="fans_information" v-for="(lists,index) in fansLists" :key="index">
 					<div class="fans_information_chart mui-pull-left">
 						<img :src="lists.avatarUrl">
@@ -147,7 +166,7 @@
 						<div>
 							<span>{{lists.nickName}}</span>
 							<span>
-								<span class="vip">{{lists.group_name}}</span>
+								<span class="vip">vip</span>
 							</span>
 						</div>
 						<div class="time">
@@ -180,7 +199,12 @@
 				data() {
 					return {
 						memberInfo: {},
-						fansLists: []
+						fansLists: [{
+							nickName: '阿萨德加咖',
+							direct: 0,
+							activation_time: '2019-04-23',
+							recommend_user: '王花花'
+						}]
 					}
 				},
 				created: () => {
