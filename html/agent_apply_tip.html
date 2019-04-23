@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>代理预约</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style>
+			.area-desc{
+				font-size: 0.24rem;
+				padding-right: 15px;
+			}
+			.area-desc:after{
+				font-size: 0.32rem;
+				right: 0.15rem;
+			}
+			
+			.join-team-verify {
+				position: fixed;
+				z-index: 999;
+				top: 50%;
+				width: 80%;
+				left: 10%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			
+			
+			.verift-body {
+				width: 100%;
+				background-color: #ffffff;
+				border-radius: 10px;
+				position: relative;
+				overflow: hidden;
+				padding-top: 5px;
+				box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
+				animation: zoomIn 150ms ease-in-out;
+				z-index: 1045;
+			}
+			
+			.verift-body .tips {
+				width: 100%;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 1.6rem;
+			}
+			
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+			
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 15px 10px;
+			}
+			
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav target-detail-header">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">代理预约处理</h1>
+		</header>
+		<div class="mui-content oreder-container">
+			<div style="width: 100%;height: 4rem;">
+				<div style="margin-top: 1.5rem;text-align: center;">
+					<img src="../image/entry-customer.png" width="80" alt="">
+				</div>
+				<div style="margin-top: 0.5rem;text-align: center;font-size: 0.3rem;color: #666;">代理申请处理中...</div>
+			</div>
+			<div class="mui-content-padded">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="submit">取消申请</button>
+			</div>
+			<div id="verift-body" class="join-team-verify" style="display: none;">
+				<div class="verift-body">
+					<div class="tips">
+						<span>确定取消代理商申请？</span>
+					</div>
+					<div class="verift-footer">
+						<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+						<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					plus.navigator.setStatusBarStyle('light');
+				}
+			});
+			
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			
+			var mask = mui.createMask(function() {
+				document.getElementById("verift-body").style.display = "none";
+			});
+			var userInfo = getUserInfo();
+			mui.plusReady(function () {
+				mui('.mui-content').on('tap', '#submit', function() {
+					mask.show();
+					document.getElementById("verift-body").style.display = "flex";
+				})
+				
+				// 取消删除
+				mui("#verift-body").on('tap', '.close-verify-window', function() {
+					mask.close();
+				})
+				
+				mui("#verift-body").on('tap', '.send-verify', function() {
+					mask.close();
+					mui.post($ajaxUrl + 'member',{
+							action: 'cancel_agent_apply',
+							token: userInfo.token
+						}, function(res) {
+							if (res.errno == 0) {
+								message('取消成功!', 'center');
+								updateUserInfo();
+								setTimeout(function() {
+									mui.back()
+								}, 2000)
+							} else {
+								message('取消失败!', 'center');
+							}
+						}, 'json'
+					);
+				})
+			})
+		</script>
+	</body>
+
+</html>

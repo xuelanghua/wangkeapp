@@ -73,8 +73,7 @@
 				<ul class="mui-table-view border-top">
 					<li class="mui-table-view-cell"><span>应付金额</span><span class="price">&yen;<span id="activation_fee">199</span></span></li>
 					<li class="mui-table-view-cell pay-type"><span>支付方式</span><span style="font-weight: normal;" class="pay-title">微信</span></li>
-					<li id="area-select" class="mui-table-view-cell"><span>区域选择</span><span style="font-weight: normal;" id="area-desc"
-						 class="area-desc mui-navigate-right">点击选择</span></li>
+					<!-- <li id="area-select" class="mui-table-view-cell"><span>区域选择</span><span style="font-weight: normal;" id="area-desc" class="area-desc mui-navigate-right">点击选择</span></li> -->
 				</ul>
 			</div>
 			<div class="mui-content-padded">
@@ -328,6 +327,7 @@
 					province_id: provinceId,
 					city_id: cityId,
 					area_id: areaId,
+					activation_type: 1,
 				}, function(res) {
 					// console.log(JSON.stringify(res));
 					waiting.close();
@@ -361,26 +361,26 @@
 			}
 			
 			// 城市选择
-			mui.ready(function() {
-				var _getParam = function(obj, param) {
-					return obj[param] || '';
-				};
-				var showCityPickerButton = document.getElementById('area-select');
-				var cityResult = document.getElementById('area-desc');
-				showCityPickerButton.addEventListener('tap', function(event) {
-					var cityPicker = new mui.PopPicker({
-						layer: 3
-					});
-					cityPicker.setData(cityData3);
-					cityPicker.show(function(items) {
-						provinceId = _getParam(items[0], 'value');
-						cityId = _getParam(items[1], 'value');
-						areaId = _getParam(items[2], 'value');
-						cityResult.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(
-							items[2], 'text');
-					});
-				}, false);
-			})
+			// mui.ready(function() {
+			// 	var _getParam = function(obj, param) {
+			// 		return obj[param] || '';
+			// 	};
+			// 	var showCityPickerButton = document.getElementById('area-select');
+			// 	var cityResult = document.getElementById('area-desc');
+			// 	showCityPickerButton.addEventListener('tap', function(event) {
+			// 		var cityPicker = new mui.PopPicker({
+			// 			layer: 3
+			// 		});
+			// 		cityPicker.setData(cityData3);
+			// 		cityPicker.show(function(items) {
+			// 			provinceId = _getParam(items[0], 'value');
+			// 			cityId = _getParam(items[1], 'value');
+			// 			areaId = _getParam(items[2], 'value');
+			// 			cityResult.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(
+			// 				items[2], 'text');
+			// 		});
+			// 	}, false);
+			// })
 		</script>
 	</body>
 </html>

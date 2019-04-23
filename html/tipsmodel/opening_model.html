@@ -134,9 +134,14 @@
 						setStatusBar('', 'light');
 						plus.webview.close("opening_model", "auto", "", "");
 					} else {
-						plus.nativeUI.alert(res.message, function() {
-							mui.back();
-						})
+						var statusBarStyle = plus.navigator.getStatusBarStyle();
+						fnOpenWin('../agent_apply_tip.html', 'agent_apply_tip', {statusbar: {background: '#FFF'}}, {
+							statusBarStyle: statusBarStyle
+						}, 'slide-in-bottom');
+						plus.webview.close("opening_model", "auto", "", "");
+						// plus.nativeUI.alert(res.message, function() {
+						// 	mui.back();
+						// })
 					}
 				}, 'json');
 			})
