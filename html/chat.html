@@ -727,8 +727,27 @@
 				window.addEventListener('resizeWindow', function(e) {
 					console.log('resizeWindow');
 					console.log(webviewHeight);
+					var temp = webviewHeight - Math.random() / 2;
+					console.log(temp);
 					plus.webview.currentWebview().setStyle({
-						height: webviewHeight
+						// height: webviewHeight - Math.random() / 2
+						height: temp
+					});
+				})
+				
+				document.querySelector('input').addEventListener('focus', function(e) {
+					console.log('input focus');
+					setTimeout(function() {
+						plus.webview.currentWebview().setStyle({
+							height: webviewHeight - Math.random() / 2
+						});
+					}, 500)
+				})
+				
+				document.querySelector('input').addEventListener('blur', function(e) {
+					console.log('input blur');
+					plus.webview.currentWebview().setStyle({
+						height: webviewHeight - Math.random() / 2
 					});
 				})
 
