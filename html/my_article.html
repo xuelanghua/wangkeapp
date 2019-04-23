@@ -20,6 +20,7 @@
 				align-items: flex-start;
 				justify-content: space-between;
 				position: relative;
+				height: 100%;
 			}
 
 			.article-img-cont {
@@ -36,8 +37,11 @@
 			}
 
 			.left-desc {
-				display: block;
+				display: flex;
 				flex-grow: 1;
+				flex-direction: column;
+				height: 1.55rem;
+				justify-content: space-between;
 			}
 
 			.left-desc p {
@@ -47,8 +51,10 @@
 			}
 
 			.bottom-data {
+				display: block;
 				padding-left: 0.2rem;
-				margin-top: 0.36rem;
+				/* margin-top: 0.36rem; */
+				width: 100%;
 			}
 
 			.bottom-data span {
@@ -191,26 +197,21 @@
 							<span class="mui-btn mui-btn-blue" v-on:tap.stop="editArticle(article.id)">编辑</span>
 						</div>
 						<div class="mui-slider-handle">
-							<!-- <div class="article-img-cont">
+							<div class="article-img-cont">
 								<img class="article-img" :src="article.thumb" alt="">
-							</div> -->
-							<div class="mui-slider-handle">
-								<div class="article-img-cont">
-									<img class="article-img" :src="article.thumb" alt="">
-								</div>
-								<div class="left-desc">
-									<p class="mui-ellipsis-2">{{article.title}}</p>
-									<div class="bottom-data mui-clearfix">
-										<span>{{article.add_time}}</span>
-										<span class="mui-pull-right"><img src="../image//eye.png">{{article.click}}</span>
-									</div>
+							</div>
+							<div class="left-desc">
+								<p class="mui-ellipsis-2">{{article.title}}</p>
+								<div class="bottom-data mui-clearfix">
+									<span>{{article.add_time}}</span>
+									<span class="mui-pull-right"><img src="../image//eye.png">{{article.click}}</span>
 								</div>
 							</div>
 						</div>
 					</li>
 				</ul>
 			</div>
-			
+
 			<div id="verift-body" class="join-team-verify" style="display: none;">
 				<div class="verift-body">
 					<div class="tips">
@@ -255,7 +256,7 @@
 			var mask = mui.createMask(function() {
 				document.getElementById("verift-body").style.display = "none";
 			});
-			
+
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -265,7 +266,7 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
-			
+
 			var app = new Vue({
 				el: "#mui-content",
 				data() {
@@ -280,16 +281,6 @@
 					mui.plusReady(function() {
 						plus.webview.hide('article_operation', 'none');
 						plus.webview.close('article_operation', 'none');
-						
-						mui('.mui-content').on('dragstart', '.mui-table-view-cell', function(e) {
-							cancelId = this.id;
-						})
-						
-						mui(".mui-content").on("tap",".mui-pull-right",function(e){
-							console.log("asdfasdf");
-							e.stopPropagation();
-						})
-						
 						// 去详情页
 						mui(".mui-content").on('tap', '.mui-table-view-cell', function(e) {
 							var articleId = this.dataset.article;
@@ -303,7 +294,7 @@
 								});
 							}
 						})
-						
+
 						// 取消删除
 						mui("#verift-body").on('tap', '.close-verify-window', function() {
 							// alert(222);
@@ -311,27 +302,27 @@
 							mui.swipeoutClose(article);
 							mask.close();
 						})
-						
+
 						// 确认删除
 						mui(".mui-content").on('tap', '.send-verify', function() {
 							mask.close();
-							mui.post($ajaxUrl + 'article',{
-									action: 'article_delete',
-									token: userInfo.token,
-									article_id: articleId
-								}, function(res){
-									if (res.errno == 0) {
-										var article = document.getElementById('article' + articleId);
-										article.parentNode.removeChild(article);
-										// getArticleList(false, true);
-									} else {
-										message('删除失败!', 'center')
-									}
-								}, 'json'
-							);
+							mui.post($ajaxUrl + 'article', {
+								action: 'article_delete',
+								token: userInfo.token,
+								article_id: articleId
+							}, function(res) {
+								if (res.errno == 0) {
+									var article = document.getElementById('article' + articleId);
+									article.parentNode.removeChild(article);
+									// getArticleList(false, true);
+								} else {
+									message('删除失败!', 'center')
+								}
+							}, 'json');
 						})
-						
 						getArticleList(false, false);
+						plus.webview.hide('publish_article', 'none');
+						plus.webview.close('publish_article', 'none');
 					})
 				},
 				methods: {
@@ -350,7 +341,6 @@
 					}
 				}
 			})
-			
 			function getArticleList(up, down) {
 				if (up) {
 					app.skip++;
