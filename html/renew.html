@@ -12,6 +12,85 @@
 			.mui-bar-nav {
 				box-shadow: none;
 			}
+			/* 弹窗 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 999;
+				top: 50%;
+				width: 80%;
+				left: 10%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			
+			
+			.verift-body {
+				width: 100%;
+				background-color: #ffffff;
+				border-radius: 10px;
+				position: relative;
+				overflow: hidden;
+				padding-top: 5px;
+				box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
+				animation: zoomIn 150ms ease-in-out;
+				z-index: 1045;
+			}
+			
+			.verift-body .tips {
+				width: 100%;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 1.6rem;
+			}
+			
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+			
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 15px 10px;
+			}
+			
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+			
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
+			}
 		</style>
 	</head>
 
@@ -24,18 +103,29 @@
 			<div class="renew-container">
 				<div class="swiper-container">
 					<div class="swiper-wrapper">
-						<div class="swiper-slide slide0" :class="'slide'+index" v-for="(list,index) in severlist" :key="index">
+						<div class="swiper-slide" :class="'slide'+index" v-for="(list,index) in severlist" :key="index">
 							<img class="crown-img" src="../image/ilusdf04.png">
 							<div class="equity-cont"><img src="../image/equity-icon.png" alt="">权益</div>
 							<h3>{{list.name}}</h3>
 							<h2><span class="unit">&yen;</span>{{list.price}}</h2>
 							<h4>有效期：{{list.validity}}</h4>
-							<span v-if="list.status==0" class="vt-renew">续费</span>
-							<span v-else-if="list.status==1" class="vt-renew">升级</span>
-							<span v-else class="vt-renew">预约升级</span>
+							<span v-if="list.status==0" class="vt-renew" @tap="renew(1)">续费</span>
+							<span v-else-if="list.status==1" class="vt-renew" @tap="renew(2)">升级</span>
+							<span v-else class="vt-renew" @tap="renew(3)">预约升级</span>
 						</div>
 					</div>
 					<div class="swiper-pagination"></div>
+				</div>
+			</div>
+		</div>
+		<div id="verift-body" class="join-team-verify" style="display: none;">
+			<div class="verift-body">
+				<div class="tips">
+					<span>发起预约后将有专员与你联系</span>
+				</div>
+				<div class="verift-footer">
+					<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+					<button type="button" class="mui-btn mui-btn-link send-verify">预约</button>
 				</div>
 			</div>
 		</div>
@@ -46,6 +136,9 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
+			var mask = mui.createMask(function() {
+				document.getElementById("verift-body").style.display = "none";
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -98,6 +191,22 @@
 							el: '.swiper-pagination'
 						}
 					})
+					// 取消删除
+					mui("#verift-body").on('tap', '.close-verify-window', function() {
+						mask.close();
+					})
+				},
+				methods:{
+					renew:function(e){
+						if(e==1){
+							openPage('vt_renew.html','vt_renew','#f7f7f7','');
+						}else if(e==2){
+							openPage('vt_renew.html','vt_renew','#f7f7f7','');
+						}else{
+							document.getElementById('verift-body').style.display="flex";
+							mask.show();
+						}
+					}
 				}
 			})
 		</script>
