@@ -230,7 +230,7 @@
 					<div class="wangwang"><span class="icon-wangwang"></span><span>旺旺</span>{{memberInfo.wang || 0}}</div>
 					<div class="card-bottom">
 						<div>
-							<span>到期：{{memberInfo.expire_time}}</span><span class="left-btn">续费/升级</span>
+							<span>到期：{{memberInfo.expire_time}}</span><span class="left-btn" id="renew">续费/升级</span>
 						</div>
 						<span class="right-btn" v-if="memberInfo.activation_code!='0/0'" @tap="goCodeList">{{memberInfo.activation_code}}</span>
 						<span class="right-btn" v-else @tap="exchangeCode">激活码</span>
@@ -310,6 +310,20 @@
 						window.addEventListener('activateSuccess', function() {
 							getMemberInfo();
 						})
+						
+						// 显示激活码
+						mui(".mui-content .jihuo").on("tap", ".show-key", function() {
+							openPage('activate_code.html', 'activate_code', '#ffffff', '');
+						})
+						
+						// 领取激活码
+						mui(".mui-content .jihuo").on("tap", ".get-key", function() {
+							openPage('activation_code_collection.html', 'activation_code_collection', '#f7f7f7', '');
+						})
+						
+						mui('.mui-content').on('tap', '#renew', function() {
+							openPage('renew.html', 'renew', '#f7f7f7', '');
+						})
 					})
 				},
 				methods: {
@@ -333,15 +347,6 @@
 					}
 				}, 'json');
 			}
-			// 显示激活码
-			mui(".mui-content .jihuo").on("tap", ".show-key", function() {
-				openPage('activate_code.html', 'activate_code', '#ffffff', '');
-			})
-			
-			// 领取激活码
-			mui(".mui-content .jihuo").on("tap", ".get-key", function() {
-				openPage('activation_code_collection.html', 'activation_code_collection', '#f7f7f7', '');
-			})
 
 			function getFans() {
 				pageNum += 1;

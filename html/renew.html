@@ -3,156 +3,107 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>续费升级</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../css/mui.css" rel="stylesheet" />
-		<style>
-			.mui-bar{
-				background-color: #FFFFFF;
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/swiper.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
+		<style type="text/css">
+			.mui-bar-nav {
 				box-shadow: none;
-			}
-			.clearfix{
-				clear: both;
-			}
-			.background{
-				width: 100%;
-				height: 100%;
-				line-height: 0;
-			}
-			.renew_title{
-				width: 100%;
-				position: absolute;
-				top: 100px;
-			}
-			.renew_title_chart{
-				width: 127px;
-				height: 85px;
-				margin: 0 auto;
-			}
-			.renew_title_chart img{
-				width: 100%;
-				height: 100%;
-			}
-			.renew_title_name{
-				text-align: center;
-				color: #FFFFFF;
-				font-size: 25px;
-				padding: 21px 0;
-			}
-			.renew_content{
-				width: 80%;
-				margin: 0 auto;
-				background-color: #F2F2F2;
-			}
-			.circularL,.circularR{
-				width: 20px;
-				height: 20px;
-				border-radius: 50%;
-				margin-top: -10px;
-			}
-			.circularL{
-				margin-left: -10px;
-				background-color: #292B37;
-			}
-			.circularR{
-				margin-right: -10px;
-				background-color: #232531;
-			}
-			.renew_content_title{
-				text-align: center;
-				padding: 46px 0 31px 0;
-				background-color: #FFFFFF;
-			}
-			.money{
-				font-size: 16px;
-			}
-			.currency{
-				position: relative;
-				top: -17px;
-			}
-			.original_price{
-				font-size: 15px;
-				margin-top: 14px;
-				color: #7F725B;
-				text-decoration: line-through;
-			}
-			
-			.payment{
-				margin-top: 10px;
-				background-color: #FFFFFF;
-			}
-			.payment_title{
-				padding: 15px 10px;
-				font-size: 15px;
-				border-bottom: 1px solid #F2F2F2;
-			}
-			.payment_button{
-				padding: 42px 0;
-				text-align: center;
-			}
-			.payment_button button{
-				width: 70%;
-				font-size: 15px;
-				padding: 14px 0;
-				color: #FFFFFF;
-				border: none;
-				border-radius: 5px;
-				background-color: #252833;
 			}
 		</style>
 	</head>
 
-	<body>
-		
+	<body class="mui-hidden">
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+<<<<<<< HEAD
+			<h1 class="mui-title">续费升级</h1>
+=======
 			<h1 class="mui-title">续费</h1>
+>>>>>>> 2982ab7007a9dd78beb0c218693259ad7a88d8e0
 		</header>
-		
-		<div class="mui-content">
-			<img class="background" src="../image/renew.jpg" >
-			<div class="renew_title">
-				<div class="renew_title_chart">
-					<img src="../image/renew_title.png" >
-				</div>
-				<div class="renew_title_name">VIP</div>
-				<div class="renew_content">
-					<div class="circular">
-						<div class="circularL mui-pull-left"></div>
-						<div class="circularR mui-pull-right"></div>
-					</div>
-					<div class="renew_content_title">
-						<div class="money">
-							<span class="currency">￥</span>
-							<span style="font-size: 40px;">69</span>
-							<span>/年</span>
-						</div>
-						<div class="original_price">￥100/年</div>
-					</div>
-					<div class="payment">
-						<div class="payment_title">
-							<span class="mui-pull-left">付款方式</span>
-							<span class="mui-pull-right"style="color: #999999;">
-								<span>微信支付</span>
-								<span style="margin-left: 10px;font-size: 20px;">···</span>
-							</span>
-							<div class="clearfix"></div>
-						</div>
-						<div class="payment_button">
-							<button>续费</button>
+		<div id="mui-content" class="mui-content ">
+			<div class="renew-container">
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide slide0" :class="'slide'+index" v-for="(list,index) in severlist" :key="index">
+							<img class="crown-img" src="../image/ilusdf04.png">
+							<div class="equity-cont"><img src="../image/equity-icon.png" alt="">权益</div>
+							<h3>{{list.name}}</h3>
+							<h2><span class="unit">&yen;</span>{{list.price}}</h2>
+							<h4>有效期：{{list.validity}}</h4>
+							<span v-if="list.status==0" class="vt-renew">续费</span>
+							<span v-else-if="list.status==1" class="vt-renew">升级</span>
+							<span v-else class="vt-renew">预约升级</span>
 						</div>
 					</div>
-					<div class="circular"style="margin-top: -2px;">
-						<div class="circularL mui-pull-left"></div>
-						<div class="circularR mui-pull-right"></div>
-					</div>
+					<div class="swiper-pagination"></div>
 				</div>
 			</div>
-			
 		</div>
-		<script src="../js/mui.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/Zepto.min.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init()
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			mui.plusReady(function() {})
+			var app = new Vue({
+				el: "#mui-content",
+				data() {
+					return {
+						severlist: [{
+							name: 'vip',
+							price: 9932,
+							validity: '一年',
+							status: 0
+						}, {
+							name: '创客',
+							price: 11222,
+							validity: '一年',
+							status: 1
+						}, {
+							name: '服务站',
+							price: 15695,
+							validity: '永久',
+							status: 2
+						}, {
+							name: '服务中心',
+							price: 26545,
+							validity: '永久',
+							status: 2
+						}, {
+							name: '分公司',
+							price: 39932,
+							validity: '永久',
+							status: 2
+						}]
+					}
+				},
+				mounted: function() {
+					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+					mySwiper = new Swiper('.swiper-container', {
+						watchSlidesProgress: true,
+						slidesPerView: 'auto',
+						centeredSlides: true,
+						loop: true,
+						autoplay: false,
+						pagination: {
+							el: '.swiper-pagination'
+						}
+					})
+				}
+			})
 		</script>
 	</body>
 
