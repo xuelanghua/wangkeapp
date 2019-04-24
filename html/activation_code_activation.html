@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>激活码领取</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-popover {
+				height: 7.56rem;
+				margin-top: 0.8rem;
+				border-radius: 0.1rem;
+				width: 6.25rem;
+				overflow: hidden;
+				background: rgba(0,0,0,0.0);
+				box-shadow: none;
+			}
+
+			.mui-popover .mui-popover-arrow {
+				display: none;
+			}
+
+			.pop-body {
+				background-color: #FFFFFF;
+				height: 6.3rem;
+				width: 100%;
+				border-radius: 0.1rem;
+				overflow: hidden;
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				flex-direction: column;
+			}
+
+			.pop-body img {
+				width: 100%;
+			}
+
+			.pop-body p {
+				font-size: 0.35rem;
+				color: #2a2d38;
+				margin: 0.8rem 0 0.9rem;
+			}
+
+			.pop-body span {
+				font-size: 0.36rem;
+				color: #FFFFFF;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				background-color: #2a2d38;
+				width: 3.86rem;
+				height: 0.88rem;
+				border-radius: 0.44rem;
+			}
+
+			.close-btn {
+				width: 0.72rem;
+				height: 0.72rem;
+				display: block;
+				margin: 0.5rem auto 0;
+			}
+
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, .6);
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden" style="position: relative;min-height: 100%;">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">激活码兑换</h1>
+		</header>
+		<div id="collections" class="mui-content">
+			<div class="activation-code-activation">
+				<div class="pattern-of-payment">
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-radio">
+							<label><img src="../image/Alipay.png"><span>支付宝</span></label>
+							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
+						</div>
+						<div class="mui-input-row mui-radio">
+							<label><img src="../image/WeChat.png"><span>微信</span></label>
+							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
+						</div>
+						<div class="mui-input-row mui-radio">
+							<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
+							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
+						</div>
+					</form>
+				</div>
+				<div class="pattern-of-payment">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<div class="mui-clearfix">
+								<span class="title mui-pull-left">VIP激活码</span>
+								<span class="number mui-pull-right">X50</span>
+							</div>
+							<p class="desc">10,000(旺旺)+1,000(元)</p>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="mui-clearfix">
+								<span class="title mui-pull-left">创客激活码</span>
+								<span class="number mui-pull-right">X10</span>
+							</div>
+							<p class="desc">10,000(旺旺)+1,000(元)</p>
+						</li>
+						<li class="mui-table-view-cell total">
+							<div class="mui-clearfix">
+								<span class="mui-pull-left">合计</span>
+								<span class="number mui-pull-right">2000(旺旺)</span>
+							</div>
+							<p>2000(元)</p>
+							<a class="confirm-payment " href="#popover">确认支付</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="popover" class="mui-popover">
+			<div class="pop-body">
+				<img src="../image/collections-bg-pop-img.jpg" alt="">
+				<p>激活码兑换成功</p>
+				<span class="immediate-use">立即使用</span>
+			</div>
+			<img class="close-btn" src="../image/Close.png" alt="">
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			// vue实例初始化
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#collections",
+				data() {
+					return {
+						userType: 5
+					}
+				},
+				mounted: function() {
+					mui.init();
+					mui.plusReady(function() {});
+				},
+				computed: {
+
+				}
+			});
+			// 关闭窗口
+			mui("#popover").on('tap', '.close-btn', function() {
+				mui('.mui-popover').popover('hide', document.getElementById("popover"));
+			})
+			mui("#popover").on('tap', '.immediate-use', function() {
+				openPage('activate_code.html','activate_code','#f7f7f7','');
+			})
+		</script>
+	</body>
+</html>
