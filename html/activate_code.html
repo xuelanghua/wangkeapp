@@ -168,6 +168,19 @@
 				overflow-y: scroll;
 				padding-top: 44px;
 			}
+			
+			.exchange-code {
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+				height: 45px;
+				line-height: 45px;
+				background-color: #2289FF;
+				color: #FFF;
+				font-size: 16px;
+				text-align: center;
+			}
 		</style>
 	</head>
 
@@ -187,8 +200,7 @@
 					<div id="item1" class="mui-control-content mui-active">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell" v-for="(list,index) in keylist" :key="index"><span>{{list.code}}</span>
-								<button v-if="list.activate_status==1" type="button" class="mui-btn mui-btn-primary mui-btn-outlined">赠送</button>
-								<button v-else type="button" class="mui-btn mui-btn-outlined action" @tap="actionKey(list.code,list.id,list.group_id)">激活</button>
+								<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined" @tap="copyToClip(list.code)">赠送</button>
 							</li>
 						</ul>
 					</div>
@@ -239,6 +251,9 @@
 					<h3>&yen;&nbsp;{{ fee }}</h3>
 					<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">确认支付</button>
 				</div>
+			</div>
+			<div class="exchange-code">
+				兑换激活码
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -389,6 +404,10 @@
 					mui(".mui-bar").on('tap', '#action-btn', function() {
 						this.classList.toggle('active');
 					})
+					
+					mui('body').on('tap', '.exchange-code', function() {
+						openPage('activation_code_collection.html', 'activation_code_collection', '#f7f7f7', '');
+					})
 				}
 			})
 
@@ -513,6 +532,22 @@
 					}, 'json'
 				);
 			}
+			
+			 function copyToClip(text) {
+                if(mui.os.android) {  
+                    var Context = plus.android.importClass("android.content.Context");  
+                    var main = plus.android.runtimeMainActivity();  
+                    var clip = main.getSystemService(Context.CLIPBOARD_SERVICE);  
+                    plus.android.invoke(clip, "setText", text);
+                } else {  
+                    var UIPasteboard = plus.ios.importClass("UIPasteboard");  
+                    var generalPasteboard = UIPasteboard.generalPasteboard();  
+                    // 设置/获取文本内容:  
+                    generalPasteboard.setValueforPasteboardType(text, "public.utf8-plain-text");  
+                    var value = generalPasteboard.valueForPasteboardType("public.utf8-plain-text");  
+                }  
+                mui.toast("复制激活码成功"); 
+            }  
 		</script>
 	</body>
 

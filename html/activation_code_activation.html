@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<title>激活码领取</title>
@@ -78,43 +77,45 @@
 			<div class="activation-code-activation">
 				<div class="pattern-of-payment">
 					<form class="mui-input-group">
-						<div class="mui-input-row mui-radio">
+						<!-- <div class="mui-input-row mui-radio">
 							<label><img src="../image/Alipay.png"><span>支付宝</span></label>
-							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
-						</div>
+							<input class="choice-tag" name="radio1" type="radio" value="alipay">
+						</div> -->
 						<div class="mui-input-row mui-radio">
 							<label><img src="../image/WeChat.png"><span>微信</span></label>
 							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
 						</div>
-						<div class="mui-input-row mui-radio">
-							<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
-							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
-						</div>
+						<!-- <div class="mui-input-row mui-radio">
+							<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;{{ balance }}</span></label>
+							<input class="choice-tag" name="radio1" type="radio" value="balance">
+						</div> -->
 					</form>
 				</div>
 				<div class="pattern-of-payment">
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell">
-							<div class="mui-clearfix">
-								<span class="title mui-pull-left">VIP激活码</span>
-								<span class="number mui-pull-right">X50</span>
-							</div>
-							<p class="desc">10,000(旺旺)+1,000(元)</p>
-						</li>
-						<li class="mui-table-view-cell">
+						<template v-for="(item, key) in codeList" ;key="key">
+							<li class="mui-table-view-cell" v-if="item.number>0">
+								<div class="mui-clearfix">
+									<span class="title mui-pull-left">{{ item.name }}</span>
+									<span class="number mui-pull-right">X{{ item.number }}</span>
+								</div>
+								<p class="desc">{{ item.wang * item.number }}(旺旺)+{{ item.wang * item.number / 10 }}(元)</p>
+							</li>
+						</template>
+						<!-- <li class="mui-table-view-cell">
 							<div class="mui-clearfix">
 								<span class="title mui-pull-left">创客激活码</span>
 								<span class="number mui-pull-right">X10</span>
 							</div>
 							<p class="desc">10,000(旺旺)+1,000(元)</p>
-						</li>
+						</li> -->
 						<li class="mui-table-view-cell total">
 							<div class="mui-clearfix">
 								<span class="mui-pull-left">合计</span>
-								<span class="number mui-pull-right">2000(旺旺)</span>
+								<span class="number mui-pull-right">{{ totalWang }}(旺旺)</span>
 							</div>
-							<p>2000(元)</p>
-							<a class="confirm-payment " href="#popover">确认支付</a>
+							<p class="mui-pull-right">{{ fee }}(元)</p>
+							<a class="confirm-payment" id="openPopover">确认支付</a>
 						</li>
 					</ul>
 				</div>
@@ -132,7 +133,9 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				swipeBack: true
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -141,30 +144,137 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-			// vue实例初始化
+			
 			var userInfo = getUserInfo();
+			//支付相关变量
+			var payType = 'wxpay';
+			var wxChannel = null; // 微信支付
+			var aliChannel = null; // 支付宝支付
+			var channel = null; //支付通道
+			var ALIPAYSERVER = $ajaxUrl + 'member&action=code_exchange';
+			var WXPAYSERVER = $ajaxUrl + 'member&action=code_exchange';
+			// vue实例初始化
 			var app = new Vue({
 				el: "#collections",
 				data() {
 					return {
-						userType: 5
+						codeList: null,
+						totalWang: 0,
+						fee: 0,
+						balance: 0
 					}
 				},
-				mounted: function() {
-					mui.init();
-					mui.plusReady(function() {});
+				created: function() {
+					getMemberInfo();
 				},
-				computed: {
-
+				mounted: function() {
+					mui.plusReady(function() {
+						plus.payment.getChannels(function(channels) {
+							for (var i in channels) {
+								if (channels[i].id == "wxpay") {
+									wxChannel = channels[i];
+								} else {
+									aliChannel = channels[i];
+								}
+							}
+						}, function(e) {
+							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
+						});
+						
+						var self = plus.webview.currentWebview();
+						app.codeList = self.codeList;
+						app.totalWang = self.totalWang;
+						app.fee = parseFloat(self.totalWang / 10);
+						// 关闭窗口
+						mui("#popover").on('tap', '.close-btn', function() {
+							mui('.mui-popover').popover('hide', document.getElementById("openPopover"));
+						})
+						
+						mui("#popover").on('tap', '.immediate-use', function() {
+							plus.webview.close('activate_code', 'none');
+							plus.webview.close('activation_code_collection', 'none');
+							plus.webview.close('activation_code_activation', 'none');
+							openPage('activate_code.html','activate_code','#f7f7f7','');
+						})
+						
+						mui('.mui-content').on('tap', '.confirm-payment', function() {
+							payType = mui('input[name=radio1]:checked')[0].value;
+							pay(payType);
+							// mui('.mui-popover').popover('show',document.getElementById("openPopover"));
+						})
+					});
 				}
 			});
-			// 关闭窗口
-			mui("#popover").on('tap', '.close-btn', function() {
-				mui('.mui-popover').popover('hide', document.getElementById("popover"));
-			})
-			mui("#popover").on('tap', '.immediate-use', function() {
-				openPage('activate_code.html','activate_code','#f7f7f7','');
-			})
+			
+			//获取用户信息
+			function getMemberInfo() {
+				mui.post($ajaxUrl + 'member', {
+					action: 'detail',
+					token: userInfo.token
+				}, function(res) {
+					// app.groupId = res.data.group_id;
+					app.blance = res.data.balance;
+				}, 'json');
+			}
+			
+			// 2. 发起支付请求  
+			function pay(id) {
+				// 从服务器请求支付订单
+				var PAYSERVER = '';
+				if (id == 'alipay') {
+					message("暂不支持支付宝支付!", 'center');
+					return;
+					PAYSERVER = ALIPAYSERVER;
+					channel = aliChannel;
+				} else if (id == 'wxpay') {
+					PAYSERVER = WXPAYSERVER;
+					channel = wxChannel;
+				} else {
+					message("不支持此支付通道!", 'center');
+					return;
+				}
+			
+				var waiting = plus.nativeUI.showWaiting();
+				mui.post(PAYSERVER, {
+					code_list: app.codeList,
+					total_wang: app.totalWang,
+					fee: app.fee,
+					pay_type: payType,
+					token: userInfo.token
+				}, function(res) {
+					console.log(JSON.stringify(res));
+					waiting.close();
+					if (res.errno == 0) {
+						var data = res.data;
+						var param = {
+							appid: data.appid,
+							noncestr: data.nonce_str,
+							package: 'Sign=WXPay',
+							partnerid: data.mch_id,
+							prepayid: data.prepay_id,
+							timestamp: data.timeStamp,
+							sign: data.paySign
+						};
+			
+						plus.payment.request(channel, param, function(result) {
+							updateUserInfo();
+							mui.fire(plus.webview.getWebviewById('activation_code_collection'), 'activateSuccess');
+							mui.fire(plus.webview.getWebviewById('maker'), 'activateSuccess');
+							mui.fire(plus.webview.getWebviewById('agent'), 'activateSuccess');
+							mui('.mui-popover').popover('show',document.getElementById("openPopover"));
+							// plus.nativeUI.alert("兑换成功！", function() {
+							// 	plus.navigator.setStatusBarStyle('dark');
+							// 	mui.back();
+							// });
+						}, function(error) {
+							console.log(JSON.stringify(error));
+							plus.nativeUI.alert("支付失败：" + error.code);
+						});
+					} else {
+						plus.nativeUI.alert(res.message, null, '提示');
+					}
+				}, 'json')
+			}
 		</script>
 	</body>
 </html>

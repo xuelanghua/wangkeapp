@@ -17,19 +17,19 @@
 		<div id="collections" class="mui-content">
 			<div class="collection-code-container">
 				<h3>旺旺</h3>
-				<h2>400,000,000</h2>
+				<h2>{{ wang }}</h2>
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell">
-						<span>服务中心（个）</span><input type="number" value="0">
+					<li class="mui-table-view-cell" v-if="groupId>4">
+						<span>服务中心（个）</span><input type="number" placeholder="0" v-model="codeList[4].number">
 					</li>
-					<li class="mui-table-view-cell">
-						<span>服务站（个）</span><input type="number" value="0">
+					<li class="mui-table-view-cell" v-if="groupId>3">
+						<span>服务站（个）</span><input type="number" placeholder="0" v-model="codeList[3].number">
 					</li>
-					<li class="mui-table-view-cell">
-						<span>创客（个）</span><input type="number" value="0">
+					<li class="mui-table-view-cell" v-if="groupId>2">
+						<span>创客（个）</span><input type="number" placeholder="0" v-model="codeList[2].number">
 					</li>
-					<li class="mui-table-view-cell">
-						<span>VIP（个）</span><input type="number" value="0">
+					<li class="mui-table-view-cell" v-if="groupId>1">
+						<span>VIP（个）</span><input type="number" placeholder="0" v-model="codeList[1].number">
 					</li>
 				</ul>
 				<span class="next">下一步</span>
@@ -39,7 +39,9 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				swipeBack: true
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -54,20 +56,103 @@
 				el: "#collections",
 				data() {
 					return {
-						userType: 5
+						wang: 0,
+						groupId: userInfo.group_id,
+						groupId: 5,
+						codeList: {
+							"1": {
+								id: 1,
+								number: 0,
+								wang: 0,
+								name: ''
+							},
+							"2": {
+								id: 2,
+								number: 0,
+								wang: 0,
+								name: ''
+							},
+							"3": {
+								id: 3,
+								number: 0,
+								wang: 0,
+								name: ''
+							},
+							"4": {
+								id: 4,
+								number: 0,
+								wang: 0,
+								name: '',
+							}
+						},
+						group: []
 					}
 				},
+				created:function() {
+					getMemberInfo();
+					getGroupList();
+				},
 				mounted: function() {
-					mui.init();
-					mui.plusReady(function() {});
+					mui.plusReady(function() {
+						mui(".mui-content").on('tap', '.next', function() {
+							document.activeElement.blur();
+							var flag = false;
+							mui.each(app.codeList, function(index, item) {
+								if (item.number > 0) {
+									flag = true;
+								}
+							})
+							if (!flag) {
+								message('无效兑换', 'center');
+								return;
+							}
+							if (app.wang < app.totalWang) {
+								message('旺旺不足', 'center');
+								return;
+							}
+							openPage('activation_code_activation.html', 'activation_code_activation', '#f7f7f7', {codeList: app.codeList, totalWang: app.totalWang});
+						})
+						
+						window.addEventListener('activateSuccess', function() {
+							getMemberInfo();
+						})
+					});
 				},
 				computed: {
-
+					totalWang: function() {
+						return parseInt(this.codeList["1"]["wang"] * this.codeList["1"]["number"]) + parseInt(this.codeList["2"]["wang"] * this.codeList["2"]["number"]) + parseInt(this.codeList["3"]["wang"] * this.codeList["3"]["number"]) + parseInt(this.codeList["4"]["wang"] * this.codeList["4"]["number"]);
+					}
 				}
 			});
-			mui(".mui-content").on('tap', '.next', function() {
-				openPage('activation_code_collection.html','activation_code_collection','#f7f7f7','');
-			})
+			
+			
+			//获取用户信息
+			function getMemberInfo() {
+				mui.post($ajaxUrl + 'member', {
+					action: 'detail',
+					token: userInfo.token
+				}, function(res) {
+					// app.groupId = res.data.group_id;
+					app.wang = res.data.wang;
+				}, 'json');
+			}
+			
+			//获取会员等级列表
+			function getGroupList() {
+				mui.post($ajaxUrl + 'member', {
+					action: 'group_info',
+					token: userInfo.token
+				}, function(res) {
+					app.groupList = res.data
+					mui.each(app.groupList, function(index, item) {
+						if (item.id < 5) {
+							app.codeList[item.id]["wang"] = item.activation_fee;
+							app.codeList[item.id]["name"] = item.name;
+						}
+					})
+				}, 'json');
+			}
+			
 			// mui.post($ajaxUrl + 'member&action=get_code', {
 			// 	token: userInfo.token,
 			// 	code: lists
