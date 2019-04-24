@@ -602,6 +602,31 @@
 			var timer = null;
 			var self = null;
 			var webviewHeight = 0;
+			
+			var nativeWebview, imm, InputMethodManager;  
+			var initNativeObjects = function() {  
+				if (mui.os.android) {  
+					var main = plus.android.runtimeMainActivity();  
+					var Context = plus.android.importClass("android.content.Context");  
+					InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");  
+					imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);  
+				} else {  
+					nativeWebview = plus.webview.currentWebview().nativeInstanceObject();  
+				}  
+			};  
+			var showSoftInput = function() {  
+				if (mui.os.android) {  
+					imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);  
+				} else {  
+					nativeWebview.plusCallMethod({  
+						"setKeyboardDisplayRequiresUserAction": false  
+					});  
+				}  
+				setTimeout(function() {  
+				   logs(2222);
+				}, 200);  
+			};
+			
 			mui.plusReady(function() {
 				// originalHeight = document.querySelector("body").offsetHeight;
 				self = plus.webview.currentWebview();
@@ -763,7 +788,6 @@
 						});
 					}
 				}
-
 			})
 
 			function indexInit() {
