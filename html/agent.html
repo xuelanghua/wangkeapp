@@ -246,8 +246,8 @@
 		<div id="mui-content" class="mui-content setting-container">
 			<div class="maker-head">
 				<div class="first-section">
-					<h2>{{memberInfo.group_name}}<span class="updata-position">升级<img src="../image/agent-arrows-01.png" alt=""></span></h2>
-					<div class="wangwang"><span class="icon-wangwang"></span><span>旺旺</span>183,567,941</div>
+					<h2>{{memberInfo.group_name}}<span class="updata-position" v-if="memberInfo.group_id<5">升级<img src="../image/agent-arrows-01.png" alt=""></span></h2>
+					<div class="wangwang"><span class="icon-wangwang"></span><span>旺旺</span>{{memberInfo.wang || 0}}</div>
 					<div class="card-bottom">
 						<div>
 							&nbsp;
@@ -259,7 +259,7 @@
 				<div class="bonus-section">
 					<div class="items">
 						<span class="mui-navigate-right">本月服务奖</span>
-						<p>50,050<span class="unit">元</span></p>
+						<p>{{memberInfo.service_award || 0}}<span class="unit">元</span></p>
 					</div>
 					<div class="items">
 						<span class="mui-navigate-right">推荐奖累计</span>
@@ -307,13 +307,15 @@
 				data() {
 					return {
 						memberInfo: {
-							group_name: '代理',
+							group_id: 3,
+							group_name: '服务站',
 							position: '大区经理',
 							expire_time: '2019-06-19',
 							group_annual_fee: '199',
-							activation_code: '665',
-							service_award: 36,
-							recommended_award: 23559
+							activation_code: '665/23565',
+							service_award: '5,050',
+							recommended_award: 23559,
+							wang: '183,567,941'
 						},
 						fansLists: []
 					}

@@ -16,12 +16,12 @@
 		</header>
 		<div class="mui-content data-statistics-container">
 			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item mui-active" href="#item1">时间</a>
-				<a class="mui-control-item" href="#item2">行为</a>
+				<a class="mui-control-item mui-active" href="#item2">行为</a>
+				<a class="mui-control-item" href="#item1">时间</a>
 			</div>
 			<div class="segmentedControl-cont">
 				<!-- 第一个选项卡 -->
-				<div id="item1" class="mui-control-content mui-active">
+				<div id="item1" class="mui-control-content">
 					<ul v-if="contstatus" class="time-line-cont">
 						<li v-for="(item,key,index) in dataGroup" :key="index">
 							<div class="time-line-items-title">
@@ -138,7 +138,7 @@
 					</div>
 				</div>
 				<!-- 第二个选项卡 -->
-				<div id="item2" class="mui-control-content">
+				<div id="item2" class="mui-control-content mui-active">
 					<div id="showUserPicker" class="select-time">
 						<p class="select-title"><span id="selectTitle">近7天</span>被查看的行为统计</p>
 						<i class="mui-icon mui-icon-arrowdown"></i>
@@ -322,8 +322,9 @@
 							Vue.set(itemCont.dataGroup, list, data[list]);
 						}
 						// 上拉加载完成隐藏加载动画
-						mui('#item1').pullRefresh().endPullupToRefresh();
+						mui('#item1').pullRefresh().endPullupToRefresh(false);
 					} else {
+						mui('#item1').pullRefresh().endPullupToRefresh(true);
 						// 数据为空禁用上拉加载
 						mui('#item1').pullRefresh().disablePullupToRefresh();
 						// 判断数据是否为空

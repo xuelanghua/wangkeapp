@@ -498,6 +498,11 @@
 					}
 				}
 				
+				//激活成功监听
+				window.addEventListener('activationSuccess', function() {
+					getMemberInfo();
+				})
+				
 				//签到成功监听
 				window.addEventListener('signSuccess', function() {
 					getMemberInfo();
@@ -509,20 +514,20 @@
 
 				//商城首页
 				mui('.mui-content').on('tap', '#shop', function() {
-					// 	var activation = checkMember();
-					// 	if (activation) {
-					fnOpenWin('shop_index.html', 'shop_index', {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, {
-						page: 'my'
-					}, 'slide-in-right');
-					setStatusBar('', 'dark');
-					// }
+					var activation = checkMember();
+					if (activation) {
+						fnOpenWin('shop_index.html', 'shop_index', {
+							statusbar: {
+								background: '#F7F7F7'
+							}
+						}, {
+							page: 'my'
+						}, 'slide-in-right');
+						setStatusBar('', 'dark');
+					}
 				})
 
-				//boss 
+				//团队
 				mui('.mui-content').on('tap', '#boss', function() {
 					mui.post($ajaxUrl + 'team&action=team_info', {
 						token: userInfo.token
@@ -628,7 +633,44 @@
 					}, '', 'slide-in-right');
 					plus.navigator.setStatusBarStyle('dark');
 				});
-
+				
+				
+				// 跳转到会员中心
+				mui(".goods").on("tap", ".goodsL", function() {
+					message(group_id);
+					// return;
+					// group_id = 2;
+					// openPage('member.html', 'member', '#ffffff', '');
+					// openPage('maker.html', 'maker', '#f7f7f7', '');
+					// openPage('agent.html', 'agent', '#f7f7f7', '');
+					// return;
+					if (group_id == 0) {
+						checkMember();
+					} else if (group_id == 1) {
+						openPage('member.html', 'member', '#ffffff', '');
+						console.log(group_id);
+						// 创客
+					} else if (group_id == 2) {
+						openPage('maker.html', 'maker', '#f7f7f7', '');
+						console.log(group_id);
+						//代理
+					} else if (group_id == 3) {
+						openPage('agent.html', 'agent', '#f7f7f7', '');
+					} else if (group_id == 4) {
+						openPage('agent.html', 'agent', '#f7f7f7', '');
+					} else if (group_id == 5) {
+						openPage('agent.html', 'agent', '#f7f7f7', '');
+					} else {
+						console.log(group_id);
+					}
+					plus.navigator.setStatusBarStyle('dark');
+				})
+				
+				// 跳转到设置
+				mui("#header").on("tap", "#setting-btn", function() {
+					openPage('setting.html', 'setting', '#f7f7f7', '');
+					plus.navigator.setStatusBarStyle('dark');
+				})
 			}
 
 			//获取用户信息
@@ -728,40 +770,9 @@
 							tipObj.innerText = 0;
 							tipObj.style.display = 'none';
 						}
-					},'json'
-				);
+					},'json');
 			}
 			
-			// 跳转到会员中心
-			mui(".goods").on("tap", ".goodsL", function() {
-				// message(group_id);
-				group_id = 1;
-				if (group_id == 0) { 
-					checkMember();
-				} else if (group_id == 1) {
-					openPage('member.html', 'member', '#ffffff', '');
-					console.log(group_id);
-					// 创客
-				} else if (group_id == 2) {
-					openPage('maker.html', 'maker', '#f7f7f7', '');
-					console.log(group_id);
-					//代理
-				} else if (group_id == 3) {
-					openPage('agent.html', 'agent', '#f7f7f7', '');
-				} else if (group_id == 4) {
-					openPage('agent.html', 'agent', '#f7f7f7', '');
-				} else if (group_id == 5) {
-					openPage('agent.html', 'agent', '#f7f7f7', '');
-				} else {
-					console.log(group_id);
-				}
-				plus.navigator.setStatusBarStyle('dark');
-			})
-			// 跳转到设置
-			mui("#header").on("tap", "#setting-btn", function() {
-				openPage('setting.html', 'setting', '#f7f7f7', '');
-				plus.navigator.setStatusBarStyle('dark');
-			})
 		</script>
 	</body>
 </html>

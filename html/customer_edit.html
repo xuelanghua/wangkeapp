@@ -184,7 +184,10 @@
 				<input type="text" name="anniversary" class="mui-pull-right" style="width: 120px;" readonly value="">
 				<div class="clearfix"></div>
 			</div>
-
+			
+			<div style="width: 100%; margin-top: 30px;text-align: center;">
+				<button class="mui-btn mui-btn-danger delete">删除客户</button>
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/mui.picker.js"></script>
@@ -250,6 +253,31 @@
 					submitData.cid = cid;
 					logs(submitData);
 					fnSubmit(submitData);
+				})
+				
+				mui('.mui-content').on('tap', '.delete', function() {
+					plus.nativeUI.confirm('确认删除该客户?', function(e) {
+						if (e.index == 0) {
+							mui.post($ajaxUrl + 'customer', {
+									action: 'crm_delete',
+									token: userInfo.token,
+									cid: cid
+								}, function(res){
+									if (res.errno == 0) {
+										message('删除成功!', 'center');
+										mui.fire(plus.webview.getWebviewById('chat'), 'addCrm');
+										setTimeout(function() {
+											plus.webview.close('crm_detail_app', 'none');
+											plus.webview.close('crm_detail_miniapp', 'none');
+											mui.back();
+										}, 2000)
+									} else {
+										message('删除失败!', 'center')
+									}
+								}, 'json'
+							);
+						}
+					})
 				})
 			})
 
