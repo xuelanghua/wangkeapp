@@ -7,61 +7,36 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
-		<style type="text/css">
-			.collection-code-container .section-body .section-items .section-input input {
-				min-width: 0.6rem;
-			}
-		</style>
 	</head>
 
 	<body class="mui-hidden" style="position: relative;min-height: 100%;">
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">激活码领取</h1>
+			<h1 class="mui-title">激活码兑换</h1>
 		</header>
-		<div id="collections" class="mui-content collection-code-container">
-			<div class="section-top">
-				<img src="../image/activation_code_collection02.png">
-				<h2>服务站</h2>
-			</div>
-			<div class="section-body">
-				<div class="section-shell">
-					<div class="section-items" v-if="userType==5">
-						<h2>服务中心激活码</h2>
-						<div class="section-input">
-							<input type="number" id="input1" value="0" v-model="submitarr[0].num"></input><label>个</label>
-						</div>
-					</div>
-					<div class="section-items" v-if="userType==5||userType==4">
-						<h2>服务站激活码</h2>
-						<div class="section-input">
-							<input type="number" id="input2" value="0" v-model="submitarr[1].num"></input><label>个</label>
-						</div>
-					</div>
-					<div class="section-items" v-if="userType==5||userType==4||userType==3">
-						<h2>创客激活码</h2>
-						<div class="section-input">
-							<input type="number" id="input3" value="0" v-model="submitarr[2].num"></input><label>个</label>
-						</div>
-					</div>
-					<div class="section-items" v-if="userType==5||userType==4||userType==3">
-						<h2>VIP激活码</h2>
-						<div class="section-input">
-							<input maxlength="6" id="input4" type="number" value="0" v-model="submitarr[3].num"></input><label>个</label>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="confirm-section">
-				<p class="tips-info" v-if="status==1">您有<span>{{surplus}}</span>个VIP可以领取！</p>
-				<p class="tips-info" v-else>您领超了<span>{{surplus}}</span>个VIP！</p>
-				<span id="determined">确定</span>
-				<p>确定领取后将无法更改</p>
+		<div id="collections" class="mui-content">
+			<div class="collection-code-container">
+				<h3>旺旺</h3>
+				<h2>400,000,000</h2>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<span>服务中心（个）</span><input type="number" value="0">
+					</li>
+					<li class="mui-table-view-cell">
+						<span>服务站（个）</span><input type="number" value="0">
+					</li>
+					<li class="mui-table-view-cell">
+						<span>创客（个）</span><input type="number" value="0">
+					</li>
+					<li class="mui-table-view-cell">
+						<span>VIP（个）</span><input type="number" value="0">
+					</li>
+				</ul>
+				<span class="next">下一步</span>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/Zepto.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -75,119 +50,37 @@
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// vue实例初始化
 			var userInfo = getUserInfo();
-			// userInfo.group_id=5;
-			var collection = new Vue({
+			var app = new Vue({
 				el: "#collections",
 				data() {
 					return {
-						userType: userInfo.group_id,
-						status: 1,
-						submitarr: [{
-							id: 4,
-							num: 0
-						}, {
-							id: 3,
-							num: 0
-						}, {
-							id: 2,
-							num: 0
-						}, {
-							id: 1,
-							num: 0
-						}]
+						userType: 5
 					}
 				},
 				mounted: function() {
 					mui.init();
-					mui.plusReady(function() {
-						// logs("激活码领取")
-					});
+					mui.plusReady(function() {});
 				},
 				computed: {
-					surplus: function() {
-						var num = 0;
-						if (this.userType == 5) {
-							num = parseInt((500000 - this.submitarr[0].num * 200000 - this.submitarr[1].num * 50000 - this.submitarr[2].num *
-								9999 - this.submitarr[3].num *
-								199) / 199);
-							if (num >= 0) {
-								this.status = 1;
-								return num;
-							} else {
-								this.status = 2;
-								return Math.abs(num);
-							}
-						} else if (this.userType == 4) {
-							num = parseInt((200000 - this.submitarr[1].num * 50000 - this.submitarr[2].num * 9999 - this.submitarr[3].num *
-								199) / 199);
-							if (num >= 0) {
-								this.status = 1;
-								return num;
-							} else {
-								this.status = 2;
-								return Math.abs(num);
-							}
-						} else if (this.userType == 3) {
-							num = parseInt((50000 - this.submitarr[2].num * 9999 - this.submitarr[3].num * 199) / 199);
-							if (num >= 0) {
-								this.status = 1;
-								return num;
-							} else {
-								this.status = 2;
-								return Math.abs(num);
-							}
-						}
-					}
+
 				}
 			});
-			$(function() {
-				$('input').bind('input propertychange', function() {
-					var obj = $(this);
-					var text_length = obj.val().length;
-					var width = parseInt(text_length) * 16;
-					if (width < 100) {
-						obj.css('width', width + 'px');
-					} else {
-						obj.css('width', 100 + 'px');
-					}
-				});
+			mui(".mui-content").on('tap', '.next', function() {
+				openPage('activation_code_collection.html','activation_code_collection','#f7f7f7','');
 			})
-			mui(".mui-content").on("tap", ".mask-container", function() {
-				collection.tips = false;
-			})
-			mui(".mui-content").on("tap", ".tips-cont", function() {
-
-			})
-			mui(".mui-content").on("tap", "#determined", function() {
-				document.getElementById("input1").blur();
-				document.getElementById("input2").blur();
-				document.getElementById("input3").blur();
-				document.getElementById("input4").blur();
-				var lists = [];
-				for (i in collection.submitarr) {
-					if (collection.submitarr[i].num) {
-						lists.push(collection.submitarr[i]);
-					} else {
-
-					}
-				}
-				if (0 < lists.length) {
-					mui.post($ajaxUrl + 'member&action=get_code', {
-						token: userInfo.token,
-						code: lists
-					}, function(res) {
-						logs(res);
-						if(res.errno){
-							message(res.message);
-						}else{
-							message('领取成功！');
-							mui.back();
-						}
-					}, 'json');
-				} else {
-					message("请输入领取个数");
-				}
-			})
+			// mui.post($ajaxUrl + 'member&action=get_code', {
+			// 	token: userInfo.token,
+			// 	code: lists
+			// }, function(res) {
+			// 	logs(res);
+			// 	if (res.errno) {
+			// 		message(res.message);
+			// 	} else {
+			// 		message('领取成功！');
+			// 		mui.back();
+			// 	}
+			// }, 'json');
+			
 		</script>
 	</body>
 </html>
