@@ -192,6 +192,8 @@
 					var userInfo = getUserInfo();
 					userInfo.mobile = vmobile;
 					localStorage.setItem('user', JSON.stringify(userInfo));
+					updateUserInfo();
+					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'bindMobileSuccess');
 					setTimeout(function() {
 						plus.webview.close('login');
 						plus.webview.close('mobile_bind');
