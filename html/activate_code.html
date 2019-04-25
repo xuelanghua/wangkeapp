@@ -168,7 +168,7 @@
 				overflow-y: scroll;
 				padding-top: 44px;
 			}
-			
+
 			.exchange-code {
 				position: fixed;
 				left: 0;
@@ -180,6 +180,10 @@
 				color: #FFF;
 				font-size: 16px;
 				text-align: center;
+			}
+
+			.mui-segmented-control .mui-control-item {
+				width: 50%;
 			}
 		</style>
 	</head>
@@ -229,29 +233,6 @@
 					 :class="[item.id==1?'active':'']" :key="index">{{item.name}}</li>
 				</ul>
 			</div>
-			<!-- 支付方式选择 -->
-			<div id="wayMiddlePopover" class="mui-popover">
-				<h2>{{keyDesc}}激活</h2>
-				<form class="mui-input-group">
-					<!-- <div class="mui-input-row mui-radio">
-						<label><img src="../image/Alipay.png"><span>支付宝</span></label>
-						<input name="radio1" type="radio" value="alipay" checked="checked">
-					</div> -->
-					<div class="mui-input-row mui-radio">
-						<label><img src="../image/WeChat.png"><span>微信</span></label>
-						<input name="radio1" type="radio" checked value="wxpay">
-					</div>
-					<!-- <div class="mui-input-row mui-radio">
-						<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
-						<input name="radio1" type="radio" value="3">
-					</div> -->
-				</form>
-				<div class="surplus-cont">
-					<h5>合计</h5>
-					<h3>&yen;&nbsp;{{ fee }}</h3>
-					<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">确认支付</button>
-				</div>
-			</div>
 			<div class="exchange-code">
 				兑换激活码
 			</div>
@@ -267,15 +248,8 @@
 				pageNum = 1,
 				selectId = 1,
 				status = 1,
-				codeId = 0,	
-				groupInfo = null,
-				//支付相关变量
-				payType = 'wxpay',
-				wxChannel = null, // 微信支付
-				aliChannel = null, // 支付宝支付
-				channel = null, //支付通道
-				ALIPAYSERVER = $ajaxUrl + 'member&action=code_activate',
-				WXPAYSERVER = $ajaxUrl + 'member&action=code_activate';
+				codeId = 0,
+				groupInfo = null;
 			mui.init({
 				pullRefresh: {
 					container: "#mui-content",
@@ -349,33 +323,18 @@
 						});
 						getGroupInfo();
 						getlist(1);
-						// 支付相关
-						// 获取支付通道  
-						plus.payment.getChannels(function(channels) {
-							for (var i in channels) {
-								if (channels[i].id == "wxpay") {
-									wxChannel = channels[i];
-								} else {
-									aliChannel = channels[i];
-								}
-							}
-						}, function(e) {
-							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
-						});
 					});
 				},
 				mounted: () => {
 					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 					mui('#middlePopover').on('tap', 'li', function() {
 						mui('#middlePopover').popover('hide');
-						mui('#wayMiddlePopover').popover('hide');
 						var btn = mui("#action-btn");
 						btn[0].classList.remove('active');
 					});
 					// 切换选项卡请求接口
 					mui('.mui-segmented-control').on('tap', 'a', function() {
 						mui('#middlePopover').popover('hide');
-						mui('#wayMiddlePopover').popover('hide');
 						var btn = mui("#action-btn");
 						btn[0].classList.remove('active');
 						var link = this.getAttribute('href');
@@ -404,7 +363,7 @@
 					mui(".mui-bar").on('tap', '#action-btn', function() {
 						this.classList.toggle('active');
 					})
-					
+
 					mui('body').on('tap', '.exchange-code', function() {
 						openPage('activation_code_collection.html', 'activation_code_collection', '#f7f7f7', '');
 					})
@@ -441,113 +400,30 @@
 					}
 				}, 'json');
 			}
-			
-			// 弹出支付
-			function actionKey(key, keyid, group_id) {
-				mui('#wayMiddlePopover').popover('show');
-				codeId = keyid;
-				mui.each(groupInfo, function(index, item) {
-					if (item.id == group_id) {
-						app.fee = parseFloat((item.activation_fee * 10 / 100));
-					}
-				})
-				app.keyDesc = key;
-			}
-			// 选择支付方式
-			var payTarget = document.getElementsByTagName("mui-radio");
-			for (var i = 0; i < payTarget.length; i++) {
-				if (payTarget[i].checked) {
-					message(payTarget[i].value);
-				}
-			}
-			
-			mui('.mui-content').on('tap', '.mui-pay', function() {
-				if (payType.length == 0) {
-					message('请选择支付方式!');
-					return;
-				}
-				mui('#wayMiddlePopover').popover('hide');
-				pay(payType);
-			}) 
-			// 监听选择的支付方式
-			// 2. 发起支付请求  
-			function pay(id) {
-				// 从服务器请求支付订单
-				var PAYSERVER = '';
-				if (id == 'alipay') {
-					message("暂不支持支付宝支付!", 'center');
-					return;
-					PAYSERVER = ALIPAYSERVER;
-					channel = aliChannel;
-				} else if (id == 'wxpay') {
-					PAYSERVER = WXPAYSERVER;
-					channel = wxChannel;
-				} else {
-					message("不支持此支付通道!", 'center');
-					return;
-				}
-				var waiting = plus.nativeUI.showWaiting();
-				mui.post(PAYSERVER, {
-					code_id: codeId,
-					fee: app.fee,
-					pay_type: payType,
-					token: userInfo.token
-				}, function(res) {
-					console.log(JSON.stringify(res));
-					waiting.close();
-					if (res.errno == 0) {
-						var data = res.data;
-						var param = {
-							appid: data.appid,
-							noncestr: data.nonce_str,
-							package: 'Sign=WXPay',
-							partnerid: data.mch_id,
-							prepayid: data.prepay_id,
-							timestamp: data.timeStamp,
-							sign: data.paySign
-						};
 
-						plus.payment.request(channel, param, function(result) {
-							//                  	console.log(JSON.stringify(result));
-							plus.nativeUI.alert("支付成功！", function() {
-								plus.navigator.setStatusBarStyle('dark');
-								mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'activationSuccess');
-								mui.back();
-							});
-						}, function(error) {
-							console.log(JSON.stringify(error));
-							plus.nativeUI.alert("支付失败：" + error.code);
-						});
-					} else {
-						plus.nativeUI.alert(res.message, null, '提示');
-					}
-				}, 'json')
-			}
-			
 			function getGroupInfo() {
-				mui.get($ajaxUrl + 'member',{
-						action: 'group_info'
-					}, function(res){
-						groupInfo = res.data;
-					}, 'json'
-				);
+				mui.get($ajaxUrl + 'member', {
+					action: 'group_info'
+				}, function(res) {
+					groupInfo = res.data;
+				}, 'json');
 			}
-			
-			 function copyToClip(text) {
-                if(mui.os.android) {  
-                    var Context = plus.android.importClass("android.content.Context");  
-                    var main = plus.android.runtimeMainActivity();  
-                    var clip = main.getSystemService(Context.CLIPBOARD_SERVICE);  
-                    plus.android.invoke(clip, "setText", text);
-                } else {  
-                    var UIPasteboard = plus.ios.importClass("UIPasteboard");  
-                    var generalPasteboard = UIPasteboard.generalPasteboard();  
-                    // 设置/获取文本内容:  
-                    generalPasteboard.setValueforPasteboardType(text, "public.utf8-plain-text");  
-                    var value = generalPasteboard.valueForPasteboardType("public.utf8-plain-text");  
-                }  
-                mui.toast("复制激活码成功"); 
-            }  
+
+			function copyToClip(text) {
+				if (mui.os.android) {
+					var Context = plus.android.importClass("android.content.Context");
+					var main = plus.android.runtimeMainActivity();
+					var clip = main.getSystemService(Context.CLIPBOARD_SERVICE);
+					plus.android.invoke(clip, "setText", text);
+				} else {
+					var UIPasteboard = plus.ios.importClass("UIPasteboard");
+					var generalPasteboard = UIPasteboard.generalPasteboard();
+					// 设置/获取文本内容:  
+					generalPasteboard.setValueforPasteboardType(text, "public.utf8-plain-text");
+					var value = generalPasteboard.valueForPasteboardType("public.utf8-plain-text");
+				}
+				mui.toast("复制激活码成功");
+			}
 		</script>
 	</body>
 

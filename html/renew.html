@@ -12,6 +12,7 @@
 			.mui-bar-nav {
 				box-shadow: none;
 			}
+
 			/* 弹窗 */
 			.join-team-verify {
 				position: fixed;
@@ -26,8 +27,8 @@
 				justify-content: center;
 				flex-direction: column;
 			}
-			
-			
+
+
 			.verift-body {
 				width: 100%;
 				background-color: #ffffff;
@@ -39,7 +40,7 @@
 				animation: zoomIn 150ms ease-in-out;
 				z-index: 1045;
 			}
-			
+
 			.verift-body .tips {
 				width: 100%;
 				font-size: 0.3rem;
@@ -48,7 +49,7 @@
 				justify-content: center;
 				height: 1.6rem;
 			}
-			
+
 			.verift-footer:before {
 				content: '';
 				display: block;
@@ -61,19 +62,19 @@
 				transform: scaleY(0.5);
 				-webkit-transform: scaleY(0.5);
 			}
-			
+
 			.verift-footer {
 				position: relative;
 				display: flex;
 				justify-content: center;
 			}
-			
+
 			.verift-footer .mui-btn {
 				width: 100%;
 				height: 100%;
 				padding: 15px 10px;
 			}
-			
+
 			.close-verify-window:before {
 				content: '';
 				display: block;
@@ -87,9 +88,14 @@
 				transform: scaleX(0.5);
 				-webkit-transform: scaleX(0.5);
 			}
-			
+
 			.mui-backdrop {
 				background-color: rgba(0, 0, 0, 0);
+			}
+			.mui-content{
+				height: 100vh;
+				overflow: hidden;
+				background-color: #232531;
 			}
 		</style>
 	</head>
@@ -185,7 +191,7 @@
 						watchSlidesProgress: true,
 						slidesPerView: 'auto',
 						centeredSlides: true,
-						loop: true,
+						loop: false,
 						autoplay: false,
 						pagination: {
 							el: '.swiper-pagination'
@@ -201,14 +207,14 @@
 						message('预约成功');
 					})
 				},
-				methods:{
-					renew:function(e){
-						if(e==1){
-							openPage('vt_renew.html','vt_renew','#f7f7f7','');
-						}else if(e==2){
-							openPage('vt_renew.html','vt_renew','#f7f7f7','');
-						}else{
-							document.getElementById('verift-body').style.display="flex";
+				methods: {
+					renew: function(e) {
+						if (e == 1) {
+							openPage('vt_renew.html', 'vt_renew', '#f7f7f7', '');
+						} else if (e == 2) {
+							openPage('vt_renew.html', 'vt_renew', '#f7f7f7', '');
+						} else {
+							document.getElementById('verift-body').style.display = "flex";
 							mask.show();
 						}
 					}
