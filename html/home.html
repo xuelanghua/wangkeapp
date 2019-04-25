@@ -450,7 +450,7 @@
 						<div class="clearfix"></div>
 					</div>
 					<div class="titlecontentR">
-						<p id="city">昆明</p>
+						<p id="city">昆明市</p>
 						<!-- <div class="icon sun-shower">
 							<div class="cloud"></div>
 							<div class="sun">
@@ -679,9 +679,21 @@
 				// var type = this.dataset.type;
 				// showQrcode('card');
 				// message(userInfo.id);
-				openPage('friends_detail.html','friends_detail','#f7f7f7',{
-					fid:userInfo.id
-				})
+				mui.get($ajaxUrl + 'member', {
+						action: 'check_user_info',
+						token: userInfo.token
+					}, function(res){
+						if (res.errno == 0) {
+							openPage('friends_detail.html','friends_detail','#f7f7f7',{
+								fid:userInfo.id
+							})
+						} else {
+							openPage('card_setting.html','card_setting','#FFF',{
+								fid:userInfo.id
+							})
+						}
+					}, 'json'
+				);
 			})
 
 			//打开商城

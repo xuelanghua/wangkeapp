@@ -718,4 +718,14 @@ function playNoticeAudio() {
 	}
 }
 
+// 设置数字
+function setBadge(number) {
+	plus.runtime.setBadgeNumber(number);
+}
+// 清除数字
+function clearBadge() {
+	plus.runtime.setBadgeNumber(-1);
+}
+
+
 
