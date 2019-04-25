@@ -6,31 +6,191 @@
 		<title>服务奖</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/vip-page.css" rel="stylesheet" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<style>
+			.screen-btn{
+				font-size: 14px;
+				color: #333333;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				padding: 0 20px;
+				position: relative;
+				z-index: 12;
+				margin-right: -10px;
+			}
+			.screen-btn img{
+				width: 16px;
+				margin-right: 3px;
+				margin-top: -6px;
+			}
+			/* 弹窗 */
+			.mui-popover .mui-popover-arrow{
+				display: none;	
+			}
+			.mui-popover {
+				width: 6.67rem;
+				height: 4.5rem;
+				border-radius: 0.1rem;
+				background-color: #FFFFFF;
+				z-index: 1045 !important;
+				position: fixed !important;
+				top: 50% !important;
+				left: 50% !important;
+				transform: translate(-50%,-50%);
+				-webkit-transform: translate(-50%,-50%);
+			}
+			.title{
+				font-size: 0.35rem;
+				color: #5a5a5a;
+				height: 1.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+			}
+			.title:before{
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				bottom: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			.tips-body{
+				padding:0.2rem 0.3rem;
+			} 
+			.tips-body ul{
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: wrap;
+			}
+			.tips-body ul li{
+				width: 1.8rem;
+				height: 0.9rem;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				background-color: #f5f5f5;
+				border-radius: 0.1rem;
+				color: #333333;
+				margin: 0.2rem 0;
+				font-size: 0.26rem;
+			}
+			.tips-body ul li.active{
+				background-color: #def4ff;
+			}
+		</style>
 	</head>
 
 	<body class="mui-hidden">
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">服务奖</h1>
+			<a class="screen-btn mui-pull-right" href="#middlePopover"><img src="../image/screen.png">筛选</a>
 		</header>
 
 		<div class="mui-content service-award-container">
-				
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell timer">
+					<span id="timer-choice"><span id="result">2018年12月</span><span class="mui-icon mui-icon-arrowdown"></span></span>
+					<span>收入&nbsp;&nbsp;&yen;4,500</span>
+				</li>
+				<li class="mui-table-view-cell">
+					<img src="../image/kaol.jpg" alt="">
+					<div class="right-cont">
+						<div class="top mui-clearfix">
+							<span>小飞飞</span>
+							<!-- .vip,.vip1,.vip2,.vip3四种class -->
+							<span class="vip">vip</span>
+							<span class="mui-pull-right">+60</span>
+						</div>
+						<div class="bottom mui-clearfix">
+							<span>[会员续费]</span>
+							<span class="mui-pull-right">12-28</span>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<img src="../image/kaol.jpg" alt="">
+					<div class="right-cont">
+						<div class="top mui-clearfix">
+							<span>小飞飞</span>
+							<!-- .vip,.vip1,.vip2,.vip3四种class -->
+							<span class="vip">服务站</span>
+							<span class="mui-pull-right">+60</span>
+						</div>
+						<div class="bottom mui-clearfix">
+							<span>[会员续费]</span>
+							<span class="mui-pull-right">12-28</span>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="middlePopover" class="mui-popover">
+			<div class="title">类型选择</div>
+			<div class="tips-body">
+				<ul id="filtrate-type">
+					<li data-type='1' class="active">全部</li>
+					<li data-type='2'>会员续费</li>
+					<li data-type='3'>会员升级</li>
+					<li data-type='4'>知识付费</li>
+				</ul>
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
 		<script type="text/javascript">
-		mui.init();
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-		// 初始化字体大小结束
-		mui.plusReady(function() {})
-	</script>
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			// 初始化字体大小结束
+			mui.plusReady(function() {})
+			// 日期选择
+			var btn = document.getElementById('timer-choice');
+			var result = document.getElementById('result');
+			btn.addEventListener('tap', function() {
+				var _self = this;
+				var options = {
+					"type": "month",
+					"beginYear": "2019",
+					"endYear": "2029"
+				}
+				if (_self.picker) {
+					_self.picker.show(function(rs) {
+						result.innerText = rs.y.text + '年' + rs.m.text + '月';
+					});
+				} else {
+					_self.picker = new mui.DtPicker(options);
+					_self.picker.show(function(rs) {
+						result.innerText = rs.y.text + '年' + rs.m.text + '月';
+					});
+				}
+			})
+			mui('#filtrate-type').on('tap', 'li', function() {
+				mui("#filtrate-type li").each(function() {
+					this.classList.remove('active');
+				});
+				this.classList.add('active');
+				var types=this.dataset.type;
+				mui('#middlePopover').popover('hide');
+				console.log(types);
+			})
+		</script>
 	</body>
-	
+
 </html>
