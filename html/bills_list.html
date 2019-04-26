@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>账单</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" type="text/css" rel="stylesheet" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../icomoon/style.css" type="text/css" rel="stylesheet" />
+		<link href="../css/vip-page.css" type="text/css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-off-canvas-wrap .mui-bar {
+				-webkit-box-shadow: 0 1px 1px #f2f2f2;
+				box-shadow: 0 1px 1px #f2f2f2;
+			}
+
+			.mui-off-canvas-right {
+				top: 45px;
+				background-color: #FFFFFF;
+			}
+
+			.mui-off-canvas-right .mui-table-view:before,
+			.mui-off-canvas-right .mui-table-view:after {
+				height: 0;
+			}
+
+			.mui-off-canvas-right .mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.mui-off-canvas-right .mui-table-view-cell {
+				padding: 0;
+				height: 0.9rem;
+				display: flex;
+				align-items: center;
+				padding-left: 0.4rem;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.mui-off-canvas-right .mui-table-view-cell:after {
+				background-color: #f2f2f2;
+				left: 0.4rem;
+			}
+
+			.mui-off-canvas-right h2 {
+				padding: 0.4rem;
+				font-size: 0.35rem;
+				color: #2289ff;
+				font-weight: normal;
+			}
+
+			.mui-off-canvas-right p {
+				background-color: #f2f2f2;
+				color: #999999;
+				font-size: 0.24rem;
+				padding: 0.1rem 0.45rem;
+				margin-bottom: 0;
+			}
+
+			.mui-off-canvas-right img {
+				width: 0.42rem;
+				height: 0.42rem;
+				border-radius: 50%;
+				margin-right: 0.2rem;
+			}
+
+			#offCanvasSide .mui-table-view-cell.active {
+				background-color: #e5f1ff;
+			}
+
+			#offCanvasSide .mui-table-view-cell.border-none:after {
+				height: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- 侧滑菜单 -->
+		<div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-draggable mui-slide-in">
+			<!--菜单部分-->
+			<aside id="offCanvasSide" class="mui-off-canvas-right">
+				<h2>交易类型</h2>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell border-none active" data-text="筛选"><img src="../image/assert/checked-cls.png">全部</li>
+				</ul>
+				<p>收入</p>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" data-text="广告收益"><img src="../image/assert/adv_icon.png">广告收益</li>
+					<li class="mui-table-view-cell" data-text="店铺收益"><img src="../image/assert/shop_icon.png">店铺收益</li>
+					<li class="mui-table-view-cell" data-text="二维码收款"><img src="../image/assert/qrcode_icon.png">二维码收款</li>
+				</ul>
+				<p>支出</p>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" data-text="红包"><img src="../image/assert/redpack_icon.png">红包</li>
+					<li class="mui-table-view-cell" data-text="提现"><img src="../image/assert/withdrawal_icon.png">提现</li>
+				</ul>
+			</aside>
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">账单</h1>
+			</header>
+			<div class="mui-inner-wrap">
+				<div class="mui-content bill-container">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell timer bills-timer">
+							<div id="timer-choice">
+								<div><span class="timer-choice" id="result">2018年12月</span><span class="mui-icon mui-icon-arrowdown"></div>
+								<div>
+									<span>收入&nbsp;&nbsp;</span><span>4.500</span>
+									<span class="title">支出&nbsp;&nbsp;</span><span>3,200</span>
+								</div>
+							</div>
+							<div class="more" id="offCanvasShow">
+								<img src="../image/screen.png"><span id="checked-cls">筛选</span>
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<img src="../image/assert/adv_icon.png" alt="">
+							<div class="right-cont">
+								<div class="top mui-clearfix">
+									<div class="mui-ellipsis bill-title mui-pull-left">广告收益广告收益广告收益广告收益广告收益广告收益广告收益</div>
+									<span class="mui-pull-right earning">+600000</span>
+								</div>
+								<div class="bottom mui-clearfix">
+									<span>10月15&nbsp;&nbsp;&nbsp;&nbsp;18:20</span>
+									<span class="mui-pull-right">等待买家收货</span>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<img src="../image/assert/shop_icon.png" alt="">
+							<div class="right-cont">
+								<div class="top mui-clearfix">
+									<span>店铺收入</span>
+									<span class="mui-pull-right expenditure">+60</span>
+								</div>
+								<div class="bottom mui-clearfix">
+									<span>10月15&nbsp;&nbsp;&nbsp;&nbsp;18:20</span>
+									<span class="mui-pull-right">曝光1000次</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="mui-off-canvas-backdrop"></div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script>
+		mui.init({
+			swipeBack: true
+		})
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		var userInfo = getUserInfo();
+		var app = new Vue({
+			el: '.mui-content',
+			data() {
+				return {
+
+				}
+			},
+			mounted: function() {
+				mui.plusReady(function() {})
+			}
+		})
+		//侧滑容器父节点
+		var offCanvasWrapper = mui('#offCanvasWrapper');
+		//主界面容器
+		var offCanvasInner = offCanvasWrapper[0].querySelector('.mui-inner-wrap');
+		//菜单容器
+		var offCanvasSide = document.getElementById("offCanvasSide");
+		//实现ios平台的侧滑关闭页面；
+		if (mui.os.plus && mui.os.ios) {
+			offCanvasWrapper[0].addEventListener('shown', function(e) { //菜单显示完成事件
+				plus.webview.currentWebview().setStyle({
+					'popGesture': 'none'
+				});
+			});
+			offCanvasWrapper[0].addEventListener('hidden', function(e) { //菜单关闭完成事件
+				plus.webview.currentWebview().setStyle({
+					'popGesture': 'close'
+				});
+			});
+		}
+		document.getElementById('offCanvasShow').addEventListener('tap', function() {
+			offCanvasWrapper.offCanvas('show');
+		});
+		// 日期选择
+		var btn = document.getElementById('timer-choice');
+		var result = document.getElementById('result');
+		btn.addEventListener('tap', function() {
+			var _self = this;
+			var options = {
+				"type": "month",
+				"beginYear": "2019",
+				"endYear": "2029"
+			}
+			if (_self.picker) {
+				_self.picker.show(function(rs) {
+					result.innerText = rs.y.text + '年' + rs.m.text + '月';
+				});
+			} else {
+				_self.picker = new mui.DtPicker(options);
+				_self.picker.show(function(rs) {
+					result.innerText = rs.y.text + '年' + rs.m.text + '月';
+				});
+			}
+		})
+		mui('#offCanvasSide').on('tap', 'li', function() {
+			mui("#offCanvasSide li").each(function() {
+				this.classList.remove('active');
+			});
+			this.classList.add('active');
+			document.getElementById('checked-cls').innerText=this.dataset.text;
+			// 隐藏筛选
+			offCanvasWrapper.offCanvas('close');
+		})
+	</script>
+</html>

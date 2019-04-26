@@ -236,18 +236,18 @@
 					</div>
 				</div>
 				<div class="bonus-section">
-					<div class="items">
+					<div class="items service-award">
 						<span class="mui-navigate-right">本月服务奖</span>
 						<p>{{memberInfo.service_award || 0 }}<span class="unit">元</span></p>
 					</div>
-					<div class="items">
+					<div class="items accumulated">
 						<span class="mui-navigate-right">推荐奖累计</span>
 						<p>{{memberInfo.recommended_award}}<span class="unit">元</span></p>
 					</div>
 				</div>
 			</div>
 			<div class="fans">
-				<div class="title"><span>我的粉丝（{{memberInfo.fans_number||0}}）</span><span class="mui-navigate-right">更多</span></div>
+				<div class="title"><span>我的粉丝（{{memberInfo.fans_number||0}}）</span><span class="mui-navigate-right accumulated">更多</span></div>
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell" v-for="(list,index) in fansLists" :key="index">
 						<img class="user-head-img" src="../image/kaol.jpg">
@@ -323,6 +323,14 @@
 						mui('.mui-content').on('tap', '#renew', function() {
 							openPage('renew.html', 'renew', '#f7f7f7', '');
 						})
+						// 服务奖
+						mui('.mui-content').on('tap', '.service-award', function() {
+							openPage('service_award.html', 'service_award', '#f7f7f7', '');
+						})
+						// 推荐奖
+						mui('.mui-content').on('tap', '.accumulated', function() {
+							openPage('my_fans.html', 'my_fans', '#f7f7f7', '');
+						})
 					})
 				},
 				methods: {
@@ -346,7 +354,6 @@
 					}
 				}, 'json');
 			}
-
 			function getFans() {
 				pageNum += 1;
 				mui.post($ajaxUrl + 'member&action=fans', {

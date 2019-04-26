@@ -644,7 +644,7 @@
 				mui(".goods").on("tap", ".goodsL", function() {
 					// message(group_id);
 					// return;
-					group_id = 2;
+					group_id = 3;
 					// openPage('member.html', 'member', '#ffffff', '');
 					// openPage('maker.html', 'maker', '#f7f7f7', '');
 					// openPage('agent.html', 'agent', '#f7f7f7', '');
@@ -763,19 +763,19 @@
 			
 			//获取未读消息
 			function getUnreadMessage() {
-				mui.get( $ajaxUrl + 'member',{
-						action: 'unread_message',
-						token: userInfo.token
-					},function(res){
-						var tipObj = document.getElementById('unread_message');
-						if (res.data > 0) {
-							tipObj.innerText = res.data;
-							tipObj.style.display = 'block';
-						} else {
-							tipObj.innerText = 0;
-							tipObj.style.display = 'none';
-						}
-					},'json');
+			mui.get( $ajaxUrl + 'member',{
+					action: 'unread_message',
+					token: userInfo.token
+				},function(res){
+					var tipObj = document.getElementById('unread_message');
+					if (res.data > 0) {
+						tipObj.innerText = res.data;
+						tipObj.style.display = 'block';
+					} else {
+						tipObj.innerText = 0;
+						tipObj.style.display = 'none';
+					}
+				},'json');
 			}
 		</script>
 	</body>
