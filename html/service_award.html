@@ -97,39 +97,24 @@
 			<a class="screen-btn mui-pull-right" href="#middlePopover"><img src="../image/screen.png">筛选</a>
 		</header>
 
-		<div class="mui-content service-award-container">
+		<div id="mui-content" class="mui-content service-award-container">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell timer">
 					<span id="timer-choice"><span id="result">2018年12月</span><span class="mui-icon mui-icon-arrowdown"></span></span>
-					<span>收入&nbsp;&nbsp;&yen;4,500</span>
+					<span>收入&nbsp;&nbsp;&yen;{{serviceAward.income}}</span>
 				</li>
-				<li class="mui-table-view-cell">
-					<img src="../image/kaol.jpg" alt="">
+				<li class="mui-table-view-cell" v-for="(list,index) in serviceAward.list" :key="index">
+					<img :src="list.avatarUrl" alt="">
 					<div class="right-cont">
 						<div class="top mui-clearfix">
-							<span>小飞飞</span>
+							<span>{{list.name||list.nickName}}</span>
 							<!-- .vip,.vip1,.vip2,.vip3四种class -->
-							<span class="vip">vip</span>
-							<span class="mui-pull-right">+60</span>
+							<span :class="'vip'+list.group_id">{{list.group_name}}</span>
+							<span class="mui-pull-right">+{{list.number}}</span>
 						</div>
 						<div class="bottom mui-clearfix">
-							<span>[会员续费]</span>
-							<span class="mui-pull-right">12-28</span>
-						</div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<img src="../image/kaol.jpg" alt="">
-					<div class="right-cont">
-						<div class="top mui-clearfix">
-							<span>小飞飞</span>
-							<!-- .vip,.vip1,.vip2,.vip3四种class -->
-							<span class="vip">服务站</span>
-							<span class="mui-pull-right">+60</span>
-						</div>
-						<div class="bottom mui-clearfix">
-							<span>[会员续费]</span>
-							<span class="mui-pull-right">12-28</span>
+							<span>[{{list.remark}}]</span>
+							<span class="mui-pull-right">{{list.create_time}}</span>
 						</div>
 					</div>
 				</li>
@@ -139,19 +124,32 @@
 			<div class="title">类型选择</div>
 			<div class="tips-body">
 				<ul id="filtrate-type">
-					<li data-type='1' class="active">全部</li>
-					<li data-type='2'>会员续费</li>
-					<li data-type='3'>会员升级</li>
-					<li data-type='4'>知识付费</li>
+					<li data-type='' class="active">全部</li>
+					<li data-type='12'>会员续费</li>
+					<li data-type='13'>商品位购买</li>
+					<li data-type='14'>知识付费</li>
 				</ul>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script src="../js/mui.picker.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
 			// 初始化字体大小
+			var userInfo = getUserInfo(),
+				genre = '',
+				skip = 1,
+				timer = '',
+				limit = 10;
+			var date = new Date;
+			var year = date.getFullYear();
+			var month = date.getMonth() + 1;
+			if (month < 10) {
+				month = '0' + month;
+			}
+			var timers = year + '-' + month;
+			timer=timers;
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
 				viewport = 750
@@ -159,37 +157,102 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
-			mui.plusReady(function() {})
-			// 日期选择
-			var btn = document.getElementById('timer-choice');
-			var result = document.getElementById('result');
-			btn.addEventListener('tap', function() {
-				var _self = this;
-				var options = {
-					"type": "month",
-					"beginYear": "2019",
-					"endYear": "2029"
-				}
-				if (_self.picker) {
-					_self.picker.show(function(rs) {
-						result.innerText = rs.y.text + '年' + rs.m.text + '月';
+			var app = new Vue({
+				el: '#mui-content',
+				data() {
+					return {
+						serviceAward: {}
+					}
+				},
+				created: function() {
+					getServiceAward();
+				},
+				mounted: function() {
+					mui.init({
+						swipeBack: false, 
+						pullRefresh: {
+							container: "#mui-content", 
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									timer=timers;
+									skip+=1;
+									getServiceAward();
+								}
+							},
+							down: {
+								style: 'circle', 
+								color: '#2289FF', 
+								callback: function() {
+									skip=1;
+									getServiceAward();
+								}
+							}
+						}
 					});
-				} else {
-					_self.picker = new mui.DtPicker(options);
-					_self.picker.show(function(rs) {
-						result.innerText = rs.y.text + '年' + rs.m.text + '月';
-					});
+					mui.plusReady(function() {})
+					// 日期选择
+					var btn = document.getElementById('timer-choice');
+					var result = document.getElementById('result');
+					btn.addEventListener('tap', function() {
+						var _self = this;
+						var options = {
+							"type": "month",
+							"beginYear": "2019",
+							"endYear": "2029"
+						}
+						if (_self.picker) {
+							_self.picker.show(function(rs) {
+								result.innerText = rs.y.text + '年' + rs.m.text + '月';
+								timer=rs.y.text + '-' + rs.m.text;
+								getServiceAward();
+							});
+						} else {
+							_self.picker = new mui.DtPicker(options);
+							_self.picker.show(function(rs) {
+								result.innerText = rs.y.text + '年' + rs.m.text + '月';
+								timer=rs.y.text + '-' + rs.m.text;
+								getServiceAward();
+							});
+						}
+					})
+					mui('#filtrate-type').on('tap', 'li', function() {
+						mui("#filtrate-type li").each(function() {
+							this.classList.remove('active');
+						});
+						this.classList.add('active');
+						genre = this.dataset.type;
+						mui('#middlePopover').popover('hide');
+						getServiceAward();
+					})
 				}
 			})
-			mui('#filtrate-type').on('tap', 'li', function() {
-				mui("#filtrate-type li").each(function() {
-					this.classList.remove('active');
-				});
-				this.classList.add('active');
-				var types=this.dataset.type;
-				mui('#middlePopover').popover('hide');
-				console.log(types);
-			})
+
+			function getServiceAward() {
+				logs(skip);
+				mui.post($ajaxUrl + 'member&action=service_award_log', {
+					token: userInfo.token,
+					data: timer,
+					type: genre,
+					skip: skip,
+					limit: limit,
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0&&skip==1) {
+						app.serviceAward = res.data;
+						mui('#mui-content').pullRefresh().endPulldownToRefresh();
+					} else if(res.errno == 0&&skip>1){
+						app.serviceAward.list = app.serviceAward.list.concat(res.data.list);
+						mui('#mui-content').pullRefresh().endPullupToRefresh();
+					}else{
+						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						message('没有更多了~');
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 

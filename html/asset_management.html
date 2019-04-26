@@ -9,6 +9,15 @@
 		<link href="../css/mui.picker.min.css" rel="stylesheet" />
 		<link href="../icomoon/style.css" type="text/css" rel="stylesheet" />
 		<link href="../css/vip-page.css" type="text/css" rel="stylesheet" />
+		<style>
+			.mui-bar.mui-bar-nav {
+				background-color: #2289ff;
+				box-shadow: none;
+			}
+			.mui-bar.mui-bar-nav h1,.mui-icon-back:before, .mui-icon-left-nav:before{
+				color: #FFFFFF;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -60,11 +69,11 @@
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
-						<img src="../image/kaol.jpg" alt="">
+						<img src="../image/assert/adv_icon.png" alt="">
 						<div class="right-cont">
 							<div class="top mui-clearfix">
 								<div class="mui-ellipsis bill-title mui-pull-left">广告收益广告收益广告收益广告收益广告收益广告收益广告收益</div>
-								<span class="mui-pull-right">+600000</span>
+								<span class="mui-pull-right earning">+600000</span>
 							</div>
 							<div class="bottom mui-clearfix">
 								<span>10月15&nbsp;&nbsp;&nbsp;&nbsp;18:20</span>
@@ -73,11 +82,11 @@
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
-						<img src="../image/kaol.jpg" alt="">
+						<img src="../image/assert/shop_icon.png" alt="">
 						<div class="right-cont">
 							<div class="top mui-clearfix">
-								<span>小飞飞</span>
-								<span class="mui-pull-right">+60</span>
+								<span>店铺收入</span>
+								<span class="mui-pull-right expenditure">+60</span>
 							</div>
 							<div class="bottom mui-clearfix">
 								<span>10月15&nbsp;&nbsp;&nbsp;&nbsp;18:20</span>
@@ -118,7 +127,9 @@
 				}
 			},
 			mounted: function() {
-				mui.plusReady(function() {})
+				mui.plusReady(function() {
+					eventInit();
+				})
 			}
 		})
 
@@ -130,6 +141,10 @@
 
 			mui('.mui-content').on('tap', '#cash', function() {
 				message('提现!', 'center');
+			})
+			// 账单
+			mui('.mui-content').on('tap', '.more', function() {
+				openPage('bills_list.html', 'bills_list', '#f7f7f7', '')
 			})
 		}
 	</script>
