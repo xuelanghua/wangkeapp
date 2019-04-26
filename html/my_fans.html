@@ -22,7 +22,7 @@
 		</header>
 
 		<div id="mui-content" class="mui-content service-award-container">
-			<ul class="mui-table-view">
+			<ul class="mui-table-view" v-if="fansList.length>0">
 				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
 					<img src="../image/kaol.jpg" alt="">
 					<div class="right-cont">
@@ -39,6 +39,9 @@
 					</div>
 				</li>
 			</ul>
+			<div class="void-status" v-else style="padding: 3rem;text-align: center;min-height: 100vh;">
+				 没有粉丝
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
@@ -60,7 +63,7 @@
 				el: "#mui-content",
 				data() {
 					return {
-						fansList:[]
+						fansList: []
 					}
 				},
 				created: function() {
@@ -68,24 +71,24 @@
 				},
 				mounted: function() {
 					mui.init({
-						swipeBack: false, 
+						swipeBack: false,
 						pullRefresh: {
-							container: "#mui-content", 
+							container: "#mui-content",
 							up: {
 								height: 50,
 								auto: false,
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
-									skip+=1;
+									skip += 1;
 									getFansList();
 								}
 							},
 							down: {
-								style: 'circle', 
-								color: '#2289FF', 
+								style: 'circle',
+								color: '#2289FF',
 								callback: function() {
-									skip=1;
+									skip = 1;
 									getFansList();
 								}
 							}
@@ -98,16 +101,16 @@
 			function getFansList() {
 				mui.post($ajaxUrl + 'team&action=team_info', {
 					token: userInfo.token,
-					skip:skip,
-					limit:limit
+					skip: skip,
+					limit: limit
 				}, function(res) {
-					if (res.errno == 0&&skip==1) {
+					if (res.errno == 0 && skip == 1) {
 						app.fansList = res.data;
 						mui('#mui-content').pullRefresh().endPulldownToRefresh();
-					} else if(res.errno == 0&&skip>1){
+					} else if (res.errno == 0 && skip > 1) {
 						app.fansList = app.fansList.concat(res.data);
 						mui('#mui-content').pullRefresh().endPullupToRefresh();
-					}else{
+					} else {
 						mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 						message('没有更多了~');
