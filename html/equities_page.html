@@ -13,6 +13,85 @@
 				height: 100vh;
 				background-color: #242632;
 			}
+
+			/* 弹窗 */
+			.mui-popover .mui-popover-arrow {
+				display: none;
+			}
+
+			.mui-popover {
+				width: 6rem;
+				height: auto;
+				z-index: 1045 !important;
+				position: fixed !important;
+				top: 50% !important;
+				left: 50% !important;
+				transform: translate(-50%, -50%);
+				-webkit-transform: translate(-50%, -50%);
+			}
+
+			.mui-backdrop {
+				/* background: transparent; */
+			}
+			.verift-body {
+				width: 100%;
+				background-color: #ffffff;
+				border-radius: 0.1rem;
+				position: relative;
+				overflow: hidden;
+				padding-top: 5px;
+				box-shadow: 0 0 10px 5px rgba(0,0,0,0.3);
+				animation: zoomIn 150ms ease-in-out;
+				z-index: 1045;
+			}
+			
+			.verift-body .tips {
+				width: 100%;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 1.6rem;
+			}
+			
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+			
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 15px 10px;
+			}
+			
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
 		</style>
 	</head>
 
@@ -125,7 +204,7 @@
 								<h4>推荐奖</h4>
 								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
 							</div>
-							<span class="upgrade-btn">预约升级</span>
+							<a href="#middlePopover" class="upgrade-btn">预约升级</a>
 						</div>
 					</div>
 					<div class="swiper-slide  slider2">
@@ -184,6 +263,18 @@
 				<div class="swiper-pagination"></div>
 			</div>
 		</div>
+		<!-- 弹窗 -->
+		<div id="middlePopover" class="mui-popover">
+			<div class="verift-body">
+				<div class="tips">
+					<span>发起预约后将有专员与你联系</span>
+				</div>
+				<div class="verift-footer">
+					<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+					<button type="button" class="mui-btn mui-btn-link send-verify">预约</button>
+				</div>
+			</div>
+		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
@@ -221,6 +312,19 @@
 					});
 					galleryThumbs.controller.control = galleryTop;
 					galleryTop.controller.control = galleryThumbs;
+					// 升级
+					mui(".inside1").on("tap", ".upgrade-btn", function() {
+						openPage('vt_renew.html', 'vt_renew', '#f7f7f7', '');
+					});
+					// 取消预约
+					mui("#middlePopover").on('tap', '.close-verify-window', function() {
+						mui('#middlePopover').popover('hide');
+					})
+					// 确认预约
+					mui("#middlePopover").on('tap', '.send-verify', function() {
+						mui('#middlePopover').popover('hide');
+						message('预约成功');
+					})
 				}
 			})
 		</script>
