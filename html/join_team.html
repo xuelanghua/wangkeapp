@@ -358,7 +358,11 @@
 				})
 				// 创建团队
 				mui(".mui-bar").on("tap", ".create-team-btn", function() {
-					openPage('create_team.html', 'create_team', '#f7f7f7', '');
+					if (userInfo.group_id < 2) {
+						message('您没有创建团队的权限!', 'center');
+					} else {
+						openPage('create_team.html', 'create_team', '#f7f7f7', '');
+					}
 				})
 				// 关闭验证弹窗
 				mui(".mui-content").on("tap", ".close-verify-window", function(e) {
