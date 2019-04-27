@@ -74,8 +74,9 @@
 				height: 0;
 			}
 
-			.mui-content {
+			.mui-off-canvas-wrap.mui-active .mui-off-canvas-backdrop {
 				padding-top: 44px;
+				z-index: 9;
 			}
 		</style>
 	</head>
@@ -101,39 +102,41 @@
 					<li class="mui-table-view-cell" data-text="提现" data-type="5"><img src="../image/assert/assert5.png">提现</li>
 				</ul>
 			</aside>
-			<header class="mui-bar mui-bar-nav">
-				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-				<h1 class="mui-title">账单</h1>
-			</header>
 			<div class="mui-inner-wrap">
-				<div id="mui-content" class="mui-content bill-container">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell timer bills-timer">
-							<div id="timer-choice">
-								<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
-								<div>
-									<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
-									<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					<h1 class="mui-title">账单</h1>
+				</header>
+				<div id="offCanvasContentScroll" class="mui-content bill-container mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell timer bills-timer">
+								<div id="timer-choice">
+									<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
+									<div>
+										<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
+										<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
+									</div>
 								</div>
-							</div>
-							<div class="more" id="offCanvasShow">
-								<img src="../image/screen.png"><span id="checked-cls">筛选</span>
-							</div>
-						</li>
-						<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
-							<img :src="'../image/assert/assert'+list.type+'.png'">
-							<div class="right-cont">
-								<div class="top mui-clearfix">
-									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
-									<span class="mui-pull-right earning">{{list.number}}</span>
+								<div class="more" id="offCanvasShow">
+									<img src="../image/screen.png"><span id="checked-cls">筛选</span>
 								</div>
-								<div class="bottom mui-clearfix">
-									<span>{{list.create_time}}</span>
-									<span class="mui-pull-right">{{list.desc}}</span>
+							</li>
+							<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+								<img :src="'../image/assert/assert'+list.type+'.png'">
+								<div class="right-cont">
+									<div class="top mui-clearfix">
+										<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
+										<span class="mui-pull-right earning">{{list.number}}</span>
+									</div>
+									<div class="bottom mui-clearfix">
+										<span>{{list.create_time}}</span>
+										<span class="mui-pull-right">{{list.desc}}</span>
+									</div>
 								</div>
-							</div>
-						</li>
-					</ul>
+							</li>
+						</ul>
+					</div>
 				</div>
 				<div class="mui-off-canvas-backdrop"></div>
 			</div>
@@ -152,12 +155,12 @@
 		var userInfo = getUserInfo(),
 			skip = 1;
 		var app = new Vue({
-			el: '#mui-content',
+			el: '#offCanvasContentScroll',
 			data() {
 				return {
 					type: 1,
 					balanceData: {
-						list:[]
+						list: []
 					},
 					currentTime: formatDate('y-m', ''),
 					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
@@ -227,16 +230,16 @@
 					if (_self.picker) {
 						_self.picker.show(function(rs) {
 							app.showTime = rs.y.text + '年' + rs.m.text + '月';
-							app.currentTime= rs.y.text + '-' + rs.m.text;
-							skip=1;
+							app.currentTime = rs.y.text + '-' + rs.m.text;
+							skip = 1;
 							getUserBalanceLog();
 						});
 					} else {
 						_self.picker = new mui.DtPicker(options);
 						_self.picker.show(function(rs) {
 							app.showTime = rs.y.text + '年' + rs.m.text + '月';
-							app.currentTime= rs.y.text + '-' + rs.m.text;
-							skip=1;
+							app.currentTime = rs.y.text + '-' + rs.m.text;
+							skip = 1;
 							getUserBalanceLog();
 						});
 					}
@@ -249,8 +252,8 @@
 					document.getElementById('checked-cls').innerText = this.dataset.text;
 					// 隐藏筛选
 					offCanvasWrapper.offCanvas('close');
-					app.type=this.dataset.type;
-					skip=1;
+					app.type = this.dataset.type;
+					skip = 1;
 					getUserBalanceLog();
 				})
 			}
@@ -279,5 +282,6 @@
 				}
 			}, 'json');
 		}
+		mui('#offCanvasContentScroll').scroll();
 	</script>
 </html>
