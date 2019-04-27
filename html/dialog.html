@@ -501,6 +501,7 @@
 					release: true //默认为false，不监听
 				},
 				beforeback: function() {
+					mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 					plus.navigator.setStatusBarStyle(plus.webview.currentWebview().barStyle);
 				}
 			});
@@ -1026,12 +1027,26 @@
 								data = JSON.parse(data);
 								logs(data);
 								if (data.data2) {
-									var message = {
-										sender: chatId,
-										type: data.data2.message_type,
-										content: data.data2.content
+									if (data.data2.user_id == chatId) {
+										var message = {
+											sender: chatId,
+											type: data.data2.message_type,
+											content: data.data2.content
+										}
+										send(message);
+									} else {
+										mui.post($ajaxUrl + 'chat&action=unread_message', {
+											token: userInfo.token,
+											message_id: data.data2.id
+										}, function(res) {
+											if (res.errno == 0) {
+												// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+												// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+												// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+												// mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+											}
+										}, 'json')
 									}
-									send(message);
 								}
 							}
 						};
