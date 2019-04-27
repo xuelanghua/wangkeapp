@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>搜索</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
+		<style type="text/css">
+			#search {
+				display: inline-flex;
+				flex-grow: 1;
+				background-color: #FFFFFF;
+				text-align: left;
+			}
+
+			.void-tips {
+				padding: 1rem 0;
+			}
+
+			.lately-add-cont .between-info .user-name {
+				color: #333333;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">搜索</h1>
+		</header>
+		<div id="mui-content" class="mui-content chat-page-search">
+			<form action="" onsumit="return false">
+				<div class="mui-input-row search-cont">
+					<span class="mui-icon mui-icon-search"></span>
+					<input type="search" id="search" name="cont" class="mui-input-clear" placeholder="搜索">
+				</div>
+			</form>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: false,
+			});
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			var userInfo = getUserInfo();
+			var token = userInfo.token;
+			var app = new Vue({
+				el: "#mui-content",
+				data() {
+					return {
+						
+					}
+				},
+				created: function() {
+				},
+				methods: {
+				}
+			})
+			// 搜索好友
+			mui.plusReady(function() {
+				document.getElementById("search").addEventListener("keypress", function(event) {
+					var search = document.querySelector('input[name=cont]').value;
+					var keyword = search.replace(/^\s*|\s*$/g, "");
+					if (event.keyCode == "13" && keyword != '') {
+						plus.key.hideSoftKeybord();
+						message('开始搜索');
+						// 阻止默认事件---阻止页面刷新
+						event.preventDefault();
+					} else {
+						// message("请输入用户名或者电话");
+					}
+				});
+			})
+		</script>
+	</body>
+</html>

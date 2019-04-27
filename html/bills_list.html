@@ -156,7 +156,9 @@
 			data() {
 				return {
 					type: 1,
-					balanceData: {},
+					balanceData: {
+						list:[]
+					},
 					currentTime: formatDate('y-m', ''),
 					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
 				}
@@ -187,6 +189,7 @@
 					// }
 				});
 				mui.plusReady(function() {
+					setStatusBar('', 'dark');
 					getUserBalanceLog();
 				})
 				//侧滑容器父节点

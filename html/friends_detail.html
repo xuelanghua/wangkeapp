@@ -18,7 +18,7 @@
 			<!-- 名片样式一 -->
 			<div v-if="cardType=='cardType2'" class="first-card-container">
 				<div class="card">
-					<img class="user-head-img" :src="friendData.avatar">
+					<img class="user-head-img" :src="friendData.avatar||'../image/user_default.jpg'">
 					<div class="user-qr-code mui-pull-right">
 						<img src="../image/Marketing-code-01.png">
 					</div>
@@ -38,7 +38,7 @@
 			<!-- 名片样式二 -->
 			<div class="second-card-container" v-else>
 				<div class="card">
-					<img class="user-head-img" :src="friendData.avatar">
+					<img class="user-head-img" :src="friendData.avatar||'../image/user_default.jpg'">
 					<div class="user-qr-code mui-pull-right">
 						<img src="../image/Marketing-code-01.png">
 					</div>
@@ -79,7 +79,7 @@
 						<li class="browse-record-img" v-for="(items,index) in friendData.card_view" v-if="index<7" :key="index">
 							<img :src="items.avatarUrl">
 						</li>
-						<span>···</span>
+						<span v-if="friendData.card_view.length>6">···</span>
 					</ul>
 					<p>最近{{friendData.card_count}}人浏览</p>
 				</div>
@@ -90,23 +90,27 @@
 			</div>
 			<h5 class="personality-desc">个性签名</h5>
 			<div class="personality-cont">
-				<p v-html="friendData.desc"></p>
-				<div class="user-info" v-if="friendData.voice_time!=0">
-					<div class="user-head-img"><img :src="friendData.avatar"></div>
-					<!-- 添加 play是播放状态的图标-->
-					<div id="audio-control" class="play-control">
-						<div class="left-arrow"></div>
-						<i class="play-status"></i>
-						<div class="right-info mui-pull-right">
-							<i></i>
-							<span id="timer-num">{{friendData.voice_time}}</span>
+				<template>
+					<p v-if="friendData.desc" v-html="friendData.desc"></p>
+					<p v-else>暂无个性签名</p>
+					<div class="user-info" v-if="friendData.voice_time!=0">
+						<div class="user-head-img"><img :src="friendData.avatar"></div>
+						<!-- 添加 play是播放状态的图标-->
+						<div id="audio-control" class="play-control">
+							<div class="left-arrow"></div>
+							<i class="play-status"></i>
+							<div class="right-info mui-pull-right">
+								<i></i>
+								<span id="timer-num">{{friendData.voice_time}}</span>
+							</div>
+						</div>
+						<div :class="[is_voice_like?'click-agree active':'click-agree']" id="clickAgree">
+							<span class="agree-icon"></span>
+							<span>点赞</span>
 						</div>
 					</div>
-					<div :class="[is_voice_like?'click-agree active':'click-agree']" id="clickAgree">
-						<span class="agree-icon"></span>
-						<span>点赞</span>
-					</div>
-				</div>
+				</template>
+
 			</div>
 			<h5 class="personality-desc">主推商品</h5>
 			<div class="goods-window">
@@ -121,16 +125,14 @@
 						</div>
 					</li>
 				</ul>
-				<div v-else style="font-size: 0.28rem;color: #999999;">
-					<img style="width: 45%;display: block;margin: 10% auto 0;" class="no-friends" src="../image/icon/void-data.png">
-					<p style="text-align: center;">暂无数据</p>
-				</div>
+				<p v-else style="margin: 10px 0;">暂无数据</p>
 			</div>
 			<h5 class="personality-desc">图片展示</h5>
 			<div class="img-show" id="img-show">
-				<ul>
+				<ul v-if="friendData.images">
 					<li v-for="img in friendData.images"><img :src="img"></li>
 				</ul>
+				<p v-else style="margin: 10px 0;text-align: left;">暂无图片</p>
 			</div>
 			<div class="add-friend-btn" v-if="addshow" v-on:click.stop="addFriend">
 				<img src="../image/icon/add_friends_icon.png" class="constrain-img">
@@ -294,7 +296,7 @@
 					token: userInfo.token,
 					user_id: fid
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0) {
 						muiCont.cardType = data.card_type;

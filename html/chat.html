@@ -380,6 +380,16 @@
 				color: #FFFFFF;
 				font-size: 10px;
 			}
+			.to-search{
+				height: 34px;
+				width: 100%;
+				border-radius: 17px;
+				background: rgba(255,255,255,0.6);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #FFFFFF;
+			}
 		</style>
 	</head>
 
@@ -390,7 +400,8 @@
 			<div id='list' class="mui-indexed-list">
 				<div class="tite">
 					<div class="mui-indexed-list-search mui-input-row mui-search">
-						<input type="search" id="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="搜索">
+						<!-- <input type="search" id="search"  class="mui-input-clear mui-indexed-list-search-input" placeholder="搜索"> -->
+						<div class="to-search"><span class="mui-icon mui-icon-search"></span>搜索</div>
 					</div>
 					<div class="mui-pull-right ns operating-area">
 						<img class="info" id="message" src="../image/Message-icon.png" />
@@ -757,21 +768,21 @@
 					});
 				})
 				
-				document.querySelector('input').addEventListener('focus', function(e) {
-					console.log('input focus');
-					setTimeout(function() {
-						plus.webview.currentWebview().setStyle({
-							height: webviewHeight - Math.random() / 2
-						});
-					}, 500)
-				})
+				// document.querySelector('input').addEventListener('focus', function(e) {
+				// 	console.log('input focus');
+				// 	setTimeout(function() {
+				// 		plus.webview.currentWebview().setStyle({
+				// 			height: webviewHeight - Math.random() / 2
+				// 		});
+				// 	}, 500)
+				// })
 				
-				document.querySelector('input').addEventListener('blur', function(e) {
-					console.log('input blur');
-					plus.webview.currentWebview().setStyle({
-						height: webviewHeight - Math.random() / 2
-					});
-				})
+				// document.querySelector('input').addEventListener('blur', function(e) {
+				// 	console.log('input blur');
+				// 	plus.webview.currentWebview().setStyle({
+				// 		height: webviewHeight - Math.random() / 2
+				// 	});
+				// })
 
 				// 获取原始窗口的高度
 				// var originalHeight = document.querySelector("body").offsetHeight;
@@ -1738,6 +1749,9 @@
 					}
 				}, 'json');
 			}
+			mui(".mui-content").on('tap','.mui-search',function(){
+				openPage('chat_page_search.html','chat_page_search','#f7f7f7','');
+			})
 		</script>
 	</body>
 
