@@ -1,13 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 
 	<head>
 		<meta charset="utf-8">
-		<title>账单</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../css/mui.css" type="text/css" rel="stylesheet" />
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
 		<link href="../css/mui.picker.min.css" rel="stylesheet" />
-		<link href="../icomoon/style.css" type="text/css" rel="stylesheet" />
 		<link href="../css/vip-page.css" type="text/css" rel="stylesheet" />
 		<style type="text/css">
 			.mui-off-canvas-wrap .mui-bar {
@@ -78,210 +79,261 @@
 				padding-top: 44px;
 				z-index: 9;
 			}
+
+			.mui-bar-nav~.mui-content {
+				padding-top: 120px;
+			}
 		</style>
 	</head>
 
 	<body>
-		<!-- 侧滑菜单 -->
-		<div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-draggable mui-slide-in">
-			<!--菜单部分-->
-			<aside id="offCanvasSide" class="mui-off-canvas-right">
-				<h2>交易类型</h2>
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell border-none active" data-text="筛选" data-type="1"><img src="../image/assert/checked-cls.png">全部</li>
-				</ul>
-				<p>收入</p>
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" data-text="广告收益" data-type="15"><img src="../image/assert/assert15.png">广告收益</li>
-					<li class="mui-table-view-cell" data-text="店铺收益" data-type="6"><img src="../image/assert/assert6.png">店铺收益</li>
-					<li class="mui-table-view-cell" data-text="二维码收款" data-type="7"><img src="../image/assert/assert7.png">二维码收款</li>
-				</ul>
-				<p>支出</p>
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" data-text="红包" data-type="4"><img src="../image/assert/assert4.png">红包</li>
-					<li class="mui-table-view-cell" data-text="提现" data-type="5"><img src="../image/assert/assert5.png">提现</li>
-				</ul>
-			</aside>
-			<div class="mui-inner-wrap">
-				<header class="mui-bar mui-bar-nav">
-					<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-					<h1 class="mui-title">账单</h1>
-				</header>
-				<div id="offCanvasContentScroll" class="mui-content bill-container mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell timer bills-timer">
-								<div id="timer-choice">
-									<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
-									<div>
-										<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
-										<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
-									</div>
-								</div>
-								<div class="more" id="offCanvasShow">
-									<img src="../image/screen.png"><span id="checked-cls">筛选</span>
-								</div>
-							</li>
-							<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
-								<img :src="'../image/assert/assert'+list.type+'.png'">
-								<div class="right-cont">
-									<div class="top mui-clearfix">
-										<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
-										<span class="mui-pull-right earning">{{list.number}}</span>
-									</div>
-									<div class="bottom mui-clearfix">
-										<span>{{list.create_time}}</span>
-										<span class="mui-pull-right">{{list.desc}}</span>
-									</div>
-								</div>
-							</li>
-						</ul>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-back mui-pull-left"></a>
+			<h1 class="mui-title">账单</h1>
+		</header>
+		<div id="mui-content" class="mui-content  bill-container">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell timer bills-timer">
+					<div id="timer-choice">
+						<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
+						<div>
+							<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
+							<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
+						</div>
 					</div>
-				</div>
-				<div class="mui-off-canvas-backdrop"></div>
-			</div>
+					<div class="more" id="offCanvasShow">
+						<img src="../image/screen.png"><span id="show-btn">筛选</span>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+					<img :src="'../image/assert/assert'+list.type+'.png'">
+					<div class="right-cont">
+						<div class="top mui-clearfix">
+							<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
+							<span class="mui-pull-right earning">{{list.number}}</span>
+						</div>
+						<div class="bottom mui-clearfix">
+							<span>{{list.create_time}}</span>
+							<span class="mui-pull-right">{{list.desc}}</span>
+						</div>
+					</div>
+				</li>
+			</ul>
 		</div>
-	</body>
-	<script src="../js/mui.js"></script>
-	<script src="../js/util.js"></script>
-	<script src="../js/mui.picker.min.js"></script>
-	<script src="../js/vue.min.js"></script>
-	<script>
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		var userInfo = getUserInfo(),
-			skip = 1;
-		var app = new Vue({
-			el: '#offCanvasContentScroll',
-			data() {
-				return {
-					type: 1,
-					balanceData: {
-						list: []
-					},
-					currentTime: formatDate('y-m', ''),
-					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
-				}
-			},
-			mounted: function() {
-				mui.init({
-					swipeBack: false,
-					// pullRefresh: {
-					// 	container: "#mui-content",
-					// 	up: {
-					// 		height: 50,
-					// 		auto: false,
-					// 		contentrefresh: "正在加载...",
-					// 		contentnomore: '没有更多数据了',
-					// 		callback: function() {
-					// 			skip += 1;
-					// 			getUserBalanceLog();
-					// 		}
-					// 	},
-					// 	down: {
-					// 		style: 'circle',
-					// 		color: '#2289FF',
-					// 		callback: function() {
-					// 			skip = 1;
-					// 			getUserBalanceLog();
-					// 		}
-					// 	}
-					// }
-				});
-				mui.plusReady(function() {
-					setStatusBar('', 'dark');
-					getUserBalanceLog();
-				})
-				//侧滑容器父节点
-				var offCanvasWrapper = mui('#offCanvasWrapper');
-				//主界面容器
-				var offCanvasInner = offCanvasWrapper[0].querySelector('.mui-inner-wrap');
-				//菜单容器
-				var offCanvasSide = document.getElementById("offCanvasSide");
-				//实现ios平台的侧滑关闭页面；
-				if (mui.os.plus && mui.os.ios) {
-					offCanvasWrapper[0].addEventListener('shown', function(e) { //菜单显示完成事件
-						plus.webview.currentWebview().setStyle({
-							'popGesture': 'none'
-						});
-					});
-					offCanvasWrapper[0].addEventListener('hidden', function(e) { //菜单关闭完成事件
-						plus.webview.currentWebview().setStyle({
-							'popGesture': 'close'
-						});
-					});
-				}
-				document.getElementById('offCanvasShow').addEventListener('tap', function() {
-					offCanvasWrapper.offCanvas('show');
-				});
-				// 日期选择
-				var btn = document.getElementById('timer-choice');
-				var result = document.getElementById('result');
-				btn.addEventListener('tap', function() {
-					var _self = this;
-					var options = {
-						"type": "month",
-						"beginYear": "2019",
-						"endYear": "2029"
-					}
-					if (_self.picker) {
-						_self.picker.show(function(rs) {
-							app.showTime = rs.y.text + '年' + rs.m.text + '月';
-							app.currentTime = rs.y.text + '-' + rs.m.text;
-							skip = 1;
-							getUserBalanceLog();
-						});
-					} else {
-						_self.picker = new mui.DtPicker(options);
-						_self.picker.show(function(rs) {
-							app.showTime = rs.y.text + '年' + rs.m.text + '月';
-							app.currentTime = rs.y.text + '-' + rs.m.text;
-							skip = 1;
-							getUserBalanceLog();
-						});
-					}
-				})
-				mui('#offCanvasSide').on('tap', 'li', function() {
-					mui("#offCanvasSide li").each(function() {
-						this.classList.remove('active');
-					});
-					this.classList.add('active');
-					document.getElementById('checked-cls').innerText = this.dataset.text;
-					// 隐藏筛选
-					offCanvasWrapper.offCanvas('close');
-					app.type = this.dataset.type;
-					skip = 1;
-					getUserBalanceLog();
-				})
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			var main, menu, mask = mui.createMask(_closeMenu);
+			var showMenu = false,
+				mode = 'main-move';
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
 			}
-		})
-		//获取用户余额日志
-		function getUserBalanceLog() {
-			mui.get($ajaxUrl + 'member', {
-				action: 'balance_log',
-				token: userInfo.token,
-				type: app.type,
-				date: app.currentTime,
-				skip: skip,
-				limit: 6
-			}, function(res) {
-				// logs(res);
-				if (res.errno == 0 && skip == 1) {
-					app.balanceData = res.data;
-					// mui('#mui-content').pullRefresh().endPulldownToRefresh();
-				} else if (res.errno == 0 && skip > 1) {
-					app.balanceData.list = app.balanceData.list.concat(res.data.list);
-					// mui('#mui-content').pullRefresh().endPullupToRefresh();
-				} else {
-					// mui('#mui-content').pullRefresh().endPulldownToRefresh();
-					// mui('#mui-content').pullRefresh().endPullupToRefresh(true);
-					message('没有更多了~');
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			var userInfo = getUserInfo();
+			var skip = 1;
+
+			var app = new Vue({
+				el: '#mui-content',
+				data() {
+					return {
+						type: 1,
+						balanceData: {
+							list: []
+						},
+						currentTime: formatDate('y-m', ''),
+						showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
+					}
+				},
+				mounted: function() {
+					mui.init({
+						swipeBack: false,
+						swipeBack: false,
+						beforeback: back,
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: true,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									skip += 1;
+									getUserBalanceLog();
+								}
+							},
+							down: {
+								style: 'circle', //单webview模式的下拉刷新 
+								color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+								callback: function() {
+									skip = 1;
+									getUserBalanceLog();
+								}
+							}
+						}
+					});
+					mui.plusReady(function() {
+						setStatusBar('', 'dark');
+						getUserBalanceLog();
+						//plusReady事件后，自动创建menu窗口；
+						main = plus.webview.currentWebview();
+						//setTimeout的目的是等待窗体动画结束后，再执行create webview操作，避免资源竞争，导致窗口动画不流畅；
+						setTimeout(function() {
+							menu = mui.preload({
+								id: 'offcanvas-drag-left-plus-menu',
+								url: 'offcanvas-drag-left-plus-menu.html',
+								styles: {
+									left: "30%",
+									width: '70%',
+									zindex: 9997
+								}
+							});
+						}, 300);
+					})
+					// 日期选择
+					var btn = document.getElementById('timer-choice');
+					var result = document.getElementById('result');
+					btn.addEventListener('tap', function() {
+						var _self = this;
+						var options = {
+							"type": "month",
+							"beginYear": "2019",
+							"endYear": "2029"
+						}
+						if (_self.picker) {
+							_self.picker.show(function(rs) {
+								app.showTime = rs.y.text + '年' + rs.m.text + '月';
+								app.currentTime = rs.y.text + '-' + rs.m.text;
+								skip = 1;
+								getUserBalanceLog();
+							});
+						} else {
+							_self.picker = new mui.DtPicker(options);
+							_self.picker.show(function(rs) {
+								app.showTime = rs.y.text + '年' + rs.m.text + '月';
+								app.currentTime = rs.y.text + '-' + rs.m.text;
+								skip = 1;
+								getUserBalanceLog();
+							});
+						}
+					})
+					mui('#offCanvasSide').on('tap', 'li', function() {
+						mui("#offCanvasSide li").each(function() {
+							this.classList.remove('active');
+						});
+						this.classList.add('active');
+					})
 				}
-			}, 'json');
-		}
-		mui('#offCanvasContentScroll').scroll();
-	</script>
+			})
+			//获取用户余额日志
+			function getUserBalanceLog() {
+				mui.get($ajaxUrl + 'member', {
+					action: 'balance_log',
+					token: userInfo.token,
+					type: app.type,
+					date: app.currentTime,
+					skip: skip,
+					limit: 6
+				}, function(res) {
+					if (res.errno == 0 && skip == 1) {
+						app.balanceData = res.data;
+						mui('#mui-content').pullRefresh().endPulldownToRefresh();
+					} else if (res.errno == 0 && skip > 1) {
+						app.balanceData.list = app.balanceData.list.concat(res.data.list);
+						mui('#mui-content').pullRefresh().endPullupToRefresh();
+					} else {
+						mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						message('没有更多了~');
+					}
+				}, 'json');
+			}
+
+			function back() {
+				if (showMenu) {
+					closeMenu();
+					return false;
+				} else {
+					menu.close('none');
+					return true;
+				}
+			}
+			function openMenu() {
+				if (!showMenu) {
+					if (mui.os.android && parseFloat(mui.os.version) < 4.4) {
+						document.querySelector("header.mui-bar").style.position = "static";
+						document.querySelector(".mui-bar-nav~.mui-content").style.paddingTop = "0px";
+					}
+
+					menu.show('none', 0, function() {
+						menu.setStyle({
+							left: '30%',
+							transition: {
+								duration: 150
+							}
+						});
+					});
+					//显示主窗体遮罩
+					mask.show();
+					showMenu = true;
+				}
+			}
+
+			function closeMenu() {
+				//窗体移动
+				_closeMenu();
+				//关闭遮罩
+				mask.close();
+			}
+			/**
+			 * 关闭侧滑菜单(业务部分)
+			 */
+			function _closeMenu() {
+				if (showMenu) {
+					//解决android 4.4以下版本webview移动时，导致fixed定位元素错乱的bug;
+					if (mui.os.android && parseFloat(mui.os.version) < 4.4) {
+						document.querySelector("header.mui-bar").style.position = "fixed";
+						//同时需要修改以下.mui-contnt的padding-top，否则会多出空白；
+						document.querySelector(".mui-bar-nav~.mui-content").style.paddingTop = "44px";
+					}
+					menu.setStyle({
+						left: '100%',
+						transition: {
+							duration: 150
+						}
+					});
+					//等窗体动画结束后，隐藏菜单webview，节省资源；
+					setTimeout(function() {
+						menu.hide();
+					}, 300);
+					showMenu = false;
+				}
+			}
+			document.getElementById("show-btn").addEventListener('tap',openMenu);
+			window.addEventListener('dragright', function(e) {
+				e.detail.gesture.preventDefault();
+			});
+			window.addEventListener('dragleft', function(e) {
+				e.detail.gesture.preventDefault();
+			});
+			 //主界面向左滑动，若菜单未显示，则显示菜单；否则不做任何操作；
+			window.addEventListener("swipeleft", openMenu);
+			 //menu页面向右滑动，关闭菜单；
+			window.addEventListener("swiperight", closeMenu);
+			window.addEventListener("menu:swiperight", closeMenu);
+			
+			//重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
+			mui.menu = function() {
+				if (showMenu) {
+					closeMenu();
+				} else {
+					openMenu();
+				}
+			}
+		</script>
+	</body>
+
 </html>
