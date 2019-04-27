@@ -43,26 +43,26 @@
 			<div class="activation-code-activation">
 				<div class="pattern-of-payment">
 					<form class="mui-input-group">
-						<div class="mui-input-row mui-radio">
+						<!-- <div class="mui-input-row mui-radio">
 							<label><img src="../image/Alipay.png"><span>支付宝</span></label>
 							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
-						</div>
+						</div> -->
 						<div class="mui-input-row mui-radio">
 							<label><img src="../image/WeChat.png"><span>微信</span></label>
 							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
 						</div>
-						<div class="mui-input-row mui-radio">
+						<!-- <div class="mui-input-row mui-radio">
 							<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;580</span></label>
 							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
-						</div>
+						</div> -->
 					</form>
 				</div>
 				<div class="pattern-of-payment">
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell total">
 							<h4>合计</h4>
-							<p><span>&yen;</span>69.00</p>
-							<span class="confirm-payment">确认支付</span>
+							<p><span>&yen;</span>{{ fee }}</p>
+							<span class="confirm-payment mui-pay">确认支付</span>
 						</li>
 					</ul>
 				</div>
@@ -72,7 +72,9 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				swipeBack: true
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -81,23 +83,125 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-			// vue实例初始化
+			//支付相关变量
+			var payType = 'wxpay';
+			var wxChannel = null; // 微信支付
+			var aliChannel = null; // 支付宝支付
+			var channel = null; //支付通道
+			var ALIPAYSERVER = $ajaxUrl + 'member&action=activation';
+			var WXPAYSERVER = $ajaxUrl + 'member&action=activation';
 			var userInfo = getUserInfo();
+			// vue实例初始化
 			var app = new Vue({
 				el: "#collections",
 				data() {
 					return {
-						userType: 5
+						fee: '69.00',
+						type: '',
+						groupId: 0
 					}
 				},
 				mounted: function() {
 					mui.init();
-					mui.plusReady(function() {});
+					mui.plusReady(function() {
+						// 获取支付通道  
+						plus.payment.getChannels(function(channels) {
+							for (var i in channels) {
+								if (channels[i].id == "wxpay") {
+									wxChannel = channels[i];
+								} else {
+									aliChannel = channels[i];
+								}
+							}
+						}, function(e) {
+							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
+						});
+						var self = plus.webview.currentWebview();
+						app.fee = self.fee;
+						app.groupId = self.groupId;
+						app.type = self.type;
+						
+						//支付
+						mui('.mui-content').on('tap', '.mui-pay', function() {
+							payType = document.querySelector('input[name=radio1]:checked').value;
+							if (payType.length == 0) {
+								message('请选择支付方式!', 'center');
+								return;
+							}
+							if (payType == 'balance') {
+						
+							} else {
+								pay(payType);
+							}
+						})
+					});
 				},
 				computed: {
 					// 支付完成之后跳转到 member_renewal_successful页面
 				}
 			});
+			
+			// 2. 发起支付请求  
+			function pay(id) {
+				// 从服务器请求支付订单
+				var PAYSERVER = '';
+				if (id == 'alipay') {
+					message("暂不支持支付宝支付!", 'center');
+					return;
+					PAYSERVER = ALIPAYSERVER;
+					channel = aliChannel;
+				} else if (id == 'wxpay') {
+					PAYSERVER = WXPAYSERVER;
+					channel = wxChannel;
+				} else {
+					message("不支持此支付通道!", 'center');
+					return;
+				}
+			
+				var waiting = plus.nativeUI.showWaiting();
+				mui.post(PAYSERVER, {
+					group_id: app.groupId,
+					price: app.fee,
+					fee: app.fee,
+					pay_type: payType,
+					token: userInfo.token,
+					activation_type: app.type,
+				}, function(res) {
+					// console.log(JSON.stringify(res));
+					waiting.close();
+					if (res.errno == 0) {
+						var data = res.data;
+						var param = {
+							appid: data.appid,
+							noncestr: data.nonce_str,
+							package: 'Sign=WXPay',
+							partnerid: data.mch_id,
+							prepayid: data.prepay_id,
+							timestamp: data.timeStamp,
+							sign: data.paySign
+						};
+			
+						plus.payment.request(channel, param, function(result) {
+							mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'activationSuccess');
+							mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
+							mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
+							mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
+							mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
+							setTimeout(function() {
+								plus.webview.close('renew', 'none');
+								plus.webview.close('vt_renew', 'none');
+							}, 1000)
+							var title = app.type == 2 ? '续费' : '升级';
+							openPage('member_renewal_successful.html', 'member_renewal_successful', '#f7f7f7', {title: title});
+						}, function(error) {
+							console.log(JSON.stringify(error));
+							plus.nativeUI.alert("支付失败：" + error.code);
+						});
+					} else {
+						plus.nativeUI.alert(res.message, null, '提示');
+					}
+				}, 'json') 
+			}
 		</script>
 	</body>
 </html>

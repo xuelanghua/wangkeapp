@@ -656,6 +656,7 @@ function pushCallback(data, event) {
 					mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
 					mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
 					mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+					mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 					fnOpenWin('html/' + url + '.html', url, {statusbar: {background: '#F7F7F7'}}, extra, '');
 				} else {
 					if (url) {
@@ -673,6 +674,7 @@ function pushCallback(data, event) {
 				mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 				
 				playNoticeAudio();
 			} else if (url == 'chat') {
