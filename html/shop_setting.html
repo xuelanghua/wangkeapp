@@ -148,7 +148,9 @@
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
-			mui.init()
+			mui.init({
+				swipeBack: true
+			})
 			//页面加载完毕
 			mui.plusReady(function() {
 				eventinit();
@@ -199,7 +201,9 @@
 						if (ret.errno == 0) {
 							console.log(ret.data.avatar);
 							document.getElementById('title').innerHTML = ret.data.store_name;
-							document.getElementById('avatar').src = ret.data.store_avatar;
+							if (ret.data.store_avatar) {
+								document.getElementById('avatar').src = ret.data.store_avatar;
+							}
 							document.getElementById('description').innerHTML = ret.data.store_description;
 							document.getElementById('title').innerHTML = ret.data.store_name;
 						}
