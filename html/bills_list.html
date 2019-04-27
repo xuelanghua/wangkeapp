@@ -73,6 +73,10 @@
 			#offCanvasSide .mui-table-view-cell.border-none:after {
 				height: 0;
 			}
+
+			.mui-content {
+				padding-top: 44px;
+			}
 		</style>
 	</head>
 
@@ -83,18 +87,18 @@
 			<aside id="offCanvasSide" class="mui-off-canvas-right">
 				<h2>交易类型</h2>
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell border-none active" data-text="筛选"><img src="../image/assert/checked-cls.png">全部</li>
+					<li class="mui-table-view-cell border-none active" data-text="筛选" data-type="1"><img src="../image/assert/checked-cls.png">全部</li>
 				</ul>
 				<p>收入</p>
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" data-text="广告收益"><img src="../image/assert/adv_icon.png">广告收益</li>
-					<li class="mui-table-view-cell" data-text="店铺收益"><img src="../image/assert/shop_icon.png">店铺收益</li>
-					<li class="mui-table-view-cell" data-text="二维码收款"><img src="../image/assert/qrcode_icon.png">二维码收款</li>
+					<li class="mui-table-view-cell" data-text="广告收益" data-type="15"><img src="../image/assert/assert15.png">广告收益</li>
+					<li class="mui-table-view-cell" data-text="店铺收益" data-type="6"><img src="../image/assert/assert6.png">店铺收益</li>
+					<li class="mui-table-view-cell" data-text="二维码收款" data-type="7"><img src="../image/assert/assert7.png">二维码收款</li>
 				</ul>
 				<p>支出</p>
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" data-text="红包"><img src="../image/assert/redpack_icon.png">红包</li>
-					<li class="mui-table-view-cell" data-text="提现"><img src="../image/assert/withdrawal_icon.png">提现</li>
+					<li class="mui-table-view-cell" data-text="红包" data-type="4"><img src="../image/assert/assert4.png">红包</li>
+					<li class="mui-table-view-cell" data-text="提现" data-type="5"><img src="../image/assert/assert5.png">提现</li>
 				</ul>
 			</aside>
 			<header class="mui-bar mui-bar-nav">
@@ -102,43 +106,30 @@
 				<h1 class="mui-title">账单</h1>
 			</header>
 			<div class="mui-inner-wrap">
-				<div class="mui-content bill-container">
+				<div id="mui-content" class="mui-content bill-container">
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell timer bills-timer">
 							<div id="timer-choice">
-								<div><span class="timer-choice" id="result">2018年12月</span><span class="mui-icon mui-icon-arrowdown"></div>
+								<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
 								<div>
-									<span>收入&nbsp;&nbsp;</span><span>4.500</span>
-									<span class="title">支出&nbsp;&nbsp;</span><span>3,200</span>
+									<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
+									<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
 								</div>
 							</div>
 							<div class="more" id="offCanvasShow">
 								<img src="../image/screen.png"><span id="checked-cls">筛选</span>
 							</div>
 						</li>
-						<li class="mui-table-view-cell">
-							<img src="../image/assert/adv_icon.png" alt="">
+						<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+							<img :src="'../image/assert/assert'+list.type+'.png'">
 							<div class="right-cont">
 								<div class="top mui-clearfix">
-									<div class="mui-ellipsis bill-title mui-pull-left">广告收益广告收益广告收益广告收益广告收益广告收益广告收益</div>
-									<span class="mui-pull-right earning">+600000</span>
+									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
+									<span class="mui-pull-right earning">{{list.number}}</span>
 								</div>
 								<div class="bottom mui-clearfix">
-									<span>10月15&nbsp;&nbsp;&nbsp;&nbsp;18:20</span>
-									<span class="mui-pull-right">等待买家收货</span>
-								</div>
-							</div>
-						</li>
-						<li class="mui-table-view-cell">
-							<img src="../image/assert/shop_icon.png" alt="">
-							<div class="right-cont">
-								<div class="top mui-clearfix">
-									<span>店铺收入</span>
-									<span class="mui-pull-right expenditure">+60</span>
-								</div>
-								<div class="bottom mui-clearfix">
-									<span>10月15&nbsp;&nbsp;&nbsp;&nbsp;18:20</span>
-									<span class="mui-pull-right">曝光1000次</span>
+									<span>{{list.create_time}}</span>
+									<span class="mui-pull-right">{{list.desc}}</span>
 								</div>
 							</div>
 						</li>
@@ -153,77 +144,137 @@
 	<script src="../js/mui.picker.min.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script>
-		mui.init({
-			swipeBack: true
-		})
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		var userInfo = getUserInfo();
+		var userInfo = getUserInfo(),
+			skip = 1;
 		var app = new Vue({
-			el: '.mui-content',
+			el: '#mui-content',
 			data() {
 				return {
-
+					type: 1,
+					balanceData: {},
+					currentTime: formatDate('y-m', ''),
+					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
 				}
 			},
 			mounted: function() {
-				mui.plusReady(function() {})
+				mui.init({
+					swipeBack: false,
+					// pullRefresh: {
+					// 	container: "#mui-content",
+					// 	up: {
+					// 		height: 50,
+					// 		auto: false,
+					// 		contentrefresh: "正在加载...",
+					// 		contentnomore: '没有更多数据了',
+					// 		callback: function() {
+					// 			skip += 1;
+					// 			getUserBalanceLog();
+					// 		}
+					// 	},
+					// 	down: {
+					// 		style: 'circle',
+					// 		color: '#2289FF',
+					// 		callback: function() {
+					// 			skip = 1;
+					// 			getUserBalanceLog();
+					// 		}
+					// 	}
+					// }
+				});
+				mui.plusReady(function() {
+					getUserBalanceLog();
+				})
+				//侧滑容器父节点
+				var offCanvasWrapper = mui('#offCanvasWrapper');
+				//主界面容器
+				var offCanvasInner = offCanvasWrapper[0].querySelector('.mui-inner-wrap');
+				//菜单容器
+				var offCanvasSide = document.getElementById("offCanvasSide");
+				//实现ios平台的侧滑关闭页面；
+				if (mui.os.plus && mui.os.ios) {
+					offCanvasWrapper[0].addEventListener('shown', function(e) { //菜单显示完成事件
+						plus.webview.currentWebview().setStyle({
+							'popGesture': 'none'
+						});
+					});
+					offCanvasWrapper[0].addEventListener('hidden', function(e) { //菜单关闭完成事件
+						plus.webview.currentWebview().setStyle({
+							'popGesture': 'close'
+						});
+					});
+				}
+				document.getElementById('offCanvasShow').addEventListener('tap', function() {
+					offCanvasWrapper.offCanvas('show');
+				});
+				// 日期选择
+				var btn = document.getElementById('timer-choice');
+				var result = document.getElementById('result');
+				btn.addEventListener('tap', function() {
+					var _self = this;
+					var options = {
+						"type": "month",
+						"beginYear": "2019",
+						"endYear": "2029"
+					}
+					if (_self.picker) {
+						_self.picker.show(function(rs) {
+							app.showTime = rs.y.text + '年' + rs.m.text + '月';
+							app.currentTime= rs.y.text + '-' + rs.m.text;
+							skip=1;
+							getUserBalanceLog();
+						});
+					} else {
+						_self.picker = new mui.DtPicker(options);
+						_self.picker.show(function(rs) {
+							app.showTime = rs.y.text + '年' + rs.m.text + '月';
+							app.currentTime= rs.y.text + '-' + rs.m.text;
+							skip=1;
+							getUserBalanceLog();
+						});
+					}
+				})
+				mui('#offCanvasSide').on('tap', 'li', function() {
+					mui("#offCanvasSide li").each(function() {
+						this.classList.remove('active');
+					});
+					this.classList.add('active');
+					document.getElementById('checked-cls').innerText = this.dataset.text;
+					// 隐藏筛选
+					offCanvasWrapper.offCanvas('close');
+					app.type=this.dataset.type;
+					skip=1;
+					getUserBalanceLog();
+				})
 			}
 		})
-		//侧滑容器父节点
-		var offCanvasWrapper = mui('#offCanvasWrapper');
-		//主界面容器
-		var offCanvasInner = offCanvasWrapper[0].querySelector('.mui-inner-wrap');
-		//菜单容器
-		var offCanvasSide = document.getElementById("offCanvasSide");
-		//实现ios平台的侧滑关闭页面；
-		if (mui.os.plus && mui.os.ios) {
-			offCanvasWrapper[0].addEventListener('shown', function(e) { //菜单显示完成事件
-				plus.webview.currentWebview().setStyle({
-					'popGesture': 'none'
-				});
-			});
-			offCanvasWrapper[0].addEventListener('hidden', function(e) { //菜单关闭完成事件
-				plus.webview.currentWebview().setStyle({
-					'popGesture': 'close'
-				});
-			});
+		//获取用户余额日志
+		function getUserBalanceLog() {
+			mui.get($ajaxUrl + 'member', {
+				action: 'balance_log',
+				token: userInfo.token,
+				type: app.type,
+				date: app.currentTime,
+				skip: skip,
+				limit: 6
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0 && skip == 1) {
+					app.balanceData = res.data;
+					// mui('#mui-content').pullRefresh().endPulldownToRefresh();
+				} else if (res.errno == 0 && skip > 1) {
+					app.balanceData.list = app.balanceData.list.concat(res.data.list);
+					// mui('#mui-content').pullRefresh().endPullupToRefresh();
+				} else {
+					// mui('#mui-content').pullRefresh().endPulldownToRefresh();
+					// mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+					message('没有更多了~');
+				}
+			}, 'json');
 		}
-		document.getElementById('offCanvasShow').addEventListener('tap', function() {
-			offCanvasWrapper.offCanvas('show');
-		});
-		// 日期选择
-		var btn = document.getElementById('timer-choice');
-		var result = document.getElementById('result');
-		btn.addEventListener('tap', function() {
-			var _self = this;
-			var options = {
-				"type": "month",
-				"beginYear": "2019",
-				"endYear": "2029"
-			}
-			if (_self.picker) {
-				_self.picker.show(function(rs) {
-					result.innerText = rs.y.text + '年' + rs.m.text + '月';
-				});
-			} else {
-				_self.picker = new mui.DtPicker(options);
-				_self.picker.show(function(rs) {
-					result.innerText = rs.y.text + '年' + rs.m.text + '月';
-				});
-			}
-		})
-		mui('#offCanvasSide').on('tap', 'li', function() {
-			mui("#offCanvasSide li").each(function() {
-				this.classList.remove('active');
-			});
-			this.classList.add('active');
-			document.getElementById('checked-cls').innerText=this.dataset.text;
-			// 隐藏筛选
-			offCanvasWrapper.offCanvas('close');
-		})
 	</script>
 </html>
