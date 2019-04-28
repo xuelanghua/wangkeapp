@@ -98,27 +98,31 @@
 		</header>
 
 		<div id="mui-content" class="mui-content service-award-container">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell timer">
-					<span id="timer-choice"><span id="result">2018年12月</span><span class="mui-icon mui-icon-arrowdown"></span></span>
-					<span>收入&nbsp;&nbsp;&yen;{{serviceAward.income}}</span>
-				</li>
-				<li class="mui-table-view-cell" v-for="(list,index) in serviceAward.list" :key="index">
-					<img :src="list.avatarUrl" alt="">
-					<div class="right-cont">
-						<div class="top mui-clearfix">
-							<span>{{list.name||list.nickName}}</span>
-							<!-- .vip,.vip1,.vip2,.vip3四种class -->
-							<span :class="'vip'+list.group_id">{{list.group_name}}</span>
-							<span class="mui-pull-right">+{{list.number}}</span>
-						</div>
-						<div class="bottom mui-clearfix">
-							<span>[{{list.remark}}]</span>
-							<span class="mui-pull-right">{{list.create_time}}</span>
-						</div>
-					</div>
-				</li>
-			</ul>
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell timer">
+							<span id="timer-choice"><span id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></span></span>
+							<span>收入&nbsp;&nbsp;&yen;{{serviceAward.income}}</span>
+						</li>
+						<li class="mui-table-view-cell" v-for="(list,index) in serviceAward.list" :key="index">
+							<img :src="list.avatarUrl" alt="">
+							<div class="right-cont">
+								<div class="top mui-clearfix">
+									<span>{{list.name||list.nickName}}</span>
+									<!-- .vip,.vip1,.vip2,.vip3四种class -->
+									<span :class="'vip'+list.group_id">{{list.group_name}}</span>
+									<span class="mui-pull-right">+{{list.number}}</span>
+								</div>
+								<div class="bottom mui-clearfix">
+									<span>[{{list.remark}}]</span>
+									<span class="mui-pull-right">{{list.create_time}}</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 		<div id="middlePopover" class="mui-popover">
 			<div class="title">类型选择</div>
@@ -149,7 +153,7 @@
 				month = '0' + month;
 			}
 			var timers = year + '-' + month;
-			timer=timers;
+			timer = timers;
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
 				viewport = 750
@@ -161,7 +165,9 @@
 				el: '#mui-content',
 				data() {
 					return {
-						serviceAward: {}
+						serviceAward: {},
+						currentTime: formatDate('y-m', ''),
+						showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
 					}
 				},
 				created: function() {
@@ -169,35 +175,44 @@
 				},
 				mounted: function() {
 					mui.init({
-						swipeBack: false, 
+						swipeBack: false,
 						pullRefresh: {
-							container: "#mui-content", 
+							container: "#pullrefresh",
 							up: {
 								height: 50,
 								auto: false,
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
-									timer=timers;
-									skip+=1;
+									timer = timers;
+									skip += 1;
 									getServiceAward();
 								}
 							},
 							down: {
-								style: 'circle', 
-								color: '#2289FF', 
+								style: 'circle',
+								color: '#2289FF',
 								callback: function() {
-									skip=1;
+									skip = 1;
 									getServiceAward();
 								}
 							}
 						}
 					});
-					mui.plusReady(function() {})
+					mui.plusReady(function() {
+						// 重新开启滚动
+						mui("body").on('tap', '.mui-btn', function() {
+							mui('#pullrefresh').pullRefresh().setStopped(false);
+						})
+						mui('body').on('tap', '.mui-backdrop', function() {
+							mui('#pullrefresh').pullRefresh().setStopped(false);
+						})
+					})
 					// 日期选择
 					var btn = document.getElementById('timer-choice');
 					var result = document.getElementById('result');
 					btn.addEventListener('tap', function() {
+						mui('#pullrefresh').pullRefresh().setStopped(true);
 						var _self = this;
 						var options = {
 							"type": "month",
@@ -207,15 +222,17 @@
 						if (_self.picker) {
 							_self.picker.show(function(rs) {
 								result.innerText = rs.y.text + '年' + rs.m.text + '月';
-								timer=rs.y.text + '-' + rs.m.text;
+								timer = rs.y.text + '-' + rs.m.text;
 								getServiceAward();
+								mui('#pullrefresh').pullRefresh().setStopped(false);
 							});
 						} else {
 							_self.picker = new mui.DtPicker(options);
 							_self.picker.show(function(rs) {
 								result.innerText = rs.y.text + '年' + rs.m.text + '月';
-								timer=rs.y.text + '-' + rs.m.text;
+								timer = rs.y.text + '-' + rs.m.text;
 								getServiceAward();
+								mui('#pullrefresh').pullRefresh().setStopped(false);
 							});
 						}
 					})
@@ -232,7 +249,6 @@
 			})
 
 			function getServiceAward() {
-				logs(skip);
 				mui.post($ajaxUrl + 'member&action=service_award_log', {
 					token: userInfo.token,
 					data: timer,
@@ -240,14 +256,14 @@
 					skip: skip,
 					limit: limit,
 				}, function(res) {
-					if (res.errno == 0&&skip==1) {
+					if (res.errno == 0 && skip == 1) {
 						app.serviceAward = res.data;
-						mui('#mui-content').pullRefresh().endPulldownToRefresh();
-					} else if(res.errno == 0&&skip>1){
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					} else if (res.errno == 0 && skip > 1) {
 						app.serviceAward.list = app.serviceAward.list.concat(res.data.list);
-						mui('#mui-content').pullRefresh().endPullupToRefresh();
-					}else{
-						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+					} else {
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 						message('没有更多了~');
 					}
 				}, 'json');
