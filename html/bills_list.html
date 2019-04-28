@@ -109,7 +109,7 @@
 					<img :src="'../image/assert/assert'+list.type+'.png'">
 					<div class="right-cont">
 						<div class="top mui-clearfix">
-							<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
+							<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
 							<span class="mui-pull-right earning">{{list.number}}</span>
 						</div>
 						<div class="bottom mui-clearfix">
@@ -135,12 +135,13 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			var userInfo = getUserInfo();
 			var skip = 1;
+			var limit = 10;
 
 			var app = new Vue({
 				el: '#mui-content',
 				data() {
 					return {
-						type: 1,
+						type: 0,
 						balanceData: {
 							list: []
 						},
@@ -157,7 +158,7 @@
 							container: "#mui-content",
 							up: {
 								height: 50,
-								auto: true,
+								auto: false,
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
@@ -230,13 +231,16 @@
 			})
 			//获取用户余额日志
 			function getUserBalanceLog() {
+				console.log(app.currentTime);
+				console.log(app.type);
+				
 				mui.get($ajaxUrl + 'member', {
 					action: 'balance_log',
 					token: userInfo.token,
 					type: app.type,
 					date: app.currentTime,
 					skip: skip,
-					limit: 10
+					limit: limit
 				}, function(res) {
 					if (res.errno == 0 && skip == 1) {
 						app.balanceData = res.data;

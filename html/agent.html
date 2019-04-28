@@ -165,6 +165,7 @@
 				justify-content: space-between;
 				padding: 0 0.4rem 0 0.2rem;
 				font-size:0.3rem;
+				border-bottom: 1px solid #DDDDDD;
 			}
 			.fans .title span:last-of-type{
 				color: #999999;
@@ -173,6 +174,9 @@
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+			}
+			.fans .mui-table-view-cell:before{
+				height: 0;
 			}
 			.user-head-img{
 				width: 0.75rem;
@@ -279,7 +283,7 @@
 			</div>
 			<div class="fans">
 				<div class="title"><span>我的粉丝（{{memberInfo.fans_number||0}}）</span><span class="mui-navigate-right accumulated">更多</span></div>
-				<ul class="mui-table-view">
+				<ul v-if="fansLists.length>0" class="mui-table-view">
 					<li class="mui-table-view-cell" v-for="(list,index) in fansLists" :key="index">
 						<img class="user-head-img" src="../image/kaol.jpg">
 						<div class="flex-right">
@@ -294,6 +298,11 @@
 							</div>
 						</div>
 					</li>
+				</ul>
+				<div v-else style="padding: 36px 0;">
+					<img style="width: 50%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png">
+					<p style="text-align: center;">您还没有粉丝</p>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
@@ -340,7 +349,7 @@
 				mounted: () => {
 					document.querySelector(".mui-content").classList.remove('mui-hidden');
 				},
-				methods:{
+				methods: {
 					goCodeList: function() {
 						openPage('activate_code.html', 'activate_code', '#f7f7f7', '');
 					},
@@ -382,6 +391,7 @@
 			mui('.mui-content').on('tap', '.updata-position', function() {
 				openPage('renew.html', 'renew', '#f7f7f7', '');
 			})
+
 			function getFans() {
 				pageNum += 1;
 				mui.post($ajaxUrl + 'member&action=fans', {

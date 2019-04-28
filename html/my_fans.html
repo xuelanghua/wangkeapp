@@ -24,17 +24,17 @@
 		<div id="mui-content" class="mui-content service-award-container">
 			<ul class="mui-table-view" v-if="fansList.length>0">
 				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
-					<img src="../image/kaol.jpg" alt="">
+					<img :src="list.avatarUrl" alt="">
 					<div class="right-cont">
 						<div class="top mui-clearfix">
 							<span>{{list.nickName}}</span>
 							<!-- .vip,.vip1,.vip2,.vip3四种class -->
-							<span :class="'vip1'+list.group_id">{{list.group_name}}</span>
+							<span :class="'vip'+list.group_id">{{list.group_name}}</span>
 							<span class="mui-pull-right">+{{list.recommend_award}}</span>
 						</div>
 						<div class="bottom mui-clearfix">
 							<span>加入时间：{{list.activation_time}}</span>
-							<span class="mui-pull-right">推荐人：{{list.recommend_user}}</span>
+							<span class="mui-pull-right" v-if="list.direct==0">推荐人：{{list.recommend_user}}</span>
 						</div>
 					</div>
 				</li>
@@ -68,7 +68,7 @@
 					}
 				},
 				created: function() {
-
+					getFansList();
 				},
 				mounted: function() {
 					mui.init({
@@ -98,12 +98,14 @@
 					mui.plusReady(function() {})
 				}
 			})
+			
 			function getFansList() {
-				mui.post($ajaxUrl + 'team&action=team_info', {
+				mui.post($ajaxUrl + 'member&action=fans', {
 					token: userInfo.token,
 					skip: skip,
 					limit: limit
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0 && skip == 1) {
 						app.fansList = res.data;
 						mui('#mui-content').pullRefresh().endPulldownToRefresh();

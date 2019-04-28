@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
+		<link href="../iconfont/iconfont.css" rel="stylesheet" />
 		<style type="text/css">
 			#search {
 				display: inline-flex;
@@ -22,6 +23,67 @@
 			.lately-add-cont .between-info .user-name {
 				color: #333333;
 			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				height: 0;
+			}
+
+			.mui-table-view {
+				margin-bottom: 0.2rem;
+			}
+
+			.mui-table-view-cell {
+				display: flex;
+				align-items: center;
+				height: 1.3rem;
+				padding: 0 0.2rem;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.mui-table-view-cell.headline {
+				display: flex;
+				align-items: center;
+				height: 1rem;
+				padding: 0 0.2rem;
+				color: #1f4b84;
+			}
+
+			.mui-table-view-cell.headline .iconfont {
+				margin-right: 0.1rem;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+				left: 1.1rem;
+			}
+
+			.mui-table-view-cell.headline:after {
+				left: 0;
+			}
+
+			.mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.mui-table-view-cell img {
+				width: 0.85rem;
+				height: 0.85rem;
+				border-radius: 50%;
+				margin-right: 0.2rem;
+				flex-shrink: 0;
+			}
+
+			.mui-table-view-cell p {
+				height: 100%;
+				flex-grow: 1;
+				margin: 0;
+				font-size: 0.3rem;
+				color: #333333;
+				display: flex;
+				align-items: center;
+			}
 		</style>
 	</head>
 
@@ -34,9 +96,29 @@
 			<form action="" onsumit="return false">
 				<div class="mui-input-row search-cont">
 					<span class="mui-icon mui-icon-search"></span>
-					<input type="search" id="search" name="cont" class="mui-input-clear" placeholder="搜索">
+					<input type="search" id="search" name="cont" class="mui-input-clear" placeholder="好友名称/手机号">
 				</div>
 			</form>
+			<div class="search-result">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell headline"><i class="iconfont icon-friends"></i>新增客户</li>
+					<li class="mui-table-view-cell"><img src="../image/kaol.jpg">
+						<p>王花花</p>
+					</li>
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell headline"><i class="iconfont icon-custom"></i>客户CRM</li>
+					<li class="mui-table-view-cell"><img src="../image/kaol.jpg">
+						<p>王花花</p>
+					</li>
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell headline"><i class="iconfont icon-friend"></i>好友</li>
+					<li class="mui-table-view-cell"><img src="../image/kaol.jpg">
+						<p>王花花</p>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -62,13 +144,11 @@
 				el: "#mui-content",
 				data() {
 					return {
-						
+
 					}
 				},
-				created: function() {
-				},
-				methods: {
-				}
+				created: function() {},
+				methods: {}
 			})
 			// 搜索好友
 			mui.plusReady(function() {
