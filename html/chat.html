@@ -614,31 +614,31 @@
 			var timer = null;
 			var self = null;
 			var webviewHeight = 0;
-			
-			var nativeWebview, imm, InputMethodManager;  
-			var initNativeObjects = function() {  
-				if (mui.os.android) {  
-					var main = plus.android.runtimeMainActivity();  
-					var Context = plus.android.importClass("android.content.Context");  
-					InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");  
-					imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);  
-				} else {  
-					nativeWebview = plus.webview.currentWebview().nativeInstanceObject();  
-				}  
-			};  
-			var showSoftInput = function() {  
-				if (mui.os.android) {  
-					imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);  
-				} else {  
-					nativeWebview.plusCallMethod({  
-						"setKeyboardDisplayRequiresUserAction": false  
-					});  
-				}  
-				setTimeout(function() {  
-				   logs(2222);
-				}, 200);  
+
+			var nativeWebview, imm, InputMethodManager;
+			var initNativeObjects = function() {
+				if (mui.os.android) {
+					var main = plus.android.runtimeMainActivity();
+					var Context = plus.android.importClass("android.content.Context");
+					InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
+					imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
+				} else {
+					nativeWebview = plus.webview.currentWebview().nativeInstanceObject();
+				}
 			};
-			
+			var showSoftInput = function() {
+				if (mui.os.android) {
+					imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+				} else {
+					nativeWebview.plusCallMethod({
+						"setKeyboardDisplayRequiresUserAction": false
+					});
+				}
+				setTimeout(function() {
+					logs(2222);
+				}, 200);
+			};
+
 			mui.plusReady(function() {
 				// originalHeight = document.querySelector("body").offsetHeight;
 				self = plus.webview.currentWebview();
@@ -689,7 +689,7 @@
 					logs('refreshCustomer');
 					getCustomerList('customer', true);
 				})
-				
+
 				//自定义事件监听-刷新新增客户
 				window.addEventListener('refreshCrm', function() {
 					logs('refreshCrm');
@@ -743,7 +743,7 @@
 					getFriendApply();
 					getCustomerList('friend', false);
 				})
-				
+
 				window.addEventListener('addCrm', function(e) {
 					getCustomerList('crm', false);
 				})
@@ -760,7 +760,7 @@
 					getUnreadMessage();
 					getFriendApply();
 				})
-				
+
 				window.addEventListener('resizeWindow', function(e) {
 					console.log('resizeWindow');
 					console.log(webviewHeight);
@@ -768,7 +768,7 @@
 						height: webviewHeight - Math.random() / 2
 					});
 				})
-				
+
 				// document.querySelector('input').addEventListener('focus', function(e) {
 				// 	console.log('input focus');
 				// 	setTimeout(function() {
@@ -777,7 +777,7 @@
 				// 		});
 				// 	}, 500)
 				// })
-				
+
 				// document.querySelector('input').addEventListener('blur', function(e) {
 				// 	console.log('input blur');
 				// 	plus.webview.currentWebview().setStyle({
@@ -792,7 +792,7 @@
 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 					var resizeHeight = document.querySelector("body").offsetHeight;
 					if (resizeHeight * 1 != webviewHeight * 1) {
-					// if (resizeHeight * 1 < originalHeight * 1) {
+						// if (resizeHeight * 1 < originalHeight * 1) {
 						console.log('resetWindowHeight');
 						console.log(resizeHeight);
 						plus.webview.currentWebview().setStyle({
@@ -1151,7 +1151,7 @@
 							this.innerText = res.data;
 							this.style.display = 'block';
 						})
-						
+
 						tipsObj.innerText = res.data;
 						// tipsObjs.style.display = 'block';
 						tipsObj.style.display = 'block';
@@ -1163,7 +1163,7 @@
 						tipsObjs.innerText = 0;
 						tipsObj.innerText = 0;
 						// tipsObjs.style.display = 'none'; 
-						tipsObj.style.display = 'none'; 
+						tipsObj.style.display = 'none';
 					}
 				}, 'json')
 			}
@@ -1750,8 +1750,8 @@
 					}
 				}, 'json');
 			}
-			mui(".mui-content").on('tap','.mui-search',function(){
-				openPage('chat_page_search.html','chat_page_search','#f7f7f7','');
+			mui(".mui-content").on('tap', '.mui-search', function() {
+				openPage('chat_page_search.html', 'chat_page_search', '#f7f7f7', '');
 			})
 		</script>
 	</body>
