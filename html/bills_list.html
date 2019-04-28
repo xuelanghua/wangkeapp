@@ -110,7 +110,7 @@
 							<img :src="'../image/assert/assert'+list.type+'.png'">
 							<div class="right-cont">
 								<div class="top mui-clearfix">
-									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
+									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
 									<span class="mui-pull-right earning">{{list.number}}</span>
 								</div>
 								<div class="bottom mui-clearfix">
@@ -195,7 +195,7 @@
 								}
 							});
 						}, 300);
-						// 重新开启下拉和上拉
+						// 重新开启滚动
 						mui(".mui-dtpicker-header").on('tap', '.mui-btn', function() {
 							mui('#pullrefresh').pullRefresh().setStopped(false); 
 						})
@@ -207,7 +207,7 @@
 					var btn = document.getElementById('timer-choice');
 					var result = document.getElementById('result');
 					btn.addEventListener('tap', function() {
-						// 禁用滚动
+						// 滚动
 						mui('#pullrefresh').pullRefresh().setStopped(true);
 						var _self = this;
 						var options = {
