@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>充值</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style type="text/css">
+			.recharge-sum {
+				height: 0.89rem;
+				width: 100%;
+				display: flex;
+				align-items: center;
+				position: relative;
+			}
+
+			.recharge-sum input {
+				padding-left: 0.1rem;
+			}
+
+			.recharge-sum input,
+			.recharge-sum leabel {
+				font-weight: 700;
+				font-size: 0.5rem;
+				color: #5a5a5a;
+			}
+
+			.activation-code-activation .total p {
+				color: #5a5a5a;
+				font-size: 0.3rem;
+				margin: 0.5rem 0 0.2rem;
+			}
+
+			.recharge-sum:after {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #dddddd;
+			}
+		</style>
+	</head>
+
+	<body class="mui-hidden" style="position: relative;min-height: 100%;">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">充值</h1>
+		</header>
+		<div id="collections" class="mui-content">
+			<div class="activation-code-activation">
+				<div class="pattern-of-payment">
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-radio">
+							<label><img src="../image/Alipay.png"><span>支付宝</span></label>
+							<input class="choice-tag" name="radio1" type="radio" value="alipay">
+						</div>
+						<div class="mui-input-row mui-radio">
+							<label><img src="../image/WeChat.png"><span>微信</span></label>
+							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
+						</div>
+						<div class="pattern-of-payment">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell total">
+									<p>充值金额</p>
+									<div class="recharge-sum">
+										<leabel>&yen;</leabel><input type="number" name="" id="" value="" />
+									</div>
+									<a class="confirm-payment" id="openPopover">充值</a>
+								</li>
+							</ul>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			});
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
+			var userInfo = getUserInfo();
+			// vue实例初始化
+			var app = new Vue({
+				el: "#mui-content",
+				data() {
+					return {}
+				},
+				created: function() {},
+				mounted: function() {
+					mui.plusReady(function() {});
+				}
+			});
+		</script>
+	</body>
+</html>

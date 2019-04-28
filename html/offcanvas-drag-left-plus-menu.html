@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Hello MUI</title>
+		<title></title>
 		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -12,6 +12,9 @@
 		<style>
 			header.mui-bar{
 				display: none;
+			}
+			.mui-table-view-cell.active{
+				background-color: #e5f1ff;
 			}
 		</style>
 	</head>
@@ -37,7 +40,7 @@
 		<script src="../js/mui.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			var viewport = document.documentElement.clientWidth;
-			var typer='';
+			var typer = '';
 			if (viewport > 750) {
 				viewport = 750
 			}
@@ -65,12 +68,12 @@
 					this.classList.remove('active');
 				});
 				this.classList.add('active');
-				
 				// 隐藏筛选
 				mui.fire(main, "menu:swiperight");
 				typer = this.dataset.type;
-				skip = 1;
-				getUserBalanceLog();
+				mui.fire(main, 'doit', {
+					type: typer
+				});
 			})
 		</script>
 	</body>
