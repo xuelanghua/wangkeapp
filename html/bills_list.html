@@ -91,33 +91,37 @@
 			<h1 class="mui-title">账单</h1>
 		</header>
 		<div id="mui-content" class="mui-content  bill-container">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell timer bills-timer">
-					<div id="timer-choice">
-						<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
-						<div>
-							<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
-							<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
-						</div>
-					</div>
-					<div class="more" id="offCanvasShow">
-						<img src="../image/screen.png"><span id="show-btn">筛选</span>
-					</div>
-				</li>
-				<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
-					<img :src="'../image/assert/assert'+list.type+'.png'">
-					<div class="right-cont">
-						<div class="top mui-clearfix">
-							<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
-							<span class="mui-pull-right earning">{{list.number}}</span>
-						</div>
-						<div class="bottom mui-clearfix">
-							<span>{{list.create_time}}</span>
-							<span class="mui-pull-right">{{list.desc}}</span>
-						</div>
-					</div>
-				</li>
-			</ul>
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell timer bills-timer">
+							<div id="timer-choice">
+								<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
+								<div>
+									<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
+									<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
+								</div>
+							</div>
+							<div class="more" id="offCanvasShow">
+								<img src="../image/screen.png"><span id="show-btn">筛选</span>
+							</div>
+						</li>
+						<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+							<img :src="'../image/assert/assert'+list.type+'.png'">
+							<div class="right-cont">
+								<div class="top mui-clearfix">
+									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title+index}}</div>
+									<span class="mui-pull-right earning">{{list.number}}</span>
+								</div>
+								<div class="bottom mui-clearfix">
+									<span>{{list.create_time}}</span>
+									<span class="mui-pull-right">{{list.desc}}</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
@@ -153,7 +157,7 @@
 						swipeBack: false,
 						beforeback: back,
 						pullRefresh: {
-							container: "#mui-content",
+							container: "#pullrefresh",
 							up: {
 								height: 50,
 								auto: false,
@@ -191,12 +195,20 @@
 								}
 							});
 						}, 300);
+						// 重新开启下拉和上拉
+						mui(".mui-dtpicker-header").on('tap', '.mui-btn', function() {
+							mui('#pullrefresh').pullRefresh().setStopped(false); 
+						})
+						mui('body').on('tap','.mui-backdrop',function(){
+							mui('#pullrefresh').pullRefresh().setStopped(false);
+						})
 					})
 					// 日期选择
 					var btn = document.getElementById('timer-choice');
 					var result = document.getElementById('result');
 					btn.addEventListener('tap', function() {
-						mui('#mui-content').pullRefresh().setStopped(true);
+						// 禁用滚动
+						mui('#pullrefresh').pullRefresh().setStopped(true);
 						var _self = this;
 						var options = {
 							"type": "month",
@@ -209,6 +221,7 @@
 								app.currentTime = rs.y.text + '-' + rs.m.text;
 								skip = 1;
 								getUserBalanceLog();
+								mui('#pullrefresh').pullRefresh().setStopped(false);
 							});
 						} else {
 							_self.picker = new mui.DtPicker(options);
@@ -217,6 +230,7 @@
 								app.currentTime = rs.y.text + '-' + rs.m.text;
 								skip = 1;
 								getUserBalanceLog();
+								mui('#pullrefresh').pullRefresh().setStopped(false);
 							});
 						}
 					})
@@ -240,13 +254,13 @@
 				}, function(res) {
 					if (res.errno == 0 && skip == 1) {
 						app.balanceData = res.data;
-						mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
 					} else if (res.errno == 0 && skip > 1) {
 						app.balanceData.list = app.balanceData.list.concat(res.data.list);
-						mui('#mui-content').pullRefresh().endPullupToRefresh();
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh();
 					} else {
-						mui('#mui-content').pullRefresh().endPulldownToRefresh();
-						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 						message('没有更多了~');
 					}
 				}, 'json');
@@ -340,16 +354,6 @@
 					openMenu();
 				}
 			}
-
-			mui("body").on('tap', '.mui-btn.mui-btn-blue.mui-poppicker-btn-ok', function() {
-				mui('#mui-contnet').pullRefresh().setStopped(false); //开启滚动
-			})
-			mui("body").on('tap', '.mui-btn.mui-poppicker-btn-cancel', function() {
-				mui('#mui-contnet').pullRefresh().setStopped(false); //开启滚动
-			})
-			mui("body").on('tap', '.mui-backdrop', function() {
-				mui('#mui-contnet').pullRefresh().setStopped(false); //开启滚动
-			})
 		</script>
 	</body>
 
