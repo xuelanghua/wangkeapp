@@ -77,7 +77,6 @@
 
 			.mui-off-canvas-wrap.mui-active .mui-off-canvas-backdrop {
 				padding-top: 44px;
-				z-index: 9;
 			}
 
 			.mui-bar-nav~.mui-content {
@@ -157,7 +156,7 @@
 							container: "#mui-content",
 							up: {
 								height: 50,
-								auto: true,
+								auto: false,
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
@@ -197,6 +196,7 @@
 					var btn = document.getElementById('timer-choice');
 					var result = document.getElementById('result');
 					btn.addEventListener('tap', function() {
+						mui('#mui-content').pullRefresh().setStopped(true);
 						var _self = this;
 						var options = {
 							"type": "month",
@@ -261,6 +261,7 @@
 					return true;
 				}
 			}
+
 			function openMenu() {
 				if (!showMenu) {
 					if (mui.os.android && parseFloat(mui.os.version) < 4.4) {
@@ -312,23 +313,25 @@
 					showMenu = false;
 				}
 			}
-			document.getElementById("show-btn").addEventListener('tap',openMenu);
+			document.getElementById("show-btn").addEventListener('tap', openMenu);
 			window.addEventListener('dragright', function(e) {
 				e.detail.gesture.preventDefault();
 			});
 			window.addEventListener('dragleft', function(e) {
 				e.detail.gesture.preventDefault();
 			});
-			 //主界面向左滑动，若菜单未显示，则显示菜单；否则不做任何操作；
+			//主界面向左滑动，若菜单未显示，则显示菜单；否则不做任何操作；
 			window.addEventListener("swipeleft", openMenu);
-			 //menu页面向右滑动，关闭菜单；
+			//menu页面向右滑动，关闭菜单；
 			window.addEventListener("swiperight", closeMenu);
 			window.addEventListener("menu:swiperight", closeMenu);
-			window.addEventListener("doit", function(e){
-				app.type=e.detail.type;
+			// 监听菜单点击
+			window.addEventListener("doit", function(e) {
+				app.type = e.detail.type;
 				getUserBalanceLog();
+				document.getElementById('show-btn').innerText = e.detail.text;
 				logs(app.type);
-			},false);
+			}, false);
 			//重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
 			mui.menu = function() {
 				if (showMenu) {
@@ -337,6 +340,16 @@
 					openMenu();
 				}
 			}
+
+			mui("body").on('tap', '.mui-btn.mui-btn-blue.mui-poppicker-btn-ok', function() {
+				mui('#mui-contnet').pullRefresh().setStopped(false); //开启滚动
+			})
+			mui("body").on('tap', '.mui-btn.mui-poppicker-btn-cancel', function() {
+				mui('#mui-contnet').pullRefresh().setStopped(false); //开启滚动
+			})
+			mui("body").on('tap', '.mui-backdrop', function() {
+				mui('#mui-contnet').pullRefresh().setStopped(false); //开启滚动
+			})
 		</script>
 	</body>
 
