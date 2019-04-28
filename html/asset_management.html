@@ -49,7 +49,7 @@
 				</ul>
 				<div class="income-content">
 					<p>余额(元)</p>
-					<h2>0.00</h2>
+					<h2>{{balance}}</h2>
 					<div class="function_button mui-clearfix">
 						<button class="mui-pull-left" id="recharge">充值</button>
 						<div class="recharge"></div>
@@ -140,14 +140,18 @@
 					}
 				});
 				mui.plusReady(function() {
+					getMemberInfo();
 					getUserBalanceLog();
 				})
+				
 				mui('.mui-content').on('tap', '#recharge', function() {
-					message('充值!', 'center');
+					openPage('recharge.html', 'recharge', '#f7f7f7', '')
+					setStatusBar('', 'dark');
 				})
 
 				mui('.mui-content').on('tap', '#cash', function() {
-					message('提现!', 'center');
+					openPage('cash_withdrawal.html', 'cash_withdrawal', '#fff', '');
+					setStatusBar('', 'dark');
 				})
 				// 账单
 				mui('.mui-content').on('tap', '.more', function() {
@@ -177,6 +181,17 @@
 					mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 					message('没有更多了~');
 				}
+			}, 'json');
+		}
+		
+		//获取用户信息
+		function getMemberInfo() {
+			mui.post($ajaxUrl + 'member', {
+				action: 'detail',
+				token: userInfo.token
+			}, function(res) {
+				var memberInfo = res.data;
+				vm.balance = memberInfo.balance;
 			}, 'json');
 		}
 	</script>

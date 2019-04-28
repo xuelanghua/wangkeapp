@@ -159,13 +159,13 @@
 		},
 		bindSearchEvent: function() {
 			var self = this;
-			self.el.searchInput.addEventListener('input', function() {
-				var keyword = this.value;
-				self.search(keyword);
-			}, false);
-			$(self.el.search).on('tap', classSelector('icon-clear'), function() {
-				self.search('');
-			}, false);
+			// self.el.searchInput.addEventListener('input', function() {
+			// 	var keyword = this.value;
+			// 	self.search(keyword);
+			// }, false);
+			// $(self.el.search).on('tap', classSelector('icon-clear'), function() {
+			// 	self.search('');
+			// }, false);
 		},
 		bindEvent: function() {
 			var self = this;

@@ -196,12 +196,11 @@
 				},
 				methods: {
 					renew: function(id, fee) {
-						openPage('member_renewal_successful.html', 'member_renewal_successful', '#f7f7f7', {title: '升级'});
-						// if (!id || !fee) {
-						// 	message('参数错误!');
-						// 	return;
-						// }
-						// openPage('vt_renew.html', 'vt_renew', '#f7f7f7', {type: 2, groupId: id, fee: fee});
+						if (!id || !fee) {
+							message('参数错误!');
+							return;
+						}
+						openPage('vt_renew.html', 'vt_renew', '#f7f7f7', {type: 2, groupId: id, fee: fee});
 					},
 					upgrade: function(id, fee) {
 						if (!id || !fee) {
