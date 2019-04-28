@@ -77,7 +77,6 @@
 
 			.mui-off-canvas-wrap.mui-active .mui-off-canvas-backdrop {
 				padding-top: 44px;
-				z-index: 9;
 			}
 
 			.mui-bar-nav~.mui-content {
@@ -92,33 +91,37 @@
 			<h1 class="mui-title">账单</h1>
 		</header>
 		<div id="mui-content" class="mui-content  bill-container">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell timer bills-timer">
-					<div id="timer-choice">
-						<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
-						<div>
-							<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
-							<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
-						</div>
-					</div>
-					<div class="more" id="offCanvasShow">
-						<img src="../image/screen.png"><span id="show-btn">筛选</span>
-					</div>
-				</li>
-				<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
-					<img :src="'../image/assert/assert'+list.type+'.png'">
-					<div class="right-cont">
-						<div class="top mui-clearfix">
-							<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
-							<span class="mui-pull-right earning">{{list.number}}</span>
-						</div>
-						<div class="bottom mui-clearfix">
-							<span>{{list.create_time}}</span>
-							<span class="mui-pull-right">{{list.desc}}</span>
-						</div>
-					</div>
-				</li>
-			</ul>
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell timer bills-timer">
+							<div id="timer-choice">
+								<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
+								<div>
+									<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
+									<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
+								</div>
+							</div>
+							<div class="more" id="offCanvasShow">
+								<img src="../image/screen.png"><span id="show-btn">筛选</span>
+							</div>
+						</li>
+						<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+							<img :src="'../image/assert/assert'+list.type+'.png'">
+							<div class="right-cont">
+								<div class="top mui-clearfix">
+									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
+									<span class="mui-pull-right earning">{{list.number}}</span>
+								</div>
+								<div class="bottom mui-clearfix">
+									<span>{{list.create_time}}</span>
+									<span class="mui-pull-right">{{list.desc}}</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
@@ -155,7 +158,7 @@
 						swipeBack: false,
 						beforeback: back,
 						pullRefresh: {
-							container: "#mui-content",
+							container: "#pullrefresh",
 							up: {
 								height: 50,
 								auto: false,
@@ -167,8 +170,8 @@
 								}
 							},
 							down: {
-								style: 'circle', //单webview模式的下拉刷新 
-								color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+								style: 'circle', 
+								color: '#2289FF', 
 								callback: function() {
 									skip = 1;
 									getUserBalanceLog();
@@ -193,11 +196,20 @@
 								}
 							});
 						}, 300);
+						// 重新开启滚动
+						mui("body").on('tap', '.mui-btn', function() {
+							mui('#pullrefresh').pullRefresh().setStopped(false); 
+						})
+						mui('body').on('tap','.mui-backdrop',function(){
+							mui('#pullrefresh').pullRefresh().setStopped(false);
+						})
 					})
 					// 日期选择
 					var btn = document.getElementById('timer-choice');
 					var result = document.getElementById('result');
 					btn.addEventListener('tap', function() {
+						// 滚动
+						mui('#pullrefresh').pullRefresh().setStopped(true);
 						var _self = this;
 						var options = {
 							"type": "month",
@@ -210,6 +222,7 @@
 								app.currentTime = rs.y.text + '-' + rs.m.text;
 								skip = 1;
 								getUserBalanceLog();
+								mui('#pullrefresh').pullRefresh().setStopped(false);
 							});
 						} else {
 							_self.picker = new mui.DtPicker(options);
@@ -218,6 +231,7 @@
 								app.currentTime = rs.y.text + '-' + rs.m.text;
 								skip = 1;
 								getUserBalanceLog();
+								mui('#pullrefresh').pullRefresh().setStopped(false);
 							});
 						}
 					})
@@ -244,13 +258,13 @@
 				}, function(res) {
 					if (res.errno == 0 && skip == 1) {
 						app.balanceData = res.data;
-						mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
 					} else if (res.errno == 0 && skip > 1) {
 						app.balanceData.list = app.balanceData.list.concat(res.data.list);
-						mui('#mui-content').pullRefresh().endPullupToRefresh();
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh();
 					} else {
-						mui('#mui-content').pullRefresh().endPulldownToRefresh();
-						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 						message('没有更多了~');
 					}
 				}, 'json');
@@ -265,6 +279,7 @@
 					return true;
 				}
 			}
+
 			function openMenu() {
 				if (!showMenu) {
 					if (mui.os.android && parseFloat(mui.os.version) < 4.4) {
@@ -316,23 +331,25 @@
 					showMenu = false;
 				}
 			}
-			document.getElementById("show-btn").addEventListener('tap',openMenu);
+			document.getElementById("show-btn").addEventListener('tap', openMenu);
 			window.addEventListener('dragright', function(e) {
 				e.detail.gesture.preventDefault();
 			});
 			window.addEventListener('dragleft', function(e) {
 				e.detail.gesture.preventDefault();
 			});
-			 //主界面向左滑动，若菜单未显示，则显示菜单；否则不做任何操作；
+			//主界面向左滑动，若菜单未显示，则显示菜单；否则不做任何操作；
 			window.addEventListener("swipeleft", openMenu);
-			 //menu页面向右滑动，关闭菜单；
+			//menu页面向右滑动，关闭菜单；
 			window.addEventListener("swiperight", closeMenu);
 			window.addEventListener("menu:swiperight", closeMenu);
-			window.addEventListener("doit", function(e){
-				app.type=e.detail.type;
+			// 监听菜单点击
+			window.addEventListener("doit", function(e) {
+				app.type = e.detail.type;
 				getUserBalanceLog();
+				document.getElementById('show-btn').innerText = e.detail.text;
 				logs(app.type);
-			},false);
+			}, false);
 			//重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
 			mui.menu = function() {
 				if (showMenu) {
