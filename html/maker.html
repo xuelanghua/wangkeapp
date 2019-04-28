@@ -5,7 +5,7 @@
 		<title>会员中心</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<link href="../icomoon/style.css" type="text/css" rel="stylesheet"/>
+		<link href="../icomoon/style.css" type="text/css" rel="stylesheet" />
 		<style>
 			.my-equity{
 				height: 100%;
@@ -162,6 +162,7 @@
 				justify-content: space-between;
 				padding: 0 0.4rem 0 0.2rem;
 				font-size:0.3rem;
+				border-bottom: 1px solid #DDDDDD;
 			}
 			.fans .title span:last-of-type{
 				color: #999999;
@@ -196,9 +197,13 @@
 			.mui-table-view-cell:after{
 				left: 1rem;
 			}
+			
 			.fans .mui-table-view-cell .create-time,.fans .mui-table-view-cell .person{
 				color: #999999;
 				font-size: 0.24rem;
+			}
+			.fans .mui-table-view-cell:after{
+				height: 1;
 			}
 			.mui-table-view-cell .flex-right .vip,.mui-table-view-cell .flex-right .vip1{
 				padding: 0.05rem 0.16rem 0.02rem;
@@ -248,7 +253,7 @@
 			</div>
 			<div class="fans">
 				<div class="title"><span>我的粉丝（{{memberInfo.fans_number||0}}）</span><span class="mui-navigate-right accumulated">更多</span></div>
-				<ul class="mui-table-view">
+				<ul v-if="fansLists.length>0" class="mui-table-view">
 					<li class="mui-table-view-cell" v-for="(list,index) in fansLists" :key="index">
 						<img class="user-head-img" src="../image/kaol.jpg">
 						<div class="flex-right">
@@ -263,11 +268,16 @@
 							</div>
 						</div>
 					</li>
+				</ul>
+				<div v-else style="padding: 36px 0;">
+					<img style="width: 50%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png">
+					<p style="text-align: center;">您还没有粉丝</p>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/vue.min.js"></script>  
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: true
@@ -305,21 +315,21 @@
 						document.querySelector(".mui-content").classList.remove('mui-hidden');
 						getMemberInfo();
 						getFans();
-						
+
 						window.addEventListener('activateSuccess', function() {
 							getMemberInfo();
 						})
-						
+
 						// 显示激活码
 						mui(".mui-content .jihuo").on("tap", ".show-key", function() {
 							openPage('activate_code.html', 'activate_code', '#ffffff', '');
 						})
-						
+
 						// 领取激活码
 						mui(".mui-content .jihuo").on("tap", ".get-key", function() {
 							openPage('activation_code_collection.html', 'activation_code_collection', '#f7f7f7', '');
 						})
-						
+
 						mui('.mui-content').on('tap', '#renew', function() {
 							openPage('renew.html', 'renew', '#f7f7f7', '');
 						})
@@ -342,6 +352,7 @@
 					}
 				}
 			})
+
 			function getMemberInfo() {
 				mui.post($ajaxUrl + 'member&action=member_info', {
 					token: userInfo.token
@@ -354,6 +365,7 @@
 					}
 				}, 'json');
 			}
+
 			function getFans() {
 				pageNum += 1;
 				mui.post($ajaxUrl + 'member&action=fans', {
