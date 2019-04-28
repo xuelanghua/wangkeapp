@@ -77,11 +77,11 @@
 				<div class="browse-record-left">
 					<ul class="browse-record-img-cont">
 						<li class="browse-record-img" v-for="(items,index) in friendData.card_view" v-if="index<7" :key="index">
-							<img :src="items.avatarUrl">
+							<img :src="items">
 						</li>
-						<span v-if="friendData.card_view.length>6">···</span>
+						<span v-if="view_total>6">...</span>  
 					</ul>
-					<p>最近{{friendData.card_count}}人浏览</p>
+					<p>最近{{friendData.card_count}}人次浏览</p>
 				</div>
 				<div :class="[is_reliable?'browse-record-right active':'browse-record-right']">
 					<span class="click-heart"></span>
@@ -170,7 +170,8 @@
 					is_reliable: 0,
 					is_voice_like: 0,
 					addshow: false,
-					audioUrl: ''
+					audioUrl: '',
+					view_total: 0
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -307,6 +308,8 @@
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;
 						muiCont.audioUrl = data.voice;
+						muiCont.view_total = data.card_view.length;
+						
 						mui(".mui-title")[0].innerText = data.name;
 						var selfid = userInfo.id;
 						if (fid != selfid && muiCont.is_friend != 1) {
@@ -316,7 +319,7 @@
 							document.querySelector('.mui-icon-more').style.display = 'block';
 						}
 					} else {
-						message(res.errno.message)
+						message(res.errno.message) 
 					}
 				}, 'json')
 			}

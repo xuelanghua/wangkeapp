@@ -217,9 +217,22 @@
 					})
 				},
 				mounted: () => {
-					mui(".mui-content").on("tap", ".button", function() {
-						openPage('renew.html', 'renew', '#f7f7f7', '');
+					mui.plusReady(function () {
+						window.addEventListener('activateSuccess', function() {
+							setTimeout(function() {
+								getMemberInfo();
+							}, 1000)
+						})
+					    mui(".mui-content").on("tap", ".button", function() {
+					    	openPage('renew.html', 'renew', '#f7f7f7', '');
+					    })
+						
+						// 跳转到粉丝页面
+						mui(".mui-content").on("tap", ".mui-navigate-right", function() {
+							openPage('my_fans.html', 'my_fans', '#f7f7f7', '');
+						})
 					})
+					
 				}
 			})
 
@@ -251,10 +264,6 @@
 					}
 				}, 'json');
 			}
-			// 跳转到粉丝页面
-			mui(".mui-content").on("tap", ".mui-navigate-right", function() {
-				openPage('my_fans.html', 'my_fans', '#f7f7f7', '');
-			})
 		</script>
 	</body>
 

@@ -260,7 +260,7 @@
 							<div class="mui-clearfix">
 								<span class="user-name">{{list.nickName}}</span>
 								<span :class="[list.group_name=='创客'?'vip1':'vip']">{{list.group_name}}</span>
-								<span class="mui-pull-right">+{{list.recommend_award}}</span>
+								<span class="mui-pull-right" v-if="list.activation_type==1">+{{list.recommend_award}}</span>
 							</div>
 							<div>
 								<span class="create-time">加入时间：{{list.activation_time}}</span>
@@ -303,9 +303,9 @@
 							expire_time: '2019-06-19',
 							group_annual_fee: '199',
 							activation_code: '0/0',
-							service_award: 36,
-							recommended_award: 23559,
-							wang: '183,567,941'
+							service_award: 0,
+							recommended_award: 0,
+							wang: '0'
 						},
 						fansLists: []
 					}
@@ -317,7 +317,9 @@
 						getFans();
 
 						window.addEventListener('activateSuccess', function() {
-							getMemberInfo();
+							setTimeout(function() {
+								getMemberInfo();
+							}, 1000)
 						})
 
 						// 显示激活码

@@ -69,9 +69,9 @@
 								<li class="mui-table-view-cell total">
 									<p>充值金额</p>
 									<div class="recharge-sum">
-										<leabel>&yen;</leabel><input type="number" name="" id="" value="" />
+										<leabel>&yen;</leabel><input type="number" name="fee" />
 									</div>
-									<a class="confirm-payment" id="openPopover">充值</a>
+									<button class="confirm-payment mui-pay">充值</button>
 								</li>
 							</ul>
 						</div>
@@ -101,17 +101,110 @@
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 
 			var userInfo = getUserInfo();
+			//支付相关变量
+			var payType = 'wxpay';
+			var wxChannel = null; // 微信支付
+			var aliChannel = null; // 支付宝支付
+			var channel = null; //支付通道
+			var ALIPAYSERVER = $ajaxUrl + 'member&action=recharge';
+			var WXPAYSERVER = $ajaxUrl + 'member&action=recharge';
+			
+			var fee = 0;
 			// vue实例初始化
 			var app = new Vue({
-				el: "#mui-content",
+				el: "#collections",
 				data() {
 					return {}
 				},
 				created: function() {},
 				mounted: function() {
-					mui.plusReady(function() {});
+					mui.plusReady(function() {
+						plus.payment.getChannels(function(channels) {
+							for (var i in channels) {
+								if (channels[i].id == "wxpay") {
+									wxChannel = channels[i];
+								} else {
+									aliChannel = channels[i];
+								}
+							}
+						}, function(e) {
+							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
+						});
+
+						//支付
+						mui('.mui-content').on('tap', '.mui-pay', function() {
+							fee = mui('input[name=fee]')[0].value;
+							payType = document.querySelector('input[name=radio1]:checked').value;
+							if (payType.length == 0) {
+								message('请选择支付方式!', 'center');
+								return;
+							}
+							if (payType == 'balance') {
+
+							} else {
+								pay(payType);
+							}
+						})
+					});
 				}
 			});
+
+			// 2. 发起支付请求  
+			function pay(id) {
+				// 从服务器请求支付订单
+				var PAYSERVER = '';
+				if (id == 'alipay') {
+					message("暂不支持支付宝支付!", 'center');
+					return;
+					PAYSERVER = ALIPAYSERVER;
+					channel = aliChannel;
+				} else if (id == 'wxpay') {
+					PAYSERVER = WXPAYSERVER;
+					channel = wxChannel;
+				} else {
+					message("不支持此支付通道!", 'center');
+					return;
+				}
+
+				if (fee == '' || fee <= 0) {
+					message("请输入充值金额!", 'center');
+					return;
+				}
+				var waiting = plus.nativeUI.showWaiting();
+				mui.post(PAYSERVER, {
+					fee: fee,
+					pay_type: payType,
+					token: userInfo.token
+				}, function(res) {
+					// console.log(JSON.stringify(res));
+					waiting.close();
+					if (res.errno == 0) {
+						var data = res.data;
+						var param = {
+							appid: data.appid,
+							noncestr: data.nonce_str,
+							package: 'Sign=WXPay',
+							partnerid: data.mch_id,
+							prepayid: data.prepay_id,
+							timestamp: data.timeStamp,
+							sign: data.paySign
+						};
+
+						plus.payment.request(channel, param, function(result) {
+							message('充值成功!');
+							mui.fire(plus.webview.getWebviewById('asset_management'),'rechargeSuccess');
+							setTimeout(function() {
+								mui.back();
+							}, 2000)
+						}, function(error) {
+							console.log(JSON.stringify(error));
+							plus.nativeUI.alert("支付失败：" + error.code);
+						});
+					} else {
+						plus.nativeUI.alert(res.message, null, '提示');
+					}
+				}, 'json')
+			}
 		</script>
 	</body>
 </html>

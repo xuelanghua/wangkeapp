@@ -426,6 +426,82 @@
 				margin-left: 5px;
 				color: #B8B8B8;
 			}
+			
+			/* 弹窗 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 999;
+				top: 50%;
+				width: 80%;
+				left: 10%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			
+			
+			.verift-body {
+				width: 100%;
+				background-color: #ffffff;
+				border-radius: 10px;
+				position: relative;
+				overflow: hidden;
+				padding-top: 5px;
+				box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
+				animation: zoomIn 150ms ease-in-out;
+				z-index: 1045;
+			}
+			
+			.verift-body .tips {
+				width: 100%;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 1.6rem;
+			}
+			
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+			
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 15px 10px;
+			}
+			
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
 		</style>
 	</head>
 
@@ -509,7 +585,7 @@
 			<div class="Amount-of-money">
 				<div class="money">
 					<div style="color: #2489FF;">
-						<span style="font-size: 25px;font-weight: 500;">7500</span>
+						<span style="font-size: 25px;font-weight: 500;">{{balance}}</span>
 						<span style="font-size: 15px;">元</span>
 					</div>
 					<div style="font-size: 12px;margin-top: 10px;">
@@ -521,13 +597,14 @@
 					<p>提现金额</p>
 					<span>￥</span>
 					<span>
-						<input type="text" id="" value="" />
+						<input type="number" v-model="fee" name="fee"/>
 					</span>
 				</div>
 				<div class="tishi">
 					<div>
 						<span class="yu mui-pull-left"></span>
-						<span>额外扣除￥7.50手续费（费率%0.1）</span>
+						<span v-if="enough">额外扣除￥{{(fee * 0.1).toFixed(2)}}手续费（费率10%）</span>
+						<span v-if="!enough" style="color: red;">余额不足</span>
 					</div>
 				</div>
 				<button class="tixain">提现</button>
@@ -585,68 +662,146 @@
 				</div>
 				<div class="hbbj"></div>
 			</div>
+			
+			<div id="verift-body" class="join-team-verify" style="display: none;">
+				<div class="verift-body">
+					<div class="tips">
+						<span>发起预约后将有专员与你联系</span>
+					</div>
+					<div class="verift-footer">
+						<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+						<button type="button" class="mui-btn mui-btn-link send-verify">预约</button>
+					</div>
+				</div>
+			</div>
 		</div>
-	<script src="../js/mui.js"></script>
-	<script src="../js/util.js"></script>
-	<script type="text/javascript" src="../js/Zepto.min.js"></script>
-	<script type="text/javascript">
-		mui.init({
-			swipeBack: true,
-			beforeback: function() {
-				setStatusBar('', 'light');
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript" src="../js/Zepto.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					setStatusBar('', 'light');
+				}
+			})
+			var mask = mui.createMask(function() {
+				document.getElementById("verift-body").style.display = "none";
+			});
+			var userInfo = getUserInfo();
+			// vue实例初始化
+			var vm = new Vue({
+				el: ".mui-content",
+				data() {
+					return {
+						balance: 0,
+						fee: '',
+						enough: true
+					}
+				},
+				created: function() {
+					getMemberInfo();
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						// mask.show();
+						mui('.mui-content').on('tap', '.quan', function() {
+							vm.fee = (vm.balance / 1.1).toFixed(2);
+						})
+						
+						mui('.mui-content').on('tap', '.tixain', function() {
+							document.activeElement.blur();
+							if (!vm.enough || !vm.fee) return;
+							plus.nativeUI.confirm('确认提现?', function(e) {
+								if (e.index == 0) {
+									alert(1111);
+								}
+							})
+						})
+					})
+				},
+				watch: {
+					fee: function(newFee, oldFee) {
+						newFee = parseFloat(newFee);
+						var total = 0;
+						if (!isNaN(newFee)) {
+							total = newFee * 1.1;
+						}
+						total = parseFloat(total.toFixed(2));
+						if (total > vm.balance) {
+							vm.enough = false;
+						} else {
+							vm.enough = true;
+						}
+					}
+				}
+			});
+			
+			//获取用户信息
+			function getMemberInfo() {
+				logs(userInfo);
+				mui.post($ajaxUrl + 'member', {
+					action: 'detail',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						vm.balance = res.data.balance;
+					}
+				}, 'json');
 			}
-		})
-		$(function() {
-			//出现浮动层
-			$(".tixain").click(function() {
-				$(".ftc_wzsf").show();
-			});
-			//关闭浮动
-			$(".close").click(function() {
-				$(".ftc_wzsf").hide();
-				$(".mm_box li").removeClass("mmdd");
-				$(".mm_box li").attr("data", "");
-				i = 0;
-			});
-			//数字显示隐藏
-			$(".xiaq_tb").click(function() {
-				$(".numb_box").slideUp(500);
-			});
-			$(".mm_box").click(function() {
-				$(".numb_box").slideDown(500);
-			});
-			//----
-			var i = 0;
-			$(".nub_ggg li .zf_num").click(function() {
-
-				if (i < 6) {
-					$(".mm_box li").eq(i).addClass("mmdd");
-					$(".mm_box li").eq(i).attr("data", $(this).text());
-					i++
-					if (i == 6) {
-						setTimeout(function() {
-							var data = "";
-							$(".mm_box li").each(function() {
-								data += $(this).attr("data");
-							});
-						}, 100);
-					};
-				}
-			});
-
-			$(".nub_ggg li .zf_del").click(function() {
-				if (i > 0) {
-					i--
-					$(".mm_box li").eq(i).removeClass("mmdd");
-					$(".mm_box li").eq(i).attr("data", "");
-				}
-			});
-
-			$(".nub_ggg li .zf_empty").click(function() {
-				$(".mm_box li").removeClass("mmdd");
-				$(".mm_box li").attr("data", "");
-				i = 0;
-			});
-		});
-	</script>
+			
+// 			$(function() {
+// 				//出现浮动层
+// 				$(".tixain").click(function() {
+// 					$(".ftc_wzsf").show();
+// 				});
+// 				//关闭浮动
+// 				$(".close").click(function() {
+// 					$(".ftc_wzsf").hide();
+// 					$(".mm_box li").removeClass("mmdd");
+// 					$(".mm_box li").attr("data", "");
+// 					i = 0;
+// 				});
+// 				//数字显示隐藏
+// 				$(".xiaq_tb").click(function() {
+// 					$(".numb_box").slideUp(500);
+// 				});
+// 				$(".mm_box").click(function() {
+// 					$(".numb_box").slideDown(500);
+// 				});
+// 				//----
+// 				var i = 0;
+// 				$(".nub_ggg li .zf_num").click(function() {
+// 
+// 					if (i < 6) {
+// 						$(".mm_box li").eq(i).addClass("mmdd");
+// 						$(".mm_box li").eq(i).attr("data", $(this).text());
+// 						i++
+// 						if (i == 6) {
+// 							setTimeout(function() {
+// 								var data = "";
+// 								$(".mm_box li").each(function() {
+// 									data += $(this).attr("data");
+// 								});
+// 							}, 100);
+// 						};
+// 					}
+// 				});
+// 
+// 				$(".nub_ggg li .zf_del").click(function() {
+// 					if (i > 0) {
+// 						i--
+// 						$(".mm_box li").eq(i).removeClass("mmdd");
+// 						$(".mm_box li").eq(i).attr("data", "");
+// 					}
+// 				});
+// 
+// 				$(".nub_ggg li .zf_empty").click(function() {
+// 					$(".mm_box li").removeClass("mmdd");
+// 					$(".mm_box li").attr("data", "");
+// 					i = 0;
+// 				});
+// 			});
+		</script>
 </html>
