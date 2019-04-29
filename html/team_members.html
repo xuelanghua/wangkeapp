@@ -77,6 +77,14 @@
 
 			.mui-table-view-cell.mui-checkbox.mui-left {
 				padding-left: 0.2rem;
+				padding-right: 1.8rem;
+			}
+
+			.mui-table-view-cell.mui-checkbox.mui-left .user-name {
+				flex-grow: 1;
+				display: inline-flex;
+				height: 0.78rem;
+				align-items: center;
 			}
 
 			.mui-checkbox input[type=checkbox]:checked:before,
@@ -214,6 +222,25 @@
 				position: relative;
 				z-index: 999;
 			}
+
+			.mui-table-view-cell {
+				position: relative;
+			}
+
+			.check-target {
+				position: absolute;
+				right: 0.4rem;
+				top: 50%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				font-size: 0.26rem;
+				display: inline-flex;
+				height: 100%;
+				padding: 0 10px;
+				align-items: center;
+				color: #999999;
+				/* background-color: #007AFF; */
+			}
 		</style>
 	</head>
 
@@ -277,11 +304,11 @@
 							</template>
 							<template v-for="(items,key,index) in userList" :key="index">
 								<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
-								<li :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" @tap="viewDetails(list.uid)"
-								 class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-									<input v-if="identity&&list.is_captain==0" type="checkbox" :value="list.uid" :data-avatar="list.avatar||list.avatarUrl" />
-									<img :src="list.avatar||list.avatarUrl" alt="">
-									<span>{{list.name||list.nickName}}</span>
+								<li :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+									<input v-show="identity&&list.is_captain==0" type="checkbox" :value="list.uid" :data-avatar="list.avatar||list.avatarUrl" />
+									<img :src="list.avatar||list.avatarUrl" alt="" @tap="viewDetails(list.uid)">
+									<span class="user-name" @tap="viewDetails(list.uid)">{{list.name||list.nickName}}</span>
+									<span class="check-target" @tap="checkTarget(list.uid)">查看目标</span>
 								</li>
 							</template>
 						</ul>
@@ -368,7 +395,16 @@
 							fid: cid
 						});
 					} else {
-
+						// 我什么也不做
+					}
+				},
+				checkTarget: function(uid) {
+					if (this.identity == false) {
+						openPage('target_detail.html', 'target_detail', '#f7f7f7', {
+							uid: uid
+						});
+					} else {
+						// 我什么也不做
 					}
 				}
 			},
@@ -384,7 +420,7 @@
 							token: userInfo.token,
 							team_id: tid
 						}, function(res) {
-							if (res.errno==0) {
+							if (res.errno == 0) {
 								app.dissolve = false;
 								plus.webview.close('webview');
 								plus.webview.close('team_members');
@@ -477,6 +513,7 @@
 				}
 			}, 'json');
 		});
+
 		function getUserData() {
 			// logs(tid);
 			mui.post($ajaxUrl + 'team&action=member_list', {
