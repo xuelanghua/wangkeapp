@@ -18,6 +18,7 @@
 			.recharge-sum input {
 				padding-left: 0.1rem;
 				line-height: 1.6;
+				height: auto;
 			}
 
 			.recharge-sum input,
@@ -77,7 +78,6 @@
 						</div>
 					</form>
 				</div>
-
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -108,7 +108,7 @@
 			var channel = null; //支付通道
 			var ALIPAYSERVER = $ajaxUrl + 'member&action=recharge';
 			var WXPAYSERVER = $ajaxUrl + 'member&action=recharge';
-			
+
 			var fee = 0;
 			// vue实例初始化
 			var app = new Vue({
@@ -193,7 +193,7 @@
 
 						plus.payment.request(channel, param, function(result) {
 							message('充值成功!');
-							mui.fire(plus.webview.getWebviewById('asset_management'),'rechargeSuccess');
+							mui.fire(plus.webview.getWebviewById('asset_management'), 'rechargeSuccess');
 							setTimeout(function() {
 								mui.back();
 							}, 2000)
