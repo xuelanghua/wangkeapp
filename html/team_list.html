@@ -24,7 +24,8 @@
 						<li class="team-list" v-if="list.is_captain==1" @tap="teamDetail(list.team_id)">
 							<div class="inside">
 								<i class="adorn"></i>
-								<div class="team-title">{{list.name}}<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span> {{list.current_number}} 人</span></div>
+								<div class="team-title">{{list.name}}<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span>
+										{{list.current_number}} 人</span></div>
 								<div class="time-person">
 									<span class="create-time">创建时间：{{list.create_time}}</span>
 								</div>
@@ -36,14 +37,15 @@
 					暂未创建团队
 				</div>
 			</div>
-			<div class="my-join-team"  v-if="joinFlag">
+			<div class="my-join-team" v-if="joinFlag">
 				<h2><i></i>我加入的团队</h2>
 				<ul>
 					<template v-for="(list, index) in joinList" :key="index">
 						<li class="team-list" v-if="list.is_captain==0" @tap="teamDetail(list.team_id)">
 							<div class="inside">
 								<i class="adorn"></i>
-								<div class="team-title">{{list.name}}<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span> {{list.current_number}} 人</span></div>
+								<div class="team-title">{{list.name}}<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span>
+										{{list.current_number}} 人</span></div>
 								<div class="time-person">
 									<span class="create-time">创建时间：{{list.create_time}}</span>
 									<span class="create-person">创建人：{{list.captain_name.name || list.captain_name.nickName}}</span>
@@ -52,6 +54,10 @@
 						</li>
 					</template>
 				</ul>
+			</div>
+			<div class="operation-section">
+				<span class="team-building" v-if="!createFlag">创建团队</span>
+				<span class="join-team">加入团队</span>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
@@ -72,7 +78,7 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
-			
+
 			var vm = new Vue({
 				el: '.mui-content',
 				data() {
@@ -83,7 +89,7 @@
 						joinFlag: false
 					}
 				},
-				mounted:() => {
+				mounted: () => {
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						var teamList = self.teamList;
@@ -105,11 +111,11 @@
 						if (joinList.length > 0) {
 							vm.joinFlag = true;
 						}
-						
+
 						mui('.mui-content').on('tap', '.create-team', function() {
 							openPage('create_team.html', 'create_team', '#f7f7f7', '')
 						})
-						
+
 						mui('.mui-content').on('tap', '.join-team', function() {
 							openPage('join_team.html', 'join_team', '#f7f7f7', '')
 						})
