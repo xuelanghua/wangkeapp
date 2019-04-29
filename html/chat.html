@@ -391,6 +391,15 @@
 				color: #FFFFFF;
 				font-size: 15px;
 			}
+			.see-card{
+				color: #DDDDDD;
+				font-size: 14px;
+				height: 50px;
+				/* background-color: #0062CC; */
+				display: inline-flex;
+				align-items: center;
+				padding: 0 3px;
+			}
 		</style>
 	</head>
 
@@ -958,71 +967,41 @@
 							}, 'slide-in-right');
 						}
 					} else if (type == 'friend') {
-						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-							fid: cid
-						})
-					}
-				})
-
-				// 点击右半部分进入聊天
-				mui('.mui-indexed-list-item').on('tap', '.user-left-cont', function() {
-					var cid = this.dataset.id,
-						type = this.dataset.type,
-						chatName = this.dataset.name,
-						avatar = this.dataset.avatar;
-					if (type == 'crm') {
-						var from = this.dataset.from;
-						if (from == 1) {
-							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
-						} else {
-							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
-						}
-					} else if (type == 'friend') {
-						fnOpenWin('dialog.html', 'dialog', {
+						fnOpenWin('customer_detail.html', 'customer_detail', {
 							statusbar: {
-								background: '#F7F7F7'
+								background: '#2289FF'
 							}
 						}, {
-							cid: cid,
-							chatName: chatName,
-							avatar: avatar,
-							barStyle: 'light'
+							cid: cid
 						}, 'slide-in-right');
-						plus.navigator.setStatusBarStyle('dark');
 					}
 				})
-
-				// 打开新增客户详情页
-				mui('.mui-table-view').on('tap', '.customer-head-img', function() {
-					var cid = this.dataset.id;
-					var type = this.dataset.type;
-					fnOpenWin('customer_detail.html', 'customer_detail', {
-						statusbar: {
-							background: '#2289FF'
-						}
-					}, {
-						cid: cid
-					}, 'slide-in-right');
-				})
-
-				// 打开新增客户聊天
-				mui('.mui-table-view').on('tap', '.customer-right-cont', function() {
-					var cid = this.dataset.id,
-						type = this.dataset.type,
-						chatName = this.dataset.name,
-						avatar = this.dataset.avatar;
+			// 点击右半部分进入聊天
+			mui('.mui-indexed-list-item').on('tap', '.user-left-cont', function() {
+				var cid = this.dataset.id,
+					type = this.dataset.type,
+					chatName = this.dataset.name,
+					avatar = this.dataset.avatar;
+				if (type == 'crm') {
+					var from = this.dataset.from;
+					if (from == 1) {
+						fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
+							statusbar: {
+								background: '#2289FF'
+							}
+						}, {
+							cid: cid
+						}, 'slide-in-right');
+					} else {
+						fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+							statusbar: {
+								background: '#2289FF'
+							}
+						}, {
+							cid: cid
+						}, 'slide-in-right');
+					}
+				} else if (type == 'friend') {
 					fnOpenWin('dialog.html', 'dialog', {
 						statusbar: {
 							background: '#F7F7F7'
@@ -1034,64 +1013,67 @@
 						barStyle: 'light'
 					}, 'slide-in-right');
 					plus.navigator.setStatusBarStyle('dark');
+				}
+			})
+			mui('.mui-indexed-list-item').on('tap', '.see-card', function() {
+				var cid = this.dataset.id;
+				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+					fid: cid
 				})
-
-				// 添加新朋友
-				mui(".mui-content").on("tap", ".new-friend", function() {
-					openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
-					plus.navigator.setStatusBarStyle("dark");
-				})
-
-				// 客户crm头像跳转
-				mui('.mui-table-view').on('tap', '.crm-user-head', function() {
-					var cid = this.dataset.id;
-					var type = this.dataset.type;
-					// console.log(type);
-					if (type == 'crm') {
-						var from = this.dataset.from;
-						if (from == 1) {
-							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
-						} else {
-							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
-						}
-					} else if (type == 'friend') {
-						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-							fid: cid
-						})
+			})
+			// 打开新增客户详情页
+			mui('.mui-table-view').on('tap', '.customer-head-img', function() {
+				var cid = this.dataset.id;
+				var type = this.dataset.type;
+				fnOpenWin('customer_detail.html', 'customer_detail', {
+					statusbar: {
+						background: '#2289FF'
 					}
-				})
+				}, {
+					cid: cid
+				}, 'slide-in-right');
+			})
 
-				// 客户crm跳转
-				mui('.mui-table-view').on('tap', '.crm-left-cont', function() {
-					var cid = this.dataset.id,
-						avatar = this.dataset.avatar,
-						type = this.dataset.type,
-						chatName = this.dataset.name,
-						from = this.dataset.from;
+			// 打开新增客户聊天
+			mui('.mui-table-view').on('tap', '.customer-right-cont', function() {
+				var cid = this.dataset.id,
+					type = this.dataset.type,
+					chatName = this.dataset.name,
+					avatar = this.dataset.avatar;
+				fnOpenWin('dialog.html', 'dialog', {
+					statusbar: {
+						background: '#F7F7F7'
+					}
+				}, {
+					cid: cid,
+					chatName: chatName,
+					avatar: avatar,
+					barStyle: 'light'
+				}, 'slide-in-right');
+				plus.navigator.setStatusBarStyle('dark');
+			})
+
+			// 添加新朋友
+			mui(".mui-content").on("tap", ".new-friend", function() {
+				openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
+				plus.navigator.setStatusBarStyle("dark");
+			})
+
+			// 客户crm头像跳转
+			mui('.mui-table-view').on('tap', '.crm-user-head', function() {
+				var cid = this.dataset.id;
+				var type = this.dataset.type;
+				// console.log(type);
+				if (type == 'crm') {
+					var from = this.dataset.from;
 					if (from == 1) {
-						fnOpenWin('dialog.html', 'dialog', {
+						fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
 							statusbar: {
-								background: '#F7F7F7'
+								background: '#2289FF'
 							}
 						}, {
-							cid: cid,
-							chatName: chatName,
-							avatar: avatar,
-							barStyle: 'light'
+							cid: cid
 						}, 'slide-in-right');
-						plus.navigator.setStatusBarStyle('dark');
 					} else {
 						fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
 							statusbar: {
@@ -1101,13 +1083,48 @@
 							cid: cid
 						}, 'slide-in-right');
 					}
-				})
+				} else if (type == 'friend') {
+					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+						fid: cid
+					})
+				}
+			})
 
-				//新增好友条目点击记录
-				mui('.newly_added').on('tap', '#segmentedControl a', function() {
-					var tabId = this.dataset.id;
-					customerCurrentTab = tabId;
-				})
+			// 客户crm跳转
+			mui('.mui-table-view').on('tap', '.crm-left-cont', function() {
+				var cid = this.dataset.id,
+					avatar = this.dataset.avatar,
+					type = this.dataset.type,
+					chatName = this.dataset.name,
+					from = this.dataset.from;
+				if (from == 1) {
+					fnOpenWin('dialog.html', 'dialog', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						cid: cid,
+						chatName: chatName,
+						avatar: avatar,
+						barStyle: 'light'
+					}, 'slide-in-right');
+					plus.navigator.setStatusBarStyle('dark');
+				} else {
+					fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+						statusbar: {
+							background: '#2289FF'
+						}
+					}, {
+						cid: cid
+					}, 'slide-in-right');
+				}
+			})
+
+			//新增好友条目点击记录
+			mui('.newly_added').on('tap', '#segmentedControl a', function() {
+				var tabId = this.dataset.id;
+				customerCurrentTab = tabId;
+			})
 			}
 
 			function getCustomerList(type, refresh) {
@@ -1604,7 +1621,8 @@
 							}
 							html += '</div>';
 							html += '<div class="content user-left-cont bosom-friend" data-type="friend" data-id="' + list[i].fid +
-								'" data-name="' + list[i].name + '" data-avatar="' + list[i].avatarUrl + '">' + list[i].name + '</div>';
+								'" data-name="' + list[i].name + '" data-avatar="' + list[i].avatarUrl + '">' + '<span>' + list[i].name +
+								'</span>' + '</div>' + '<span data-id="' + list[i].fid + '" class="see-card">' + '查看名片' + '</span>';
 							// html += '<div class="good_friend_name ">' ;
 							html += '</div>';
 							html += '</a>';
@@ -1751,7 +1769,36 @@
 				}, 'json');
 			}
 			mui(".mui-content").on('tap', '.mui-search', function() {
-				openPage('chat_page_search.html', 'chat_page_search', '#f7f7f7', '');
+				mui.openWindow({
+					url: "chat_page_search.html",
+					id: "chat_page_search",
+					styles: {
+						bounce: 'none',
+						scrollsToTop: true,
+						popGesture: 'close',
+						// background: '#ffffff',
+						background: 'transparent',
+						statusbar: {
+							background: "#f7f7f7"
+						}
+					},
+					extras: '',
+					createNew: false,
+					show: {
+						autoShow: true,
+						aniShow: 'none',
+						duration: 150,
+						event: 'titleUpdate',
+						extras: {
+							acceleration: 'auto',
+							capture: '',
+							otherCapture: ''
+						}
+					},
+					waiting: {
+						autoShow: false
+					}
+				})
 			})
 		</script>
 	</body>
