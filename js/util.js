@@ -609,9 +609,9 @@ function pushInit() {
 	plus.push.addEventListener('click', function(msg) {
 		console.log(JSON.stringify(msg));
 		try {
-			if (plus.os.name == 'iOS') {
-				plus.push.clear();
-			}
+			// if (plus.os.name == 'iOS') {
+			// 	plus.push.clear();
+			// }
 			if (!msg.payload) {
 				return;
 			}
@@ -726,7 +726,12 @@ function setBadge(number) {
 }
 // 清除数字
 function clearBadge() {
-	plus.runtime.setBadgeNumber(-1);
+	if (plus.os.name == 'iOS') {
+		plus.runtime.setBadgeNumber(0);
+	} else {
+		plus.runtime.setBadgeNumber(-1);
+		plus.push.clear();
+	}
 }
 
 

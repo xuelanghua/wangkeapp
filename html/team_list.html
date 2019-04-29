@@ -17,43 +17,40 @@
 		</header>
 
 		<div class="mui-content team-list-container">
-			<div class="my-team">
+			<div class="my-team" v-if="createFlag">
 				<h2><i></i>我创建的团队</h2>
 				<ul>
-					<li class="team-list">
-						<div class="inside">
-							<i class="adorn"></i>
-							<div class="team-title">阿飞队<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span>120人</span></div>
-							<div class="time-person">
-								<span class="create-time">创建时间：2019-04-28</span>
+					<template v-for="(list, index) in createList" :key="index">
+						<li class="team-list" v-if="list.is_captain==1" @tap="teamDetail(list.team_id)">
+							<div class="inside">
+								<i class="adorn"></i>
+								<div class="team-title">{{list.name}}<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span> {{list.current_number}} 人</span></div>
+								<div class="time-person">
+									<span class="create-time">创建时间：{{list.create_time}}</span>
+								</div>
 							</div>
-						</div>
-					</li>
+						</li>
+					</template>
 				</ul>
+				<div v-else>
+					暂未创建团队
+				</div>
 			</div>
-			<div class="my-join-team">
-				<h2><i></i>我创建的团队</h2>
+			<div class="my-join-team"  v-if="joinFlag">
+				<h2><i></i>我加入的团队</h2>
 				<ul>
-					<li class="team-list">
-						<div class="inside">
-							<i class="adorn"></i>
-							<div class="team-title">阿飞队<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span>120人</span></div>
-							<div class="time-person">
-								<span class="create-time">创建时间：2019-04-28</span>
-								<span class="create-person">创建人：灰灰</span>
+					<template v-for="(list, index) in joinList" :key="index">
+						<li class="team-list" v-if="list.is_captain==0" @tap="teamDetail(list.team_id)">
+							<div class="inside">
+								<i class="adorn"></i>
+								<div class="team-title">{{list.name}}<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span> {{list.current_number}} 人</span></div>
+								<div class="time-person">
+									<span class="create-time">创建时间：{{list.create_time}}</span>
+									<span class="create-person">创建人：{{list.captain_name.name || list.captain_name.nickName}}</span>
+								</div>
 							</div>
-						</div>
-					</li>
-					<li class="team-list">
-						<div class="inside">
-							<i class="adorn"></i>
-							<div class="team-title">阿飞队<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span>120人</span></div>
-							<div class="time-person">
-								<span class="create-time">创建时间：2019-04-28</span>
-								<span class="create-person">创建人：灰灰</span>
-							</div>
-						</div>
-					</li>
+						</li>
+					</template>
 				</ul>
 			</div>
 		</div>
@@ -61,7 +58,12 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					setStatusBar('', 'light');
+				}
+			});
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -70,7 +72,65 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
-			mui.plusReady(function() {})
+			
+			var vm = new Vue({
+				el: '.mui-content',
+				data() {
+					return {
+						createList: null,
+						joinList: null,
+						createFlag: false,
+						joinFlag: false
+					}
+				},
+				mounted:() => {
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						var teamList = self.teamList;
+						var createList = new Array();
+						var joinList = new Array();
+						mui.each(teamList, function(index, item) {
+							logs(item);
+							if (item.is_captain == 1) {
+								createList.push(item);
+							} else {
+								joinList.push(item);
+							}
+						})
+						vm.createList = createList;
+						vm.joinList = joinList;
+						if (createList.length > 0) {
+							vm.createFlag = true;
+						}
+						if (joinList.length > 0) {
+							vm.joinFlag = true;
+						}
+						
+						mui('.mui-content').on('tap', '.create-team', function() {
+							openPage('create_team.html', 'create_team', '#f7f7f7', '')
+						})
+						
+						mui('.mui-content').on('tap', '.join-team', function() {
+							openPage('join_team.html', 'join_team', '#f7f7f7', '')
+						})
+					})
+				},
+				methods: {
+					teamDetail: function(team_id) {
+						fnOpenWin('webview.html', 'webview', {
+							statusbar: {
+								background: '#FFFFFF'
+							}
+						}, {
+							tid: team_id,
+							title: '团队',
+							statusBarStyle: 'light',
+							url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=' + team_id +
+								'&m=longbing_card'
+						}, 'slide-in-right');
+					}
+				}
+			})
 		</script>
 	</body>
 

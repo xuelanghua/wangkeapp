@@ -536,30 +536,12 @@
 
 				//团队
 				mui('.mui-content').on('tap', '#boss', function() {
-					mui.post($ajaxUrl + 'team&action=team_info', {
+					mui.post($ajaxUrl + 'team&action=team_list', {
 						token: userInfo.token
 					}, function(res) {
-						logs(res);
 						if (res.errno == 0) {
-							if (res.data.join_status == 1) {
-								fnOpenWin('webview.html', 'webview', {
-									statusbar: {
-										background: '#FFFFFF'
-									}
-								}, {
-									tid: res.data.id,
-									title: '团队',
-									statusBarStyle: 'light',
-									url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=' + res.data.id +
-										'&m=longbing_card'
-								}, 'slide-in-right');
-								setStatusBar('', 'dark');
-							} else {
-								openPage('boss_team.html', 'boss_team', '#f7f7f7', {
-									teamInfo: res.data
-								});
-								setStatusBar('', 'dark');
-							}
+							openPage('team_list.html', 'team_list', '#f7f7f7', {teamList: res.data});
+							setStatusBar('', 'dark');
 						} else {
 							openPage('boss_team.html', 'boss_team', '#f7f7f7', '');
 							setStatusBar('', 'dark');
@@ -567,6 +549,40 @@
 					}, 'json');
 					// openPage('boss_team.html', 'boss_team', '#f7f7f7', '')
 				})
+				
+				// //团队
+				// mui('.mui-content').on('tap', '#boss', function() {
+				// 	mui.post($ajaxUrl + 'team&action=team_list', {
+				// 		token: userInfo.token
+				// 	}, function(res) {
+				// 		logs(res);
+				// 		if (res.errno == 0) {
+				// 			if (res.data.join_status == 1) {
+				// 				fnOpenWin('webview.html', 'webview', {
+				// 					statusbar: {
+				// 						background: '#FFFFFF'
+				// 					}
+				// 				}, {
+				// 					tid: res.data.id,
+				// 					title: '团队',
+				// 					statusBarStyle: 'light',
+				// 					url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=' + res.data.id +
+				// 						'&m=longbing_card'
+				// 				}, 'slide-in-right');
+				// 				setStatusBar('', 'dark');
+				// 			} else {
+				// 				openPage('boss_team.html', 'boss_team', '#f7f7f7', {
+				// 					teamInfo: res.data
+				// 				});
+				// 				setStatusBar('', 'dark');
+				// 			}
+				// 		} else {
+				// 			openPage('boss_team.html', 'boss_team', '#f7f7f7', '');
+				// 			setStatusBar('', 'dark');
+				// 		}
+				// 	}, 'json');
+				// 	// openPage('boss_team.html', 'boss_team', '#f7f7f7', '')
+				// })
 
 				//目标
 				mui('.mui-content').on('tap', '#target', function() {
@@ -676,6 +692,7 @@
 
 			//获取用户信息
 			function getMemberInfo() {
+				if (!userInfo) return;
 				logs(userInfo);
 				mui.post($ajaxUrl + 'member', {
 					action: 'detail',
@@ -687,7 +704,7 @@
 					document.getElementById('avatar').src = memberInfo.avatarUrl;
 					if (!memberInfo.group) {
 						document.getElementById('group_name').innerText = '普通';
-						document.getElementById('more').style.display = 'none';
+						// document.getElementById('more').style.display = 'none';
 					} else {
 						document.getElementById('group_name').innerText = memberInfo.group.name;
 					}

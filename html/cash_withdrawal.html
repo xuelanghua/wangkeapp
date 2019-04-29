@@ -715,7 +715,7 @@
 							if (!vm.enough || !vm.fee) return;
 							plus.nativeUI.confirm('确认提现?', function(e) {
 								if (e.index == 0) {
-									alert(1111);
+									withdrawDeposit();
 								}
 							})
 						})
@@ -749,6 +749,29 @@
 						vm.balance = res.data.balance;
 					}
 				}, 'json');
+			}
+			
+			//提现操作
+			function withdrawDeposit() {
+				plus.nativeUI.showWaiting('处理中...');
+				mui.post($ajaxUrl + 'member', {
+						action: 'withdraw_deposit',
+						fee: vm.fee,
+						token: userInfo.token
+					}, function(res){
+						logs(res);
+						if (res.errno == 0) {
+							message('提现成功!');
+							mui.fire(plus.webview.getWebviewById('asset_management'), 'withdrawDepositSuccess');
+							setTimeout(function() {
+								mui.back();
+							}, 2000)
+						} else {
+							message(res.message);
+						}
+						plus.nativeUI.closeWaiting();
+					}, 'json'
+				);
 			}
 			
 // 			$(function() {

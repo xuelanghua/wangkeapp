@@ -135,6 +135,7 @@
 						mui('.mui-content').on('tap', '.mui-pay', function() {
 							fee = mui('input[name=fee]')[0].value;
 							payType = document.querySelector('input[name=radio1]:checked').value;
+							document.activeElement.blur();
 							if (payType.length == 0) {
 								message('请选择支付方式!', 'center');
 								return;
@@ -176,7 +177,7 @@
 					pay_type: payType,
 					token: userInfo.token
 				}, function(res) {
-					// console.log(JSON.stringify(res));
+					console.log(JSON.stringify(res));
 					waiting.close();
 					if (res.errno == 0) {
 						var data = res.data;
