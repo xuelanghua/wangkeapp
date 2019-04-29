@@ -230,8 +230,10 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
+			var uid = 0;
 			userInfo = getUserInfo();
-			var selectTime = '2019-03-18';
+			var selectTime = formatDate('y-m-d', '');
+			document.querySelector('#select-time').innerText = selectTime;
 			var timeType = '1';
 			var optionsCont = {
 				"type": "date"
@@ -250,18 +252,24 @@
 							deal: 0
 						},
 						finish: {
-							exposure_rate: 3,
-							new_customer: 1,
-							customer_follow: 1,
-							share_card: 1,
-							communication: 2,
-							deal: 10
+							exposure_rate: 0,
+							new_customer: 0,
+							customer_follow: 0,
+							share_card: 0,
+							communication: 0,
+							deal: 0
 						},
 						titles: ['曝光', '拓客', '客户跟进', '有效沟通', '转介绍', '成交']
 					}
 				},
 				mounted: function() {
 					mui.plusReady(function() {
+						// 拿到从团队成员页面传过来的uid
+						var _self=plus.webview.currentWebview();
+						if (_self.uid) {
+							uid = _self.uid;
+							document.querySelector('.my-target-menu').style.display = 'none';
+						}
 						plus.webview.currentWebview().setStyle({
 							statusbar: {
 								background: '#ffffff'
@@ -270,9 +278,6 @@
 							bottom: 0
 						});
 						userTargetStatistics();
-						// 拿到从团队成员页面传过来的uid
-						var _self=plus.webview.currentWebview();
-						message(_self.uid);
 					});
 					// 日期选择器
 					// 年月日切换
@@ -289,11 +294,13 @@
 						$(this).children('i').addClass('active');
 						// logs(typs);
 						if (typs == "year") {
+							document.querySelector('#select-time').innerText = formatDate('y', '');
 							optionsCont = "year";
 							selectTime = isYear + '-01';
 							timeType = "3";
 							userTargetStatistics();
 						} else if (typs == "month") {
+							document.querySelector('#select-time').innerText = formatDate('y-m', '');
 							optionsCont = {
 								"type": "month",
 								"beginYear": 2019,
@@ -303,6 +310,7 @@
 							timeType = "2";
 							userTargetStatistics();
 						} else {
+							document.querySelector('#select-time').innerText = formatDate('y-m-d', '');
 							optionsCont = {
 								"type": "date",
 								"beginYear": 2019,
@@ -357,7 +365,7 @@
 							yearPicker.show(function(items) {
 								mui("#select-time")[0].innerText = " " + items[0].text + " ";
 								selectTime = items[0].text;
-								timeType = "3";
+								// timeType = "3";
 								userTargetStatistics();
 							});
 						} else {
@@ -366,7 +374,7 @@
 							_self.picker.show(function(res) {
 								mui("#select-time")[0].innerText = res.text;
 								selectTime = res.text;
-								timeType = "2";
+								// timeType = "2";
 								userTargetStatistics();
 								_self.picker = null;
 							});
@@ -405,10 +413,11 @@
 					action: 'detail',
 					token: userInfo.token,
 					date: selectTime, //"01" 
-					pattern: timeType // 1天 2月 3年
+					pattern: timeType ,// 1天 2月 3年
+					uid: uid
 				}, function(res) {
 					app.plan = res.data.plan;
-					// app.finish = res.data.finish;
+					app.finish = res.data.finish;
 				}, 'json')
 			}
 			// 显示我的目标

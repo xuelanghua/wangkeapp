@@ -116,7 +116,12 @@
 		// 初始化字体大小结束
 		
 		mui.plusReady(function() {
-			
+			var webveiw = plus.webview.all();
+			var webviewName = new Array();
+			mui.each(webveiw, function(index, item) {
+				webviewName.push(item.id);
+			})
+			logs(webviewName);
 			updateUserInfo();
 			userInfo = getUserInfo();
 			logs(userInfo);
@@ -156,13 +161,39 @@
 							//注销账号
 							localStorage.removeItem("user");
 							// plus.webview.getLaunchWebview().show("pop-in");
-							mui.openWindow({
-								url: 'login.html',
-								id: 'login',
-								show: {
-									aniShow: 'pop-in'
-								}
-							});
+							// mui.openWindow({
+							// 	url: 'login.html',
+							// 	id: 'login',
+							// 	show: {
+							// 		aniShow: 'pop-in'
+							// 	}
+							// });
+							if (plus.os.name == "iOS") {
+								mui.get($ajaxUrl + 'member',{
+										action: 'login_type',
+									}, function(res){
+										if (res.data == 1) {
+											fnOpenWin('login.html', 'login', {
+												statusbar: {
+													background: '#122c9a'
+												}
+											}, '', 'slide-in-bottom');
+										} else {
+											fnOpenWin('mobile_login.html', 'mobile_login', {
+												statusbar: {
+													background: '#2289FF'
+												}
+											}, '', 'slide-in-bottom');
+										}
+									}, 'json'
+								);
+							} else {
+								fnOpenWin('login.html', 'login', {
+									statusbar: {
+										background: '#122c9a'
+									}
+								}, '', 'slide-in-bottom');
+							}
 							break;
 						case 2:
 							plus.runtime.quit();

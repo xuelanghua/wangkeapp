@@ -298,17 +298,38 @@
 		}
 
 		function login() {
-			fnOpenWin('html/login.html', 'login', {
-				statusbar: {
-					background: '#122c9a'
-				}
-			}, '', 'slide-in-bottom');
+			if (plus.os.name == "iOS") {
+				mui.get($ajaxUrl + 'member',{
+						action: 'login_type',
+					}, function(res){
+						if (res.data == 1) {
+							fnOpenWin('html/login.html', 'login', {
+								statusbar: {
+									background: '#122c9a'
+								}
+							}, '', 'slide-in-bottom');
+						} else {
+							fnOpenWin('html/mobile_login.html', 'mobile_login', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, '', 'slide-in-bottom');
+						}
+					}, 'json'
+				);
+			} else {
+				fnOpenWin('html/login.html', 'login', {
+					statusbar: {
+						background: '#122c9a'
+					}
+				}, '', 'slide-in-bottom');
+			}
 		}
 
 		function bindMobile() {
 			fnOpenWin('html/mobile_bind.html', 'mobile_bind', {
 				statusbar: {
-					background: '#122c9a'
+					background: '#2289ff'
 				},
 			}, '', 'slide-in-bottom');
 		}

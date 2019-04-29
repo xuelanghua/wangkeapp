@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			body{
+				background-color: #FFFFFF;
+			}
+			.mui-content{
+				background-color: #FFFFFF;
+			}
+			.number img{
+				width: 100%;
+			}
+			.sk{
+				width: 90%;
+				position: absolute;
+				top: 30%;
+				left: 5%;
+			}
+			.phone{
+				background-color: #FFFFFF;
+				margin: 0 auto;
+				padding: 31px 15px 20px 17px;
+				border-radius: 8px;
+				box-shadow: 0 3px 15px 2px #DDDDDD;
+			}
+			.phone-title{
+				font-size: 20px;
+			}
+			.phone-content{
+				margin-top:15px;
+			}
+			.phone1{
+				padding-top: 33px;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.phone1 input{
+				width: 90%;
+				margin: 0;
+				padding: 0 0 8px 0;
+				border: none;
+			}
+			.phone1 img{
+				width: 23px;
+			}
+			
+			.Obtain{
+				font-size: 12px;
+				border: none;
+				color: #6E83EB;
+				margin-top: 25px;
+			}
+			.Opening{
+				width: 100%;
+				display: block;
+				padding: 15px 0;
+				font-size: 18px;
+				color: #FFFFFF;
+				border: none;
+				position: relative;
+				border-radius: 5px;
+				background-color: #2798FE;
+				margin: 10% auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="number">
+				<img src="../image/number.png" >
+			</div>
+			<div class="sk">
+				<div class="phone">
+					<div class="phone-title">
+						手机号登录
+					</div>
+					<div class="phone-content">
+						<div class="phone1">
+							<input class="mui-pull-left" name="mobile" type="number" placeholder="手机号"/>
+							<img class="mui-pull-right" src="../image/shouji.png" />
+							<div class="clearfix"></div>
+						</div>
+						<div class="phone1">
+							<input class="mui-pull-left" name="password" type="password" placeholder="密码"/>
+							<img class="mui-pull-right" src="../image/Formacopy.png" />
+							<div class="clearfix"></div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<button class="Opening">立即登录</button>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script type="text/javascript">
+		mui.init({
+			swipeBack: false,
+			beforeback: function() {
+				return false;
+			}
+		})
+	
+		var flag = false;
+		var phoneNumber = /^[1][\d]{10}$/;
+		var userInfo = null;
+		var timer = null;
+		var num = 60;
+		mui.plusReady(function(){
+			mui('.sk').on('tap', '.Opening', function() {
+				document.activeElement.blur();
+				login();
+			})
+		})
+		
+		function login() {
+			if (flag) {
+			    return;
+			}
+			var mobile = mui('input[name=mobile]')[0].value;
+			var password = mui('input[name=password]')[0].value;
+			if (mobile.length == 0) {
+			    message('请输入手机号码!');
+			    return;
+			} else if (!phoneNumber.test(mobile)) {
+			    message('手机号码格式错误!');
+			    return;
+			}
+			
+	        if (password.length == 0) {
+	        	message('请输入密码!');
+	        	return;
+	        }
+	        flag = true;
+	        mui.post($ajaxUrl + 'member&action=mobile_login', {mobile: mobile, password: password}, function(res) {
+	        	console.log(JSON.stringify(res));
+	        	if (res.errno == 0) {
+	        		message('登录成功!');
+	        		mui.fire(plus.webview.getWebviewById('chat'), 'loginSuccess');
+	        		mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'loginSuccess');
+	        		localStorage.setItem('user', JSON.stringify(res.data));
+					setTimeout(function() {
+						plus.navigator.setStatusBarStyle('dark');
+						fnCloseWin('mobile_login');
+						fnOpenWin('../index.html', 'index', '', '', 'slide-in-bottom');
+					}, 2000)
+	        	} else {
+	        		message(res.message);
+	        	}
+				flag = false;
+	        }, 'json');
+		}
+	</script>
+</html>
