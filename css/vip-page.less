@@ -71,7 +71,7 @@
 		box-shadow: 0 10px 10px 3px rgba(0, 0, 0, .1);
 		margin-bottom: 0.7rem;
 		padding-top: 10px;
-		.mui-table-view.border-top{
+		.border-top{
 			border-top: 0.15rem solid #f3f3f3;
 			border-radius: 0;
 			font-size: 0.3rem;
@@ -79,6 +79,11 @@
 			.price{
 				color: #1e77ff;
 				margin-left: 0.1rem;
+			}
+			.mui-table-view-cell{
+				min-height: 1.2rem;
+				display: flex;
+				align-items: center;
 			}
 			.mui-table-view-cell:last-of-type{
 				display: -webkit-flex;
@@ -95,30 +100,22 @@
 		}
 	}
 	.radio-list{
-		height: 1.16rem;
+		height: auto;
 		border-radius: 0.1rem;
-		overflow: hidden;
-		border:1px solid #dddddd;
+		overflow: visible;
 		margin: 0.2rem;
 		display: -webkit-flex;
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
 		position: relative;
-		padding: 0 0.2rem;
-		.mui-right{
-			position: absolute;
-			right: 0.2rem;
-			display: -webkit-flex;
-			display: flex;
-			flex-direction: column;
-			span{
-				font-size: 0.3rem;
-				color: #333333;
-				&:last-of-type{
-					color: #999999;
-					font-size: 0.24rem;
-				}
+		padding: 0.2rem;
+		span{
+			font-size: 0.3rem;
+			color: #333333;
+			&:last-of-type{
+				color: #999999;
+				font-size: 0.24rem;
 			}
 		}
 		.mui-radio{
@@ -126,8 +123,8 @@
 			z-index: 2;
 		}
 		.mui-radio.mui-left input[type=radio] {
-		left: 0px;
-		top: 6px;
+			left: 0px;
+			top: 0;
 		}
 		.mui-radio.mui-left label {
 			padding-right: 0;
@@ -137,8 +134,27 @@
 		}
 		.mui-radio.mui-left label:last-of-type {
 			color: #1e77ff;
-			font-size: 0.20rem;
+			font-size: 0.24rem;
+			line-height: 1.4;
+			margin-top: 0.1rem;
+			text-align: justify
 		}
+	}
+	.radio-list::after{
+		content: '';
+		display: block;
+		position: absolute;
+		width: 200%;
+		height: 200%;
+		border: 1px solid #f2f2f2;
+		left: 0;
+		top:0;
+		border-radius: 0.2rem;
+		transform-origin: 0 0;
+		-webkit-transform-origin: 0 0;
+		transform: scale(0.5,0.5);
+		-webkit-transform: scale(0.5,0.5);
+		box-sizing: border-box;
 	}
 	.radio-list.last{
 		justify-content: space-between;
@@ -1424,10 +1440,9 @@
 			}
 			#sixth-row{
 			 width:3.5rem;
-	         overflow:hidden;
-			 text-overflow:ellipsis;
-			 white-space:nowrap
-			}
+			flex-wrap: wrap;
+			line-height: 1.4;
+		}
 			
 		}
 	}
@@ -3632,7 +3647,7 @@
 		display: block;
 		height: 1rem;
 		background-color: #f7cb2b;
-		width: 0.2rem;
+		width: 0.18rem;
 		border-radius: 0.15rem;
 		position: absolute;
 		left: 0;

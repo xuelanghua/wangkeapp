@@ -7,6 +7,16 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
 		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.friends-detail-container .first-card-container .card-left-cont #sixth-row {
+				flex-wrap: wrap;
+			}
+
+			.card-left-cont span {
+				color: #999999;
+
+			}
+		</style>
 	</head>
 	<body class="mui-hidden">
 		<header class="mui-bar mui-bar-nav friends-detail-header">
@@ -24,12 +34,12 @@
 					</div>
 					<div class="card-left-cont">
 						<ul>
-							<li v-if="friendData.company" id="first-row">{{friendData.company}}</li>
-							<li v-if="friendData.name" id="second-row">{{friendData.name}}</li>
-							<li v-if="friendData.job" id="third-row">{{friendData.job}}</li>
-							<li v-if="friendData.phone" id="fourth-row">{{friendData.phone}}</li>
-							<li v-if="friendData.email" id="fifth-row">{{friendData.email}}</li>
-							<li v-if="friendData.company_address" id="sixth-row">{{friendData.company_address}}</li>
+							<li class="mui-ellipsis" id="first-row">{{friendData.company||'暂无'}}</li>
+							<li id="second-row">{{friendData.name||'暂无'}}</li>
+							<li id="third-row">{{friendData.job||'暂无'}}</li>
+							<li id="fourth-row">{{friendData.phone||'暂无'}}</li>
+							<li id="fifth-row">{{friendData.email||'暂无'}}</li>
+							<li id="sixth-row">{{friendData.company_address||'暂无'}}</li>
 						</ul>
 					</div>
 				</div>
@@ -44,8 +54,8 @@
 					</div>
 					<div class="user-info">
 						<h4>{{friendData.name}}</h4>
-						<p>{{friendData.job==''?'还未填写':friendData.job}}</p>
-						<p>{{friendData.company_address==''?'还未填写':friendData.company_address}}</p>
+						<p>{{friendData.job||'还未填写'}}</p>
+						<p>{{friendData.company_address||'还未填写'}}</p>
 					</div>
 				</div>
 			</div>
@@ -55,17 +65,24 @@
 			<div class="show-card-info" id="showInfo"><span id="descText">展开全部名片信息</span><i class="mui-icon mui-icon-arrowup"></i></div>
 			<div class="card-info-container">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell"><i>手机</i><span>{{friendData.phone==""?"暂无":friendData.phone}}</span><a v-if="friendData.phone"
-						 :href="'tel:'+friendData.phone">拨打</a></li>
-					<li class="mui-table-view-cell" v-if="cardType=='cardType1'"><i>座机</i><span>{{friendData.telephone==""?"暂无":friendData.telephone}}</span><a
-						 v-if="friendData.telephone" href="tel:13700696591">拨打</a></li>
-					<li class="mui-table-view-cell"><i>微信</i><span>{{friendData.wechat==""?"暂无":friendData.wechat}}</span><a v-if="friendData.wechat"
-						 href="javascript:void(0)" @tap="copy_fun(friendData.wechat)">复制</a></li>
-					<li class="mui-table-view-cell" v-if="cardType=='cardType1'"><i>邮箱</i><span>{{friendData.email==""?"暂无":friendData.email}}</span><a
-						 v-if="friendData.email" href="javascript:void(0)" @tap="copy_fun(friendData.email)">复制</a></li>
-					<li class="mui-table-view-cell"><i>公司</i><span>{{friendData.company==""?"暂无":friendData.company}}</span><a v-if="friendData.company"
-						 href="javascript:void(0)" @tap="copy_fun(friendData.company)">复制</a></li>
-					<li class="mui-table-view-cell"><i>地址</i><span>{{friendData.company_address==""?"暂无":friendData.company_address}}</span></li>
+					<li class="mui-table-view-cell">
+						<i>手机</i><span>{{friendData.phone||"还未填写"}}</span>
+						<a v-if="friendData.phone" :href="'tel:'+friendData.phone">拨打</a></li>
+					<li class="mui-table-view-cell" v-if="cardType=='cardType1'">
+						<i>座机</i><span>{{friendData.telephone||"还未填写"}}</span>
+						<a v-if="friendData.telephone" href="tel:13700696591">拨打</a></li>
+					<li class="mui-table-view-cell">
+						<i>微信</i><span>{{friendData.wechat||"还未填写"}}</span>
+						<a v-if="friendData.wechat" href="javascript:void(0)" @tap="copy_fun(friendData.wechat)">复制</a></li>
+					<li class="mui-table-view-cell" v-if="cardType=='cardType1'">
+						<i>邮箱</i><span>{{friendData.email||"还未填写"}}</span>
+						<a v-if="friendData.email" href="javascript:void(0)" @tap="copy_fun(friendData.email)">复制</a></li>
+					<li class="mui-table-view-cell">
+						<i>公司</i><span>{{friendData.company||"还未填写"}}</span>
+						<a v-if="friendData.company" href="javascript:void(0)" @tap="copy_fun(friendData.company)">复制</a></li>
+					<li class="mui-table-view-cell">
+						<i>地址</i><span>{{friendData.company_address||"还未填写"}}</span>
+					</li>
 				</ul>
 			</div>
 			<div class="operation-btn-cont">
@@ -79,7 +96,7 @@
 						<li class="browse-record-img" v-for="(items,index) in friendData.card_view" v-if="index<7" :key="index">
 							<img :src="items">
 						</li>
-						<span v-if="view_total>6">...</span>  
+						<span v-if="view_total>6">...</span>
 					</ul>
 					<p>最近{{friendData.card_count}}人次浏览</p>
 				</div>
@@ -309,7 +326,7 @@
 						muiCont.is_voice_like = data.is_voice_like;
 						muiCont.audioUrl = data.voice;
 						muiCont.view_total = data.card_view.length;
-						
+
 						mui(".mui-title")[0].innerText = data.name;
 						var selfid = userInfo.id;
 						if (fid != selfid && muiCont.is_friend != 1) {
@@ -319,7 +336,7 @@
 							document.querySelector('.mui-icon-more').style.display = 'block';
 						}
 					} else {
-						message(res.errno.message) 
+						message(res.errno.message)
 					}
 				}, 'json')
 			}
