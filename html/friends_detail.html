@@ -111,7 +111,7 @@
 					<p v-if="friendData.desc" v-html="friendData.desc"></p>
 					<p v-else>暂无个性签名</p>
 					<div class="user-info" v-if="friendData.voice_time!=0">
-						<div class="user-head-img"><img :src="friendData.avatar"></div>
+						<div class="user-head-img"><img :src="friendData.avatar||'../image/user_default.jpg'"></div>
 						<!-- 添加 play是播放状态的图标-->
 						<div id="audio-control" class="play-control">
 							<div class="left-arrow"></div>
@@ -206,7 +206,7 @@
 									downloader = plus.downloader.createDownload(muiCont.audioUrl, {
 										filename: downLoadurl
 									}, function(d, status) {
-										logs(d);
+										// logs(d);
 										if (status == 200) {
 											voice = plus.audio.createPlayer(downLoadurl);
 										} else {

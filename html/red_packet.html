@@ -115,28 +115,26 @@
 					<span class="mui-control-item" data-type="chat">聊天红包</span>
 				</div>
 			</div>
-			<div id="record_container">
-				<div class="mui-control-content mui-active">
-					<div class="mui-scroll-wrapper">
-						<div class="mui-scroll">
-							<ul class="mui-table-view" v-if="recordList.length>0">
-								<li class="mui-table-view-cell" v-for="(item, index) in recordList" :key="index">
-									<img class="mui-pull-left" :src="item.avatarUrl">
-									<div class="mui-pull-left none">
-										<div class="mui-clearfix" style="font-size: 15px;padding-bottom: 5px;">
-											<span class="mui-pull-left">{{ item.nickName }}</span>
-											<span class="mui-pull-right">{{ item.fee }}元</span>
-										</div>
-										<div style="color: #999999;">
-											<span>{{ item.pay_time }}</span>
-										</div>
+			<div class="mui-control-content mui-active">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul id="pull-refresh" class="mui-table-view" v-if="recordList.length>0">
+							<li class="mui-table-view-cell" v-for="(item, index) in recordList" :key="index">
+								<img class="mui-pull-left" :src="item.avatarUrl">
+								<div class="mui-pull-left none">
+									<div class="mui-clearfix" style="font-size: 15px;padding-bottom: 5px;">
+										<span class="mui-pull-left">{{ item.nickName }}</span>
+										<span class="mui-pull-right">{{ item.fee }}元</span>
 									</div>
-								</li>
-							</ul>
-							<div v-else style="padding-top: 60px;">
-								<img style="width: 60%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png" >
-								<p style="text-align: center;">暂无数据</p>
-							</div>
+									<div style="color: #999999;">
+										<span>{{ item.pay_time }}</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+						<div v-else style="padding-top: 60px;">
+							<img style="width: 60%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png">
+							<p style="text-align: center;">暂无数据</p>
 						</div>
 					</div>
 				</div>
@@ -152,7 +150,7 @@
 					plus.navigator.setStatusBarStyle('light');
 				},
 				pullRefresh: {
-					container: "#record_container",
+					container: "#pull-refresh",
 					up: {
 						style: 'circle',
 						color: '#2289FF',
@@ -163,7 +161,7 @@
 						callback: function() {
 							skip++;
 							getRedpackInfo();
-							mui("#record_container").pullRefresh().endPullupToRefresh();
+							mui("#pull-refresh").pullRefresh().endPullupToRefresh();
 						}
 					}
 				}
@@ -205,7 +203,7 @@
 						}
 						skip = 1;
 						getRedpackInfo();
-						mui('#record_container').pullRefresh().refresh(true);
+						mui('#pull-refresh').pullRefresh().refresh(true);
 					});
 				}
 			})
@@ -221,7 +219,7 @@
 				}, function(res) {
 					var data = res.data;
 					if (data.record.length == 0) {
-						mui("#record_container").pullRefresh().endPullupToRefresh(true);
+						mui("#pull-refresh").pullRefresh().endPullupToRefresh(true);
 					} else {
 						vm.balance = data.balance;
 						vm.promote = data.promote;
