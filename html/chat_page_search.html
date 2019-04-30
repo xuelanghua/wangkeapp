@@ -224,37 +224,40 @@
 					}
 				}
 			})
-			
+
 			// 搜索好友
 			mui.plusReady(function() {
 				document.getElementById("search").addEventListener("keypress", function(event) {
 					var search = document.querySelector('input[name=cont]').value;
 					var keywords = search.replace(/^\s*|\s*$/g, "");
-					if (event.keyCode == "13" && keywords != '') {
-						plus.key.hideSoftKeybord();
-						// message(keywords);
-						mui.post($ajaxUrl + 'customer&action=search', {
-							token: token,
-							content: keywords
-						}, function(res) {
-							logs(res);
-							if (res.errno == 0) {
-								app.customer = res.data.customer;
-								app.crm = res.data.crm;
-								app.friend = res.data.friend;
-								if (res.data.customer.length == 0 && res.data.crm.length == 0 && res.data.friend.length == 0) {
-									message('未搜索到结果');
+					if (event.keyCode == "13") {
+						if (keywords != '') {
+							plus.key.hideSoftKeybord();
+							// message(keywords);
+							mui.post($ajaxUrl + 'customer&action=search', {
+								token: token,
+								content: keywords
+							}, function(res) {
+								logs(res);
+								if (res.errno == 0) {
+									app.customer = res.data.customer;
+									app.crm = res.data.crm;
+									app.friend = res.data.friend;
+									if (res.data.customer.length == 0 && res.data.crm.length == 0 && res.data.friend.length == 0) {
+										message('未搜索到结果');
+									}
+								} else {
+									app.customer = [];
+									app.crm = [];
+									app.friend = [];
 								}
-							} else {
-								app.customer = [];
-								app.crm = [];
-								app.friend = [];
-							}
-						}, 'json');
-						// 阻止默认事件---阻止页面刷新
-						// event.preventDefault();
+							}, 'json');
+							// 阻止页面刷新
+							event.preventDefault();
+						} else {
+							message("请输入关键词！");
+						}
 					} else {
-						message("请输入关键词！");
 					}
 				});
 			})
