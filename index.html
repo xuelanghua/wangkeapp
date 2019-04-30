@@ -21,6 +21,10 @@
 				font-size: 10px;
 				z-index: 9999;
 			}
+
+			* {
+				touch-action: pan-y;
+			}
 		</style>
 	</head>
 	<body>
@@ -165,7 +169,7 @@
 				console.log('loginSuccess');
 				initIndexView();
 			})
-			
+
 			//自定义事件-绑定成功
 			window.addEventListener('bindMobileSuccess', function() {
 				console.log('bindMobileSuccess');
@@ -185,7 +189,7 @@
 				// currentTab.children[0].classList.remove(tabsConfig[current].icon);
 				// currentTab.children[0].classList.add(tabsConfig[current].selected);
 			})
-			
+
 			window.addEventListener('refreshNotice', function() {
 				getUnreadMessage();
 			})
@@ -299,24 +303,23 @@
 
 		function login() {
 			if (plus.os.name == "iOS") {
-				mui.get($ajaxUrl + 'member',{
-						action: 'login_type',
-					}, function(res){
-						if (res.data == 1) {
-							fnOpenWin('html/login.html', 'login', {
-								statusbar: {
-									background: '#122c9a'
-								}
-							}, '', 'slide-in-bottom');
-						} else {
-							fnOpenWin('html/mobile_login.html', 'mobile_login', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, '', 'slide-in-bottom');
-						}
-					}, 'json'
-				);
+				mui.get($ajaxUrl + 'member', {
+					action: 'login_type',
+				}, function(res) {
+					if (res.data == 1) {
+						fnOpenWin('html/login.html', 'login', {
+							statusbar: {
+								background: '#122c9a'
+							}
+						}, '', 'slide-in-bottom');
+					} else {
+						fnOpenWin('html/mobile_login.html', 'mobile_login', {
+							statusbar: {
+								background: '#2289FF'
+							}
+						}, '', 'slide-in-bottom');
+					}
+				}, 'json');
 			} else {
 				fnOpenWin('html/login.html', 'login', {
 					statusbar: {
@@ -333,7 +336,7 @@
 				},
 			}, '', 'slide-in-bottom');
 		}
-		
+
 		//获取未读消息
 		function getUnreadMessage() {
 			if (!userInfo) return;
@@ -351,7 +354,7 @@
 				}
 			}, 'json');
 		}
-		
+
 		//获取好友申请条目
 		function getFriendApply() {
 			if (!userInfo) return;

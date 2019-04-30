@@ -84,6 +84,15 @@
 				display: flex;
 				align-items: center;
 			}
+
+			.mui-table-view-cell span {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				padding: 0 0.1rem;
+				font-size: 0.26rem;
+				color: #999999;
+			}
 		</style>
 	</head>
 
@@ -99,26 +108,27 @@
 					<input type="search" id="search" name="cont" class="mui-input-clear" placeholder="好友名称/手机号">
 				</div>
 			</form>
-			<div class="search-result">
-				<ul class="mui-table-view">
+			<div class="search-result" v-if="customer||crm||friend">
+				<ul class="mui-table-view" v-if="customer.length>0">
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-friends"></i>新增客户</li>
-					<li class="mui-table-view-cell" @tap='goDetail'>
-						<img src="../image/kaol.jpg">
-						<p>王花花</p>
+					<li class="mui-table-view-cell" v-for="(f,index) in customer" :key="index">
+						<img :src="f.avatarUrl" @tap="goDetail('friend',f.uid)">
+						<p @tap="goChat(f.name,f.avatarUrl,f.uid)">{{f.name}}</p>
 					</li>
 				</ul>
-				<ul class="mui-table-view">
+				<ul class="mui-table-view" v-if="crm.length>0">
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-custom"></i>客户CRM</li>
-					<li class="mui-table-view-cell" @tap='goDetail'>
-						<img src="../image/kaol.jpg">
-						<p>王花花</p>
+					<li class="mui-table-view-cell" v-for="(f,index) in crm" :key="index">
+						<img :src="f.avatarUrl" @tap="goDetail('friend',f.uid)">
+						<p @tap="goChat(f.name,f.avatarUrl,f.uid)">{{f.name}}</p>
 					</li>
 				</ul>
-				<ul class="mui-table-view">
+				<ul class="mui-table-view" v-if="friend.length>0">
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-friend"></i>好友</li>
-					<li class="mui-table-view-cell" @tap='goDetail'>
-						<img src="../image/kaol.jpg">
-						<p>王花花</p>
+					<li class="mui-table-view-cell" v-for="(f,index) in friend" :key="index">
+						<img :src="f.avatarUrl" @tap="goDetail('friend',f.uid)">
+						<p @tap="goChat(f.name,f.avatarUrl,f.uid)">{{f.name}}</p>
+						<span @tap="checkCard(f.uid)">查看名片</span>
 					</li>
 				</ul>
 			</div>
@@ -147,30 +157,85 @@
 				el: "#mui-content",
 				data() {
 					return {
-
+						customer: [],
+						crm: [],
+						friend: []
 					}
 				},
-				created: function() {},
+				created: function() {
+
+				},
 				methods: {
-					goDetail:function(){
+					goDetail: function(typ, cid) {
 						// 根据客户类型跳转详情页
-						openPage('','','');
+						if (typ == 'customer') {
+							fnOpenWin('customer_detail.html', 'customer_detail', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
+						} else if (typ == 'crm') {
+							fnOpenWin('customer_detail.html', 'customer_detail', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
+						} else {
+							fnOpenWin('customer_detail.html', 'customer_detail', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, {
+								cid: cid
+							}, 'slide-in-right');
+						}
+
+					},
+					checkCard: function(fid) {
+						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+							fid: fid
+						})
+					},
+					goChat: function(name, avatar, cid) {
+						openPage('dialog.html', 'dialog', '#f7f7f7', {
+							cid: cid,
+							chatName: name,
+							avatar: avatar
+						})
 					}
 				}
 			})
 			// 搜索好友
 			mui.plusReady(function() {
-				setStatusBar('', 'dark');
 				document.getElementById("search").addEventListener("keypress", function(event) {
 					var search = document.querySelector('input[name=cont]').value;
 					var keywords = search.replace(/^\s*|\s*$/g, "");
 					if (event.keyCode == "13" && keywords != '') {
 						plus.key.hideSoftKeybord();
-						message('开始搜索');
+						message(keywords);
+						mui.post($ajaxUrl + 'customer&action=search', {
+							token: token,
+							content: keywords
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								app.customer = res.data.customer;
+								app.crm = res.data.crm;
+								app.friend = res.data.friend;
+							} else {
+								app.customer = [];
+								app.crm = [];
+								app.friend = [];
+							}
+						}, 'json');
 						// 阻止默认事件---阻止页面刷新
-						event.preventDefault();
+						// event.preventDefault();
 					} else {
-						// message("请输入用户名或者电话");
+						message("请输入关键词！");
 					}
 				});
 			})
