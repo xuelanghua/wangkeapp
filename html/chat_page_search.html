@@ -113,7 +113,7 @@
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-friends"></i>新增客户</li>
 					<li class="mui-table-view-cell" v-for="(f,index) in customer" :key="index">
 						<img :src="f.avatarUrl" @tap="goDetail('customer',f.id,'')">
-						<p @tap="goChat(f.name,f.avatarUrl,f.uid)">{{f.nickName}}</p>
+						<p @tap="goChat(f.nickName,f.avatarUrl,f.uid)">{{f.nickName}}</p>
 					</li>
 				</ul>
 				<ul class="mui-table-view" v-if="crm.length>0">
@@ -141,6 +141,7 @@
 				swipeBack: false,
 				beforeback: function() {
 					mui.fire(plus.webview.getWebviewById('chat'), 'resizeWindow');
+					setStatusBar('', 'light');
 				}
 			});
 			// 初始化字体大小
@@ -223,6 +224,7 @@
 					}
 				}
 			})
+			
 			// 搜索好友
 			mui.plusReady(function() {
 				document.getElementById("search").addEventListener("keypress", function(event) {
@@ -230,7 +232,7 @@
 					var keywords = search.replace(/^\s*|\s*$/g, "");
 					if (event.keyCode == "13" && keywords != '') {
 						plus.key.hideSoftKeybord();
-						message(keywords);
+						// message(keywords);
 						mui.post($ajaxUrl + 'customer&action=search', {
 							token: token,
 							content: keywords
@@ -240,6 +242,9 @@
 								app.customer = res.data.customer;
 								app.crm = res.data.crm;
 								app.friend = res.data.friend;
+								if (res.data.customer.length == 0 && res.data.crm.length == 0 && res.data.friend.length == 0) {
+									message('未搜索到结果');
+								}
 							} else {
 								app.customer = [];
 								app.crm = [];

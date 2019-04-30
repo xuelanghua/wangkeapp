@@ -148,10 +148,10 @@
 						<template v-for="(vel,key,i) in lists" :key="i">
 							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
 							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input type="checkbox" :value="items.uid" :data-avatar="items.avatar||items.avatarUrl" />
+								<input type="checkbox" :value="items.uid" :data-avatar="items.avatar||items.avatarUrl" :disabled="items.join_status==1" />
 								<img :src="items.avatar||items.avatarUrl" alt="头像">
 								<span>{{items.name}}</span>
-								<span v-if="items.team_id" style="color: #2289ff;">({{ items.team_name }})</span>
+								<span v-if="items.join_status" style="color: #2289ff;">(已加入)</span>
 							</li>
 						</template>
 					</ul>
@@ -241,8 +241,10 @@
 			}
 		})
 		function getUserList() {
+			console.log(tid);
 			mui.post($ajaxUrl + 'team&action=friend_list', {
-				token: userInfo.token
+				token: userInfo.token,
+				team_id: tid
 			}, function(res) {
 				logs(res);
 				if (res.errno == 0) {

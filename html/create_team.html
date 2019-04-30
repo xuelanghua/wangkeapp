@@ -227,6 +227,7 @@
 		})
 		// 创建团队
 		mui(".mui-content").on('tap', '#create-group', function() {
+			document.activeElement.blur();
 			mui.post($ajaxUrl + 'team&action=create', {
 				name: app.teamName,
 				notice: app.notice,
@@ -235,9 +236,12 @@
 			}, function(res) {
 				if (res.errno == 0) {
 					message("创建成功！");
-					plus.webview.close('create_team');
-					plus.webview.close('boss_team');
-					openPage('team_detail.html','team_detail','#f7f7f7','');
+					mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
+					setTimeout(function() {
+						plus.webview.close('create_team');
+						plus.webview.close('boss_team');
+						openPage('team_detail.html','team_detail','#f7f7f7','');	
+						}, 2000)
 				} else {
 					message(res.message);
 				}

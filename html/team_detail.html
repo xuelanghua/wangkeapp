@@ -347,7 +347,7 @@
 					暂无验证消息
 				</div>
 			</div>
-			<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team">退出团队</button>
+			<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
 			<!-- 公告编辑 -->
 			<div class="join-team-verify" v-if="iseditDesc">
 				<div class="verift-body">
@@ -447,11 +447,33 @@
 							message(res.message);
 							getInfo();
 							getApplyList();
+							getMember();
 						} else {
 							getInfo();
 							message(res.message);
 						}
 					}, 'json');
+				},
+				quitTeam: function() {
+					plus.nativeUI.confirm('确认退出团队?', function(e) {
+						if (e.index == 0) {
+							mui.post($ajaxUrl + 'team&action=quit_team', {
+								token: userInfo.token,
+								team_id: app.tid,
+							}, function(res) {
+								if (res.errno == 0) {
+									message('退出成功!');
+									mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
+									setTimeout(function() {
+										plus.webview.close('team_tetail');
+										plus.webview.close('webUrl');
+									}, 2000)
+								} else {
+									message(res.message);
+								}
+							}, 'json');
+						}
+					})
 				}
 			},
 			mounted: function() {
@@ -473,7 +495,7 @@
 		})
 		// 添加团队成员
 		mui(".mui-content").on("tap", ".member-selection", function() {
-			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', '');
+			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', {tid: app.tid});
 		})
 		// 更多成员
 		mui(".mui-content").on("tap", ".team-member-more", function() {
@@ -482,11 +504,14 @@
 				tid: app.tid
 			});
 		})
+		
 		// 获取团队信息
 		function getInfo() {
 			mui.post($ajaxUrl + 'team&action=team_info', {
-				token: userInfo.token
+				token: userInfo.token,
+				team_id: app.tid 
 			}, function(res) {
+				console.log(JSON.stringify(res));
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
