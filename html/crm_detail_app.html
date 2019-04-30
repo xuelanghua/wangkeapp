@@ -506,7 +506,7 @@
 		mui.plusReady(function() {
 			var self = plus.webview.currentWebview();
 			cid = self.cid;
-
+			message(cid);
 			getCustomerInfo();
 			
 			window.addEventListener('editCustomer', function() {
@@ -682,6 +682,7 @@
 				id: cid,
 				type: 'crm'
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					var data = res.data;
 					customerInfo = res.data;

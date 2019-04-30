@@ -112,21 +112,21 @@
 				<ul class="mui-table-view" v-if="customer.length>0">
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-friends"></i>新增客户</li>
 					<li class="mui-table-view-cell" v-for="(f,index) in customer" :key="index">
-						<img :src="f.avatarUrl" @tap="goDetail('friend',f.uid)">
-						<p @tap="goChat(f.name,f.avatarUrl,f.uid)">{{f.name}}</p>
+						<img :src="f.avatarUrl" @tap="goDetail('customer',f.id,'')">
+						<p @tap="goChat(f.name,f.avatarUrl,f.uid,f.type)">{{f.nickName}}</p>
 					</li>
 				</ul>
 				<ul class="mui-table-view" v-if="crm.length>0">
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-custom"></i>客户CRM</li>
 					<li class="mui-table-view-cell" v-for="(f,index) in crm" :key="index">
-						<img :src="f.avatarUrl" @tap="goDetail('friend',f.uid)">
+						<img :src="f.headimgurl||'../image/sound_recording_chart.png'" @tap="goDetail('crm',f.id,f.type)">
 						<p @tap="goChat(f.name,f.avatarUrl,f.uid)">{{f.name}}</p>
 					</li>
 				</ul>
 				<ul class="mui-table-view" v-if="friend.length>0">
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-friend"></i>好友</li>
 					<li class="mui-table-view-cell" v-for="(f,index) in friend" :key="index">
-						<img :src="f.avatarUrl" @tap="goDetail('friend',f.uid)">
+						<img :src="f.avatarUrl" @tap="goDetail('friend',f.uid,'')">
 						<p @tap="goChat(f.name,f.avatarUrl,f.uid)">{{f.name}}</p>
 						<span @tap="checkCard(f.uid)">查看名片</span>
 					</li>
@@ -166,7 +166,7 @@
 
 				},
 				methods: {
-					goDetail: function(typ, cid) {
+					goDetail: function(typ, cid,rank) {
 						// 根据客户类型跳转详情页
 						if (typ == 'customer') {
 							fnOpenWin('customer_detail.html', 'customer_detail', {
@@ -177,13 +177,23 @@
 								cid: cid
 							}, 'slide-in-right');
 						} else if (typ == 'crm') {
-							fnOpenWin('customer_detail.html', 'customer_detail', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
+							if (rank == 1) {
+								fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
+									statusbar: {
+										background: '#2289FF'
+									}
+								}, {
+									cid: cid
+								}, 'slide-in-right');
+							} else {
+								fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+									statusbar: {
+										background: '#2289FF'
+									}
+								}, {
+									cid: cid
+								}, 'slide-in-right');
+							}
 						} else {
 							fnOpenWin('customer_detail.html', 'customer_detail', {
 								statusbar: {
@@ -200,12 +210,16 @@
 							fid: fid
 						})
 					},
-					goChat: function(name, avatar, cid) {
-						openPage('dialog.html', 'dialog', '#f7f7f7', {
-							cid: cid,
-							chatName: name,
-							avatar: avatar
-						})
+					goChat: function(name, avatar, cid,type) {
+						if(type==1){
+							openPage('dialog.html', 'dialog', '#f7f7f7', {
+								cid: cid,
+								chatName: name,
+								avatar: avatar
+							})
+						}else{
+							message('不能聊天');
+						}
 					}
 				}
 			})
