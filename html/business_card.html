@@ -174,30 +174,39 @@
 		// 初始化字体大小结束
 
 		var userInfo = getUserInfo();
-
-		mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
-			token: userInfo.token
-		}, function(res) {
-			logs(res);
-			if (res.errno == 0) {
-				var type = res.data.type;
-				var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-				document.getElementById('qr-img').setAttribute('src', url);
-				if (type == 'redpacket') {
-					document.getElementById('type_desc').innerText = '扫二维码领红包';
-				} else if (type == 'card') {
-					document.getElementById('type_desc').innerText = '扫二维码领加我好友';
-				} else if (type == 'link') {
-					document.getElementById('type_desc').innerText = '扫二维码了解更多精彩';
-				} else if (type == 'pic') {
-					document.getElementById('type_desc').innerText = '扫二维码看美图';
+		mui.plusReady(function () {
+		    document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
+		    document.getElementById('user-name').innerText = userInfo.nickName;
+			getQrcodePic();
+		})
+		
+		//获取二维码图片
+		function getQrcodePic() {
+			plus.nativeUI.showWaiting();
+			mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					var type = res.data.type;
+					var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+					document.getElementById('qr-img').setAttribute('src', url);
+					if (type == 'redpacket') {
+						document.getElementById('type_desc').innerText = '扫二维码领红包';
+					} else if (type == 'card') {
+						document.getElementById('type_desc').innerText = '扫二维码领加我好友';
+					} else if (type == 'link') {
+						document.getElementById('type_desc').innerText = '扫二维码了解更多精彩';
+					} else if (type == 'pic') {
+						document.getElementById('type_desc').innerText = '扫二维码看美图';
+					}
+				} else {
+					message(res.message);
+					setTimeout(function() {
+						mui.back();
+					}, 2000)
 				}
-			} else {
-				
-			}
-		}, 'json');
-		// logs(userInfo);
-		document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
-		document.getElementById('user-name').innerText = userInfo.nickName;
+				plus.nativeUI.closeWaiting();
+			}, 'json');
+		}
 	</script>
 </html>

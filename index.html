@@ -167,13 +167,21 @@
 			//自定义事件-登录成功
 			window.addEventListener('loginSuccess', function() {
 				console.log('loginSuccess');
+				userInfo = getUserInfo();
+				bindClientId();
 				initIndexView();
+				getUnreadMessage();
 			})
 
 			//自定义事件-绑定成功
 			window.addEventListener('bindMobileSuccess', function() {
 				console.log('bindMobileSuccess');
+				userInfo = getUserInfo();
+				bindClientId();
 				initIndexView();
+				getUnreadMessage();
+				// updateUserInfo();
+				// initIndexView();
 			})
 
 			//自定义事件-激活成功
@@ -201,7 +209,7 @@
 			//设置只支持竖屏幕显示
 			plus.screen.lockOrientation("portrait-primary");
 
-			// localStorage.removeItem('user');
+			localStorage.removeItem('user');
 			userInfo = getUserInfo();
 			if (!userInfo) {
 				login();

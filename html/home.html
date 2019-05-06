@@ -461,10 +461,10 @@
 						<div id="weather_img" style="margin-left: 10px;"><div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div></div>
 						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -55px;">今天</span>
 						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -35px;">
-							<font id="temperature">1°~7°</font>
+							<font id="temperature">-°~-°</font>
 						</span>
 						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -15px;">
-							<font id="weather">晴</font>
+							<font id="weather">-</font>
 						</span>
 					</div>
 					<div class="clearfix"></div>
@@ -584,7 +584,7 @@
 		mui.init({
 			swipeBack: false,
 			pullRefresh: {
-				container: "body", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
 				down: {
 					height: 50, //可选,默认50.触发下拉刷新拖动距离,
 					auto: false, //可选,默认false.首次加载自动下拉刷新一次
@@ -843,7 +843,7 @@
 				}, 1000)
 				if (refresh) {
 					setTimeout(function() {
-						mui('body').pullRefresh().endPulldownToRefresh();
+						mui('.mui-content').pullRefresh().endPulldownToRefresh();
 					}, 1000)
 				}
 			}, 'json')

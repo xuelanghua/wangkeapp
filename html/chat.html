@@ -635,6 +635,7 @@
 					nativeWebview = plus.webview.currentWebview().nativeInstanceObject();
 				}
 			};
+			
 			var showSoftInput = function() {
 				if (mui.os.android) {
 					imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
@@ -643,9 +644,6 @@
 						"setKeyboardDisplayRequiresUserAction": false
 					});
 				}
-				setTimeout(function() {
-					logs(2222);
-				}, 200);
 			};
 
 			mui.plusReady(function() {
@@ -747,8 +745,7 @@
 					}
 				})
 
-				window.addEventListener('addCustomer', function(e) {
-					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
+				window.addEventListener('addFriend', function(e) {
 					getFriendApply();
 					getCustomerList('friend', false);
 				})
@@ -757,12 +754,12 @@
 					getCustomerList('crm', false);
 				})
 
-				window.addEventListener('loginSuccess', function(e) {
-					console.log('loginSuccess');
-					getCustomerList('crm', false);
-					getCustomerList('customer', false);
-					getCustomerList('friend', false);
-				})
+				// window.addEventListener('loginSuccess', function(e) {
+				// 	console.log('loginSuccess');
+				// 	getCustomerList('crm', false);
+				// 	getCustomerList('customer', false);
+				// 	getCustomerList('friend', false);
+				// })
 
 				window.addEventListener('refreshNotice', function(e) {
 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');

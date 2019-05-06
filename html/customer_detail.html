@@ -374,9 +374,9 @@
 		<header class="mui-bar mui-bar-nav" style="background-color: #2289FF;color: #FFFFFF;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;"></a>
 			<h1 class="mui-title">客户详情</h1>
-			<!-- <a href="javascript: void(0);" id="crm_edit">
-				<div class="mui-pull-right" style="margin-top: 10px;font-size: 15px;color: #FFFFFF;">编辑</div>
-			</a> -->
+			<a href="javascript: void(0);" id="view_card" class="mui-hidden">
+				<div class="mui-pull-right" style="margin-top: 10px;font-size: 15px;color: #FFFFFF;">查看名片</div>
+			</a>
 		</header>
 
 		<div class="mui-content">
@@ -757,6 +757,13 @@
 					}, 'json')
 				}
 			})
+			
+			mui('header').on('tap', '#view_card', function() {
+				openPage('friends_detail.html','friends_detail','#f7f7f7',{
+					fid:cid
+				})
+				plus.navigator.setStatusBarStyle('dark');
+			})
 
 			mui('header').on('tap', '#crm_edit', function() {
 				fnOpenWin('customer_edit.html', 'customer_edit', {
@@ -814,6 +821,9 @@
 						document.getElementById('crm_mobile').innerText = data.mobile;
 					} else {
 						document.getElementById('crm_mobile').innerText = '未授权';
+					}
+					if (data.card > 0) {
+						document.getElementById('view_card').classList.remove('mui-hidden');
 					}
 					var follow = data.follow;
 					var html = '';
