@@ -1,4 +1,4 @@
-<!doctype html>
+doctype html>
 <html>
 
 	<head>
@@ -7,12 +7,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
-			.team-qr-code {
-				position: fixed;
-				top: 0;
-				bottom: 0;
-				width: 100%;
-				padding-top: 44px;
+			.mui-content {
+				min-height: 100vh;
 				background-color: #2889FF;
 				overflow: hidden;
 			}
@@ -23,10 +19,9 @@
 				position: relative;
 				border-radius: 0.1rem;
 				margin: 1.2rem auto;
-				background: #FFFFFF url("../image/scana-qr-bottom-bg.png")center bottom no-repeat;
+				background: #ffffff url("../image/scana-qr-bottom-bg.png")center bottom no-repeat;
 				background-size: contain;
 				overflow: hidden;
-				padding: 0.3rem 0;
 				display: flex;
 				flex-direction: column;
 			}
@@ -66,8 +61,15 @@
 				align-items: center;
 			}
 
+			.team-qr-code {
+				position: relative;
+			}
+
 			.line {
+				margin-top: 0.3rem;
 				border-top: 1px dashed #999999;
+				transform: translateY(0.5);
+				-webkit-transform: translateY(0.5);
 				width: 100%;
 				height: 0;
 			}
@@ -76,12 +78,21 @@
 			.right-semicircle {
 				width: 0.15rem;
 				height: 0.3rem;
-				background-color: #2889FF;
+				background-color: #2289FF;
 				border-radius: 0 0.3rem 0.3rem 0;
+				position: absolute;
+				top: 1.4rem;
 			}
 
 			.right-semicircle {
 				border-radius: 0.3rem 0 0 0.3rem;
+				right: 0.75rem;
+				z-index: 3;
+			}
+
+			.left-semicircle {
+				left: 0.74rem;
+				z-index: 3;
 			}
 
 			.operation-section {
@@ -113,6 +124,7 @@
 				display: flex;
 				align-items: center;
 				padding-left: 0.2rem;
+				margin-top: 0.3rem;
 			}
 
 			.user-head-img {
@@ -134,7 +146,9 @@
 		</header>
 		<div class="mui-content">
 			<div class="team-qr-code">
-				<div class="qr-code-body">
+				<div class="left-semicircle"></div>
+				<div class="right-semicircle"></div>
+				<div id="code-body" class="qr-code-body">
 					<div class="qrcode-section">
 						<img id="user-head-img" class="user-head-img" src="../image/kaol.jpg">
 						<div>
@@ -142,17 +156,18 @@
 							<p id="type_desc">扫二维码加我好友</p>
 						</div>
 					</div>
-					<div class="linellae">
+					<div class="line"></div>
+					<!-- <div class="linellae">
 						<div class="left-semicircle"></div>
 						<div class="line"></div>
 						<div class="right-semicircle"></div>
-					</div>
+					</div> -->
 					<img id="qr-img" class="qr-img" src="../image/scan-qr.png">
 					<img class="logo-img" src="../image/wangkelogo.png">
 				</div>
-				<div class="operation-section mui-hidden">
-					<button type="button" class="mui-btn mui-btn-outlined">保存到手机</button>
-					<button type="button" class="mui-btn ">分享二维码</button>
+				<div class="operation-section">
+					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
+					<button type="button" id="shareImg" class="mui-btn">分享二维码</button>
 				</div>
 			</div>
 		</div>
@@ -160,6 +175,9 @@
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/vue.min.js"></script>
+	<script src="../js/Zepto.min.js"></script>
+	<script src="../js/canvas2image.js"></script>
+	<script src="../js/html2canvas.js"></script>
 	<script type="text/javascript">
 		mui.init({
 			swipeBack: true
@@ -173,11 +191,45 @@
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
 
+		var imgPath = "";
 		var userInfo = getUserInfo();
-		mui.plusReady(function () {
-		    document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
-		    document.getElementById('user-name').innerText = userInfo.nickName;
+		mui.plusReady(function() {
+			document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
+			document.getElementById('user-name').innerText = userInfo.nickName;
 			getQrcodePic();
+			
+			document.getElementById('saveImage').addEventListener('tap', function() {
+				generateImg('图片保存成功！');
+			})
+			
+			// 分享
+			document.getElementById('shareImg').addEventListener('tap', function() {
+				generateImg(false);
+				// message(imgPath);
+				plus.share.getServices(function(list) {
+					for (var i = 0; i < list.length; i++) {
+						if (list[i].authenticated) {
+							shares = list[i];
+						}
+					}
+					if (shares != undefined) {
+						var msg = {
+							type: 'image',
+							pictures: [imgPath], //这里的pictures是要分享的图片 该图片放在项目根目录下
+							extra: {
+								scene: "WXSceneSession"
+							}
+						};
+						shares.send(msg, function(success) {
+							message("分享成功!");
+						}, function(error) {
+							console.log(JSON.stringify(error))
+						});
+					}
+				}, function(e) {
+					alert("获取分享服务列表失败：" + e.message);
+				});
+			})
 		})
 		
 		//获取二维码图片
@@ -207,6 +259,49 @@
 				}
 				plus.nativeUI.closeWaiting();
 			}, 'json');
+		}
+		
+		// 生成二维码图片
+		function generateImg(tips) {
+			var divObj = $('#code-body'); //需要截图的包裹的（原生的）DOM 对象
+			var width = divObj.width(); //获取dom 宽度
+			var height = divObj.height(); //获取dom 高度
+			var canvas = document.createElement("canvas"); //创建一个canvas节点
+			var context = canvas.getContext('2d');
+			canvas.width = width * 2; //定义canvas 宽度 * 缩放
+			canvas.height = height * 2; //定义canvas高度 *缩放
+			canvas.style.background = "transparent";
+			context.scale(2, 2);
+			context.translate(0, 0);
+			// console.log(canvas);
+			// logs(canvas.width);
+			// logs(canvas.height);
+			html2canvas(divObj, {
+				allowTaint: true,
+				background: "#ffffff",
+				taintTest: false,
+				scale: 2,
+				canvas: canvas,
+				width: canvas.width,
+				height: canvas.height,
+				removeContainer: true,
+				onrendered: function(canvas) { //将截屏图片的base64给生成区
+					var imgUrl = canvas.toDataURL("image/jpg").replace("image/jpg", "image/octet-stream"); // 获取生成的图片的url 　
+					// var imgUrl = canvas.toDataURL('image/jpg');
+					// var newImg = document.createElement("img");
+					// newImg.src = imgUrl;
+					// newImg.style.width = width * 2;
+					// newImg.style.height = height * 2;
+					// document.body.appendChild(newImg);
+					baseImgFile(userInfo.id + 'codeImg', imgUrl, 100, function(i) {
+						// alert(JSON.stringify(i));
+						if (tips) {
+							message(tips);
+						}
+						imgPath = i.target;
+					})
+				}
+			})
 		}
 	</script>
 </html>
