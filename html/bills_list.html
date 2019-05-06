@@ -263,6 +263,9 @@
 						app.balanceData.list = app.balanceData.list.concat(res.data.list);
 						mui('#pullrefresh').pullRefresh().endPullupToRefresh();
 					} else {
+						if (skip == 1) {
+							app.balanceData.list = null;
+						}
 						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
 						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 						message('没有更多了~');
@@ -346,6 +349,7 @@
 			// 监听菜单点击
 			window.addEventListener("doit", function(e) {
 				app.type = e.detail.type;
+				skip = 1;
 				getUserBalanceLog();
 				document.getElementById('show-btn').innerText = e.detail.text;
 				logs(app.type);
