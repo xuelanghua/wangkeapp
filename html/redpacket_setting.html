@@ -72,6 +72,12 @@
 					<input type="number" name="redpacket_fee" /><span>元</span>
 				</div>
 			</div>
+			<div class="money mui-clearfix">
+				<div class="mui-pull-left">输入红包祝福语(必填)</div>
+				<div class="mui-pull-right input-money mui-clearfix">
+					<input type="text" name="redpacket_wish" />
+				</div>
+			</div>
 			<button id="submit">确 定</button>
 		</div>
 	</body>
@@ -97,8 +103,14 @@
 			document.querySelector('#submit').addEventListener('tap', function() {
 				if (!flag) return;
 				var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
+				var redpacket_wish = document.querySelector('input[name=redpacket_wish]').value;
 				if (redpacket_fee <= 0) {
 					plus.nativeUI.toast('红包金额输入错误!');
+					return;
+				}
+				
+				if (redpacket_wish.length == 0) {
+					plus.nativeUI.toast('请输入红包祝福语!');
 					return;
 				}
 				
@@ -106,6 +118,7 @@
 				mui.post($ajaxUrl + 'userqrcode',{
 						action: 'redpacket_setting',
 						redpacket_fee: redpacket_fee,
+						redpacket_wish: redpacket_wish,
 						token: userInfo.token
 					},function(res){
 						if (res.errno == 0) {
@@ -136,6 +149,10 @@
 					var setting = res.data;
 					if (setting.redpacket_fee > 0) {
 						document.querySelector('input[name=redpacket_fee]').value = setting.redpacket_fee;
+					}
+					
+					if (setting.redpacket_wish.length > 0) {
+						document.querySelector('input[name=redpacket_wish]').value = setting.redpacket_wish;
 					}
 				}
 				plus.nativeUI.closeWaiting();
