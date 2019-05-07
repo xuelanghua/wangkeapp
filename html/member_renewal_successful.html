@@ -62,8 +62,7 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		var userInfo = getUserInfo();
-		var groupId = userInfo.group_id;
+		
 		var vm = new Vue({
 			el: '.mui-content',
 			data() {
@@ -77,6 +76,8 @@
 					vm.title = self.title;
 					mui('.mui-title')[0].innerText = vm.title + '结果';
 					mui('.mui-content').on('tap','.iKnow',function(){
+						var userInfo = getUserInfo();
+						var groupId = userInfo.group_id;
 						plus.webview.close('member', 'none');
 						plus.webview.close('maker', 'none');
 						plus.webview.close('agent', 'none');

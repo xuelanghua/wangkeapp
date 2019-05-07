@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" type="text/css" rel="stylesheet" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../icomoon/style.css" type="text/css" rel="stylesheet" />
+		<link href="../css/vip-page.css" type="text/css" rel="stylesheet" />
+		<style>
+			.mui-bar.mui-bar-nav {
+				background-color: #2289ff;
+				box-shadow: none;
+			}
+
+			.mui-bar.mui-bar-nav h1,
+			.mui-icon-back:before,
+			.mui-icon-left-nav:before {
+				color: #FFFFFF;
+			}
+
+			#recharge,
+			#cash {
+				border: 1px solid rgba(255,255,255,.6);
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">店铺资产管理</h1>
+		</header>
+
+		<div id="mui-content" class="mui-content bill-container">
+			<div class="banner enterplorer-banner">
+				<div class="am-container">
+					<img src="../image/assets.png" style="width: 100%;margin-top: -40px;">
+				</div>
+				<!-- 背景square -->
+				<ul class="bg-bubbles">
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+				<div class="income-content">
+					<p>余额(元)</p>
+					<h2>{{balance}}</h2>
+					<div class="function_button mui-clearfix">
+						<!-- <button class="" id="recharge">充值</button> -->
+						<!-- <div class="recharge"></div> -->
+						<button class="" id="cash">提现</button>
+					</div>
+				</div>
+			</div>
+			<div class="bill-list">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell timer">
+						<div>
+							<h4>{{currentTime}}</h4>
+							<div>
+								<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
+								<span class="title">提现&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
+							</div>
+						</div>
+						<div class="more">
+							<span>更多</span><span class="mui-icon mui-icon-arrowright"></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+						<img :src="'../image/assert/assert'+list.type+'.png'">
+						<div class="right-cont">
+							<div class="top mui-clearfix">
+								<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
+								<span class="mui-pull-right earning">{{list.number}}</span>
+							</div>
+							<div class="bottom mui-clearfix">
+								<span>{{list.create_time}}</span>
+								<span class="mui-pull-right">{{list.desc}}</span>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script>
+		mui.init({
+			swipeBack: true
+		})
+		var viewport = document.documentElement.clientWidth;
+		if (viewport > 750) {
+			viewport = 750
+		}
+		document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		var userInfo = getUserInfo(),
+			skip = 1;
+		var vm = new Vue({
+			el: '#mui-content',
+			data() {
+				return {
+					balance: '0.00',
+					balanceData: {},
+					currentTime: formatDate('y-m', ''),
+					type: 6,
+					profit: 0,
+				}
+			},
+			mounted: function() {
+				mui.init({
+					swipeBack: false,
+					pullRefresh: {
+						container: "#mui-content",
+						up: {
+							height: 50,
+							auto: false,
+							contentrefresh: "正在加载...",
+							contentnomore: '没有更多数据了',
+							callback: function() {
+								skip += 1;
+								getUserBalanceLog();
+							}
+						},
+						down: {
+							style: 'circle',
+							color: '#2289FF',
+							callback: function() {
+								skip = 1;
+								getUserBalanceLog();
+							}
+						}
+					}
+				});
+				mui.plusReady(function() {
+					window.addEventListener('rechargeSuccess', function() {
+						setTimeout(function() {
+							location.reload();
+						}, 1000);
+					})
+					
+					window.addEventListener('withdrawDepositSuccess', function() {
+						getMemberInfo();
+						getUserBalanceLog();
+					})
+					getMemberInfo();
+					getUserBalanceLog();
+				})
+				
+				mui('.mui-content').on('tap', '#recharge', function() {
+					openPage('recharge.html', 'recharge', '#f7f7f7', '')
+					setStatusBar('', 'dark');
+				})
+
+				mui('.mui-content').on('tap', '#cash', function() {
+					if (vm.balance <= 0) {
+						message('没有可提现的余额!'); 
+						return;
+					}
+					openPage('shop_cash_withdrawal.html', 'shop_cash_withdrawal', '#fff', '');
+					setStatusBar('', 'dark');
+				})
+				// 账单
+				mui('.mui-content').on('tap', '.more', function() {
+					openPage('shop_bills_list.html', 'shop_bills_list', '#f7f7f7', '')
+				})
+			}
+		})
+
+		//获取用户余额日志
+		function getUserBalanceLog() {
+			mui.get($ajaxUrl + 'member', {
+				action: 'shop_balance_log',
+				token: userInfo.token,
+				date: vm.currentTime,
+				skip: skip,
+				limit: 6
+			}, function(res) {
+				if (res.errno == 0 && skip == 1) {
+					vm.balanceData = res.data;
+					mui('#mui-content').pullRefresh().endPulldownToRefresh();
+				} else if (res.errno == 0 && skip > 1) {
+					vm.balanceData.list = vm.balanceData.list.concat(res.data.list);
+					mui('#mui-content').pullRefresh().endPullupToRefresh();
+				} else {
+					mui('#mui-content').pullRefresh().endPulldownToRefresh();
+					mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+					message('没有更多了~');
+				}
+			}, 'json');
+		}
+		
+		//获取用户信息
+		function getMemberInfo() {
+			mui.post($ajaxUrl + 'member', {
+				action: 'detail',
+				token: userInfo.token
+			}, function(res) {
+				var memberInfo = res.data;
+				vm.balance = memberInfo.shop_balance;
+			}, 'json');
+		}
+	</script>
+</html>

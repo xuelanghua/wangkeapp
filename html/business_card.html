@@ -267,25 +267,23 @@ doctype html>
 			var width = divObj.width(); //获取dom 宽度
 			var height = divObj.height(); //获取dom 高度
 			var canvas = document.createElement("canvas"); //创建一个canvas节点
-			var context = canvas.getContext('2d');
-			canvas.width = width * 2; //定义canvas 宽度 * 缩放
-			canvas.height = height * 2; //定义canvas高度 *缩放
-			canvas.style.background = "transparent";
-			context.scale(2, 2);
-			context.translate(0, 0);
+			// var context = canvas.getContext('2d');
+			// canvas.width = width * 2; //定义canvas 宽度 * 缩放
+			// canvas.height = height * 2; //定义canvas高度 *缩放
+			// canvas.style.background = "transparent";
+			// context.scale(2, 2);
+			// context.translate(0, 0);
 			// console.log(canvas);
 			// logs(canvas.width);
 			// logs(canvas.height);
 			html2canvas(divObj, {
 				allowTaint: true,
-				background: "#ffffff",
+				background: "#2289FF",
 				taintTest: false,
 				scale: 2,
 				canvas: canvas,
-				width: width,
-				// width: canvas.width,
-				// height: canvas.height,
-				height: height,
+				width: width * 2,
+				height: height * 2,
 				removeContainer: true,
 				onrendered: function(canvas) { //将截屏图片的base64给生成区
 					var imgUrl = canvas.toDataURL("image/jpg").replace("image/jpg", "image/octet-stream"); // 获取生成的图片的url 　
