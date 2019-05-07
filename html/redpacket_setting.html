@@ -56,6 +56,16 @@
 				border-radius: 0.3125rem;
 				background-color: #2289FF;
 			}
+			.redpacket-wish-title{
+				text-align: left;
+				margin-bottom: 10px;
+			}
+			.redpacket-wish{
+				border-color:#dedede;
+				padding: 10px;
+				text-align: justify;
+				margin-bottom: 0;
+			}
 		</style>
 	</head>
 	<body>
@@ -64,7 +74,7 @@
 			<h1 class="mui-title">红包设置</h1>
 			<!-- <div class="mui-pull-right record">红包记录</div> -->
 		</header>
-		
+
 		<div class="mui-content">
 			<div class="money mui-clearfix">
 				<div class="mui-pull-left">输入红包金额(必填)</div>
@@ -72,11 +82,9 @@
 					<input type="number" name="redpacket_fee" /><span>元</span>
 				</div>
 			</div>
-			<div class="money mui-clearfix">
-				<div class="mui-pull-left">输入红包祝福语(必填)</div>
-				<div class="mui-pull-right input-money mui-clearfix">
-					<input type="text" name="redpacket_wish" />
-				</div>
+			<div class="money">
+				<div class="redpacket-wish-title">输入红包祝福语(必填)</div>
+				<textarea class="redpacket-wish" name="redpacket_wish" rows="5" cols="" placeholder="恭喜发财"></textarea>
 			</div>
 			<button id="submit">确 定</button>
 		</div>
@@ -84,61 +92,62 @@
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
 	<script type="text/javascript">
-		mui.init({swipeBack: true});
-		
+		mui.init({
+			swipeBack: true
+		});
+
 		var userInfo = getUserInfo();
 		var flag = true;
-		mui.plusReady(function () {
-			settingInit();	//初始化设置
+		mui.plusReady(function() {
+			settingInit(); //初始化设置
 			var currentWebview = plus.webview.currentWebview();
 			var fro = currentWebview.from;
-			
+
 			document.getElementById('back').addEventListener('tap', function() {
 				if (fro == 'setting') {
 					setStatusBar('', 'light');
 				}
 				mui.back();
 			})
-			
+
 			document.querySelector('#submit').addEventListener('tap', function() {
 				if (!flag) return;
 				var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
-				var redpacket_wish = document.querySelector('input[name=redpacket_wish]').value;
+				var redpacket_wish = document.querySelector('textarea[name=redpacket_wish]').value;
 				if (redpacket_fee <= 0) {
 					plus.nativeUI.toast('红包金额输入错误!');
 					return;
 				}
-				
+
 				if (redpacket_wish.length == 0) {
 					plus.nativeUI.toast('请输入红包祝福语!');
 					return;
 				}
-				
+
 				flag = false;
-				mui.post($ajaxUrl + 'userqrcode',{
-						action: 'redpacket_setting',
-						redpacket_fee: redpacket_fee,
-						redpacket_wish: redpacket_wish,
-						token: userInfo.token
-					},function(res){
-						if (res.errno == 0) {
-							plus.nativeUI.toast(res.message);
-							setTimeout(function() {
-								if (fro == 'setting') {
-									setStatusBar('', 'light');
-								}
-								mui.back();
-							}, 2000)
-						} else {
-							flag = true;
-							plus.nativeUI.toast(res.message);
-						}
-						// console.log(JSON.stringify(data));
-					},'json'
-				);
+				mui.post($ajaxUrl + 'userqrcode', {
+					action: 'redpacket_setting',
+					redpacket_fee: redpacket_fee,
+					redpacket_wish: redpacket_wish,
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						plus.nativeUI.toast(res.message);
+						setTimeout(function() {
+							if (fro == 'setting') {
+								setStatusBar('', 'light');
+							}
+							mui.back();
+						}, 1000)
+					} else {
+						flag = true;
+						plus.nativeUI.toast(res.message);
+					}
+					// console.log(JSON.stringify(data));
+				}, 'json');
 			})
 		})
-		
+
 		function settingInit() {
 			plus.nativeUI.showWaiting();
 			mui.post($ajaxUrl + 'userqrcode', {
@@ -150,9 +159,9 @@
 					if (setting.redpacket_fee > 0) {
 						document.querySelector('input[name=redpacket_fee]').value = setting.redpacket_fee;
 					}
-					
+
 					if (setting.redpacket_wish.length > 0) {
-						document.querySelector('input[name=redpacket_wish]').value = setting.redpacket_wish;
+						document.querySelector('textarea[name=redpacket_wish]').value = setting.redpacket_wish;
 					}
 				}
 				plus.nativeUI.closeWaiting();
