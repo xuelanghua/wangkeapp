@@ -263,66 +263,20 @@ doctype html>
 				plus.nativeUI.closeWaiting();
 			}, 'json');
 		}
-
 		// 生成二维码图片
 		function generateImg(tips) {
-			// var divObj = $('#code-body'); //需要截图的包裹的（原生的）DOM 对象
-			// var width = divObj.width(); //获取dom 宽度
-			// var height = divObj.height(); //获取dom 高度
-			// var canvas = document.createElement("canvas"); //创建一个canvas节点
-			// var context = canvas.getContext('2d');
-			// canvas.width = width * 2; //定义canvas 宽度 * 缩放
-			// canvas.height = height * 2; //定义canvas高度 *缩放
-			// canvas.style.background = "transparent";
-			// context.scale(2, 2);
-			// context.translate(0, 0);
-			// console.log(canvas);
-			// logs(canvas.width);
-			// logs(canvas.height);
-			// html2canvas(divObj, {
-			// 	allowTaint: true,
-			// 	background: "#2289FF",
-			// 	taintTest: false,
-			// 	scale: 2,
-			// 	canvas: canvas,
-			// 	width: width * 2,
-			// 	height: height * 2,
-			// 	removeContainer: true,
-			// 	onrendered: function(canvas) { //将截屏图片的base64给生成区
-			// 		var imgUrl = canvas.toDataURL("image/jpg").replace("image/jpg", "image/octet-stream"); // 获取生成的图片的url 　
-			// 		// var imgUrl = canvas.toDataURL('image/jpg');
-			// 		// var newImg = document.createElement("img");
-			// 		// newImg.src = imgUrl;
-			// 		// newImg.style.width = width * 2;
-			// 		// newImg.style.height = height * 2;
-			// 		// document.body.appendChild(newImg);
-			// 		baseImgFile(userInfo.id + 'codeImg', imgUrl, 100, function(i) {
-			// 			// alert(JSON.stringify(i));
-			// 			if (tips) {
-			// 				message(tips);
-			// 			}
-			// 			imgPath = i.target;
-			// 		})
-			// 	}
-			// })
-
 			html2canvas(document.getElementById("code-body"), {
 				useCORS: true
 			}).then(canvas => {
 				var imgUrl = canvas.toDataURL("image/jpeg", 1);
-				// var newImg = document.createElement("img");
-				// newImg.src = imgUrl;
-				// document.body.appendChild(newImg);
-				// document.body.appendChild(canvas)
 				baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
-					// alert(JSON.stringify(i));
+					// plus.nativeUI.alert(i.target);
 					if (tips) {
 						message(tips);
 					}
 					imgPath = i.target;
 				})
 			});
-
 		}
 	</script>
 </html>
