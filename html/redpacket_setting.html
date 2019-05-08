@@ -109,7 +109,7 @@
 				}
 				mui.back();
 			})
-			
+
 			document.querySelector('#submit').addEventListener('tap', function() {
 				if (!flag) return;
 				var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
@@ -119,7 +119,7 @@
 					plus.nativeUI.toast('请输入红包金额!');
 					return;
 				}
-				
+
 				if (redpacket_fee < 0.5 || redpacket_fee > 200) {
 					plus.nativeUI.toast('红包金额输入错误!');
 					return;
@@ -143,6 +143,8 @@
 							if (fro == 'setting') {
 								setStatusBar('', 'light');
 							}
+							var view = plus.webview.currentWebview().opener();
+							mui.fire(view, 'doit');
 							mui.back();
 						}, 1000)
 					} else {
@@ -158,7 +160,7 @@
 			plus.nativeUI.showWaiting();
 			mui.post($ajaxUrl + 'userqrcode', {
 				action: 'setting_info',
-				token: userInfo.token  
+				token: userInfo.token
 			}, function(res) {
 				if (res.errno == 0) {
 					var setting = res.data;
