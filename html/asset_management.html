@@ -63,7 +63,7 @@
 				</div>
 			</div>
 			<div class="bill-list">
-				<ul class="mui-table-view">
+				<ul id="pull-refresh" class="mui-table-view">
 					<li class="mui-table-view-cell timer">
 						<div>
 							<h4>{{currentTime}}</h4>
@@ -76,19 +76,25 @@
 							<span>更多</span><span class="mui-icon mui-icon-arrowright"></span>
 						</div>
 					</li>
-					<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
-						<img :src="'../image/assert/assert'+list.type+'.png'">
-						<div class="right-cont">
-							<div class="top mui-clearfix">
-								<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
-								<span class="mui-pull-right earning">{{list.number}}</span>
+					<template v-if="balanceData.list">
+						<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+							<img :src="'../image/assert/assert'+list.type+'.png'">
+							<div class="right-cont">
+								<div class="top mui-clearfix">
+									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
+									<span class="mui-pull-right earning">{{list.number}}</span>
+								</div>
+								<div class="bottom mui-clearfix">
+									<span>{{list.create_time}}</span>
+									<span class="mui-pull-right">{{list.desc}}</span>
+								</div>
 							</div>
-							<div class="bottom mui-clearfix">
-								<span>{{list.create_time}}</span>
-								<span class="mui-pull-right">{{list.desc}}</span>
-							</div>
-						</div>
-					</li>
+						</li>
+					</template>
+					<div v-else class="void">
+						<img style="width: 60%;display: block;margin: 0 auto; margin-top: 80px;" class="no-friends" src="../image/icon/void-data.png" >
+						<!-- <p style="text-align: center;">暂无明细~</p> -->
+					</div>
 				</ul>
 			</div>
 		</div>
@@ -123,7 +129,7 @@
 				mui.init({
 					swipeBack: false,
 					pullRefresh: {
-						container: "#mui-content",
+						container: "#pull-refresh",
 						up: {
 							height: 50,
 							auto: false,
@@ -187,13 +193,13 @@
 			}, function(res) {
 				if (res.errno == 0 && skip == 1) {
 					vm.balanceData = res.data;
-					mui('#mui-content').pullRefresh().endPulldownToRefresh();
+					mui('#pull-refresh').pullRefresh().endPulldownToRefresh();
 				} else if (res.errno == 0 && skip > 1) {
 					vm.balanceData.list = vm.balanceData.list.concat(res.data.list);
-					mui('#mui-content').pullRefresh().endPullupToRefresh();
+					mui('#pull-refresh').pullRefresh().endPullupToRefresh();
 				} else {
-					mui('#mui-content').pullRefresh().endPulldownToRefresh();
-					mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+					mui('#pull-refresh').pullRefresh().endPulldownToRefresh();
+					mui('#pull-refresh').pullRefresh().endPullupToRefresh(true);
 					message('没有更多了~');
 				}
 			}, 'json');

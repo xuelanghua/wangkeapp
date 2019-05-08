@@ -775,11 +775,12 @@ function baseImgFile(uid, base64, quality, callback) {
 	var bitmap = new plus.nativeObj.Bitmap();
 	// 从本地加载Bitmap图片
 	bitmap.loadBase64Data(base64, function() {
-		bitmap.save("/storage/emulated/0/" + uid + ".jpg", {
+		bitmap.save("_doc/" + uid + ".jpg", {
 			overwrite: true,
 			quality: quality
 		}, function(i) {
 			callback(i);
+			plus.gallery.save(i.target);
 			bitmap.clear();
 		}, function(e) {
 			message("保存失败！");
