@@ -57,9 +57,24 @@
 				margin-top: -7px;
 			}
 			.Collection_records{
+				display: flex;
+				/* background-color: #0062CC; */
+				justify-content: space-between;
 				padding: 15px 0;
 				font-size: 14px;
 				border-bottom: 1px solid #F2F2F2;
+			}
+			.Collection_records .mui-pull-left{
+				flex-grow: 1;
+			}
+			.Collection_records .mui-pull-right{
+				flex-shrink: 0;
+			}
+			.mui-radio.mui-left input[type=radio]{
+				left: 10px;
+			}
+			.mui-radio.mui-left label{
+				padding-left: 48px;
 			}
 			.tujt{
 				width: 7px;
@@ -68,15 +83,15 @@
 	</head>
 
 	<body style="background-color: #2289FF;">
-		<header class="mui-bar mui-bar-nav"style="background-color: #2289FF;box-shadow: none;">
+		<header class="mui-bar mui-bar-nav" style="background-color: #2289FF;box-shadow: none;">
 			<a class="mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;" id="back"></a>
-			<h1 class="mui-title"style="color: #FFFFFF;">营销码设置</h1>
+			<h1 class="mui-title" style="color: #FFFFFF;">营销码设置</h1>
 		</header>
-		
+
 		<div class="mui-content" style="background-color: #2289FF;">
 			<div class="content">
 				<div class="QR-code">
-					<img src="../image//QR.png" >
+					<img src="../image//QR.png">
 				</div>
 				<p>
 					<span>当前为: </span>
@@ -97,7 +112,7 @@
 					<div class="mui-right mui-pull-right setting" style="margin-top: 8px;color: #999999;" data-type="redpacket">
 						<span style="margin-right: 15px;">设置</span>
 						<span class="mui-right mui-pull-right" style="margin-top: 5px;">
-							<img class="mui-pull-right tujt" src="../image//Marketing-codea.png" >
+							<img class="mui-pull-right tujt" src="../image//Marketing-codea.png">
 						</span>
 					</div>
 					<div class="clearfix"></div>
@@ -110,20 +125,20 @@
 					<div class="mui-pull-right setting" style="margin-top: 8px;color: #999999;" data-type="card">
 						<span style="margin-right: 15px;">设置</span>
 						<span class="mui-pull-right" style="margin-top: 5px;">
-							<img class="mui-pull-right tujt" src="../image//Marketing-codea.png" >
+							<img class="mui-pull-right tujt" src="../image//Marketing-codea.png">
 						</span>
 					</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="Collection_records">
-					<div class="mui-input-row mui-radio mui-left mui-pull-left"  data-type="link">
+					<div class="mui-input-row mui-radio mui-left mui-pull-left" data-type="link">
 						<label>链接码</label>
 						<input name="type" type="radio">
 					</div>
 					<div class="mui-pull-right setting" style="margin-top: 8px;color: #999999;" data-type="link">
 						<span style="margin-right: 15px;">设置</span>
 						<span class="mui-pull-right" style="margin-top: 5px;">
-							<img class="mui-pull-right tujt" src="../image//Marketing-codea.png" >
+							<img class="mui-pull-right tujt" src="../image//Marketing-codea.png">
 						</span>
 					</div>
 					<div class="clearfix"></div>
@@ -136,7 +151,7 @@
 					<div class="mui-pull-right setting" style="margin-top: 8px;color: #999999;" data-type="pic">
 						<span style="margin-right: 15px;">设置</span>
 						<span class="mui-pull-right" style="margin-top: 5px;">
-							<img class="mui-pull-right tujt" src="../image//Marketing-codea.png" >
+							<img class="mui-pull-right tujt" src="../image//Marketing-codea.png">
 						</span>
 					</div>
 					<div class="clearfix"></div>
@@ -166,7 +181,7 @@
 				setStatusBar('#FFF', 'dark');
 			}
 		});
-		
+
 		var userInfo = getUserInfo();
 		var currentType = '';
 		var qrType = {
@@ -177,58 +192,65 @@
 		};
 		mui.plusReady(function() {
 			initQrcode();
-		    document.getElementById('back').addEventListener('tap', function() {
+			document.getElementById('back').addEventListener('tap', function() {
 				setStatusBar('#FFF', 'dark');
 				mui.back();
 			})
-			
+
 			mui('.Collection_records').on('tap', '.mui-radio', function() {
 				var type = this.dataset.type;
 				if (currentType == type) return;
 				currentType = type;
 				document.querySelector('#qrcode_type').innerHTML = qrType[type];
 				mui.post($ajaxUrl + 'userqrcode', {
-						action: 'change_type',
-						type: type,
-						token: userInfo.token
-					}, function(res) {
-						logs(res);
-						if (res.errno == 0) {
-							var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-							document.querySelector('.QR-code img').setAttribute('src', url);
-						} else if (res.errno == 1) {
-							plus.nativeUI.toast(res.message);
-						}
-					},'json'
-				);
+					action: 'change_type',
+					type: type,
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+						document.querySelector('.QR-code img').setAttribute('src', url);
+					} else if (res.errno == 1) {
+						plus.nativeUI.toast(res.message);
+					}
+				}, 'json');
 			})
-			
+
 			mui('.Collection_records').on('tap', '.setting', function() {
 				var qtype = this.dataset.type;
 				openSettingWin(qtype);
 			})
 		})
-		
+
 		function initQrcode() {
 			mui.post($ajaxUrl + 'userqrcode', {
-					action: 'info',
-					token: userInfo.token
-				}, function(res) {
-					if (res.errno == 0) {
-						document.querySelector('#qrcode_type').innerHTML = qrType[res.data.type];
-						currentType = res.data.type;
-						document.querySelector('.mui-radio[data-type=' + res.data.type + '] input').setAttribute('checked', true);
-						var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-						document.querySelector('.QR-code img').setAttribute('src', url);
-					} else {
-						document.querySelector('.mui-radio[data-type=redpacket] input').setAttribute('checked', true);
-					}
-				},'json'
-			);
+				action: 'info',
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					document.querySelector('#qrcode_type').innerHTML = qrType[res.data.type];
+					currentType = res.data.type;
+					document.querySelector('.mui-radio[data-type=' + res.data.type + '] input').setAttribute('checked', true);
+					var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+					document.querySelector('.QR-code img').setAttribute('src', url);
+				} else {
+					document.querySelector('.mui-radio[data-type=redpacket] input').setAttribute('checked', true);
+				}
+			}, 'json');
 		}
-		
+
 		function openSettingWin(type) {
-			var newPage = plus.webview.create(type + '_setting.html', type + '_setting', {top: '0', bottom: '0', scrollIndicator: 'none', statusbar: {background: '#FFF'}}, {'from': 'setting'});
+			var newPage = plus.webview.create(type + '_setting.html', type + '_setting', {
+				top: '0',
+				bottom: '0',
+				scrollIndicator: 'none',
+				statusbar: {
+					background: '#FFF'
+				}
+			}, {
+				'from': 'setting'
+			});
 			// newPage.show('slide-in-bottom');
 			newPage.show('slide-in-right');
 			setStatusBar('', 'dark');

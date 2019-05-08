@@ -85,7 +85,7 @@
 				</ul>
 			</div>
 			<div class="operation-btn-cont">
-				<button type="button">分享名片</button>
+				<button class="share-card" type="button">分享名片</button>
 				<button type="button" @tap="addAddressList">同步到通讯录</button>
 			</div>
 			<!-- 浏览记录 -->
@@ -296,6 +296,23 @@
 								});
 							});
 						}, 200)
+						mui(".mui-content").on("tap", ".share-card", function() {
+							var avatar = muiCont.friendData.avatar || '../image/user_default.jpg'
+							if (muiCont.contName == '') {
+								message('用户名为空，暂时无法分享');
+							} else {
+								shareToMiniprogram({
+									title: muiCont.contName + '的旺客名片',
+									content: '王天下之客,让营销更简单!',
+									thumbs: [avatar],
+									miniProgram: {
+										id: 'gh_9fa5f42ab939',
+										path: '/longbing_card/pages/index/index?to_uid=' + fid + '&is_qr=1&currentTabBar=toCard',
+										webUrl: 'https://app.wangkeapp.cn/'
+									}
+								}, 'miniProgram');
+							}
+						})
 					})
 					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 				},

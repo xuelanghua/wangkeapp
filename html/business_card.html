@@ -27,7 +27,7 @@ doctype html>
 			}
 
 			.qr-code-body h2 {
-				font-size: 0.35rem;
+				font-size: 0.28rem;
 				color: #323333;
 				font-weight: normal;
 				margin-bottom: 0.1rem;
@@ -35,7 +35,7 @@ doctype html>
 
 			.qr-code-body p {
 				margin: 0;
-				font-size: 0.3rem;
+				font-size: 0.24rem;
 				color: #999999;
 			}
 
@@ -66,7 +66,7 @@ doctype html>
 			}
 
 			.line {
-				margin-top: 0.3rem;
+				margin-top: 0.38rem;
 				border-top: 1px dashed #999999;
 				transform: translateY(0.5);
 				-webkit-transform: translateY(0.5);
@@ -152,7 +152,7 @@ doctype html>
 					<div class="qrcode-section">
 						<img id="user-head-img" class="user-head-img" src="../image/kaol.jpg">
 						<div>
-							<h2 id="user-name">肖飞的团队</h2>
+							<h2 id="user-name" class="">肖飞的团队</h2>
 							<p id="type_desc">扫二维码加我好友</p>
 						</div>
 					</div>
@@ -265,16 +265,19 @@ doctype html>
 		}
 		// 生成二维码图片
 		function generateImg(tips) {
+			plus.nativeUI.showWaiting();
 			html2canvas(document.getElementById("code-body"), {
 				useCORS: true
 			}).then(canvas => {
 				var imgUrl = canvas.toDataURL("image/jpeg", 1);
 				baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
+				// baseImgFile('codeImg', imgUrl, 100, function(i) {
 					// plus.nativeUI.alert(i.target);
 					if (tips) {
 						message(tips);
 					}
 					imgPath = i.target;
+					plus.nativeUI.closeWaiting();
 				})
 			});
 		}

@@ -106,19 +106,25 @@
 								<img src="../image/screen.png"><span id="show-btn">筛选</span>
 							</div>
 						</li>
-						<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
-							<img :src="'../image/assert/assert'+list.type+'.png'">
-							<div class="right-cont">
-								<div class="top mui-clearfix">
-									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
-									<span class="mui-pull-right earning">{{list.number}}</span>
+						<template v-if="balanceData.list">
+							<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+								<img :src="'../image/assert/assert'+list.type+'.png'">
+								<div class="right-cont">
+									<div class="top mui-clearfix">
+										<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
+										<span class="mui-pull-right earning">{{list.number}}</span>
+									</div>
+									<div class="bottom mui-clearfix">
+										<span>{{list.create_time}}</span>
+										<span class="mui-pull-right">{{list.desc}}</span>
+									</div>
 								</div>
-								<div class="bottom mui-clearfix">
-									<span>{{list.create_time}}</span>
-									<span class="mui-pull-right">{{list.desc}}</span>
-								</div>
-							</div>
-						</li>
+							</li>
+						</template>
+						<div v-else class="void">
+							<img style="width: 60%;display: block;margin: 0 auto; margin-top: 80px;" class="no-friends" src="../image/icon/void-data.png">
+							<!-- <p style="text-align: center;">暂无明细~</p> -->
+						</div>
 					</ul>
 				</div>
 			</div>
@@ -170,8 +176,8 @@
 								}
 							},
 							down: {
-								style: 'circle', 
-								color: '#2289FF', 
+								style: 'circle',
+								color: '#2289FF',
 								callback: function() {
 									skip = 1;
 									getUserBalanceLog();
@@ -198,9 +204,9 @@
 						}, 300);
 						// 重新开启滚动
 						mui("body").on('tap', '.mui-btn', function() {
-							mui('#pullrefresh').pullRefresh().setStopped(false); 
+							mui('#pullrefresh').pullRefresh().setStopped(false);
 						})
-						mui('body').on('tap','.mui-backdrop',function(){
+						mui('body').on('tap', '.mui-backdrop', function() {
 							mui('#pullrefresh').pullRefresh().setStopped(false);
 						})
 					})
@@ -247,7 +253,7 @@
 			function getUserBalanceLog() {
 				console.log(app.currentTime);
 				console.log(app.type);
-				
+
 				mui.get($ajaxUrl + 'member', {
 					action: 'balance_log',
 					token: userInfo.token,
