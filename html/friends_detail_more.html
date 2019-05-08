@@ -50,6 +50,7 @@
 							name: remark
 						}, function(res) {
 							if (res.errno == 0) {
+								mui.fire(plus.webview.getWebviewById('chat'), 'refreshFriend');
 								message("修改成功");
 								plus.key.hideSoftKeybord();
 								mui.back();
@@ -63,15 +64,20 @@
 				})
 				// 解除好友关系
 				mui(".mui-content").on("tap", ".unbind-friends", function() {
-					mui.post($ajaxUrl + 'customer&action=friend_delete', {
-						token: token,
-						fid: fid
-					}, function(res) {
-						if (res.errno == 0) {
-							message("解除成功");
-							mui.back();
+					plus.nativeUI.confirm('确认解除好友关系?', function(e) {
+						if (e.index == 0) {
+							mui.post($ajaxUrl + 'customer&action=friend_delete', {
+								token: token,
+								fid: fid
+							}, function(res) {
+								if (res.errno == 0) {
+									mui.fire(plus.webview.getWebviewById('chat'), 'refreshFriend')
+									message("解除成功");
+									mui.back();
+								}
+							}, 'json')
 						}
-					}, 'json')
+					})
 				})
 			})
 		</script>
