@@ -150,9 +150,9 @@ doctype html>
 				<div class="right-semicircle"></div>
 				<div id="code-body" class="qr-code-body">
 					<div class="qrcode-section">
-						<img id="user-head-img" class="user-head-img" src="../image/kaol.jpg">
+						<img id="user-head-img" class="user-head-img" src="../image/user_default.jpg">
 						<div>
-							<h2 id="user-name">肖飞的团队</h2>
+							<h2 id="user-name">旺客</h2>
 							<p id="type_desc">扫二维码加我好友</p>
 						</div>
 					</div>
@@ -237,7 +237,7 @@ doctype html>
 
 		//获取二维码图片
 		function getQrcodePic() {
-			plus.nativeUI.showWaiting();
+			plus.nativeUI.showWaiting('', {width: 60, height: 60, background: 'rgba(0, 0, 0, 0.9)'});
 			mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
 				token: userInfo.token
 			}, function(res) {
@@ -248,7 +248,7 @@ doctype html>
 					if (type == 'redpacket') {
 						document.getElementById('type_desc').innerText = '扫二维码领红包';
 					} else if (type == 'card') {
-						document.getElementById('type_desc').innerText = '扫二维码领加我好友';
+						document.getElementById('type_desc').innerText = '扫二维码加我好友';
 					} else if (type == 'link') {
 						document.getElementById('type_desc').innerText = '扫二维码了解更多精彩';
 					} else if (type == 'pic') {
@@ -260,7 +260,9 @@ doctype html>
 						mui.back();
 					}, 2000)
 				}
-				plus.nativeUI.closeWaiting();
+				setTimeout(function() {
+					plus.nativeUI.closeWaiting();
+				}, 1000)
 			}, 'json');
 		}
 

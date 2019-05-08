@@ -79,7 +79,7 @@
 			<div class="money mui-clearfix">
 				<div class="mui-pull-left">输入红包金额(必填)</div>
 				<div class="mui-pull-right input-money mui-clearfix">
-					<input type="number" name="redpacket_fee" /><span>元</span>
+					<input type="number" name="redpacket_fee" placeholder="0.5~200" /><span>元</span>
 				</div>
 			</div>
 			<div class="money">
@@ -93,7 +93,7 @@
 	<script src="../js/util.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			swipeBack: true
+			swipeBack: true,
 		});
 
 		var userInfo = getUserInfo();
@@ -109,12 +109,18 @@
 				}
 				mui.back();
 			})
-
+			
 			document.querySelector('#submit').addEventListener('tap', function() {
 				if (!flag) return;
 				var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
+				console.log(redpacket_fee);
 				var redpacket_wish = document.querySelector('textarea[name=redpacket_wish]').value;
-				if (redpacket_fee <= 0) {
+				if (isNaN(redpacket_fee)) {
+					plus.nativeUI.toast('请输入红包金额!');
+					return;
+				}
+				
+				if (redpacket_fee < 0.5 || redpacket_fee > 200) {
 					plus.nativeUI.toast('红包金额输入错误!');
 					return;
 				}
@@ -152,7 +158,7 @@
 			plus.nativeUI.showWaiting();
 			mui.post($ajaxUrl + 'userqrcode', {
 				action: 'setting_info',
-				token: userInfo.token
+				token: userInfo.token  
 			}, function(res) {
 				if (res.errno == 0) {
 					var setting = res.data;

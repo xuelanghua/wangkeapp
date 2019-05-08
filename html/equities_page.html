@@ -104,7 +104,13 @@
 		<div id="mui-content" class="mui-content equity-container">
 			<div class="swiper-container gallery-thumbs">
 				<div class="swiper-wrapper">
-					<div class="swiper-slide slider1">
+					<template v-for="(list, index) in groupList">
+						<div class="swiper-slide slider1">
+							<img src="../image/huiyuanqy01.png">
+							<p>{{list.name}}{{index}}</p>
+						</div>
+					</template>
+					<!-- <div class="swiper-slide slider1">
 						<img src="../image/huiyuanqy01.png">
 						<p>VIP</p>
 					</div>
@@ -123,7 +129,7 @@
 					<div class="swiper-slide  slider1">
 						<img src="../image/huiyuanqy03.png">
 						<p>分公司</p>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			<div class="swiper-container gallery-top">
@@ -289,13 +295,18 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
-			mui.plusReady(function() {})
+			
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data() {
 					return {
-
+						groupList: null,
+						groupId: userInfo.group_id
 					}
+				},
+				created: function() {
+					getGroupList();
 				},
 				mounted: function() {
 					var galleryThumbs = new Swiper('.gallery-thumbs', {
@@ -312,21 +323,32 @@
 					});
 					galleryThumbs.controller.control = galleryTop;
 					galleryTop.controller.control = galleryThumbs;
-					// 升级
-					mui(".inside1").on("tap", ".upgrade-btn", function() {
-						openPage('vt_renew.html', 'vt_renew', '#f7f7f7', '');
-					});
-					// 取消预约
-					mui("#middlePopover").on('tap', '.close-verify-window', function() {
-						mui('#middlePopover').popover('hide');
-					})
-					// 确认预约
-					mui("#middlePopover").on('tap', '.send-verify', function() {
-						mui('#middlePopover').popover('hide');
-						message('预约成功');
+					mui.plusReady(function() {
+						// 升级
+						mui(".inside1").on("tap", ".upgrade-btn", function() {
+							openPage('vt_renew.html', 'vt_renew', '#f7f7f7', '');
+						});
+						// 取消预约
+						mui("#middlePopover").on('tap', '.close-verify-window', function() {
+							mui('#middlePopover').popover('hide');
+						})
+						// 确认预约
+						mui("#middlePopover").on('tap', '.send-verify', function() {
+							mui('#middlePopover').popover('hide');
+							message('预约成功');
+						})
 					})
 				}
 			})
+			
+			function getGroupList() {
+				mui.post($ajaxUrl + 'member', {
+					action: 'group_info'
+				}, function(res) {
+					logs(res);
+					app.groupList = res.data;
+				}, 'json');
+			}
 		</script>
 	</body>
 

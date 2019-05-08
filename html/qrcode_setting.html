@@ -192,7 +192,6 @@
 						type: type,
 						token: userInfo.token
 					}, function(res) {
-						logs(res);
 						if (res.errno == 0) {
 							var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 							document.querySelector('.QR-code img').setAttribute('src', url);
@@ -221,7 +220,7 @@
 						var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 						document.querySelector('.QR-code img').setAttribute('src', url);
 					} else {
-						document.querySelector('.mui-radio[data-type=redpacket] input').setAttribute('checked', true);
+						document.querySelector('.mui-radio[data-type=card] input').setAttribute('checked', true);
 					}
 				},'json'
 			);
