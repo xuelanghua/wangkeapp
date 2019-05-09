@@ -73,9 +73,11 @@ function checkMember() {
 //获取用户信息
 function updateUserInfo() {
 	var userInfo = getUserInfo();
+	console.log(JSON.stringify(userInfo));
 	mui.post($ajaxUrl + 'member&action=info', {
 		token: userInfo.token
 	}, function(res) {
+		console.log(JSON.stringify(res));
 		localStorage.setItem('user', JSON.stringify(res.data));
 	}, 'json')
 }
@@ -315,7 +317,8 @@ function shareToMiniprogram(param) {
 		});
 		shareAction(shareBtns[0], param, 'miniProgram');
 	}, function(e) {
-		plus.nativeUI.alert("获取分享服务列表失败：" + e.message);
+		message('分享失败!')
+		// plus.nativeUI.alert("获取分享服务列表失败：" + e.message);
 	});
 }
 
@@ -382,14 +385,16 @@ function shareAction(sb, param, type) {
 /**
  * 发送分享消息
  * @param {JSON} msg
- * @param {plus.share.ShareService} s
+ * @param {plus.share.ShareService}
  */
 function shareMessage(msg, s) {
 	console.log(JSON.stringify(msg));
 	s.send(msg, function() {
 		message("分享到\"" + s.description + "\"成功", 'center');
 	}, function(e) {
-		plus.nativeUI.alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+		// plus.nativeUI.alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+		message("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+		console.log("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
 	});
 }
 
