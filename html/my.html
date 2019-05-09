@@ -101,7 +101,7 @@
 				position: relative;
 				padding: 10px;
 				font-size: 12px;
-				background-color: #DDDEDE;
+				background-color: #f2f2f2;
 				overflow: hidden;
 			}
 
@@ -112,8 +112,9 @@
 
 			.Notice .notice-more {
 				position: absolute;
-				right: 5px;
+				right: 15px;
 				top: 10px;
+				opacity: 0.3;
 			}
 
 			.Notice .notice-more img {
@@ -170,25 +171,48 @@
 			.menu {
 				margin-top: 10px;
 				padding-bottom: 20px;
-				background-color: #fff;
+				background-color: #ffffff;
+				display: flex;
+				flex-direction: column;
 			}
 
 			.menu li {
-				width: 25%;
-				float: left;
-				padding-top: 30px;
-				text-align: center;
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+				padding-left: 10px;
+				min-height: 50px;
+			}
+
+			.menu.mui-table-view:before,
+			.menu.mui-table-view:after {
+				height: 0;
+			}
+
+			.menu .mui-table-view-cell:after {
+				left: 40px;
+				background-color: #f2f2f2;
+			}
+
+			.menu .mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.menu .mui-navigate-right:after {
+				font-size: 20px;
+				right: 10px;
 			}
 
 			.menu li img {
 				height: 21px;
+				width: auto;
+				margin-right: 10px;
 			}
 
 			.menu li span {
 				display: block;
-				margin-top: 7-px;
-				font-size: 12px;
-				color: #000000;
+				font-size: 15px;
+				color: #333333;
 			}
 
 			.mui-popover .mui-popover-arrow:after {
@@ -289,14 +313,17 @@
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				background: transparent;
+				background: #2288FF;
+				/* background: transparent; */
+				box-shadow: none;
 			}
 
 			.usercenter-header .message {
 				width: 25px;
 				height: 22px;
 			}
-			.mui-badge-danger{
+
+			.mui-badge-danger {
 				position: absolute;
 				left: 25px;
 				top: 5px;
@@ -304,10 +331,13 @@
 				padding: 3px 5px 1px;
 				background-color: #FF0000;
 			}
+			.menu #red_packet{
+				border-bottom:10px solid #f2f2f2;
+			}
 		</style>
 	</head>
 	<body>
-		<header id="header" class="mui-bar mui-bar-transparent mui-active usercenter-header">
+		<header id="header" class="mui-bar usercenter-header">
 			<span class="mui-badge mui-badge-danger" style="display: none;" id="unread_message">0</span>
 			<img id="message" class="message" src="../image/Message-icon.png">
 			<h1 class="mui-title" style="color: #fff;">我的</h1>
@@ -389,45 +419,41 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
-
-				<div class="menu">
-					<li id="shop">
-						<img src="../image/Store-management.png">
-						<span>店铺管理</span>
+				<ul class="mui-table-view menu">
+					<li class="mui-table-view-cell" id="asset_management">
+						<img src="../image/icon/my-page-list-01.png">
+						<span class="mui-navigate-right">资产管理</span>
 					</li>
-					<li id="boss">
-						<img src="../image/group.png">
-						<span>团队</span>
+					<li class="mui-table-view-cell" id="red_packet">
+						<img src="../image/icon/my-page-list-02.png">
+						<span class="mui-navigate-right">红包管理</span>
 					</li>
-					<li id="data_statistics">
-						<img src="../image/radar.png">
-						<span>雷达</span>
+					<li class="mui-table-view-cell" id="shop">
+						<img src="../image/icon/my-page-list-03.png">
+						<span class="mui-navigate-right">我的店铺</span>
 					</li>
-					<li id="card_manage">
-						<img src="../image/Personal-information.png">
-						<span>名片管理</span>
+					<li class="mui-table-view-cell" id="boss">
+						<img src="../image/icon/my-page-list-04.png">
+						<span class="mui-navigate-right">团队</span>
 					</li>
-					<div class="clearfix"></div>
-					<li id="dat_statistics">
-						<img src="../image/data-statistics.png">
-						<span>数据统计</span>
+					<li class="mui-table-view-cell" id="target">
+						<img src="../image/icon/my-page-list-05.png">
+						<span class="mui-navigate-right">目标管理</span>
 					</li>
-					<li id="asset_management">
-						<img src="../image/asset-management.png">
-						<span>资产管理</span>
+					<li class="mui-table-view-cell" id="card_manage">
+						<img src="../image/icon/my-page-list-06.png">
+						<span class="mui-navigate-right">名片管理</span>
 					</li>
-					<li id="target">
-						<img src="../image/Target-management.png">
-						<span>目标管理</span>
+					<li class="mui-table-view-cell" id="data_statistics">
+						<img src="../image/icon/my-page-list-07.png">
+						<span class="mui-navigate-right">雷达</span>
 					</li>
-					<li id="red_packet">
-						<img src="../image/Red-envelopes_q1.png">
-						<span>红包管理</span>
+					<li class="mui-table-view-cell" id="dat_statistics">
+						<img src="../image/icon/my-page-list-08.png">
+						<span class="mui-navigate-right">数据统计</span>
 					</li>
-					<div class="clearfix"></div>
-				</div>
+				</ul>
 			</div>
-
 			<div id="cover" onclick="yc()"></div>
 			<div id="QR-code">
 				<div class="QR-tu">
@@ -443,7 +469,12 @@
 		<script src="../js/util.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
-			mui.init();
+			mui.init({
+				keyEventBind: {
+					backbutton: false, //Boolean(默认true)关闭back按键监听  
+					menubutton: true //Boolean(默认true)关闭menu按键监听  
+				}
+			});
 
 			var userInfo = getUserInfo();
 			var group_id = userInfo.group_id;
@@ -455,20 +486,22 @@
 					bottom: 51
 				})
 				// // 重写返回
-				var first = null;
-				mui.back = function() {
-					if (!first) {
-						first = (new Date()).getTime();
-						mui.toast('再按一次退出应用');
-						setTimeout(function() {
-							first = null;
-						}, 1000);
-					} else {
-						if ((new Date()).getTime() - first < 1000) {
-							plus.runtime.quit();
-						}
-					}
-				};
+				// var first = null;
+				// mui.back = function() {
+				// 	var main = plus.android.runtimeMainActivity();
+				// 	main.moveTaskToBack(false);
+				// 	if (!first) {
+				// 		first = (new Date()).getTime();
+				// 		mui.toast('再按一次退出应用');
+				// 		setTimeout(function() {
+				// 			first = null;
+				// 		}, 1000);
+				// 	} else {
+				// 		if ((new Date()).getTime() - first < 1000) {
+				// 			plus.runtime.quit();
+				// 		}
+				// 	}
+				// };
 				eventInit();
 				getMemberInfo();
 				getNotice();
@@ -484,7 +517,7 @@
 						height: webviewHeight - Math.random() / 2
 					});
 				})
-				
+
 				window.onresize = function() {
 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 					var resizeHeight = document.querySelector("body").offsetHeight;
@@ -496,21 +529,21 @@
 						});
 					}
 				}
-				
+
 				//激活成功监听
 				window.addEventListener('activationSuccess', function() {
 					getMemberInfo();
 				})
-				
+
 				window.addEventListener('cardSettingSuccess', function() {
 					getMemberInfo();
 				})
-				
+
 				//签到成功监听
 				window.addEventListener('signSuccess', function() {
 					getMemberInfo();
 				})
-				
+
 				window.addEventListener('refreshNotice', function() {
 					getUnreadMessage();
 				})
@@ -536,7 +569,9 @@
 						token: userInfo.token
 					}, function(res) {
 						if (res.errno == 0) {
-							openPage('team_list.html', 'team_list', '#f7f7f7', {teamList: res.data});
+							openPage('team_list.html', 'team_list', '#f7f7f7', {
+								teamList: res.data
+							});
 							setStatusBar('', 'dark');
 						} else {
 							openPage('boss_team.html', 'boss_team', '#f7f7f7', '');
@@ -545,7 +580,7 @@
 					}, 'json');
 					// openPage('boss_team.html', 'boss_team', '#f7f7f7', '')
 				})
-				
+
 				// //团队
 				// mui('.mui-content').on('tap', '#boss', function() {
 				// 	mui.post($ajaxUrl + 'team&action=team_list', {
@@ -652,8 +687,8 @@
 					}, '', 'slide-in-right');
 					plus.navigator.setStatusBarStyle('dark');
 				});
-				
-				
+
+
 				// 跳转到会员中心
 				mui(".goods").on("tap", ".goodsL", function() {
 					// message(group_id);
@@ -678,7 +713,7 @@
 					}
 					plus.navigator.setStatusBarStyle('dark');
 				})
-				
+
 				// 跳转到设置
 				mui("#header").on("tap", "#setting-btn", function() {
 					openPage('setting.html', 'setting', '#f7f7f7', '');
@@ -697,7 +732,7 @@
 					logs(res);
 					var memberInfo = res.data;
 					group_id = memberInfo.group_id;
-					document.getElementById('nickname').innerText = memberInfo.nickName||"旺客";
+					document.getElementById('nickname').innerText = memberInfo.nickName || "旺客";
 					document.getElementById('avatar').src = memberInfo.avatarUrl;
 					if (!memberInfo.group) {
 						document.getElementById('group_name').innerText = '普通';
@@ -770,13 +805,13 @@
 				detailPage.show('slide-in-right');
 				setStatusBar('', 'dark');
 			}
-			
+
 			//获取未读消息
 			function getUnreadMessage() {
-			mui.get( $ajaxUrl + 'member',{
+				mui.get($ajaxUrl + 'member', {
 					action: 'unread_message',
 					token: userInfo.token
-				},function(res){
+				}, function(res) {
 					var tipObj = document.getElementById('unread_message');
 					if (res.data > 0) {
 						tipObj.innerText = res.data;
@@ -785,7 +820,7 @@
 						tipObj.innerText = 0;
 						tipObj.style.display = 'none';
 					}
-				},'json');
+				}, 'json');
 			}
 		</script>
 	</body>

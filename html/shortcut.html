@@ -107,7 +107,12 @@
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
 	<script>
-		mui.init();
+		mui.init({
+			keyEventBind: {
+				backbutton: false, //Boolean(默认true)关闭back按键监听  
+				menubutton: true //Boolean(默认true)关闭menu按键监听  
+			}
+		});
 
 		var userInfo = getUserInfo();
 		mui.plusReady(function() {
@@ -118,7 +123,9 @@
 			// 重写返回
 			// var first = null;
 			// mui.back = function() {
-			// 	if (!first) { 
+			// 	var main = plus.android.runtimeMainActivity();
+			// 	main.moveTaskToBack(false);
+			// 	if (!first) {
 			// 		first = (new Date()).getTime();
 			// 		mui.toast('再按一次退出应用');
 			// 		setTimeout(function() {
@@ -171,12 +178,12 @@
 						webUrl: 'https://app.wangkeapp.cn/'
 					}
 				}, 'miniProgram');
-// 				share({
-// 					title: '旺客',
-// 					content: '旺天下之客,让营销更简单!',
-// 					thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
-// 					href: $ajaxUrl + 'download'
-// 				}, 'web');
+				// 				share({
+				// 					title: '旺客',
+				// 					content: '旺天下之客,让营销更简单!',
+				// 					thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
+				// 					href: $ajaxUrl + 'download'
+				// 				}, 'web');
 				e.stopPropagation();
 			})
 
