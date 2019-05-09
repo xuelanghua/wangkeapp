@@ -153,11 +153,17 @@
 											localStorage.setItem('user', JSON.stringify(res.data));
 											// if (res.data.mobile!='') {
 											if (res.data.mobile.length == 0) {
-												fnOpenWin('mobile_bind.html', 'mobile_bind', {background: '#2289ff'}, '', 'slide-in-bottom');
+												fnOpenWin('mobile_bind.html', 'mobile_bind', {
+													background: '#2289ff'
+												}, '', 'slide-in-bottom');
 											} else {
+												var curr = plus.webview.currentWebview();
 												plus.navigator.setStatusBarStyle('dark');
-												fnCloseWin('login');
-												// fnOpenWin('../index.html', 'index', '', '', 'slide-in-bottom');
+												fnOpenWin('../index.html', 'index', '', '', 'slide-in-bottom');
+												setTimeout(function() {
+													curr.hide();
+													curr.close();
+												}, 300);
 											}
 										} else {
 											mui.toast(res.message);

@@ -104,7 +104,7 @@
 				plus.navigator.setStatusBarStyle('light');
 			}
 		});
-		
+
 		var userInfo = getUserInfo();
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
@@ -114,7 +114,7 @@
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
-		
+
 		mui.plusReady(function() {
 			var webveiw = plus.webview.all();
 			var webviewName = new Array();
@@ -129,7 +129,7 @@
 				userInfo = getUserInfo();
 				mui('#mobile')[0].innerHTML = userInfo.mobile;
 			})
-			
+
 			// 注销登录
 			document.getElementById('exit').addEventListener('tap', function() {
 				// 	if (mui.os.ios) {
@@ -160,39 +160,50 @@
 						case 1:
 							//注销账号
 							localStorage.removeItem("user");
-							// plus.webview.getLaunchWebview().show("pop-in");
-							// mui.openWindow({
-							// 	url: 'login.html',
-							// 	id: 'login',
-							// 	show: {
-							// 		aniShow: 'pop-in'
-							// 	}
-							// });
+							var login = plus.webview.create("login.html", "login", {
+								statusbar: {
+									background: '#122c9a'
+								}
+							}, '');
+
+
 							if (plus.os.name == "iOS") {
-								mui.get($ajaxUrl + 'member',{
-										action: 'login_type',
-									}, function(res){
-										if (res.data == 1) {
-											fnOpenWin('login.html', 'login', {
-												statusbar: {
-													background: '#122c9a'
-												}
-											}, '', 'slide-in-bottom');
-										} else {
-											fnOpenWin('mobile_login.html', 'mobile_login', {
-												statusbar: {
-													background: '#2289FF'
-												}
-											}, '', 'slide-in-bottom');
-										}
-									}, 'json'
-								);
+								mui.get($ajaxUrl + 'member', {
+									action: 'login_type',
+								}, function(res) {
+									if (res.data == 1) {
+										fnOpenWin('login.html', 'login', {
+											statusbar: {
+												background: '#122c9a'
+											}
+										}, '', 'slide-in-bottom');
+									} else {
+										fnOpenWin('mobile_login.html', 'mobile_login', {
+											statusbar: {
+												background: '#2289FF'
+											}
+										}, '', 'slide-in-bottom');
+									}
+								}, 'json');
 							} else {
+								// plus.runtime.restart();
+								// 获取所有Webview窗口
+								var curr = plus.webview.currentWebview();
+								var wvs = plus.webview.all();
+								for (var i = 0; i < wvs.length; i++) {
+									if (wvs[i].getURL() == curr.getURL()) {
+										continue;
+									} else {
+										plus.webview.close(wvs[i]);
+									}
+								}
 								fnOpenWin('login.html', 'login', {
 									statusbar: {
 										background: '#122c9a'
 									}
 								}, '', 'slide-in-bottom');
+								curr.hide();
+								curr.close();
 							}
 							break;
 						case 2:
@@ -201,23 +212,21 @@
 					}
 				});
 			}, false);
-			
+
 			mui('#app_version')[0].innerHTML = '版本号' + plus.runtime.version;
 			mui('#mobile')[0].innerHTML = userInfo.mobile;
-			
+
 			mui(".setting-container").on("tap", ".change-num", function(e) {
 				openPage('chang_phone_number.html', 'chang_phone_number', '#f7f7f7', '');
 			})
-			
-// 			mui(".setting-container").on("tap", ".change-position", function(e) {
-// 				openPage('regionai_changes.html', 'regionai_changes', '#f7f7f7', '')
-// 			})
-			
+
+			// 			mui(".setting-container").on("tap", ".change-position", function(e) {
+			// 				openPage('regionai_changes.html', 'regionai_changes', '#f7f7f7', '')
+			// 			})
+
 			mui(".setting-container").on("tap", ".about", function(e) {
 				openPage('about_wangke.html', 'about_wangke', '#f7f7f7', '')
 			})
 		})
-		
-		
 	</script>
 </html>

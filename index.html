@@ -135,6 +135,11 @@
 
 		mui.plusReady(function() {
 			pushInit();
+			// plus.webview.currentWebview().opener().close(); 
+			var view = plus.webview.currentWebview().opener();
+			logs(view);
+			// plus.webview.hide('view', 'none');
+			// plus.webview.close('view', 'none');
 			// var main = plus.android.runtimeMainActivity();
 			// main.moveTaskToBack(false);
 			// document.getElementById('bar').style.top = (plus.display.resolutionHeight - 75) + "px";
@@ -176,7 +181,7 @@
 
 			//自定义事件-绑定成功
 			window.addEventListener('bindMobileSuccess', function() {
-				console.log('bindMobileSuccess');
+				// console.log('bindMobileSuccess');
 				userInfo = getUserInfo();
 				bindClientId();
 				initIndexView();
