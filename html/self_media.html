@@ -308,6 +308,10 @@
 		var loadding = 0;
 		mui.init({
 			swipeBack: false, //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
+			keyEventBind: {
+				backbutton: false, //Boolean(默认true)关闭back按键监听  
+				menubutton: true //Boolean(默认true)关闭menu按键监听  
+			},
 			pullRefresh: {
 				container: "#article_bottom", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
 				up: {
@@ -340,22 +344,24 @@
 				bottom: 51
 			})
 			// 重写返回
-			var first = null;
-			mui.back = function() {
-				if (!first) {
-					first = (new Date()).getTime();
-					// logs(first);
-					mui.toast('再按一次退出应用');
-					setTimeout(function() {
-						first = null;
-					}, 1000);
-				} else {
-					var timer = (new Date()).getTime() - first;
-					if (timer < 1000) {
-						plus.runtime.quit();
-					}
-				}
-			};
+			// var first = null;
+			// mui.back = function() {
+			// 	var main = plus.android.runtimeMainActivity();
+			// 	main.moveTaskToBack(false);
+			// 	if (!first) {
+			// 		first = (new Date()).getTime();
+			// 		// logs(first);
+			// 		mui.toast('再按一次退出应用');
+			// 		setTimeout(function() {
+			// 			first = null;
+			// 		}, 1000);
+			// 	} else {
+			// 		var timer = (new Date()).getTime() - first;
+			// 		if (timer < 1000) {
+			// 			plus.runtime.quit();
+			// 		}
+			// 	}
+			// };
 
 			mui.showLoading("正在加载..", "div");
 			window.addEventListener('scrollTop', function(event) {

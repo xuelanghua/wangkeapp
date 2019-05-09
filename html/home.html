@@ -413,7 +413,8 @@
 				left: 0 !important;
 				right: 0 !important;
 			}
-			.mui-badge-danger{
+
+			.mui-badge-danger {
 				position: absolute;
 				left: 25px;
 				top: 5px;
@@ -458,7 +459,14 @@
 							</div>
 							<div class="rain"></div>
 						</div> -->
-						<div id="weather_img" style="margin-left: 10px;"><div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div></div>
+						<div id="weather_img" style="margin-left: 10px;">
+							<div class="icon sun-shower">
+								<div class="cloud"></div>
+								<div class="sun">
+									<div class="rays"></div>
+								</div>
+							</div>
+						</div>
 						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -55px;">今天</span>
 						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -35px;">
 							<font id="temperature">-°~-°</font>
@@ -583,6 +591,10 @@
 	<script>
 		mui.init({
 			swipeBack: false,
+			keyEventBind: {
+				backbutton: false, //Boolean(默认true)关闭back按键监听  
+				menubutton: true //Boolean(默认true)关闭menu按键监听  
+			},
 			pullRefresh: {
 				container: "body", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
 				down: {
@@ -618,7 +630,7 @@
 			window.addEventListener('refreshNotice', function() {
 				getUnreadMessage();
 			})
-			
+
 			//打开扫一扫
 			var scan = document.getElementById('scan');
 			scan.addEventListener('tap', function() {
@@ -680,20 +692,19 @@
 				// showQrcode('card');
 				// message(userInfo.id);
 				mui.get($ajaxUrl + 'member', {
-						action: 'check_user_info',
-						token: userInfo.token
-					}, function(res){
-						if (res.errno == 0) {
-							openPage('friends_detail.html','friends_detail','#f7f7f7',{
-								fid:userInfo.id
-							})
-						} else {
-							openPage('card_setting.html','card_setting','#FFF',{
-								fid:userInfo.id
-							})
-						}
-					}, 'json'
-				);
+					action: 'check_user_info',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+							fid: userInfo.id
+						})
+					} else {
+						openPage('card_setting.html', 'card_setting', '#FFF', {
+							fid: userInfo.id
+						})
+					}
+				}, 'json');
 			})
 
 			//打开商城
@@ -844,7 +855,7 @@
 				if (refresh) {
 					setTimeout(function() {
 						mui('body').pullRefresh().endPulldownToRefresh();
-					}, 1000) 
+					}, 1000)
 				}
 			}, 'json')
 		}
@@ -871,11 +882,14 @@
 						var str = '';
 						if (weather.indexOf("晴") != -1) {
 							if (weather.indexOf("云") != -1) {
-								str += '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div>';
+								str +=
+									'<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div></div>';
 							} else if (weather.indexOf("雨") != -1) {
-								str += '<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>';
+								str +=
+									'<div class="icon sun-shower"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="rain"></div></div>';
 							} else if (weather.indexOf('雪') != -1) {
-								str += '<div class="icon flurries"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="snow"><div class="flake"></div></div>';
+								str +=
+									'<div class="icon flurries"><div class="cloud"></div><div class="sun"><div class="rays"></div></div><div class="snow"><div class="flake"></div></div>';
 							} else {
 								str += '<div class="icon sun-shower"><div class="sun"><div class="rays"></div></div></div>';
 							}
@@ -889,7 +903,8 @@
 							str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
 							// str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
 						} else if (weather.indexOf("雪") != -1) {
-							str += '<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
+							str +=
+								'<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
 						}
 						document.getElementById('weather_img').innerHTML = str;
 					}
@@ -1030,23 +1045,22 @@
 			newPage.show('slide-in-bottom');
 			hideQrcode();
 		}
-		
+
 		//获取未读消息
 		function getUnreadMessage() {
-			mui.get( $ajaxUrl + 'member',{
-					action: 'unread_message',
-					token: userInfo.token
-				},function(res){
-					var tipObj = document.getElementById('unread_message');
-					if (res.data > 0) {
-						tipObj.innerText = res.data;
-						tipObj.style.display = 'block';
-					} else {
-						tipObj.innerText = 0;
-						tipObj.style.display = 'none';
-					}
-				},'json'
-			);
+			mui.get($ajaxUrl + 'member', {
+				action: 'unread_message',
+				token: userInfo.token
+			}, function(res) {
+				var tipObj = document.getElementById('unread_message');
+				if (res.data > 0) {
+					tipObj.innerText = res.data;
+					tipObj.style.display = 'block';
+				} else {
+					tipObj.innerText = 0;
+					tipObj.style.display = 'none';
+				}
+			}, 'json');
 		}
 	</script>
 </html>
