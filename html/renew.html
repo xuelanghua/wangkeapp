@@ -92,7 +92,8 @@
 			.mui-backdrop {
 				background-color: rgba(0, 0, 0, 0);
 			}
-			.mui-content{
+
+			.mui-content {
 				height: 100vh;
 				overflow: hidden;
 				background-color: #232531;
@@ -137,9 +138,9 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script src="../js/swiper.min.js"></script>
-		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			var mask = mui.createMask(function() {
@@ -165,32 +166,34 @@
 					getUserUpgradeInfo();
 				},
 				mounted: function() {
+					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 					mui.plusReady(function() {
-						document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-						mySwiper = new Swiper('.swiper-container', {
-							watchSlidesProgress: true,
-							slidesPerView: 'auto',
-							centeredSlides: true,
-							loop: false,
-							autoplay: false,
-							pagination: {
-								el: '.swiper-pagination'
-							}
-						})
+						setTimeout(function() {
+							mySwiper = new Swiper('.swiper-container', {
+								watchSlidesProgress: true,
+								slidesPerView: 'auto',
+								centeredSlides: true,
+								loop: false,
+								autoplay: false,
+								pagination: {
+									el: '.swiper-pagination'
+								}
+							})
+						}, 90);
 						// 取消预约
 						mui("#verift-body").on('tap', '.close-verify-window', function() {
 							mask.close();
 						})
-						
+
 						// 确认预约
 						mui("#verift-body").on('tap', '.send-verify', function() {
 							mask.close();
 							upgradeOrder();
 						})
-						
+
 						// 权益
 						mui(".mui-content").on('tap', '.equity-cont', function() {
-							openPage('equities_page.html','equities_page','#f7f7f7','');
+							openPage('equities_page.html', 'equities_page', '#f7f7f7', '');
 						})
 					})
 				},
@@ -200,14 +203,22 @@
 							message('参数错误!');
 							return;
 						}
-						openPage('vt_renew.html', 'vt_renew', '#f7f7f7', {type: 2, groupId: id, fee: fee});
+						openPage('vt_renew.html', 'vt_renew', '#f7f7f7', {
+							type: 2,
+							groupId: id,
+							fee: fee
+						});
 					},
 					upgrade: function(id, fee) {
 						if (!id || !fee) {
 							message('参数错误!');
 							return;
 						}
-						openPage('vt_renew.html', 'vt_renew', '#f7f7f7', {type: 3, groupId: id, fee: fee});
+						openPage('vt_renew.html', 'vt_renew', '#f7f7f7', {
+							type: 3,
+							groupId: id,
+							fee: fee
+						});
 					},
 					upgradeOrder: function(id) {
 						groupId = id;
@@ -216,17 +227,17 @@
 					}
 				}
 			})
-			
+
 			function getUserUpgradeInfo() {
-				mui.get($ajaxUrl + 'member',{
-						action: 'upgrade_info',
-						token: userInfo.token
-					}, function(res){
-						app.severlist = res.data;
-					}, 'json'
-				);
+				mui.get($ajaxUrl + 'member', {
+					action: 'upgrade_info',
+					token: userInfo.token
+				}, function(res) {
+					app.severlist = res.data;
+					initSwiper();
+				}, 'json');
 			}
-			
+
 			function upgradeOrder() {
 				if (groupId == 0) {
 					message('出错啦!', 'center');
@@ -238,22 +249,36 @@
 				// }
 				plus.nativeUI.showWaiting('数据处理中...');
 				mui.post($ajaxUrl + 'member', {
-						action: 'agent_apply',
-						token: userInfo.token,
-						group_id: groupId,
-						type: 2
-					}, function(res){
-						if (res.errno == 0) {
-							openPage('member_renewal_successful.html', 'member_renewal_successful', '#f7f7f7', {title: '预约'});
-							setTimeout(function() {
-								plus.webview.close('renew', 'none');
-							}, 1000)
-						} else {
-							message(res.message);
-						}
-						plus.nativeUI.closeWaiting();
-					}, 'json'
-				);
+					action: 'agent_apply',
+					token: userInfo.token,
+					group_id: groupId,
+					type: 2
+				}, function(res) {
+					if (res.errno == 0) {
+						openPage('member_renewal_successful.html', 'member_renewal_successful', '#f7f7f7', {
+							title: '预约'
+						});
+						setTimeout(function() {
+							plus.webview.close('renew', 'none');
+						}, 1000)
+					} else {
+						message(res.message);
+					}
+					plus.nativeUI.closeWaiting();
+				}, 'json');
+			}
+
+			function initSwiper() {
+				// mySwiper = new Swiper('.swiper-container', {
+				// 	watchSlidesProgress: true,
+				// 	slidesPerView: 'auto',
+				// 	centeredSlides: true,
+				// 	loop: false,
+				// 	autoplay: false,
+				// 	pagination: {
+				// 		el: '.swiper-pagination'
+				// 	}
+				// })
 			}
 		</script>
 	</body>

@@ -249,7 +249,7 @@
 
 			<div class="hd">
 				<li class="current" data-status="1">待付款</li>
-				<li data-status="2">待发货</li>
+				<li id="wait-send" data-status="2">待发货</li>
 				<li data-status="3">已发货</li>
 				<li data-status="4">已完成</li>
 				<!-- <li data-status="5">退货</li> -->
@@ -455,7 +455,7 @@
 					</li>
 				</div>
 			</div>
-			
+
 			<!-- 弹出框 -->
 			<div id="cover"></div>
 			<div class="tanchu">
@@ -500,6 +500,13 @@
 			mui.plusReady(function() {
 				eventInit();
 				getOrderList(false);
+				var self = plus.webview.currentWebview();
+				var change = self.change; //获得参数
+				if (change) {
+					// var btn = document.getElementById('wait-send'); // mui("#wait-send");
+					var btn = document.querySelector(""); // mui("#wait-send");
+					mui.trigger(btn, 'tap');
+				}
 			})
 
 			//事件初始化
@@ -529,13 +536,13 @@
 					})
 					document.querySelector('.bd li[data-status="' + status + '"]').className = 'current';
 				})
-				
+
 				//发货弹窗
 				mui('.mui-content').on('tap', '#cover', function() {
 					this.style.display = 'none';
 					document.querySelector('.tanchu').style.display = 'none';
 				})
-				
+
 				//发货
 				mui('.mui-content').on('tap', '.tanchu_button', function() {
 					var expressCompany = document.querySelector('input[name=express_company]').value;
@@ -553,7 +560,7 @@
 					fnExpress(expressCompany, courierNumber, orderId);
 				})
 			}
-			
+
 			//订单列表事件
 			function orderEvent() {
 				//查看详情
@@ -568,16 +575,25 @@
 						openDetailWin('order_details_3', orderId);
 					}
 				})
-				
+
 				//聊天
 				mui('.Record_list').on('tap', '.chat', function(e) {
 					var userId = this.dataset.id;
 					var nickname = this.dataset.name;
 					var avatar = this.dataset.avatar;
-					fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: userId, chatName: nickname, avatar: avatar, barStyle: 'dark'}, 'slide-in-right');
+					fnOpenWin('dialog.html', 'dialog', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						cid: userId,
+						chatName: nickname,
+						avatar: avatar,
+						barStyle: 'dark'
+					}, 'slide-in-right');
 					e.stopPropagation();
 				})
-				
+
 				//发货
 				mui('.Record_list').on('tap', '.deliver', function(e) {
 					orderId = this.dataset.id;
@@ -585,11 +601,17 @@
 					document.querySelector('#cover').style.display = 'block';
 					e.stopPropagation();
 				})
-				
+
 				//查看物流
 				mui('.Record_list').on('tap', '.logistics', function(e) {
 					var orderId = this.dataset.id;
-					fnOpenWin('logistics.html', 'logistics', {statusbar: {background: '#F7F7F7'}}, {orderId: orderId}, 'slide-in-right');
+					fnOpenWin('logistics.html', 'logistics', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						orderId: orderId
+					}, 'slide-in-right');
 					e.stopPropagation();
 				})
 			}
@@ -604,7 +626,7 @@
 				}, function(res) {
 					var emptyContent =
 						'<div ><img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-order.png" ><p style="text-align: center;">暂无订单</p></div>';
-							if (res.errno == 0) {
+					if (res.errno == 0) {
 						var orderList = res.data;
 						var str_1 = '';
 						var str_2 = '';
@@ -855,12 +877,18 @@
 					plus.nativeUI.closeWaiting();
 				}, 'json');
 			}
-			
+
 			//打开订单详情页
 			function openDetailWin(win, orderId) {
-				fnOpenWin(win + '.html', win, {statusbar: {background: '#F7F7F7'}}, {orderId: orderId}, 'slide-in-right');
+				fnOpenWin(win + '.html', win, {
+					statusbar: {
+						background: '#F7F7F7'
+					}
+				}, {
+					orderId: orderId
+				}, 'slide-in-right');
 			}
-			
+
 			//发货
 			function fnExpress(expressCompany, courierNumber, orderId) {
 				mui.post($ajaxUrl + 'order', {
