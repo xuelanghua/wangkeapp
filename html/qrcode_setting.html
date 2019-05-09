@@ -201,11 +201,18 @@
 				type: 'redpacket',
 				token: userInfo.token
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 1) {
 					document.getElementById('red-packet').disabled = true;
+					mui.post($ajaxUrl + 'userqrcode', {
+						action: 'change_type',
+						type: currentType,
+						token: userInfo.token
+					}, function(res) {}, 'json');
+					initQrcode();
 				} else {
 					document.getElementById('red-packet').disabled = false;
+					initQrcode();
 				}
 			}, 'json');
 			mui('.Collection_records').on('tap', '.mui-radio', function() {
@@ -216,11 +223,13 @@
 					type: type,
 					token: userInfo.token
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0) {
 						var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 						document.querySelector('.QR-code img').setAttribute('src', url);
 						currentType = type;
 						document.querySelector('#qrcode_type').innerHTML = qrType[type];
+						// this.disabled = false;
 					} else if (res.errno == 1) {
 						plus.nativeUI.toast(res.message);
 					}
@@ -238,6 +247,7 @@
 				action: 'info',
 				token: userInfo.token
 			}, function(res) {
+				// logs(res);
 				if (res.errno == 0) {
 					document.querySelector('#qrcode_type').innerHTML = qrType[res.data.type];
 					currentType = res.data.type;
