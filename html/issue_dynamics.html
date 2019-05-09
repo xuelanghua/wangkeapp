@@ -40,7 +40,7 @@
 		<script type="text/javascript">
 			mui.init({
 				beforeback: function() {
-					var myDynamics = plus.webview.currentWebview().opener();　
+					var myDynamics = plus.webview.currentWebview().opener();
 					mui.fire(myDynamics, 'refresh');
 					return true;
 				}
@@ -83,18 +83,26 @@
 				e.preventDefault();
 				var titles = document.querySelector('input[name=title]').value;
 				var contents = document.querySelector('textarea[name=desc]').value
-				mui.post($ajaxUrl + 'timeline&action=add', {
-					token: userInfo.token,
-					title: titles,
-					content: contents,
-					cover: images.filter(function(e) {return e != null}).join(',')
-				}, function(res) {
-					if (res.errno == 0) {
-						plus.key.hideSoftKeybord();
-						mui.back();
-						message("发布成功");
-					}
-				}, 'json')
+				if (!titles) {
+					message("文章标题不能为空！");
+				} else if (!contents) {
+					message("文章内容不能为空！");
+				} else {
+					mui.post($ajaxUrl + 'timeline&action=add', {
+						token: userInfo.token,
+						title: titles,
+						content: contents,
+						cover: images.filter(function(e) {
+							return e != null
+						}).join(',')
+					}, function(res) {
+						if (res.errno == 0) {
+							plus.key.hideSoftKeybord();
+							mui.back();
+							message("发布成功");
+						}
+					}, 'json')
+				}
 			})
 		</script>
 	</body>
