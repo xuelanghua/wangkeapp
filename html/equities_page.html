@@ -106,8 +106,8 @@
 			<div class="swiper-container gallery-thumbs">
 				<div class="swiper-wrapper">
 					<template v-for="(list, index) in groupList">
-						<div class="swiper-slide slider1">
-							<img :src="index<3?'../image/huiyuanqy'+index+'.png':'../image/huiyuanqy2.png'">
+						<div v-if="list.id>currentId||list.id==currentId" class="swiper-slide slider1">
+							<img :src="list.id<3?'../image/huiyuanqy'+list.id+'.png':'../image/huiyuanqy3.png'">
 							<p>{{list.name}}</p>
 						</div>
 					</template>
@@ -135,34 +135,23 @@
 			</div>
 			<div class="swiper-container gallery-top">
 				<div class="swiper-wrapper">
-					<div class="swiper-slide  slider2">
-						<div class="inside inside0">
-							<div class="current-rank"><span>当前等级</span></div>
+					<div class="swiper-slide  slider2" v-if="list.id>currentId||list.id==currentId" v-for="(list, index) in groupList"
+					 :key="index">
+						<div class="inside" :class="'inside'+index">
+							<div class="current-rank" v-if="currentId==list.id"><span>当前等级</span></div>
 							<div class="mui-popover-arrow"></div>
+							<!-- <div class="inside-desc">
+								<h4>推荐奖</h4>
+								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
+							</div> -->
 							<div class="inside-desc">
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
-								<h4>推荐奖</h4>
-								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
+								<h4>特权</h4>
+								<p v-for="(items,index) in list.rights">{{items}}</p>
 							</div>
-							<span class="upgrade-btn">升级</span>
+							<span class="upgrade-btn mui-hidden">升级</span>
 						</div>
 					</div>
-					<div class="swiper-slide  slider2">
+					<!-- <div class="swiper-slide  slider2">
 						<div class="inside inside1">
 							<div class="mui-popover-arrow"></div>
 							<div class="inside-desc">
@@ -185,7 +174,7 @@
 								<h4>推荐奖</h4>
 								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
 							</div>
-							<span class="upgrade-btn">升级</span>
+							<span class="upgrade-btn mui-hidden">升级</span>
 						</div>
 					</div>
 					<div class="swiper-slide  slider2">
@@ -211,7 +200,7 @@
 								<h4>推荐奖</h4>
 								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
 							</div>
-							<a href="#middlePopover" class="upgrade-btn">预约升级</a>
+							<a href="#middlePopover" class="upgrade-btn mui-hidden">预约升级</a>
 						</div>
 					</div>
 					<div class="swiper-slide  slider2">
@@ -237,7 +226,7 @@
 								<h4>推荐奖</h4>
 								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
 							</div>
-							<span class="upgrade-btn">预约升级</span>
+							<span class="upgrade-btn mui-hidden">预约升级</span>
 						</div>
 					</div>
 					<div class="swiper-slide  slider2">
@@ -263,9 +252,9 @@
 								<h4>推荐奖</h4>
 								<p>推荐一个VIP得60，推荐一个VIP得60推荐一个VIP得60推荐一个VIP得60</p>
 							</div>
-							<span class="upgrade-btn">预约升级</span>
+							<span class="upgrade-btn mui-hidden">预约升级</span>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="swiper-pagination"></div>
 			</div>
@@ -303,7 +292,8 @@
 				data() {
 					return {
 						groupList: null,
-						groupId: userInfo.group_id
+						groupId: userInfo.group_id,
+						currentId: 0
 					}
 				},
 				created: function() {
@@ -340,6 +330,8 @@
 							message('预约成功');
 						})
 					})
+					// 获取当前的id
+					this.currentId = userInfo.group_id;
 				}
 			})
 
