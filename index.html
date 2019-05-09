@@ -168,7 +168,6 @@
 
 			//自定义事件-登录成功
 			window.addEventListener('loginSuccess', function() {
-				console.log('loginSuccess');
 				userInfo = getUserInfo();
 				bindClientId();
 				initIndexView();
@@ -186,14 +185,6 @@
 				// initIndexView();
 			})
 
-			//自定义事件-激活成功
-			window.addEventListener('activationSuccess', function() {
-				console.log('activationSuccess');
-				setTimeout(function() {
-					updateUserInfo();
-				}, 2000)
-			})
-
 			window.addEventListener('showChat', function() {
 				mui.trigger(document.getElementById('chat'), 'tap');
 				// currentTab.children[0].classList.remove(tabsConfig[current].icon);
@@ -209,7 +200,7 @@
 			//获取当前webview
 			self = plus.webview.currentWebview();
 			//设置只支持竖屏幕显示
-			plus.screen.lockOrientation("portrait-primary");
+			plus.screen.lockOrientation("portrait-primary"); 
 
 			// localStorage.removeItem('user');
 			userInfo = getUserInfo();

@@ -499,9 +499,7 @@
 				
 				//激活成功监听
 				window.addEventListener('activationSuccess', function() {
-					setTimeout(function() {
-						getMemberInfo();
-					}, 1000)
+					getMemberInfo();
 				})
 				
 				window.addEventListener('cardSettingSuccess', function() {
@@ -691,11 +689,12 @@
 			//获取用户信息
 			function getMemberInfo() {
 				if (!userInfo) return;
-				logs(userInfo);
+				console.log(JSON.stringify(userInfo));
 				mui.post($ajaxUrl + 'member', {
 					action: 'detail',
 					token: userInfo.token
 				}, function(res) {
+					logs(res);
 					var memberInfo = res.data;
 					group_id = memberInfo.group_id;
 					document.getElementById('nickname').innerText = memberInfo.nickName||"旺客";
