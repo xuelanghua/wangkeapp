@@ -17,6 +17,26 @@
 				font-size: 0.32rem;
 				right: 0.15rem;
 			}
+			.recommend-person input{
+				border: none;
+				border-bottom: 1px solid #F2F2F2;
+				font-weight: normal;
+				padding-bottom: 0;
+				padding-left: 0;
+				color: #333333;
+				border-radius: 0;
+				width: 100%;
+			}
+			.recommend-person input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.3rem;
+			}
+			.recommend-person .mui-input-row:after{
+				height: 0;
+			}
+			.recommend-person.mui-active{
+				background-color: #FFFFFF;
+			}
 		</style>
 	</head>
 
@@ -91,8 +111,14 @@
 				</div> -->
 				<div class="mui-card" style="margin-top: 0;" v-if="recommendId==0">
 					<ul class="mui-table-view border-top">
-						<li id="area-select" class="mui-table-view-cell"><span>推荐人手机号码</span><span style="font-weight: normal;" id="area-desc"
-							 class="area-desc mui-navigate-right mui-pull-right"><input type="number" v-model="recommendPhone"></span></li>
+						<li id="area-select" class="mui-table-view-cell recommend-person">
+							<span>推荐人手机号码</span>
+							<span style="font-weight: normal;" id="area-desc" class="area-desc">
+								<div class="mui-input-row">
+									<input type="number" v-model="recommendPhone" class="mui-input-clear">
+								</div>
+							</span>
+						</li>
 					</ul>
 				</div>
 			</form>
@@ -113,7 +139,7 @@
 					plus.navigator.setStatusBarStyle('light');
 				}
 			});
-			
+
 			// 初始化字体大小
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -121,7 +147,7 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			
+
 			var userInfo = getUserInfo();
 			//vue初始化
 			var vm = new Vue({
@@ -132,19 +158,19 @@
 						recommendPhone: '',
 						group: []
 					}
-				} ,
+				},
 				created: () => {
 					getRecommendUser();
 				}
 			})
-			
+
 			var provinceId = 0;
 			var cityId = 0;
 			var areaId = 0;
 			var self = null;
 			var groupData = null;
 			var groupId = 0;
-			mui.plusReady(function () {
+			mui.plusReady(function() {
 				var _getParam = function(obj, param) {
 					return obj[param] || '';
 				};
@@ -163,23 +189,23 @@
 				// 			items[2], 'text');
 				// 	});
 				// }, false);
-				
-			    self = plus.webview.currentWebview();
+
+				self = plus.webview.currentWebview();
 				groupData = self.groupData;
 				vm.group = [groupData[2], groupData[3], groupData[4]];
-				
+
 				//选择代理级别
 				mui('.mui-content').on('tap', '.mui-radio', function() {
 					groupId = this.dataset.id;
 				})
-				
+
 				mui('.mui-content').on('tap', '#submit', function() {
 					document.activeElement.blur();
 					if (groupId == 0) {
 						message('请选择要申请的代理!', 'center');
 						return;
 					}
-					
+
 					if (vm.recommendId == 0) {
 						if (vm.recommendPhone.length == 0) {
 							message('请输入推荐人手机号码!');
@@ -190,49 +216,47 @@
 							return;
 						}
 					}
-					
+
 					// if (provinceId == 0 || cityId == 0) {
 					// 	message('请选择地区!', 'center');
 					// 	return;
 					// }
 					plus.nativeUI.showWaiting('数据处理中...');
 					mui.post($ajaxUrl + 'member', {
-							action: 'agent_apply',
-							token: userInfo.token,
-							group_id: groupId,
-							type: 1,
-							province_id: provinceId,
-							city_id: cityId,
-							area_id: areaId,
-							recommend_phone: vm.recommendPhone
-						}, function(res){
-							logs(res);
-							if (res.errno == 0) {
-								plus.nativeUI.alert('申请成功, 等待审核!', function() {
-									plus.webview.close('agent_apply');
-									plus.webview.close('activation');
-								})
-							} else {
-								plus.nativeUI.alert(res.message, function() {
-									window.location.reload();
-								})
-							}
-							plus.nativeUI.closeWaiting();
-						}, 'json'
-					);
+						action: 'agent_apply',
+						token: userInfo.token,
+						group_id: groupId,
+						type: 1,
+						province_id: provinceId,
+						city_id: cityId,
+						area_id: areaId,
+						recommend_phone: vm.recommendPhone
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							plus.nativeUI.alert('申请成功, 等待审核!', function() {
+								plus.webview.close('agent_apply');
+								plus.webview.close('activation');
+							})
+						} else {
+							plus.nativeUI.alert(res.message, function() {
+								window.location.reload();
+							})
+						}
+						plus.nativeUI.closeWaiting();
+					}, 'json');
 				})
 			})
-			
+
 			//获取上级推荐id
 			function getRecommendUser() {
 				mui.get($ajaxUrl + 'member', {
-						action: 'recommend_id',
-						token: userInfo.token
-					}, function(res){
-						logs(res);
-						vm.recommendId = res.data;
-					}, 'json'
-				);
+					action: 'recommend_id',
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					vm.recommendId = res.data;
+				}, 'json');
 			}
 		</script>
 	</body>
