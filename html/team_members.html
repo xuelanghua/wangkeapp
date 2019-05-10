@@ -352,6 +352,7 @@
 		mui.init();
 		var userInfo = getUserInfo();
 		var tid = '';
+		var captainUid=0;
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
@@ -366,7 +367,7 @@
 				return {
 					identity: false,
 					dissolve: false,
-					iscaptain: true,
+					iscaptain: false,
 					userData: userInfo,
 					userList: {}
 				}
@@ -412,6 +413,12 @@
 				mui.plusReady(function() {
 					var self = plus.webview.currentWebview();
 					tid = self.tid;
+					captainUid=self.captainUid;
+					if(captainUid==userInfo.id){
+						app.iscaptain=true;
+					}else{
+						app.iscaptain=false;
+					}
 					logs(tid);
 					getUserData();
 					// 解散团队
@@ -509,6 +516,7 @@
 					message("添加成功");
 					getUserData();
 				} else {
+					logs(res);
 					message("添加失败，请稍后重试");
 				}
 			}, 'json');
@@ -521,9 +529,10 @@
 				team_id: tid,
 				type: 1
 			}, function(res) {
-				// logs(res);
+				logs(res);
 				if (res.errno == 0) {
 					app.userList = res.data;
+					// app.iscaptain
 				}
 			}, 'json');
 		}

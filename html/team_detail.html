@@ -400,7 +400,8 @@
 					tid: '',
 					teamMember: [],
 					applyList: [],
-					teamNum: 1
+					teamNum: 1,
+					captain_uid:0
 				}
 			},
 			methods: {
@@ -501,7 +502,8 @@
 		mui(".mui-content").on("tap", ".team-member-more", function() {
 			logs(app.tid);
 			openPage('team_members.html', 'team_members', '#f7f7f7', {
-				tid: app.tid
+				tid: app.tid,
+				captainUid:app.captain_uid
 			});
 		})
 		
@@ -516,6 +518,7 @@
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
 					app.teamNum = res.data.current_number;
+					app.captain_uid=res.data.captain_uid;
 					var captainId = res.data.captain_uid;
 					if (userInfo.id == captainId) {
 						app.role = 1;
