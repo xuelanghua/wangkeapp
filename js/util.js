@@ -42,7 +42,7 @@ function checkMember() {
 			createNew: false,
 			show: {
 				autoShow: true,
-				aniShow: 'pop-in',
+				aniShow: 'none',
 				duration: 150,
 				event: 'titleUpdate',
 				extras: {
@@ -73,11 +73,9 @@ function checkMember() {
 //获取用户信息
 function updateUserInfo() {
 	var userInfo = getUserInfo();
-	console.log(JSON.stringify(userInfo));
 	mui.post($ajaxUrl + 'member&action=info', {
 		token: userInfo.token
 	}, function(res) {
-		console.log(JSON.stringify(res));
 		localStorage.setItem('user', JSON.stringify(res.data));
 	}, 'json')
 }
@@ -672,10 +670,10 @@ function pushCallback(data, event) {
 		var type = data.type;
 		var url = data.url;
 		var extra = data.extra;
-		logs(type);
-		logs(url);
-		logs(extra);
-		logs(event);
+		// logs(type);
+		// logs(url);
+		// logs(extra);
+		// logs(event);
 		if (event == 'click') {
 			if (type == 'jump') {
 				if (url == 'chat') {
@@ -704,7 +702,15 @@ function pushCallback(data, event) {
 					}
 				}
 			} else if (type == 'refresh') {
-				mui.fire(plus.webview.getWebviewById(url), 'refresh');
+				if (url == 'activation') {
+					updateUserInfo();
+					mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
+					mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
+					mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
+					mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
+				} else {
+					mui.fire(plus.webview.getWebviewById(url), 'refresh');
+				}
 			}
 		} else if (event == 'receive') {
 			if (url == 'dialog') {
@@ -728,6 +734,12 @@ function pushCallback(data, event) {
 				}
 
 				playNoticeAudio();
+			} else if (url == 'activation') {
+				updateUserInfo();
+				mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
+				mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
+				mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
+				mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
@@ -794,4 +806,23 @@ function baseImgFile(uid, base64, quality, callback) {
 	}, function(e) {
 		console.log('加载图片失败：' + JSON.stringify(e));
 	});
+}
+
+//监听网络状态 
+function onNetChange(){
+	var nt = plus.networkinfo.getCurrentType();
+	switch (nt){
+		case plus.networkinfo.CONNECTION_ETHERNET:
+		case plus.networkinfo.CONNECTION_WIFI:
+		alert("Switch to Wifi networks!"); 
+		break; 
+		case plus.networkinfo.CONNECTION_CELL2G:
+		case plus.networkinfo.CONNECTION_CELL3G:
+		case plus.networkinfo.CONNECTION_CELL4G:
+		alert("Switch to Cellular networks!");  
+		break; 
+		default:
+		alert("Not networks!"); 
+		break;
+	}
 }

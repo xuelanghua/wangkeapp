@@ -69,19 +69,19 @@
 						</div>
 					</div> -->
 				</form>
-				<div class="radio-list last">
+				<div class="radio-list last agent-apply">
 					<span>代理</span>
 					<span class="apply">立即预约<i class="mui-icon mui-icon mui-icon-arrowright" style="font-size: 16px;font-weight: bold;"></i></span>
 				</div>
 				<ul class="mui-table-view border-top">
 					<li class="mui-table-view-cell"><span>应付金额</span><span class="price">&yen;<span id="activation_fee">199</span></span></li>
 					<li class="mui-table-view-cell pay-type"><span>支付方式</span><span style="font-weight: normal;" class="pay-title">微信</span></li>
-					<!-- <li id="area-select" class="mui-table-view-cell"><span>区域选择</span><span style="font-weight: normal;" id="area-desc" class="area-desc mui-navigate-right">点击选择</span></li> -->
+					<li class="mui-table-view-cell" v-if="recommendId==0"><span>推荐人</span><span><input type="number" class="mui-input" v-model="recommendPhone" name="recommend_phone" placeholder="输入推荐人手机号码"></span></li> 
 				</ul>
 			</div>
 			<div class="mui-content-padded">
 				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">立即支付</button>
-				<p>开通即视为同意<a href="agreement.html">《旺客-用户协议》</a></p>
+				<p style="text-align: center;">开通即视为同意<a href="agreement.html">《旺客-用户协议》</a></p>
 			</div>
 			<!-- 创客弹窗开始 -->
 			<div class="maker-model-container mui-hidden">
@@ -159,19 +159,26 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-
+			
+			var userInfo = getUserInfo();
 			//vue初始化
 			var vm = new Vue({
 				el: "#form",
-				data: {
-					group: []
+				data() {
+					return {
+						recommendId: 0,
+						recommendPhone: '',
+						group: []
+					}
+				},
+				created: function() {
+					getRecommendUser();
 				}
 			});
 
 			var groupId = 0;
 			var activationFee = 0;
 			var groupData = null;
-			var userInfo = getUserInfo();
 			var provinceId = 0;
 			var cityId = 0;
 			var areaId = 0;
@@ -220,7 +227,7 @@
 				})
 
 				//跳转代理申请
-				mui('.radio-list').on('tap', '.apply', function() {
+				mui('.mui-content').on('tap', '.agent-apply', function() {
 					fnOpenWin('agent_apply.html', 'agent_apply', {
 						statusbar: {
 							background: '#FFF'
@@ -250,13 +257,13 @@
 					picker.setData([{
 						value: 'wxpay',
 						text: '微信'
-					}, {
+					}/*, {
 						value: 'alipay',
 						text: '支付宝'
 					}, {
 						value: 'unionpay',
 						text: '银联'
-					}]);
+					}*/]);
 					picker.show(function(selectItems) {
 						payType = selectItems[0].value;
 						if (payType == 'wxpay') {
@@ -269,6 +276,17 @@
 
 				//支付
 				mui('.mui-content').on('tap', '.mui-pay', function() {
+					document.activeElement.blur();
+					if (vm.recommendId == 0) {
+						if (vm.recommendPhone.length == 0) {
+							message('请输入推荐人手机号码!');
+							return;
+						}
+						if (!/1[\d]{10}/.test(vm.recommendPhone)) {
+							message('推荐人手机号码输入有误!');
+							return;
+						}
+					}
 					pay(payType);
 				})
 			}
@@ -331,6 +349,7 @@
 					city_id: cityId,
 					area_id: areaId,
 					activation_type: 1,
+					recommend_phone: vm.recommendPhone
 				}, function(res) {
 					// console.log(JSON.stringify(res));
 					waiting.close();
@@ -364,6 +383,18 @@
 						plus.nativeUI.alert(res.message, null, '提示');
 					}
 				}, 'json')
+			}
+			
+			//获取上级推荐id
+			function getRecommendUser() {
+				mui.get($ajaxUrl + 'member', {
+						action: 'recommend_id',
+						token: userInfo.token
+					}, function(res){
+						logs(res);
+						vm.recommendId = res.data;
+					}, 'json'
+				);
 			}
 
 			// 城市选择

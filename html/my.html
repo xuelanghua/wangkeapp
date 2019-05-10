@@ -473,12 +473,25 @@
 				keyEventBind: {
 					backbutton: false, //Boolean(默认true)关闭back按键监听  
 					menubutton: true //Boolean(默认true)关闭menu按键监听  
+				},
+				pullRefresh: {
+					container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					down: {
+						style: 'circle',
+						color: '#2289FF',
+						callback: function() {
+							downRefresh = true;
+							updateUserInfo();
+							getMemberInfo();
+						}
+					}
 				}
 			});
 
 			var userInfo = getUserInfo();
 			var group_id = userInfo.group_id;
 			var webviewHeight = 0;
+			var downRefresh = false;
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
 				webviewHeight = self.webviewHeight;
@@ -724,7 +737,6 @@
 			//获取用户信息
 			function getMemberInfo() {
 				if (!userInfo) return;
-				console.log(JSON.stringify(userInfo));
 				mui.post($ajaxUrl + 'member', {
 					action: 'detail',
 					token: userInfo.token
@@ -739,6 +751,12 @@
 						// document.getElementById('more').style.display = 'none';
 					} else {
 						document.getElementById('group_name').innerText = memberInfo.group.name;
+					}
+					if (downRefresh) {
+						setTimeout(function() {
+							mui('.mui-content').pullRefresh().endPulldownToRefresh();
+						}, 1000)
+						downRefresh = false;
 					}
 					// document.getElementById('wang_number').innerText = memberInfo.wang;
 				}, 'json');

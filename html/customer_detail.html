@@ -588,6 +588,7 @@
 		var dealFlag = 0;
 		var noticeStatus = 0;
 		var userInfo = getUserInfo();
+		var groupId = userInfo.group_id;
 		mui.plusReady(function() {
 			var self = plus.webview.currentWebview();
 			cid = self.cid;
@@ -827,7 +828,7 @@
 					}
 					var follow = data.follow;
 					var html = '';
-					if (follow.length > 0) {
+					if (follow.length > 0 && groupId > 0) {
 						for (var i in follow) {
 							if (follow[i].mark == 1 || follow[i].mark == 2) {
 								html += '<div class="current_chart mui-pull-left">';
@@ -877,7 +878,7 @@
 					document.querySelector('#follow_container').innerHTML = html;
 
 					var viewHtml = '';
-					if (data.view.length > 0) {
+					if (data.view.length > 0 && groupId > 0) {
 						var viewList = data.view;
 						for (var k in viewList) {
 							viewHtml += '<div class="current_chart mui-pull-left">';
@@ -1027,7 +1028,7 @@
 					document.querySelector('#view_container').innerHTML = viewHtml;
 
 					var dealHtml = '';
-					if (data.deal.length > 0) {
+					if (data.deal.length > 0 && groupId > 0) {
 						var dealList = data.deal;
 						for (var j in dealList) {
 							dealHtml += '<div class="Record_list">';

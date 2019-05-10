@@ -89,12 +89,12 @@
 						</div>
 					</div>
 				</div> -->
-				<!-- <div class="mui-card" style="margin-top: 0;">
+				<div class="mui-card" style="margin-top: 0;" v-if="recommendId==0">
 					<ul class="mui-table-view border-top">
-						<li id="area-select" class="mui-table-view-cell"><span>区域选择</span><span style="font-weight: normal;" id="area-desc"
-							 class="area-desc mui-navigate-right mui-pull-right">点击选择</span></li>
+						<li id="area-select" class="mui-table-view-cell"><span>推荐人手机号码</span><span style="font-weight: normal;" id="area-desc"
+							 class="area-desc mui-navigate-right mui-pull-right"><input type="number" v-model="recommendPhone"></span></li>
 					</ul>
-				</div> -->
+				</div>
 			</form>
 			<div class="mui-content-padded" style="padding-bottom: 25px;">
 				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="submit">确定</button>
@@ -122,11 +122,19 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
 			
+			var userInfo = getUserInfo();
 			//vue初始化
 			var vm = new Vue({
 				el: '#form',
-				data: {
-					group: []
+				data() {
+					return {
+						recommendId: 0,
+						recommendPhone: '',
+						group: []
+					}
+				} ,
+				created: () => {
+					getRecommendUser();
 				}
 			})
 			
@@ -136,7 +144,6 @@
 			var self = null;
 			var groupData = null;
 			var groupId = 0;
-			var userInfo = getUserInfo();
 			mui.plusReady(function () {
 				var _getParam = function(obj, param) {
 					return obj[param] || '';
@@ -167,10 +174,23 @@
 				})
 				
 				mui('.mui-content').on('tap', '#submit', function() {
+					document.activeElement.blur();
 					if (groupId == 0) {
 						message('请选择要申请的代理!', 'center');
 						return;
 					}
+					
+					if (vm.recommendId == 0) {
+						if (vm.recommendPhone.length == 0) {
+							message('请输入推荐人手机号码!');
+							return;
+						}
+						if (!/1[\d]{10}/.test(vm.recommendPhone)) {
+							message('推荐人手机号码输入有误!');
+							return;
+						}
+					}
+					
 					// if (provinceId == 0 || cityId == 0) {
 					// 	message('请选择地区!', 'center');
 					// 	return;
@@ -184,6 +204,7 @@
 							province_id: provinceId,
 							city_id: cityId,
 							area_id: areaId,
+							recommend_phone: vm.recommendPhone
 						}, function(res){
 							logs(res);
 							if (res.errno == 0) {
@@ -201,6 +222,18 @@
 					);
 				})
 			})
+			
+			//获取上级推荐id
+			function getRecommendUser() {
+				mui.get($ajaxUrl + 'member', {
+						action: 'recommend_id',
+						token: userInfo.token
+					}, function(res){
+						logs(res);
+						vm.recommendId = res.data;
+					}, 'json'
+				);
+			}
 		</script>
 	</body>
 
