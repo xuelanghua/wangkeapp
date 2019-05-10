@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-content {
+				height: 100vh;
+				background-color: #FFFFFF;
+				/* background-color: #0062CC; */
+				width: 100%;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.tips {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+
+			img {
+				width: 60%;
+				height: auto;
+			}
+
+			span {
+				font-size: 0.24rem;
+				color: #2289FF;
+			}
+
+			.mui-icon-arrowright {
+				font-size: 0.28rem;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="tips">
+				<img src="../image/icon/network_outage.png">
+				<p>暂无网络，请检查网络连接……</p>
+				<span id="iknown">知道了<span class="mui-icon mui-icon-arrowright"></span></span>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			mui.plusReady(function() {
+				var self=plus.webview.currentWebview()
+				mui(".mui-content").on('tap','#iknown',function(){
+					plus.webview.close(self,'fade-out');
+				})
+			})
+		</script>
+	</body>
+
+</html>

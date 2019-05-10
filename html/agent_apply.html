@@ -17,6 +17,9 @@
 				font-size: 0.32rem;
 				right: 0.15rem;
 			}
+			.recommend-person{
+				position: relative;
+			}
 			.recommend-person input{
 				border: none;
 				border-bottom: 1px solid #F2F2F2;
@@ -36,6 +39,12 @@
 			}
 			.recommend-person.mui-active{
 				background-color: #FFFFFF;
+			}
+			.mui-icon.mui-icon-clear{
+				color: #DDDDDD;
+				position: absolute;
+				right:10px;
+				top: 55%;
 			}
 		</style>
 	</head>
@@ -114,9 +123,8 @@
 						<li id="area-select" class="mui-table-view-cell recommend-person">
 							<span>推荐人手机号码</span>
 							<span style="font-weight: normal;" id="area-desc" class="area-desc">
-								<div class="mui-input-row">
 									<input type="number" v-model="recommendPhone" class="mui-input-clear">
-								</div>
+									<i v-show="recommendPhone" class="mui-icon mui-icon-clear" @tap="recommendPhone=''"></i>
 							</span>
 						</li>
 					</ul>
