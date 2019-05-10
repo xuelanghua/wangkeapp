@@ -188,32 +188,34 @@
 					var self = plus.webview.currentWebview();
 					tid = self.tid;
 					app.uids = self.uids;
-					logs(app.uids);
 					getUserList();
-					setTimeout(function() {
-						var list = document.getElementById('list');
-						var signs = list.querySelectorAll('.checkeds');
-						console.log(signs);
-						for (let i = 0; i < signs.length; i++) {
-							for (let j = 0; j < app.uids.length; j++) {
-								if (app.uids[j] == signs[i].value) {
-									signs[i].checked = "checked";
+					if (app.uids) {
+						setTimeout(function() {
+							var list = document.getElementById('list');
+							var signs = list.querySelectorAll('.checkeds');
+							for (let i = 0; i < signs.length; i++) {
+								for (let j = 0; j < app.uids.length; j++) {
+									if (app.uids[j] == signs[i].value) {
+										signs[i].checked = "checked";
+									}
 								}
 							}
-						}
-						var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
-						var value = count ? "完成(" + count + ")" : "完成";
-						done.innerHTML = value;
-						if (count) {
-							if (done.classList.contains("mui-disabled")) {
-								done.classList.remove("mui-disabled");
+							var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+							var value = count ? "完成(" + count + ")" : "完成";
+							done.innerHTML = value;
+							if (count) {
+								if (done.classList.contains("mui-disabled")) {
+									done.classList.remove("mui-disabled");
+								}
+							} else {
+								if (!done.classList.contains("mui-disabled")) {
+									done.classList.add("mui-disabled");
+								}
 							}
-						} else {
-							if (!done.classList.contains("mui-disabled")) {
-								done.classList.add("mui-disabled");
-							}
-						}
-					}, 300);
+						}, 300);
+					} else {
+
+					}
 					// mui.back = function() {
 					// 	// self.hide();
 					// 	plus.webview.hide( self, "slide-out-right");
