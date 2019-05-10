@@ -128,7 +128,7 @@
 			<input class="team-name" type="text" v-model="teamName" placeholder="填写团队名称（2~10个字）" />
 			<textarea class="team-notice" rows="6" cols="3" v-model="notice" maxlength="150" placeholder="填写团队公告"></textarea>
 			<div class="invite-team-members">
-				<h2 class="title">邀请团队成员(0)</h2>
+				<h2 class="title">邀请团队成员({{uids.length}})</h2>
 				<ul>
 					<li v-for="(list,index) in imagePath" :key="index" @tap="delChecked(index)">
 						<div class="user-head-img">
@@ -223,7 +223,9 @@
 			}
 		})
 		mui(".mui-content").on('tap', '.member-selection', function() {
-			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', '')
+			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', {
+				uids:app.uids
+			})
 		})
 		// 创建团队
 		mui(".mui-content").on('tap', '#create-group', function() {
