@@ -715,6 +715,10 @@
 							if (!vm.enough || !vm.fee) return;
 							plus.nativeUI.confirm('确认提现?', function(e) {
 								if (e.index == 0) {
+									if (vm.fee < 100 || (vm.fee % 100) != 0) {
+										message('小于100部分不能提现');
+										return;
+									}
 									withdrawDeposit();
 								}
 							})

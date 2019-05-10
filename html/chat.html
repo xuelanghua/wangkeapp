@@ -613,6 +613,24 @@
 				keyEventBind: {
 					backbutton: false, //Boolean(默认true)关闭back按键监听  
 					menubutton: true //Boolean(默认true)关闭menu按键监听  
+				},
+				pullRefresh: {
+					container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					down: {
+						style: 'circle',
+						color: '#2289FF',
+						callback: function() {
+							downRefresh = true;
+							if (currentTab == 'crm') {
+								getCustomerList('crm', false);
+							} else if (currentTab == 'customer') {
+								getCustomerList('customer', false);
+							} else if (currentTab == 'friend') {
+								getCustomerList('friend', false);
+							}
+							// getMemberInfo();
+						}
+					}
 				}
 			});
 
@@ -627,6 +645,7 @@
 			var timer = null;
 			var self = null;
 			var webviewHeight = 0;
+			var downRefresh = false;
 
 			var nativeWebview, imm, InputMethodManager;
 			var initNativeObjects = function() {
@@ -694,7 +713,7 @@
 
 				//自定义事件监听-首页新增朋友点击
 				window.addEventListener('newFriend', function() {
-					mui.trigger(document.querySelector('.switch1_content[data-id=fiend]'), 'tap');
+					mui.trigger(document.querySelector('.switch1_content[data-id=friend]'), 'tap');
 				})
 
 				//自定义事件监听-刷新新增客户
@@ -1149,6 +1168,12 @@
 					// 					document.getElementById('list_container').innerHTML = html;
 					// 					eventInit();
 					// 					indexInit();
+					if (downRefresh) {
+						setTimeout(function() {
+							mui('.mui-content').pullRefresh().endPulldownToRefresh();
+						}, 1000)
+						downRefresh = false;
+					}
 				}, 'json')
 			}
 

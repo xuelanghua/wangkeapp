@@ -708,6 +708,8 @@ function pushCallback(data, event) {
 					mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
 					mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
 					mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
+				} else if (url == 'logout') {
+					fnLogout();
 				} else {
 					mui.fire(plus.webview.getWebviewById(url), 'refresh');
 				}
@@ -740,6 +742,8 @@ function pushCallback(data, event) {
 				mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
 				mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
 				mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
+			}  else if (url == 'logout') {
+				fnLogout();
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
@@ -808,21 +812,103 @@ function baseImgFile(uid, base64, quality, callback) {
 	});
 }
 
+function fnLogout() {
+	plus.nativeUI.alert('您的账号在其他设备登录,本设备被强制退出!', function() {
+		localStorage.removeItem("user");
+		var login = plus.webview.create("login.html", "login", {
+			statusbar: {
+				background: '#122c9a'
+			}
+		}, '');
+		
+		// 获取所有Webview窗口
+		var curr = plus.webview.currentWebview();
+		var wvs = plus.webview.all();
+		if (plus.os.name == "iOS") {
+			mui.get($ajaxUrl + 'member', {
+				action: 'login_type',
+			}, function(res) {
+				if (res.data == 1) {
+					for (var i = 0; i < wvs.length; i++) {
+						if (wvs[i].getURL() == curr.getURL()) {
+							continue;
+						} else {
+							plus.webview.close(wvs[i]);
+						}
+					}
+					fnOpenWin('/html/login.html', 'login', {
+						statusbar: {
+							background: '#122c9a'
+						}
+					}, '', 'slide-in-bottom');
+					curr.hide();
+					curr.close();
+				} else {
+					for (var i = 0; i < wvs.length; i++) {
+						if (wvs[i].getURL() == curr.getURL()) {
+							continue;
+						} else {
+							plus.webview.close(wvs[i]);
+						}
+					}
+					fnOpenWin('/html/mobile_login.html', 'mobile_login', {
+						statusbar: {
+							background: '#2289FF'
+						}
+					}, '', 'slide-in-bottom');
+					curr.hide();
+					curr.close();
+				}
+			}, 'json');
+		} else {
+			// plus.runtime.restart();
+			for (var i = 0; i < wvs.length; i++) {
+				if (wvs[i].getURL() == curr.getURL()) {
+					continue;
+				} else {
+					plus.webview.close(wvs[i]);
+				}
+			}
+			fnOpenWin('/html/login.html', 'login', {
+				statusbar: {
+					background: '#122c9a'
+				}
+			}, '', 'slide-in-bottom');
+			curr.hide();
+			curr.close();
+		}
+	})
+}
+
 //监听网络状态 
-function onNetChange(){
+function onNetChange() {
 	var nt = plus.networkinfo.getCurrentType();
-	switch (nt){
+	switch (nt) {
+		case 1:
+		console.log('offline');
+		fnOpenWin('/html/network_outage.html', 'network_outage', {
+			statusbar: {
+				background: '#FFF'
+			}
+		}, '', 'slide-in-bottom');
+		break;
 		case plus.networkinfo.CONNECTION_ETHERNET:
 		case plus.networkinfo.CONNECTION_WIFI:
-		alert("Switch to Wifi networks!"); 
+		var web = plus.webview.getWebviewById('network_outage');
+		if (web) {
+			plus.webview.close('network_outage', 'none');
+		}
 		break; 
 		case plus.networkinfo.CONNECTION_CELL2G:
 		case plus.networkinfo.CONNECTION_CELL3G:
 		case plus.networkinfo.CONNECTION_CELL4G:
-		alert("Switch to Cellular networks!");  
+		var web = plus.webview.getWebviewById('network_outage');
+		if (web) {
+			plus.webview.close('network_outage', 'none');
+		}  
 		break; 
 		default:
-		alert("Not networks!"); 
+		console.log('netchange');
 		break;
 	}
 }

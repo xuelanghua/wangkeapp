@@ -137,7 +137,6 @@
 			pushInit();
 			// plus.webview.currentWebview().opener().close(); 
 			var view = plus.webview.currentWebview().opener();
-			logs(view);
 			// plus.webview.hide('view', 'none');
 			// plus.webview.close('view', 'none');
 			// var main = plus.android.runtimeMainActivity();
@@ -170,6 +169,8 @@
 				// console.log('打印');
 				mui.trigger(document.getElementById('user'), 'tap');
 			})
+			
+			document.addEventListener('netchange', onNetChange, false);
 
 			//自定义事件-登录成功
 			window.addEventListener('loginSuccess', function() {
@@ -199,6 +200,15 @@
 			window.addEventListener('refreshNotice', function() {
 				getUnreadMessage();
 			})
+			
+			var nt = plus.networkinfo.getCurrentType();
+			if (nt == 1) {
+				fnOpenWin('/html/network_outage.html', 'network_outage', {
+					statusbar: {
+						background: '#FFF'
+					}
+				}, '', 'slide-in-bottom');
+			}
 
 			//设置currentTab
 			currentTab = mui('#bar .tab-item')[0];
