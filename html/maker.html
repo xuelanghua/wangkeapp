@@ -10,9 +10,9 @@
 			.my-equity{
 				height: 100%;
 				width: auto;
-				padding: 0 0.1rem;
+				padding: 0 10px;
 				margin-right: -10px;
-				font-size: 0.28rem;
+				font-size: 14px;
 				position: relative;
 				z-index: 12;
 				display: flex;
@@ -220,7 +220,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">会员中心</h1>
@@ -295,27 +295,24 @@
 				pageNum = 0;
 			var app = new Vue({
 				el: "#mui-content",
-				data() {
-					return {
-						memberInfo: {
-							group_name: '创客',
-							position: '大区经理',
-							expire_time: '2019-06-19',
-							group_annual_fee: '199',
-							activation_code: '0/0',
-							service_award: 0,
-							recommended_award: 0,
-							wang: '0'
-						},
-						fansLists: []
-					}
+				data: {
+					memberInfo: {
+						group_name: '创客',
+						position: '大区经理',
+						expire_time: '2019-06-19',
+						group_annual_fee: '199',
+						activation_code: '0/0',
+						service_award: 0,
+						recommended_award: 0,
+						wang: '0'
+					},
+					fansLists: []
 				},
-				mounted: () => {
+				mounted: function() {
 					mui.plusReady(function() {
 						document.querySelector(".mui-content").classList.remove('mui-hidden');
 						getMemberInfo();
 						getFans();
-
 						window.addEventListener('activateSuccess', function() {
 							setTimeout(function() {
 								getMemberInfo();
@@ -345,7 +342,7 @@
 						})
 						// 我的权益
 						mui("header").on('tap', '.my-equity', function() {
-							openPage('equities_page.html','equities_page','#f7f7f7','');
+							openPage('equities_page.html', 'equities_page', '#f7f7f7', '');
 						})
 					})
 				},
