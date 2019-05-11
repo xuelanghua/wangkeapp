@@ -5,6 +5,8 @@ doctype html>
 		<meta charset="utf-8">
 		<title>二维码名片</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
 			.mui-content {
@@ -139,7 +141,7 @@ doctype html>
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">二维码名片</h1>
@@ -162,7 +164,7 @@ doctype html>
 						<div class="line"></div>
 						<div class="right-semicircle"></div>
 					</div> -->
-					<img id="qr-img" class="qr-img" src="../image/scan-qr.png">
+					<img id="qr-img" class="qr-img" src="../image/QR.png">
 					<img class="logo-img" src="../image/wangkelogo.png">
 				</div>
 				<div class="operation-section">
@@ -175,9 +177,9 @@ doctype html>
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
-	<script src="../js/vue.min.js"></script>
 	<script src="../js/Zepto.min.js"></script>
 	<script src="../js/canvas2image.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script src="../js/html2canvas.min.js"></script>
 	<script type="text/javascript">
 		mui.init({
@@ -189,7 +191,6 @@ doctype html>
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 		// 初始化字体大小结束
 
 		var imgPath = "";
@@ -270,11 +271,9 @@ doctype html>
 			plus.nativeUI.showWaiting();
 			html2canvas(document.getElementById("code-body"), {
 				useCORS: true
-			}).then(canvas => {
+			}).then(function(canvas){
 				var imgUrl = canvas.toDataURL("image/jpeg", 1);
 				baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
-				// baseImgFile('codeImg', imgUrl, 100, function(i) {
-					// plus.nativeUI.alert(i.target);
 					if (tips) {
 						message(tips);
 					}
