@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/vip-page.css" rel="stylesheet" />
+		<style>
+			.code-cont .mui-icon {
+				color: #999999 !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">激活码升级</h1>
+		</header>
+		<div id="mui-content" class="mui-content activation-container">
+			<div class="mui-input-row">
+				<label>激活码</label>
+				<input id="search" type="text" v-model="keyCode" placeholder="请输入你的激活码">
+				<span v-show="keyCode" class="mui-icon mui-icon-clear" @tap="keyCode=''"></span>
+			</div>
+			<div class="mui-content-padded">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="activate">立即激活</button>
+			</div>
+		</div>
+
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					plus.navigator.setStatusBarStyle('light');
+				}
+			});
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+			
+			var userInfo = getUserInfo();
+			
+			var app = new Vue({
+				el: "#mui-content",
+				data() {
+					return {
+						keyCode: ''
+					}
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						document.getElementById("search").addEventListener("keypress", function(event) {
+							var search = app.keyCode;
+							var keyword = search.replace(/^\s*|\s*$/g, "");
+							if (keyword != '') {
+								if (event.keyCode == "13") {
+									plus.key.hideSoftKeybord();
+									upgrade();
+								}
+								event.preventDefault();
+							} else {
+								message("激活码不能为空");
+								this.focus();
+							}
+						});
+						mui('.mui-content').on('tap', '#activate', function() {
+							upgrade();
+						})
+
+						function upgrade() {
+							mui.post($ajaxUrl + 'member&action=upgrade_by_code', {
+								token: userInfo.token,
+								activation_code: app.keyCode
+							}, function(res) {
+								logs(res);
+								if (res.errno == 0) {
+									message("升级成功！");
+									mui.fire(plus.webview.getWebviewById('user'), 'reloadMyself');
+									var cPage = plus.webview.currentWebview();
+									var bPage = cPage.opener();
+									var aPage = bPage.opener();
+									plus.webview.hide(aPage);
+									plus.webview.hide(bPage);
+									plus.webview.close(aPage);
+									plus.webview.close(bPage);
+									setTimeout(function() {
+										plus.webview.hide(cPage, "fade-out");
+										plus.webview.close(cPage);
+									}, 900);
+								} else {
+									message(res.message);
+								}
+							}, 'json');
+						}
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>
