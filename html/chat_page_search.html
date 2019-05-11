@@ -96,7 +96,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">搜索</h1>
@@ -151,17 +151,15 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 			var userInfo = getUserInfo();
 			var token = userInfo.token;
 			var app = new Vue({
 				el: "#mui-content",
-				data() {
-					return {
-						customer: [],
-						crm: [],
-						friend: []
-					}
+				data: {
+					customer: [],
+					crm: [],
+					friend: []
 				},
 				created: function() {
 
@@ -257,8 +255,7 @@
 						} else {
 							message("请输入关键词！");
 						}
-					} else {
-					}
+					} else {}
 				});
 			})
 		</script>

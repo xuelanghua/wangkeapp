@@ -211,7 +211,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav activate-code-header">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">激活码</a></h1>
@@ -306,31 +306,29 @@
 			})
 			var app = new Vue({
 				el: "#mui-content",
-				data() {
-					return {
-						// 控制显示几个激活码选项
-						group_id: 5,
-						keylist: [],
-						keyDesc: '',
-						unusedNum: 0,
-						usedNum: 0,
-						fee: 0,
-						keyType: [{
-							name: '服务中心激活码',
-							id: 4
-						}, {
-							name: '服务站激活码',
-							id: 3
-						}, {
-							name: '创客激活码',
-							id: 2
-						}, {
-							name: 'VIP激活码',
-							id: 1
-						}]
-					}
+				data: {
+					// 控制显示几个激活码选项
+					group_id: 5,
+					keylist: [],
+					keyDesc: '',
+					unusedNum: 0,
+					usedNum: 0,
+					fee: 0,
+					keyType: [{
+						name: '服务中心激活码',
+						id: 4
+					}, {
+						name: '服务站激活码',
+						id: 3
+					}, {
+						name: '创客激活码',
+						id: 2
+					}, {
+						name: 'VIP激活码',
+						id: 1
+					}]
 				},
-				created: () => {
+				created: function() {
 					var ishow = true;
 					// 初始化字体大小
 					var viewport = document.documentElement.clientWidth;
@@ -351,8 +349,7 @@
 						getlist(1);
 					});
 				},
-				mounted: () => {
-					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+				mounted: function() {
 					mui('#middlePopover').on('tap', 'li', function() {
 						mui('#middlePopover').popover('hide');
 						var btn = mui("#action-btn");

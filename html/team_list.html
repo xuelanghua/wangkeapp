@@ -10,7 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">团队列表</h1>
@@ -76,21 +76,19 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 			// 初始化字体大小结束
-			
+
 			var userInfo = getUserInfo();
 			var vm = new Vue({
 				el: '.mui-content',
-				data() {
-					return {
-						createList: null,
-						joinList: null,
-						createFlag: false,
-						joinFlag: false
-					}
+				data: {
+					createList: null,
+					joinList: null,
+					createFlag: false,
+					joinFlag: false
 				},
-				mounted: () => {
+				mounted: function() {
 					mui.plusReady(function() {
 						window.addEventListener('refreshTeamList', function() {
 							getTeamList();
@@ -144,7 +142,7 @@
 					}
 				}
 			})
-			
+
 			function getTeamList() {
 				mui.post($ajaxUrl + 'team&action=team_list', {
 					token: userInfo.token

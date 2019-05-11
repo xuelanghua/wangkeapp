@@ -73,32 +73,32 @@
 	<body style="background-color: #2289FF;">
 		<header class="mui-bar mui-bar-nav" style="background-color: #2289FF;box-shadow: none;">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;"></div>
-			<h1 class="mui-title"style="color: #FFFFFF;">收款码</h1>
+			<h1 class="mui-title" style="color: #FFFFFF;">收款码</h1>
 		</header>
-		
+
 		<div class="mui-content" style="background-color: #2289FF;">
 			<div class="content">
 				<h4>
 					<span>{{ receipt }}</span>
 				</h4>
 				<div class="QR-code">
-					<img src="../image/QR.png" >
+					<img src="../image/QR.png">
 				</div>
 				<div class="Amount-of-money">
-					<input type="number" v-model="fee" placeholder="设置收款金额"/>
+					<input type="number" v-model="fee" placeholder="设置收款金额" />
 					<div class="Eliminate" @tap="clear">清除</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="Collection_records">
 					<span>
-						<img src="../image/collection_records.png" >
+						<img src="../image/collection_records.png">
 					</span>
 					<span>收款记录</span>
-					<img class="mui-pull-right tujt" src="../image//iconrighth.png" >
+					<img class="mui-pull-right tujt" src="../image//iconrighth.png">
 				</div>
 			</div>
 		</div>
-		
+
 	</body>
 
 </html>
@@ -111,19 +111,17 @@
 		beforeback: function() {
 			clearInterval();
 			setStatusBar('#FFF', 'dark');
-		}	
+		}
 	});
-	
+
 	var userInfo = getUserInfo();
 	var vm = new Vue({
 		el: '.mui-content',
-		data() {
-			return {
-				fee: ''
-			}
+		data: {
+			fee: ''
 		},
 		mounted: function() {
-			mui.plusReady(function () {
+			mui.plusReady(function() {
 				getReceiptQrcode();
 				setInterval(function() {
 					getReceiptQrcode();
@@ -145,12 +143,15 @@
 			}
 		}
 	})
-	
+
 	/**
 	 * 获取收款二维码
 	 */
 	function getReceiptQrcode() {
-		mui.post($ajaxUrl + 'userqrcode&action=receipt', {fee: vm.fee, token: userInfo.token}, function(res) {
+		mui.post($ajaxUrl + 'userqrcode&action=receipt', {
+			fee: vm.fee,
+			token: userInfo.token
+		}, function(res) {
 			if (res.errno == 0) {
 				var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 				document.querySelector('.QR-code img').setAttribute('src', url);

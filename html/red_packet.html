@@ -172,15 +172,13 @@
 			var userInfo = getUserInfo();
 			var vm = new Vue({
 				el: ".mui-content",
-				data() {
-					return {
-						balance: '0.00',
-						promote: '0.00',
-						chat: '0.00',
-						recordList: [],
-					}
+				data: {
+					balance: '0.00',
+					promote: '0.00',
+					chat: '0.00',
+					recordList: [],
 				},
-				created: () => {
+				created: function() {
 					// 初始化字体大小
 					var viewport = document.documentElement.clientWidth;
 					if (viewport > 750) {
@@ -192,7 +190,7 @@
 						getRedpackInfo();
 					});
 				},
-				mounted: () => {
+				mounted: function() {
 					// 切换选项卡请求接口
 					mui('.mui-segmented-control').on('tap', 'span', function() {
 						var rtype = this.dataset.type;

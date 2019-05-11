@@ -84,7 +84,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">付款</h1>
@@ -124,9 +124,9 @@
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 		// 初始化字体大小结束
-		
+
 		//支付相关变量
 		var payType = 'wxpay';
 		var wxChannel = null; // 微信支付
@@ -134,18 +134,16 @@
 		var channel = null; //支付通道
 		var ALIPAYSERVER = $ajaxUrl + 'member&action=receipt';
 		var WXPAYSERVER = $ajaxUrl + 'member&action=receipt';
-		
+
 		var userInfo = getUserInfo();
 		var vm = new Vue({
 			el: '.mui-content',
-			data() {
-				return {
-					fee: 0,
-					user_id: 0,
-					nickname: '',
-					avatar: '',
-					disable: true
-				}
+			data: {
+				fee: 0,
+				user_id: 0,
+				nickname: '',
+				avatar: '',
+				disable: true
 			},
 			mounted: function() {
 				mui.plusReady(function() {
@@ -161,7 +159,7 @@
 					}, function(e) {
 						plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
 					});
-					
+
 					var self = plus.webview.currentWebview();
 					vm.fee = parseInt(self.fee);
 					vm.user_id = parseInt(self.uid);
@@ -169,7 +167,7 @@
 						vm.disable = false;
 					}
 					getPaymentUserInfo();
-					
+
 					//支付
 					mui('.mui-content').on('tap', '.mui-pay', function() {
 						pay(payType);
@@ -177,25 +175,24 @@
 				})
 			}
 		})
-		
+
 		//获取收款用户信息
 		function getPaymentUserInfo() {
 			mui.get($ajaxUrl + 'member', {
-					action: 'user_info',
-					user_id: vm.user_id,
-					token: userInfo.token
-				}, function(res){
-					if (res.errno == 0) {
-						vm.nickname = res.data.nickName;
-						if (typeof res.data.name != "undefined") {
-							vm.nickname += '(' + res.data.name + ')';
-						}
-						vm.avatar = res.data.avatar || res.data.avatarUrl;
+				action: 'user_info',
+				user_id: vm.user_id,
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					vm.nickname = res.data.nickName;
+					if (typeof res.data.name != "undefined") {
+						vm.nickname += '(' + res.data.name + ')';
 					}
-				}, 'json'
-			);
+					vm.avatar = res.data.avatar || res.data.avatarUrl;
+				}
+			}, 'json');
 		}
-		
+
 		// 2. 发起支付请求  
 		function pay(id) {
 			// 从服务器请求支付订单
@@ -212,7 +209,7 @@
 				message("不支持此支付通道!", 'center');
 				return;
 			}
-		
+
 			var waiting = plus.nativeUI.showWaiting();
 			mui.post(PAYSERVER, {
 				fee: vm.fee,
@@ -233,7 +230,7 @@
 						timestamp: data.timeStamp,
 						sign: data.paySign
 					};
-		
+
 					plus.payment.request(channel, param, function(result) {
 						//                  	console.log(JSON.stringify(result));
 						plus.nativeUI.alert("支付成功！", function() {
@@ -247,7 +244,7 @@
 				} else {
 					plus.nativeUI.alert(res.message, null, '提示');
 				}
-			}, 'json') 
+			}, 'json')
 		}
 	</script>
 </html>

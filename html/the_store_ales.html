@@ -89,7 +89,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">店铺营收</h1>
@@ -140,7 +140,7 @@
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		 
 		// 初始化字体大小结束
 		mui.plusReady(function() {})
 		mui('.mui-content').on('tap', '.mui-table-view-cell', function() {
@@ -196,8 +196,7 @@
 
 		var vm = new Vue({
 			el: '.mui-content',
-			data() {
-				return {
+			data:{
 					days: 7,
 					item1: true,
 					item2: false,
@@ -205,7 +204,6 @@
 					total: 0.00,
 					unit: 0.00,
 					average: 0.00,
-				}
 			},
 			mounted: function() {
 				myChart = echarts.init(document.getElementById('main'), 'macarons');

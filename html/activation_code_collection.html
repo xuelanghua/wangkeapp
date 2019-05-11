@@ -8,7 +8,7 @@
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
 		<style type="text/css">
-			.mui-content{
+			.mui-content {
 				height: 100vh;
 			}
 		</style>
@@ -54,45 +54,43 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 			// vue实例初始化
 			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#collections",
-				data() {
-					return {
-						wang: 0,
-						groupId: userInfo.group_id,
-						codeList: {
-							"1": {
-								id: 1,
-								number: '',
-								wang: 0,
-								name: ''
-							},
-							"2": {
-								id: 2,
-								number: '',
-								wang: 0,
-								name: ''
-							},
-							"3": {
-								id: 3,
-								number: '',
-								wang: 0,
-								name: ''
-							},
-							"4": {
-								id: 4,
-								number: '',
-								wang: 0,
-								name: '',
-							}
+				data: {
+					wang: 0,
+					groupId: userInfo.group_id,
+					codeList: {
+						"1": {
+							id: 1,
+							number: '',
+							wang: 0,
+							name: ''
 						},
-						group: []
-					}
+						"2": {
+							id: 2,
+							number: '',
+							wang: 0,
+							name: ''
+						},
+						"3": {
+							id: 3,
+							number: '',
+							wang: 0,
+							name: ''
+						},
+						"4": {
+							id: 4,
+							number: '',
+							wang: 0,
+							name: '',
+						}
+					},
+					group: []
 				},
-				created:function() {
+				created: function() {
 					getMemberInfo();
 					getGroupList();
 				},
@@ -114,9 +112,12 @@
 								message('旺旺不足', 'center');
 								return;
 							}
-							openPage('activation_code_activation.html', 'activation_code_activation', '#f7f7f7', {codeList: app.codeList, totalWang: app.totalWang});
+							openPage('activation_code_activation.html', 'activation_code_activation', '#f7f7f7', {
+								codeList: app.codeList,
+								totalWang: app.totalWang
+							});
 						})
-						
+
 						window.addEventListener('activateSuccess', function() {
 							getMemberInfo();
 						})
@@ -124,11 +125,14 @@
 				},
 				computed: {
 					totalWang: function() {
-						return parseInt(this.codeList["1"]["wang"] * this.codeList["1"]["number"]) + parseInt(this.codeList["2"]["wang"] * this.codeList["2"]["number"]) + parseInt(this.codeList["3"]["wang"] * this.codeList["3"]["number"]) + parseInt(this.codeList["4"]["wang"] * this.codeList["4"]["number"]);
+						return parseInt(this.codeList["1"]["wang"] * this.codeList["1"]["number"]) + parseInt(this.codeList["2"][
+								"wang"
+							] * this.codeList["2"]["number"]) + parseInt(this.codeList["3"]["wang"] * this.codeList["3"]["number"]) +
+							parseInt(this.codeList["4"]["wang"] * this.codeList["4"]["number"]);
 					}
 				}
 			});
-			
+
 			//获取用户信息
 			function getMemberInfo() {
 				mui.post($ajaxUrl + 'member', {
@@ -139,7 +143,7 @@
 					app.wang = res.data.wang;
 				}, 'json');
 			}
-			
+
 			//获取会员等级列表
 			function getGroupList() {
 				mui.post($ajaxUrl + 'member', {
@@ -168,7 +172,6 @@
 			// 		mui.back();
 			// 	}
 			// }, 'json');
-			
 		</script>
 	</body>
 </html>

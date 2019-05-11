@@ -90,7 +90,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">服务奖</h1>
@@ -159,16 +159,14 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+			 
 			// 初始化字体大小结束
 			var app = new Vue({
 				el: '#mui-content',
-				data() {
-					return {
+				data:{
 						serviceAward: {},
 						currentTime: formatDate('y-m', ''),
 						showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
-					}
 				},
 				created: function() {
 					getServiceAward();

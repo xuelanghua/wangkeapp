@@ -13,7 +13,7 @@
 				border-radius: 0.1rem;
 				width: 6.25rem;
 				overflow: hidden;
-				background: rgba(0,0,0,0.0);
+				background: rgba(0, 0, 0, 0.0);
 				box-shadow: none;
 			}
 
@@ -143,8 +143,8 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-			
+
+
 			var userInfo = getUserInfo();
 			//支付相关变量
 			var payType = 'wxpay';
@@ -156,13 +156,11 @@
 			// vue实例初始化
 			var app = new Vue({
 				el: "#collections",
-				data() {
-					return {
-						codeList: null,
-						totalWang: 0,
-						fee: 0,
-						balance: 0
-					}
+				data: {
+					codeList: null,
+					totalWang: 0,
+					fee: 0,
+					balance: 0
 				},
 				created: function() {
 					getMemberInfo();
@@ -180,7 +178,7 @@
 						}, function(e) {
 							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
 						});
-						
+
 						var self = plus.webview.currentWebview();
 						app.codeList = self.codeList;
 						app.totalWang = self.totalWang;
@@ -189,14 +187,14 @@
 						mui("#popover").on('tap', '.close-btn', function() {
 							mui('.mui-popover').popover('hide', document.getElementById("openPopover"));
 						})
-						
+
 						mui("#popover").on('tap', '.immediate-use', function() {
 							plus.webview.close('activate_code', 'none');
 							plus.webview.close('activation_code_collection', 'none');
 							plus.webview.close('activation_code_activation', 'none');
-							openPage('activate_code.html','activate_code','#f7f7f7','');
+							openPage('activate_code.html', 'activate_code', '#f7f7f7', '');
 						})
-						
+
 						mui('.mui-content').on('tap', '.confirm-payment', function() {
 							payType = mui('input[name=radio1]:checked')[0].value;
 							pay(payType);
@@ -205,7 +203,7 @@
 					});
 				}
 			});
-			
+
 			//获取用户信息
 			function getMemberInfo() {
 				mui.post($ajaxUrl + 'member', {
@@ -216,7 +214,7 @@
 					app.blance = res.data.balance;
 				}, 'json');
 			}
-			
+
 			// 2. 发起支付请求  
 			function pay(id) {
 				// 从服务器请求支付订单
@@ -233,7 +231,7 @@
 					message("不支持此支付通道!", 'center');
 					return;
 				}
-			
+
 				var waiting = plus.nativeUI.showWaiting();
 				mui.post(PAYSERVER, {
 					code_list: app.codeList,
@@ -255,13 +253,13 @@
 							timestamp: data.timeStamp,
 							sign: data.paySign
 						};
-			
+
 						plus.payment.request(channel, param, function(result) {
 							updateUserInfo();
 							mui.fire(plus.webview.getWebviewById('activation_code_collection'), 'activateSuccess');
 							mui.fire(plus.webview.getWebviewById('maker'), 'activateSuccess');
 							mui.fire(plus.webview.getWebviewById('agent'), 'activateSuccess');
-							mui('.mui-popover').popover('show',document.getElementById("openPopover"));
+							mui('.mui-popover').popover('show', document.getElementById("openPopover"));
 							// plus.nativeUI.alert("兑换成功！", function() {
 							// 	plus.navigator.setStatusBarStyle('dark');
 							// 	mui.back();

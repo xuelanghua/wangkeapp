@@ -101,7 +101,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">续费升级</h1>
@@ -157,16 +157,14 @@
 			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
-				data() {
-					return {
-						severlist: []
-					}
+				data: {
+					severlist: []
 				},
 				created: function() {
 					getUserUpgradeInfo();
 				},
 				mounted: function() {
-					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 					mui.plusReady(function() {
 						setTimeout(function() {
 							mySwiper = new Swiper('.swiper-container', {

@@ -244,7 +244,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<div id="mui-content">
 			<header class="mui-bar mui-bar-nav">
 				<a v-if="identity" class="mui-pull-left create-team-btn cancel-btn" @tap="cancelOperate">取消</a>
@@ -352,25 +352,23 @@
 		mui.init();
 		var userInfo = getUserInfo();
 		var tid = '';
-		var captainUid=0;
+		var captainUid = 0;
 		// 初始化字体大小
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 		// 初始化字体大小结束
 		var app = new Vue({
 			el: "#mui-content",
-			data() {
-				return {
-					identity: false,
-					dissolve: false,
-					iscaptain: false,
-					userData: userInfo,
-					userList: {}
-				}
+			data: {
+				identity: false,
+				dissolve: false,
+				iscaptain: false,
+				userData: userInfo,
+				userList: {}
 			},
 			methods: {
 				cancelOperate: function() {
@@ -413,11 +411,11 @@
 				mui.plusReady(function() {
 					var self = plus.webview.currentWebview();
 					tid = self.tid;
-					captainUid=self.captainUid;
-					if(captainUid==userInfo.id){
-						app.iscaptain=true;
-					}else{
-						app.iscaptain=false;
+					captainUid = self.captainUid;
+					if (captainUid == userInfo.id) {
+						app.iscaptain = true;
+					} else {
+						app.iscaptain = false;
 					}
 					logs(tid);
 					getUserData();

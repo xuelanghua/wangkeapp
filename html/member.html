@@ -198,7 +198,7 @@
 					</div>
 				</div>
 				<div v-else style="margin: 36px 0;">
-					<img style="width: 50%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png" >
+					<img style="width: 50%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png">
 					<p style="text-align: center;">您还没有粉丝</p>
 				</div>
 			</div>
@@ -217,41 +217,39 @@
 				pageNum = 0;
 			var app = new Vue({
 				el: "#mui-content",
-				data() {
-					return {
-						memberInfo: {},
-						fansLists: []
-					}
+				data: {
+					memberInfo: {},
+					fansLists: []
 				},
-				created: () => {
+				created: function() {
 					mui.init();
 					mui.plusReady(function() {
 						getMemberInfo();
 						getFans();
 					})
 				},
-				mounted: () => {
-					mui.plusReady(function () {
+				mounted: function() {
+					mui.plusReady(function() {
 						window.addEventListener('activateSuccess', function() {
 							setTimeout(function() {
 								getMemberInfo();
 							}, 1000)
 						})
-					    mui(".mui-content").on("tap", ".button", function() {
-					    	openPage('renew.html', 'renew', '#f7f7f7', '');
-					    })
-						
+						mui(".mui-content").on("tap", ".button", function() {
+							openPage('renew.html', 'renew', '#f7f7f7', '');
+						})
+
 						// 跳转到粉丝页面
 						mui(".mui-content").on("tap", ".mui-navigate-right", function() {
 							openPage('my_fans.html', 'my_fans', '#f7f7f7', '');
 						})
-						
+
 						// 我的权益
 						mui("header").on('tap', '.my-equity', function() {
-							openPage('equities_page.html','equities_page','#f7f7f7','');
+							openPage('equities_page.html', 'equities_page', '#f7f7f7', '');
 						})
 					})
-					
+
 				}
 			})
 

@@ -23,7 +23,7 @@
 
 			#recharge,
 			#cash {
-				border: 1px solid rgba(255,255,255,.6);
+				border: 1px solid rgba(255, 255, 255, .6);
 			}
 		</style>
 	</head>
@@ -92,7 +92,7 @@
 						</li>
 					</template>
 					<div v-else class="void">
-						<img style="width: 60%;display: block;margin: 0 auto; margin-top: 80px;" class="no-friends" src="../image/icon/void-data.png" >
+						<img style="width: 60%;display: block;margin: 0 auto; margin-top: 80px;" class="no-friends" src="../image/icon/void-data.png">
 						<!-- <p style="text-align: center;">暂无明细~</p> -->
 					</div>
 				</ul>
@@ -116,14 +116,12 @@
 			skip = 1;
 		var vm = new Vue({
 			el: '#mui-content',
-			data() {
-				return {
-					balance: '0.00',
-					balanceData: {},
-					currentTime: formatDate('y-m', ''),
-					type: 0,
-					profit: 0,
-				}
+			data: {
+				balance: '0.00',
+				balanceData: {},
+				currentTime: formatDate('y-m', ''),
+				type: 0,
+				profit: 0,
 			},
 			mounted: function() {
 				mui.init({
@@ -156,7 +154,7 @@
 							location.reload();
 						}, 1000);
 					})
-					
+
 					window.addEventListener('withdrawDepositSuccess', function() {
 						getMemberInfo();
 						getUserBalanceLog();
@@ -164,7 +162,7 @@
 					getMemberInfo();
 					getUserBalanceLog();
 				})
-				
+
 				mui('.mui-content').on('tap', '#recharge', function() {
 					openPage('recharge.html', 'recharge', '#f7f7f7', '')
 					setStatusBar('', 'dark');
@@ -204,7 +202,7 @@
 				}
 			}, 'json');
 		}
-		
+
 		//获取用户信息
 		function getMemberInfo() {
 			mui.post($ajaxUrl + 'member', {

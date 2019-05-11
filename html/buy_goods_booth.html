@@ -110,7 +110,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">商品位购买</h1>
@@ -170,7 +170,7 @@
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 		// 初始化字体大小结束
 
 		var userInfo = getUserInfo();
@@ -183,14 +183,12 @@
 		var WXPAYSERVER = $ajaxUrl + 'member&action=goods_number';
 		var app = new Vue({
 			el: "#goods-booth",
-			data() {
-				return {
-					number: 0,
-					price: 0,
-					list: null
-				}
+			data: {
+				number: 0,
+				price: 0,
+				list: null
 			},
-			created: () => {
+			created: function() {
 
 			},
 			mounted: function() {
@@ -225,7 +223,7 @@
 				// this.price = document.querySelector('input[name=meal]:checked').value;
 			},
 			methods: {
-				itemChange:function(p, n){
+				itemChange: function(p, n) {
 					this.price = p;
 					this.number = n;
 				}

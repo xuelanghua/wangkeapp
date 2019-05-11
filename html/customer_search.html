@@ -28,13 +28,14 @@
 			.mui-table-view-cell.mui-active {
 				background-color: #FFFFFF;
 			}
-			#search .lately-add-cont ul{
+
+			#search .lately-add-cont ul {
 				min-height: 85.5vh;
 			}
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">添加好友</h1>
@@ -43,7 +44,7 @@
 			<div class="lately-add-cont" v-if="result">
 				<h5>搜索结果</h5>
 				<ul>
-					<li class="mui-table-view-cell" v-for="items in lists"  v-on:click.stop="toDetail(items.uid)">
+					<li class="mui-table-view-cell" v-for="items in lists" v-on:click.stop="toDetail(items.uid)">
 						<div class="head-img">
 							<img :src="items.avatar">
 						</div>
@@ -56,7 +57,7 @@
 				</ul>
 			</div>
 			<div class="no-history" v-else>
-				<img style="width: 60%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-seach-result.png" >
+				<img style="width: 60%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-seach-result.png">
 				<p style="text-align: center;">没有符合的搜索结果</p>
 			</div>
 		</div>
@@ -75,11 +76,9 @@
 			// 初始化字体大小结束
 			var app = new Vue({
 				el: "#search",
-				data() {
-					return {
-						result:true,
-						lists: []
-					}
+				data: {
+					result: true,
+					lists: []
 				},
 				created: function() {
 					mui.plusReady(function() {
@@ -94,7 +93,7 @@
 								if (res.errno == 0) {
 									app.lists = res.data;
 								} else {
-									app.result=false;
+									app.result = false;
 									// message(res.message);
 								}
 							}, 'json')
@@ -103,18 +102,18 @@
 						}
 					})
 				},
-				mounted:function(){
-					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+				mounted: function() {
+
 				},
-				methods:{
-					toDetail:function(fid){
-						openPage('friends_detail.html','friends_detail','#f7f7f7',{
-							fid:fid
+				methods: {
+					toDetail: function(fid) {
+						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+							fid: fid
 						});
 					},
-					addFriend:function(fid){
-						openPage('friend_verification.html','friend_verification','#f7f7f7',{
-							fid:fid
+					addFriend: function(fid) {
+						openPage('friend_verification.html', 'friend_verification', '#f7f7f7', {
+							fid: fid
 						});
 					}
 				}

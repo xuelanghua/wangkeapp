@@ -115,7 +115,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav target-detail-header">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">目标详情</h1>
@@ -241,31 +241,29 @@
 			var myDate = new Date();
 			var app = new Vue({
 				el: "#targetDetail",
-				data() {
-					return {
-						plan: {
-							exposure_rate: 0,
-							new_customer: 0,
-							customer_follow: 0,
-							communication: 0,
-							share_card: 0,
-							deal: 0
-						},
-						finish: {
-							exposure_rate: 0,
-							new_customer: 0,
-							customer_follow: 0,
-							share_card: 0,
-							communication: 0,
-							deal: 0
-						},
-						titles: ['曝光', '拓客', '客户跟进', '有效沟通', '转介绍', '成交']
-					}
+				data: {
+					plan: {
+						exposure_rate: 0,
+						new_customer: 0,
+						customer_follow: 0,
+						communication: 0,
+						share_card: 0,
+						deal: 0
+					},
+					finish: {
+						exposure_rate: 0,
+						new_customer: 0,
+						customer_follow: 0,
+						share_card: 0,
+						communication: 0,
+						deal: 0
+					},
+					titles: ['曝光', '拓客', '客户跟进', '有效沟通', '转介绍', '成交']
 				},
 				mounted: function() {
 					mui.plusReady(function() {
 						// 拿到从团队成员页面传过来的uid
-						var _self=plus.webview.currentWebview();
+						var _self = plus.webview.currentWebview();
 						if (_self.uid) {
 							uid = _self.uid;
 							document.querySelector('.my-target-menu').style.display = 'none';
@@ -391,7 +389,7 @@
 						$(".play-control .play-status").removeClass("active");
 						$("#audio-control").addClass("play").removeClass("pause");
 					})
-					
+
 					//编辑目标
 					mui(".my-target-card .mui-card-footer").on("tap", ".target-edit", function() {
 						var audio = document.getElementById("audio");
@@ -404,7 +402,7 @@
 							}
 						}, '', 'slide-in-right');
 					})
-					document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 				}
 			})
 
@@ -413,7 +411,7 @@
 					action: 'detail',
 					token: userInfo.token,
 					date: selectTime, //"01" 
-					pattern: timeType ,// 1天 2月 3年
+					pattern: timeType, // 1天 2月 3年
 					uid: uid
 				}, function(res) {
 					app.plan = res.data.plan;
@@ -434,7 +432,7 @@
 					$(".target-modal-frame").addClass("active");
 				}
 			})
-			
+
 			// 关闭我的目标
 			mui(".my-target-card .mui-card-footer").on("tap", ".close-btn", function() {
 				var audio = document.getElementById("audio");

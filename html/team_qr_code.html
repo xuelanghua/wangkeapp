@@ -111,7 +111,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">团队二维码</h1>
@@ -152,18 +152,16 @@
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+		 
 		// 初始化字体大小结束
 		
 		var userInfo = getUserInfo();
 		var vm = new Vue({
 			el: '.mui-content',
-			data() {
-				return {
+			data:{
 					teamName: '',
 					teamId: 0,
 					qrcodeImage: '../image/scan-qr.png'
-				}
 			},
 			mounted: function() {
 				mui.plusReady(function() {

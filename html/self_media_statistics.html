@@ -50,7 +50,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">自媒体广告</h1>
@@ -97,41 +97,40 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 			// 初始化字体大小结束
-			
+
 			var userInfo = getUserInfo();
 			var vm = new Vue({
 				el: '.nui-content',
-				data() {
-					return {
-						articleList: null,
-					}
+				data: {
+					articleList: null,
 				},
-				mounted:function() {
+				mounted: function() {
 					mui.plusReady(function() {
 						eventInit();
 						// userArticleList();
 					})
 				}
 			});
-			
+
 			//事件初始化
 			function eventInit() {
 				mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
 					var id = this.dataset.id;
-					openPage('self_media_statistics_detail.html', 'self_media_statistics_detail', '#f7f7f7', {id: id})
+					openPage('self_media_statistics_detail.html', 'self_media_statistics_detail', '#f7f7f7', {
+						id: id
+					})
 				})
 			}
-			
+
 			function userArticleList() {
 				mui.get($ajaxUrl + 'article', {
-						action: 'user_article',
-						token: userInfo.token
-					}, function(res){
-						vm.articleList = res.data;
-					}, 'json'
-				);
+					action: 'user_article',
+					token: userInfo.token
+				}, function(res) {
+					vm.articleList = res.data;
+				}, 'json');
 			}
 		</script>
 	</body>

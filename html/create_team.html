@@ -118,7 +118,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">创建团队</h1>
@@ -203,17 +203,15 @@
 		// 初始化字体大小结束
 		var app = new Vue({
 			el: '#create-team',
-			data() {
-				return {
-					headImg: [],
-					uids: [],
-					teamName: '',
-					notice: '',
-					imagePath: []
-				}
+			data: {
+				headImg: [],
+				uids: [],
+				teamName: '',
+				notice: '',
+				imagePath: []
 			},
 			mounted: function() {
-				document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 			},
 			methods: {
 				delChecked: function(i) {
@@ -224,7 +222,7 @@
 		})
 		mui(".mui-content").on('tap', '.member-selection', function() {
 			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', {
-				uids:app.uids
+				uids: app.uids
 			})
 		})
 		// 创建团队
@@ -242,8 +240,8 @@
 					setTimeout(function() {
 						plus.webview.close('create_team');
 						plus.webview.close('boss_team');
-						openPage('team_detail.html','team_detail','#f7f7f7','');	
-						}, 2000)
+						openPage('team_detail.html', 'team_detail', '#f7f7f7', '');
+					}, 2000)
 				} else {
 					message(res.message);
 				}

@@ -597,7 +597,7 @@
 					<p>提现金额</p>
 					<span>￥</span>
 					<span>
-						<input type="number" v-model="fee" name="fee"/>
+						<input type="number" v-model="fee" name="fee" />
 					</span>
 				</div>
 				<div class="tishi" v-if="!enough">
@@ -662,7 +662,7 @@
 				</div>
 				<div class="hbbj"></div>
 			</div>
-			
+
 			<div id="verift-body" class="join-team-verify" style="display: none;">
 				<div class="verift-body">
 					<div class="tips">
@@ -693,12 +693,10 @@
 			// vue实例初始化
 			var vm = new Vue({
 				el: ".mui-content",
-				data() {
-					return {
-						balance: 0,
-						fee: '',
-						enough: true
-					}
+				data: {
+					balance: 0,
+					fee: '',
+					enough: true
 				},
 				created: function() {
 					getMemberInfo();
@@ -713,7 +711,7 @@
 							}
 							vm.fee = vm.balance;
 						})
-						
+
 						mui('.mui-content').on('tap', '.tixain', function() {
 							document.activeElement.blur();
 							if (!vm.enough || !vm.fee) return;
@@ -740,7 +738,7 @@
 					}
 				}
 			});
-			
+
 			//获取用户信息
 			function getMemberInfo() {
 				logs(userInfo);
@@ -753,81 +751,80 @@
 					}
 				}, 'json');
 			}
-			
+
 			//提现操作
 			function withdrawDeposit() {
 				plus.nativeUI.showWaiting('处理中...');
 				mui.post($ajaxUrl + 'member', {
-						action: 'shop_withdraw_deposit',
-						fee: vm.fee,
-						token: userInfo.token
-					}, function(res){
-						logs(res);
-						if (res.errno == 0) {
-							message('提现成功!');
-							mui.fire(plus.webview.getWebviewById('shop_asset_management'), 'withdrawDepositSuccess');
-							setTimeout(function() {
-								mui.back();
-							}, 2000)
-						} else {
-							message(res.message);
-						}
-						plus.nativeUI.closeWaiting();
-					}, 'json'
-				);
+					action: 'shop_withdraw_deposit',
+					fee: vm.fee,
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						message('提现成功!');
+						mui.fire(plus.webview.getWebviewById('shop_asset_management'), 'withdrawDepositSuccess');
+						setTimeout(function() {
+							mui.back();
+						}, 2000)
+					} else {
+						message(res.message);
+					}
+					plus.nativeUI.closeWaiting();
+				}, 'json');
 			}
-			
-// 			$(function() {
-// 				//出现浮动层
-// 				$(".tixain").click(function() {
-// 					$(".ftc_wzsf").show();
-// 				});
-// 				//关闭浮动
-// 				$(".close").click(function() {
-// 					$(".ftc_wzsf").hide();
-// 					$(".mm_box li").removeClass("mmdd");
-// 					$(".mm_box li").attr("data", "");
-// 					i = 0;
-// 				});
-// 				//数字显示隐藏
-// 				$(".xiaq_tb").click(function() {
-// 					$(".numb_box").slideUp(500);
-// 				});
-// 				$(".mm_box").click(function() {
-// 					$(".numb_box").slideDown(500);
-// 				});
-// 				//----
-// 				var i = 0;
-// 				$(".nub_ggg li .zf_num").click(function() {
-// 
-// 					if (i < 6) {
-// 						$(".mm_box li").eq(i).addClass("mmdd");
-// 						$(".mm_box li").eq(i).attr("data", $(this).text());
-// 						i++
-// 						if (i == 6) {
-// 							setTimeout(function() {
-// 								var data = "";
-// 								$(".mm_box li").each(function() {
-// 									data += $(this).attr("data");
-// 								});
-// 							}, 100);
-// 						};
-// 					}
-// 				});
-// 
-// 				$(".nub_ggg li .zf_del").click(function() {
-// 					if (i > 0) {
-// 						i--
-// 						$(".mm_box li").eq(i).removeClass("mmdd");
-// 						$(".mm_box li").eq(i).attr("data", "");
-// 					}
-// 				});
-// 
-// 				$(".nub_ggg li .zf_empty").click(function() {
-// 					$(".mm_box li").removeClass("mmdd");
-// 					$(".mm_box li").attr("data", "");
-// 					i = 0;
-// 				});
-// 			});
+
+			// 			$(function() {
+			// 				//出现浮动层
+			// 				$(".tixain").click(function() {
+			// 					$(".ftc_wzsf").show();
+			// 				});
+			// 				//关闭浮动
+			// 				$(".close").click(function() {
+			// 					$(".ftc_wzsf").hide();
+			// 					$(".mm_box li").removeClass("mmdd");
+			// 					$(".mm_box li").attr("data", "");
+			// 					i = 0;
+			// 				});
+			// 				//数字显示隐藏
+			// 				$(".xiaq_tb").click(function() {
+			// 					$(".numb_box").slideUp(500);
+			// 				});
+			// 				$(".mm_box").click(function() {
+			// 					$(".numb_box").slideDown(500);
+			// 				});
+			// 				//----
+			// 				var i = 0;
+			// 				$(".nub_ggg li .zf_num").click(function() {
+			// 
+			// 					if (i < 6) {
+			// 						$(".mm_box li").eq(i).addClass("mmdd");
+			// 						$(".mm_box li").eq(i).attr("data", $(this).text());
+			// 						i++
+			// 						if (i == 6) {
+			// 							setTimeout(function() {
+			// 								var data = "";
+			// 								$(".mm_box li").each(function() {
+			// 									data += $(this).attr("data");
+			// 								});
+			// 							}, 100);
+			// 						};
+			// 					}
+			// 				});
+			// 
+			// 				$(".nub_ggg li .zf_del").click(function() {
+			// 					if (i > 0) {
+			// 						i--
+			// 						$(".mm_box li").eq(i).removeClass("mmdd");
+			// 						$(".mm_box li").eq(i).attr("data", "");
+			// 					}
+			// 				});
+			// 
+			// 				$(".nub_ggg li .zf_empty").click(function() {
+			// 					$(".mm_box li").removeClass("mmdd");
+			// 					$(".mm_box li").attr("data", "");
+			// 					i = 0;
+			// 				});
+			// 			});
 		</script>
 </html>

@@ -142,15 +142,13 @@
 
 			var app = new Vue({
 				el: '#mui-content',
-				data() {
-					return {
-						type: 6,
-						balanceData: {
-							list: []
-						},
-						currentTime: formatDate('y-m', ''),
-						showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
-					}
+				data: {
+					type: 6,
+					balanceData: {
+						list: []
+					},
+					currentTime: formatDate('y-m', ''),
+					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
 				},
 				mounted: function() {
 					mui.init({
@@ -170,8 +168,8 @@
 								}
 							},
 							down: {
-								style: 'circle', 
-								color: '#2289FF', 
+								style: 'circle',
+								color: '#2289FF',
 								callback: function() {
 									skip = 1;
 									getUserBalanceLog();
@@ -198,9 +196,9 @@
 						}, 300);
 						// 重新开启滚动
 						mui("body").on('tap', '.mui-btn', function() {
-							mui('#pullrefresh').pullRefresh().setStopped(false); 
+							mui('#pullrefresh').pullRefresh().setStopped(false);
 						})
-						mui('body').on('tap','.mui-backdrop',function(){
+						mui('body').on('tap', '.mui-backdrop', function() {
 							mui('#pullrefresh').pullRefresh().setStopped(false);
 						})
 					})
@@ -247,7 +245,7 @@
 			function getUserBalanceLog() {
 				console.log(app.currentTime);
 				console.log(app.type);
-				
+
 				mui.get($ajaxUrl + 'member', {
 					action: 'shop_balance_log',
 					token: userInfo.token,

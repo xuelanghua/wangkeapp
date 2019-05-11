@@ -69,7 +69,7 @@
 			}
 		</style>
 	</head>
-	<body class="mui-hidden">
+	<body>
 		<div id="vip-container" class="mui-content vip-container">
 			<div class="close-button">关闭</div>
 			<div class="activation-link">激活码激活</div>
@@ -111,8 +111,9 @@
 					<li class="mui-table-view-cell pay-type"><span>支付方式</span><span style="font-weight: normal;" class="pay-title">微信</span></li>
 					<li class="mui-table-view-cell recommend-person" v-if="recommendId==0">
 						<span>推荐人</span>
-							<input type="number" class="mui-input mui-input-clear" v-model="recommendPhone" name="recommend_phone" placeholder="输入推荐人手机号码">
-							<i v-show="recommendPhone" class="mui-icon mui-icon-clear" @tap="recommendPhone=''"></i>
+						<input type="number" class="mui-input mui-input-clear" v-model="recommendPhone" name="recommend_phone"
+						 placeholder="输入推荐人手机号码">
+						<i v-show="recommendPhone" class="mui-icon mui-icon-clear" @tap="recommendPhone=''"></i>
 					</li>
 				</ul>
 			</div>
@@ -201,12 +202,10 @@
 			//vue初始化
 			var vm = new Vue({
 				el: "#form",
-				data() {
-					return {
-						recommendId: 0,
-						recommendPhone: '',
-						group: []
-					}
+				data: {
+					recommendId: 0,
+					recommendPhone: '',
+					group: []
 				},
 				created: function() {
 					getRecommendUser();

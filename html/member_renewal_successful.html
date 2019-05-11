@@ -36,14 +36,14 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">续费成功</h1>
 		</header>
 
 		<div class="mui-content">
-			<img src="../image/vt-renew-top-img.png" >
+			<img src="../image/vt-renew-top-img.png">
 			<h4>会员{{title}}成功!</h4>
 			<span class="iKnow">知道了</span>
 		</div>
@@ -51,55 +51,53 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-		mui.init({
-			swipeBack: true
-		});
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
-		// 初始化字体大小结束
-		
-		var vm = new Vue({
-			el: '.mui-content',
-			data() {
-				return {
-					title: '续费'
-				}
-			},
-			mounted: function() {
-				mui.plusReady(function() {
-					var self = plus.webview.currentWebview();
-					vm.title = self.title;
-					mui('.mui-title')[0].innerText = vm.title + '结果';
-					mui('.mui-content').on('tap','.iKnow',function(){
-						var userInfo = getUserInfo();
-						var groupId = userInfo.group_id;
-						plus.webview.close('member', 'none');
-						plus.webview.close('maker', 'none');
-						plus.webview.close('agent', 'none');
-						if (groupId == 1) {
-							openPage('member.html', 'member', '#ffffff', '');
-						} else if (groupId == 2) {
-							openPage('maker.html', 'maker', '#f7f7f7', '');
-						} else if (groupId == 3) {
-							openPage('agent.html', 'agent', '#f7f7f7', '');
-						} else if (groupId == 4) {
-							openPage('agent.html', 'agent', '#f7f7f7', '');
-						} else if (groupId == 5) {
-							openPage('agent.html', 'agent', '#f7f7f7', '');
-						}
-						setTimeout(function() {
-							plus.webview.close('member_renewal_successful', 'none');
-						}, 1000)
-					})
-				})
+			mui.init({
+				swipeBack: true
+			});
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
 			}
-		})
-	</script>
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+
+			// 初始化字体大小结束
+
+			var vm = new Vue({
+				el: '.mui-content',
+				data: {
+					title: '续费'
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						vm.title = self.title;
+						mui('.mui-title')[0].innerText = vm.title + '结果';
+						mui('.mui-content').on('tap', '.iKnow', function() {
+							var userInfo = getUserInfo();
+							var groupId = userInfo.group_id;
+							plus.webview.close('member', 'none');
+							plus.webview.close('maker', 'none');
+							plus.webview.close('agent', 'none');
+							if (groupId == 1) {
+								openPage('member.html', 'member', '#ffffff', '');
+							} else if (groupId == 2) {
+								openPage('maker.html', 'maker', '#f7f7f7', '');
+							} else if (groupId == 3) {
+								openPage('agent.html', 'agent', '#f7f7f7', '');
+							} else if (groupId == 4) {
+								openPage('agent.html', 'agent', '#f7f7f7', '');
+							} else if (groupId == 5) {
+								openPage('agent.html', 'agent', '#f7f7f7', '');
+							}
+							setTimeout(function() {
+								plus.webview.close('member_renewal_successful', 'none');
+							}, 1000)
+						})
+					})
+				}
+			})
+		</script>
 	</body>
-	
+
 </html>

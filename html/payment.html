@@ -42,7 +42,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">商品位购买</h1>
@@ -91,9 +91,9 @@
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		document.querySelector(".mui-hidden").classList.remove("mui-hidden");
+
 		// 初始化字体大小结束
-		
+
 		var userInfo = getUserInfo();
 		//支付相关变量
 		var payType = 'wxpay';
@@ -105,16 +105,14 @@
 		var fee = 0.00;
 		var app = new Vue({
 			el: "#goods-booth",
-			data() {
-				return {
-					total: 1,
-					price: 100
-				}
+			data: {
+				total: 1,
+				price: 100
 			},
-			created: () => {
+			created: function() {
 				mui.plusReady(function() {
 					getGoodsBoothPrice();
-					
+
 					plus.payment.getChannels(function(channels) {
 						for (var i in channels) {
 							if (channels[i].id == "wxpay") {
@@ -126,7 +124,7 @@
 					}, function(e) {
 						plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
 					});
-					
+
 					//支付
 					mui('.mui-content').on('tap', '.mui-pay', function() {
 						payType = document.querySelector('input[name=radio1]:checked').value;
@@ -135,7 +133,7 @@
 							return;
 						}
 						if (payType == 'balance') {
-							
+
 						} else {
 							pay(payType);
 						}
@@ -185,18 +183,17 @@
 				}
 			}
 		})
-		
+
 		//获取商品位的价格
 		function getGoodsBoothPrice() {
 			mui.get($ajaxUrl + 'goods', {
-					action: 'booth',
-					token: userInfo.token
-				}, function(res){
-					app.price = res.data;
-				}, 'json'
-			);
+				action: 'booth',
+				token: userInfo.token
+			}, function(res) {
+				app.price = res.data;
+			}, 'json');
 		}
-		
+
 		// 2. 发起支付请求  
 		function pay(id) {
 			// 从服务器请求支付订单
@@ -213,7 +210,7 @@
 				message("不支持此支付通道!", 'center');
 				return;
 			}
-		
+
 			var waiting = plus.nativeUI.showWaiting();
 			mui.post(PAYSERVER, {
 				number: app.total,
@@ -235,7 +232,7 @@
 						timestamp: data.timeStamp,
 						sign: data.paySign
 					};
-		
+
 					plus.payment.request(channel, param, function(result) {
 						plus.nativeUI.alert("支付成功！", function() {
 							plus.navigator.setStatusBarStyle('dark');
@@ -248,7 +245,7 @@
 				} else {
 					plus.nativeUI.alert(res.message, null, '提示');
 				}
-			}, 'json') 
+			}, 'json')
 		}
 	</script>
 </html>
