@@ -400,6 +400,11 @@
 				transform: translateX(-25%);
 				-webkit-transform: translateX(-25%);
 			}
+			#inner-editor{
+				position: absolute !important;
+				z-index: -999 !important;
+				display: none !important;
+			}
 		</style>
 	</head>
 
@@ -555,9 +560,9 @@
 				}
 
 				var self = plus.webview.currentWebview();
-// 				self.setStyle({
-// 					softinputMode: "adjustResize"
-// 				});
+				// 				self.setStyle({
+				// 					softinputMode: "adjustResize"
+				// 				});
 				var chatName = self.chatName;
 				chatId = self.cid;
 				chatAvatar = self.avatar;
@@ -896,24 +901,24 @@
 					ui.footer.style.height = (ui.h.offsetHeight + footerPadding) + 'px';
 					ui.content.style.paddingBottom = ui.footer.style.height;
 				});
-				var focus = false;
-				ui.boxMsgText.addEventListener('tap', function(event) {
-					ui.boxMsgText.focus();
-					setTimeout(function() {
-						ui.boxMsgText.focus();
-					}, 0);
-					focus = true;
-					setTimeout(function() {
-						focus = false;
-					}, 1000);
-					event.detail.gesture.preventDefault();
-				}, false);
-
+				
+				// var focus = false;
+				// ui.boxMsgText.addEventListener('tap', function(event) {
+				// 	ui.boxMsgText.focus();
+				// 	setTimeout(function() {
+				// 		ui.boxMsgText.focus();
+				// 	}, 0);
+				// 	focus = true;
+				// 	setTimeout(function() {
+				// 		focus = false;
+				// 	}, 1000);
+				// 	event.detail.gesture.preventDefault();
+				// }, false);
 				//点击消息列表，关闭键盘
 				ui.areaMsgList.addEventListener('tap', function(event) {
-					if (!focus) {
+					// if (!focus) {
 						ui.boxMsgText.blur();
-					}
+					// }
 				})
 				// 清除全部聊天记录
 				mui('.mui-content').on("tap", ".send-verify", function() {
@@ -961,7 +966,7 @@
 								bindMsgList();
 								ui.areaMsgList.scrollTop = 300;
 							} else {
-								recordData.data=[];
+								recordData.data = [];
 								recordData.data = res.data;
 								for (var index in res.data) {
 									lastIndex = index;
@@ -971,7 +976,7 @@
 							}
 						} else {
 							if (!loadMore) {
-								recordData.data=[];
+								recordData.data = [];
 								recordData.data = res.data;
 								for (var index in res.data) {
 									lastIndex = index;
@@ -1064,23 +1069,22 @@
 						message("您的手机不支持 WebSocket!");
 					}
 				}
-				
-				
+
+
 				//修改当前聊天消息状态
 				function readMessage() {
-					mui.post($ajaxUrl + 'chat',{
-							action: 'read_message',
-							user_id: chatId,
-							token: userInfo.token
-						}, function(res){
-							if (res.errno == 0) {
-								mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-								mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-								mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
-								mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-							}
-						}, 'json'
-					);
+					mui.post($ajaxUrl + 'chat', {
+						action: 'read_message',
+						user_id: chatId,
+						token: userInfo.token
+					}, function(res) {
+						if (res.errno == 0) {
+							mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+							mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+							mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+							mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+						}
+					}, 'json');
 				}
 			});
 			// 长按显示操作菜单
