@@ -181,7 +181,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden">
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">我的文章</h1>
@@ -229,7 +229,7 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script type="text/javascript" src="../js/vue.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: false, //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
@@ -267,18 +267,15 @@
 			}
 			var userInfo = getUserInfo();
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			document.querySelector(".mui-hidden").classList.remove("mui-hidden");
 			// 初始化字体大小结束
 
 			var app = new Vue({
 				el: "#mui-content",
-				data() {
-					return {
-						skip: 1,
-						limit: 7,
-						articles: [],
-						articleStatus: true
-					}
+				data: {
+					skip: 1,
+					limit: 7,
+					articles: [],
+					articleStatus: false
 				},
 				mounted: function() {
 					mui.plusReady(function() {
