@@ -187,7 +187,7 @@
 			<h1 class="mui-title">我的文章</h1>
 		</header>
 		<div id="mui-content" class="mui-content">
-			<div v-if="articles.length>0" id="article_container">
+			<div v-if="!articleStatus" id="article_container">
 				<ul class="mui-table-view">
 					<li :id="'article'+article.id" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
 					 :key="index">
@@ -211,7 +211,7 @@
 					</li>
 				</ul>
 			</div>
-			<div v-else style="padding-top: 33%;">
+			<div v-if="articleStatus" style="padding-top: 33%;">
 				<img style="width: 60%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png">
 				<p style="text-align: center;">没有文章吖~</p>
 			</div>
