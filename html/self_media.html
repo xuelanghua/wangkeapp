@@ -336,13 +336,15 @@
 		gallery.slider({
 		interval:1000//自动轮播周期，若为0则不自动播放，默认为0；
 		}); */
-		var webviewHeight = 0;
+		// var webviewHeight = 0;
 		mui.plusReady(function() {
-			var self = plus.webview.currentWebview();
-			webviewHeight = self.webviewHeight;
-			self.setStyle({
-				bottom: 51
-			})
+			// plus.navigator.setStatusBarBackground("#2289FF");
+			// plus.navigator.setStatusBarStyle('dark');
+			// var self = plus.webview.currentWebview();
+			// webviewHeight = self.webviewHeight;
+			// self.setStyle({
+			// 	bottom: 51
+			// })
 			// 重写返回
 			// var first = null;
 			// mui.back = function() {
@@ -400,25 +402,25 @@
 				})
 			})
 
-			window.addEventListener('resizeWindow', function(e) {
-				console.log('resizeWindow');
-				console.log(webviewHeight);
-				plus.webview.currentWebview().setStyle({
-					height: webviewHeight - 0.5
-				});
-			})
+			// window.addEventListener('resizeWindow', function(e) {
+			// 	console.log('resizeWindow');
+			// 	console.log(webviewHeight);
+			// 	plus.webview.currentWebview().setStyle({
+			// 		height: webviewHeight - 0.5
+			// 	});
+			// })
 
-			window.onresize = function() {
-				//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-				var resizeHeight = document.querySelector("body").offsetHeight;
-				if (resizeHeight * 1 != webviewHeight * 1) {
-					console.log('resetWindowHeight');
-					console.log(resizeHeight);
-					plus.webview.currentWebview().setStyle({
-						height: webviewHeight
-					});
-				}
-			}
+			// window.onresize = function() {
+			// 	//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+			// 	var resizeHeight = document.querySelector("body").offsetHeight;
+			// 	if (resizeHeight * 1 != webviewHeight * 1) {
+			// 		console.log('resetWindowHeight');
+			// 		console.log(resizeHeight);
+			// 		plus.webview.currentWebview().setStyle({
+			// 			height: webviewHeight
+			// 		});
+			// 	}
+			// }
 		})
 
 		function slideReady() {

@@ -400,6 +400,10 @@
 				align-items: center;
 				padding: 0 3px;
 			}
+			#list{
+				min-height: 100vh;
+				/* background-color: #0062CC; */
+			}
 		</style>
 	</head>
 
@@ -640,11 +644,11 @@
 			var customerCurrentTab = 1;
 			var refresh = false;
 			var userInfo = null;
-			var winHeight = 0;
+			// var winHeight = 0;
 			var customer_data = null;
 			var timer = null;
 			var self = null;
-			var webviewHeight = 0;
+			// var webviewHeight = 0;
 			var downRefresh = false;
 
 			var nativeWebview, imm, InputMethodManager;
@@ -670,12 +674,14 @@
 			};
 
 			mui.plusReady(function() {
+				// plus.navigator.setStatusBarStyle("light");
+				// plus.navigator.setStatusBarBackground('#2289FF');
 				// originalHeight = document.querySelector("body").offsetHeight;
-				self = plus.webview.currentWebview();
-				webviewHeight = self.webviewHeight;
-				self.setStyle({
-					bottom: 51
-				})
+				// self = plus.webview.currentWebview();
+				// webviewHeight = self.webviewHeight;
+				// self.setStyle({
+				// 	bottom: 51
+				// })
 				// self.setStyle({bottom: 51})
 				// 				self.addEventListener('show', function() {
 				// 					timeInterval();
@@ -702,7 +708,7 @@
 				// };
 
 				// winHeight = document.querySelector("body").offsetHeight;
-				winHeight = document.documentElement.clientHeight || document.body.clientHeight;
+				// winHeight = document.documentElement.clientHeight || document.body.clientHeight;
 				userInfo = getUserInfo();
 				pageInit();
 
@@ -792,13 +798,13 @@
 					getFriendApply();
 				})
 
-				window.addEventListener('resizeWindow', function(e) {
-					console.log('resizeWindow');
-					console.log(webviewHeight);
-					plus.webview.currentWebview().setStyle({
-						height: webviewHeight - Math.random() * 5
-					});
-				})
+				// window.addEventListener('resizeWindow', function(e) {
+				// 	console.log('resizeWindow');
+				// 	console.log(webviewHeight);
+				// 	plus.webview.currentWebview().setStyle({
+				// 		height: webviewHeight - Math.random() * 5
+				// 	});
+				// })
 
 				// document.querySelector('input').addEventListener('focus', function(e) {
 				// 	console.log('input focus');
@@ -819,28 +825,28 @@
 				// 获取原始窗口的高度
 				// var originalHeight = document.querySelector("body").offsetHeight;
 				// originalHeight = 681;
-				window.onresize = function() {
-					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-					var resizeHeight = document.querySelector("body").offsetHeight;
-					if (resizeHeight * 1 != webviewHeight * 1) {
-						// if (resizeHeight * 1 < originalHeight * 1) {
-						console.log('resetWindowHeight');
-						console.log(resizeHeight);
-						plus.webview.currentWebview().setStyle({
-							height: webviewHeight
-						});
-					}
-				}
+				// window.onresize = function() {
+				// 	//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+				// 	var resizeHeight = document.querySelector("body").offsetHeight;
+				// 	if (resizeHeight * 1 != webviewHeight * 1) {
+				// 		// if (resizeHeight * 1 < originalHeight * 1) {
+				// 		console.log('resetWindowHeight');
+				// 		console.log(resizeHeight);
+				// 		plus.webview.currentWebview().setStyle({
+				// 			height: webviewHeight
+				// 		});
+				// 	}
+				// }
 			})
 
 			function indexInit() {
 				var header = document.querySelector('header.mui-bar');
 				var list = document.getElementById('list');
 				// list.style.height = (document.body.offsetHeight - header.offsetHeight + 2) + 'px';
-				list.style.height = (winHeight - header.offsetHeight + 2) + 'px';
+				// list.style.height = (winHeight - header.offsetHeight + 2) + 'px';
 				// list.style.height = (winHeight - header.offsetHeight - 50) + 'px';
 				// list.style.backgroundColor = "#ff0000";
-				window.indexedList = new mui.IndexedList(list);
+				// window.indexedList = new mui.IndexedList(list);
 				mui.trigger(document.getElementById(currentTab), 'tap');
 				// var arrv = plus.webview.all();
 				// console.log(arrv);
