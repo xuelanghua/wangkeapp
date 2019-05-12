@@ -643,7 +643,7 @@
 			var currentTab = 'crm';
 			var customerCurrentTab = 1;
 			var refresh = false;
-			var userInfo = null;
+			var userInfo = getUserInfo();
 			// var winHeight = 0;
 			var customer_data = null;
 			var timer = null;
@@ -709,7 +709,6 @@
 
 				// winHeight = document.querySelector("body").offsetHeight;
 				// winHeight = document.documentElement.clientHeight || document.body.clientHeight;
-				userInfo = getUserInfo();
 				pageInit();
 
 				//自定义事件监听-首页新增客户点击
@@ -1835,6 +1834,9 @@
 				})
 				setStatusBar('', 'dark');
 			})
+			setInterval(function(){
+				getUnreadMessage();
+			},2000)
 		</script>
 	</body>
 
