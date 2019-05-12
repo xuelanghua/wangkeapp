@@ -222,7 +222,7 @@
 				<a class="mui-control-item" href="#item2">已使用（{{usedNum}}）</a>
 			</div>
 			<div class="segmentedControl-cont">
-				<div class="mui-slider-group">
+				<div id="refresh" v-if="keylist" class="mui-slider-group">
 					<!-- 第一个选项卡 -->
 					<div id="item1" class="mui-control-content mui-active">
 						<ul class="mui-table-view">
@@ -254,7 +254,7 @@
 			<div id="middlePopover" class="mui-popover first-popover">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell" v-if="group_id>index+1" v-for="(item,index) in keyType" @tap="getlist(item.id)"
-					 :class="[item.id==1?'active':'']" :key="index">
+					 :key="index">
 						{{item.name}}
 					</li>
 				</ul>
@@ -274,11 +274,11 @@
 				pageNum = 1,
 				selectId = 1,
 				status = 1,
-				codeId = 0,
-				groupInfo = null;
+				codeId = 0;
+			// groupInfo = null;
 			mui.init({
 				pullRefresh: {
-					container: "#mui-content",
+					container: "#refresh",
 					down: {
 						style: 'circle',
 						color: '#2289FF',
@@ -286,8 +286,8 @@
 						auto: false,
 						callback: function() {
 							pageNum = 1;
-							getlist(selectId);
-							mui('#mui-content').pullRefresh().refresh(true);
+							getlist(0);
+							mui('#refresh').pullRefresh().refresh(true);
 						}
 					},
 					up: {
@@ -345,9 +345,9 @@
 							top: 0,
 							bottom: 0
 						});
-						getGroupInfo();
-						getlist(1);
+						// getGroupInfo();
 					});
+					getlist(0);
 				},
 				mounted: function() {
 					mui('#middlePopover').on('tap', 'li', function() {
@@ -368,7 +368,7 @@
 						}
 						pageNum = 1;
 						getlist(selectId);
-						mui('#mui-content').pullRefresh().refresh(true);
+						mui('#refresh').pullRefresh().refresh(true);
 					});
 					// 监听遮罩是否显示 为了让顶部的箭头处于正常位置
 					window.addEventListener('tap', function(e) {
@@ -404,34 +404,37 @@
 				}, function(res) {
 					logs(res);
 					var data = res.data.list;
-					if (res.errno) {
+					logs(data);
+					if (data.length<1) {
 						if (pageNum == 1) {
 							app.keylist = [];
+							app.userlist = [];
 						}
-						mui("#mui-content").pullRefresh().endPullupToRefresh(true);
+						mui("#refresh").pullRefresh().endPullupToRefresh(true);
 					} else {
 						app.unusedNum = res.data.valid;
 						app.usedNum = res.data.invalid;
 						if (pageNum == 1) {
 							app.keylist = data;
-							mui("#mui-content").pullRefresh().endPulldown();
+							mui("#refresh").pullRefresh().endPulldown();
 						} else {
 							setTimeout(function() {
 								app.keylist = app.keylist.concat(data);
-								mui("#mui-content").pullRefresh().endPullupToRefresh()
+								mui("#refresh").pullRefresh().endPullupToRefresh()
 							}, 1500)
 						}
 					}
 				}, 'json');
 			}
 
-			function getGroupInfo() {
-				mui.get($ajaxUrl + 'member', {
-					action: 'group_info'
-				}, function(res) {
-					groupInfo = res.data;
-				}, 'json');
-			}
+			// function getGroupInfo() {
+			// 	mui.get($ajaxUrl + 'member', {
+			// 		action: 'group_info'
+			// 	}, function(res) {
+			// 		logs(res);
+			// 		groupInfo = res.data;
+			// 	}, 'json');
+			// }
 
 			function copyToClip(text) {
 				if (mui.os.android) {

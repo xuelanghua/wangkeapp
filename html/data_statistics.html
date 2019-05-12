@@ -246,45 +246,76 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript" src="../js/mui.picker.min.js"></script>
-		<script type="text/javascript" src="../js/data-statistice.js"></script>
+		<!-- <script type="text/javascript" src="../js/data-statistice.js"></script> -->
 		<script type="text/javascript">
-			mui.init({
-				pullRefresh: {
-					container: '#item1',
-					up: {
-						height: 50,
-						auto: false,
-						contentrefresh: "正在加载...",
-						contentnomore: '没有更多数据了',
-						callback: pullupRefresh
-					},
-					down: {
-						style: 'circle',
-						color: '#2BD009',
-						height: '50px',
-						range: '120px',
-						offset: '0px',
-						auto: false,
-						callback: pulldownRefresh
-					}
-				}
-			});
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
 			var postType = 1;
 			var pgNum = 1;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
-
-
 			var userInfo = getUserInfo();
-			mui.plusReady(function() {
-				behaviorStatistics();
-				businessCardBrowsingStatistics();
-			})
+			// 实例化vue对象
+			var itemCont = new Vue({
+				el: '#item1',
+				data: {
+					dataGroup: {},
+					contstatus: false
+				},
+				mounted: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+					mui.init({
+						pullRefresh: {
+							container: '#item1',
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pgNum += 1;
+									businessCardBrowsingStatistics();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2BD009',
+								height: '50px',
+								range: '120px',
+								offset: '0px',
+								auto: false,
+								callback: function() {
+									pgNum = 1;
+									businessCardBrowsingStatistics();
+								}
+							}
+						}
+					});
+
+					behaviorStatistics();
+					businessCardBrowsingStatistics();
+					// 选择天数
+					var userPicker = new mui.PopPicker();
+					userPicker.setData([{
+						value: 1,
+						text: '近7天'
+					}, {
+						value: 2,
+						text: '近30天'
+					}]);
+					var showUserPickerButton = document.getElementById('showUserPicker');
+					var selectTitle = document.getElementById('selectTitle');
+					showUserPickerButton.addEventListener('tap', function(event) {
+						userPicker.show(function(items) {
+							selectTitle.innerText = items[0].text;
+							postType = items[0].value;
+							behaviorStatistics();
+						});
+					}, false);
+				}
+			});
 			// 获取行为数据
 			function behaviorStatistics() {
 				mui.post($ajaxUrl + 'staff&action=card_view_statistics', {
@@ -305,79 +336,42 @@
 			// 获取名片浏览记录
 			function businessCardBrowsingStatistics() {
 				mui.post($ajaxUrl + 'staff&action=card_view_record', {
+					token: userInfo.token,
 					skip: pgNum,
-					limit: 10,
-					token: userInfo.token
+					limit: 10
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					var data = res.data;
 					if (res.errno == 0 && pgNum == 1) {
 						itemCont.dataGroup = data;
 						mui.later(function() {
 							// 下拉加载完成隐藏加载动画
 							mui('#item1').pullRefresh().endPulldown();
-						}, 1500)
+							
+						}, 1000)
+						itemCont.contstatus=true;
 					} else if (res.errno == 0 && pgNum > 1) {
 						for (list in data) {
 							Vue.set(itemCont.dataGroup, list, data[list]);
 						}
+						logs(itemCont.dataGroup);
+						itemCont.contstatus=true;
 						// 上拉加载完成隐藏加载动画
 						mui('#item1').pullRefresh().endPullupToRefresh(false);
 					} else {
-						mui('#item1').pullRefresh().endPullupToRefresh(true);
 						// 数据为空禁用上拉加载
+						mui('#item1').pullRefresh().endPullupToRefresh(true);
 						mui('#item1').pullRefresh().disablePullupToRefresh();
 						// 判断数据是否为空
-						for (var item in itemCont.dataGroup) {
-							itemCont.contstatus = true;
-							return;
-							mui('#item1').pullRefresh().enablePullupToRefresh();
-							// 没有更多数据了
-							mui('#item1').pullRefresh().endPullupToRefresh(true);
-						}
-
+						// for (var item in itemCont.dataGroup) {
+						// 	itemCont.contstatus = true;
+						// 	return;
+						// 	mui('#item1').pullRefresh().enablePullupToRefresh();
+						// 	// 没有更多数据了
+						// 	mui('#item1').pullRefresh().endPullupToRefresh(true);
+						// }
 					}
 				}, 'json')
-			}
-			// 选择天数
-			var userPicker = new mui.PopPicker();
-			userPicker.setData([{
-				value: 1,
-				text: '近7天'
-			}, {
-				value: 2,
-				text: '近30天'
-			}]);
-			// 实例化vue对象
-			var itemCont = new Vue({
-				el: '#item1',
-				data: {
-					dataGroup: {},
-					contstatus: false
-				}
-			});
-			var showUserPickerButton = document.getElementById('showUserPicker');
-			var selectTitle = document.getElementById('selectTitle');
-			showUserPickerButton.addEventListener('tap', function(event) {
-				userPicker.show(function(items) {
-					selectTitle.innerText = items[0].text;
-					postType = items[0].value;
-					behaviorStatistics();
-				});
-			}, false);
-
-			// 下拉刷新具体业务实现
-			function pulldownRefresh() {
-				pgNum = 1;
-				businessCardBrowsingStatistics();
-				behaviorStatistics();
-				// mui('#item1').pullRefresh().enablePullupToRefresh();
-			}
-
-			// 上拉加载具体业务实现
-			function pullupRefresh() {
-				pgNum += 1;
-				businessCardBrowsingStatistics();
 			}
 		</script>
 	</body>

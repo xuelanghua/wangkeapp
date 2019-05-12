@@ -57,47 +57,46 @@
 				mounted: function() {
 					mui.plusReady(function() {
 						document.getElementById("search").addEventListener("keypress", function(event) {
-							var search = app.keyCode;
-							var keyword = search.replace(/^\s*|\s*$/g, "");
-							if (keyword != '') {
-								if (event.keyCode == "13") {
-									plus.key.hideSoftKeybord();
-									upgrade();
-								}
-								event.preventDefault();
-							} else {
-								message("激活码不能为空");
-								this.focus();
+							if (event.keyCode == "13") {
+								plus.key.hideSoftKeybord();
+								upgrade();
 							}
+							event.preventDefault();
 						});
 						mui('.mui-content').on('tap', '#activate', function() {
 							upgrade();
 						})
 
 						function upgrade() {
-							mui.post($ajaxUrl + 'member&action=upgrade_by_code', {
-								token: userInfo.token,
-								activation_code: app.keyCode
-							}, function(res) {
-								logs(res);
-								if (res.errno == 0) {
-									message("升级成功！");
-									mui.fire(plus.webview.getWebviewById('user'), 'reloadMyself');
-									var cPage = plus.webview.currentWebview();
-									var bPage = cPage.opener();
-									var aPage = bPage.opener();
-									plus.webview.hide(aPage);
-									plus.webview.hide(bPage);
-									plus.webview.close(aPage);
-									plus.webview.close(bPage);
-									setTimeout(function() {
-										plus.webview.hide(cPage, "fade-out");
-										plus.webview.close(cPage);
-									}, 900);
-								} else {
-									message(res.message);
-								}
-							}, 'json');
+							var search = app.keyCode;
+							var keyword = search.replace(/^\s*|\s*$/g, "");
+							if (keyword) {
+								mui.post($ajaxUrl + 'member&action=upgrade_by_code', {
+									token: userInfo.token,
+									activation_code: keyword
+								}, function(res) {
+									logs(res);
+									if (res.errno == 0) {
+										message("升级成功！");
+										mui.fire(plus.webview.getWebviewById('user'), 'reloadMyself');
+										var cPage = plus.webview.currentWebview();
+										var bPage = cPage.opener();
+										var aPage = bPage.opener();
+										plus.webview.hide(aPage);
+										plus.webview.hide(bPage);
+										plus.webview.close(aPage);
+										plus.webview.close(bPage);
+										setTimeout(function() {
+											plus.webview.hide(cPage, "fade-out");
+											plus.webview.close(cPage);
+										}, 900);
+									} else {
+										message(res.message);
+									}
+								}, 'json');
+							} else {
+								message("请输入激活码");
+							}
 						}
 					})
 				}

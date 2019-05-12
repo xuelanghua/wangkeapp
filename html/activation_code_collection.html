@@ -14,7 +14,7 @@
 		</style>
 	</head>
 
-	<body class="mui-hidden" style="position: relative;min-height: 100%;">
+	<body style="position: relative;min-height: 100%;">
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">激活码兑换</h1>
@@ -61,7 +61,7 @@
 				el: "#collections",
 				data: {
 					wang: 0,
-					groupId: userInfo.group_id,
+					groupId: '',
 					codeList: {
 						"1": {
 							id: 1,
@@ -96,6 +96,7 @@
 				},
 				mounted: function() {
 					mui.plusReady(function() {
+						getMemberInfo();
 						mui(".mui-content").on('tap', '.next', function() {
 							document.activeElement.blur();
 							var flag = false;
@@ -139,7 +140,7 @@
 					action: 'detail',
 					token: userInfo.token
 				}, function(res) {
-					// app.groupId = res.data.group_id;
+					app.groupId = res.data.group_id;
 					app.wang = res.data.wang;
 				}, 'json');
 			}
@@ -150,6 +151,7 @@
 					action: 'group_info',
 					token: userInfo.token
 				}, function(res) {
+					// logs(res);
 					app.groupList = res.data
 					mui.each(app.groupList, function(index, item) {
 						if (item.id < 5) {

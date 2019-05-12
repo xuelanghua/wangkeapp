@@ -246,6 +246,10 @@
 				margin-left: 2px;
 				margin-top: -2px;
 			}
+			
+			[v-cloak] {
+			  display: none;
+			}
 		</style>
 	</head>
 
@@ -256,7 +260,7 @@
 			<div class="mui-pull-right my-equity">我的权益</div>
 		</header>
 
-		<div id="mui-content" class="mui-content setting-container">
+		<div id="mui-content" class="mui-content setting-container" v-cloak>
 			<div class="maker-head">
 				<div class="first-section">
 					<h2>{{memberInfo.group_name}}<span class="updata-position" v-if="memberInfo.group_id<5">升级<img src="../image/agent-arrows-01.png"
@@ -353,7 +357,7 @@
 						})
 					})
 				},
-				mounted:  function() {
+				mounted: function() {
 					document.querySelector(".mui-content").classList.remove('mui-hidden');
 				},
 				methods: {

@@ -758,10 +758,10 @@
 					}, 'json')
 				}
 			})
-			
+
 			mui('header').on('tap', '#view_card', function() {
-				openPage('friends_detail.html','friends_detail','#f7f7f7',{
-					fid:cid
+				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+					fid: cid
 				})
 				plus.navigator.setStatusBarStyle('dark');
 			})
@@ -808,7 +808,7 @@
 				id: cid,
 				type: 'customer'
 			}, function(res) {
-				// logs(res);
+				logs(res);
 				if (res.errno == 0) {
 					var data = res.data;
 					chatName = data.nickName;
@@ -880,6 +880,13 @@
 					var viewHtml = '';
 					if (data.view.length > 0 && groupId > 0) {
 						var viewList = data.view;
+						// var intimacy = viewList.length;
+						// logs(intimacy);
+						// if (intimacy > 29) {
+						// 	intimacy = "，高意向客户，请注意跟进！"
+						// } else {
+						// 	intimacy = '';
+						// }
 						for (var k in viewList) {
 							viewHtml += '<div class="current_chart mui-pull-left">';
 							if (data.avatarUrl.length != 0) {
@@ -894,19 +901,19 @@
 								viewHtml += 'TA给你的<span>录音</span>点赞了, 看来TA对你的介绍<span>非常感兴趣</span>';
 							} else if (viewList[k].sign == 'praise' && viewList[k].type == 2) {
 								if (viewList[k].count == 1) {
-									viewHtml += '<span>首次查看</span>你的<span>名片</span>,TA正在了解你';
+									viewHtml += '<span>首次查看</span>你的<span>名片</span>,TA正在了解你' ;
 								} else if (viewList[k].count > 1 && viewList[k].count < 5) {
-									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>名片</span>,你成功的吸引了TA';
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>名片</span>,你成功的吸引了TA' ;
 								} else {
-									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>名片</span>,高意向客户,立即主动沟通';
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>名片</span>,' + '立即主动沟通';
 								}
 							} else if (viewList[k].sign == 'praise' && viewList[k].type == 3) {
 								viewHtml += 'TA给你点赞了, 看来TA觉得你<span>非常靠谱</span>';
 							} else if (viewList[k].sign == 'praise' && viewList[k].type == 4) {
 								if (viewList[k].count == 1) {
-									viewHtml += '<span>首次分享</span>了你的<span>名片</span>';
+									viewHtml += '<span>首次分享</span>了你的<span>名片</span>' ;
 								} else {
-									viewHtml += '<span>第' + viewList[k].count + '次分享</span>了你的<span>名片</span>';
+									viewHtml += '<span>第' + viewList[k].count + '次分享</span>了你的<span>名片</span>' ;
 								}
 							} else if (viewList[k].sign == 'copy' && viewList[k].type == 1) {
 								if (viewList[k].count == 1) {
@@ -936,7 +943,7 @@
 								if (viewList[k].count == 1) {
 									viewHtml += 'TA<span>首次</span>复制了你的邮箱, 可随时邮寄文件给你';
 								} else {
-									viewHtml += 'TA<span>第' + viewList[k].count + '次</span>复制了你的邮箱, 可随时邮寄文件给你';
+									viewHtml += 'TA<span>第' + viewList[k].count + '次</span>复制了你的邮箱, 可随时邮件给你';
 								}
 							} else if (viewList[k].sign == 'copy' && viewList[k].type == 6) {
 								if (viewList[k].count == 1) {
@@ -960,32 +967,32 @@
 								if (viewList[k].count == 1) {
 									viewHtml += '<span>首次播放</span>你的<span>语音</span>';
 								} else {
-									viewHtml += '<span>第' + viewList[k].count + '次播放</span>你的<span>语音</span>';
+									viewHtml += '<span>第' + viewList[k].count + '次播放</span>你的<span>语音</span>' ;
 								}
 							} else if (viewList[k].sign == 'view' && viewList[k].type == 1) {
 								if (viewList[k].count == 1) {
 									viewHtml += '<span>首次查看</span>你的<span>商城</span>,尽快把握商机';
 								} else if (viewList[k].count == 2) {
-									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,潜在购买客户';
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,潜在购买客户' ;
 								} else if (viewList[k].count == 3) {
-									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,高意向客户成交在望';
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,成交在望' ;
 								} else {
-									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,购买欲望强烈';
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商城</span>,购买欲望强烈' ;
 								}
 							} else if (viewList[k].sign == 'view' && viewList[k].type == 2) {
 								if (viewList[k].count == 1) {
-									viewHtml += '<span>首次查看</span>你的<span>商品(' + viewList[k].target_name + ')详情</span>,尽快把握商机';
+									viewHtml += '<span>首次查看</span>你的<span>商品(' + viewList[k].target_name + ')详情</span>,尽快把握商机' ;
 								} else {
 									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>商品(' + viewList[k].target_name +
-										')详情</span>,尽快把握商机';
+										')详情</span>,尽快把握商机,' ;
 								}
 							} else if (viewList[k].sign == 'view' && viewList[k].type == 3) {
 								if (viewList[k].count == 1) {
-									viewHtml += '<span>首次查看</span>你的<span>动态</span>';
+									viewHtml += '<span>首次查看</span>你的<span>动态</span>' ;
 								} else if (viewList[k].count == 2) {
-									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>动态</span>,赶快主动沟通';
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>动态</span>,赶快主动沟通' ;
 								} else {
-									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>动态</span>,高意向客户成交在望';
+									viewHtml += '<span>第' + viewList[k].count + '次查看</span>你的<span>动态</span>,成交在望' ;
 								}
 							} else if (viewList[k].sign == 'view' && viewList[k].type == 4) {
 								if (viewList[k].count == 1) {
@@ -1003,16 +1010,16 @@
 								if (viewList[k].count == 1) {
 									viewHtml += '<span>首次查看公司官网</span>,看来他对公司感兴趣';
 								} else if (viewList[k].count == 2) {
-									viewHtml += '<span>第' + viewList[k].count + '次查看公司官网</span>,赶快主动沟通';
+									viewHtml += '<span>第' + viewList[k].count + '次查看公司官网</span>,赶快主动沟通' ;
 								} else {
-									viewHtml += '<span>第' + viewList[k].count + '次查看公司官网</span>,高意向客户成交在望';
+									viewHtml += '<span>第' + viewList[k].count + '次查看公司官网</span>,成交在望';
 								}
 							} else if (viewList[k].sign == 'view' && viewList[k].type == 7) {
 								if (viewList[k].count == 1) {
 									viewHtml += '<span>首次浏览</span>你的<span>动态(' + viewList[k].target_name + ')详情</span>';
 								} else {
 									viewHtml += '<span>第' + viewList[k].count + '次浏览</span>你的<span>动态(' + viewList[k].target_name +
-										')详情</span>';
+										')详情</span>' ;
 								}
 							}
 							viewHtml += '</div>';
