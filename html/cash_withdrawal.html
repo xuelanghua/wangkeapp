@@ -535,14 +535,14 @@
 					</label>
 					<input style="margin-top: 11px;" name="radio" type="radio" checked>
 				</div> -->
-				<div class="mui-input-row mui-radio ">
+				<div class="mui-input-row mui-radio" v-if="fee<=5000">
 					<label>
 						<div class="mui-pull-left img">
 							<img src="../image//WeChat.png" alt="">
 						</div>
 						<div class="mui-pull-left shuo">
 							<div>
-								<span style="font-size: 15px;">微信</span>
+								<span style="font-size: 15px;">微信零钱</span>
 								<span style="float: right;margin-top: 1px;margin-right: 60px;">(扣除10%手续费)</span>
 								<div class="clearfix"></div>
 							</div>
@@ -554,6 +554,21 @@
 									</span>
 								</a>
 							</div> -->
+						</div>
+					</label>
+					<input style="margin-top: 11px;" name="radio" type="radio" checked>
+				</div>
+				<div class="mui-input-row mui-radio" v-if="fee>5000">
+					<label>
+						<div class="mui-pull-left img">
+							<img src="../image//WeChat.png" alt="">
+						</div>
+						<div class="mui-pull-left shuo">
+							<div>
+								<span style="font-size: 15px;">线下打款</span>
+								<span style="float: right;margin-top: 1px;margin-right: 60px;">(扣除10%手续费)</span>
+								<div class="clearfix"></div>
+							</div>
 						</div>
 					</label>
 					<input style="margin-top: 11px;" name="radio" type="radio" checked>
@@ -709,7 +724,9 @@
 					mui.plusReady(function() {
 						// mask.show();
 						mui('.mui-content').on('tap', '.quan', function() {
-							vm.fee = (vm.balance / 1.1).toFixed(2);
+							// vm.fee = (vm.balance / 1.1).toFixed(2);
+							// vm.fee = (vm.balance / 1.1);
+							vm.fee = Math.floor(vm.balance / 1.1 * 100) / 100;
 						})
 
 						mui('.mui-content').on('tap', '.tixain', function() {
@@ -765,9 +782,13 @@
 					fee: vm.fee,
 					token: userInfo.token
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
-						message('提现成功!');
+						if (vm.fee > 5000) {
+							message('申请成功,等待打款!');
+						} else {
+							message('提现成功!');
+						}
 						mui.fire(plus.webview.getWebviewById('asset_management'), 'withdrawDepositSuccess');
 						setTimeout(function() {
 							mui.back();

@@ -89,9 +89,13 @@
 							<label><img src="../image/Alipay.png"><span>支付宝</span></label>
 							<input class="choice-tag" name="radio1" type="radio" value="alipay">
 						</div> -->
-						<div class="mui-input-row mui-radio">
+						<div class="mui-input-row mui-radio" v-if="fee<=5000">
 							<label><img src="../image/WeChat.png"><span>微信</span></label>
-							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
+							<input class="choice-tag" name="radio1" ty   pe="radio" checked="checked" value="wxpay">
+						</div>
+						<div class="mui-input-row mui-radio" v-if="fee>5000">
+							<label><img src="../image/WeChat.png"><span>线下支付</span></label>
+							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="offline">
 						</div>
 						<!-- <div class="mui-input-row mui-radio">
 							<label><img src="../image/balance.png"><span>余额</span><span class="balance">&yen;{{ balance }}</span></label>
@@ -132,8 +136,8 @@
 		<div id="popover" class="mui-popover">
 			<div class="pop-body">
 				<img src="../image/collections-bg-pop-img.jpg" alt="">
-				<p>激活码兑换成功</p>
-				<span class="immediate-use">立即使用</span>
+				<p class="pop-title">激活码兑换成功</p>
+				<span class="immediate-use pop-button">立即使用</span>
 			</div>
 			<img class="close-btn" src="../image/Close.png" alt="">
 		</div>
@@ -191,6 +195,11 @@
 						app.codeList = self.codeList;
 						app.totalWang = self.totalWang;
 						app.fee = parseFloat(self.totalWang / 10);
+						if (app.fee > 5000) {
+							payType = 'offline';
+						} else {
+							payType = 'wxpay';
+						}
 						// 关闭窗口
 						mui("#popover").on('tap', '.close-btn', function() {
 							mui('.mui-popover').popover('hide', document.getElementById("openPopover"));
@@ -235,7 +244,23 @@
 				} else if (id == 'wxpay') {
 					PAYSERVER = WXPAYSERVER;
 					channel = wxChannel;
-				} else {
+				} else if (id == 'offline') {
+					mui.post(PAYSERVER, {
+						code_list: app.codeList,
+						total_wang: app.totalWang,
+						fee: app.fee,
+						pay_type: payType,
+						token: userInfo.token
+					}, function(res) {
+						if (res.errno == 0) {
+							// message('申请成功');
+							document.querySelector('.pop-title').innerHTML = '申请成功!';
+							document.querySelector('.pop-button').innerHTML = '返回!';
+							mui('.mui-popover').popover('show', document.getElementById("openPopover"));
+						}
+					}, 'json')
+					return;
+				} {
 					message("不支持此支付通道!", 'center');
 					return;
 				}
