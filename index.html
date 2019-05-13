@@ -73,7 +73,7 @@
 				</div>
 			</nav>
 		</div>
-		<script src="js/mui.min.js"></script>
+		<script src="js/mui.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script src="js/util.js"></script>
 		<script type="text/javascript" charset="utf-8">
@@ -137,15 +137,21 @@
 					}
 				},
 				mounted: function() {
+					// (function($) {
+					// 	var main,
+					// 		backButtonPress = 0;
+					// 	$.plusReady(function() {
+					// 		main = plus.android.runtimeMainActivity();
+					// 	});
+					// 	$.back = function() {
+					// 		main && main.moveTaskToBack(false);
+					// 	};
+					// }(mui));
+
 					var prevId = 'home',
 						currentId = '',
 						tempId = '';
-					mui.init({
-						keyEventBind: {
-							backbutton: false, //Boolean(默认true)关闭back按键监听  
-							menubutton: true //Boolean(默认true)关闭menu按键监听  
-						}
-					});
+					mui.init();
 					var subpages = [{
 							url: 'html/home.html',
 							ids: 'home',

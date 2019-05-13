@@ -51,26 +51,24 @@
 			}
 		})
 
-		var noticeId = 0;
 		mui.plusReady(function() {
 			plus.navigator.setStatusBarStyle("dark");
 			waiting = plus.nativeUI.showWaiting();
 			var self = plus.webview.currentWebview();
-			// noticeId = self.notice.id;
 
 			noticeDetail();
 		})
 
 		function noticeDetail() {
-			// mui.post($ajaxUrl + 'notice', {action: 'detail', id: noticeId}, function(res) {
-			// 	if (res.errno == 0) {
-			// 		var detail = res.data;
-			// 		document.getElementsByClassName('article')[0].innerHTML = detail.content;
-			// 	} else {
-			// 		console.log(res.message);
-			// 	}
-			// 	waiting.close();
-			// }, 'json')
+			mui.post($ajaxUrl + 'util&action=system_setting', '', function(res) {
+				if (res.errno == 0) {
+					var detail = res.data.user_agreement;
+					document.getElementsByClassName('article')[0].innerHTML = detail||'暂无用户协议';
+				} else {
+					console.log(res.message);
+				}
+				waiting.close();
+			}, 'json')
 		}
 	</script>
 </html>
