@@ -196,6 +196,12 @@
 				background-color: #fff;
 				box-shadow: none;
 			}
+
+			.subMenu.fixed-cont {
+				position: fixed;
+				top: 44px;
+				z-index: 1045;
+			}
 		</style>
 	</head>
 	<body>
@@ -242,7 +248,7 @@
                 <div class="mui-indicator"></div>
             </div> -->
 			</div>
-			<div class="subMenu">
+			<div id="subMenu" class="subMenu">
 				<div class=" inner mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted"
 				 style="background-color: #F5F6F8;">
 					<div class="mui-scroll" style="color: #000000;" id="classification">
@@ -421,6 +427,18 @@
 			// 		});
 			// 	}
 			// }
+
+
+			var headH = document.querySelector('header').offsetHeight,
+				tab = document.getElementById("subMenu"),
+				list=document.getElementById("article_list")
+			window.addEventListener('scroll', function(e) {
+				if (list.getBoundingClientRect().top <= 90) {
+					tab.classList.add('fixed-cont');
+				} else {
+					tab.classList.remove('fixed-cont');
+				}
+			});
 		})
 
 		function slideReady() {
