@@ -335,12 +335,30 @@
 			.menu #red_packet {
 				border-bottom: 10px solid #f2f2f2;
 			}
+
+			.open-message,
+			#setting-btn {
+				/* background-color: #20D81F; */
+				position: relative;
+				padding: 0 10px;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 13;
+			}
+
+			#setting-btn {
+				padding: 0 15px;
+			}
 		</style>
 	</head>
 	<body>
 		<header id="header" class="mui-bar usercenter-header">
-			<span class="mui-badge mui-badge-danger" style="display: none;" id="unread_message">0</span>
-			<img id="message" class="message" src="../image/Message-icon.png">
+			<div class="mui-pull-left open-message" id="message">
+				<span class="mui-badge mui-badge-danger" style="display: none;" id="unread_message">0</span>
+				<img class="message" src="../image/Message-icon.png">
+			</div>
 			<h1 class="mui-title" style="color: #fff;">我的</h1>
 			<span id="setting-btn" class="mui-right mui-pull-right">
 				<img src="../image/icon/mypagesetting-icon.png">
@@ -856,9 +874,9 @@
 					}
 				}, 'json');
 			}
-			setInterval(function(){
+			setInterval(function() {
 				getUnreadMessage();
-			},2000)
+			}, 2000)
 		</script>
 	</body>
 </html>

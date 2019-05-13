@@ -46,6 +46,22 @@
 				right:10px;
 				top: 55%;
 			}
+			.mui-content-padded span{
+				color:#2289ff;
+			}
+			.mui-content-padded p{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.mui-checkbox input[type=checkbox]{
+				position: relative;
+				top: 0;
+				right: auto;
+				left: auto;
+				transform: scale(0.8);
+				-webkit-transform: scale(0.8);
+			}
 		</style>
 	</head>
 
@@ -132,6 +148,7 @@
 			</form>
 			<div class="mui-content-padded" style="padding-bottom: 25px;">
 				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="submit">确定</button>
+				<p style="text-align: center;" class="mui-input-row mui-checkbox"><input id="agree" name="checkbox" value="" type="checkbox">开通即视为同意<span id="agreement">《旺客-用户协议》</span></p>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -206,6 +223,7 @@
 				})
 
 				mui('.mui-content').on('tap', '#submit', function() {
+					var cheackd=document.getElementById('agree').checked;
 					document.activeElement.blur();
 					if (groupId == 0) {
 						message('请选择要申请的代理!', 'center');
@@ -221,6 +239,10 @@
 							message('推荐人手机号码输入有误!');
 							return;
 						}
+					}
+					if (!cheackd) {
+						message('需要同意旺客用户协议');
+						return;
 					}
 
 					// if (provinceId == 0 || cityId == 0) {
@@ -251,6 +273,9 @@
 						}
 						plus.nativeUI.closeWaiting();
 					}, 'json');
+				})
+				mui('.mui-content').on('tap', '#agreement', function() {
+					openPage('user_agreement.html','user_agreement','#ffffff','');
 				})
 			})
 
