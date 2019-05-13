@@ -91,7 +91,7 @@
 						</div> -->
 						<div class="mui-input-row mui-radio" v-if="fee<=5000">
 							<label><img src="../image/WeChat.png"><span>微信</span></label>
-							<input class="choice-tag" name="radio1" ty   pe="radio" checked="checked" value="wxpay">
+							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
 						</div>
 						<div class="mui-input-row mui-radio" v-if="fee>5000">
 							<label><img src="../image/WeChat.png"><span>线下支付</span></label>
@@ -214,6 +214,7 @@
 
 						mui('.mui-content').on('tap', '.confirm-payment', function() {
 							payType = mui('input[name=radio1]:checked')[0].value;
+							console.log(payType);
 							pay(payType);
 							// mui('.mui-popover').popover('show',document.getElementById("openPopover"));
 						})
@@ -245,22 +246,28 @@
 					PAYSERVER = WXPAYSERVER;
 					channel = wxChannel;
 				} else if (id == 'offline') {
-					mui.post(PAYSERVER, {
+					var waiting = plus.nativeUI.showWaiting();
+					logs(payType);
+					logs(app.codeList);
+					logs(app.fee);
+					mui.post(WXPAYSERVER, {
 						code_list: app.codeList,
 						total_wang: app.totalWang,
 						fee: app.fee,
 						pay_type: payType,
 						token: userInfo.token
 					}, function(res) {
+						logs(res);
 						if (res.errno == 0) {
 							// message('申请成功');
 							document.querySelector('.pop-title').innerHTML = '申请成功!';
 							document.querySelector('.pop-button').innerHTML = '返回!';
 							mui('.mui-popover').popover('show', document.getElementById("openPopover"));
 						}
+						waiting.close();
 					}, 'json')
 					return;
-				} {
+				} else {
 					message("不支持此支付通道!", 'center');
 					return;
 				}
