@@ -11,11 +11,6 @@
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link href="icomoon/style.css" rel="stylesheet" />
 		<style>
-			.mui-bar-tab img{
-				display: block;
-				margin: 0 auto;
-				width: 0.44rem;
-			}
 			.mui-tab-label{
 				font-size: 0.22rem;
 			}
@@ -27,21 +22,8 @@
 				flex-grow: 1;
 				color: #535353;
 			}
-			.mui-bar.mui-bar-tab{
-				z-index: 1045;
-				background-color: #FFFFFF;
-			}
-			.mui-bar-tab .mui-tab-item .mui-badge{
-				position: absolute;
-				top: 5px;
-				right: 31%;
-				width: 8px;
-				height: 8px;
-				background-color: #FF435F;
-				border-radius: 100%;
-				padding: 0;
-			}
 			 *{ touch-action: pan-y; }
+			 
 			 .mui-tab-item p{
 				margin: 0;
 				padding: 0;
@@ -51,17 +33,28 @@
 			  }
 			  .mui-tab-item {
 				position: relative;
-			}
-
+			 }
 			.mui-tab-item .mui-badge {
 				position: absolute;
+				width: auto;
+				height: auto;
 				top: 2px;
-				right: 20px;
-				padding: 2px 3px 0;
+				right: 32%;
+				padding: 2px 3px 1px;
 				background-color: rgba(255, 0, 0, 0.8);
-				color: #FFFFFF;
+				color: #FFFFFF !important;
 				font-size: 10px;
 				z-index: 9999;
+			}
+			.mui-bar{
+				box-shadow: none;
+				-webkit-box-shadow: none;
+			}
+			.mui-bar.mui-bar-tab{
+				z-index: 1045;
+				background-color: #FFFFFF; 
+				-webkit-box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
+				box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
 			}
 		</style>
 	</head>
@@ -70,17 +63,17 @@
 		<div id="index">
 			<nav class="mui-bar mui-bar-tab">
 				<!-- <a :data-index="index" :id="index==0?'defaultTab':nav.id" class="mui-tab-item" @tap="changetab(index)" :class="nav.selected?'mui-active':''" -->
-				<a :data-index="index" :id="index==0?'defaultTab':nav.id" class="mui-tab-item" @tap="changetab(index)" :class="nav.selected?'mui-active':''"
-				 :href="nav.href" v-for="(nav,index) in nav" :key="index">
+				<div :data-index="index" :id="index==0?'defaultTab':nav.id" class="mui-tab-item" @tap="changetab(index)" :class="nav.selected?'mui-active':''"
+				 :data-url="nav.href" v-for="(nav,index) in nav" :key="index">
 					<p>
 						<span :class="nav.selected?nav.icon+'-s':nav.icon" style="font-size: 18px;margin-top: 2px;"></span>
-						<span v-if="nav.id=='chat'" class="mui-badge" id="message_tip" style="display: none;">0</span>
+						<span v-if="nav.id=='chat'&&numbers!=0" class="mui-badge">{{numbers}}</span>
 					</p>
 					<span class="mui-tab-label">{{nav.title}}</span>
-				</a>
+				</div>
 			</nav>
 		</div>
-		<script src="js/mui.min.js"></script>
+		<script src="js/mui.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script src="js/util.js"></script>
 		<script type="text/javascript" charset="utf-8">
@@ -89,46 +82,51 @@
 			if (viewport > 750) {
 				viewport = 750
 			}
+			var userInfo = getUserInfo();
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			var app = new Vue({
 				el: "#index",
 				data: {
+					numbers: 0,
 					nav: [{
-						title: "首页",
-						id: 'home',
-						icon: 'icon-home-page',
-						selected: 'icon-home-page-s',
-						href: "html/home.html",
-						selected: true
-					}, {
-						title: "人脉",
-						id: 'chat',
-						icon: 'icon-chat',
-						selected: 'icon-chat-s',
-						href: "html/chat.html",
-						selected: false
-					}, {
-						title: "快捷",
-						id: 'shortcut',
-						icon: 'icon-quick',
-						selected: 'icon-quick-s',
-						href: "html/shortcut.html",
-						selected: false
-					}, {
-						title: "自媒体",
-						id: 'media',
-						icon: 'icon-selfmedia',
-						selected: 'icon-selfmedia-s',
-						href: "html/self_media.html",
-						selected: false
-					}, {
-						title: "我的",
-						id: 'user',
-						icon: 'icon-my',
-						selected: 'icon-my-s',
-						href: "html/my.html",
-						selected: false
-					}]
+							title: "首页",
+							id: 'home',
+							icon: 'icon-home-page',
+							selected: 'icon-home-page-s',
+							href: "html/home.html",
+							selected: true
+						}, {
+							title: "人脉",
+							id: 'chat',
+							icon: 'icon-chat',
+							selected: 'icon-chat-s',
+							href: "html/chat.html",
+							selected: false
+						},
+						// {
+						// 	title: "快捷",
+						// 	id: 'shortcut',
+						// 	icon: 'icon-quick',
+						// 	selected: 'icon-quick-s',
+						// 	href: "html/shortcut.html",
+						// 	selected: false
+						// }, 
+						{
+							title: "自媒体",
+							id: 'media',
+							icon: 'icon-selfmedia',
+							selected: 'icon-selfmedia-s',
+							href: "html/self_media.html",
+							selected: false
+						}, {
+							title: "我的",
+							id: 'user',
+							icon: 'icon-my',
+							selected: 'icon-my-s',
+							href: "html/my.html",
+							selected: false
+						}
+					]
 				},
 				methods: {
 					changetab: function(e) {
@@ -139,6 +137,20 @@
 					}
 				},
 				mounted: function() {
+					// (function($) {
+					// 	var main,
+					// 		backButtonPress = 0;
+					// 	$.plusReady(function() {
+					// 		main = plus.android.runtimeMainActivity();
+					// 	});
+					// 	$.back = function() {
+					// 		main && main.moveTaskToBack(false);
+					// 	};
+					// }(mui));
+
+					var prevId = 'home',
+						currentId = '',
+						tempId = '';
 					mui.init();
 					var subpages = [{
 							url: 'html/home.html',
@@ -146,9 +158,10 @@
 							background: '#ffffff',
 							style: 'dark',
 							styles: {
-								top: '0',
-								bottom: '51px',
+								top: '0px',
+								bottom: '50px',
 								background: '#ffffff',
+								scrollIndicator: 'none',
 								statusbar: {
 									background: '#ffffff'
 								}
@@ -159,35 +172,42 @@
 							background: '#cccccc',
 							style: 'light',
 							styles: {
-								top: '0',
-								bottom: '51px',
+								top: '0px',
+								bottom: '50px',
 								background: '#ffffff',
+								scrollIndicator: 'none',
 								statusbar: {
 									background: '#2289FF'
 								}
 							}
-						}, {
-							url: 'html/shortcut.html',
-							ids: 'shortcut',
-							background: 'transparent',
-							style: 'dark',
-							styles: {
-								top: '0',
-								bottom: '51px',
-								background: 'transparent',
-								statusbar: {
-									background: '#ffffff'
-								}
-							}
-						}, {
+						},
+						// {
+						// 	url: 'html/shortcut.html',
+						// 	ids: 'shortcut',
+						// 	background: '#ffffff',
+						// 	style: 'dark',
+						// 	styles: {
+						// 		top: '0px',
+						// 		bottom: '50px',
+						// 		background: 'transparent',
+						// 		backgroundColorBottom: "rgba(0,0,0,0)",
+						// 		backgroundColorTop: "rgba(0,0,0,0)",
+						// 		bounceBackground: "rgba(0,0,0,0)",
+						// 		statusbar: {
+						// 			background: '#ffffff'
+						// 		}
+						// 	}
+						// },
+						{
 							url: 'html/self_media.html',
 							ids: 'self_media',
 							background: '#ffffff',
 							style: 'dark',
 							styles: {
-								top: '0',
-								bottom: '51px',
+								top: '0px',
+								bottom: '50px',
 								background: '#ffffff',
+								scrollIndicator: 'none',
 								statusbar: {
 									background: '#ffffff'
 								}
@@ -199,9 +219,10 @@
 							background: '#2289ff',
 							style: 'light',
 							styles: {
-								top: '0',
-								bottom: '51px',
+								top: '0px',
+								bottom: '50px',
 								background: '#ffffff',
+								scrollIndicator: 'none',
 								statusbar: {
 									background: '#2289ff'
 								}
@@ -209,12 +230,15 @@
 						}
 					];
 					var aniShow = {};
+					//当前激活选项
+					var current = '';
+					var activeTab = subpages[0];
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("dark");
 						plus.navigator.setStatusBarBackground('#FFFFFF');
 						var self = plus.webview.currentWebview();
-						for (var i = 0; i < 5; i++) {
+						for (var i = 0; i < 4; i++) {
 							var temp = {};
 							var sub = plus.webview.create(subpages[i].url, subpages[i].id, subpages[i].styles);
 							if (i > 0) {
@@ -225,98 +249,113 @@
 							}
 							self.append(sub);
 						}
-					});
-					//当前激活选项
-					var activeTab = subpages[0];
-					//选项卡点击事件
-					mui('.mui-bar-tab').on('tap', 'a', function(e) {
-						var targetTab = this.getAttribute('href');
-						if (targetTab == activeTab) {
-							return;
-						}
-						//显示目标选项卡
-						//若为iOS平台或非首次显示，则直接显示
-						if (mui.os.ios || aniShow[targetTab]) {
-							plus.webview.show(targetTab);
-						} else {
-							//否则，使用fade-in动画，且保存变量
-							var temp = {};
-							temp[targetTab] = "true";
-							mui.extend(aniShow, temp);
-							plus.webview.show(targetTab, "fade-in", 300);
-						}
-						//隐藏当前;
-						plus.webview.hide(activeTab);
-						//更改当前活跃的选项卡
-						activeTab = targetTab;
-						setStatusBar(subpages[this.dataset.index].background, subpages[this.dataset.index].style);
-					});
-					//自定义事件，模拟点击“首页选项卡”
-					document.addEventListener('gohome', function() {
-						var defaultTab = document.getElementById("home");
-						//模拟首页点击
-						mui.trigger(defaultTab, 'tap');
-						//切换选项卡高亮
-						var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
-						if (defaultTab !== current) {
-							current.classList.remove('mui-active');
-							defaultTab.classList.add('mui-active');
-						}
+						initIndexPage();
 					});
 
-					//自定义事件监听-首页新增客户点击
-					window.addEventListener('newCustomer', function() {
-						mui.trigger(document.getElementById('chat'), 'tap');
-						document.querySelector('div[data-id=home]').classList.remove('mui-active');
-						document.getElementById('chat').classList.add('mui-active');
-					})
-
-					window.addEventListener('changeMy', function() {
-						mui.trigger(document.getElementById('user.html'), 'tap');
-					})
-
-					document.addEventListener('netchange', onNetChange, false);
-
-					//自定义事件-登录成功
-					window.addEventListener('loginSuccess', function() {
-						userInfo = getUserInfo();
-						bindClientId();
-						getUnreadMessage();
-					})
-
-					//自定义事件-绑定成功
-					window.addEventListener('bindMobileSuccess', function() {
-						userInfo = getUserInfo();
-						bindClientId();
-						getUnreadMessage();
-					})
-
-					window.addEventListener('showChat', function() {
-						mui.trigger(document.getElementById('chat'), 'tap');
-					})
-
-					window.addEventListener('refreshNotice', function() {
-						getUnreadMessage();
-					})
-					var nt = plus.networkinfo.getCurrentType();
-					if (nt == 1) {
-						fnOpenWin('/html/network_outage.html', 'network_outage', {
-							statusbar: {
-								background: '#FFFFFF'
+					function initIndexPage() {
+						//选项卡点击事件
+						mui('.mui-bar-tab').on('tap', '.mui-tab-item', function(e) {
+							var targetTab = this.dataset.url;
+							if (targetTab == activeTab) {
+								return;
 							}
-						}, '', 'slide-in-bottom');
-					}
+							//显示目标选项卡
+							//若为iOS平台或非首次显示，则直接显示
+							if (mui.os.ios || aniShow[targetTab]) {
+								plus.webview.show(targetTab);
+							} else {
+								//否则，使用fade-in动画，且保存变量
+								var temp = {};
+								temp[targetTab] = "true";
+								mui.extend(aniShow, temp);
+								plus.webview.show(targetTab, "fade-in", 300);
+							}
+							//隐藏当前;
+							plus.webview.hide(activeTab);
+							//更改当前活跃的选项卡
+							activeTab = targetTab;
+							setStatusBar(subpages[this.dataset.index].background, subpages[this.dataset.index].style);
+						});
+						//自定义事件，模拟点击“首页选项卡”
+						document.addEventListener('gohome', function() {
+							var defaultTab = document.getElementById("home");
+							//模拟首页点击
+							mui.trigger(defaultTab, 'tap');
+							//切换选项卡高亮
+							current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+							if (defaultTab !== current) {
+								current.classList.remove('mui-active');
+								defaultTab.classList.add('mui-active');
+							}
+						});
 
-					plus.screen.lockOrientation("portrait-primary");
+						//自定义事件监听-首页新增客户点击
+						window.addEventListener('newCustomer', function() {
+							mui.trigger(document.getElementById('chat'), 'tap');
+							document.querySelector('div[data-id=home]').classList.remove('mui-active');
+							document.getElementById('chat').classList.add('mui-active');
+						})
 
-					userInfo = getUserInfo();
-					if (!userInfo) {
-						login();
-					} else if (userInfo.mobile.length == 0) {
-						bindMobile();
-					} else {
-						bindClientId();
-						getUnreadMessage();
+						window.addEventListener('changeMy', function() {
+							mui.trigger(document.getElementById('user.html'), 'tap');
+						})
+
+						document.addEventListener('netchange', onNetChange, false);
+
+						//自定义事件-登录成功
+						window.addEventListener('loginSuccess', function() {
+							userInfo = getUserInfo();
+							bindClientId();
+							getUnreadMessage();
+						})
+
+						//自定义事件-绑定成功
+						window.addEventListener('bindMobileSuccess', function() {
+							userInfo = getUserInfo();
+							bindClientId();
+							getUnreadMessage();
+						})
+
+						window.addEventListener('closeShortcut', function() {
+							// document.getElementById('short_cut').dataset.status = 0;
+							// shortcutWebview.hide();
+							// var restore = document.getElementById(prevId);
+							// //修改选中颜色样式
+							// mui.trigger(restore, 'tap');
+							// document.getElementById('shortcut').classList.remove('mui-active');
+							// restore.classList.add('mui-active');
+							console.log("尝试关闭快捷菜单！");
+						})
+
+						window.addEventListener('showChat', function() {
+							mui.trigger(document.getElementById('chat'), 'tap');
+						})
+
+						window.addEventListener('refreshNotice', function() {
+							getUnreadMessage();
+						})
+						var nt = plus.networkinfo.getCurrentType();
+						if (nt == 1) {
+							fnOpenWin('/html/network_outage.html', 'network_outage', {
+								statusbar: {
+									background: '#FFFFFF'
+								}
+							}, '', 'slide-in-bottom');
+						}
+
+						plus.screen.lockOrientation("portrait-primary");
+
+						if (!userInfo) {
+							login();
+						} else if (userInfo.mobile.length == 0) {
+							bindMobile();
+						} else {
+							bindClientId();
+							getUnreadMessage();
+							var timer = setInterval(function() {
+								getUnreadMessage();
+							}, 2000);
+						}
 					}
 
 					function login() {
@@ -354,7 +393,6 @@
 							},
 						}, '', 'slide-in-bottom');
 					}
-
 					//获取未读消息
 					function getUnreadMessage() {
 						if (!userInfo) return;
@@ -362,12 +400,11 @@
 							action: 'unread_message',
 							token: userInfo.token
 						}, function(res) {
-							var tipsObj = document.getElementById('message_tip');
 							if (res.data > 0) {
-								tipsObj.innerText = res.data;
+								app.numbers = res.data;
 								getFriendApply();
 							} else {
-								tipsObj.innerText = 0;
+								app.numbers = 0;
 								getFriendApply();
 							}
 						}, 'json');
@@ -380,16 +417,12 @@
 							action: 'friend_apply_count',
 							token: userInfo.token,
 						}, function(res) {
-							var tipsObj = document.getElementById('message_tip');
-							var number = tipsObj.innerText;
-							var total = parseInt(res.data) + parseInt(number);
+							var total = parseInt(res.data) + parseInt(app.numbers);
 							if (total > 0) {
-								tipsObj.innerText = total;
-								tipsObj.style.display = 'block';
+								app.numbers = total;
 								setBadge(total);
 							} else {
-								tipsObj.innerText = 0;
-								tipsObj.style.display = 'none';
+								app.numbers = 0;
 								clearBadge();
 							}
 						}, 'json')

@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>代理</title>
+		<title></title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/mui.picker.min.css" rel="stylesheet" />
 		<link href="../css/mui.poppicker.css" rel="stylesheet" />
@@ -67,6 +67,22 @@
 				transform: translateY(-50%);
 				-webkit-transform: translateY(-50%);
 			}
+			.mui-content-padded span{
+				color:#2289ff;
+			}
+			.mui-content-padded p{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.mui-checkbox input[type=checkbox]{
+				position: relative;
+				top: 0;
+				right: auto;
+				left: auto;
+				transform: scale(0.8);
+				-webkit-transform: scale(0.8);
+			}
 		</style>
 	</head>
 	<body>
@@ -119,7 +135,7 @@
 			</div>
 			<div class="mui-content-padded">
 				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">立即支付</button>
-				<p style="text-align: center;">开通即视为同意<a href="agreement.html">《旺客-用户协议》</a></p>
+				<p style="text-align: center;" class="mui-input-row mui-checkbox"><input id="agree" name="checkbox" value="" type="checkbox">开通即视为同意<span id="agreement">《旺客-用户协议》</span></p>
 			</div>
 			<!-- 创客弹窗开始 -->
 			<div class="maker-model-container mui-hidden">
@@ -251,6 +267,9 @@
 					setStatusBar('', statusBarStyle);
 					mui.back();
 				})
+				mui('.mui-content').on('tap', '#agreement', function() {
+					openPage('user_agreement.html','user_agreement','#ffffff','');
+				})
 
 				//跳转激活码激活
 				mui('.mui-content').on('tap', '.activation-link', function() {
@@ -314,6 +333,7 @@
 
 				//支付
 				mui('.mui-content').on('tap', '.mui-pay', function() {
+				var cheackd=document.getElementById('agree').checked;
 					document.activeElement.blur();
 					if (vm.recommendId == 0) {
 						if (vm.recommendPhone.length == 0) {
@@ -322,6 +342,10 @@
 						}
 						if (!/1[\d]{10}/.test(vm.recommendPhone)) {
 							message('推荐人手机号码输入有误!');
+							return;
+						}
+						if (!cheackd) {
+							message('需要同意旺客用户协议');
 							return;
 						}
 					}

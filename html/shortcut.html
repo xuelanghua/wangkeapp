@@ -19,7 +19,7 @@
 				display: -webkit-flex;
 				width: 100%;
 				min-height: 100vh;
-				background-color: rgba(0, 0, 0, 0.1);
+				background-color: rgba(0, 0, 0, 0);
 			}
 
 			.li-container {
@@ -104,7 +104,7 @@
 			</div>
 		</div>
 	</body>
-	<script src="../js/mui.min.js"></script>
+	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
 	<script>
 		mui.init({
@@ -141,6 +141,9 @@
 				//首页id=H54F3E71F
 				var index = plus.webview.getWebviewById('H54F3E71F');
 				mui.fire(index, 'closeShortcut');
+				// index.close();
+				var _self=plus.webview.currentWebview();
+				_self.hide();
 			})
 
 			document.getElementById('add_customer').addEventListener('tap', function(e) {

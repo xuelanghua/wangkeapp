@@ -416,22 +416,42 @@
 
 			.mui-badge-danger {
 				position: absolute;
-				left: 25px;
+				right: 5px;
 				top: 5px;
 				font-size: 10px;
 				padding: 3px 5px 1px;
 				background-color: #FF0000;
+			}
+
+			#message,
+			#openPopover {
+				position: relative;
+				z-index: 13;
+				/* background-color: #20D81F; */
+			}
+
+			.open-message,
+			#openPopover {
+				position: relative;
+				padding: 0 15px;
+				height: 42px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 13;
 			}
 		</style>
 	</head>
 	<body>
 		<div style="margin-bottom: 50px;">
 			<header class="mui-bar mui-bar-nav" style="height:120px; background-color: #fff;box-shadow: 0 0 0 #fff;">
-				<img id="message" src="../image/index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;">
-				<span class="mui-badge mui-badge-danger" style="display: none;" id="unread_message">0</span>
+				<div id="message" class="open-message mui-pull-left">
+					<img src="../image/index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;">
+					<span class="mui-badge mui-badge-danger" style="display: none;z-index: 14;" id="unread_message">0</span>
+				</div>
 				<h1 class="mui-title">旺客</h1>
 				<a href="#popover" class="add-btn mui-pull-right" id="openPopover">
-					<img src="../image/index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;margin-right: 10px;">
+					<img src="../image/index-add-icon.png" style="width: 20px;height: 20px;">
 				</a>
 				<!-- <a href="#popover" id="openPopover">
 					<img src="../image/index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;margin-right: 10px;">
@@ -488,9 +508,12 @@
 
 				<div class="mui-slider" id="slider_container">
 					<div class="mui-slider-group">
-						<div class="mui-slider-item"><a href="javascript: void(0);"><img src="../image/home_adv.jpg" />
+						<div class="mui-slider-item">
+							<a href="javascript: void(0);">
+								<img src="../image/home_adv.jpg" />
 								<p class="mui-slider-title">只要精神不滑坡,办法总比困难多</p>
-							</a></div>
+							</a>
+						</div>
 					</div>
 				</div>
 
@@ -632,7 +655,9 @@
 			self.setStyle({
 				bottom: 51
 			})
-			getUnreadMessage();
+			var timer = setInterval(function() {
+				getUnreadMessage();
+			}, 2000);
 			getNotice();
 			weatherInit(); //天气初始化
 			slideInit(false); //幻灯片初始化 
