@@ -626,7 +626,6 @@ function pushInit() {
 	// }
 	plus.push.addEventListener('receive', function(msg) {
 		console.log(JSON.stringify(msg));
-		alert("我我我");
 		try {
 			if (!msg.payload) {
 				return;
@@ -718,11 +717,11 @@ function pushCallback(data, event) {
 		}
 	} else if (event == 'receive') {
 		if (url == 'dialog') {
+			playNoticeAudio();
 			// plus.device.beep();
 			// plus.device.vibrate();
 			mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 			mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-			playNoticeAudio();
 		} else if (url == 'chat') {
 			playNoticeAudio();
 			if (data.chat == 'customer') {
@@ -752,7 +751,7 @@ function pushCallback(data, event) {
 }
 
 function playNoticeAudio() {
-	alert("2323");
+	alert("今天今天今天");
 	if (plus.os.name == 'Android') {
 		var context = plus.android.runtimeMainActivity();
 		var RingtoneManager = plus.android.importClass('android.media.RingtoneManager');
