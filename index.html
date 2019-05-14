@@ -59,13 +59,20 @@
 				-webkit-box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
 				box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
 			}
+			body {
+				padding-top: constant(safe-area-inset-top);
+			}
+			.mui-bar.mui-bar-nav {
+			   top: constant(safe-area-inset-top);
+			}
 		</style>
 	</head> 
 
 	<body>
 		<div id="index">
 			<nav class="mui-bar mui-bar-tab">
-				<div :data-index="index" :id="nav.id" class="mui-tab-item" :class="nav.selected?'self-active':''" v-for="(nav,index) in nav" :key="index">
+				<div :data-index="index" :id="nav.id" class="mui-tab-item" :class="nav.selected?'self-active':''" v-for="(nav,index) in nav"
+				 :key="index">
 					<p>
 						<span :class="nav.selected?nav.icon+'-s':nav.icon" style="font-size: 18px;margin-top: 2px;"></span>
 						<span v-if="nav.id=='chat'&&numbers!=0" class="mui-badge">{{numbers}}</span>
@@ -89,7 +96,7 @@
 				el: "#index",
 				data: {
 					numbers: 0,
-					number:0,
+					number: 0,
 					nav: [{
 							title: "首页",
 							id: 'home',
@@ -303,14 +310,14 @@
 						//自定义事件监听-首页新增客户点击
 						window.addEventListener('newCustomer', function() {
 							mui.trigger(document.getElementById('chat'), 'tap');
-							document.getElementById('defaultTab').classList.remove('self-active');
+							document.getElementById('home').classList.remove('self-active');
 							document.getElementById('chat').classList.add('self-active');
 						})
 
 						window.addEventListener('changeMy', function() {
 							mui.trigger(document.getElementById('user.html'), 'tap');
 						})
-
+						
 						document.addEventListener('netchange', onNetChange, false);
 
 						//自定义事件-登录成功
@@ -348,6 +355,7 @@
 
 						window.addEventListener('refreshNotice', function() {
 							getUnreadMessage();
+							alert("我我我我");
 						})
 						
 						var nt = plus.networkinfo.getCurrentType();
@@ -419,7 +427,7 @@
 								mui.fire(plus.webview.getWebviewById('user'), 'messgeNumber', {
 									number: res.data
 								});
-								app.number=res.data;
+								app.number = res.data;
 								getFriendApply();
 							} else {
 								mui.fire(plus.webview.getWebviewById('chat'), 'messgeNumber', {
@@ -431,7 +439,7 @@
 								mui.fire(plus.webview.getWebviewById('user'), 'messgeNumber', {
 									number: 0
 								});
-								app.number=0;
+								app.number = 0;
 								getFriendApply();
 							}
 						}, 'json');

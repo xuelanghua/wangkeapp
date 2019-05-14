@@ -440,6 +440,12 @@
 				justify-content: center;
 				z-index: 13;
 			}
+			body {
+			   padding-top: constant(safe-area-inset-top);
+			}
+			.mui-bar.mui-bar-nav {
+			   top: constant(safe-area-inset-top);
+			}
 		</style>
 	</head>
 	<body>
@@ -651,10 +657,17 @@
 		var qrType = 'card';
 		var userInfo = getUserInfo();
 		mui.plusReady(function() {
-			var self = plus.webview.currentWebview();
-			self.setStyle({
-				bottom: 51
-			})
+			
+			if(plus.device.model === 'iPhoneX') {
+				logs("运行在iphoneX上");
+			}
+			
+			
+			
+			// var self = plus.webview.currentWebview();
+			// self.setStyle({
+			// 	bottom: 51
+			// })
 			getNotice();
 			weatherInit(); //天气初始化
 			slideInit(false); //幻灯片初始化 
@@ -812,7 +825,7 @@
 			document.getElementById('quik_sharing').addEventListener('tap', function() {
 				share({
 					title: '旺客',
-					content: '王天下之客,让营销更简单!',
+					content: '旺天下之客,让营销更简单!',
 					thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
 					href: $ajaxUrl + 'download'
 				}, 'web');

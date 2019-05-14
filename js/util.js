@@ -621,11 +621,12 @@ function bindClientId() {
 
 //消息推送初始化
 function pushInit() {
-	if (plus.os.name == 'iOS') {
-		plus.push.clear();
-	}
+	// if (plus.os.name == 'iOS') {
+	// 	plus.push.clear();
+	// }
 	plus.push.addEventListener('receive', function(msg) {
 		console.log(JSON.stringify(msg));
+		alert("我我我");
 		try {
 			if (!msg.payload) {
 				return;
@@ -686,9 +687,10 @@ function pushCallback(data, event) {
 					mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 				}
 			} else if (url == 'dialog') {
-				mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-				mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-				mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+				// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+				// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+				// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 				fnOpenWin('html/' + url + '.html', url, {
 					statusbar: {
@@ -718,13 +720,11 @@ function pushCallback(data, event) {
 		if (url == 'dialog') {
 			// plus.device.beep();
 			// plus.device.vibrate();
-			mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-			mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-			mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+			mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 			mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-
 			playNoticeAudio();
 		} else if (url == 'chat') {
+			playNoticeAudio();
 			if (data.chat == 'customer') {
 				mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
 			} else if (data.chat == 'friend') {
@@ -734,14 +734,12 @@ function pushCallback(data, event) {
 				logs(data);
 				mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 			}
-
-			playNoticeAudio();
 		} else if (url == 'activation') {
-			updateUserInfo();
 			mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
 			mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
 			mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
 			mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
+			updateUserInfo();
 		} else if (url == 'logout') {
 			fnLogout();
 		} else {
@@ -754,12 +752,14 @@ function pushCallback(data, event) {
 }
 
 function playNoticeAudio() {
+	alert("2323");
 	if (plus.os.name == 'Android') {
 		var context = plus.android.runtimeMainActivity();
 		var RingtoneManager = plus.android.importClass('android.media.RingtoneManager');
 		var uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
 		plus.android.importClass(uri);
 		var p = plus.audio.createPlayer(uri.toString());
+		logs(uri.toString());
 		var flag = true;
 		p.play(function() {
 			flag = false;
