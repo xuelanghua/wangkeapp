@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.css" rel="stylesheet" />
 		<style>
 			a:hover, a:active, a:visited, a:link, a:focus{
@@ -599,7 +599,7 @@
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">微信号</div>
 					<div class="mui-pull-right">
-						<input  type="text" name="wechat" value="" placeholder="暂未填写" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')"/>
+						<input type="text" name="wechat" value="" placeholder="暂未填写" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -613,7 +613,7 @@
 				<div class="head_portrait">
 					<div class="mui-pull-left head_portrait_name">邮箱</div>
 					<div class="mui-pull-right">
-						<input type="email" name="email"  onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" value="" placeholder="暂未填写" />
+						<input type="email" name="email" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" value="" placeholder="暂未填写" />
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -683,7 +683,7 @@
 	<script src="../js/upload.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			swipeBack: true,
+			swipeBack: false,
 			gestureConfig: {
 				hold: true, //默认为false，不监听
 				release: true //默认为false，不监听
@@ -698,6 +698,7 @@
 		var imageId = 0;
 		var images = new Array();
 		var submitFlag = true;
+		var mask = mui.createMask();
 		mui.plusReady(function() {
 			userInfo = getUserInfo();
 			getMemberInfo();
@@ -812,34 +813,34 @@
 					document.querySelector('.member-company-address').innerText = '暂未填写';
 				}
 			})
-
+			
 			//按住录音
 			document.getElementById('voice_record').addEventListener('hold', function() {
 				document.querySelector('.showArea').style.display = 'block';
 				voiceTime = 0;
 				startRecord();
 			})
-			
+
 			//结束录音
 			document.getElementById('voice_record').addEventListener('release', function() {
 				document.querySelector('.showArea').style.display = 'none';
 				stopRecord();
 				// setTimeout('stopRecord()', 2000);
 			})
-			
+
 			//播放录音
 			document.querySelector('.play').addEventListener('tap', function() {
 				document.querySelector('.play').src = '../image/play.gif';
 				var voice = document.querySelector('input[name=voice]').value;
-				var audio = document.createElement("audio");  
-				audio.src = voice; 
+				var audio = document.createElement("audio");
+				audio.src = voice;
 				audio.play();
 				console.log('voiceTime=' + voiceTime);
 				setTimeout(function() {
 					document.querySelector('.play').src = '../image/bofang.png';
-				}, voiceTime*1000)
+				}, voiceTime * 1000)
 			})
-			
+
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
 				imageUpload(function(res) {
@@ -848,12 +849,13 @@
 					var newImgDiv = document.createElement('div');
 					newImgDiv.setAttribute('data-id', imageId);
 					newImgDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					var html = '<img src="' + res.url +
+						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 					newImgDiv.innerHTML = html;
 					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
 				});
 			})
-			
+
 			//删除图片
 			mui('#pic-container').on('tap', '.mui-close', function() {
 				var parentDiv = this.parentElement;
@@ -861,7 +863,7 @@
 				parentDiv.remove();
 				delete images[imgId];
 			})
-			
+
 			//提交表单
 			document.getElementById('submit').addEventListener('tap', function() {
 				var submitData = {
@@ -877,7 +879,9 @@
 					desc: document.querySelector('textarea[name=desc]').value,
 					voice: document.querySelector('input[name=voice]').value,
 					voice_time: voiceTime,
-					images: images.filter(function(e) {return e != null}).join(','),
+					images: images.filter(function(e) {
+						return e != null
+					}).join(','),
 					card_type: cardType,
 					my_url: '',
 					token: userInfo.token
@@ -898,13 +902,13 @@
 			mui.get($ajaxUrl + 'staff&action=card&token=' + userInfo.token, function(res) {
 				if (res.errno == 0) {
 					loadInfo(res.data);
-				} 
-// 				else {
-// 					message(res.message);
-// 					setTimeout(function() {
-// 						fnCloseWin('card_setting');
-// 					}, 2000);
-// 				}
+				}
+				// 				else {
+				// 					message(res.message);
+				// 					setTimeout(function() {
+				// 						fnCloseWin('card_setting');
+				// 					}, 2000);
+				// 				}
 				setTimeout(function() {
 					plus.nativeUI.closeWaiting();
 				}, 1000)
@@ -958,17 +962,18 @@
 			}
 
 			for (var attr in data) {
-				if (data[attr].length != 0 && (attr == 'avatar' || attr == 'name' || attr == 'job' || attr == 'phone' || attr == 'wechat' || attr ==
+				if (data[attr].length != 0 && (attr == 'avatar' || attr == 'name' || attr == 'job' || attr == 'phone' || attr ==
+						'wechat' || attr ==
 						'telephone' || attr == 'email' || attr == 'company' || attr == 'company_address')) {
 					document.querySelector('input[name=' + attr + ']').value = data[attr];
 				} else if (data[attr].length != 0 && attr == 'desc2') {
 					document.querySelector('textarea[name=desc]').value = data[attr];
 				}
 			}
-			
+
 			if (data.voice.length != 0) {
 				document.querySelector('.voice-container').children[0].classList.add('hidden');
-				document.querySelector('.voice-container').children[1].classList.remove('hidden'); 
+				document.querySelector('.voice-container').children[1].classList.remove('hidden');
 				document.querySelector('.voice-time').innerText = data.voice_time;
 				document.querySelector('input[name=voice_time]').value = data.voice_time;
 				document.querySelector('input[name=voice]').value = data.voice;
@@ -981,7 +986,8 @@
 					var newDiv = document.createElement('div');
 					newDiv.setAttribute('data-id', i);
 					newDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + data.images[i] + '" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					var html = '<img src="' + data.images[i] +
+						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 					newDiv.innerHTML = html;
 					document.getElementById('pic-container').insertBefore(newDiv, document.getElementById('add_pic'));
 					imageId++;
@@ -1045,7 +1051,7 @@
 				format: 'mp3'
 			}, function(e) {
 				document.querySelector('.voice-container').children[0].classList.add('hidden');
-				document.querySelector('.voice-container').children[1].classList.remove('hidden'); 
+				document.querySelector('.voice-container').children[1].classList.remove('hidden');
 				document.querySelector('.voice-time').innerText = voiceTime;
 				document.querySelector('input[name=voice_time]').value = voiceTime;
 				document.querySelector('input[name=voice]').value = e;
@@ -1063,7 +1069,8 @@
 
 		//播放录音
 		function playRecord(path) {
-			play = plus.audio.createPlayer('https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3');
+			play = plus.audio.createPlayer(
+				'https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3');
 			play.play(function() {
 				document.querySelector('.play').src = '../image/bofang.png';
 			}, function(e) {
@@ -1073,6 +1080,8 @@
 
 		//文件上传
 		function voiceUpload(file) {
+			plus.nativeUI.showWaiting('上传录音，请稍后……');
+			mask.show();
 			var task = plus.uploader.createUpload($voiceUrl, {
 					method: "POST",
 					blocksize: 614400,
@@ -1084,9 +1093,12 @@
 						logs(res);
 						if (res.errno == 1) {
 							message(res.message);
-							// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+							plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 						} else {
+							plus.nativeUI.closeWaiting();
+							mask.close();
 							document.querySelector('input[name=voice]').value = res.data.path;
+							message("上传成功");
 						}
 					} else {
 						console.log("上传失败：" + status);
@@ -1100,7 +1112,7 @@
 			});
 			task.start();
 		}
-		
+
 		//提交数据
 		function doSumbit(data) {
 			if (!submitFlag) return;
@@ -1122,7 +1134,7 @@
 				plus.nativeUI.closeWaiting();
 			}, 'json')
 		}
-		
+
 		//图片转base64
 		function canvasGen(image) {
 			var canvas = document.createElement('canvas');

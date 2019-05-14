@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<title>我的</title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
@@ -543,7 +543,6 @@
 				eventInit();
 				getMemberInfo();
 				getNotice();
-				getUnreadMessage();
 			})
 
 			//事件初始化
@@ -582,9 +581,17 @@
 					getMemberInfo();
 				})
 
-				window.addEventListener('refreshNotice', function() {
-					getUnreadMessage();
+				//监听消息数量 首页广播
+				window.addEventListener('messgeNumber', function(e) {
+					var tipObj = document.getElementById('unread_message');
+					if (e.detail.number) {
+						tipObj.innerText = e.detail.number;
+						tipObj.style.display = 'block';
+					} else {
+						tipObj.style.display = 'none';
+					}
 				})
+
 				window.addEventListener('reloadMyself', function() {
 					getMemberInfo();
 				})
@@ -857,26 +864,6 @@
 				detailPage.show('slide-in-right');
 				setStatusBar('', 'dark');
 			}
-
-			//获取未读消息
-			function getUnreadMessage() {
-				mui.get($ajaxUrl + 'member', {
-					action: 'unread_message',
-					token: userInfo.token
-				}, function(res) {
-					var tipObj = document.getElementById('unread_message');
-					if (res.data > 0) {
-						tipObj.innerText = res.data;
-						tipObj.style.display = 'block';
-					} else {
-						tipObj.innerText = 0;
-						tipObj.style.display = 'none';
-					}
-				}, 'json');
-			}
-			setInterval(function() {
-				getUnreadMessage();
-			}, 2000)
 		</script>
 	</body>
 </html>
