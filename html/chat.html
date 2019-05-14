@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<title></title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/mui.indexedlist.css" rel="stylesheet" />
@@ -379,7 +379,7 @@
 				position: absolute;
 				top: 2px;
 				right: 0;
-				padding: 2px 3px 0;
+				padding: 3px 5px 1px;
 				background-color: rgba(255,0,0,0.8);
 				color: #FFFFFF;
 				font-size: 10px;
@@ -428,6 +428,13 @@
 			}
 			.operating-area img{
 				height: 21px;
+			}
+			.list-container{
+				position: relative;
+				height: 1200px;
+			}
+			#friend_tip{
+				right: 22%;
 			}
 		</style>
 	</head>
@@ -612,13 +619,20 @@
 					</div>
 				</div>
 				<div class="list-container">
+					<!-- <div class="mui-scroll-wrapper"> -->
+					<!-- 区域滚动的子容器 -->
+					<!-- <div class="mui-scroll"> -->
+					<!-- 真实的内容放到区域滚动的子容器里面 -->
 					<div data-id="1" id="item1" class="mui-control-content mui-active"></div>
 					<div data-id="2" id="item2" class="mui-control-content"></div>
 					<div data-id="3" id="item3" class="mui-control-content"></div>
 					<div data-id="4" id="item4" class="mui-control-content"></div>
 					<div data-id="5" id="item5" class="mui-control-content"></div>
+					<!-- </div> -->
+					<!-- </div> -->
 				</div>
 			</div>
+		</div>
 		</div>
 		<div id="friend" style="display: none;">
 			<div class="new-friend" style="height: 60px;padding-left: 15px;padding-top: 10px;">
@@ -646,27 +660,32 @@
 				keyEventBind: {
 					backbutton: false, //Boolean(默认true)关闭back按键监听  
 					menubutton: true //Boolean(默认true)关闭menu按键监听  
-				},
-				pullRefresh: {
-					container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
-					down: {
-						style: 'circle',
-						color: '#2289FF',
-						callback: function() {
-							downRefresh = true;
-							if (currentTab == 'crm') {
-								getCustomerList('crm', false);
-							} else if (currentTab == 'customer') {
-								getCustomerList('customer', false);
-							} else if (currentTab == 'friend') {
-								getCustomerList('friend', false);
-							}
-							// getMemberInfo();
-						}
-					}
 				}
+				// ,
+				// pullRefresh: {
+				// 	container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				// 	down: {
+				// 		style: 'circle',
+				// 		color: '#2289FF',
+				// 		callback: function() {
+				// 			downRefresh = true;
+				// 			if (currentTab == 'crm') {
+				// 				getCustomerList('crm', false);
+				// 			} else if (currentTab == 'customer') {
+				// 				getCustomerList('customer', false);
+				// 			} else if (currentTab == 'friend') {
+				// 				getCustomerList('friend', false);
+				// 			}
+				// 			// getMemberInfo();
+				// 		}
+				// 	}
+				// },
 			});
-
+			// mui(".mui-content").scroll({
+			// 	//bounce: false,//滚动条是否有弹力默认是true
+			// 	indicators: false, //是否显示滚动条,默认是true
+			// });
+		
 			var label = null;
 			var currentLabel = 'empty';
 			var currentTab = 'crm';
@@ -703,6 +722,16 @@
 			};
 
 			mui.plusReady(function() {
+				// mui('#list_container').scroll({
+				// 	scrollY: true, //是否竖向滚动
+				// 	scrollX: false, //是否横向滚动
+				// 	startX: 0, //初始化时滚动至x
+				// 	startY: 0, //初始化时滚动至y
+				// 	indicators: true, //是否显示滚动条
+				// 	deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
+				// 	bounce: true //是否启用回弹
+				// });
+
 				// plus.navigator.setStatusBarStyle("light");
 				// plus.navigator.setStatusBarBackground('#2289FF');
 				// originalHeight = document.querySelector("body").offsetHeight;
@@ -712,12 +741,12 @@
 				// 	bottom: 51
 				// })
 				// self.setStyle({bottom: 51})
-				// 				self.addEventListener('show', function() {
-				// 					timeInterval();
-				// 				})
-				// 				self.addEventListener('hide', function() {
-				// 					clearTimeInterval();
-				// 				})
+				// self.addEventListener('show', function() {
+				// 	timeInterval();
+				// })
+				// self.addEventListener('hide', function() {
+				// 	clearTimeInterval();
+				// })
 
 				// var first = null;
 				// mui.back = function() {
@@ -761,11 +790,40 @@
 					logs('refreshCrm');
 					getCustomerList('crm', false);
 				})
+				//自定义事件监听-好友请求条数
+				window.addEventListener('friendApplyNumber', function(e) {
+					var num = e.detail.number;
+					var tipsObjs = document.querySelectorAll('.friend_tips');
+					var tipsObj = document.getElementById('friend_tip');
+					mui.each(tipsObjs, function() {
+						this.style.display = 'none';
+					})
+					tipsObj.style.display = 'none';
+					if (num > 0) {
+						mui.each(tipsObjs, function() {
+							this.innerText = num;
+							this.style.display = 'block';
+						})
+
+						tipsObj.innerText = num;
+						// tipsObjs.style.display = 'block';
+						tipsObj.style.display = 'block';
+					} else {
+						mui.each(tipsObjs, function() {
+							this.innerText = 0;
+							this.style.display = 'none';
+						})
+						tipsObjs.innerText = 0;
+						tipsObj.innerText = 0;
+						// tipsObjs.style.display = 'none'; 
+						tipsObj.style.display = 'none';
+					}
+				})
 
 				//自定义事件监听-刷新新增客户
 				window.addEventListener('refreshFriend', function() {
 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
-					getFriendApply();
+					// getFriendApply();
 					getCustomerList('friend', false);
 				})
 
@@ -780,7 +838,7 @@
 				document.getElementById('message').addEventListener('tap', function() {
 					fnOpenWin('message.html', 'message', {
 						statusbar: {
-							background: '#FFF'
+							background: '#FFFFFF'
 						}
 					}, {
 						prePage: 'chat'
@@ -805,7 +863,7 @@
 				})
 
 				window.addEventListener('addFriend', function(e) {
-					getFriendApply();
+					// getFriendApply();
 					getCustomerList('friend', false);
 				})
 
@@ -822,8 +880,8 @@
 
 				window.addEventListener('refreshNotice', function(e) {
 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
-					getUnreadMessage();
-					getFriendApply();
+					// getUnreadMessage();
+					// getFriendApply();
 				})
 
 				// window.addEventListener('resizeWindow', function(e) {
@@ -885,8 +943,8 @@
 				// 				var html = document.getElementById('crm').innerHTML;
 				// 				document.getElementById('list_container').innerHTML = html;
 				// eventInit();
-				getUnreadMessage();
-				getFriendApply();
+				// getUnreadMessage();
+				// getFriendApply();
 				getCustomerList('customer', false);
 				getCustomerList('crm', false);
 				getCustomerList('friend', false);
@@ -1175,7 +1233,6 @@
 						}, 'slide-in-right');
 					}
 				})
-
 				//新增好友条目点击记录
 				mui('.newly_added').on('tap', '#segmentedControl a', function() {
 					var tabId = this.dataset.id;
@@ -1212,40 +1269,40 @@
 			}
 
 			//获取好友申请条目
-			function getFriendApply() {
-				if (!userInfo) return;
-				mui.post($ajaxUrl + 'customer', {
-					action: 'friend_apply_count',
-					token: userInfo.token,
-				}, function(res) {
-					logs(res);
-					var tipsObjs = document.querySelectorAll('.friend_tips');
-					var tipsObj = document.getElementById('friend_tip');
-					mui.each(tipsObjs, function() {
-						this.style.display = 'none';
-					})
-					tipsObj.style.display = 'none';
-					if (parseInt(res.data) > 0) {
-						mui.each(tipsObjs, function() {
-							this.innerText = res.data;
-							this.style.display = 'block';
-						})
-
-						tipsObj.innerText = res.data;
-						// tipsObjs.style.display = 'block';
-						tipsObj.style.display = 'block';
-					} else {
-						mui.each(tipsObjs, function() {
-							this.innerText = 0;
-							this.style.display = 'none';
-						})
-						tipsObjs.innerText = 0;
-						tipsObj.innerText = 0;
-						// tipsObjs.style.display = 'none'; 
-						tipsObj.style.display = 'none';
-					}
-				}, 'json')
-			}
+			// function getFriendApply() {
+			// 	if (!userInfo) return;
+			// 	mui.post($ajaxUrl + 'customer', {
+			// 		action: 'friend_apply_count',
+			// 		token: userInfo.token,
+			// 	}, function(res) {
+			// 		logs(res);
+			// 		var tipsObjs = document.querySelectorAll('.friend_tips');
+			// 		var tipsObj = document.getElementById('friend_tip');
+			// 		mui.each(tipsObjs, function() {
+			// 			this.style.display = 'none';
+			// 		})
+			// 		tipsObj.style.display = 'none';
+			// 		if (parseInt(res.data) > 0) {
+			// 			mui.each(tipsObjs, function() {
+			// 				this.innerText = res.data;
+			// 				this.style.display = 'block';
+			// 			})
+			// 
+			// 			tipsObj.innerText = res.data;
+			// 			// tipsObjs.style.display = 'block';
+			// 			tipsObj.style.display = 'block';
+			// 		} else {
+			// 			mui.each(tipsObjs, function() {
+			// 				this.innerText = 0;
+			// 				this.style.display = 'none';
+			// 			})
+			// 			tipsObjs.innerText = 0;
+			// 			tipsObj.innerText = 0;
+			// 			// tipsObjs.style.display = 'none'; 
+			// 			tipsObj.style.display = 'none';
+			// 		}
+			// 	}, 'json')
+			// }
 
 			function showCustomer(data, type) {
 				if (!data) return;
@@ -1803,33 +1860,32 @@
 					indexInit();
 				}
 			}
-
-			function timeInterval() {
-				timer = setInterval(function() {
-					getCustomerList('customer');
-				}, 30000);
-			}
-
-			function clearTimeInterval() {
-				clearInterval(timer);
-			}
-
+			//监听消息数量 首页广播
+			window.addEventListener('messgeNumber', function(e) {
+				var tipObj = document.getElementById('unread_message');
+				if (e.detail.number) {
+					tipObj.innerText = e.detail.number;
+					tipObj.style.display = 'block';
+				} else {
+					tipObj.style.display = 'none';
+				}
+			})
 			//获取未读消息
-			function getUnreadMessage() {
-				mui.get($ajaxUrl + 'member', {
-					action: 'unread_message',
-					token: userInfo.token
-				}, function(res) {
-					var tipObj = document.getElementById('unread_message');
-					if (res.data > 0) {
-						tipObj.innerText = res.data;
-						tipObj.style.display = 'block';
-					} else {
-						tipObj.innerText = 0;
-						tipObj.style.display = 'none';
-					}
-				}, 'json');
-			}
+			// function getUnreadMessage() {
+			// 	mui.get($ajaxUrl + 'member', {
+			// 		action: 'unread_message',
+			// 		token: userInfo.token
+			// 	}, function(res) {
+			// 		var tipObj = document.getElementById('unread_message');
+			// 		if (res.data > 0) {
+			// 			tipObj.innerText = res.data;
+			// 			tipObj.style.display = 'block';
+			// 		} else {
+			// 			tipObj.innerText = 0;
+			// 			tipObj.style.display = 'none';
+			// 		}
+			// 	}, 'json');
+			// }
 			mui(".mui-content").on('tap', '.mui-search', function() {
 				mui.openWindow({
 					url: "chat_page_search.html",
@@ -1863,9 +1919,6 @@
 				})
 				setStatusBar('', 'dark');
 			})
-			setInterval(function() {
-				getUnreadMessage();
-			}, 2000)
 		</script>
 	</body>
 

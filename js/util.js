@@ -641,20 +641,20 @@ function pushInit() {
 
 	plus.push.addEventListener('click', function(msg) {
 		console.log(JSON.stringify(msg));
-		try {
-			// if (plus.os.name == 'iOS') {
-			// 	plus.push.clear();
-			// }
-			if (!msg.payload) {
-				return;
-			}
-			if (plus.os.name == "Android") {
-				msg.payload = JSON.parse(msg.payload);
-			}
-			pushCallback(msg.payload, 'click');
-		} catch (e) {
-			console.log(e.message);
+		// try {
+		// if (plus.os.name == 'iOS') {
+		// 	plus.push.clear();
+		// }
+		if (!msg.payload) {
+			return;
 		}
+		if (plus.os.name == "Android") {
+			msg.payload = JSON.parse(msg.payload);
+		}
+		pushCallback(msg.payload, 'click');
+		// } catch (e) {
+		// 	console.log(e.message);
+		// }
 	})
 }
 
@@ -666,91 +666,91 @@ function pushInit() {
  * chat:crm, customer, friend
  */
 function pushCallback(data, event) {
-	try {
-		var type = data.type;
-		var url = data.url;
-		var extra = data.extra;
-		// logs(type);
-		// logs(url);
-		// logs(extra);
-		// logs(event);
-		if (event == 'click') {
-			if (type == 'jump') {
-				if (url == 'chat') {
-					if (type == 'customer') {
-						mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
-					} else if (type == 'friend') {
-						mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
-					} else if (data.chat == 'crm') {
-						logs(data);
-						mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
-					}
-				} else if (url == 'dialog') {
-					mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-					mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-					mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
-					mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-					fnOpenWin('html/' + url + '.html', url, {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, extra, '');
-				} else {
-					if (url) {
-						logs(url);
-						fnOpenWin('html/' + url + '.html', url, '', extra, '');
-					}
-				}
-			} else if (type == 'refresh') {
-				if (url == 'activation') {
-					updateUserInfo();
-					mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
-					mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
-					mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
-					mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
-				} else if (url == 'logout') {
-					fnLogout();
-				} else {
-					mui.fire(plus.webview.getWebviewById(url), 'refresh');
-				}
-			}
-		} else if (event == 'receive') {
-			if (url == 'dialog') {
-				// plus.device.beep();
-				// plus.device.vibrate();
-				mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-				mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-				mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
-				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-
-				playNoticeAudio();
-			} else if (url == 'chat') {
-				if (data.chat == 'customer') {
+	// try {
+	var type = data.type;
+	var url = data.url;
+	var extra = data.extra;
+	// logs(type);
+	// logs(url);
+	// logs(extra);
+	// logs(event);
+	if (event == 'click') {
+		if (type == 'jump') {
+			if (url == 'chat') {
+				if (type == 'customer') {
 					mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
-				} else if (data.chat == 'friend') {
-					logs(data);
+				} else if (type == 'friend') {
 					mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
 				} else if (data.chat == 'crm') {
 					logs(data);
 					mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 				}
-
-				playNoticeAudio();
-			} else if (url == 'activation') {
+			} else if (url == 'dialog') {
+				mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+				fnOpenWin('html/' + url + '.html', url, {
+					statusbar: {
+						background: '#F7F7F7'
+					}
+				}, extra, '');
+			} else {
+				if (url) {
+					logs(url);
+					fnOpenWin('html/' + url + '.html', url, '', extra, '');
+				}
+			}
+		} else if (type == 'refresh') {
+			if (url == 'activation') {
 				updateUserInfo();
 				mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
 				mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
 				mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
 				mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
-			}  else if (url == 'logout') {
+			} else if (url == 'logout') {
 				fnLogout();
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
 		}
-	} catch (e) {
-		console.log(e.message);
+	} else if (event == 'receive') {
+		if (url == 'dialog') {
+			// plus.device.beep();
+			// plus.device.vibrate();
+			mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+			mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+			mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+			mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+
+			playNoticeAudio();
+		} else if (url == 'chat') {
+			if (data.chat == 'customer') {
+				mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
+			} else if (data.chat == 'friend') {
+				logs(data);
+				mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
+			} else if (data.chat == 'crm') {
+				logs(data);
+				mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
+			}
+
+			playNoticeAudio();
+		} else if (url == 'activation') {
+			updateUserInfo();
+			mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
+			mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
+			mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
+			mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
+		} else if (url == 'logout') {
+			fnLogout();
+		} else {
+			mui.fire(plus.webview.getWebviewById(url), 'refresh');
+		}
 	}
+	// } catch (e) {
+	// 	console.log(e.message);
+	// }
 }
 
 function playNoticeAudio() {
@@ -820,7 +820,7 @@ function fnLogout() {
 				background: '#122c9a'
 			}
 		}, '');
-		
+
 		// 获取所有Webview窗口
 		var curr = plus.webview.currentWebview();
 		var wvs = plus.webview.all();
@@ -885,30 +885,30 @@ function onNetChange() {
 	var nt = plus.networkinfo.getCurrentType();
 	switch (nt) {
 		case 1:
-		console.log('offline');
-		fnOpenWin('/html/network_outage.html', 'network_outage', {
-			statusbar: {
-				background: '#FFF'
-			}
-		}, '', 'slide-in-bottom');
-		break;
+			console.log('offline');
+			fnOpenWin('/html/network_outage.html', 'network_outage', {
+				statusbar: {
+					background: '#FFF'
+				}
+			}, '', 'slide-in-bottom');
+			break;
 		case plus.networkinfo.CONNECTION_ETHERNET:
 		case plus.networkinfo.CONNECTION_WIFI:
-		var web = plus.webview.getWebviewById('network_outage');
-		if (web) {
-			plus.webview.close('network_outage', 'none');
-		}
-		break; 
+			var web = plus.webview.getWebviewById('network_outage');
+			if (web) {
+				plus.webview.close('network_outage', 'none');
+			}
+			break;
 		case plus.networkinfo.CONNECTION_CELL2G:
 		case plus.networkinfo.CONNECTION_CELL3G:
 		case plus.networkinfo.CONNECTION_CELL4G:
-		var web = plus.webview.getWebviewById('network_outage');
-		if (web) {
-			plus.webview.close('network_outage', 'none');
-		}  
-		break; 
+			var web = plus.webview.getWebviewById('network_outage');
+			if (web) {
+				plus.webview.close('network_outage', 'none');
+			}
+			break;
 		default:
-		console.log('netchange');
-		break;
+			console.log('netchange');
+			break;
 	}
 }
