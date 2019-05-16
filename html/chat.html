@@ -13,6 +13,7 @@
 
 	<body>
 		<div id="mui-content" class="mui-content chat-container">
+			<div id="contHeight"style="position: fixed;top: 0;bottom: 0;opacity: 0; width: 100%;background-color: #FFFFFF;z-index: -9999;"></div>
 			<div style="position: fixed;top: 0;width: 100%;z-index: 15;background-color: #FFFFFF;">
 				<div class="search-bar">
 					<div class="mui-indexed-list-search">
@@ -131,7 +132,7 @@
 										</ul>
 									</div>
 								</div>
-								<div v-if="newcustomerData.new" class="void-data-tips">
+								<div v-if="!newcustomerData.new" class="void-data-tips">
 									<img src="../image/icon/void-data.png" >
 									<p>没有数据</p>
 								</div>
@@ -150,16 +151,16 @@
 														<div class="mui-ellipsis user-name">
 															{{items.name||items.nickName}}
 														</div>
-														<div class="timer-tips">
-															{{items.last_time_text}}
+														<div class="timer-tips mui-hidden">
+															{{items.end_time}}
 														</div>
 													</div>
 													<div class="left-bottom">
 														<div>
-															{{items.count}}次互动
+															{{items.end_time}}
 														</div>
 														<div class="bottom-last">
-															进行中
+															{{items.end_time}}
 														</div>
 													</div>
 												</div>
@@ -167,7 +168,7 @@
 										</ul>
 									</div>
 								</div>
-								<div v-if="newcustomerData.recommend" class="void-data-tips">
+								<div v-if="!newcustomerData.recommend" class="void-data-tips">
 									<img src="../image/icon/void-data.png" >
 									<p>没有数据</p>
 								</div>
@@ -195,7 +196,7 @@
 															{{items.count}}次互动
 														</div>
 														<div class="bottom-last">
-															进行中
+															跟进中
 														</div>
 													</div>
 												</div>
@@ -203,7 +204,7 @@
 										</ul>
 									</div>
 								</div>
-								<div v-if="newcustomerData.follow" class="void-data-tips">
+								<div v-if="!newcustomerData.follow" class="void-data-tips">
 									<img src="../image/icon/void-data.png" >
 									<p>没有数据</p>
 								</div>
@@ -231,7 +232,7 @@
 															{{items.count}}次互动
 														</div>
 														<div class="bottom-last">
-															进行中
+															高意向
 														</div>
 													</div>
 												</div>
@@ -239,7 +240,7 @@
 										</ul>
 									</div>
 								</div>
-								<div v-if="newcustomerData.intention" class="void-data-tips">
+								<div v-if="!newcustomerData.intention" class="void-data-tips">
 									<img src="../image/icon/void-data.png" >
 									<p>没有数据</p>
 								</div>
@@ -267,7 +268,7 @@
 															{{items.count}}次互动
 														</div>
 														<div class="bottom-last">
-															进行中
+															完成
 														</div>
 													</div>
 												</div>
@@ -275,7 +276,7 @@
 										</ul>
 									</div>
 								</div>
-								<div v-if="newcustomerData.deal" class="void-data-tips">
+								<div v-if="!newcustomerData.deal" class="void-data-tips">
 									<img src="../image/icon/void-data.png" >
 									<p>没有数据</p>
 								</div>
@@ -450,12 +451,14 @@
 					var timer = setInterval(function() {
 						timernum++;
 						var list = document.getElementById('list');
-						var pageHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						var contHeight = document.getElementById('contHeight');
+						var pageHeight = contHeight.offsetHeight;
+						// var pageHeight = document.documentElement.clientHeight || document.body.clientHeight;
 						document.querySelector(".mui-indexed-list-bar").style.height = pageHeight - 150 + 'px';
 						list.style.height = pageHeight - 148 + 'px';
 						window.indexedList = new mui.IndexedList(list);
 						app.viewHeight = 'height:' + (pageHeight - 348) + 'px';
-						logs("111")
+						logs(pageHeight)
 						if (timernum == 100||pageHeight>700) {
 							clearInterval(timer);
 							timernum=0;
