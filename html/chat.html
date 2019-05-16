@@ -1,491 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/mui.indexedlist.css" rel="stylesheet" />
 		<link href="../iconfont/iconfont.css" rel="stylesheet" />
-		<style>
-			html,
-			body {
-				height: 100%;
-				overflow: hidden;
-			}
-			a:hover, a:active, a:visited, a:link, a:focus{
-				-webkit-tap-highlight-color:rgba(0,0,0,0)!important;
-				-webkit-tap-highlight-color: transparent!important;
-				outline:none!important;
-				background: none!important;
-				text-decoration: none!important;
-			}
-			
-			.clearfix{
-				clear: both;
-			}
-			.mui-bar {
-				height: 0;
-			}
-			.mui-search .mui-placeholder .mui-icon{
-				color: #FFFFFF;
-				margin-right: 5px;
-			}
-			.tite{
-				padding: 15px 10px 48px 10px;
-				/* background: linear-gradient(to right, #289cff , #1b75ff); */
-				background-color: #2289FF;
-			}
-			.ns{
-				margin-top: -7%;
-			}
-			.ns img{
-				height: 22px;
-			}
-			.info{
-				/* margin-right: 38px; */
-			}
-			.nr{
-				width: 100%;
-				margin-top: -30px;
-				padding: 0 10px;
-			}
-			.switch{
-				padding: 15px 0;
-				border-radius: 5px;
-				box-shadow: 0 0 7px 0 #95bbfe;
-				background-color: #FFFFFF;
-			}
-			.xuanz{
-				color: #2289FF;
-			}
-			.switch1{
-				width: 33%;
-				float: left;
-				text-align: center;
-				border-right: 1px solid #F2F2F2;
-			}
-			.switch1_content{
-				font-size: 14px;
-				margin: 0 auto;
-				padding: 7px 0;
-			}
-			.switch1_content img{
-				height: 17px;
-				position: relative;
-				top: 3px;
-				right: 3px;
-			}
-			.classify{
-				width: 100%;
-				margin-top: 10px;
-				padding-bottom: 20px;
-				background-color: #FFFFFF;
-			}
-			.classify1{
-				width: 25%;
-				float: left;
-				font-size: 14px;
-				margin-left: 5%;
-				padding: 9px 0;
-				margin-top: 15px;
-				border-radius: 25px;
-				background-color: #F5F6F8;
-			}
-			.classify1-content{
-				text-align: center;
-				margin: 0 auto;
-			}
-			.bian{
-				color: #2288FF;
-			}
-			.classify1 img{
-				height: 17px;
-				position: relative;
-				top: 3px;
-				margin-right: 8px;
-			}
-			.classify1 i{
-				position: relative;
-				top: 1px;
-				left: 1px;
-				margin-right: 8px;
-				color: #999999;
-			}
-			.label{
-				background-color: #DEEDFF;
-				/*border: 1px solid #3492FF;*/
-			}
-			.label i{
-				position: relative;
-				top: 1px;
-				left: 1px;
-				margin-right: 8px;
-				color: #999999;
-			}
-			.bian i{
-				color: #2288FF;
-			}
-			.head-portrait img{
-				width: 45px;
-				height: 45px;
-				margin-top: 5px;
-				border-radius: 50%;
-			}
-			.content{
-				width: 80%;
-			}
-			.biaoqian button{
-				padding: 2px 8px 0 8px;
-				font-size: 10px;
-				margin-top: 10px;
-				border: none;
-				color: #FFFFFF;
-				border-radius: 10px;
-				margin-right: 5px;
-			}
-			.firm{
-				width: 30%;
-				overflow: hidden;
-				text-overflow:ellipsis;
-				white-space: nowrap;
-				background-color: #68B0FF;
-			}
-			.mui-table-view li{
-				border-bottom: #F2F2F2;
-			}
-			
-			.Birthday{
-				font-size: 12px;
-				color: #999999;
-				margin-top: 10px;
-			}
-			
-			/* 好友 */
-			.good_friend{
-				margin-top: 10px;
-			}
-			.good_friend_name{
-				/* margin-top: 18px; */
-			}
-			.user-left-cont{
-				height: 100%;
-			}
-			/* 新增客户 */
-			.number{
-				margin-top: 10px;
-				padding: 12px 0 0 0;
-				background-color: #FFFFFF;
-			}
-			.number_title{
-				width: 90%;
-				margin: 0 auto;
-				padding-bottom: 10px;
-				font-size: 12px;
-			}
-			.sign{
-				width: 33.33%;
-				float: left;
-			}
-			.sign_chart,.sign_chart1,.sign_chart2{
-				width: 32px;
-				height: 19px;
-				display: block;
-				border-radius: 5px;
-				background-color: #68B0FF;
-			}
-			.sign_chart1{
-				background-color: #F9D05E;
-			}
-			.sign_chart2{
-				background-color: #FA5954;
-			}
-			.sign_name{
-				margin-left: 5px;
-			}
-			
-			.number_surface{
-				text-align: center;
-				margin-top: 19px;
-			}
-			.trapezium{
-				width: 240px;
-				border-bottom: 30px solid #68B0FF;
-				border-left: 30px solid transparent;
-				border-right: 30px solid transparent;
-				transform:rotate(180deg);
-				margin: 4px auto;
-			}
-			.trapezium_content{
-				position: relative;
-				top: -28px;
-				font-size: 12px;
-				color: #FFFFFF;
-			}
-			.trapezium1{
-				width: 175px;
-				border-bottom: 30px solid #F9D05E;
-				border-left: 30px solid transparent;
-				border-right: 30px solid transparent;
-				transform:rotate(180deg);
-				margin: -20px auto;
-			}
-			.trapezium_content1{
-				position: relative;
-				top: -5px;
-				font-size: 12px;
-				color: #FFFFFF;
-			}
-			.trapezium2{
-				width: 110px;
-				border-bottom: 30px solid #FA5954;
-				border-left: 30px solid transparent;
-				border-right: 30px solid transparent;
-				transform:rotate(180deg);
-				margin: 4px auto;
-			}
-			.trapezium_content2{
-				position: relative;
-				top: -30px;
-				font-size: 12px;
-				color: #FFFFFF;
-			}
-			
-			.mui-card .mui-control-content {
-				padding: 10px;
-			}
-			.mui-control-content {
-				height: 100000000px;
-			}
-			.mui-segmented-control{
-				border: none;
-				background-color: #FFFFFF;
-				border-radius: 0;
-			}
-			.mui-segmented-control .mui-control-item.mui-active {
-				background-color: #FFFFFF;
-				color: #2289FF;
-				border-bottom: 2px solid #2289FF;
-			}
-			.mui-segmented-control .mui-control-item{
-				border-left: none;
-				font-size: 15px;
-				color: #000000;
-			}
-			.newly_added{
-				border-bottom: 1px solid #F2F2F2;
-			}
-			
-			.chart{
-				width: 70px;
-				height: 70px;
-			}
-			.chart img{
-				width: 100%;
-				height: 100%;
-				border-radius: 5px;
-			}
-			.customer_information{
-				font-size: 12px;
-			}
-			.customer_information_name{
-				font-size: 15px;
-			}
-			.customer_information img{
-				width: 9px;
-			}
-			.customer-content{
-				width: 76%;
-				padding: 10px 0;
-			}
-			.mui-control-content {
-				height: auto!important;
-			}
-			.mui-control-content .mui-table-view {
-				margin-bottom: 120px!important;
-			}
-			.new-friend{
-				display: flex;
-				align-items: center;
-				padding-right: 20px;
-			}
-			.new-friend-title{
-				flex-grow: 1;
-				position: relative;
-			}
-			/* .new-msg-tips{
-				flex-shrink: 0;
-				border-radius: 50%;
-				min-width: 15px;
-				display: inline-flex;
-				background-color: #FF0000;
-				color: #FFFFFF;
-				font-size: 12px;
-				line-height: 1;
-				padding:2px 2px 0;
-				margin-right: 10px;
-				align-items: baseline;
-				justify-content: center;
-			} */
-			a.detail{
-				display: flex !important;
-				align-items: center;
-			}
-			.head-portrait{
-				margin-right: 10px;
-			}
-			.user-left-cont.bosom-friend{
-				display: flex;
-				position: relative;
-				height: 50px;
-				width: 100%;
-				flex-grow: 1;
-				align-items: center;
-			}
-			.mui-indexed-list-item{
-				padding-right: 20px;
-			}
-			.mui-badge-danger{
-				position: absolute;
-				right:-6px;
-				top: -6px;
-				font-size: 10px;
-				padding: 3px 5px 1px;
-				background-color: #FF0000;
-			}
-			.operating-area{
-				width: 33%;
-				position: relative;
-				height: 34px;
-				/* background-color: #20D81F; */
-				display: flex;
-			}
-			.mui-table-view.clientclient-crm:before{
-				height: 0;
-			}
-			.mui-badge-danger.new-msg-tips{
-				position: relative;
-				margin-right: 20px;
-				margin-top: 8px;
-				font-size: 12px;
-				padding: 3px 5px 1px;
-				background-color: #FF0000;
-			}
-			.switch1_content{
-				position: relative;
-			}
-			.switch1_content .mui-badge{
-				position: absolute;
-				top: 2px;
-				right: 0;
-				padding: 3px 5px 1px;
-				background-color: rgba(255,0,0,0.8);
-				color: #FFFFFF;
-				font-size: 10px;
-			}
-			.to-search{
-				height: 34px;
-				width: 100%;
-				border-radius: 17px;
-				background: rgba(255,255,255,0.6);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: #FFFFFF;
-				font-size: 15px;
-			}
-			.see-card{
-				color: #DDDDDD;
-				font-size: 14px;
-				height: 50px;
-				/* background-color: #0062CC; */
-				display: inline-flex;
-				align-items: center;
-				padding: 0 3px;
-			}
-			#list{
-				min-height: 100vh;
-				/* background-color: #0062CC; */
-			}
-			#message{
-				display: inline-block;
-				height: 100%;
-				/* background-color: #00BCD4; */
-				display: flex;
-				align-items: center;
-				flex-grow: 1;
-				justify-content: center;
-			}
-			.customer-edit{
-				height: 100%;
-				width: auto;
-				/* background-color: #FF0000 !important; */
-				flex-grow: 1;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-			.operating-area img{
-				height: 21px;
-			}
-			.list-container{
-				position: relative;
-				/* height: 1200px; */
-			}
-			#friend_tip{
-				right: 22%;
-			}
+		<link rel="stylesheet" type="text/css" href="../css/chat.css" />
+		<style type="text/css">
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar">
-		</header>
-		<div class="mui-content">
-			<div id='list' class="mui-indexed-list">
-				<div class="tite mui-clearfix">
-					<div class="mui-indexed-list-search mui-input-row mui-search mui-pull-left">
-						<!-- <input type="search" id="search"  class="mui-input-clear mui-indexed-list-search-input mui-hidden" placeholder="搜索"> -->
+		<div id="mui-content" class="mui-content chat-container">
+			<div style="position: fixed;top: 0;width: 100%;z-index: 15;background-color: #FFFFFF;">
+				<div class="search-bar">
+					<div class="mui-indexed-list-search">
 						<div class="to-search"><span class="mui-icon mui-icon-search"></span>搜索</div>
 					</div>
-					<div class="mui-pull-right operating-area">
+					<div class="operating-area">
 						<div id="message">
 							<div style="position: relative;">
 								<img class="info" src="../image/Message-icon.png" />
-								<span class="mui-badge mui-badge-danger" style="display: none;" id="unread_message">0</span>
+								<span class="mui-badge mui-badge-danger top-badge" v-show="messageNum!=0" id="unread_message">{{messageNum}}</span>
 							</div>
 						</div>
-						<a href="javascript: void(0);" class="customer-edit" id="customer_edit">
+						<div v-show="nowaday=='crm'" class="customer-edit" id="customer_edit">
 							<img class src="../image/shuxie.png" />
-						</a>
+						</div>
+						<div v-show="nowaday=='friend'" class="customer-edit" id="add_friend">
+							<img class src="../image/add_friend.png" />
+						</div>
 					</div>
 				</div>
-				<div class="nr">
-					<div class="switch">
-						<div class="switch1">
-							<div class="switch1_content" data-id="customer">
-								<i class="iconfont icon-friends"></i>
-								<span>新增客户</span>
-							</div>
+				<div class="switch-container">
+					<div class="switch-inside">
+						<div :class="items.checked==true?'switch-cont active':'switch-cont'" v-for="(items,index) in tabs" :key="index"
+						 @tap="onchangeTab(index,items.id)">
+							<i :class="items.icon"></i>
+							<span>{{items.title}}</span>
+							<span v-show="index==2&&newfriendNum!=0" class="mui-badge mui-badge-danger friend-tip" id="friend_tip" style="">{{newfriendNum}}</span>
 						</div>
-						<div class="switch1">
-							<div class="switch1_content xuanz" data-id="crm">
-								<i class="iconfont icon-custom"></i>
-								<span>客户CRM</span>
-							</div>
-						</div>
-						<div class="switch1" style="border-right: none;">
-							<div class="switch1_content" data-id="friend">
-								<i class="iconfont icon-friend"></i>
-								<span>好友</span>
-								<span class="mui-badge" id="friend_tip" style="display: none;">0</span>
-							</div>
-						</div>
-						<div class="clearfix"></div>
 					</div>
 				</div>
-				<div class="mui-indexed-list-bar" style="height: 510px;display: block;" id="list_bar">
+			</div>
+			<div id='list' class="mui-indexed-list">
+				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
+					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="serach">
+				</div>
+				<div class="mui-indexed-list-bar" v-show="nowaday=='crm'||nowaday=='friend'" id="list_bar">
 					<a>A</a>
 					<a>B</a>
 					<a>C</a>
@@ -514,604 +79,311 @@
 					<a>Z</a>
 				</div>
 				<div class="mui-indexed-list-alert"></div>
-				<div id="list_container">
-				</div>
-			</div>
-
-		<div id="crm" style="display: none">
-			<div class="mui-indexed-list-inner">
-				<!-- <div class="classify">
-					<div class="classify1">
-						<div class="classify1-content" data-label="deal">
-							<span>
-								<i class="iconfont icon-deal"></i>
-							</span>
-							<span>成交</span>
-						</div>
-						<div class="classify1">
-							<div class="classify1-content" data-label="follow">
-								<span>
-									<i class="iconfont icon-edit"></i>
-								</span>
-								<span>跟进中</span>
-							</div>
-						</div>
-						<div class="classify1">
-							<div class="classify1-content" data-label="member">
-								<span>
-									<i class="iconfont icon-diamond"></i>
-								</span>
-								<span>会员</span>
-							</div>
-						</div>
-						<div class="classify1">
-							<div class="classify1-content" data-label="job">
-								<span>
-									<i class="iconfont icon-position"></i>
-								</span>
-								<span>职位</span>
-							</div>
-						</div>
-						<div class="classify1">
-							<div class="classify1-content" data-label="care">
-								<span>
-									<i class="iconfont icon-people"></i>
-								</span>
-								<span>客情</span>
-							</div>
-						</div>
-						<div class="classify1">
-							<div class="classify1-content" data-label="label" id="label_edit">
-								<span>
-									<i class="iconfont icon-label"></i>
-								</span>
-								<span>标签</span>
-							</div>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-					<div class="clearfix"></div>
-				</div> -->
-				<div class="mui-indexed-list-empty-alert">没有数据</div>
-				<ul class="mui-table-view clientclient-crm"></ul>
-				<div style="width: 100%;height: 45px;line-height: 45px;text-align: center;margin-bottom: 100px;font-size: 15px;color: #999;"></div>
-			</div>
-			<div id="customer" style="display: none;">
 				<div class="mui-indexed-list-inner">
-					<div class="number">
-						<div class="number_title">
-							<div>
-								<div class="sign">
-									<span class="sign_chart mui-pull-left"></span>
-									<span class="sign_name">总用户数:<span class="customer_total">0</span></span>
-									<div class="clearfix"></div>
+					<div id="customer" v-show="'customer'==nowaday">
+						<ul class="tips-cont">
+							<li><i class="totalNum"></i>用户总数:{{totalNum}}</li>
+							<li><i class="followNum"></i>跟进数量:{{followNum}}</li>
+							<li><i class="bargainNum"></i>成交数量:{{bargainNum}}</li>
+						</ul>
+						<div class="trapezium-container">
+							<div class="trapezium"></div>
+							<div class="trapezium-tips">用户总数:<span class="customer_total">0</span></div>
+							<div class="trapezium1"></div>
+							<div class="trapezium-tips">跟进数量:<span class="customer_total">0</span></div>
+							<div class="trapezium2"></div>
+							<div class="trapezium-tips">成交数量:<span class="customer_total">0</span></div>
+						</div>
+						<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+							<a class="mui-control-item mui-active" href="#item1">新增客户</a>
+							<a class="mui-control-item" href="#item2">推荐锁定</a>
+							<a class="mui-control-item" href="#item3">跟进中</a>
+							<a class="mui-control-item" href="#item4">高意向</a>
+							<a class="mui-control-item" href="#item5">成交</a>
+						</div>
+						<div id="list-container">
+							<div id="item1" class="mui-control-content mui-active" :style="viewHeight">
+								<div id="scroll1" class="mui-scroll-wrapper">
+									<div class="mui-scroll">
+										<ul class="mui-table-view">
+											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.new" :key="index">
+												<div class="user-head-img customer-head-img" :data-id="items.id" :data-type="items.type">
+													<img :src="items.avatar||items.avatarUrl">
+												</div>
+												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
+												 :data-avatar="items.avatar||items.avatarUrl">
+													<div class="left-top">
+														<div class="mui-ellipsis user-name">
+															{{items.name||items.nickName}}
+														</div>
+														<div class="timer-tips">
+															{{items.last_time_text}}
+														</div>
+													</div>
+													<div class="left-bottom">
+														<div>
+															{{items.count}}次互动
+														</div>
+														<div class="bottom-last">
+															进行中
+														</div>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
 								</div>
-								<div class="sign">
-									<span class="sign_chart1 mui-pull-left"></span>
-									<span class="sign_name">跟进数量:<span class="customer_follow">0 </span></span>
-									<div class="clearfix"></div>
-								</div>
-								<div class="sign">
-									<span class="sign_chart2 mui-pull-left"></span>
-									<span class="sign_name">成交数量:<span class="customer_deal">0</span></span>
-									<div class="clearfix"></div>
-								</div>
-								<div class="clearfix"></div>
+								<div v-if="newcustomerData.new" class="void-data-tips">没有数据</div>
 							</div>
-							<div class="number_surface">
-								<div class="trapezium"></div>
-								<div class="trapezium_content">用户总数:<span class="customer_total">0</span></div>
-								<div class="trapezium1"></div>
-								<div class="trapezium_content1">跟进数量:<span class="customer_follow">0</span></div>
-								<div class="trapezium2"></div>
-								<div class="trapezium_content2">成交数量:<span class="customer_deal">0</span></div>
+							<div id="item2" class="mui-control-content mui-active" :style="viewHeight">
+								<div id="scroll2" class="mui-scroll-wrapper">
+									<div class="mui-scroll">
+										<ul class="mui-table-view">
+											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.recommend" :key="index">
+												<div class="user-head-img customer-head-img" :data-id="items.id">
+													<img :src="items.avatar||items.avatarUrl">
+												</div>
+												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
+												 :data-avatar="items.avatar||items.avatarUrl">
+													<div class="left-top">
+														<div class="mui-ellipsis user-name">
+															{{items.name||items.nickName}}
+														</div>
+														<div class="timer-tips">
+															{{items.last_time_text}}
+														</div>
+													</div>
+													<div class="left-bottom">
+														<div>
+															{{items.count}}次互动
+														</div>
+														<div class="bottom-last">
+															进行中
+														</div>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div v-if="newcustomerData.recommend" class="void-data-tips">没有数据</div>
+							</div>
+							<div id="item3" class="mui-control-content mui-active" :style="viewHeight">
+								<div id="scroll3" class="mui-scroll-wrapper">
+									<div class="mui-scroll">
+										<ul class="mui-table-view">
+											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.follow" :key="index">
+												<div class="user-head-img customer-head-img" :data-id="items.id">
+													<img :src="items.avatar||items.avatarUrl">
+												</div>
+												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
+												 :data-avatar="items.avatar||items.avatarUrl">
+													<div class="left-top">
+														<div class="mui-ellipsis user-name">
+															{{items.name||items.nickName}}
+														</div>
+														<div class="timer-tips">
+															{{items.last_time_text}}
+														</div>
+													</div>
+													<div class="left-bottom">
+														<div>
+															{{items.count}}次互动
+														</div>
+														<div class="bottom-last">
+															进行中
+														</div>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div v-if="newcustomerData.follow" class="void-data-tips">没有数据</div>
+							</div>
+							<div id="item4" class="mui-control-content mui-active" :style="viewHeight">
+								<div id="scroll4" class="mui-scroll-wrapper">
+									<div class="mui-scroll">
+										<ul class="mui-table-view">
+											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.intention" :key="index">
+												<div class="user-head-img customer-head-img" :data-id="items.id">
+													<img :src="items.avatar||items.avatarUrl">
+												</div>
+												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
+												 :data-avatar="items.avatar||items.avatarUrl">
+													<div class="left-top">
+														<div class="mui-ellipsis user-name">
+															{{items.name||items.nickName}}
+														</div>
+														<div class="timer-tips">
+															{{items.last_time_text}}
+														</div>
+													</div>
+													<div class="left-bottom">
+														<div>
+															{{items.count}}次互动
+														</div>
+														<div class="bottom-last">
+															进行中
+														</div>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div v-if="newcustomerData.intention" class="void-data-tips">没有数据</div>
+							</div>
+							<div id="item5" class="mui-control-content mui-active" :style="viewHeight">
+								<div id="scroll5" class="mui-scroll-wrapper">
+									<div class="mui-scroll">
+										<ul class="mui-table-view">
+											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.deal" :key="index">
+												<div class="user-head-img customer-head-img" :data-id="items.id">
+													<img :src="items.avatar||items.avatarUrl">
+												</div>
+												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
+												 :data-avatar="items.avatar||items.avatarUrl">
+													<div class="left-top">
+														<div class="mui-ellipsis user-name">
+															{{items.name||items.nickName}}
+														</div>
+														<div class="timer-tips">
+															{{items.last_time_text}}
+														</div>
+													</div>
+													<div class="left-bottom">
+														<div>
+															{{items.count}}次互动
+														</div>
+														<div class="bottom-last">
+															进行中
+														</div>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div v-if="newcustomerData.deal" class="void-data-tips">没有数据</div>
 							</div>
 						</div>
 					</div>
-					<div class="newly_added">
-						<div id="segmentedControl" class="mui-segmented-control">
-							<a data-id="1" class="mui-control-item mui-active" href="#item1">新增客户</a>
-							<a data-id="2" class="mui-control-item" href="#item2">推荐锁定</a>
-							<a data-id="3" class="mui-control-item" href="#item3">跟进中</a>
-							<a data-id="4" class="mui-control-item" href="#item4">高意向</a>
-							<a data-id="5" class="mui-control-item" href="#item5">成交</a>
+					<div id="crm" v-show="'crm'==nowaday">
+						<div id="crm-scroll" class="mui-scroll-wrapper crm-scroll-cont">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<template v-for="(list,key,index) in crmList" :key="index">
+										<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
+										<li class="mui-table-view-cell customer-list" :data-tags="list.pinyin" v-for="(items,idx) in list" :key="idx">
+											<div class="user-head-img crm-user-head" data-type="crm" :data-id="items.id" data-stauts="items.type">
+												<img :src="items.headimgurl||'../image/user_default.png'">
+											</div>
+											<div class="customer-left" @tap="crmGoChat(items.id,items.name,items.headimgurl,items.type)">
+												<div class="left-top">
+													<div class="mui-ellipsis user-name">
+														{{items.name}}
+													</div>
+													<div class="timer-tips">
+														<span v-if="items.mark==1" class="status">[跟进中]</span>
+														<span v-if="items.mark==2" class="mui-hidden">[成交]</span>
+													</div>
+												</div>
+												<div class="left-bottom">
+													<span v-if="items.company" class="tags mui-ellipsis">{{items.company}}</span>
+													<span v-if="items.job" class="tags tags-p">{{items.job}}</span>
+												</div>
+											</div>
+										</li>
+									</template>
+								</ul>
+							</div>
 						</div>
 					</div>
-					<div class="list-container">
-						<!-- <div class="mui-scroll-wrapper"> -->
-						<!-- 区域滚动的子容器 -->
-						<!-- <div class="mui-scroll"> -->
-						<!-- 真实的内容放到区域滚动的子容器里面 -->
-						<div data-id="1" id="item1" class="mui-control-content mui-active"></div>
-						<div data-id="2" id="item2" class="mui-control-content"></div>
-						<div data-id="3" id="item3" class="mui-control-content"></div>
-						<div data-id="4" id="item4" class="mui-control-content"></div>
-						<div data-id="5" id="item5" class="mui-control-content"></div>
-						<!-- </div> -->
-						<!-- </div> -->
-					</div>
-				</div>
-			</div>
-			<div id="friend" style="display: none;">
-				<div class="new-friend" style="height: 60px;padding-left: 15px;padding-top: 10px;">
-					<div class="mui-pull-left head-portrait">
-						<img src="../image/add_friend_1.png">
-					</div>
-					<div class="mui-pull-left new-friend-title" style="margin-left: 18px;">
-						<div class="good_friend_name">新朋友
-							<span class="mui-pull-right mui-badge mui-badge-danger new-msg-tips friend_tips" style="display: none;">0</span>
+					<div id="friend" v-show="'friend'==nowaday">
+						<div id="friend-scroll" class="mui-scroll-wrapper friend-scroll-cont">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<li class="mui-table-view-cell customer-list" id="new_friend">
+										<div class="user-head-img">
+											<img src="../image/news1.png">
+										</div>
+										<div class="customer-left">
+											<span>新朋友</span>
+											<span class="mui-badge mui-badge-danger new-friend-badge" id="new-friend" v-show="newfriendNum!=0">{{newfriendNum}}</span>
+										</div>
+									</li>
+									<template v-for="(vel,key,idx) in friendList" :key="idx">
+										<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
+										<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
+											<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
+												<img :src="list.avatarUrl||'../image/user_default.png'">
+											</div>
+											<div class="customer-left">
+												<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
+													{{list.name||list.nickName}}
+												</div>
+												<span class="check-business-card" data-number='list.fid' v-on:click.stop="friendDetail(list.fid)">查看名片</span>
+											</div>
+										</li>
+									</template>
+								</ul>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="mui-indexed-list-inner good_friend">
-					<div class="mui-indexed-list-empty-alert">没有数据</div>
-					<ul class="mui-table-view friends_detail"></ul>
-					<div style="width: 100%;height: 45px;line-height: 45px;text-align: center;margin-bottom: 100px;font-size: 15px;color: #999;"></div>
 				</div>
 			</div>
 		</div>
-		<script src="../js/mui.js"></script>
+		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/mui.indexedlist.js"></script>
-		<script type="text/javascript" charset="utf-8">
-			mui.init({
-				swipeBack: false,
-				keyEventBind: {
-					backbutton: false, //Boolean(默认true)关闭back按键监听  
-					menubutton: true //Boolean(默认true)关闭menu按键监听  
-				}
-				,
-				pullRefresh: {
-					container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
-					down: {
-						style: 'circle',
-						color: '#2289FF',
-						callback: function() {
-							downRefresh = true;
-							if (currentTab == 'crm') {
-								getCustomerList('crm', false);
-							} else if (currentTab == 'customer') {
-								getCustomerList('customer', false);
-							} else if (currentTab == 'friend') {
-								getCustomerList('friend', false);
-							}
-							// getMemberInfo();
-						}
-					}
-				}
-			});
-			// mui(".mui-content").scroll({
-			// 	//bounce: false,//滚动条是否有弹力默认是true
-			// 	indicators: false, //是否显示滚动条,默认是true
-			// });
-
-			var label = null;
-			var currentLabel = 'empty';
-			var currentTab = 'crm';
-			var customerCurrentTab = 1;
-			var refresh = false;
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
 			var userInfo = getUserInfo();
-			// var winHeight = 0;
-			var customer_data = null;
-			var timer = null;
-			var self = null;
-			// var webviewHeight = 0;
-			var downRefresh = false;
-
-			var nativeWebview, imm, InputMethodManager;
-			var initNativeObjects = function() {
-				if (mui.os.android) {
-					var main = plus.android.runtimeMainActivity();
-					var Context = plus.android.importClass("android.content.Context");
-					InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
-					imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
-				} else {
-					nativeWebview = plus.webview.currentWebview().nativeInstanceObject();
-				}
-			};
-
-			var showSoftInput = function() {
-				if (mui.os.android) {
-					imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
-				} else {
-					nativeWebview.plusCallMethod({
-						"setKeyboardDisplayRequiresUserAction": false
-					});
-				}
-			};
-
-			mui.plusReady(function() {
-				// mui('#list_container').scroll({
-				// 	scrollY: true, //是否竖向滚动
-				// 	scrollX: false, //是否横向滚动
-				// 	startX: 0, //初始化时滚动至x
-				// 	startY: 0, //初始化时滚动至y
-				// 	indicators: true, //是否显示滚动条
-				// 	deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
-				// 	bounce: true //是否启用回弹
-				// });
-
-				// plus.navigator.setStatusBarStyle("light");
-				// plus.navigator.setStatusBarBackground('#2289FF');
-				// originalHeight = document.querySelector("body").offsetHeight;
-				// self = plus.webview.currentWebview();
-				// webviewHeight = self.webviewHeight;
-				// self.setStyle({
-				// 	bottom: 51
-				// })
-				// self.setStyle({bottom: 51})
-				// self.addEventListener('show', function() {
-				// 	timeInterval();
-				// })
-				// self.addEventListener('hide', function() {
-				// 	clearTimeInterval();
-				// })
-
-				// var first = null;
-				// mui.back = function() {
-				// 	var main = plus.android.runtimeMainActivity();
-				// 	main.moveTaskToBack(false);
-				// 	if (!first) {
-				// 		first = (new Date()).getTime();
-				// 		mui.toast('再按一次退出应用');
-				// 		setTimeout(function() {
-				// 			first = null;
-				// 		}, 1000);
-				// 	} else {
-				// 		if ((new Date()).getTime() - first < 1000) {
-				// 			plus.runtime.quit();
-				// 		}
-				// 	}
-				// };
-
-				// winHeight = document.querySelector("body").offsetHeight;
-				// winHeight = document.documentElement.clientHeight || document.body.clientHeight;
-				pageInit();
-
-				//自定义事件监听-首页新增客户点击
-				window.addEventListener('newCustomer', function() {
-					mui.trigger(document.querySelector('.switch1_content[data-id=customer]'), 'tap');
-				})
-
-				//自定义事件监听-首页新增朋友点击
-				window.addEventListener('newFriend', function() {
-					mui.trigger(document.querySelector('.switch1_content[data-id=friend]'), 'tap');
-				})
-
-				//自定义事件监听-刷新新增客户
-				window.addEventListener('refreshCustomer', function() {
-					logs('refreshCustomer');
-					getCustomerList('customer', true);
-				})
-
-				//自定义事件监听-刷新新增客户
-				window.addEventListener('refreshCrm', function() {
-					logs('refreshCrm');
-					getCustomerList('crm', false);
-				})
-				//自定义事件监听-好友请求条数
-				window.addEventListener('friendApplyNumber', function(e) {
-					var num = e.detail.number;
-					var tipsObjs = document.querySelectorAll('.friend_tips');
-					var tipsObj = document.getElementById('friend_tip');
-					mui.each(tipsObjs, function() {
-						this.style.display = 'none';
-					})
-					tipsObj.style.display = 'none';
-					if (num > 0) {
-						mui.each(tipsObjs, function() {
-							this.innerText = num;
-							this.style.display = 'block';
-						})
-
-						tipsObj.innerText = num;
-						// tipsObjs.style.display = 'block';
-						tipsObj.style.display = 'block';
-					} else {
-						mui.each(tipsObjs, function() {
-							this.innerText = 0;
-							this.style.display = 'none';
-						})
-						tipsObjs.innerText = 0;
-						tipsObj.innerText = 0;
-						// tipsObjs.style.display = 'none'; 
-						tipsObj.style.display = 'none';
-					}
-				})
-
-				//自定义事件监听-刷新新增客户
-				window.addEventListener('refreshFriend', function() {
-					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
-					// getFriendApply();
-					getCustomerList('friend', false);
-				})
-
-				window.addEventListener('resize', function() {
-					// message(document.querySelector("body").offsetHeight);
-				})
-
-				document.getElementById('label_edit').addEventListener('tap', function() {
-					console.log(11111);
-				})
-
-				document.getElementById('message').addEventListener('tap', function() {
-					fnOpenWin('message.html', 'message', {
-						statusbar: {
-							background: '#FFFFFF'
-						}
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					tabs: [{
+						title: '新增客户',
+						icon: 'iconfont icon-friends',
+						id: 'customer',
+						checked: false
 					}, {
-						prePage: 'chat'
-					}, 'slide-in-right');
-					plus.navigator.setStatusBarStyle('dark');
-				})
-
-				document.querySelector('#customer_edit').addEventListener('tap', function() {
-					if (currentTab == 'friend') {
-						openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
-						plus.navigator.setStatusBarStyle('dark');
-					} else {
-						fnOpenWin('customer_entry.html', 'customer_entry', {
-							statusbar: {
-								background: '#FFFFFF'
-							}
-						}, {
-							cid: 0
-						}, 'slide-in-right');
-						plus.navigator.setStatusBarStyle('dark');
-					}
-				})
-
-				window.addEventListener('addFriend', function(e) {
-					// getFriendApply();
-					getCustomerList('friend', false);
-				})
-
-				window.addEventListener('addCrm', function(e) {
-					getCustomerList('crm', false);
-				})
-
-				// window.addEventListener('loginSuccess', function(e) {
-				// 	console.log('loginSuccess');
-				// 	getCustomerList('crm', false);
-				// 	getCustomerList('customer', false);
-				// 	getCustomerList('friend', false);
-				// })
-
-				window.addEventListener('refreshNotice', function(e) {
-					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
-					// getUnreadMessage();
-					// getFriendApply();
-				})
-
-				// window.addEventListener('resizeWindow', function(e) {
-				// 	console.log('resizeWindow');
-				// 	console.log(webviewHeight);
-				// 	plus.webview.currentWebview().setStyle({
-				// 		height: webviewHeight - Math.random() * 5
-				// 	});
-				// })
-
-				// document.querySelector('input').addEventListener('focus', function(e) {
-				// 	console.log('input focus');
-				// 	setTimeout(function() {
-				// 		plus.webview.currentWebview().setStyle({
-				// 			height: webviewHeight - Math.random() / 2
-				// 		});
-				// 	}, 500)
-				// })
-
-				// document.querySelector('input').addEventListener('blur', function(e) {
-				// 	console.log('input blur');
-				// 	plus.webview.currentWebview().setStyle({
-				// 		height: webviewHeight - Math.random() / 2
-				// 	});
-				// })
-
-				// 获取原始窗口的高度
-				// var originalHeight = document.querySelector("body").offsetHeight;
-				// originalHeight = 681;
-				// window.onresize = function() {
-				// 	//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-				// 	var resizeHeight = document.querySelector("body").offsetHeight;
-				// 	if (resizeHeight * 1 != webviewHeight * 1) {
-				// 		// if (resizeHeight * 1 < originalHeight * 1) {
-				// 		console.log('resetWindowHeight');
-				// 		console.log(resizeHeight);
-				// 		plus.webview.currentWebview().setStyle({
-				// 			height: webviewHeight
-				// 		});
-				// 	}
-				// }
-			})
-
-			function indexInit() {
-				var header = document.querySelector('header.mui-bar');
-				var list = document.getElementById('list');
-				list.style.height = (document.body.offsetHeight - header.offsetHeight + 2) + 'px';
-				window.indexedList = new mui.IndexedList(list);
-				// mui.trigger(document.getElementById(currentTab), 'tap');
-				// var arrv = plus.webview.all();
-				// console.log(arrv);
-			}
-
-			function pageInit() {
-				// 				showCustomer(customer_data.crm, 'crm');
-				// 				var html = document.getElementById('crm').innerHTML;
-				// 				document.getElementById('list_container').innerHTML = html;
-				// eventInit();
-				// getUnreadMessage();
-				// getFriendApply();
-				getCustomerList('customer', false);
-				getCustomerList('crm', false);
-				getCustomerList('friend', false);
-				// indexInit();
-				// showCustomer(customer_data.friend, 'friend');
-				// showCustomer(customer_data.customer, 'customer');
-			}
-
-			function eventInit() {
-				mui('.switch1').on('tap', '.switch1_content', function() {
-					var id = this.dataset.id;
-					if (id == currentTab) return;
-					var tabObj = document.getElementsByClassName('switch1_content');
-					mui.each(tabObj, function(index, item) {
-						item.classList.remove('xuanz');
-					})
-					this.classList.add('xuanz');
-
-					var html = document.getElementById(id).innerHTML;
-					document.getElementById('list_container').innerHTML = html;
-					if (id == 'customer') {
-						document.getElementById('list_bar').style.display = "none";
-						document.querySelector('.customer-edit').style.display = 'none';
-					} else {
-						document.getElementById('list_bar').style.display = "block";
-						document.querySelector('.customer-edit').style.display = '';
-						if (id == 'crm') {
-							document.querySelector('.customer-edit img').src = '../image/shuxie.png';
-						} else {
-							document.querySelector('.customer-edit img').src = '../image/add_friend.png';
+						title: '客户CRM',
+						icon: 'iconfont icon-custom',
+						id: 'crm',
+						checked: true
+					}, {
+						title: '好 友',
+						icon: 'iconfont icon-friends',
+						id: 'friend',
+						checked: false
+					}],
+					totalNum: '0',
+					followNum: '0',
+					bargainNum: '0',
+					// 当前项
+					nowaday: 'crm',
+					viewHeight: '',
+					newcustomerData: {},
+					rendererList: [],
+					crmList: {},
+					friendList: {},
+					newfriendNum: '0',
+					messageNum: '0'
+				},
+				methods: {
+					onchangeTab: function(idx, tid) {
+						getCustomerList(tid)
+						for (var i = 0; i < this.tabs.length; i++) {
+							this.tabs[i].checked = false;
+							this.tabs[idx].checked = true;
 						}
-					}
-					if (id == 'crm' && currentLabel != 'empty') {
-						var currentObj = document.querySelector('.classify1-content[data-label=' + currentLabel + ']');
-						currentObj.parentElement.classList.add('label');
-						currentObj.classList.add('bian');
-					}
-					eventInit();
-					indexInit();
-					currentTab = id;
-				})
-
-				mui('.classify1').on('tap', '.classify1-content', function() {
-					label = this.dataset.label;
-					if (label == 'label') {
-						return;
-					}
-					var self = this;
-					if (label == currentLabel) {
-						self.parentElement.classList.remove('label');
-						self.classList.remove('bian');
-						label = null;
-						currentLabel = 'empty';
-
-						showCustomer(customer_data, 'crm');
-						// 						var html = document.getElementById('crm').innerHTML;
-						// 						document.getElementById('list_container').innerHTML = html;
-						// 						eventInit();
-						// 						indexInit();
-						return;
-					}
-
-					showCustomer(customer_data, 'crm');
-					// 					var html = document.getElementById('crm').innerHTML;
-					// 					document.getElementById('list_container').innerHTML = html;
-					// 					eventInit();
-					// 					indexInit();
-
-					var labelObj = document.getElementsByClassName('classify1-content');
-					mui.each(labelObj, function(index, item) {
-						item.classList.remove('bian');
-						item.parentElement.classList.remove('label');
-					});
-					var currentObj = document.querySelector('.classify1-content[data-label=' + label + ']');
-					currentObj.parentElement.classList.add('label');
-					currentObj.classList.add('bian');
-					currentLabel = label;
-				})
-
-				// mui('.mui-indexed-list-item').on('tap', 'a', function() {
-				// 	var cid = this.dataset.id;
-				// 	var type = this.dataset.type;
-				// 	if (type == 'crm') {
-				// 		var from = this.dataset.from;
-				// 		if (from == 1) {
-				// 			fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
-				// 				statusbar: {
-				// 					background: '#2289FF'
-				// 				}
-				// 			}, {
-				// 				cid: cid
-				// 			}, 'slide-in-right');
-				// 		} else {
-				// 			fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
-				// 				statusbar: {
-				// 					background: '#2289FF'
-				// 				}
-				// 			}, {
-				// 				cid: cid
-				// 			}, 'slide-in-right');
-				// 		}
-				// 
-				// 	} else if (type == 'friend') {
-				// 		var fid = this.dataset.id;
-				// 		openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-				// 			fid: fid
-				// 		})
-				// 		// fnOpenWin( {statusbar: {background: '#f7f7f7'}}, {fid: fid}, 'slide-in-right');
-				// 	}
-				// })
-
-				// 点击头像进详情
-				mui('.mui-indexed-list-item').on('tap', '.user-head-img', function() {
-					var cid = this.dataset.id;
-					var type = this.dataset.type;
-					console.log(type)
-					if (type == 'crm') {
-						var from = this.dataset.from;
-						if (from == 1) {
-							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
-						} else {
-							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
-						}
-					} else if (type == 'friend') {
-						fnOpenWin('customer_detail.html', 'customer_detail', {
-							statusbar: {
-								background: '#2289FF'
-							}
-						}, {
-							cid: cid
-						}, 'slide-in-right');
-					}
-				})
-				// 点击右半部分进入聊天
-				mui('.mui-indexed-list-item').on('tap', '.user-left-cont', function() {
-					var cid = this.dataset.id,
-						type = this.dataset.type,
-						chatName = this.dataset.name,
-						avatar = this.dataset.avatar;
-					if (type == 'crm') {
-						var from = this.dataset.from;
-						if (from == 1) {
-							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
-						} else {
-							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, {
-								cid: cid
-							}, 'slide-in-right');
-						}
-					} else if (type == 'friend') {
+						this.nowaday = tid;
+						pageinit();
+					},
+					// 跳转聊天
+					goChat: function(cid, chatName, avatar) {
 						fnOpenWin('dialog.html', 'dialog', {
 							statusbar: {
 								background: '#F7F7F7'
@@ -1123,67 +395,21 @@
 							barStyle: 'light'
 						}, 'slide-in-right');
 						plus.navigator.setStatusBarStyle('dark');
-					}
-				})
-				mui('.mui-indexed-list-item').on('tap', '.see-card', function() {
-					var cid = this.dataset.id;
-					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-						fid: cid
-					})
-				})
-				// 打开新增客户详情页
-				mui('.mui-table-view').on('tap', '.customer-head-img', function() {
-					var cid = this.dataset.id;
-					var type = this.dataset.type;
-					fnOpenWin('customer_detail.html', 'customer_detail', {
-						statusbar: {
-							background: '#2289FF'
-						}
-					}, {
-						cid: cid
-					}, 'slide-in-right');
-				})
-
-				// 打开新增客户聊天
-				mui('.mui-table-view').on('tap', '.customer-right-cont', function() {
-					var cid = this.dataset.id,
-						type = this.dataset.type,
-						chatName = this.dataset.name,
-						avatar = this.dataset.avatar;
-					fnOpenWin('dialog.html', 'dialog', {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, {
-						cid: cid,
-						chatName: chatName,
-						avatar: avatar,
-						barStyle: 'light'
-					}, 'slide-in-right');
-					plus.navigator.setStatusBarStyle('dark');
-				})
-
-				// 添加新朋友
-				mui(".mui-content").on("tap", ".new-friend", function() {
-					openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
-					plus.navigator.setStatusBarStyle("dark");
-				})
-
-				// 客户crm头像跳转
-				mui('.mui-table-view').on('tap', '.crm-user-head', function() {
-					var cid = this.dataset.id;
-					var type = this.dataset.type;
-					// console.log(type);
-					if (type == 'crm') {
-						var from = this.dataset.from;
-						if (from == 1) {
-							fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
+					},
+					// crm跳转聊天
+					crmGoChat: function(cid, chatName, avatar, type) {
+						if (type == 1) {
+							fnOpenWin('dialog.html', 'dialog', {
 								statusbar: {
-									background: '#2289FF'
+									background: '#F7F7F7'
 								}
 							}, {
-								cid: cid
+								cid: cid,
+								chatName: chatName,
+								avatar: avatar,
+								barStyle: 'light'
 							}, 'slide-in-right');
+							plus.navigator.setStatusBarStyle('dark');
 						} else {
 							fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
 								statusbar: {
@@ -1193,699 +419,49 @@
 								cid: cid
 							}, 'slide-in-right');
 						}
-					} else if (type == 'friend') {
+					},
+					// 跳转朋友详情
+					friendDetail: function(fid) {
 						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-							fid: cid
+							fid: fid
 						})
 					}
-				})
-
-				// 客户crm跳转
-				mui('.mui-table-view').on('tap', '.crm-left-cont', function() {
-					var cid = this.dataset.id,
-						avatar = this.dataset.avatar,
-						type = this.dataset.type,
-						chatName = this.dataset.name,
-						from = this.dataset.from;
-					if (from == 1) {
-						fnOpenWin('dialog.html', 'dialog', {
-							statusbar: {
-								background: '#F7F7F7'
-							}
-						}, {
-							cid: cid,
-							chatName: chatName,
-							avatar: avatar,
-							barStyle: 'light'
-						}, 'slide-in-right');
-						plus.navigator.setStatusBarStyle('dark');
-					} else {
-						fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
-							statusbar: {
-								background: '#2289FF'
-							}
-						}, {
-							cid: cid
-						}, 'slide-in-right');
-					}
-				})
-				//新增好友条目点击记录
-				mui('.newly_added').on('tap', '#segmentedControl a', function() {
-					var tabId = this.dataset.id;
-					customerCurrentTab = tabId;
-				})
-			}
-
-			function getCustomerList(type, refresh) {
-				refresh = refresh;
-				if (!userInfo) return;
-				mui.post($ajaxUrl + 'customer', {
-					action: 'list',
-					token: userInfo.token,
-					type: type
-				}, function(res) {
-					// logs(res);
-					if (type == 'crm') {
-						customer_data = res.data;
-					}
-					showCustomer(res.data, type);
-					// showCustomer(customer_data.customer, 'customer');
-					// showCustomer(customer_data.friend, 'friend');
-					// 					var html = document.getElementById(currentTab).innerHTML;
-					// 					document.getElementById('list_container').innerHTML = html;
-					// 					eventInit();
-					// 					indexInit();
-					if (downRefresh) {
-						setTimeout(function() {
-							mui('.mui-content').pullRefresh().endPulldownToRefresh();
-						}, 1000)
-						downRefresh = false;
-					}
-				}, 'json')
-			}
-
-			//获取好友申请条目
-			// function getFriendApply() {
-			// 	if (!userInfo) return;
-			// 	mui.post($ajaxUrl + 'customer', {
-			// 		action: 'friend_apply_count',
-			// 		token: userInfo.token,
-			// 	}, function(res) {
-			// 		logs(res);
-			// 		var tipsObjs = document.querySelectorAll('.friend_tips');
-			// 		var tipsObj = document.getElementById('friend_tip');
-			// 		mui.each(tipsObjs, function() {
-			// 			this.style.display = 'none';
-			// 		})
-			// 		tipsObj.style.display = 'none';
-			// 		if (parseInt(res.data) > 0) {
-			// 			mui.each(tipsObjs, function() {
-			// 				this.innerText = res.data;
-			// 				this.style.display = 'block';
-			// 			})
-			// 
-			// 			tipsObj.innerText = res.data;
-			// 			// tipsObjs.style.display = 'block';
-			// 			tipsObj.style.display = 'block';
-			// 		} else {
-			// 			mui.each(tipsObjs, function() {
-			// 				this.innerText = 0;
-			// 				this.style.display = 'none';
-			// 			})
-			// 			tipsObjs.innerText = 0;
-			// 			tipsObj.innerText = 0;
-			// 			// tipsObjs.style.display = 'none'; 
-			// 			tipsObj.style.display = 'none';
-			// 		}
-			// 	}, 'json')
-			// }
-
-			function showCustomer(data, type) {
-				if (!data) return;
-				if (type == 'crm') {
-					var html = '';
-					if (label == 'deal') {
-						for (var index in data) {
-							var list = data[index];
-							var flag = false;
-							var temp = '';
-							for (var i in list) {
-								if (!list[i].name) {
-									continue;
-								}
-								if (list[i].mark == 2) {
-									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
-										'" class="mui-table-view-cell mui-indexed-list-item">';
-									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '">';
-									temp += '<div class="mui-pull-left head-portrait">';
-									if (list[i].headimgurl.length == 0) {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="../image/user_default.png">';
-									} else {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="' + list[i].headimgurl + '">';
-									}
-									temp += '</div>';
-									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
-									temp += '<div>';
-									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-									temp += '<span>' + list[i].name + '</span>';
-									// <!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-									temp += '</span>';
-									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-									}
-									temp += '<div class="clearfix"></div>';
-									temp += '</div>';
-									temp += '<div class="biaoqian">';
-									temp += '<button class="firm">' + list[i].company + '</button>';
-									temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-									if (list[i].pid == list[i].recommend_id) {
-										temp += '<button style="background-color: #F96B5E;">下级会员</button>';
-									}
-									temp += '</div>';
-									temp += '</div>';
-									temp += '</a>';
-									temp += '</li>';
-								}
-								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
-										'</li>';
-									html += temp;
-								}
-							}
-						}
-					} else if (label == 'follow') {
-						for (var index in data) {
-							var list = data[index];
-							var flag = false;
-							var temp = '';
-							for (var i in list) {
-								if (!list[i].name) {
-									continue;
-								}
-								if (list[i].mark == 1) {
-									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
-										'" class="mui-table-view-cell mui-indexed-list-item">';
-									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '">';
-									temp += '<div class="mui-pull-left head-portrait">';
-
-									if (list[i].headimgurl.length == 0) {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="../image/user_default.png">';
-									} else {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="' + list[i].headimgurl + '">';
-									}
-									temp += '</div>';
-									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
-									temp += '<div>';
-									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-									temp += '<span>' + list[i].name + '</span>';
-									// <!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-									temp += '</span>';
-									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-									}
-									temp += '<div class="clearfix"></div>';
-									temp += '</div>';
-									temp += '<div class="biaoqian">';
-									temp += '<button class="firm">' + list[i].company + '</button>';
-									temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-									if (list[i].pid == list[i].recommend_id) {
-										temp += '<button style="background-color: #F96B5E;">下级会员</button>';
-									}
-									temp += '</div>';
-									temp += '</div>';
-									temp += '</a>';
-									temp += '</li>';
-								}
-								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
-										'</li>';
-									html += temp;
-								}
-							}
-						}
-					} else if (label == 'member') {
-						for (var index in data) {
-							var list = data[index];
-							var flag = false;
-							var temp = '';
-							for (var i in list) {
-								if (!list[i].name) {
-									continue;
-								}
-								if (list[i].is_member == 1) {
-									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
-										'" class="mui-table-view-cell mui-indexed-list-item">';
-									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '">';
-									temp += '<div class="mui-pull-left head-portrait">';
-									if (list[i].headimgurl.length == 0) {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="../image/user_default.png">';
-									} else {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="' + list[i].headimgurl + '">';
-									}
-									temp += '</div>';
-									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
-									temp += '<div>';
-									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-									temp += '<span>' + list[i].name + '</span>';
-									// <!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-									temp += '</span>';
-									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-									}
-									temp += '<div class="clearfix"></div>';
-									temp += '</div>';
-									temp += '<div class="biaoqian">';
-									temp += '<button class="firm">' + list[i].company + '</button>';
-									temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-									if (list[i].pid == list[i].recommend_id) {
-										temp += '<button style="background-color: #F96B5E;">下级会员</button>';
-									}
-									temp += '</div>';
-									temp += '</div>';
-									temp += '</a>';
-									temp += '</li>';
-								}
-								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
-										'</li>';
-									html += temp;
-								}
-							}
-						}
-					} else if (label == 'job') {
-						for (var index in data) {
-							var list = data[index];
-							var flag = false;
-							var temp = '';
-							for (var i in list) {
-								if (!list[i].name) {
-									continue;
-								}
-								if (list[i].job.length != 0) {
-									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
-										'" class="mui-table-view-cell mui-indexed-list-item">';
-									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '">';
-									temp += '<div class="mui-pull-left head-portrait">';
-									if (list[i].headimgurl.length == 0) {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="../image/user_default.png">';
-									} else {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="' + list[i].headimgurl + '">';
-									}
-									temp += '</div>';
-									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
-									temp += '<div>';
-									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-									temp += '<span>' + list[i].name + '</span>';
-									// <!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-									temp += '</span>';
-									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-									}
-									temp += '<div class="clearfix"></div>';
-									temp += '</div>';
-									temp += '<div class="biaoqian">';
-									// temp += '<button class="firm">' + list[i].company + '</button>';
-									temp += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-									// 													if (list[i].pid == list[i].recommend_id) {
-									// 														temp += '<button style="background-color: #F96B5E;">下级会员</button>';
-									// 													}
-									temp += '</div>';
-									temp += '</div>';
-									temp += '</a>';
-									temp += '</li>';
-								}
-								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
-										'</li>';
-									html += temp;
-								}
-							}
-						}
-					} else if (label == 'label') {
-						for (var index in data) {
-							var list = data[index];
-							var flag = false;
-							var temp = '';
-							for (var i in list) {
-								if (!list[i].name) {
-									continue;
-								}
-								if (list[i].label_id.length != 0) {
-									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
-										'" class="mui-table-view-cell mui-indexed-list-item">';
-									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '">';
-									temp += '<div class="mui-pull-left head-portrait">';
-									if (list[i].headimgurl.length == 0) {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="../image/user_default.png">';
-									} else {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="' + list[i].headimgurl + '">';
-									}
-									temp += '</div>';
-									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
-									temp += '<div>';
-									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-									temp += '<span>' + list[i].name + '</span>';
-									// <!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-									temp += '</span>';
-									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-									}
-									temp += '<div class="clearfix"></div>';
-									temp += '</div>';
-									temp += '<div class="biaoqian">';
-									for (var j = 0; j < list[i].label.length && j < 5; j++) {
-										temp += '<button style="background-color: #68B0FF;">' + list[i].label[j] + '</button>';
-									}
-									temp += '</div>';
-									temp += '</div>';
-									temp += '</a>';
-									temp += '</li>';
-								}
-								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
-										'</li>';
-									html += temp;
-								}
-							}
-						}
-					} else if (label == 'care') {
-						for (var index in data) {
-							var list = data[index];
-							var flag = false;
-							var temp = '';
-							for (var i in list) {
-								if (!list[i].name) {
-									continue;
-								}
-								if (list[i].birthday || list[i].anniversay) {
-									flag = true;
-									temp += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
-										'" class="mui-table-view-cell mui-indexed-list-item">';
-									temp += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '">';
-									temp += '<div class="mui-pull-left head-portrait">';
-									if (list[i].headimgurl.length == 0) {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="../image/user_default.png">';
-									} else {
-										temp += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-											'" src="' + list[i].headimgurl + '">';
-									}
-									temp += '</div>';
-									temp += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
-										'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
-									temp += '<div>';
-									temp += '<span class="mui-pull-left" style="font-size: 15px;">';
-									temp += '<span>' + list[i].name + '</span>';
-									// <!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-									temp += '</span>';
-									if (list[i].mark == 1) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-									} else if (list[i].mark == 2) {
-										temp +=
-											'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-									}
-									temp += '<div class="clearfix"></div>';
-									temp += '</div>';
-									temp += '<div class="Birthday">';
-									if (list[i].birthday.length != 0) {
-										temp += '<span>';
-										temp += '<span>生日：</span>';
-										temp += '<span>' + list[i].birthday + '</span>';
-										temp += '</span>';
-									}
-									if (list[i].anniversary.length != 0) {
-										temp += '<span style="margin-left: 15px;">';
-										temp += '<span>纪念日：</span>';
-										temp += '<span>' + list[i].anniversary + '</span>';
-										temp += '</span>';
-									}
-									temp += '</div>';
-									temp += '</div>';
-									temp += '</a>';
-									temp += '</li>';
-								}
-								if (flag) {
-									html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
-										'</li>';
-									html += temp;
-								}
-							}
-						}
-					} else {
-						for (var index in data) {
-							html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index +
-								'</li>';
-							var list = data[index];
-							for (var i in list) {
-								if (!list[i].name) {
-									continue;
-								}
-								html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
-									'" class="mui-table-view-cell mui-indexed-list-item">';
-								html += '<a href="javascript:void(0);" class="detail" data-type="crm" data-from="' + list[i].type +
-									'" data-id="' + list[i].id + '">';
-								html += '<div class="mui-pull-left head-portrait">';
-								if (list[i].headimgurl.length == 0) {
-									html += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-										'" src="../image/user_default.png">';
-								} else {
-									html += '<img class="crm-user-head" data-id="' + list[i].id + '"  data-type="crm" data-from="' + list[i].type +
-										'" src="' + list[i].headimgurl + '">';
-								}
-
-								html += '</div>';
-								html += '<div class="mui-pull-right content crm-left-cont" data-type="crm" data-from="' + list[i].type +
-									'" data-id="' + list[i].id + '" data-name="' + list[i].name + '" data-avatar="' + list[i].headimgurl + '">';
-								html += '<div>';
-								html += '<span class="mui-pull-left" style="font-size: 15px;">';
-								html += '<span>' + list[i].name + '</span>';
-								// <!-- <span style="color: #3D94FF;">（' + list[i].name + '）</span> -->
-								html += '</span>';
-								if (list[i].mark == 1) {
-									html +=
-										'<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[跟进中]</span>';
-								} else if (list[i].mark == 2) {
-									html += '<span class="mui-pull-right" style="font-size: 12px;color: #999999;margin-right: -10px;">[成交]</span>';
-								}
-								html += '<div class="clearfix"></div>';
-								html += '</div>';
-								html += '<div class="biaoqian">';
-								if (list[i].company) {
-									html += '<button class="firm">' + list[i].company + '</button>';
-								}
-								if (list[i].job) {
-									html += '<button style="background-color: #F9D05E;">' + list[i].job + '</button>';
-								}
-								if (list[i].pid == list[i].recommend_id) {
-									html += '<button style="background-color: #F96B5E;">下级会员</button>';
-								}
-								html += '</div>';
-								html += '</div>';
-								html += '</a>';
-								html += '</li>';
-							}
-						}
-					}
-					if (html.length == 0) {
-						html += '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
-					}
-					document.querySelector('#crm .mui-table-view').innerHTML = html;
-				} else if (type == 'friend') {
-					var html = '';
-					for (var index in data) {
-						html += '<li data-group="' + index + '" class="mui-table-view-divider mui-indexed-list-group">' + index + '</li>';
-						var list = data[index];
-						for (var i in list) {
-							html += '<li data-value="' + list[i].pinyin + '" data-tags="' + list[i].pinyin +
-								'" class="mui-table-view-cell mui-indexed-list-item">';
-							html += '<a href="javascript:void(0);" class="detail" data-type="friend" data-id="' + list[i].fid + '">';
-							html += '<div class="head-portrait">';
-							if (list[i].avatarUrl) {
-								html += '<img class="user-head-img" class="ddff" src="' + list[i].avatarUrl + '"  data-type="friend" data-id="' +
-									list[i].fid + '">';
-							} else {
-								html += '<img class="user-head-img" src="../image/user_default.png"  data-type="friend" data-id="' + list[i].fid +
-									'">';
-							}
-							html += '</div>';
-							html += '<div class="content user-left-cont bosom-friend" data-type="friend" data-id="' + list[i].fid +
-								'" data-name="' + list[i].name + '" data-avatar="' + list[i].avatarUrl + '">' + '<span>' + list[i].name +
-								'</span>' + '</div>' + '<span data-id="' + list[i].fid + '" class="see-card">' + '查看名片' + '</span>';
-							// html += '<div class="good_friend_name ">' ;
-							html += '</div>';
-							html += '</a>';
-							html += '</li>';
-						}
-					}
-					if (html.length == 0) {
-						html += '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
-					}
-					document.querySelector('#friend .mui-table-view').innerHTML = html;
-				} else if (type == 'customer') {
-					for (var index in data) {
-						if (index == 'count') {
-							var customerTotal = document.querySelectorAll('.customer_total');
-							mui.each(customerTotal, function(sub, item) {
-								item.innerHTML = data[index].total;
-							})
-							var customerFollow = document.querySelectorAll('.customer_follow');
-							mui.each(customerFollow, function(sub, item) {
-								item.innerHTML = data[index].follow;
-							})
-							var customerDeal = document.querySelectorAll('.customer_deal');
-							mui.each(customerDeal, function(sub, item) {
-								item.innerHTML = data[index].deal;
-							})
-							continue;
-						}
-						if (data[index].length != 0) {
-							logs(data[index]); 
-							var list = data[index];
-							html = '<ul class="mui-table-view">';
-							for (var i in list) {
-								if (!list[i].name && !list[i].nickName) {
-									continue;
-								}
-								html += '<li class="mui-table-view-cell new-customer" data-type="customer" data-id="' + list[i].id + '">';
-								if (!list[i].avatar && !list[i].avatarUrl) {
-									html += '<div class="chart mui-pull-left customer-head-img" data-id="' + list[i].id +
-										'" data-type="customer"><img src="../image/user_default.png" ></div>';
-								} else {
-									html += '<div class="chart mui-pull-left customer-head-img" data-id="' + list[i].id +
-										'" data-type="customer"><img src="' + (list[i].avatar || list[i].avatarUrl) + '" ></div>';
-								}
-								html += '<div class="mui-pull-right customer-content customer-right-cont" data-type="customer" data-name="' +
-									(list[i].name || list[i].nickName) + '" data-avatar="' + (list[i].avatar || list[i].avatarUrl) + '" data-id="' + list[i].id + '">';
-								html += '<div class="customer_information">';
-								html += '<div class="mui-pull-left">';
-								html += '<span class="customer_information_name">' + (list[i].name || list[i].nickName) + '</span>';
-								html += '</div>';
-								if (index != 'recommend' && list[i].last_time_text) {
-									html += '<div class="mui-pull-right" style="color: #6A6A6A;">' + list[i].last_time_text + '</div>';
-								}
-								html += '<div class="clearfix"></div>';
-								html += '</div>';
-								html += '<div style="font-size: 12px;margin-top: 8px;">';
-								if (index != 'recommend') {
-									if (list[i].count > 0) {
-										html += '<span class="mui-pull-left">' + list[i].count + '次互动</span>';
-									}
-								} else {
-									html += '<span class="mui-pull-left">' + list[i].create_time + '</span>';
-								}
-
-								if (index == 'new') {
-									html += '<span class="mui-pull-right"style="color: #4C7ABD;">进行中</span>';
-								} else if (index == 'follow') {
-									html += '<span class="mui-pull-right"style="color: #4C7ABD;">跟进中</span>';
-								} else if (index == 'intention') {
-									html += '<span class="mui-pull-right"style="color: #4C7ABD;">高意向</span>';
-								} else if (index == 'deal') {
-									html += '<span class="mui-pull-right"style="color: #4C7ABD;">完成</span>';
-								} else if (index == 'recommend') {
-									html += '<span class="mui-pull-right"style="color: #4C7ABD;">' + list[i].end_time + '</span>';
-								}
-								html += '</div>';
-								html += '</div>';
-								html += '</li>';
-							}
-							html += '</ul>';
-						} else {
-							html = '<div style="padding: 30px 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
-						}
-						if (index == 'new') {
-							document.querySelector('#customer #item1').innerHTML = html;
-						} else if (index == 'recommend') {
-							document.querySelector('#customer #item2').innerHTML = html;
-						} else if (index == 'follow') {
-							document.querySelector('#customer #item3').innerHTML = html;
-						} else if (index == 'intention') {
-							document.querySelector('#customer #item4').innerHTML = html;
-						} else if (index == 'deal') {
-							document.querySelector('#customer #item5').innerHTML = html;
-						}
-					}
-
-					//更新时保持下方选项卡为之前选中
-					mui('#customer #segmentedControl a').each(function(index, item) {
-						this.classList.remove('mui-active');
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						pageinit();
+						getCustomerList("crm");
 					})
-					mui('#customer .list-container div').each(function(index, item) {
-						this.classList.remove('mui-active');
-					})
-
-					mui('#customer #segmentedControl a').each(function(index, item) {
-						if (this.dataset.id == customerCurrentTab) {
-							this.classList.add('mui-active');
+					var timernum = 0;
+					var timer = setInterval(function() {
+						timernum++;
+						var list = document.getElementById('list');
+						var pageHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						document.querySelector(".mui-indexed-list-bar").style.height = pageHeight - 150 + 'px';
+						list.style.height = pageHeight - 148 + 'px';
+						window.indexedList = new mui.IndexedList(list);
+						app.viewHeight = 'height:' + (pageHeight - 348) + 'px';
+						if (timernum == 5) {
+							clearInterval(timer);
 						}
-					})
-					mui('#customer .list-container div').each(function(index, item) {
-						if (this.dataset.id == customerCurrentTab) {
-							this.classList.add('mui-active');
-						}
-					})
-				}
-				if (type == currentTab) {
-					var list = document.getElementById(currentTab).innerHTML;
-					document.getElementById('list_container').innerHTML = list;
-					eventInit();
-					indexInit();
-				}
-			}
-			//监听消息数量 首页广播
-			window.addEventListener('messgeNumber', function(e) {
-				var tipObj = document.getElementById('unread_message');
-				if (e.detail.number) {
-					tipObj.innerText = e.detail.number;
-					tipObj.style.display = 'block';
-				} else {
-					tipObj.style.display = 'none';
+					}, 1000);
 				}
 			})
-			//获取未读消息
-			// function getUnreadMessage() {
-			// 	mui.get($ajaxUrl + 'member', {
-			// 		action: 'unread_message',
-			// 		token: userInfo.token
-			// 	}, function(res) {
-			// 		var tipObj = document.getElementById('unread_message');
-			// 		if (res.data > 0) {
-			// 			tipObj.innerText = res.data;
-			// 			tipObj.style.display = 'block';
-			// 		} else {
-			// 			tipObj.innerText = 0;
-			// 			tipObj.style.display = 'none';
-			// 		}
-			// 	}, 'json');
-			// }
-			mui(".mui-content").on('tap', '.mui-search', function() {
+
+			function pageinit() {
+				mui.init();
+				mui('#refreshContainer,#crm-scroll,#friend-scroll,#scroll5,#scroll4,#scroll3,#scroll2,#scroll1').scroll({
+					scrollY: true, //是否竖向滚动
+					scrollX: false, //是否横向滚动
+					startX: 0, //初始化时滚动至x
+					startY: 0, //初始化时滚动至y
+					indicators: false, //是否显示滚动条
+					deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+					bounce: false //是否启用回弹
+				});
+			}
+			// 点击搜索
+			mui(".mui-content").on('tap', '.mui-indexed-list-search', function() {
 				mui.openWindow({
 					url: "chat_page_search.html",
 					id: "chat_page_search",
@@ -1918,6 +494,123 @@
 				})
 				setStatusBar('', 'dark');
 			})
+			// 跳转详情页
+			mui('.mui-content').on('tap', '.crm-user-head', function() {
+				var cid = this.dataset.id;
+				var type = this.dataset.type;
+				console.log(type)
+				if (type == 'crm') {
+					var stauts = this.dataset.stauts;
+					if (stauts == 1) {
+						fnOpenWin('crm_detail_miniapp.html', 'crm_detail_miniapp', {
+							statusbar: {
+								background: '#2289FF'
+							}
+						}, {
+							cid: cid
+						}, 'slide-in-right');
+					} else {
+						fnOpenWin('crm_detail_app.html', 'crm_detail_app', {
+							statusbar: {
+								background: '#2289FF'
+							}
+						}, {
+							cid: cid
+						}, 'slide-in-right');
+					}
+				} else if (type == 'friend') {
+					fnOpenWin('customer_detail.html', 'customer_detail', {
+						statusbar: {
+							background: '#2289FF'
+						}
+					}, {
+						cid: cid
+					}, 'slide-in-right');
+				}
+			})
+			// 打开新增客户详情页
+			mui('.mui-table-view').on('tap', '.customer-head-img', function() {
+				var cid = this.dataset.id;
+				fnOpenWin('customer_detail.html', 'customer_detail', {
+					statusbar: {
+						background: '#2289FF'
+					}
+				}, {
+					cid: cid
+				}, 'slide-in-right');
+			})
+			// 打开新增客户聊天
+			mui('.mui-table-view').on('tap', '.customer-chat', function() {
+				var cid = this.dataset.id,
+					type = this.dataset.type,
+					chatName = this.dataset.name,
+					avatar = this.dataset.avatar;
+				fnOpenWin('dialog.html', 'dialog', {
+					statusbar: {
+						background: '#F7F7F7'
+					}
+				}, {
+					cid: cid,
+					chatName: chatName,
+					avatar: avatar,
+					barStyle: 'light'
+				}, 'slide-in-right');
+				plus.navigator.setStatusBarStyle('dark');
+			})
+
+			// 点击消息
+			mui(".mui-content").on('tap', '#message', function() {
+				fnOpenWin('message.html', 'message', {
+					statusbar: {
+						background: '#FFFFFF'
+					}
+				}, {
+					prePage: 'chat'
+				}, 'slide-in-right');
+				plus.navigator.setStatusBarStyle('dark');
+			})
+
+			// 点击编辑客户
+			mui(".mui-content").on('tap', '#customer_edit', function() {
+				fnOpenWin('customer_entry.html', 'customer_entry', {
+					statusbar: {
+						background: '#FFFFFF'
+					}
+				}, {
+					cid: 0
+				}, 'slide-in-right');
+				plus.navigator.setStatusBarStyle('dark');
+			})
+			// 点击添加好友
+			mui(".mui-content").on('tap', '#add_friend,#new_friend', function() {
+				openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
+				plus.navigator.setStatusBarStyle('dark');
+			})
+
+			// 获取客户列表
+			function getCustomerList(type) {
+				if (!userInfo) return;
+				mui.post($ajaxUrl + 'customer', {
+					action: 'list',
+					token: userInfo.token,
+					type: type
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						if (type == 'customer') {
+							app.newcustomerData = res.data;
+							app.totalNum = res.data.count.total;
+						} else if (type == 'crm') {
+							app.crmList = res.data;
+						} else {
+							app.friendList = res.data;
+						}
+					} else {
+						app.newcCustomerlist = [];
+					}
+				}, 'json')
+			}
 		</script>
 	</body>
+
 </html>

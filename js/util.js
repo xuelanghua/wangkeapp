@@ -751,7 +751,6 @@ function pushCallback(data, event) {
 }
 
 function playNoticeAudio() {
-	alert("今天今天今天");
 	if (plus.os.name == 'Android') {
 		var context = plus.android.runtimeMainActivity();
 		var RingtoneManager = plus.android.importClass('android.media.RingtoneManager');
