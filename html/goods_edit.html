@@ -807,8 +807,9 @@
 							message('请填写商品库存!');
 							return;
 						}
+						console.log(specStock);
 						if (parseInt(specStock) <= 0) {
-							message('商品库存填写有误!');
+							message('商品库存填写有误111!');
 							return;
 						}
 						var temp = {
@@ -894,6 +895,7 @@
 					console.log(JSON.stringify(res));
 					if (res.errno == 0) {
 						message('修改成功!');
+						mui.fire(plus.webview.getWebviewById('goods_list'), 'goodsAddSuccess');
 						setTimeout(function() {
 							plus.webview.close('goods_edit');
 						}, 1000)

@@ -516,7 +516,9 @@
 					//console.log(str);
 					//console.log(JSON.stringify(data));
 					document.getElementById('slider').innerHTML = str;
-					slider_play();
+					setTimeout(function() {
+						slider_play();
+					}, 1000)
 				},
 				error: function(xhr, type, errorThrown) {
 					// 请求失败
@@ -525,9 +527,8 @@
 		}
 
 		function slider_play() {
-			var gallery = mui('.mui-slider');
-			gallery.slider({
-				interval: 2000 //自动轮播周期，若为0则不自动播放，默认为0；
+			mui('.mui-slider').slider({
+				interval: 2500 //自动轮播周期，若为0则不自动播放，默认为0；
 			});
 		}
 

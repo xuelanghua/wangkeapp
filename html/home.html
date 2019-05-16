@@ -670,7 +670,7 @@
 			// })
 			getNotice();
 			weatherInit(); //天气初始化
-			slideInit(false); //幻灯片初始化 
+			slideInit(false); //幻灯片初始化
 			//监听消息数量 首页广播
 			window.addEventListener('messgeNumber', function(e) {
 				var tipObj = document.getElementById('unread_message');
@@ -869,6 +869,9 @@
 
 		//获取轮播图
 		function slideInit(refresh) {
+			if (!refresh) {
+				plus.nativeUI.showWaiting();
+			}
 			mui.post($ajaxUrl + 'carousel', {
 				position: 1
 			}, function(res) {
@@ -901,13 +904,15 @@
 				} else {
 					console.log(res.message);
 				}
-				var closeWaiting = setTimeout(function() {
-					plus.nativeUI.closeWaiting();
-				}, 1000)
 				if (refresh) {
 					setTimeout(function() {
 						mui('.mui-content').pullRefresh().endPulldownToRefresh();
 					}, 1000)
+				}
+				if (!refresh) {
+					setTimeout(function() {
+						plus.nativeUI.closeWaiting();
+					}, 2000)
 				}
 			}, 'json')
 		}

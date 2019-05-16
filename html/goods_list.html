@@ -252,7 +252,7 @@
 				<div id="item1" class="mui-control-content mui-active">
 					<div id="scroll" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
-							<ul class="mui-table-view" id="item1_list">
+							<ul class="mui-table-view" id="item1_list" style="margin_botton: 25px;">
 								<!-- <li class="mui-table-view-cell">
 									<div class="chart mui-pull-left">
 										<img src="../image/bj.jpg">
@@ -439,6 +439,9 @@
 	var goodsName = '';
 	var userInfo = getUserInfo();
 	mui.plusReady(function() {
+		window.addEventListener('goodsAddSuccess', function() {
+			getGoodsList(false);
+		})
 		getGoodsList(false);
 		eventInit();
 	})
@@ -643,7 +646,6 @@
 			if (onSale.length > 0) {
 				var onSaleStr = '';
 				for (var i in onSale) {
-					// alert(onSale[i].cover);
 					onSaleStr += '<li class="mui-table-view-cell">';
 					onSaleStr += '<div class="chart mui-pull-left">';
 					onSaleStr += '<img src="' + onSale[i].cover + '">';
@@ -684,7 +686,7 @@
 			}
 			if (soldOut.length > 0) {
 				var soldOutStr = '';
-				for (var j in onSale) {
+				for (var j in soldOut) {
 					soldOutStr += '<li class="mui-table-view-cell">';
 					soldOutStr += '<div class="chart mui-pull-left">';
 					soldOutStr += '<img src="' + soldOut[j].cover + '">';
