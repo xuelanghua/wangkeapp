@@ -733,6 +733,7 @@ function pushCallback(data, event) {
 			if (data.chat == 'customer') {
 				mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
 			} else if (data.chat == 'friend') {
+				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
 			} else if (data.chat == 'crm') {
 				mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');

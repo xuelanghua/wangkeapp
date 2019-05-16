@@ -91,11 +91,11 @@
 						</ul>
 						<div class="trapezium-container">
 							<div class="trapezium"></div>
-							<div class="trapezium-tips">用户总数:<span class="customer_total">0</span></div>
+							<div class="trapezium-tips">用户总数:<span class="customer_total">{{totalNum}}</span></div>
 							<div class="trapezium1"></div>
-							<div class="trapezium-tips">跟进数量:<span class="customer_total">0</span></div>
+							<div class="trapezium-tips">跟进数量:<span class="customer_total">{{followNum}}</span></div>
 							<div class="trapezium2"></div>
-							<div class="trapezium-tips">成交数量:<span class="customer_total">0</span></div>
+							<div class="trapezium-tips">成交数量:<span class="customer_total">{{bargainNum}}</span></div>
 						</div>
 						<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
 							<a class="mui-control-item mui-active" href="#item1">新增客户</a>
@@ -446,7 +446,25 @@
 					}
 				},
 				mounted: function() {
-					mui.init();
+					mui.init({
+						// pullRefresh: {
+						// 	container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+						// 	down: {
+						// 		style: 'circle',
+						// 		color: '#2289FF',
+						// 		callback: function() {
+						// 			downRefresh = true;
+						// 			if (currentTab == 'crm') {
+						// 				getCustomerList('crm', false);
+						// 			} else if (currentTab == 'customer') {
+						// 				getCustomerList('customer', false);
+						// 			} else if (currentTab == 'friend') {
+						// 				getCustomerList('friend', false);
+						// 			}
+						// 		}
+						// 	}
+						// }
+					}); 
 					var pageHeight = 0;
 					mui.plusReady(function() {
 						pageinit();
@@ -466,7 +484,7 @@
 						list.style.height = pageHeight - 148 + 'px';
 						window.indexedList = new mui.IndexedList(list);
 						// 360
-						app.viewHeight = 'height:' + (pageHeight - 340) + 'px';
+						app.viewHeight = 'height:' + (pageHeight - 425) + 'px';
 					})
 				}
 			})
@@ -499,6 +517,7 @@
 				})
 				//好友新增客户crm 添加客户页面广播
 				window.addEventListener('refreshFriend', function(e) {
+					console.log(22222);
 					getCustomerList("friend");
 				})
 			}
