@@ -745,6 +745,9 @@ function pushCallback(data, event) {
 			mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
 			mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
 			updateUserInfo();
+		} else if (url == 'buyGoodsBoothSuccess') {
+			mui.fire(plus.webview.getWebviewById('shop_setting'), 'buySuccess');
+			updateUserInfo();
 		} else if (url == 'logout') {
 			fnLogout();
 		} else {
