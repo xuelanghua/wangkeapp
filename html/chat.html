@@ -18,7 +18,7 @@
 
 	<body>
 		<div id="mui-content" class="mui-content chat-container" v-cloak>
-			<div style="position: fixed;top: 0;width: 100%;z-index: 15;background-color: #FFFFFF;">
+			<div style="position: fixed;top: 0;width: 100%;z-index: 15;background-color: #FFFFFF;height: 150px;overflow: hidden;">
 				<div class="search-bar">
 					<div class="mui-indexed-list-search">
 						<div class="to-search"><span class="mui-icon mui-icon-search"></span>搜索</div>
@@ -104,7 +104,7 @@
 							<a class="mui-control-item" href="#item4">高意向</a>
 							<a class="mui-control-item" href="#item5">成交</a>
 						</div>
-						<div id="list-container">
+						<div id="list-container" class="list-container">
 							<div id="item1" class="mui-control-content mui-active" :style="viewHeight">
 								<div class="mui-scroll-wrapper">
 									<div class="mui-scroll">
@@ -136,7 +136,7 @@
 										</ul>
 									</div>
 								</div>
-								<div v-if="!newcustomerData.new" class="void-data-tips">
+								<div v-if="newcustomerData.new== undefined || newcustomerData.new.length <= 0" class="void-data-tips">
 									<img src="../image/icon/void-data.png">
 									<p>没有数据</p>
 								</div>
@@ -172,7 +172,7 @@
 										</ul>
 									</div>
 								</div>
-								<div v-if="!newcustomerData.recommend" class="void-data-tips">
+								<div v-if="newcustomerData.recommend== undefined || newcustomerData.recommend.length <= 0" class="void-data-tips">
 									<img src="../image/icon/void-data.png">
 									<p>没有数据</p>
 								</div>
@@ -208,7 +208,7 @@
 										</ul>
 									</div>
 								</div>
-								<div v-if="!newcustomerData.follow" class="void-data-tips">
+								<div v-if="newcustomerData.follow== undefined || newcustomerData.follow.length <= 0" class="void-data-tips">
 									<img src="../image/icon/void-data.png">
 									<p>没有数据</p>
 								</div>
@@ -243,10 +243,10 @@
 											</li>
 										</ul>
 									</div>
-								</div>
-								<div v-if="!newcustomerData.intention" class="void-data-tips">
-									<img src="../image/icon/void-data.png">
-									<p>没有数据</p>
+									<div v-if="newcustomerData.intention== undefined || newcustomerData.intention.length <= 0" class="void-data-tips">
+										<img src="../image/icon/void-data.png">
+										<p>没有数据</p>
+									</div>
 								</div>
 							</div>
 							<div id="item5" class="mui-control-content" :style="viewHeight">
@@ -279,10 +279,10 @@
 											</li>
 										</ul>
 									</div>
-								</div>
-								<div v-if="!newcustomerData.deal" class="void-data-tips">
-									<img src="../image/icon/void-data.png">
-									<p>没有数据</p>
+									<div v-if="newcustomerData.deal== undefined || newcustomerData.deal.length <= 0" class="void-data-tips">
+										<img src="../image/icon/void-data.png">
+										<p>没有数据</p>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -447,25 +447,40 @@
 				},
 				mounted: function() {
 					mui.init();
-					var pageHeight=0;
+					var pageHeight = 0;
 					mui.plusReady(function() {
 						pageinit();
 						getCustomerList("crm");
 						// 实际高度
 						// pageHeight=plus.android.invoke(plus.android.currentWebview(),"getHeight");
 						// pageHeight=plus.screen.resolutionHeight*plus.screen.scale;
+						// pageHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						// pageHeight = window.screen.availHeight;
 						// 逻辑高度
-						pageHeight=plus.screen.resolutionHeight;
+						// pageHeight = plus.screen.resolutionHeight;
+						pageHeight = plus.display.resolutionHeight;
 						var list = document.getElementById('list');
-						list.style.height = pageHeight - 160 + 'px';
+						// 150
+						// logs(pageHeights);
+						logs(pageHeight);
+						list.style.height = pageHeight - 148 + 'px';
 						window.indexedList = new mui.IndexedList(list);
-						app.viewHeight = 'height:' + (pageHeight - 360) + 'px';
+						// 360
+						app.viewHeight = 'height:' + (pageHeight - 340) + 'px';
 					})
 				}
 			})
 
 			function pageinit() {
-				mui(".mui-scroll-wrapper").scroll();
+				mui(".mui-scroll-wrapper").scroll({
+					scrollY: true, //是否竖向滚动
+					scrollX: false, //是否横向滚动
+					startX: 0, //初始化时滚动至x
+					startY: 0, //初始化时滚动至y
+					indicators: false, //是否显示滚动条
+					deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
+					bounce: true //是否启用回弹
+				});
 				//监听消息数量 首页广播
 				window.addEventListener('messgeNumber', function(e) {
 					app.messageNum = e.detail.number;
