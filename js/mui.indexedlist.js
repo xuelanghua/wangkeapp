@@ -66,6 +66,7 @@
 			if (!groupElement || (self.hiddenGroups && self.hiddenGroups.indexOf(groupElement) > -1)) {
 				return;
 			}
+			// mui('.mui-scroll-wrapper').scroll().scrollTo(0,groupElement.offsetTop,10);
 			self.el.inner.scrollTop = groupElement.offsetTop;
 		},
 		bindBarEvent: function() {
