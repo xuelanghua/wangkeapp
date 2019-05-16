@@ -237,6 +237,7 @@
 					var activeTab = subpages[0].ids;
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
+						pushInit();
 						plus.navigator.setStatusBarStyle("dark");
 						plus.navigator.setStatusBarBackground('#FFFFFF');
 						if (!userInfo) {
@@ -268,6 +269,7 @@
 						//选项卡点击事件
 						mui('.mui-bar-tab').on('tap', '.mui-tab-item', function(e) {
 							var targetTab = this.id;
+							console.log(targetTab);
 							var idxs = this.dataset.index;
 							if (targetTab == activeTab) {
 								return;
@@ -275,13 +277,17 @@
 							//显示目标选项卡
 							//若为iOS平台或非首次显示，则直接显示
 							if (mui.os.ios || aniShow[targetTab]) {
-								plus.webview.show(targetTab);
+								console.log(55555);
+								plus.webview.show(targetTab, "fade-in", 300);
+								console.log(66666);
 							} else {
 								//否则，使用fade-in动画，且保存变量
 								var temp = {};
 								temp[targetTab] = "true";
 								mui.extend(aniShow, temp);
+								console.log(2222);
 								plus.webview.show(targetTab, "fade-in", 300);
+								console.log(3333);
 							}
 							//隐藏当前;
 							plus.webview.hide(activeTab);

@@ -635,6 +635,13 @@ function pushInit() {
 			}
 			pushCallback(msg.payload, 'receive');
 		} catch (e) {
+			var imei = plus.device.imei;
+			var imsi = plus.device.imsi;
+			var model = plus.device.model;
+			var vendor = plus.device.vendor;
+			var uuid = plus.device.uuid;
+			var content = '运行发生错误,错误内容:' + e.message + ',错误设备详情:设备身份码' +  imei + ',用户识别码' +  imsi + ',设备型号' +  model +',生产厂商' +  vendor +',唯一标识' +  uuid;
+			appErrorCollection(content);
 			console.log(e.message);
 		}
 	})
@@ -670,10 +677,10 @@ function pushCallback(data, event) {
 	var type = data.type;
 	var url = data.url;
 	var extra = data.extra;
-	// logs(type);
-	// logs(url);
-	// logs(extra);
-	// logs(event);
+	logs(type);
+	logs(url);
+	logs(extra);
+	logs(event);
 	if (event == 'click') {
 		if (type == 'jump') {
 			if (url == 'chat') {
@@ -682,13 +689,13 @@ function pushCallback(data, event) {
 				} else if (type == 'friend') {
 					mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
 				} else if (data.chat == 'crm') {
-					logs(data);
 					mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 				}
 			} else if (url == 'dialog') {
 				// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
 				// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
 				// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+				// console.log(33333);
 				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 				fnOpenWin('html/' + url + '.html', url, {
@@ -717,22 +724,20 @@ function pushCallback(data, event) {
 		}
 	} else if (event == 'receive') {
 		if (url == 'dialog') {
-			playNoticeAudio();
 			// plus.device.beep();
 			// plus.device.vibrate();
 			mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 			mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-		} else if (url == 'chat') {
 			playNoticeAudio();
+		} else if (url == 'chat') {
 			if (data.chat == 'customer') {
 				mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
 			} else if (data.chat == 'friend') {
-				logs(data);
 				mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
 			} else if (data.chat == 'crm') {
-				logs(data);
 				mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
 			}
+			playNoticeAudio();
 		} else if (url == 'activation') {
 			mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
 			mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
@@ -748,6 +753,7 @@ function pushCallback(data, event) {
 	// } catch (e) {
 	// 	console.log(e.message);
 	// }
+	return;
 }
 
 function playNoticeAudio() {
@@ -755,19 +761,25 @@ function playNoticeAudio() {
 		var context = plus.android.runtimeMainActivity();
 		var RingtoneManager = plus.android.importClass('android.media.RingtoneManager');
 		var uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
-		plus.android.importClass(uri);
-		var p = plus.audio.createPlayer(uri.toString());
-		logs(uri.toString());
-		var flag = true;
-		p.play(function() {
-			flag = false;
-			logs("Audio play success!");
-		}, function(e) {
-			logs("Audio play error: " + e.message);
-		})
-		// 		if (flag) {
-		// 			plus.device.beep();
-		// 		}
+		if (uri != null) {
+			plus.android.importClass(uri);
+			if (uri.toString().indexOf('ogg') != -1) {
+				uri = '/plugins/music/tim.wav';
+			}
+			var p = plus.audio.createPlayer(uri.toString());
+			p.play(function() {
+				logs("System Audio play success!");
+			}, function(e) {
+				logs("System Audio play error: " + e.message);
+			})
+		} else {
+			var p = plus.audio.createPlayer('/plugins/music/tim.wav');
+			p.play(function() {
+				logs("APP Audio play success!");
+			}, function(e) {
+				logs("APP Audio play error: " + e.message);
+			})
+		}
 	} else {
 		plus.ios.invoke(null, "AudioServicesPlaySystemSound", 1002);
 	}
@@ -910,3 +922,24 @@ function onNetChange() {
 			break;
 	}
 }
+
+//手机APP错误信息
+function appErrorCollection(content) {
+	mui.get($ajaxUrl + 'util',{
+			action: 'app_error_collection',
+			content: content
+		}, function(res){
+			console.log(res);
+		},'json'
+	);
+}
+
+function getContactsInit() {
+	plus.contacts.getAddressBook( plus.contacts.ADDRESSBOOK_PHONE, function( addressbook ) {
+		// 可通过addressbook进行通讯录操作
+		console.log("Get address book success!");
+	}, function ( e ) {
+		console.log("Get address book failed: " + e.message );
+	} );
+}
+

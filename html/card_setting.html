@@ -1040,12 +1040,6 @@
 
 		//开始录音
 		function startRecord() {
-			var format='mp3'
-			if(mui.os.ios){
-				format='wav'
-			}else{
-				
-			}
 			r = plus.audio.getRecorder();
 			if (r == null) {
 				message("Device not ready!");
@@ -1054,7 +1048,7 @@
 			timeInterval();
 			r.record({
 				filename: "_doc/audio/",
-				format: format
+				format: 'mp3'
 			}, function(e) {
 				document.querySelector('.voice-container').children[0].classList.add('hidden');
 				document.querySelector('.voice-container').children[1].classList.remove('hidden');

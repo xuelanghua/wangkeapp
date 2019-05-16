@@ -65,11 +65,11 @@
 			<div class="logistics_title">
 				<div>
 					<span>订单编号：</span>
-					<span>12559845188136</span>
+					<span>{{orderNumber}}</span>
 				</div>
 				<div style="margin-top: 15px;">
 					<span>配送方式：</span>
-					<span>顺风快递 52316965956</span>
+					<span>{{expressCompany}} {{courierNumber}}</span>
 				</div>
 			</div>
 			<div class="logistics_details" id="express_list_container">
@@ -86,19 +86,36 @@
 						</div>
 					</div>
 					<div class="clearfix"></div>
-				</div>
+				</div> -->
 				<div>
-					<div class="logistics_detailsL mui-pull-left">
-						<div class="circularw">
-							<div class="circular1"></div>
+					<template v-for="(list, index) in expressList" :key="index" v-if="expressList">
+						<div class="logistics_detailsL mui-pull-left">
+							<div class="circularw">
+								<div v-if="index==0" class="circular"></div>
+								<div v-else class="circular1"></div>
+							</div>
 						</div>
-					</div>
-					<div class="logistics_detailsR mui-pull-left">
-						<div class="logistics_name">
-							<div>[昆明市] 你的快递已到达官渡区分管中心</div>
-							<div style="margin-top: 10px;">2018-05-22 12:20:58</div>
+						<div class="logistics_detailsR mui-pull-left">
+							<div class="logistics_name">
+								<div>{{list.context}}</div>
+								<div style="margin-top: 10px;">{{list.time}}</div>
+							</div>
 						</div>
-					</div>
+					</template>
+					
+					<template v-else>
+						<div class="logistics_detailsL mui-pull-left">
+							<div class="circularw">
+								<div v-if="index==0" class="circular"></div>
+								<div v-else class="circular1"></div>
+							</div>
+						</div>
+						<div class="logistics_detailsR mui-pull-left">
+							<div class="logistics_name">
+								<div>货物正在出库中</div>
+							</div>
+						</div>
+					</template>
 					<div class="logistics_detailsL mui-pull-left">
 						<div class="circularw">
 							<div class="circular"></div>
@@ -108,29 +125,73 @@
 							<div>已发货</div>
 					</div>
 					<div class="clearfix"></div>
-				</div> -->
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/Zepto.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<!-- <script src="../js/Zepto.min.js"></script> -->
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: true
+			
+			var vm = new Vue({
+				el: '.mui-content',
+				data: {
+					orderNumber: '',
+					expressCompany: '',
+					courierNumber: '',
+					expressList: null
+				},
+				created: function() {
+					
+				},
+				mounted: function() {
+					mui.init({
+						swipeBack: true
+					})
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						var orderId = self.orderId;
+						var userInfo = getUserInfo();
+						plus.nativeUI.showWaiting();
+						mui.get($ajaxUrl + 'express', {
+								token: userInfo.token,
+								action: 'getEcpressInfoList',
+								order_id: orderId
+							}, function(res){
+								logs(res);
+								if (res.errno == 0) {
+									vm.orderNumber = res.data.orderInfo.out_trade_no;
+									vm.expressCompany = res.data.orderInfo.express_company;
+									vm.courierNumber = res.data.orderInfo.courier_number;
+									if (res.data.expressInfo.message == 'ok') {
+										vm.expressList = res.data.expressInfo.data;
+									}
+								} else {
+									message(res.message);
+									setTimeout(function() {
+										mui.back();
+									}, 2000)
+								}
+								setTimeout(function() {
+									plus.nativeUI.closeWaiting();
+								}, 1000)
+							}, 'json'
+						);
+						// refreshExpressInfo();
+					});
+				}
 			})
-			mui.plusReady(function() {
-				refreshExpressInfo();
-			});
+			
 			/**
 			 *刷新快递信息
 			 */
 			function refreshExpressInfo() {
-				var userInfo = getUserInfo();
-				var ajax_url = $ajaxUrl + 'express';
-				mui.ajax(ajax_url, {
+				mui.ajax($ajaxUrl + 'express', {
 					data: {
 						token: userInfo.token,
 						action: 'getEcpressInfoList',
+						order_id: orderId
 					},
 					dataType: 'json',
 					type: 'post',
