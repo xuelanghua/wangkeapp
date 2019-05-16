@@ -9,11 +9,15 @@
 		<link href="../css/mui.indexedlist.css" rel="stylesheet" />
 		<link href="../iconfont/iconfont.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/chat.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+		</style>
 	</head>
 
 	<body>
-		<div id="mui-content" class="mui-content chat-container">
-			<div id="contHeight"style="position: fixed;top: 0;bottom: 0;opacity: 0; width: 100%;background-color: #FFFFFF;z-index: -9999;"></div>
+		<div id="mui-content" class="mui-content chat-container" v-cloak>
 			<div style="position: fixed;top: 0;width: 100%;z-index: 15;background-color: #FFFFFF;">
 				<div class="search-bar">
 					<div class="mui-indexed-list-search">
@@ -49,7 +53,7 @@
 				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="serach">
 				</div>
-				<div class="mui-indexed-list-bar  mui-hidden" v-show="nowaday=='crm'||nowaday=='friend'" id="list_bar">
+				<div class="mui-indexed-list-bar mui-hidden" v-show="nowaday=='crm'||nowaday=='friend'" id="list_bar">
 					<a>A</a>
 					<a>B</a>
 					<a>C</a>
@@ -102,7 +106,7 @@
 						</div>
 						<div id="list-container">
 							<div id="item1" class="mui-control-content mui-active" :style="viewHeight">
-								<div id="scroll1" class="mui-scroll-wrapper">
+								<div class="mui-scroll-wrapper">
 									<div class="mui-scroll">
 										<ul class="mui-table-view">
 											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.new" :key="index">
@@ -133,12 +137,12 @@
 									</div>
 								</div>
 								<div v-if="!newcustomerData.new" class="void-data-tips">
-									<img src="../image/icon/void-data.png" >
+									<img src="../image/icon/void-data.png">
 									<p>没有数据</p>
 								</div>
 							</div>
-							<div id="item2" class="mui-control-content mui-active" :style="viewHeight">
-								<div id="scroll2" class="mui-scroll-wrapper">
+							<div id="item2" class="mui-control-content" :style="viewHeight">
+								<div class="mui-scroll-wrapper">
 									<div class="mui-scroll">
 										<ul class="mui-table-view">
 											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.recommend" :key="index">
@@ -160,7 +164,7 @@
 															{{items.end_time}}
 														</div>
 														<div class="bottom-last">
-															{{items.end_time}}
+															已锁定
 														</div>
 													</div>
 												</div>
@@ -169,12 +173,12 @@
 									</div>
 								</div>
 								<div v-if="!newcustomerData.recommend" class="void-data-tips">
-									<img src="../image/icon/void-data.png" >
+									<img src="../image/icon/void-data.png">
 									<p>没有数据</p>
 								</div>
 							</div>
-							<div id="item3" class="mui-control-content mui-active" :style="viewHeight">
-								<div id="scroll3" class="mui-scroll-wrapper">
+							<div id="item3" class="mui-control-content" :style="viewHeight">
+								<div class="mui-scroll-wrapper">
 									<div class="mui-scroll">
 										<ul class="mui-table-view">
 											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.follow" :key="index">
@@ -205,12 +209,12 @@
 									</div>
 								</div>
 								<div v-if="!newcustomerData.follow" class="void-data-tips">
-									<img src="../image/icon/void-data.png" >
+									<img src="../image/icon/void-data.png">
 									<p>没有数据</p>
 								</div>
 							</div>
-							<div id="item4" class="mui-control-content mui-active" :style="viewHeight">
-								<div id="scroll4" class="mui-scroll-wrapper">
+							<div id="item4" class="mui-control-content" :style="viewHeight">
+								<div class="mui-scroll-wrapper">
 									<div class="mui-scroll">
 										<ul class="mui-table-view">
 											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.intention" :key="index">
@@ -241,12 +245,12 @@
 									</div>
 								</div>
 								<div v-if="!newcustomerData.intention" class="void-data-tips">
-									<img src="../image/icon/void-data.png" >
+									<img src="../image/icon/void-data.png">
 									<p>没有数据</p>
 								</div>
 							</div>
-							<div id="item5" class="mui-control-content mui-active" :style="viewHeight">
-								<div id="scroll5" class="mui-scroll-wrapper">
+							<div id="item5" class="mui-control-content" :style="viewHeight">
+								<div class="mui-scroll-wrapper">
 									<div class="mui-scroll">
 										<ul class="mui-table-view">
 											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.deal" :key="index">
@@ -277,7 +281,7 @@
 									</div>
 								</div>
 								<div v-if="!newcustomerData.deal" class="void-data-tips">
-									<img src="../image/icon/void-data.png" >
+									<img src="../image/icon/void-data.png">
 									<p>没有数据</p>
 								</div>
 							</div>
@@ -286,7 +290,7 @@
 					<div id="crm" v-show="'crm'==nowaday">
 						<div id="crm-scroll" class="mui-scroll-wrapper crm-scroll-cont">
 							<div class="mui-scroll">
-								<ul class="mui-table-view ">
+								<ul class="mui-table-view  crm-scroll-cont">
 									<template v-for="(list,key,index) in crmList" :key="index">
 										<!-- <li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li> -->
 										<li class="mui-table-view-cell customer-list" :data-tags="list.pinyin" v-for="(items,idx) in list" :key="idx">
@@ -443,40 +447,25 @@
 				},
 				mounted: function() {
 					mui.init();
+					var pageHeight=0;
 					mui.plusReady(function() {
-						getCustomerList("crm");
 						pageinit();
-					})
-					var timernum = 0;
-					var timer = setInterval(function() {
-						timernum++;
+						getCustomerList("crm");
+						// 实际高度
+						// pageHeight=plus.android.invoke(plus.android.currentWebview(),"getHeight");
+						// pageHeight=plus.screen.resolutionHeight*plus.screen.scale;
+						// 逻辑高度
+						pageHeight=plus.screen.resolutionHeight;
 						var list = document.getElementById('list');
-						var contHeight = document.getElementById('contHeight');
-						var pageHeight = contHeight.offsetHeight;
-						// var pageHeight = document.documentElement.clientHeight || document.body.clientHeight;
-						document.querySelector(".mui-indexed-list-bar").style.height = pageHeight - 150 + 'px';
-						list.style.height = pageHeight - 148 + 'px';
+						list.style.height = pageHeight - 160 + 'px';
 						window.indexedList = new mui.IndexedList(list);
-						app.viewHeight = 'height:' + (pageHeight - 348) + 'px';
-						logs(pageHeight)
-						if (timernum == 100||pageHeight>700) {
-							clearInterval(timer);
-							timernum=0;
-						}
-					}, 300);
+						app.viewHeight = 'height:' + (pageHeight - 360) + 'px';
+					})
 				}
 			})
 
 			function pageinit() {
-				mui('#crm-scroll,#friend-scroll,#scroll5,#scroll4,#scroll3,#scroll2,#scroll1').scroll({
-					scrollY: true,
-					scrollX: false,
-					startX: 0,
-					startY: 0,
-					indicators: false,
-					deceleration: 0.0006,
-					bounce: false
-				});
+				mui(".mui-scroll-wrapper").scroll();
 				//监听消息数量 首页广播
 				window.addEventListener('messgeNumber', function(e) {
 					app.messageNum = e.detail.number;
