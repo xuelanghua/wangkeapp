@@ -122,7 +122,7 @@
 							<div class="mui-media-body">
 								<p class='mui-ellipsis tishi'>购买商品位</p>
 							</div>
-							<span class="goods-position">当前拥有3个</span>
+							<span class="goods-position">当前拥有0个</span>
 						</a>
 					</li>
 					<li class="mui-table-view-cell mui-media mui-hidden">
@@ -151,10 +151,15 @@
 			mui.init({
 				swipeBack: true
 			})
+			//获取用户信息
+			var userInfo = getUserInfo();
+			var uid = userInfo.id;
+			var utoken = userInfo.token;
 			//页面加载完毕
 			mui.plusReady(function() {
 				eventinit();
 				getSelfStoreInfo();
+				document.querySelector(".goods-position").innerText="当前拥有"+userInfo.goods_number+"个";
 			});
 			/**
 			 * 绑定元素监听
@@ -162,7 +167,7 @@
 			function eventinit() {
 				//点击自己店铺图标
 				mui(".mui-content").on("tap", "#store_setting", function() {
-					openPage("store_setting.html", "store_setting", '#f7f7f7','');
+					openPage("store_setting.html", "store_setting", '#f7f7f7', '');
 				})
 				// 购买商品位
 				mui(".mui-content").on("tap", ".buy-goods-booth", function() {
@@ -170,10 +175,8 @@
 				})
 			}
 
-			//获取用户信息
-			var userInfo = getUserInfo();
-			var uid = userInfo.id;
-			var utoken = userInfo.token;
+
+
 			//获取当前用户的店铺信息
 			function getSelfStoreInfo() {
 				var ajax_url = $ajaxUrl + 'store';
@@ -186,8 +189,6 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(ret) {
-						console.log(JSON.stringify('成功'));
-						console.log(JSON.stringify(ret));
 						if (ret.errno == 1) {
 							//提示后 跳转到店铺信息设置页面
 							message(ret.message);
