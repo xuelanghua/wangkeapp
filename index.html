@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link href="icomoon/style.css" rel="stylesheet" />
 		<style>
@@ -62,14 +63,11 @@
 			.mui-bar.mui-bar-nav {
 			   top: constant(safe-area-inset-top);
 			}
-			[v-cloak] {
-				display: none;
-			}
 		</style>
 	</head>
 
 	<body>
-		<div id="index" v-cloak>
+		<div id="index">
 			<nav class="mui-bar mui-bar-tab">
 				<div :data-index="index" :id="nav.id" class="mui-tab-item" :class="nav.selected?'self-active':''" v-for="(nav,index) in nav"
 				 :key="index">
@@ -92,6 +90,95 @@
 			}
 			var userInfo = getUserInfo();
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			
+			var prevId = 'home',
+				currentId = '',
+				tempId = '';
+			var subpages = [{
+					url: 'html/home.html',
+					ids: 'home',
+					background: '#ffffff',
+					style: 'dark',
+					styles: {
+						top: '0px',
+						bottom: '50px',
+						background: '#ffffff',
+						scrollIndicator: 'none',
+						statusbar: {
+							background: '#ffffff'
+						},
+						render: 'always'
+					}
+				}, {
+					url: 'html/chat.html',
+					ids: 'chat',
+					background: '#cccccc',
+					style: 'light',
+					styles: {
+						top: '0px',
+						bottom: '50px',
+						background: '#ffffff',
+						scrollIndicator: 'none',
+						statusbar: {
+							background: '#2289FF'
+						},
+						render: 'always'
+					}
+				},
+				// {
+				// 	url: 'html/shortcut.html',
+				// 	ids: 'shortcut',
+				// 	background: '#ffffff',
+				// 	style: 'dark',
+				// 	styles: {
+				// 		top: '0px',
+				// 		bottom: '50px',
+				// 		background: 'transparent',
+				// 		backgroundColorBottom: "rgba(0,0,0,0)",
+				// 		backgroundColorTop: "rgba(0,0,0,0)",
+				// 		bounceBackground: "rgba(0,0,0,0)",
+				// 		statusbar: {
+				// 			background: '#ffffff'
+				// 		}
+				// 	}
+				// },
+				{
+					url: 'html/self_media.html',
+					ids: 'media',
+					background: '#ffffff',
+					style: 'dark',
+					styles: {
+						top: '0px',
+						bottom: '50px',
+						background: '#ffffff',
+						scrollIndicator: 'none',
+						statusbar: {
+							background: '#ffffff'
+						}
+					}
+				},
+				{
+					url: 'html/my.html',
+					ids: 'user',
+					background: '#2289ff',
+					style: 'light',
+					styles: {
+						top: '0px',
+						bottom: '50px',
+						background: '#ffffff',
+						scrollIndicator: 'none',
+						statusbar: {
+							background: '#2289ff'
+						},
+						render: 'always'
+					}
+				}
+			];
+			var aniShow = {};
+			//当前激活选项
+			var current = '';
+			var activeTab = subpages[0].ids;
+			
 			var app = new Vue({
 				el: "#index",
 				data: {
@@ -133,103 +220,9 @@
 						}
 					]
 				},
-				methods: {},
 				mounted: function() {
 					mui.init();
-					// (function($) {
-					// 	var main,
-					// 		backButtonPress = 0;
-					// 	$.plusReady(function() {
-					// 		main = plus.android.runtimeMainActivity();
-					// 	});
-					// 	$.back = function() {
-					// 		main && main.moveTaskToBack(false);
-					// 	};
-					// }(mui));
-					var prevId = 'home',
-						currentId = '',
-						tempId = '';
-					var subpages = [{
-							url: 'html/home.html',
-							ids: 'home',
-							background: '#ffffff',
-							style: 'dark',
-							styles: {
-								top: '0px',
-								bottom: '50px',
-								background: '#ffffff',
-								scrollIndicator: 'none',
-								statusbar: {
-									background: '#ffffff'
-								}
-							}
-						}, {
-							url: 'html/chat.html',
-							ids: 'chat',
-							background: '#cccccc',
-							style: 'light',
-							styles: {
-								top: '0px',
-								bottom: '50px',
-								background: '#ffffff',
-								scrollIndicator: 'none',
-								statusbar: {
-									background: '#2289FF'
-								}
-							}
-						},
-						// {
-						// 	url: 'html/shortcut.html',
-						// 	ids: 'shortcut',
-						// 	background: '#ffffff',
-						// 	style: 'dark',
-						// 	styles: {
-						// 		top: '0px',
-						// 		bottom: '50px',
-						// 		background: 'transparent',
-						// 		backgroundColorBottom: "rgba(0,0,0,0)",
-						// 		backgroundColorTop: "rgba(0,0,0,0)",
-						// 		bounceBackground: "rgba(0,0,0,0)",
-						// 		statusbar: {
-						// 			background: '#ffffff'
-						// 		}
-						// 	}
-						// },
-						{
-							url: 'html/self_media.html',
-							ids: 'media',
-							background: '#ffffff',
-							style: 'dark',
-							styles: {
-								top: '0px',
-								bottom: '50px',
-								background: '#ffffff',
-								scrollIndicator: 'none',
-								statusbar: {
-									background: '#ffffff'
-								}
-							}
-						},
-						{
-							url: 'html/my.html',
-							ids: 'user',
-							background: '#2289ff',
-							style: 'light',
-							styles: {
-								top: '0px',
-								bottom: '50px',
-								background: '#ffffff',
-								scrollIndicator: 'none',
-								statusbar: {
-									background: '#2289ff'
-								}
-							}
-						}
-					];
-					var aniShow = {};
-					//当前激活选项
-					var current = '';
-					var activeTab = subpages[0].ids;
+					
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
 						pushInit();
@@ -243,233 +236,231 @@
 							var timer = setInterval(function() {
 								getUnreadMessage();
 							}, 2000);
+							eventInit();
 							initIndexPage();
 							bindClientId();
 						}
 					});
-
-					function initIndexPage() {
-						var self = plus.webview.currentWebview();
-						for (var i = 0; i < 4; i++) {
-							var temp = {};
-							var sub = plus.webview.create(subpages[i].url, subpages[i].ids, subpages[i].styles);
-							if (i > 0) {
-								sub.hide();
-							} else {
-								temp[subpages[i].ids] = "true";
-								mui.extend(aniShow, temp);
-							}
-							self.append(sub);
-						}
-						//选项卡点击事件
-						mui('.mui-bar-tab').on('tap', '.mui-tab-item', function(e) {
-							var targetTab = this.id;
-							console.log(targetTab);
-							var idxs = this.dataset.index;
-							if (targetTab == activeTab) {
-								return;
-							}
-							//显示目标选项卡
-							//若为iOS平台或非首次显示，则直接显示
-							if (mui.os.ios || aniShow[targetTab]) {
-								console.log(55555);
-								plus.webview.show(targetTab, "fade-in", 300);
-								console.log(66666);
-							} else {
-								//否则，使用fade-in动画，且保存变量
-								var temp = {};
-								temp[targetTab] = "true";
-								mui.extend(aniShow, temp);
-								console.log(2222);
-								plus.webview.show(targetTab, "fade-in", 300);
-								console.log(3333);
-							}
-							//隐藏当前;
-							plus.webview.hide(activeTab);
-							//更改当前活跃的选项卡
-							for (var i = 0; i < 4; i++) {
-								app.nav[i].selected = false;
-							}
-							app.nav[idxs].selected = true;
-							activeTab = targetTab;
-							setStatusBar(subpages[this.dataset.index].background, subpages[this.dataset.index].style);
-						});
-
-						//自定义事件，模拟点击“首页选项卡”
-						document.addEventListener('gohome', function() {
-							var defaultTab = document.getElementById("home");
-							//模拟首页点击
-							mui.trigger(defaultTab, 'tap');
-							//切换选项卡高亮
-							current = document.querySelector(".mui-bar-tab>.mui-tab-item.self-active");
-							if (defaultTab !== current) {
-								current.classList.remove('self-active');
-								defaultTab.classList.add('self-active');
-							}
-						});
-
-						//自定义事件监听-首页新增客户点击
-						window.addEventListener('newCustomer', function() {
-							mui.trigger(document.getElementById('chat'), 'tap');
-							document.getElementById('home').classList.remove('self-active');
-							document.getElementById('chat').classList.add('self-active');
-						})
-
-						window.addEventListener('changeMy', function() {
-							mui.trigger(document.getElementById('user.html'), 'tap');
-						})
-
-						document.addEventListener('netchange', onNetChange, false);
-
-						//自定义事件-登录成功
-						window.addEventListener('loginSuccess', function() {
-							userInfo = getUserInfo();
-							bindClientId();
-							initIndexPage();
-							getUnreadMessage();
-							var timer = setInterval(function() {
-								getUnreadMessage();
-							}, 2000);
-						})
-
-						//自定义事件-绑定成功
-						window.addEventListener('bindMobileSuccess', function() {
-							userInfo = getUserInfo();
-							bindClientId();
-							getUnreadMessage();
-						})
-
-						window.addEventListener('closeShortcut', function() {
-							// document.getElementById('short_cut').dataset.status = 0;
-							// shortcutWebview.hide();
-							// var restore = document.getElementById(prevId);
-							// //修改选中颜色样式
-							// mui.trigger(restore, 'tap');
-							// document.getElementById('shortcut').classList.remove('mui-active');
-							// restore.classList.add('mui-active');
-							console.log("尝试关闭快捷菜单！");
-						})
-
-						window.addEventListener('showChat', function() {
-							mui.trigger(document.getElementById('chat'), 'tap');
-						})
-
-						window.addEventListener('refreshNotice', function() {
-							getUnreadMessage();
-						})
-
-						var nt = plus.networkinfo.getCurrentType();
-						if (nt == 1) {
-							fnOpenWin('/html/network_outage.html', 'network_outage', {
-								statusbar: {
-									background: '#FFFFFF'
-								}
-							}, '', 'slide-in-bottom');
-						}
-
-						plus.screen.lockOrientation("portrait-primary");
-
+				}
+			})
+			
+			function initIndexPage() {
+				var self = plus.webview.currentWebview();
+				for (var i = 0; i < 4; i++) {
+					var temp = {};
+					var sub = plus.webview.create(subpages[i].url, subpages[i].ids, subpages[i].styles);
+					if (i > 0) {
+						sub.hide();
+					} else {
+						temp[subpages[i].ids] = "true";
+						mui.extend(aniShow, temp);
 					}
-
-					function login() {
-						if (plus.os.name == "iOS") {
-							mui.get($ajaxUrl + 'member', {
-								action: 'login_type',
-							}, function(res) {
-								if (res.data == 1) {
-									fnOpenWin('html/login.html', 'login', {
-										statusbar: {
-											background: '#122c9a'
-										}
-									}, '', 'slide-in-bottom');
-								} else {
-									fnOpenWin('html/mobile_login.html', 'mobile_login', {
-										statusbar: {
-											background: '#2289FF'
-										}
-									}, '', 'slide-in-bottom');
-								}
-							}, 'json');
-						} else {
+					self.append(sub);
+				}
+			}
+			
+			function eventInit() {
+				//选项卡点击事件
+				mui('.mui-bar-tab').on('tap', '.mui-tab-item', function(e) {
+					var targetTab = this.id;
+					var idxs = this.dataset.index;
+					if (targetTab == activeTab) {
+						return;
+					}
+					//显示目标选项卡
+					//若为iOS平台或非首次显示，则直接显示
+					if (mui.os.ios || aniShow[targetTab]) {
+						plus.webview.show(targetTab, "fade-in", 300);
+					} else {
+						//否则，使用fade-in动画，且保存变量
+						var temp = {};
+						temp[targetTab] = "true";
+						mui.extend(aniShow, temp);
+						plus.webview.show(targetTab, "fade-in", 300);
+					}
+					//隐藏当前;
+					plus.webview.hide(activeTab);
+					//更改当前活跃的选项卡
+					for (var i = 0; i < 4; i++) {
+						app.nav[i].selected = false;
+					}
+					app.nav[idxs].selected = true;
+					activeTab = targetTab;
+					setStatusBar(subpages[this.dataset.index].background, subpages[this.dataset.index].style);
+				});
+			
+				//自定义事件，模拟点击“首页选项卡”
+				document.addEventListener('gohome', function() {
+					var defaultTab = document.getElementById("home");
+					//模拟首页点击
+					mui.trigger(defaultTab, 'tap');
+					//切换选项卡高亮
+					current = document.querySelector(".mui-bar-tab>.mui-tab-item.self-active");
+					if (defaultTab !== current) {
+						current.classList.remove('self-active');
+						defaultTab.classList.add('self-active');
+					}
+				});
+			
+				//自定义事件监听-首页新增客户点击
+				window.addEventListener('newCustomer', function() {
+					mui.trigger(document.getElementById('chat'), 'tap');
+					document.getElementById('home').classList.remove('self-active');
+					document.getElementById('chat').classList.add('self-active');
+				})
+			
+				window.addEventListener('changeMy', function() {
+					mui.trigger(document.getElementById('user.html'), 'tap');
+				})
+			
+				document.addEventListener('netchange', onNetChange, false);
+			
+				//自定义事件-登录成功
+				window.addEventListener('loginSuccess', function() {
+					userInfo = getUserInfo();
+					bindClientId();
+					initIndexPage();
+					getUnreadMessage();
+					var timer = setInterval(function() {
+						getUnreadMessage();
+					}, 2000);
+				})
+			
+				//自定义事件-绑定成功
+				window.addEventListener('bindMobileSuccess', function() {
+					userInfo = getUserInfo();
+					bindClientId();
+					getUnreadMessage();
+				})
+			
+				window.addEventListener('closeShortcut', function() {
+					// document.getElementById('short_cut').dataset.status = 0;
+					// shortcutWebview.hide();
+					// var restore = document.getElementById(prevId);
+					// //修改选中颜色样式
+					// mui.trigger(restore, 'tap');
+					// document.getElementById('shortcut').classList.remove('mui-active');
+					// restore.classList.add('mui-active');
+					console.log("尝试关闭快捷菜单！");
+				})
+			
+				window.addEventListener('showChat', function() {
+					mui.trigger(document.getElementById('chat'), 'tap');
+				})
+			
+				window.addEventListener('refreshNotice', function() {
+					getUnreadMessage();
+				})
+			
+				var nt = plus.networkinfo.getCurrentType();
+				if (nt == 1) {
+					fnOpenWin('/html/network_outage.html', 'network_outage', {
+						statusbar: {
+							background: '#FFFFFF'
+						}
+					}, '', 'slide-in-bottom');
+				}
+			
+				plus.screen.lockOrientation("portrait-primary");
+			}
+			
+			function login() {
+				if (plus.os.name == "iOS") {
+					mui.get($ajaxUrl + 'member', {
+						action: 'login_type',
+					}, function(res) {
+						if (res.data == 1) {
 							fnOpenWin('html/login.html', 'login', {
 								statusbar: {
 									background: '#122c9a'
 								}
 							}, '', 'slide-in-bottom');
+						} else {
+							fnOpenWin('html/mobile_login.html', 'mobile_login', {
+								statusbar: {
+									background: '#2289FF'
+								}
+							}, '', 'slide-in-bottom');
 						}
-					}
-
-					function bindMobile() {
-						fnOpenWin('html/mobile_bind.html', 'mobile_bind', {
-							statusbar: {
-								background: '#2289ff'
-							},
-						}, '', 'slide-in-bottom');
-					}
-
-					//获取未读消息
-					function getUnreadMessage() {
-						if (!userInfo) return;
-						mui.get($ajaxUrl + 'member', {
-							action: 'unread_message',
-							token: userInfo.token
-						}, function(res) {
-							// 获取所有页面
-							var wvs = plus.webview.all();
-							// logs(wvs);
-							if (res.data > 0) {
-								mui.fire(plus.webview.getWebviewById('chat'), 'messgeNumber', {
-									number: res.data
-								});
-								mui.fire(plus.webview.getWebviewById('home'), 'messgeNumber', {
-									number: res.data
-								});
-								mui.fire(plus.webview.getWebviewById('user'), 'messgeNumber', {
-									number: res.data
-								});
-								app.number = res.data;
-								getFriendApply();
-							} else {
-								mui.fire(plus.webview.getWebviewById('chat'), 'messgeNumber', {
-									number: 0
-								});
-								mui.fire(plus.webview.getWebviewById('home'), 'messgeNumber', {
-									number: 0
-								});
-								mui.fire(plus.webview.getWebviewById('user'), 'messgeNumber', {
-									number: 0
-								});
-								app.number = 0;
-								getFriendApply();
-							}
-						}, 'json');
-					}
-
-					//获取好友申请条目
-					function getFriendApply() {
-						if (!userInfo) return;
-						mui.post($ajaxUrl + 'customer', {
-							action: 'friend_apply_count',
-							token: userInfo.token,
-						}, function(res) {
-							var total = parseInt(res.data) + parseInt(app.number);
-							if (total > 0) {
-								app.numbers = total;
-								setBadge(total);
-								mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
-									number: res.data
-								});
-							} else {
-								mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
-									number: 0
-								});
-								app.numbers = 0;
-								clearBadge();
-							}
-						}, 'json')
-					}
+					}, 'json');
+				} else {
+					fnOpenWin('html/login.html', 'login', {
+						statusbar: {
+							background: '#122c9a'
+						}
+					}, '', 'slide-in-bottom');
 				}
-			})
+			}
+			
+			function bindMobile() {
+				fnOpenWin('html/mobile_bind.html', 'mobile_bind', {
+					statusbar: {
+						background: '#2289ff'
+					},
+				}, '', 'slide-in-bottom');
+			}
+			
+			//获取未读消息
+			function getUnreadMessage() {
+				if (!userInfo) return;
+				mui.get($ajaxUrl + 'member', {
+					action: 'unread_message',
+					token: userInfo.token
+				}, function(res) {
+					// 获取所有页面
+					var wvs = plus.webview.all();
+					// logs(wvs);
+					if (res.data > 0) {
+						mui.fire(plus.webview.getWebviewById('chat'), 'messgeNumber', {
+							number: res.data
+						});
+						mui.fire(plus.webview.getWebviewById('home'), 'messgeNumber', {
+							number: res.data
+						});
+						mui.fire(plus.webview.getWebviewById('user'), 'messgeNumber', {
+							number: res.data
+						});
+						app.number = res.data;
+						getFriendApply();
+					} else {
+						mui.fire(plus.webview.getWebviewById('chat'), 'messgeNumber', {
+							number: 0
+						});
+						mui.fire(plus.webview.getWebviewById('home'), 'messgeNumber', {
+							number: 0
+						});
+						mui.fire(plus.webview.getWebviewById('user'), 'messgeNumber', {
+							number: 0
+						});
+						app.number = 0;
+						getFriendApply();
+					}
+				}, 'json');
+			}
+			
+			//获取好友申请条目
+			function getFriendApply() {
+				if (!userInfo) return;
+				mui.post($ajaxUrl + 'customer', {
+					action: 'friend_apply_count',
+					token: userInfo.token,
+				}, function(res) {
+					var total = parseInt(res.data) + parseInt(app.number);
+					if (total > 0) {
+						app.numbers = total;
+						setBadge(total);
+						mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
+							number: res.data
+						});
+					} else {
+						mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
+							number: 0
+						});
+						app.numbers = 0;
+						clearBadge();
+					}
+				}, 'json')
+			}
 		</script>
 	</body>
 

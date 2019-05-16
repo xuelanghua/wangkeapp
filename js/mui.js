@@ -5130,7 +5130,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 					}
 				}
 				slideNumber = Math.min(Math.max(0, slideNumber), this.itemLength - 1);
-			}
+			}  
 			return this.pages[slideNumber][0];
 		},
 		_gotoItem: function(slideNumber, time) {
