@@ -103,11 +103,10 @@
 						</div>
 					</template>
 					
-					<template v-else>
+					<template v-if="!expressList">
 						<div class="logistics_detailsL mui-pull-left">
 							<div class="circularw">
-								<div v-if="index==0" class="circular"></div>
-								<div v-else class="circular1"></div>
+								<div class="circular"></div>
 							</div>
 						</div>
 						<div class="logistics_detailsR mui-pull-left">
@@ -131,7 +130,6 @@
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
-		<!-- <script src="../js/Zepto.min.js"></script> -->
 		<script type="text/javascript">
 			
 			var vm = new Vue({
@@ -154,12 +152,11 @@
 						var orderId = self.orderId;
 						var userInfo = getUserInfo();
 						plus.nativeUI.showWaiting();
-						mui.get($ajaxUrl + 'express', {
+						mui.get($ajaxUrl + 'order', {
 								token: userInfo.token,
-								action: 'getEcpressInfoList',
+								action: 'get_express_info',
 								order_id: orderId
 							}, function(res){
-								logs(res);
 								if (res.errno == 0) {
 									vm.orderNumber = res.data.orderInfo.out_trade_no;
 									vm.expressCompany = res.data.orderInfo.express_company;
@@ -178,65 +175,8 @@
 								}, 1000)
 							}, 'json'
 						);
-						// refreshExpressInfo();
 					});
 				}
 			})
-			
-			/**
-			 *刷新快递信息
-			 */
-			function refreshExpressInfo() {
-				mui.ajax($ajaxUrl + 'express', {
-					data: {
-						token: userInfo.token,
-						action: 'getEcpressInfoList',
-						order_id: orderId
-					},
-					dataType: 'json',
-					type: 'post',
-					timeout: 10000,
-					success: function(ret) {
-						console.log(JSON.stringify('成功'));
-						console.log(JSON.stringify(ret.data.express_info.data));
-						//获取快递信息
-						var express_info_list = ret.data.express_info.data;
-						//循环读出快递信息
-						var express_str = '';
-						for (var i = 0; i < express_info_list.length; i++) {
-							var left_point = '<div class="circular1"></div>';
-							if (i == 0) {
-								left_point = '<div class="circular"></div>';
-							}
-							console.log(JSON.stringify(express_info_list[i]));
-							express_str += '' + '<div>\n' + '<div class="logistics_detailsL mui-pull-left">\n' +
-								'<div class="circularw">\n' + '' + left_point + '' + '</div>\n' + '</div>\n' +
-								'<div class="logistics_detailsR mui-pull-left">\n' + '<div class="logistics_name">\n' + '<div>' +
-								express_info_list[i].context + '</div>\n' + '<div style="margin-top: 10px;">' + express_info_list[i].time +
-								'</div>\n' + '</div>\n' + '</div>\n' + '<div class="clearfix"></div>\n' + '</div>';
-						}
-						express_str += '<div>\n' +
-                    '<div class="logistics_detailsL mui-pull-left">\n' +
-                    '<div class="circularw">\n' +
-                    '<div class="circular"></div>\n' +
-                    '</div>\n' +
-                    '</div>\n' +
-                    '<div class="logistics_detailsR mui-pull-left" style="border-left:0px;>\n' +
-                    '<div class="logistics_name">\n' +
-                    '<div>已发货</div>\n' +
-                    '<div style="margin-top: 10px;"></div>\n' +
-                    '</div>\n' +
-                    '</div>\n' +
-                    '<div class="clearfix"></div>\n' +
-                    '</div>';
-						$('#express_list_container').html(express_str);
-					},
-					error: function(xhr, type, errorThrown) {
-						console.log(JSON.stringify('失败'));
-						console.log(JSON.stringify(errorThrown));
-					}
-				});
-			}
-		</script>
 	</body>
 </html>

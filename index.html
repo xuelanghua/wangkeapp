@@ -34,9 +34,7 @@
 			  .mui-tab-item.mui-active span{
 				  color: #333333;
 			  }
-			  .mui-tab-item {
-				position: relative;
-			 }
+			  
 			.mui-tab-item .mui-badge {
 				position: absolute;
 				width: auto;
@@ -66,7 +64,7 @@
 			   top: constant(safe-area-inset-top);
 			}
 		</style>
-	</head> 
+	</head>
 
 	<body>
 		<div id="index">
@@ -102,14 +100,12 @@
 							id: 'home',
 							icon: 'icon-home-page',
 							selected: 'icon-home-page-s',
-							href: "html/home.html",
 							selected: true
 						}, {
 							title: "人脉",
 							id: 'chat',
 							icon: 'icon-chat',
 							selected: 'icon-chat-s',
-							href: "html/chat.html",
 							selected: false
 						},
 						// {
@@ -125,14 +121,12 @@
 							id: 'media',
 							icon: 'icon-selfmedia',
 							selected: 'icon-selfmedia-s',
-							href: "html/self_media.html",
 							selected: false
 						}, {
 							title: "我的",
 							id: 'user',
 							icon: 'icon-my',
 							selected: 'icon-my-s',
-							href: "html/my.html",
 							selected: false
 						}
 					]
@@ -299,7 +293,7 @@
 							activeTab = targetTab;
 							setStatusBar(subpages[this.dataset.index].background, subpages[this.dataset.index].style);
 						});
-						
+
 						//自定义事件，模拟点击“首页选项卡”
 						document.addEventListener('gohome', function() {
 							var defaultTab = document.getElementById("home");
@@ -323,7 +317,7 @@
 						window.addEventListener('changeMy', function() {
 							mui.trigger(document.getElementById('user.html'), 'tap');
 						})
-						
+
 						document.addEventListener('netchange', onNetChange, false);
 
 						//自定义事件-登录成功
@@ -362,7 +356,7 @@
 						window.addEventListener('refreshNotice', function() {
 							getUnreadMessage();
 						})
-						
+
 						var nt = plus.networkinfo.getCurrentType();
 						if (nt == 1) {
 							fnOpenWin('/html/network_outage.html', 'network_outage', {
@@ -411,7 +405,7 @@
 							},
 						}, '', 'slide-in-bottom');
 					}
-					
+
 					//获取未读消息
 					function getUnreadMessage() {
 						if (!userInfo) return;

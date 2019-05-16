@@ -227,7 +227,7 @@
 				<div class="odd_numbers">
 					<div>运送单号：<span id="courier_number">53021358841</span></div>
 				</div>
-				<div id="courier_info">【物流详情】你的快递已拣货完成，由顺风快递寄出</div>
+				<div id="courier_info" style="width: 90%;">商品正在出库中</div>
 				<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
 			</div>
 			
@@ -330,6 +330,10 @@
 							document.querySelector('.order_contacts').dataset.id = detail.user_id;
 							document.querySelector('.order_contacts').dataset.name = detail.buyer.nickName;
 							document.querySelector('.order_contacts').dataset.avatar = detail.buyer.avatarUrl;
+							if (detail.courier_number.length > 0) {
+								document.getElementById('courier_number').innerText = detail.courier_number;
+								document.getElementById('courier_info').innerText = detail.express_info;
+							}
 							var goods = detail.goods;
 							var html = '';
 							for (var i in goods) {
