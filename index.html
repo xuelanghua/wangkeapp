@@ -227,6 +227,7 @@
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
 						pushInit();
+						eventInit();
 						plus.navigator.setStatusBarStyle("dark");
 						plus.navigator.setStatusBarBackground('#FFFFFF');
 						if (!userInfo) {
@@ -237,7 +238,6 @@
 							var timer = setInterval(function() {
 								getUnreadMessage();
 							}, 2000);
-							eventInit();
 							initIndexPage();
 							bindClientId();
 						}
@@ -318,6 +318,7 @@
 			
 				//自定义事件-登录成功
 				window.addEventListener('loginSuccess', function() {
+					console.log('loginSuccess');
 					userInfo = getUserInfo();
 					bindClientId();
 					initIndexPage();
@@ -330,8 +331,7 @@
 				//自定义事件-绑定成功
 				window.addEventListener('bindMobileSuccess', function() {
 					userInfo = getUserInfo();
-					bindClientId();
-					getUnreadMessage();
+					// initIndexPage();
 				})
 			
 				window.addEventListener('closeShortcut', function() {

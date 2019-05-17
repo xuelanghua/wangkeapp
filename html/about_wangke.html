@@ -97,14 +97,16 @@
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		 
+
+		var systemSetting = null;
 		// 初始化字体大小结束
 		mui.plusReady(function() {
+			getSystemSetting();
 			document.getElementById("confirmBtn").addEventListener('tap', function() {
 				if (mui.os.plus) {
-					plus.device.dial("0871-64586569");
+					plus.device.dial(systemSetting.service_phone);
 				} else {
-					location.href = 'tel:0871-64586569';
+					location.href = 'tel:' + systemSetting.service_phone;
 				}
 				//var btnArray = ['拨打', '取消'];
 				//mui.confirm('0871-64586569', '', btnArray, function(e) {
@@ -120,10 +122,31 @@
 				//})
 			});
 			mui('#app_version')[0].innerHTML = '版本号' + plus.runtime.version;
+
+			// 检查更新
+			mui(".mui-content").on("tap", "#check-updates", function() {
+				var currentVersion = plus.runtime.version;
+				var newVersion = systemSetting.app_version;
+				if (currentVersion != newVersion) {
+					plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?', function(e) {
+						if (e.index == 0) {
+							downWgt();
+						}
+					})
+					// message("新版!");
+				} else {
+					message("暂无更新!");
+				}
+			})
 		})
-		// 检查更新
-		mui(".mui-content").on("tap","#check-updates",function(){
-			message("暂无更新!");
-		})
+
+		//获取系统设置
+		function getSystemSetting() {
+			mui.get($ajaxUrl + 'util', {
+				action: 'system_setting',
+			}, function(res) {
+				systemSetting = res.data;
+			}, 'json');
+		}
 	</script>
 </html>

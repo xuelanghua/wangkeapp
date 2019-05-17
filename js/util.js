@@ -391,7 +391,8 @@ function shareMessage(msg, s) {
 		message("分享到\"" + s.description + "\"成功", 'center');
 	}, function(e) {
 		// plus.nativeUI.alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
-		message("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+		// message("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+		message("分享失败");
 		console.log("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
 	});
 }
@@ -640,7 +641,8 @@ function pushInit() {
 			var model = plus.device.model;
 			var vendor = plus.device.vendor;
 			var uuid = plus.device.uuid;
-			var content = '运行发生错误,错误内容:' + e.message + ',错误设备详情:设备身份码' +  imei + ',用户识别码' +  imsi + ',设备型号' +  model +',生产厂商' +  vendor +',唯一标识' +  uuid;
+			var content = '运行发生错误,错误内容:' + e.message + ',错误设备详情:设备身份码' + imei + ',用户识别码' + imsi + ',设备型号' + model + ',生产厂商' +
+				vendor + ',唯一标识' + uuid;
 			appErrorCollection(content);
 			console.log(e.message);
 		}
@@ -746,8 +748,10 @@ function pushCallback(data, event) {
 			mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
 			updateUserInfo();
 		} else if (url == 'buyGoodsBoothSuccess') {
-			mui.fire(plus.webview.getWebviewById('shop_setting'), 'buySuccess');
 			updateUserInfo();
+			setTimeout(function() {
+				mui.fire(plus.webview.getWebviewById('shop_setting'), 'buySuccess');
+			}, 2000)
 		} else if (url == 'logout') {
 			fnLogout();
 		} else {
@@ -929,21 +933,53 @@ function onNetChange() {
 
 //手机APP错误信息
 function appErrorCollection(content) {
-	mui.get($ajaxUrl + 'util',{
-			action: 'app_error_collection',
-			content: content
-		}, function(res){
-			console.log(res);
-		},'json'
-	);
+	mui.get($ajaxUrl + 'util', {
+		action: 'app_error_collection',
+		content: content
+	}, function(res) {
+		console.log(res);
+	}, 'json');
 }
 
 function getContactsInit() {
-	plus.contacts.getAddressBook( plus.contacts.ADDRESSBOOK_PHONE, function( addressbook ) {
+	plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function(addressbook) {
 		// 可通过addressbook进行通讯录操作
 		console.log("Get address book success!");
-	}, function ( e ) {
-		console.log("Get address book failed: " + e.message );
-	} );
+	}, function(e) {
+		console.log("Get address book failed: " + e.message);
+	});
 }
 
+// 下载wgt文件  
+function downWgt() {
+	var wgtUrl = "https://wangkeapp.oss-cn-shenzhen.aliyuncs.com/wangke.wgt";
+	plus.nativeUI.showWaiting("下载更新文件中...");
+	plus.downloader.createDownload(wgtUrl, {
+		filename: "_doc/update/"
+	}, function(d, status) {
+		if (status == 200) {
+			console.log("下载文件成功：" + d.filename);
+			installWgt(d.filename); // 安装wgt包  
+		} else {
+			console.log("下载文件失败！");
+			plus.nativeUI.alert("下载文件失败！");
+		}
+		plus.nativeUI.closeWaiting();
+	}).start();
+}
+
+// 更新应用资源  
+function installWgt(path) {
+	plus.nativeUI.showWaiting("安装wgt文件...");
+	plus.runtime.install(path, {}, function() {
+		plus.nativeUI.closeWaiting();
+		console.log("安装文件成功！");
+		plus.nativeUI.alert("应用资源更新完成！", function() {
+			plus.runtime.restart();
+		});
+	}, function(e) {
+		plus.nativeUI.closeWaiting();
+		console.log("安装文件失败[" + e.code + "]：" + e.message);
+		plus.nativeUI.alert("安装文件失败[" + e.code + "]：" + e.message);
+	});
+}
