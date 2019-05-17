@@ -70,7 +70,7 @@
 		<div id="index">
 			
 			<nav class="mui-bar mui-bar-tab">
-				<div :data-index="index" :id="nav.id" class="mui-tab-item" :class="nav.selected?'self-active':''" v-for="(nav,index) in nav"
+				<div :data-idx="index" :id="nav.id" class="mui-tab-item" :class="nav.selected?'self-active':''" v-for="(nav,index) in nav"
 				 :key="index">
 					<p>
 						<span :class="nav.selected?nav.icon+'-s':nav.icon" style="font-size: 18px;margin-top: 2px;"></span>
@@ -98,12 +98,11 @@
 			var subpages = [{
 					url: 'html/home.html',
 					ids: 'home',
-					background: '#ffffff',
 					style: 'dark',
+					statusBg: '#ffffff',
 					styles: {
 						top: '0px',
 						bottom: '50px',
-						background: '#ffffff',
 						scrollIndicator: 'none',
 						statusbar: {
 							background: '#ffffff'
@@ -113,12 +112,11 @@
 				}, {
 					url: 'html/chat.html',
 					ids: 'chat',
-					background: '#cccccc',
 					style: 'light',
+					statusBg: '#2289FF',
 					styles: {
 						top: '0px',
 						bottom: '50px',
-						background: '#ffffff',
 						scrollIndicator: 'none',
 						statusbar: {
 							background: '#2289FF'
@@ -126,32 +124,14 @@
 						render: 'always'
 					}
 				},
-				// {
-				// 	url: 'html/shortcut.html',
-				// 	ids: 'shortcut',
-				// 	background: '#ffffff',
-				// 	style: 'dark',
-				// 	styles: {
-				// 		top: '0px',
-				// 		bottom: '50px',
-				// 		background: 'transparent',
-				// 		backgroundColorBottom: "rgba(0,0,0,0)",
-				// 		backgroundColorTop: "rgba(0,0,0,0)",
-				// 		bounceBackground: "rgba(0,0,0,0)",
-				// 		statusbar: {
-				// 			background: '#ffffff'
-				// 		}
-				// 	}
-				// },
 				{
 					url: 'html/self_media.html',
 					ids: 'media',
-					background: '#ffffff',
 					style: 'dark',
+					statusBg: '#ffffff',
 					styles: {
 						top: '0px',
 						bottom: '50px',
-						background: '#ffffff',
 						scrollIndicator: 'none',
 						statusbar: {
 							background: '#ffffff'
@@ -161,12 +141,11 @@
 				{
 					url: 'html/my.html',
 					ids: 'user',
-					background: '#2289ff',
 					style: 'light',
+					statusBg: '#2289ff',
 					styles: {
 						top: '0px',
 						bottom: '50px',
-						background: '#ffffff',
 						scrollIndicator: 'none',
 						statusbar: {
 							background: '#2289ff'
@@ -198,14 +177,6 @@
 							selected: 'icon-chat-s',
 							selected: false
 						},
-						// {
-						// 	title: "快捷",
-						// 	id: 'shortcut',
-						// 	icon: 'icon-quick',
-						// 	selected: 'icon-quick-s',
-						// 	href: "html/shortcut.html",
-						// 	selected: false
-						// }, 
 						{
 							title: "自媒体",
 							id: 'media',
@@ -264,7 +235,7 @@
 				//选项卡点击事件
 				mui('.mui-bar-tab').on('tap', '.mui-tab-item', function(e) {
 					var targetTab = this.id;
-					var idxs = this.dataset.index;
+					var idx = this.dataset.idx;
 					if (targetTab == activeTab) {
 						return;
 					}
@@ -285,9 +256,9 @@
 					for (var i = 0; i < 4; i++) {
 						app.nav[i].selected = false;
 					}
-					app.nav[idxs].selected = true;
+					app.nav[idx].selected = true;
 					activeTab = targetTab;
-					setStatusBar(subpages[this.dataset.index].background, subpages[this.dataset.index].style);
+					setStatusBar(subpages[this.dataset.idx].statusBg, subpages[this.dataset.idx].style);
 				});
 			
 				//自定义事件，模拟点击“首页选项卡”
