@@ -560,9 +560,12 @@
 				}
 
 				var self = plus.webview.currentWebview();
-				// 				self.setStyle({
-				// 					softinputMode: "adjustResize"
-				// 				});
+				if (mui.os.ios) {
+					self.setStyle({
+						softinputMode: "adjustResize"
+					});
+				}
+
 				var chatName = self.chatName;
 				chatId = self.cid;
 				chatAvatar = self.avatar;
@@ -901,7 +904,7 @@
 					ui.footer.style.height = (ui.h.offsetHeight + footerPadding) + 'px';
 					ui.content.style.paddingBottom = ui.footer.style.height;
 				});
-				
+
 				// var focus = false;
 				// ui.boxMsgText.addEventListener('tap', function(event) {
 				// 	ui.boxMsgText.focus();
@@ -917,7 +920,7 @@
 				//点击消息列表，关闭键盘
 				ui.areaMsgList.addEventListener('tap', function(event) {
 					// if (!focus) {
-						ui.boxMsgText.blur();
+					ui.boxMsgText.blur();
 					// }
 				})
 				// 清除全部聊天记录
