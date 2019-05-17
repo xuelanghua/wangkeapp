@@ -265,12 +265,12 @@
 								}, function(res){
 									if (res.errno == 0) {
 										message('删除成功!', 'center');
-										mui.fire(plus.webview.getWebviewById('chat'), 'addCrm');
+										mui.fire(plus.webview.getWebviewById('chat'), 'refreshCrm');
 										setTimeout(function() {
 											plus.webview.close('crm_detail_app', 'none');
 											plus.webview.close('crm_detail_miniapp', 'none');
 											mui.back();
-										}, 2000)
+										}, 1000)
 									} else {
 										message('删除失败!', 'center')
 									}
