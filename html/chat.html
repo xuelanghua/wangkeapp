@@ -18,7 +18,7 @@
 
 	<body>
 		<div id="mui-content" class="mui-content chat-container" v-cloak>
-			<div style="position: fixed;top: 0;width: 100%;z-index: 15;background-color: #FFFFFF;height: 150px;overflow: hidden;">
+			<div class="fixed-section">
 				<div class="search-bar">
 					<div class="mui-indexed-list-search">
 						<div class="to-search"><span class="mui-icon mui-icon-search"></span>搜索</div>
@@ -49,7 +49,7 @@
 					</div>
 				</div>
 			</div>
-			<div id='list' class="mui-indexed-list">
+			<div id='list' class="mui-indexed-list-cont">
 				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="serach">
 				</div>
@@ -315,6 +315,10 @@
 										</li>
 									</template>
 								</ul>
+								<div v-if="crmList== undefined || crmList.length <= 0" class="void-data-tips">
+									<img src="../image/icon/void-data.png">
+									<p>没有数据</p>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -464,7 +468,7 @@
 						// 		}
 						// 	}
 						// }
-					}); 
+					});
 					var pageHeight = 0;
 					mui.plusReady(function() {
 						pageinit();
@@ -477,14 +481,14 @@
 						// 逻辑高度
 						// pageHeight = plus.screen.resolutionHeight;
 						pageHeight = plus.display.resolutionHeight;
-						var list = document.getElementById('list');
+						// var list = document.getElementById('list');
 						// 150
 						// logs(pageHeights);
-						logs(pageHeight);
-						list.style.height = pageHeight - 148 + 'px';
-						window.indexedList = new mui.IndexedList(list);
+						// logs(pageHeight);
+						// list.style.height = pageHeight - 140 + 'px';
+						// window.indexedList = new mui.IndexedList(list);
 						// 360
-						app.viewHeight = 'height:' + (pageHeight - 425) + 'px';
+						app.viewHeight = 'height:' + (pageHeight - 312) + 'px';
 					})
 				}
 			})

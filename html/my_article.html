@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>我的文章</title>
+		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
@@ -187,7 +187,7 @@
 			<h1 class="mui-title">我的文章</h1>
 		</header>
 		<div id="mui-content" class="mui-content">
-			<div v-if="!articleStatus" id="article_container">
+			<div v-if="articles.length>0" id="article_container">
 				<ul class="mui-table-view">
 					<li :id="'article'+article.id" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
 					 :key="index">
@@ -211,9 +211,10 @@
 					</li>
 				</ul>
 			</div>
-			<div v-if="articleStatus" style="padding-top: 33%;">
-				<img style="width: 60%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png">
-				<p style="text-align: center;">没有文章吖~</p>
+			<div v-if="!articleStatus" style="padding-top: 50%;">
+				<img style="width: 60%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/article-void.png">
+				<p style="text-align: center;">暂时还没有文章~</p>
+				<p style="text-align: center;color: #2289FF;" class="write-article">去创作 >></p>
 			</div>
 			<div id="verift-body" class="join-team-verify" style="display: none;">
 				<div class="verift-body">
@@ -268,14 +269,13 @@
 			var userInfo = getUserInfo();
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					skip: 1,
 					limit: 7,
 					articles: [],
-					articleStatus: false
+					articleStatus: true
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -302,6 +302,10 @@
 							mui.swipeoutClose(article);
 							mask.close();
 						})
+						// 写文章
+						mui(".mui-content").on('tap', '.write-article', function() {
+							openPage('publish_article.html', 'publish_article', '#f7f7f7', '')
+						})
 
 						// 确认删除
 						mui(".mui-content").on('tap', '.send-verify', function() {
@@ -314,7 +318,7 @@
 								if (res.errno == 0) {
 									var article = document.getElementById('article' + articleId);
 									article.parentNode.removeChild(article);
-									// getArticleList(false, true);
+									getArticleList(false, true);
 								} else {
 									message('删除失败!', 'center')
 								}
@@ -323,6 +327,11 @@
 						getArticleList(false, false);
 						plus.webview.hide('publish_article', 'none');
 						plus.webview.close('publish_article', 'none');
+						
+						// 如果需要从写文章的页面刷新
+						window.addEventListener('refreshArticle', function(event) {
+							getArticleList(false, true);
+						})
 					})
 				},
 				methods: {
@@ -365,6 +374,11 @@
 							app.articles = app.articles.concat(res.data);
 						} else {
 							app.articles = res.data;
+						}
+						if(app.articles==''||app.articles.length<=0){
+							app.articleStatus=false;
+						}else{
+							app.articleStatus=true;
 						}
 					} else {
 						app.articleStatus = false;
