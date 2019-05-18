@@ -241,9 +241,10 @@
 						return;
 					}
 					// plus.navigator.setStatusBarBackground("#ff0000");
-					plus.navigator.setStatusBarStyle(subpages[idx].style);
+					// plus.navigator.setStatusBarStyle(subpages[idx].style);
 					//显示目标选项卡
 					//若为iOS平台或非首次显示，则直接显示
+					setStatusBar(subpages[idx].statusBg, subpages[idx].style);
 					if (mui.os.ios || aniShow[targetTab]) {
 						plus.webview.show(targetTab, "fade-in", 100);
 					} else {
@@ -261,7 +262,6 @@
 					}
 					app.nav[idx].selected = true;
 					activeTab = targetTab;
-					// setStatusBar(subpages[idx].statusBg, subpages[idx].style);
 				});
 
 				//自定义事件，模拟点击“首页选项卡”
