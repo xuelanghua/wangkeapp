@@ -93,65 +93,65 @@
 			var userInfo = getUserInfo();
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 
-			var prevId = 'home',
-				currentId = '',
-				tempId = '';
+			var prevId = "home",
+				currentId = "",
+				tempId = "";
 			var subpages = [{
-					url: 'html/home.html',
-					ids: 'home',
-					statusBg: '#ffffff',
-					style: 'dark',
+					url: "html/home.html",
+					ids: "home",
+					statusBg: "#ffffff",
+					style: "dark",
 					styles: {
-						top: '0px',
-						bottom: '51px',
-						scrollIndicator: 'none',
+						top: "0px",
+						bottom: "51px",
+						scrollIndicator: "none",
 						statusbar: {
-							background: '#ffffff'
+							background: "#ffffff"
 						},
-						render: 'always'
+						render: "always"
 					}
 				}, {
-					url: 'html/chat.html',
-					ids: 'chat',
-					statusBg: '#2289FF',
-					style: 'light',
+					url: "html/chat.html",
+					ids: "chat",
+					statusBg: "#2289FF",
+					style: "light",
 					styles: {
-						top: '0px',
-						bottom: '51px',
-						scrollIndicator: 'none',
+						top: "0px",
+						bottom: "51px",
+						scrollIndicator: "none",
 						statusbar: {
-							background: '#2289FF'
+							background: "#2289FF"
 						},
-						render: 'always'
+						render: "always"
 					}
 				},
 				{
-					url: 'html/self_media.html',
-					ids: 'media',
-					statusBg: '#ffffff',
-					style: 'dark',
+					url: "html/self_media.html",
+					ids: "media",
+					statusBg: "#ffffff",
+					style: "dark",
 					styles: {
-						top: '0px',
-						bottom: '51px',
-						scrollIndicator: 'none',
+						top: "0px",
+						bottom: "51px",
+						scrollIndicator: "none",
 						statusbar: {
-							background: '#ffffff'
+							background: "#ffffff"
 						}
 					}
 				},
 				{
-					url: 'html/my.html',
-					ids: 'user',
-					statusBg: '#2289ff',
-					style: 'light',
+					url: "html/my.html",
+					ids: "user",
+					statusBg: "#2289ff",
+					style: "light",
 					styles: {
-						top: '0px',
-						bottom: '51px',
-						scrollIndicator: 'none',
+						top: "0px",
+						bottom: "51px",
+						scrollIndicator: "none",
 						statusbar: {
-							background: '#2289ff'
+							background: "#2289ff"
 						},
-						render: 'always'
+						render: "always"
 					}
 				}
 			];
@@ -216,7 +216,6 @@
 					});
 				}
 			})
-
 			function initIndexPage() {
 				var self = plus.webview.currentWebview();
 				for (var i = 0; i < 4; i++) {
@@ -240,6 +239,8 @@
 					if (targetTab == activeTab) {
 						return;
 					}
+					// plus.navigator.setStatusBarBackground("#ff0000");
+					plus.navigator.setStatusBarStyle(subpages[idx].style);
 					//显示目标选项卡
 					//若为iOS平台或非首次显示，则直接显示
 					if (mui.os.ios || aniShow[targetTab]) {
@@ -259,7 +260,7 @@
 					}
 					app.nav[idx].selected = true;
 					activeTab = targetTab;
-					setStatusBar(subpages[idx].statusBg, subpages[idx].style);
+					// setStatusBar(subpages[idx].statusBg, subpages[idx].style);
 				});
 
 				//自定义事件，模拟点击“首页选项卡”
