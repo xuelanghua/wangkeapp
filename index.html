@@ -114,7 +114,8 @@
 					url: "html/chat.html",
 					ids: "chat",
 					statusBg: "#2289FF",
-					style: "light",
+					// style: "light",
+					style: "dark",
 					styles: {
 						top: "0px",
 						bottom: "51px",
@@ -144,7 +145,8 @@
 					url: "html/my.html",
 					ids: "user",
 					statusBg: "#2289ff",
-					style: "light",
+					// style: "light",
+					style: "dark",
 					render: "always",
 					styles: {
 						top: "0px",
@@ -201,8 +203,8 @@
 					mui.plusReady(function() {
 						pushInit();
 						eventInit();
-						plus.navigator.setStatusBarStyle("dark");
-						plus.navigator.setStatusBarBackground('#FFFFFF');
+						// plus.navigator.setStatusBarStyle("dark");
+						// plus.navigator.setStatusBarBackground('#FFFFFF');
 						if (!userInfo) {
 							login();
 						} else if (userInfo.mobile.length == 0) {
@@ -240,11 +242,12 @@
 					if (targetTab == activeTab) {
 						return;
 					}
-					// plus.navigator.setStatusBarBackground("#ff0000");
-					// plus.navigator.setStatusBarStyle(subpages[idx].style);
+					plus.navigator.setStatusBarBackground("#ff0000");
+					plus.navigator.setStatusBarStyle(subpages[idx].style);
 					//显示目标选项卡
 					//若为iOS平台或非首次显示，则直接显示
 					setStatusBar(subpages[idx].statusBg, subpages[idx].style);
+					// setStatusBar(subpages[idx].statusBg, "dark");
 					if (mui.os.ios || aniShow[targetTab]) {
 						plus.webview.show(targetTab, "fade-in", 100);
 					} else {
