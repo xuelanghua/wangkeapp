@@ -98,27 +98,27 @@
 					<h2>{{ balance }}</h2>
 				</div>
 				<div class="category mui-clearfix">
-					<div class="mui-pull-left talk-section">
+					<div class="talk-section" style="width: 100%;">
 						<div>今日拓客红包</div>
 						<div>{{ promote }}</div>
 					</div>
-					<div class="mui-pull-right chat-section">
+					<!-- <div class="mui-pull-right chat-section">
 						<div>今日聊天红包</div>
 						<div style="font-size: 15px;">{{ chat }}</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 
-			<div>
+			<!-- <div>
 				<div class="mui-segmented-control">
 					<span class="mui-control-item mui-active" data-type="promote">拓客红包</span>
 					<span class="mui-control-item" data-type="chat">聊天红包</span>
 				</div>
-			</div>
+			</div> -->
 			<div class="mui-control-content mui-active">
 				<div class="mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<ul id="pull-refresh" class="mui-table-view" v-if="recordList.length>0">
+					<div class="mui-scroll" id="pull-refresh">
+						<ul class="mui-table-view" v-if="recordList.length>0">
 							<li class="mui-table-view-cell" v-for="(item, index) in recordList" :key="index">
 								<img class="mui-pull-left" :src="item.avatarUrl">
 								<div class="mui-pull-left none">
@@ -144,30 +144,8 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: true,
-				beforeback: function() {
-					plus.navigator.setStatusBarStyle('light');
-				},
-				pullRefresh: {
-					container: "#pull-refresh",
-					up: {
-						style: 'circle',
-						color: '#2289FF',
-						height: '50px',
-						auto: false,
-						contentrefresh: "正在加载...",
-						contentnomore: '没有更多数据了',
-						callback: function() {
-							skip++;
-							getRedpackInfo();
-							mui("#pull-refresh").pullRefresh().endPullupToRefresh();
-						}
-					}
-				}
-			})
 			var skip = 1;
-			var limit = 5;
+			var limit = 10;
 			var type = '1,2';
 			var userInfo = getUserInfo();
 			var vm = new Vue({
@@ -191,6 +169,39 @@
 					});
 				},
 				mounted: function() {
+					mui.init({
+						swipeBack: false,
+						beforeback: function() {
+							plus.navigator.setStatusBarStyle('light');
+						},
+						pullRefresh: {
+							container: "#pull-refresh",
+							up: {
+
+
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									skip++;
+									getRedpackInfo();
+									mui("#pull-refresh").pullRefresh().endPullupToRefresh();
+								}
+								// style: 'circle',
+								// color: '#2289FF',
+								// height: '50px',
+								// auto: false,
+								// contentrefresh: "正在加载...",
+								// contentnomore: '没有更多数据了',
+								// callback: function() {
+								// 	skip++;
+								// 	getRedpackInfo();
+								// 	mui("#pull-refresh").pullRefresh().endPullupToRefresh();
+								// }
+							}
+						}
+					})
 					// 切换选项卡请求接口
 					mui('.mui-segmented-control').on('tap', 'span', function() {
 						var rtype = this.dataset.type;
@@ -215,6 +226,7 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
+					logs(res);
 					var data = res.data;
 					if (data.record.length == 0) {
 						mui("#pull-refresh").pullRefresh().endPullupToRefresh(true);
@@ -224,8 +236,10 @@
 						vm.chat = data.chat;
 						if (skip == 1) {
 							vm.recordList = data.record;
+							mui('#article_container').pullRefresh().endPulldownToRefresh();
 						} else {
 							vm.recordList = vm.recordList.concat(data.record);
+							mui('#article_container').pullRefresh().endPulldownToRefresh();
 						}
 					}
 				}, 'json');
