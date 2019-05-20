@@ -14,6 +14,9 @@
 			.card-left-cont span {
 				color: #999999;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 	<body>
@@ -22,7 +25,7 @@
 			<h1 class="mui-title"></h1>
 			<span class="mui-pull-right mui-icon mui-icon-more" style="display: none;"></span>
 		</header>
-		<div id="mui-content" class="mui-content friends-detail-container">
+		<div id="mui-content" class="mui-content friends-detail-container" v-cloak>
 			<!-- 名片样式一 -->
 			<div v-if="cardType=='cardType2'" class="first-card-container">
 				<div class="card">
@@ -130,7 +133,7 @@
 			<h5 class="personality-desc">主推商品</h5>
 			<div class="goods-window">
 				<ul class="goods-lists" v-if="friendData.goods !== undefined && friendData.goods.length >0 ">
-					<li class="goods-item" v-for="(goods,index) in friendData.goods" :key="index">
+					<li class="goods-item" v-for="(goods,index) in friendData.goods" :key="index" @tap="openIngMiniprogram(goods.id)">
 						<div class="goods-img">
 							<img :src="goods.cover">
 						</div>
@@ -286,6 +289,12 @@
 					}
 				}, 'json')
 			}
+			
+			//小程序中打开商品
+			function openIngMiniprogram(goodsId) {
+				launchMiniprogram(goodsId, fid);
+			}
+			
 			// 音频播放
 			var timer = 0;
 			var audio = document.getElementById("audioPlay");

@@ -374,9 +374,9 @@
 		<header class="mui-bar mui-bar-nav" style="background-color: #2289FF;color: #FFFFFF;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;"></a>
 			<h1 class="mui-title">客户详情</h1>
-			<a href="javascript: void(0);" id="view_card" class="mui-hidden">
+			<div id="view_card" class="mui-hidden" style="position: relative;z-index: 9999">
 				<div class="mui-pull-right" style="margin-top: 10px;font-size: 15px;color: #FFFFFF;">查看名片</div>
-			</a>
+			</div>
 		</header>
 
 		<div class="mui-content">
@@ -561,7 +561,7 @@
 						<span id="deal_icon" style="margin-top: 3px;margin-bottom: 2px;"><i class="iconfont icon-user-flag" style="font-size: 23px;"></i></span>
 						<span id="deal_title" id="deal_title">未成交</span>
 					</div>
-					<button id="call_up" style="margin-left: 15px;">电话</button>
+					<button id="call_up" style="margin-left: 15px;display: none;">电话</button>
 				</div>
 			</div>
 
@@ -818,6 +818,7 @@
 					}
 					document.getElementById('crm_name').innerText = data.nickName;
 					if (data.mobile.length != 0) {
+						document.getElementById('call_up').style.display = 'block';
 						document.getElementById('call_up').dataset.phone = data.mobile;
 						document.getElementById('crm_mobile').innerText = data.mobile;
 					} else {

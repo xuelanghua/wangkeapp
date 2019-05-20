@@ -321,6 +321,30 @@ function shareToMiniprogram(param) {
 }
 
 /**
+ * 打开小程序
+ * @param param 页面参数
+ */
+function launchMiniprogram(goodsId, toUid) {
+	plus.share.getServices(function(s) {
+		var shareService = {};
+		for (var i in s) {
+			var t = s[i];
+			shareService[t.id] = t;
+		}
+		// 更新分享列表
+		var ss = shareService['weixin'];
+		ss ? ss.launchMiniProgram({
+			id:'gh_9fa5f42ab939',
+			path: '/longbing_card/pages/shop/detail/detail?id=' + goodsId +'&to_uid=' + toUid,
+			type: '0', //0-正式版； 1-测试版； 2-体验版
+			webUrl: 'https://app.wangkeapp.cn'
+		}) : message('打开小程序失败!');
+	}, function(e) {
+		message('当前环境不支持打开小程序!')
+	});
+}
+
+/**
  * 分享操作
  * @param {JSON} sb 分享操作对象s.s为分享通道对象(plus.share.ShareService)
  * @param {Boolean} bh 是否分享链接
