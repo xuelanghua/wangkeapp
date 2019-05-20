@@ -22,7 +22,7 @@
 			<div class="segmentedControl-cont">
 				<!-- 第一个选项卡 -->
 				<div id="item1" class="mui-control-content">
-					<ul v-if="contstatus" class="time-line-cont">
+					<ul id="refresh-container" v-if="contstatus" class="time-line-cont">
 						<li v-for="(item,key,index) in dataGroup" :key="index">
 							<div class="time-line-items-title">
 								<h5>{{key}}</h5>
@@ -268,7 +268,7 @@
 					// 初始化字体大小结束
 					mui.init({
 						pullRefresh: {
-							container: '#item1',
+							container: '#refresh-container',
 							up: {
 								height: 50,
 								auto: false,
@@ -345,22 +345,19 @@
 						itemCont.dataGroup = data;
 						mui.later(function() {
 							// 下拉加载完成隐藏加载动画
-							mui('#item1').pullRefresh().endPulldown();
-							
+							mui('#refresh-container').pullRefresh().endPulldown();
 						}, 1000)
-						itemCont.contstatus=true;
+						itemCont.contstatus = true;
 					} else if (res.errno == 0 && pgNum > 1) {
 						for (list in data) {
 							Vue.set(itemCont.dataGroup, list, data[list]);
 						}
-						logs(itemCont.dataGroup);
-						itemCont.contstatus=true;
 						// 上拉加载完成隐藏加载动画
-						mui('#item1').pullRefresh().endPullupToRefresh(false);
+						mui('#refresh-container').pullRefresh().endPullupToRefresh(false);
 					} else {
 						// 数据为空禁用上拉加载
-						mui('#item1').pullRefresh().endPullupToRefresh(true);
-						mui('#item1').pullRefresh().disablePullupToRefresh();
+						mui('#refresh-container').endPullupToRefresh(true);;
+						// mui('#refresh-container').pullRefresh().disablePullupToRefresh();
 						// 判断数据是否为空
 						// for (var item in itemCont.dataGroup) {
 						// 	itemCont.contstatus = true;

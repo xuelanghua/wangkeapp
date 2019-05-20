@@ -23,7 +23,7 @@
 			
 			.example{
 				width: 100%;
-				margin-bottom: 66px;
+				padding-top: 42px;
 				background-color: #FFFFFF;
 			}
 			.hd{
@@ -43,13 +43,12 @@
 				border-bottom: 2px solid #2289FF;
 			}
 			.bd{
-				margin-top: 50px;
-				margin-left: 10px;
+				position: relative;
 			}
-			.bd li{
+			.bd .tab-container{
 				display: none;
 			}
-			.bd li.current{
+			.bd .tab-container.current{
 				display: block;
 			}
 			.Record_listL{
@@ -66,8 +65,6 @@
 			.Record_listR{
 				width: 82%;
 				height: 66px;
-				padding: 10px 10px 8px 0;
-				border-bottom: 1px solid #F2F2F2;
 			}
 			.Label img{
 				position: relative;
@@ -97,6 +94,28 @@
 				max-width: 86%;
 				overflow: hidden;
 			}
+			li{
+				list-style-type: none;
+			}
+			.mui-table-view-cell.mui-active{
+				background: #FFFFFF;
+			}
+			.mui-table-view-cell{
+				padding: 11px 15px;
+			}
+			.mui-table-view-cell:after{
+				right: 0;
+				left: 70px;
+				bottom: 0;
+				height: 1px;
+				background-color: #f2f2f2;
+			}
+			.mui-table-view-cell:last-child:after{
+				height: 1px;
+			}
+			.last-message{
+				max-width: 86%;
+			}
 		</style>
 	</head>
 
@@ -105,7 +124,7 @@
 			<h1 class="mui-title">消息</h1>
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<!-- <img id="back_chat" class="mui-pull-right" src="../image/newsh.png"> -->
-			<div class="hd">
+			<div class="hd mui-clearfix">
 				<li class="current" data-type="chat">
 					<span>
 						<span>聊天</span>
@@ -118,14 +137,13 @@
 						<span>(0)</span>
 					</span>
 				</li>
-				<div class="clearfix"></div>
 			</div>
 		</header>
 
 		<div class="mui-content">
 			<div class="example">
 				<div class="bd">
-					<li class="current" id="chat_message" data-type="chat">
+					<div class="current tab-container chat-cont" id="chat_message" data-type="chat">
 						<!-- <div class="Record_list">
 							<div class="Record_listL mui-pull-left">
 								<img src="../image/Alipay.png">
@@ -196,8 +214,8 @@
 							</div>
 							<div class="clearfix"></div>
 						</div> -->
-					</li>
-					<li id="system_message" data-type="system">
+					</div>
+					<div class="tab-container system-cont" id="system_message" data-type="system">
 						<div style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>
 						<!-- <div class="Record_list">
 							<div class="Record_listL mui-pull-left">
@@ -299,7 +317,7 @@
 							</div>
 							<div class="clearfix"></div>
 						</div> -->
-					</li>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -318,7 +336,7 @@
 
 			var userInfo = getUserInfo();
 			mui.plusReady(function() {
-				
+
 				window.addEventListener('refreshNotice', function(e) {
 					getChatList();
 				})
@@ -345,19 +363,19 @@
 					this.className = 'current';
 					if (type == 'system') {
 						document.querySelector('.hd li[data-type=chat]').className = '';
-						document.querySelector('.bd li[data-type=chat]').className = '';
-						document.querySelector('.bd li[data-type=system]').className = 'current';
+						document.querySelector('.chat-cont').classList.remove('current');
+						document.querySelector('.system-cont').classList.add("current");
 					} else {
 						document.querySelector('.hd li[data-type=system]').className = '';
-						document.querySelector('.bd li[data-type=system]').className = '';
-						document.querySelector('.bd li[data-type=chat]').className = 'current';
+						document.querySelector('.system-cont').classList.remove('current');
+						document.querySelector('.chat-cont').classList.add("current");
 					}
 				})
 
-				// 				document.getElementById('back_chat').addEventListener('tap', function() {
-				// 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'showChat');
-				// 					plus.webview.close('message');
-				// 				})
+				//document.getElementById('back_chat').addEventListener('tap', function() {
+				//	mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'showChat');
+				//	plus.webview.close('message');
+				//})
 			})
 
 			function getChatList() {
@@ -373,8 +391,14 @@
 						var total = chatList.length;
 						document.getElementById('chat_total').innerText = '(' + total + ')';
 						for (var i = 0; i < total; i++) {
-							html += '<div class="Record_list" data-avatar="' + chatList[i].user.avatarUrl + '" data-cid="' + chatList[i].user.id + '" data-name="' + chatList[i].user.nickName +
+							html += '<li class="Record_list mui-table-view-cell mui-transitioning" data-avatar="' + chatList[
+									i].user.avatarUrl + '" data-cid="' + chatList[i].user
+								.id + '" data-name="' + chatList[i].user.nickName +
 								'">';
+							html += '<div class="mui-slider-right mui-disabled">';
+							html += '<span class="mui-btn mui-btn-red">删除</span>';
+							html += '</div>';
+							html += '<div class="mui-slider-handle mui-clearfix">';
 							html += '<div class="Record_listL mui-pull-left">';
 							if (!chatList[i].user.avatarUrl) {
 								html += '<img src="../image/user_default.png">';
@@ -384,7 +408,7 @@
 
 							html += '</div>';
 							html += '<div class="Record_listR mui-pull-right">';
-							html += '<div>';
+							html += '<div class="mui-clearfix">';
 							html += '<span class="mui-pull-left user-name  mui-ellipsis">';
 							html += '<span class="Label">';
 							if (chatList[i].type == 'friend') {
@@ -401,12 +425,11 @@
 							}
 							html += '</span>';
 							html += '<span class="mui-pull-right date">' + chatList[i].time + '</span>';
-							html += '<div class="clearfix"></div>';
 							html += '</div>';
-							html += '<div class="tishi">';
+							html += '<div class="tishi mui-clearfix">';
 							if (chatList[i].message !== 'empty') {
 								if (chatList[i].message.message_type == 'text') {
-									html += '<span class="mui-pull-left">' + chatList[i].message.content + '</span>';
+									html += '<span class="mui-pull-left mui-ellipsis last-message">' + chatList[i].message.content + '</span>';
 								} else {
 									html += '<span class="mui-pull-left">[图片]</span>';
 								}
@@ -421,7 +444,7 @@
 							}
 							html += '</div>';
 							html += '</div>';
-							html += '<div class="clearfix"></div>';
+							html += '</li>';
 							html += '</div>';
 						}
 					} else {
