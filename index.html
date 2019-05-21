@@ -114,8 +114,8 @@
 					url: "html/chat.html",
 					ids: "chat",
 					statusBg: "#2289FF",
-					// style: "light",
-					style: "dark",
+					style: "light",
+					// style: "dark",
 					styles: {
 						top: "0px",
 						bottom: "51px",
@@ -145,8 +145,8 @@
 					url: "html/my.html",
 					ids: "user",
 					statusBg: "#2289ff",
-					// style: "light",
-					style: "dark",
+					style: "light",
+					// style: "dark",
 					render: "always",
 					styles: {
 						top: "0px",
@@ -203,8 +203,8 @@
 					mui.plusReady(function() {
 						pushInit();
 						eventInit();
-						// plus.navigator.setStatusBarStyle("dark");
-						// plus.navigator.setStatusBarBackground('#FFFFFF');
+						plus.navigator.setStatusBarStyle("dark");
+						plus.navigator.setStatusBarBackground('#FFFFFF');
 						if (!userInfo) {
 							login();
 						} else if (userInfo.mobile.length == 0) {
@@ -249,13 +249,13 @@
 					setStatusBar(subpages[idx].statusBg, subpages[idx].style);
 					// setStatusBar(subpages[idx].statusBg, "dark");
 					if (mui.os.ios || aniShow[targetTab]) {
-						plus.webview.show(targetTab, "fade-in", 100);
+						plus.webview.show(targetTab, "fade-in", 200);
 					} else {
 						//否则，使用fade-in动画，且保存变量
 						var temp = {};
 						temp[targetTab] = "true";
 						mui.extend(aniShow, temp);
-						plus.webview.show(targetTab, "fade-in", 100);
+						plus.webview.show(targetTab, "fade-in", 200);
 					}
 					//隐藏当前;
 					plus.webview.hide(activeTab);
@@ -265,6 +265,7 @@
 					}
 					app.nav[idx].selected = true;
 					activeTab = targetTab;
+					setStatusBar(subpages[idx].statusBg, subpages[idx].style);
 				});
 
 				//自定义事件，模拟点击“首页选项卡”
