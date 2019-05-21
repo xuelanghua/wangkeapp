@@ -227,6 +227,10 @@
 			.mui-table-view-cell{
 				background-color: #FFFFFF;
 			}
+			.mui-bar-nav~.mui-content{
+				padding-top: 135px;
+				padding-bottom: 55px;
+			}
 		</style>
 	</head>
 	<body id="body_tap">
@@ -235,20 +239,22 @@
 			<h1 class="mui-title">商品管理</h1>
 		</header>
 		<div class="mui-content">
-			<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
-				<input type="search" class="mui-input-clear" name="goods_name" placeholder="搜索商品名称">
-			</div>
-			<!-- <div class="search">
-				<span class="mui-icon mui-icon-search"></span>
-				<span>
-					<input type="text" name="goods_name" placeholder="搜索商品名称"/>
-				</span>
-			</div> -->
-			<div class="newly_added">
-				<div id="segmentedControl" class="mui-segmented-control">
-					<a class="mui-control-item mui-active" href="#item1">出售中</a>
-					<a class="mui-control-item" href="#item2">售罄的</a>
-					<a class="mui-control-item" href="#item3">仓库中</a>
+			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
+				<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
+					<input type="search" class="mui-input-clear" name="goods_name" placeholder="搜索商品名称">
+				</div>
+				<!-- <div class="search">
+					<span class="mui-icon mui-icon-search"></span>
+					<span>
+						<input type="text" name="goods_name" placeholder="搜索商品名称"/>
+					</span>
+				</div> -->
+				<div class="newly_added">
+					<div id="segmentedControl" class="mui-segmented-control">
+						<a class="mui-control-item mui-active" href="#item1">出售中</a>
+						<a class="mui-control-item" href="#item2">售罄的</a>
+						<a class="mui-control-item" href="#item3">仓库中</a>
+					</div>
 				</div>
 			</div>
 			<div id="goods_container">
@@ -418,7 +424,7 @@
 	mui.init({
 		swipeBack: true,
 		pullRefresh: {
-			container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+			container: "#goods_container", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
 			down: {
 				style: 'circle', //必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
 				color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件颜色
@@ -498,7 +504,7 @@
 			else if (type == 'share') {
 				var name = this.dataset.name;
 				var cover = this.dataset.cover;
-				logs(cover);
+				// logs(cover);
 				shareToMiniprogram({
 					title: name,
 					content: '旺天下之客,让营销更简单!',
@@ -608,7 +614,7 @@
 					action: 'check_goods_number',
 					token: userInfo.token
 				}, function(res){
-					logs(res); 
+					// logs(res); 
 					if (res.errno == 0) {
 						fnOpenWin('goods_add.html', 'goods_add', {
 							statusbar: {
@@ -640,6 +646,7 @@
 			token: userInfo.token,
 			goods_name: goodsName
 		}, function(res) {
+			// logs(res);
 			var goodsList = res.data;
 			var onSale = goodsList.on_sale;
 			var soldOut = goodsList.sold_out;
@@ -770,7 +777,7 @@
 				document.getElementById('item3_list').innerHTML = emptyContent;
 			}
 			if (refresh) {
-				mui('.mui-content').pullRefresh().endPulldownToRefresh();
+				mui('#goods_container').pullRefresh().endPulldownToRefresh();
 			}
 			plus.nativeUI.closeWaiting();
 		}, 'json');
@@ -783,7 +790,7 @@
 			status: status,
 			goods_id: goods_id
 		}, function(res) {
-			logs(res);
+			// logs(res);
 			if (res.errno == 0) {
 				message('操作成功!');
 				setTimeout(function() {
