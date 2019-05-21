@@ -752,9 +752,13 @@ function pushCallback(data, event) {
 		if (url == 'dialog') {
 			// plus.device.beep();
 			// plus.device.vibrate();
-			mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
-			mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-			playNoticeAudio();
+			if (type == 'cancel') {
+				mui.fire(plus.webview.getWebviewById('dialog'), 'sendCancel');
+			} else {
+				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+				playNoticeAudio();
+			}
 		} else if (url == 'chat') {
 			if (data.chat == 'customer') {
 				mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');

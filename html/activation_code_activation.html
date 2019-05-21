@@ -89,11 +89,11 @@
 							<label><img src="../image/Alipay.png"><span>支付宝</span></label>
 							<input class="choice-tag" name="radio1" type="radio" value="alipay">
 						</div> -->
-						<div class="mui-input-row mui-radio" v-if="fee<=5000">
+						<div class="mui-input-row mui-radio" v-if="fee<=3000">
 							<label><img src="../image/WeChat.png"><span>微信</span></label>
 							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
 						</div>
-						<div class="mui-input-row mui-radio" v-if="fee>5000">
+						<div class="mui-input-row mui-radio" v-if="fee>3000">
 							<label><img src="../image/WeChat.png"><span>线下支付</span></label>
 							<input class="choice-tag" name="radio1" type="radio" checked="checked" value="offline">
 						</div>
@@ -195,7 +195,7 @@
 						app.codeList = self.codeList;
 						app.totalWang = self.totalWang;
 						app.fee = parseFloat(self.totalWang / 10);
-						if (app.fee > 5000) {
+						if (app.fee > 3000) {
 							payType = 'offline';
 						} else {
 							payType = 'wxpay';
