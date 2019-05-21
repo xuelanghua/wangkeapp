@@ -1214,8 +1214,10 @@
 						} else {
 							selfDom.parentNode.removeChild(selfDom);
 						}
-						message('已经撤回');
-					} else {
+						message('撤回成功');
+					} else if(res.errno == 2){
+						message("超过三分钟，无法撤回");
+					}else{
 						message(res.message);
 					}
 				}, 'json');
