@@ -437,7 +437,7 @@
 						<% } else { %>
 							<img class="msg-user-img" src="<%= (avatar.target) %>" alt="" />
 						<% } %>
-						<div class="msg-content" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
+						<div class="msg-content" data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
 							<div class="msg-content-inner">
 								<% if(item.type=='text' ) { %>
 									<%=( item.content|| '&nbsp;&nbsp;') %>
@@ -476,6 +476,7 @@
 		<div id="middlePopover" class="mui-popover">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell copy-btn">复 制</li>
+				<li class="mui-table-view-cell recall-btn">撤 回</li>
 				<li class="mui-table-view-cell del-btn">删 除</li>
 			</ul>
 		</div>
@@ -536,6 +537,8 @@
 			};
 			var lastIndex = '';
 			var msgHeight = 0;
+			var message_id = '';
+			var sender = "1";
 			mui.plusReady(function() {
 				//模板配置
 				template.config('escape', false);
@@ -1100,26 +1103,31 @@
 				}
 			});
 			// 长按显示操作菜单
-			var message_id = 0;
 			var copytext = '';
-			var types='';
+			var types = '';
 			var isFocus = null;
 			// 获取原来的高度
 			var oglHeight = document.querySelector("body").offsetHeight;
 			mui('.mui-content').on("longtap", ".msg-content", function() {
 				// 获取高度
+				copytext = this.dataset.copytext;
+				types = this.dataset.types;
+				sender = this.dataset.sender;
+				message_id = this.dataset.tag;
 				var tempHeight = document.querySelector("body").offsetHeight;
-					copytext=this.dataset.copytext;
-					types=this.dataset.types;
-					if(types=="text"){
-						document.querySelector(".copy-btn").style.display="inline-block";
-					}else{
-						document.querySelector(".copy-btn").style.display="none";
-					}
+				if (types == "text") {
+					document.querySelector(".copy-btn").style.display = "flex";
+				} else {
+					document.querySelector(".copy-btn").style.display = "none";
+				}
+				if (sender == "self") {
+					document.querySelector(".recall-btn").style.display = "flex";
+				} else {
+					document.querySelector(".recall-btn").style.display = "none";
+				}
 				if (tempHeight == oglHeight) {
 					mui('#middlePopover').popover('hide');
 					mui("#middlePopover").popover('toggle', document.getElementById(this.id));
-					message_id = this.dataset.tag;
 				} else {
 					var input = document.getElementById("msg-text");
 					input.blur();
@@ -1179,6 +1187,40 @@
 					plus.android.invoke(clip, "setText", copytext);
 					message("复制成功");
 				}
+				mui('#middlePopover').popover('hide');
+			})
+			// 聊天记录撤回
+			mui(".mui-popover").on("tap", ".recall-btn", function() {
+				logs(message_id);
+				mui.post($ajaxUrl + 'chat&action=cancel', {
+					token: userInfo.token,
+					message_id: message_id
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						var mols = document.getElementById('parent' + message_id).previousElementSibling;
+						var brother = document.getElementById('parent' + message_id).nextElementSibling;
+						var selfDom = document.getElementById('parent' + message_id);
+						var mcls = mols.className;
+						var bcls = '';
+						if (brother) {
+							bcls = brother.className;
+						} else {
+							bcls = 'data-time';
+						}
+						if (bcls == 'data-time' && mcls == 'data-time') {
+							mols.parentNode.removeChild(mols);
+							selfDom.parentNode.removeChild(selfDom);
+						} else {
+							selfDom.parentNode.removeChild(selfDom);
+						}
+						message('撤回成功');
+					} else if(res.errno == 2){
+						message("超过三分钟，无法撤回");
+					}else{
+						message(res.message);
+					}
+				}, 'json');
 				mui('#middlePopover').popover('hide');
 			})
 			// 显示清除消息弹窗

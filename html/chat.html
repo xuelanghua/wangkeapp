@@ -297,7 +297,7 @@
 											<div class="user-head-img crm-user-head" data-type="crm" :data-id="items.id" data-stauts="items.type">
 												<img :src="items.headimgurl||'../image/user_default.png'">
 											</div>
-											<div class="customer-left" @tap="crmGoChat(items.id,items.name,items.headimgurl,items.type)">
+											<div class="customer-left" @tap="crmGoChat(items.uid,items.name,items.headimgurl,items.type)">
 												<div class="left-top">
 													<div class="mui-ellipsis user-name">
 														{{items.name}}
@@ -620,7 +620,7 @@
 					token: userInfo.token,
 					type: type
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						if (type == 'customer') {
 							app.newcustomerData = res.data;
