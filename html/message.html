@@ -122,6 +122,74 @@
 				display: flex;
 				align-items: center;
 			}
+			/* 清除聊天记录 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 996;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				background: rgba(0, 0, 0, 0);
+				display: none;
+				/* display: flex; */
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			.verift-body {
+				width: 80%;
+				background-color: #ffffff;
+				border-radius: 10px;
+				position: relative;
+				overflow: hidden;
+				padding-top: 5px;
+				box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
+			}
+			
+			.verift-body .tips {
+				width: 100%;
+				padding: 20px 10px 15px;
+				text-align: justify;
+			}
+			
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+			
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 15px 10px;
+			}
+			
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
 		</style>
 	</head>
 
@@ -327,6 +395,18 @@
 				</div>
 			</div>
 		</div>
+		<!-- 删除聊天记录确认弹窗 -->
+		<div class="join-team-verify">
+			<div class="verift-body">
+				<div class="tips">
+					<span>删除聊天记录后将无法找回，是否继续？</span>
+				</div>
+				<div class="verift-footer">
+					<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+					<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
+				</div>
+			</div>
+		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
@@ -341,8 +421,8 @@
 			})
 
 			var userInfo = getUserInfo();
+			var chatId='';
 			mui.plusReady(function() {
-
 				window.addEventListener('refreshNotice', function(e) {
 					getChatList();
 				})
@@ -402,7 +482,7 @@
 								.id + '" data-name="' + chatList[i].user.nickName +
 								'">';
 							html += '<div class="mui-slider-right mui-disabled">';
-							html += '<span class="mui-btn mui-btn-red">删除</span>';
+							html += '<span class="mui-btn mui-btn-red" data-chatid='+chatList[i].id+'>删除</span>';
 							html += '</div>';
 							html += '<div class="mui-slider-handle mui-clearfix">';
 							html += '<div class="Record_listL mui-pull-left">';
@@ -460,6 +540,34 @@
 					plus.nativeUI.closeWaiting();
 				}, 'json')
 			}
+			var listel='';
+			// 删除聊天
+			mui(".mui-content").on("tap",".mui-btn-red",function(){
+				mui('.join-team-verify')[0].style.display = "flex";
+				chatId=this.dataset.chatid;
+				listel = this.parentNode.parentNode;
+			})
+			// 确认删除聊天
+			mui('.join-team-verify').on("tap", ".send-verify", function() {
+				mui.post($ajaxUrl + 'chat&action=delete_chat', {
+					token: userInfo.token,
+					chat_id: chatId
+				}, function(res) {
+					mui('.join-team-verify')[0].style.display = "none";
+					if (res.errno == 0) {
+						getChatList();
+						message('已删除');
+					} else {
+						message('删除失败，请稍后重试');
+					}
+				}, 'json');
+			})
+			// 取消删除聊天记录
+			mui('.join-team-verify').on("tap", ".close-verify-window", function() {
+				mui('.join-team-verify')[0].style.display = "none";
+				// var li=document.getElementById
+				mui.swipeoutClose(listel);
+			})
 		</script>
 	</body>
 </html>
