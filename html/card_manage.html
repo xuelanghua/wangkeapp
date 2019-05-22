@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>名片管理</title>
+		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
@@ -50,46 +50,21 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			
-			mui.init({
-				preloadPages: [{
-					url: "my_dynamics.html",
-					id: "my_dynamics",
-					styles: {
-						bounce: 'vertical',
-						scrollsToTop: true,
-						statusbar: {
-							background: '#f7f7f7'
-						}
-					}
-				}, {
-					url: "card_setting.html",
-					id: "card_setting",
-					styles: {
-						bounce: 'vertical',
-						scrollsToTop: true,
-						statusbar: {
-							background: '#ffffff'
-						}
-					}
-				}],
-				preloadLimit: 5
-			});
-			
+			mui.init();
 			var userInfo = getUserInfo();
 			mui.plusReady(function() {
 				setUserCard();
 				plus.navigator.setStatusBarStyle('dark');
-				// 				setTimeout(function() {
-				// 					var array = plus.webview.all();
-				// 					if (array) {
-				// 						for (var i = 0, len = array.length; i < len; i++) {
-				// 							console.log(array[i].getURL());
-				// 						}
-				// 					}
-				// 				}, 10000)
+				// setTimeout(function() {
+				// 	var array = plus.webview.all();
+				// 	if (array) {
+				// 		for (var i = 0, len = array.length; i < len; i++) {
+				// 			console.log(array[i].getURL());
+				// 		}
+				// 	}
+				// }, 10000)
 
-				 
+
 				//主列表点击事件
 				mui(".mui-content").on("tap", ".edit", function() {
 					openPage('card_setting.html', 'card_setting', '#ffffff', '');
@@ -106,9 +81,9 @@
 						}
 					}, 'miniProgram');
 				})
-				mui(".mui-content").on("tap", ".business-card", function() {
-
-				})
+				// mui(".mui-content").on("tap", ".business-card", function() {
+				// 
+				// })
 				mui(".mui-content").on("tap", ".issue", function() {
 					openPage('my_dynamics.html', 'my_dynamics', '#f7f7f7', '');
 				})

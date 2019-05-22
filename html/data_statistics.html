@@ -268,7 +268,7 @@
 					// 初始化字体大小结束
 					mui.init({
 						pullRefresh: {
-							container: '#refresh-container',
+							container: '#item1',
 							up: {
 								height: 50,
 								auto: false,
@@ -276,7 +276,7 @@
 								contentnomore: '没有更多数据了',
 								callback: function() {
 									pgNum += 1;
-									businessCardBrowsingStatistics();
+									businessCardBrowsingStatistics(true);
 								}
 							},
 							down: {
@@ -288,7 +288,8 @@
 								auto: false,
 								callback: function() {
 									pgNum = 1;
-									businessCardBrowsingStatistics();
+									businessCardBrowsingStatistics(true);
+									behaviorStatistics();
 								}
 							}
 						}
@@ -333,39 +334,46 @@
 				}, 'json')
 			}
 			// 获取名片浏览记录
-			function businessCardBrowsingStatistics() {
+			function businessCardBrowsingStatistics(refresh) {
 				mui.post($ajaxUrl + 'staff&action=card_view_record', {
 					token: userInfo.token,
 					skip: pgNum,
 					limit: 10
 				}, function(res) {
-					// logs(res);
 					var data = res.data;
 					if (res.errno == 0 && pgNum == 1) {
 						itemCont.dataGroup = data;
-						mui.later(function() {
-							// 下拉加载完成隐藏加载动画
-							mui('#refresh-container').pullRefresh().endPulldown();
-						}, 1000)
 						itemCont.contstatus = true;
+						if (refresh) {
+							mui.later(function() {
+								mui('#item1').pullRefresh().endPulldown();
+								mui('#item1').pullRefresh().refresh(true);
+							}, 1000)
+						}
 					} else if (res.errno == 0 && pgNum > 1) {
 						for (list in data) {
-							Vue.set(itemCont.dataGroup, list, data[list]);
+							for (items in itemCont.dataGroup) {
+								if (list == items) {
+									itemCont.dataGroup[items] = itemCont.dataGroup[items].concat(data[list]);
+								} else {
+									Vue.set(itemCont.dataGroup, list, data[list]);
+								}
+							}
 						}
-						// 上拉加载完成隐藏加载动画
-						mui('#refresh-container').pullRefresh().endPullupToRefresh(false);
+						// 深度合并
+						// mui.extend(true, itemCont.dataGroup, data);
+						if (refresh) {
+							mui.later(function() {
+								mui('#item1').pullRefresh().endPullupToRefresh();
+							}, 1000)
+						}
 					} else {
 						// 数据为空禁用上拉加载
-						mui('#refresh-container').endPullupToRefresh(true);;
-						// mui('#refresh-container').pullRefresh().disablePullupToRefresh();
-						// 判断数据是否为空
-						// for (var item in itemCont.dataGroup) {
-						// 	itemCont.contstatus = true;
-						// 	return;
-						// 	mui('#item1').pullRefresh().enablePullupToRefresh();
-						// 	// 没有更多数据了
-						// 	mui('#item1').pullRefresh().endPullupToRefresh(true);
-						// }
+						if (refresh) {
+							mui.later(function() {
+								mui('#item1').pullRefresh().endPullupToRefresh(true);
+							}, 1000)
+						}
 					}
 				}, 'json')
 			}

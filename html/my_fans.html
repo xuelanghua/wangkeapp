@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>我的粉丝</title>
+		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
@@ -24,8 +24,8 @@
 		<div id="mui-content" class="mui-content service-award-container">
 			<ul id="fans-list" class="mui-table-view" v-if="fansList.length>0">
 				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
-					<img :src="list.avatarUrl" alt="">
-					<div class="right-cont">
+					<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
+					<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
 						<div class="top mui-clearfix">
 							<span>{{list.nickName}}</span>
 							<!-- .vip,.vip1,.vip2,.vip3四种class -->
@@ -54,6 +54,7 @@
 				skip = 1,
 				limit = 15;
 			var viewport = document.documentElement.clientWidth;
+			var refresh = '';
 			if (viewport > 750) {
 				viewport = 750
 			}
@@ -80,6 +81,7 @@
 								contentnomore: '没有更多数据了',
 								callback: function() {
 									skip += 1;
+									refresh = 'up';
 									getFansList();
 								}
 							},
@@ -88,12 +90,32 @@
 								color: '#2289FF',
 								callback: function() {
 									skip = 1;
+									refresh = 'down';
 									getFansList();
 								}
 							}
 						}
 					});
-					mui.plusReady(function() {})
+					mui.plusReady(function() {
+						mui(".mui-content").on('tap', '.header-img', function() {
+							var fid = this.dataset.fid;
+							openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+								fid: fid
+							});
+						})
+						mui(".mui-content").on('tap', '.right-cont', function() {
+							var cid = this.dataset.cid,
+								chatName = this.dataset.chatname,
+								avatar = this.dataset.avatar;
+								logs(cid);
+							openPage('dialog.html', 'dialog', '#f7f7f7', {
+								cid: cid,
+								chatName: chatName,
+								avatar: avatar,
+								barStyle: 'dark'
+							});
+						})
+					})
 				}
 			})
 
@@ -103,16 +125,21 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					logs(res);
 					if (res.errno == 0 && skip == 1) {
 						app.fansList = res.data;
-						mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						if (refresh == 'down') {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+							mui('#item1').pullRefresh().refresh(true);
+						}
 					} else if (res.errno == 0 && skip > 1) {
 						app.fansList = app.fansList.concat(res.data);
-						mui('#mui-content').pullRefresh().endPullupToRefresh();
+						if (refresh == 'up') {
+							mui('#mui-content').pullRefresh().endPullupToRefresh();
+						}
 					} else {
-						mui('#mui-content').pullRefresh().endPulldownToRefresh();
-						mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						if (refresh == 'up') {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						}
 						message('没有更多了~');
 					}
 				}, 'json');

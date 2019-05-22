@@ -175,10 +175,10 @@
 				<div class="fans-title"><span>我的粉丝</span> <span class="mui-pull-right mui-navigate-right">更多</span></div>
 				<div v-if="fansLists.length>0">
 					<div class="fans_information" v-for="(lists,index) in fansLists" :key="index">
-						<div class="fans_information_chart mui-pull-left">
+						<div class="fans_information_chart mui-pull-left" :data-fid="list.id">
 							<img :src="lists.avatarUrl">
 						</div>
-						<div class="mui-pull-left" style="margin-left: 15px;">
+						<div class="flex-right mui-pull-left" style="margin-left: 15px;" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
 							<div>
 								<span>{{lists.nickName}}</span>
 								<span>
@@ -247,6 +247,25 @@
 						// 我的权益
 						mui("header").on('tap', '.my-equity', function() {
 							openPage('equities_page.html', 'equities_page', '#f7f7f7', '');
+						})
+						
+						mui(".mui-content").on('tap', '.fans_information_chart', function() {
+							var fid = this.dataset.fid;
+							openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+								fid: fid
+							});
+						})
+						mui(".mui-content").on('tap', '.flex-right', function() {
+							var cid = this.dataset.cid,
+								chatName = this.dataset.chatname,
+								avatar = this.dataset.avatar;
+								logs(cid);
+							openPage('dialog.html', 'dialog', '#f7f7f7', {
+								cid: cid,
+								chatName: chatName,
+								avatar: avatar,
+								barStyle: 'dark'
+							});
 						})
 					})
 

@@ -406,7 +406,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="mask-cont mui-hidden">
 			<div class="tips-cont">
 				<div class="tips-body">
@@ -438,13 +438,13 @@
 			}
 		}
 	});
-	
+
 	var viewport = document.documentElement.clientWidth;
 	if (viewport > 750) {
 		viewport = 750
 	}
 	document.documentElement.style.fontSize = viewport / 7.5 + "px";
-	
+
 	var goodsName = '';
 	var userInfo = getUserInfo();
 	mui.plusReady(function() {
@@ -502,91 +502,66 @@
 			}
 			//弹出底部标签
 			else if (type == 'share') {
-				var name = this.dataset.name;
-				var cover = this.dataset.cover;
-				// logs(cover);
-				shareToMiniprogram({
-					title: name,
-					content: '旺天下之客,让营销更简单!',
-					thumbs: [cover],
-					miniProgram: {
-						id: 'gh_9fa5f42ab939',
-						path: '/longbing_card/pages/shop/detail/detail?id=' + id +'&to_uid=' + userInfo.id,
-						webUrl: 'https://app.wangkeapp.cn/'
-					}
-				}, 'miniProgram');
-// 				//初始化按钮数组
-// 				var buttonTitle = null;
-// 				//先获取分享服务列表
-// 				//初始化服务
-// 				var shares = null,
-// 					sharewx = null;
-// 				plus.share.getServices(function(sucret) {
-// 					console.log(JSON.stringify(sucret));
-// 					shares = sucret;
-// 					for (var i in sucret) {
-// 						if ('weixin' == sucret[i].id) {
-// 							sharewx = sucret[i];
-// 						}
-// 					}
-// 				}, function(errret) {
-// 					console.log(JSON.stringify(errret) + '获取分享服务列表失败');
-// 				});
-// 				var buttonTitle = [{
-// 					title: "分享到朋友圈",
-// 					style: 'default'
-// 				}, {
-// 					title: "分享给微信好友",
-// 					style: 'default'
-// 				}];
-// 				plus.nativeUI.actionSheet({
-// 					cancel: "取消",
-// 					buttons: buttonTitle
-// 				}, function(b) { /*actionSheet 按钮点击事件*/
-// 					switch (b.index) {
-// 						case 0:
-// 							break;
-// 						case 1:
-// 							// alert('分享到朋友圈');
-// 							//设置分享信息
-// 							sharewx.send({
-// 								title: "商品分享",
-// 								content: "DCloud HBuilder-做最好的HTML5开发工具",
-// 								thumbs: ["_www/logo.png"],
-// 								pictures: ["_www/logo.png"],
-// 								href: "http://www.cnwxkj.com/",
-// 								extra: {
-// 									scene: "WXSceneTimeline"
-// 								}
-// 							}, function() {
-// 								console.log("分享成功！");
-// 							}, function(e) {
-// 								console.log("分享失败：" + e.message);
-// 							});
-// 							break;
-// 						case 2:
-// 							// alert('分享给微信好友');
-// 							//设置分享信息
-// 							sharewx.send({
-// 								title: "商品分享",
-// 								content: "DCloud HBuilder-做最好的HTML5开发工具",
-// 								thumbs: ["_www/logo.png"],
-// 								pictures: ["_www/logo.png"],
-// 								href: "http://www.cnwxkj.com/",
-// 								extra: {
-// 									scene: "WXSceneSession"
-// 								}
-// 							}, function() {
-// 								console.log("分享成功！");
-// 							}, function(e) {
-// 								console.log("分享失败：" + e.message);
-// 							});
-// 							break;
-// 						default:
-// 							alert('默认');
-// 							break;
-// 					}
-// 				})
+				var cont = this.dataset.name;
+				var img = this.dataset.cover;
+				var imgs = img.substring(img.lastIndexOf("/"));
+				var sd_path = "_downloads" + imgs;
+				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+					shareToMiniprogram({
+						title: cont,
+						content: cont,
+						thumbs: [sd_path],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/shop/detail/detail?id=' + id +'&to_uid=' + userInfo.id,
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				}, function(e) {
+					plus.nativeUI.showWaiting("图片处理中…");
+					var imgpath = '';
+					var imgDtask = plus.downloader.createDownload(img, {
+						method: 'GET'
+					}, function(d, status) {
+						if (status == 200) {
+							plus.zip.compressImage({
+									src: d.filename,
+									dst: d.filename,
+									overwrite: true,
+									width: '500px',
+									height:'auto',
+									format: 'jpg',
+									quality: 90,
+									clip:{
+										width:"500px",
+										height:"400px"
+									}
+								},
+								function(e) {
+									imgpath = e.target;
+									if (imgpath) {
+										plus.nativeUI.closeWaiting();
+										shareToMiniprogram({
+											title: cont,
+											content: cont,
+											thumbs: [imgpath],
+											miniProgram: {
+												id: 'gh_9fa5f42ab939',
+												path: '/longbing_card/pages/shop/detail/detail?id=' + id +'&to_uid=' + userInfo.id,
+												webUrl: 'https://app.wangkeapp.cn/'
+											}
+										}, 'miniProgram');
+									}
+								},
+								function(error) {
+									message("Compress error!");
+								});
+						} else {
+							mui.toast('保存失败')
+						}
+					});
+					imgDtask.start()
+				});
 			}
 			//打开编辑窗口
 			else if (type == 'edit') {
@@ -611,22 +586,21 @@
 		//添加商品
 		document.getElementById('add_goods').addEventListener('tap', function() {
 			mui.get($ajaxUrl + 'member', {
-					action: 'check_goods_number',
-					token: userInfo.token
-				}, function(res){
-					// logs(res); 
-					if (res.errno == 0) {
-						fnOpenWin('goods_add.html', 'goods_add', {
-							statusbar: {
-								background: '#FFF'
-							}
-						}, '', 'slide-in-right');
-					} else {
-						document.querySelector(".mask-cont").classList.remove('mui-hidden');
-					}
-				}, 'json'
-			);
-			
+				action: 'check_goods_number',
+				token: userInfo.token
+			}, function(res) {
+				// logs(res); 
+				if (res.errno == 0) {
+					fnOpenWin('goods_add.html', 'goods_add', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, '', 'slide-in-right');
+				} else {
+					document.querySelector(".mask-cont").classList.remove('mui-hidden');
+				}
+			}, 'json');
+
 		})
 		// 立即购买商品位
 		mui(".mask-cont").on("tap", ".immediately", function() {
@@ -681,7 +655,8 @@
 					onSaleStr += '<img src="../image/delete.png" />';
 					onSaleStr += '<div style="margin-top: -1px;">删除</div>';
 					onSaleStr += '</div>';
-					onSaleStr += '<div class="play" data-type="share" data-id="' + onSale[i].id + '" data-cover="' + onSale[i].cover + '" data-name="' + onSale[i].name + '">';
+					onSaleStr += '<div class="play" data-type="share" data-id="' + onSale[i].id + '" data-cover="' + onSale[i].cover +
+						'" data-name="' + onSale[i].name + '">';
 					onSaleStr += '<img src="../image/extension.png" />';
 					onSaleStr += '<div>推广</div>';
 					onSaleStr += '</div>';
@@ -722,7 +697,8 @@
 					soldOutStr += '<img src="../image/delete.png" />';
 					soldOutStr += '<div style="margin-top: -1px;">删除</div>';
 					soldOutStr += '</div>';
-					soldOutStr += '<div class="play" data-type="share" data-id="' + soldOut[j].id + '" data-cover="' + soldOut[j].cover + '" data-name="' + soldOut[j].name + '">';
+					soldOutStr += '<div class="play" data-type="share" data-id="' + soldOut[j].id + '" data-cover="' + soldOut[j].cover +
+						'" data-name="' + soldOut[j].name + '">';
 					soldOutStr += '<img src="../image/extension.png" />';
 					soldOutStr += '<div id="share">推广</div>';
 					soldOutStr += '</div>';
@@ -763,7 +739,8 @@
 					offSaleStr += '<img src="../image/delete.png" />';
 					offSaleStr += '<div style="margin-top: -1px;">删除</div>';
 					offSaleStr += '</div>';
-					offSaleStr += '<div class="play" data-type="share" data-id="' + offSale[k].id + '" data-cover="' + offSale[k].cover + '" data-name="' + offSale[k].name + '">';
+					offSaleStr += '<div class="play" data-type="share" data-id="' + offSale[k].id + '" data-cover="' + offSale[k].cover +
+						'" data-name="' + offSale[k].name + '">';
 					offSaleStr += '<img src="../image/extension.png" />';
 					offSaleStr += '<div>推广</div>';
 					offSaleStr += '</div>';

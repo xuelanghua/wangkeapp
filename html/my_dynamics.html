@@ -40,7 +40,7 @@
 						</div>
 						<div>
 							<button type="button" class="mui-btn mui-button-row del-btn" @tap="delBtn(items.id,index)">删除</button>
-							<button type="button" class="mui-btn mui-button-row share-btn" @tap="shareBtn(items.id)">转发</button>
+							<button type="button" class="mui-btn mui-button-row share-btn" @tap="shareBtn(items.id,items.title,items.cover[0])">转发</button>
 						</div>
 					</div>
 				</li>
@@ -114,7 +114,7 @@
 					skip: skipNum,
 					limit: 5
 				}, function(res) {
-					muiCont.dataList=[];
+					// logs(res);
 					var data = res.data;
 					if (res.errno == 0 && skipNum == 1) {
 						muiCont.dataList = data;
@@ -131,7 +131,7 @@
 						}
 						mui('#mui-content').pullRefresh().endPullupToRefresh();
 					} else {
-						if(!muiCont.dataList.length>0){
+						if (!muiCont.dataList.length > 0) {
 							muiCont.voidDy = true;
 						}
 						mui('#mui-content').pullRefresh().endPulldown();
@@ -155,8 +155,62 @@
 				}, 'json')
 			}
 			// 转发按钮
-			function shareBtn(e) {
-				message(e);
+			function shareBtn(id, cont, img) {
+				var imgs = img.substring(img.lastIndexOf("/"));
+				var sd_path = "_downloads" + imgs;
+				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+					shareToMiniprogram({
+						title: cont,
+						content: cont,
+						thumbs: [sd_path],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				}, function(e) {
+					plus.nativeUI.showWaiting("图片处理中…");
+					var imgpath = '';
+					var imgDtask = plus.downloader.createDownload(img, {
+						method: 'GET'
+					}, function(d, status) {
+						if (status == 200) {
+							//图片压缩
+							plus.zip.compressImage({
+									src: d.filename,
+									dst: d.filename,
+									overwrite: true,
+									width: '500px',
+									format: 'jpg',
+									quality: 90
+								},
+								function(e) {
+									imgpath = e.target;
+									if (imgpath) {
+										plus.nativeUI.closeWaiting();
+										shareToMiniprogram({
+											title: cont,
+											content: cont,
+											thumbs: [imgpath],
+											miniProgram: {
+												id: 'gh_9fa5f42ab939',
+												// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+												path: '/longbing_card/pages/index/index?currentTabBar=toNews&to_uid='+userInfo.id,
+												webUrl: 'https://app.wangkeapp.cn/'
+											}
+										}, 'miniProgram');
+									}
+								},
+								function(error) {
+									message("Compress error!");
+								});
+						} else {
+							mui.toast('保存失败')
+						}
+					});
+					imgDtask.start()
+				});
 			}
 			// 打开详情
 			function opDetail(detailId) {
@@ -172,7 +226,6 @@
 			mui(".mui-content").on("tap", ".create-dynamics", function() {
 				openPage('issue_dynamics.html', 'issue_dynamics', '#f7f7f7', '');
 			})
-			 
 		</script>
 	</body>
 

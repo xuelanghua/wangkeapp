@@ -289,8 +289,8 @@
 				<div class="title"><span>我的粉丝（{{memberInfo.fans_number||0}}）</span><span class="mui-navigate-right accumulated">更多</span></div>
 				<ul v-if="fansLists.length>0" class="mui-table-view">
 					<li class="mui-table-view-cell" v-for="(list,index) in fansLists" :key="index">
-						<img class="user-head-img" :src="list.avatarUrl">
-						<div class="flex-right">
+						<img class="user-head-img" :data-fid="list.id" :src="list.avatarUrl">
+						<div class="flex-right" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
 							<div class="mui-clearfix">
 								<span class="user-name">{{list.nickName}}</span>
 								<span :class="[list.group_name=='创客'?'vip1':'vip']">{{list.group_name}}</span>
@@ -401,6 +401,43 @@
 			// 升级
 			mui('.mui-content').on('tap', '.updata-position', function() {
 				openPage('renew.html', 'renew', '#f7f7f7', '');
+			})
+			mui(".mui-content").on('tap', '.user-head-img', function() {
+				var fid = this.dataset.fid;
+				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+					fid: fid
+				});
+			})
+			mui(".mui-content").on('tap', '.flex-right', function() {
+				var cid = this.dataset.cid,
+					chatName = this.dataset.chatname,
+					avatar = this.dataset.avatar;
+				logs(cid);
+				openPage('dialog.html', 'dialog', '#f7f7f7', {
+					cid: cid,
+					chatName: chatName,
+					avatar: avatar,
+					barStyle: 'dark'
+				});
+			})
+			
+			mui(".mui-content").on('tap', '.user-head-img', function() {
+				var fid = this.dataset.fid;
+				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+					fid: fid
+				});
+			})
+			mui(".mui-content").on('tap', '.flex-right', function() {
+				var cid = this.dataset.cid,
+					chatName = this.dataset.chatname,
+					avatar = this.dataset.avatar;
+				logs(cid);
+				openPage('dialog.html', 'dialog', '#f7f7f7', {
+					cid: cid,
+					chatName: chatName,
+					avatar: avatar,
+					barStyle: 'dark'
+				});
 			})
 
 			function getFans() {
