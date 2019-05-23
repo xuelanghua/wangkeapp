@@ -112,10 +112,17 @@
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		 
-		// 初始化字体大小结束
 
+		// 初始化字体大小结束
+		var auths = null;
 		mui.plusReady(function() {
+			// 获取登录授权认证服务列表
+			plus.oauth.getServices(function(services) {
+				auths = services;
+			}, function(e) {
+				console.log("获取分享服务列表失败：" + e.message + " - " + e.code);
+			});
+			
 			var webveiw = plus.webview.all();
 			var webviewName = new Array();
 			mui.each(webveiw, function(index, item) {
@@ -158,6 +165,9 @@
 					var index = event.index;
 					switch (index) {
 						case 1:
+							//注销所有登录授权认证服务
+							authLogout();
+							
 							//注销账号
 							localStorage.removeItem("user");
 							var login = plus.webview.create("login.html", "login", {
@@ -245,5 +255,19 @@
 				openPage('about_wangke.html', 'about_wangke', '#f7f7f7', '')
 			})
 		})
+		
+		//注销所有登录授权认证服务
+		function authLogout() {
+			for (var i in auths) {
+				var s = auths[i];
+				if (s.authResult) {
+					s.logout(function(e){
+						console.log("注销登录认证成功");
+					}, function(e){
+						console.log("注销登录认证失败");
+					});
+				}
+			}
+		}
 	</script>
 </html>
