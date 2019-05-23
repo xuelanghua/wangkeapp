@@ -229,7 +229,8 @@
 				uids: [],
 				teamName: '',
 				notice: '',
-				imagePath: []
+				imagePath: [],
+				data_status:false
 			},
 			mounted: function() {
 				mui('.mui-content .mui-switch').each(function() { 
@@ -260,7 +261,8 @@
 				name: app.teamName,
 				notice: app.notice,
 				uids: app.uids.join(","),
-				token: userInfo.token
+				token: userInfo.token,
+				data_status:app.data_status
 			}, function(res) {
 				if (res.errno == 0) {
 					message("创建成功！");
@@ -281,5 +283,12 @@
 			app.uids = e.detail.idGroup;
 			// logs(e.detail)
 		});
+		mui('.mui-content').on('toggle','.mui-switch',function(event){
+			if(event.detail.isActive){
+				app.data_status=1;
+			}else{
+				app.data_status=0;
+			}
+		})
 	</script>
 </html>

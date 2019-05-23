@@ -66,6 +66,18 @@
 				text-align: justify;
 				margin-bottom: 0;
 			}
+			ul{
+				margin: 0;
+				padding: 0;
+				list-style-type: none;
+			}
+			ul li{
+				padding: 10px 0;
+				/* background-color: #0062CC; */
+			}
+			.input-money-cont{
+				padding: 5px 10px;
+			}
 		</style>
 	</head>
 	<body>
@@ -76,12 +88,20 @@
 		</header>
 
 		<div class="mui-content">
-			<div class="money mui-clearfix">
-				<div class="mui-pull-left">输入红包金额(必填)</div>
-				<div class="mui-pull-right input-money mui-clearfix">
-					<input type="number" name="redpacket_fee" placeholder="0.5~200" /><span>元</span>
-				</div>
-			</div>
+			<ul class="money input-money-cont">
+				<li class="mui-clearfix">
+					<div class="mui-pull-left">输入红包金额(必填)</div>
+					<div class="mui-pull-right input-money">
+						<input type="number" name="redpacket_fee" placeholder="0.5~200" /><span>元</span>
+					</div>
+				</li>
+				<li class="mui-clearfix">
+					<div class="mui-pull-left">输入红包个数(必填)</div>
+					<div class="mui-pull-right input-money">
+						<input type="number" name="redpacket_num" placeholder="1~500" /><span>个</span>
+					</div>
+				</li>
+			</ul>
 			<div class="money">
 				<div class="redpacket-wish-title">输入红包祝福语(必填)</div>
 				<textarea class="redpacket-wish" name="redpacket_wish" rows="3" cols="" placeholder="恭喜发财"></textarea>
@@ -113,18 +133,28 @@
 			document.querySelector('#submit').addEventListener('tap', function() {
 				if (!flag) return;
 				var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
+				var redpacket_num = parseFloat(document.querySelector('input[name=redpacket_num]').value);
 				// console.log(redpacket_fee);
 				var redpacket_wish = document.querySelector('textarea[name=redpacket_wish]').value;
 				if (isNaN(redpacket_fee)) {
 					plus.nativeUI.toast('请输入红包金额!');
 					return;
 				}
+				if (isNaN(redpacket_num)) {
+					plus.nativeUI.toast('请输入红包个数!');
+					return;
+				}
 
+				if (redpacket_num < 1 || redpacket_num > 500) {
+					plus.nativeUI.toast('红包个数输入错误!');
+					return;
+				}
+				
 				if (redpacket_fee < 0.5 || redpacket_fee > 200) {
 					plus.nativeUI.toast('红包金额输入错误!');
 					return;
 				}
-
+				
 				if (redpacket_wish.length == 0) {
 					plus.nativeUI.toast('请输入红包祝福语!');
 					return;
@@ -135,7 +165,8 @@
 					action: 'redpacket_setting',
 					redpacket_fee: redpacket_fee,
 					redpacket_wish: redpacket_wish,
-					token: userInfo.token
+					token: userInfo.token,
+					redpacket_number:redpacket_num
 				}, function(res) {
 					if (res.errno == 0) {
 						plus.nativeUI.toast(res.message);
@@ -151,7 +182,6 @@
 						flag = true;
 						plus.nativeUI.toast(res.message);
 					}
-					// console.log(JSON.stringify(data));
 				}, 'json');
 			})
 		})
@@ -167,9 +197,11 @@
 					if (setting.redpacket_fee > 0) {
 						document.querySelector('input[name=redpacket_fee]').value = setting.redpacket_fee;
 					}
-
 					if (setting.redpacket_wish.length > 0) {
 						document.querySelector('textarea[name=redpacket_wish]').value = setting.redpacket_wish;
+					}
+					if (setting.redpacket_number.length > 0) {
+						document.querySelector('input[name=redpacket_num]').value = setting.redpacket_number;
 					}
 				}
 				plus.nativeUI.closeWaiting();

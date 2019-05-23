@@ -281,22 +281,26 @@
 				color: #333333;
 				margin: 0.2rem 0 !important;
 			}
-			.team-members ul.mui-table-view{
-				margin-bottom:10px;
+
+			.team-members ul.mui-table-view {
+				margin-bottom: 10px;
 			}
-			.mui-table-view .mui-table-view-cell{
+
+			.mui-table-view .mui-table-view-cell {
 				display: flex;
 				width: 100%;
 				align-items: center;
 				justify-content: space-between;
 				margin: 0;
-				padding:10px 0;
+				padding: 10px 0;
 				font-size: 0.30rem;
 			}
-			.mui-table-view .mui-table-view-cell.mui-active{
+
+			.mui-table-view .mui-table-view-cell.mui-active {
 				background-color: #FFFFFF;
 			}
-			.mui-table-view-cell:last-child:after{
+
+			.mui-table-view-cell:last-child:after {
 				height: 0;
 				left: 0;
 			}
@@ -327,11 +331,11 @@
 				</h2>
 				<p>{{desc}}</p>
 			</div>
-			<div  v-if="role" style="margin-bottom: 0.2rem;padding: 0 0.2rem; background-color: #FFFFFF;">
+			<div v-if="role" style="margin-bottom: 0.2rem;padding: 0 0.2rem; background-color: #FFFFFF;">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
 						<h2 class="headline team-member-more">数据查看</h2>
-						<div class="mui-switch">
+						<div class="mui-switch" :class="data_status?'mui-active':''">
 							<div class="mui-switch-handle"></div>
 						</div>
 					</li>
@@ -413,23 +417,24 @@
 			viewport = 750
 		}
 		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		 
+
 		// 初始化字体大小结束
 		var app = new Vue({
 			el: "#mui-content",
-			data:{
-					desc: '',
-					teamName: '',
-					newTeamName: '',
-					iseditDesc: false,
-					iseditName: false,
-					conts: '',
-					role: 1,
-					tid: '',
-					teamMember: [],
-					applyList: [],
-					teamNum: 1,
-					captain_uid:0
+			data: {
+				desc: '',
+				teamName: '',
+				newTeamName: '',
+				iseditDesc: false,
+				iseditName: false,
+				conts: '',
+				role: 1,
+				tid: '',
+				teamMember: [],
+				applyList: [],
+				teamNum: 1,
+				captain_uid: 0,
+				data_status: false
 			},
 			methods: {
 				showEdit: function() {
@@ -504,8 +509,7 @@
 					})
 				}
 			},
-			mounted: function() {
-			}
+			mounted: function() {}
 		})
 		mui.plusReady(function() {
 			var self = plus.webview.currentWebview();
@@ -523,34 +527,40 @@
 		})
 		// 添加团队成员
 		mui(".mui-content").on("tap", ".member-selection", function() {
-			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', {tid: app.tid});
+			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', {
+				tid: app.tid
+			});
 		})
 		// 更多成员
 		mui(".mui-content").on("tap", ".team-member-more", function() {
 			logs(app.tid);
 			openPage('team_members.html', 'team_members', '#f7f7f7', {
 				tid: app.tid,
-				captainUid:app.captain_uid
+				captainUid: app.captain_uid
 			});
 		})
-		
+
 		// 获取团队信息
 		function getInfo() {
 			mui.post($ajaxUrl + 'team&action=team_info', {
 				token: userInfo.token,
-				team_id: app.tid 
+				team_id: app.tid
 			}, function(res) {
-				console.log(JSON.stringify(res));
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
 					app.teamNum = res.data.current_number;
-					app.captain_uid=res.data.captain_uid;
+					app.captain_uid = res.data.captain_uid;
 					var captainId = res.data.captain_uid;
 					if (userInfo.id == captainId) {
 						app.role = 1;
 					} else {
 						app.role = 0;
+					}
+					if (res.data.data_status == 1) {
+						app.data_status = true;
+					} else {
+						app.data_status = false;
 					}
 				}
 			}, 'json');
@@ -607,5 +617,20 @@
 			getInfo();
 			getMember();
 		});
+		mui('.mui-content').on('toggle', '.mui-switch', function(event) {
+			if(event.detail.isActive){
+				app.data_status=1;
+			}else{
+				app.data_status=0;
+			}
+			logs(app.data_status);
+			mui.post($ajaxUrl + 'team&action=edit_data_status', {
+				token: userInfo.token,
+				team_id: app.tid,
+				status: app.data_status
+			}, function(res) {
+				logs(res);
+			}, 'json');
+		})
 	</script>
 </html>
