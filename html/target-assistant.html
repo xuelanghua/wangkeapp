@@ -9,6 +9,109 @@
 			[v-cloak] {
 				display: none;
 			}
+
+			.target-groups {
+				padding: 0;
+				margin: 0;
+				list-style-type: none;
+			}
+
+			.target-groups .target-lists {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				margin: 20px 0;
+				padding: 0 0.6rem;
+			}
+
+			.target-lists .timer {
+				background-color: #DDDDDD;
+				color: #FFFFFF;
+				font-size: 0.22rem;
+				padding: 2px 6px;
+				border-radius: 3px;
+				margin-bottom: 0.1rem;
+			}
+
+			.target-lists img {
+				max-width: 100%;
+			}
+
+			.target-lists-head p {
+				color: #FFFFFF;
+				margin-bottom: 0;
+				font-size: 0.28rem;
+				line-height: 1.2;
+				text-align: justify;
+			}
+
+			.target-head {
+				position: relative;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			.target-lists-head {
+				position: absolute;
+				padding: 0 0.25rem 0.2rem 0.25rem;
+				bottom: 0;
+			}
+
+			.mui-card-content-inner {
+				padding: 0;
+			}
+
+			.mui-card {
+				border-radius: 5px;
+				box-shadow: none;
+			}
+
+			.desc-cont {
+				margin: 0;
+				padding: 0.1rem 0.25rem;
+				list-style-type: none;
+			}
+
+			.desc-cont li {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.15rem 0;
+				font-size: 0.28rem;
+				position: relative;
+			}
+
+			.desc-cont li span {
+				color: #999999;
+			}
+
+			.desc-cont li p,
+			.desc-cont li p span {
+				margin: 0;
+				color: #333333;
+				font-size: 0.28rem;
+			}
+
+			.desc-cont li:last-of-type:after {
+				position: absolute;
+				bottom: -0.1rem;
+				right: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #F2F2F2;
+			}
+
+			.check-detail {
+				padding: 0.3rem 0.25rem;
+				position: relative;
+				color: #2289ff;
+			}
+			.mui-navigate-right:after{
+				font-size: 0.38rem;
+			}
 		</style>
 	</head>
 	<body>
@@ -16,8 +119,55 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">目标助理</h1>
 		</header>
-		<div id="mui-content" class="mui-content target-assistant" v-cloak>
-			{{random}}
+		<div id="mui-content" class="mui-content assistant" v-cloak>
+			<ul class="target-groups">
+				<li class="target-lists">
+					<span class="timer">5月20日 12:50</span>
+					<div class="mui-card">
+						<div class="mui-card-content-inner">
+							<div class="target-head">
+								<img src="../image/every-day-img0.jpg">
+								<div class="target-lists-head">
+									<p>【尔之短处，在言语欠钝讷，举止欠端重，看书不能深入，而作文不能峥嵘。若能从此三事上下一番苦功，进之以猛，持之以恒，不过一二年，自尔精进而不觉】</p>
+								</div>
+							</div>
+							<ul class="desc-cont">
+								<li><span>曝光</span>
+									<p>
+										<pan>10/30</pan><span>&nbsp;[未达标]</span>
+									</p>
+								</li>
+								<li><span>拓客</span>
+									<p>
+										<pan>10/30</pan><span>&nbsp;[未达标]</span>
+									</p>
+								</li>
+								<li><span>客户跟进</span>
+									<p>
+										<pan>10/30</pan><span>&nbsp;[未达标]</span>
+									</p>
+								</li>
+								<li><span>有效沟通</span>
+									<p>
+										<pan>10/30</pan><span>&nbsp;[未达标]</span>
+									</p>
+								</li>
+								<li><span>转介绍</span>
+									<p>
+										<pan>10/30</pan><span>&nbsp;[未达标]</span>
+									</p>
+								</li>
+								<li><span>成交</span>
+									<p>
+										<pan>10/30</pan><span>&nbsp;[未达标]</span>
+									</p>
+								</li>
+							</ul>
+							<div class="check-detail"><span class="mui-navigate-right">查看详情</span></div>
+						</div>
+					</div>
+				</li>
+			</ul>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -41,9 +191,12 @@
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
 					mui.plusReady(function() {
-						var arr=['01','02','03','04','05'];
-						var idx = Math.floor((Math.random() * arr.length));
-						app.random=arr[idx];
+						// var arr=['01','02','03','04','05'];
+						// var idx = Math.floor((Math.random() * arr.length));
+						// app.random=arr[idx];
+						mui(".mui-content").on('tap','.check-detail',function(){
+							openPage('target_detail.html','target_detail','#f7f7f7','');
+						})
 					})
 				}
 			})
