@@ -427,11 +427,14 @@
 						}, function(res) {
 							if (res.errno == 0) {
 								app.dissolve = false;
-								plus.webview.close('webview');
-								plus.webview.close('team_members');
-								plus.webview.close('team_detail');
-								plus.webview.close('weburl');
+								mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
 								mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'changeMy');
+								setTimeout(function() {
+									plus.webview.close('webview');
+									plus.webview.close('team_members');
+									plus.webview.close('team_detail');
+									plus.webview.close('weburl');
+								}, 500)
 							} else {
 								app.dissolve = false;
 								message(res.message);

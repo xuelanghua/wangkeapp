@@ -6,47 +6,65 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.css" rel="stylesheet" />
-		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/showLoading.css" rel="stylesheet" />
 		<style>
-			.clearfix{
+			.clearfix {
 				clear: both;
 			}
-			.Number{
-				padding: 20px 10px;
-				font-size: 15px;
+			.mui-bar-nav~.mui-content{
+				padding-top: 90px;
 			}
-			.shu{
+			.Number {
+				height: 45px;
+				font-size: 15px;
+				position: fixed;
+				top: 44px;
+				background-color: #F2F2F2;
+				width: 100%;
+				display: flex;
+				align-items: center;
+				padding-left: 20px;
+				z-index: 12;
+			}
+
+			.shu {
 				color: #2289FF;
 			}
-			.visitor-list{
+
+			.visitor-list {
 				padding-left: 10px;
 				background-color: #FFFFFF;
 			}
-			.visitor-list{
+
+			.visitor-list {
 				padding: 10px 0 30px 0;
 			}
-			.listL{
+
+			.listL {
 				width: 40px;
 				height: 40px;
 				margin-left: 18px;
 				margin-top: 18px;
 				border-radius: 20px;
 			}
-			.listL img{
+
+			.listL img {
 				width: 100%;
 				height: 100%;
 				border-radius: 20px;
 			}
-			.listr{
+
+			.listr {
 				width: 80%;
 				padding: 15px 0;
 				border-bottom: 1px solid #F2F2F2;
 			}
-			.listr-title{
+
+			.listr-title {
 				font-size: 15px;
 			}
-			.fenx{
+
+			.fenx {
 				font-size: 10px;
 				border-radius: 15px;
 				padding: 3px 10px;
@@ -55,31 +73,35 @@
 				color: #FFFFFF;
 				margin-left: 10px;
 			}
-			.time{
+
+			.time {
 				margin-left: 25px;
 			}
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;">
+		<header class="mui-bar mui-bar-nav" style="box-shadow: none;">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">文章访客</h1>
 		</header>
-
 		<div class="mui-content">
 			<div class="Number">
 				<span>
 					<span>文章访客数量：</span>
-					<span class="shu"><font id="read_num"></font>人</span>
+					<span class="shu">
+						<font id="read_num"></font>人
+					</span>
 				</span>
 				<span style="margin-left: 25px;">
 					<span>分享：</span>
-					<span class="shu"><font id="share_num"></font>次</span>
+					<span class="shu">
+						<font id="share_num"></font>次
+					</span>
 				</span>
 			</div>
 			<div class="visitor-list" id="read_list">
-<!-- 				<div class="list">
+				<!-- 				<div class="list">
 					<div class="listL mui-pull-left">
 						<img src="../image//bj.jpg">
 					</div>
@@ -148,18 +170,16 @@
 			</div>
 			<div id="read_bottom"></div>
 		</div>
-
 	</body>
-
 </html>
 <script src="../js/mui.js"></script>
 <script src="../js/util.js"></script>
 <script src="../js/showLoading.js"></script>
 <script>
 	var skip = 1;
-	var limit = 8;
+	var limit = 12;
 	var loadding = 0;
-	var article_id='';//文章id
+	var article_id = ''; //文章id
 	mui.init({
 		swipeBack: false, //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
 		pullRefresh: {
@@ -169,33 +189,41 @@
 				auto: false,
 				contentrefresh: "正在加载...",
 				contentnomore: '没有更多数据了',
-				callback: pullfresh_function
+				callback: function() {
+					loadding = 1;
+					pullfresh_function();
+				}
 			}
 		}
 	});
 	mui.plusReady(function() {
-		mui.showLoading("正在加载..","div");
-		article_id=plus.webview.currentWebview().article_id;
+		mui.showLoading("正在加载..", "div");
+		article_id = plus.webview.currentWebview().article_id;
 		pullfresh_function();
 	})
-	function pullfresh_function(){
+
+	function pullfresh_function() {
 		var userInfo = getUserInfo();
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
 			token: userInfo.token,
 			action: 'article_read',
-			id:article_id,
-			type:'list',
+			id: article_id,
+			type: 'list',
 			skip: skip,
 			limit: limit
 		}, function(data) {
-			console.log(JSON.stringify(data));
-			if(data.errno=='0'){
-				document.getElementById('read_num').innerHTML =data.data.total;
-				document.getElementById('share_num').innerHTML =data.data.share_times;
-				var str='';
-				for(i in data.data.datas){
-					str+='<div class="list"><div class="listL mui-pull-left"><img src="'+data.data.datas[i].headimgurl+'"></div><div class="listr mui-pull-right"><div class="listr-title"><div><span>'+data.data.datas[i].nickname+'</span></div><div style="font-size: 12px;color: #999999;margin-top: 5px;"><span>'+data.data.datas[i].add_time+'</span><span class="time"><span>停留：</span><span>'+data.data.datas[i].stay_time+'分钟</span></span></div></div></div><div class="clearfix"></div></div>';
+			// console.log(JSON.stringify(data));
+			if (data.errno == '0') {
+				document.getElementById('read_num').innerHTML = data.data.total;
+				document.getElementById('share_num').innerHTML = data.data.share_times;
+				var str = '';
+				for (i in data.data.datas) {
+					str += '<div class="list"><div class="listL mui-pull-left"><img src="' + data.data.datas[i].headimgurl +
+						'"></div><div class="listr mui-pull-right"><div class="listr-title"><div><span>' + data.data.datas[i].nickname +
+						'</span></div><div style="font-size: 12px;color: #999999;margin-top: 5px;"><span>' + data.data.datas[i].add_time +
+						'</span><span class="time"><span>停留：</span><span>' + data.data.datas[i].stay_time +
+						'分钟</span></span></div></div></div><div class="clearfix"></div></div>';
 				}
 				if (skip == 1) {
 					document.getElementById('read_list').innerHTML = str;
@@ -203,17 +231,17 @@
 					document.getElementById('read_list').innerHTML += str;
 				}
 				skip++;
-			}else{
-				loadding = 1;
+			} else {
+				loadding = 2;
 			}
 		}, 'json');
-		setTimeout(function(){
-			mui.hideLoading();
-		},500);
-		if (loadding == 0) {
-			this.endPullupToRefresh(false);
-		} else {
-			this.endPullupToRefresh(true);
-		}
+		mui.hideLoading();
+		setTimeout(function() {
+			if (loadding == 1) {
+				mui('#read_bottom').pullRefresh().endPullupToRefresh(false);
+			} else if (loadding == 2) {
+				mui('#read_bottom').pullRefresh().endPullupToRefresh(true);
+			}
+		}, 1500)
 	}
 </script>

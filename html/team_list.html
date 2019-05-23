@@ -91,15 +91,14 @@
 					createList: null,
 					joinList: null,
 					createFlag: false,
-					joinFlag: false
+					joinFlag: false,
+					teamLists:{}
 				},
 				mounted: function() {
 					mui.plusReady(function() {
-						window.addEventListener('refreshTeamList', function() {
-							getTeamList();
-						});
 						var self = plus.webview.currentWebview();
 						var teamList = self.teamList;
+						vm.teamLists=self.teamList;
 						var createList = new Array();
 						var joinList = new Array();
 						mui.each(teamList, function(index, item) {
@@ -133,17 +132,23 @@
 				},
 				methods: {
 					teamDetail: function(team_id) {
-						fnOpenWin('webview.html', 'webview', {
-							statusbar: {
-								background: '#FFFFFF'
-							}
-						}, {
-							tid: team_id,
-							title: '团队',
-							statusBarStyle: 'dark',
-							url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=' + team_id +
-								'&m=longbing_card'
-						}, 'slide-in-right');
+						if (vm.teamLists[0].data_status!=0||vm.teamLists[0].is_captain!=0) {
+							fnOpenWin('webview.html', 'webview', {
+								statusbar: {
+									background: '#FFFFFF'
+								}
+							}, {
+								tid: team_id,
+								title: '团队',
+								statusBarStyle: 'dark',
+								url: 'https://app.wangkeapp.cn/addons/longbing_card/dist?uniacid=6&id=' + team_id +
+									'&m=longbing_card'
+							}, 'slide-in-right');
+						} else {
+							openPage('team_detail.html','team_detail','#f7f7f7',{
+								teamid: team_id
+							});
+						}
 					}
 				}
 			})
@@ -178,6 +183,9 @@
 					}
 				}, 'json');
 			}
+			window.addEventListener('refreshTeamList', function() {
+				getTeamList();
+			});
 		</script>
 	</body>
 
