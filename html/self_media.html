@@ -210,10 +210,14 @@
 				transition: all 0.3s ease-in-out;
 				-webkit-transition: all 0.3s ease-in-out;
 			}
-			.subMenu .mui-scroll-wrapper .mui-control-item{
+
+			.subMenu .mui-scroll-wrapper .mui-control-item {
 				color: #333333;
 			}
-			*{ touch-action: pan-y; }
+
+			* {
+				touch-action: pan-y;
+			}
 		</style>
 	</head>
 	<body>
@@ -404,7 +408,7 @@
 			//监听文章列表
 			mui("#article_list").on('tap', '.list1', function() {
 				//获取id
-				var id = this.getAttribute("data-id");
+				var id = this.dataset.id;
 				// 	var styles = {
 				// 		top: 20,
 				// 		bottom: 0
@@ -412,10 +416,42 @@
 				// 	var extras = {
 				// 		article_id: id
 				// 	};
-				// 	var w = plus.webview.create('article.html', 'article.html', styles, extras);
-				// 	w.show(); // 显示窗口
-				openPage('article.html', 'article', '#ffffff', {
-					article_id: id
+				// var w = plus.webview.create('article.html', 'article.html', {
+				// 	hardwareAccelerated: false
+				// }, {
+				// 	article_id: id
+				// });
+				// w.show(); // 显示窗口
+				mui.openWindow({
+					url: 'article.html',
+					id: 'article',
+					styles: {
+						bounce: 'none',
+						scrollsToTop: true,
+						popGesture: 'close',
+						hardwareAccelerated: false,
+						statusbar: {
+							background: "#ffffff"
+						}
+					},
+					extras:{
+						article_id: id
+					},
+					createNew: false,
+					show: {
+						autoShow: true,
+						aniShow: 'slide-in-right',
+						duration: 300,
+						event: 'titleUpdate',
+						extras: {
+							acceleration: 'auto',
+							capture: '',
+							otherCapture: ''
+						}
+					},
+					waiting: {
+						autoShow: false
+					}
 				})
 			})
 

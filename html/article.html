@@ -378,14 +378,15 @@
 		swipeBack: false,
 	});
 
-	var article_id = ''; //文章id
-	var time = 0; //停留时间
-	var rid = 0;
-	var shares = null;
-	var Intent = null,
+	var article_id = '', //文章id
+		time = 0, //停留时间
+		rid = 0,
+		shares = null,
+		Intent = null,
 		File = null,
 		Uri = null,
-		main = null;
+		main = null,
+		userInfo = getUserInfo();
 	mui.plusReady(function() {
 		mui.showLoading("正在加载..", "div");
 		updateSerivces();
@@ -511,7 +512,6 @@
 	}
 
 	function article_read() {
-		var userInfo = getUserInfo();
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
 			token: userInfo.token,
@@ -526,7 +526,6 @@
 	}
 
 	function article_stay() {
-		var userInfo = getUserInfo();
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
 			token: userInfo.token,
@@ -541,7 +540,6 @@
 	}
 	//文章详情
 	function article_info() {
-		var userInfo = getUserInfo();
 		var str = '';
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
@@ -604,7 +602,6 @@
 	}
 
 	function adv_list() {
-		var userInfo = getUserInfo();
 		var str = '';
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
@@ -641,7 +638,6 @@
 	}
 
 	function comment_list(comment) {
-		var userInfo = getUserInfo();
 		var str = '';
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
@@ -664,7 +660,6 @@
 	}
 
 	function read_released(content) {
-		var userInfo = getUserInfo();
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
 			token: userInfo.token,
@@ -824,7 +819,6 @@
 
 	//分享成功提交数据
 	function share_success() {
-		var userInfo = getUserInfo();
 		var url = $ajaxUrl + 'article';
 		mui.post(url, {
 			token: userInfo.token,

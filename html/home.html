@@ -58,20 +58,20 @@
 			.titlecontentR {
 				width: 50%;
 				float: right;
+				/* background-color: #0062CC; */
 			}
 
+			.titlecontentR span,
 			.titlecontentR p {
-				float: left;
-				margin-top: 10px;
-				margin-left: 10px;
 				font-size: 12px;
-				margin-right: 10px;
+				color: #333333;
+				margin-bottom: 0;
 			}
-
-			.titlecontent p {
-				color: #000000;
+			.titlecontentR .city-name{
+				padding-left: 10%;
+				margin-top: -15px;
+				text-align: left;
 			}
-
 			.Notice {
 				height: 41px;
 				overflow: hidden;
@@ -440,11 +440,50 @@
 				justify-content: center;
 				z-index: 13;
 			}
+
 			body {
-			   padding-top: constant(safe-area-inset-top);
+				padding-top: constant(safe-area-inset-top);
 			}
+
 			.mui-bar.mui-bar-nav {
-			   top: constant(safe-area-inset-top);
+				top: constant(safe-area-inset-top);
+			}
+
+			.titlecontentR .weather-info {
+				margin-top: -10px;
+			}
+
+			.titlecontentR .weather-info p {
+				font-size: 12px;
+				color: #333333;
+				margin-bottom: 0;
+				padding: 0;
+				line-height: 1.2;
+				flex-grow: 1;
+				text-align: center;
+				margin-top: 0;
+			}
+
+			.weather-img {
+				position: relative;
+				width: 60px;
+				height: 50px;
+				margin: 0 auto;
+				overflow: hidden;
+			}
+
+			.weather-img .icon {
+				position: relative;
+				width: 50px;
+				height: 50px;
+				left: 0;
+				margin: 0 auto;
+			}
+
+			.flex-left-cont {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
 			}
 		</style>
 	</head>
@@ -462,22 +501,19 @@
 				<!-- <a href="#popover" id="openPopover">
 					<img src="../image/index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;margin-right: 10px;">
 				</a> -->
-				<div class="titlecontent">
+				<div class="titlecontent mui-clearfix">
 					<div class="titlecontentL">
 						<li id="scan">
 							<img src="../image/index-scan.png">
 							<p>扫一扫</p>
 						</li>
-						<!-- <a href="html/payment_code.html"> -->
 						<li id="payment_code">
 							<img src="../image/index-receipt-code.png">
 							<p>收款码</p>
 						</li>
-						<!-- </a> -->
-						<div class="clearfix"></div>
 					</div>
 					<div class="titlecontentR">
-						<p id="city">昆明市</p>
+						<p class="city-name" id="city">昆明市</p>
 						<!-- <div class="icon sun-shower">
 							<div class="cloud"></div>
 							<div class="sun">
@@ -485,23 +521,26 @@
 							</div>
 							<div class="rain"></div>
 						</div> -->
-						<div id="weather_img" style="margin-left: 10px;">
-							<div class="icon sun-shower">
-								<div class="cloud"></div>
-								<div class="sun">
-									<div class="rays"></div>
+						<div class="flex-left-cont">
+							<div class="weather-img" id="weather_img">
+								<div class="icon sun-shower">
+									<div class="cloud"></div>
+									<div class="sun">
+										<div class="rays"></div>
+									</div>
 								</div>
 							</div>
+							<div class="weather-info">
+								<p>今天</p>
+								<p>
+									<font id="temperature">-°~-°</font>
+								</p>
+								<p>
+									<font id="weather">-</font>
+								</p>
+							</div>
 						</div>
-						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -55px;">今天</span>
-						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -35px;">
-							<font id="temperature">-°~-°</font>
-						</span>
-						<span style=" width: 60px;text-align: center; color: #000000;display: block;float: right;font-size: 12px;margin-top: -15px;">
-							<font id="weather">-</font>
-						</span>
 					</div>
-					<div class="clearfix"></div>
 				</div>
 			</header>
 			<div class="mui-content">
@@ -657,11 +696,11 @@
 		var qrType = 'card';
 		var userInfo = getUserInfo();
 		mui.plusReady(function() {
-			
-			if(plus.device.model === 'iPhoneX') {
+
+			if (plus.device.model === 'iPhoneX') {
 				logs("运行在iphoneX上");
 			}
-			
+
 			// var self = plus.webview.currentWebview();
 			// self.setStyle({
 			// 	bottom: 51
@@ -927,9 +966,10 @@
 				success: function(data) {
 					if (data.status == "success") {
 						var city = data.results[0].currentCity;
-						if (city.length > 3) {
-							city = city.substr(0, 3) + '...';
-						}
+						// var city = "红河哈尼族自治州天气不错";
+						// if (city.length > 3) {
+						// 	city = city.substr(0, 3) + '...';
+						// }
 						document.getElementById('city').innerHTML = city;
 						document.getElementById('temperature').innerHTML = data.results[0].weather_data[0].temperature;
 						document.getElementById('weather').innerHTML = data.results[0].weather_data[0].weather;
@@ -976,7 +1016,6 @@
 				interval: 2500 //自动轮播周期，若为0则不自动播放，默认为0；
 			});
 		}
-
 		//展示二维码
 		function showQrcode(type) {
 			mui.post($ajaxUrl + 'userqrcode&action=make_url', {

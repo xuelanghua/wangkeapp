@@ -13,6 +13,9 @@
 				align-items: center;
 				flex-direction: column;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -21,7 +24,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">我的动态</h1>
 		</header>
-		<div id="mui-content" class="mui-content my-dynamics-container">
+		<div id="mui-content" class="mui-content my-dynamics-container"  v-cloak>
 			<ul v-if="dataList" class="mui-table-view">
 				<li class="mui-table-view-cell" v-for="(items,index) in dataList" :key="index">
 					<h2 class="dynamics-title mui-ellipsis" @tap="opDetail(items.id)">{{items.title}}</h2>

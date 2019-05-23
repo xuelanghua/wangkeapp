@@ -161,10 +161,10 @@
 													</div>
 													<div class="left-bottom">
 														<div>
-															{{items.end_time}}
+															{{items.create_time}}
 														</div>
 														<div class="bottom-last">
-															已锁定
+															{{items.end_time}}
 														</div>
 													</div>
 												</div>
@@ -396,6 +396,9 @@
 				},
 				methods: {
 					onchangeTab: function(idx, tid) {
+						if(this.nowaday == tid){
+							return;
+						}
 						getCustomerList(tid)
 						for (var i = 0; i < this.tabs.length; i++) {
 							this.tabs[i].checked = false;
