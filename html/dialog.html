@@ -737,7 +737,6 @@
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
-
 						send({
 							sender: 'self',
 							type: 'text',
@@ -1054,7 +1053,8 @@
 										var message = {
 											sender: chatId,
 											type: data.data2.message_type,
-											content: data.data2.content
+											content:data.data2.content,
+											message_id:data.message_id
 										}
 										send(message);
 									} else {
@@ -1108,6 +1108,8 @@
 			var isFocus = null;
 			// 获取原来的高度
 			var oglHeight = document.querySelector("body").offsetHeight;
+
+			//显示操作菜单
 			mui('.mui-content').on("longtap", ".msg-content", function() {
 				// 获取高度
 				copytext = this.dataset.copytext;
@@ -1115,22 +1117,27 @@
 				sender = this.dataset.sender;
 				message_id = this.dataset.tag;
 				var tempHeight = document.querySelector("body").offsetHeight;
+
 				if (types == "text") {
 					document.querySelector(".copy-btn").style.display = "flex";
 				} else {
 					document.querySelector(".copy-btn").style.display = "none";
 				}
+
 				if (sender == "self") {
 					document.querySelector(".recall-btn").style.display = "flex";
 				} else {
 					document.querySelector(".recall-btn").style.display = "none";
 				}
+
 				if (tempHeight == oglHeight) {
-					mui('#middlePopover').popover('hide');
+					// mui('#middlePopover').popover('hide');
 					mui("#middlePopover").popover('toggle', document.getElementById(this.id));
 				} else {
-					var input = document.getElementById("msg-text");
-					input.blur();
+					// var input = document.getElementById("msg-text");
+					// input.focus();
+					// mui("#middlePopover").popover('toggle', document.getElementById(this.id));
+					plus.key.hideSoftKeybord();
 				}
 			})
 			// 删除单条聊天记录
@@ -1157,6 +1164,7 @@
 							selfDom.parentNode.removeChild(selfDom);
 						}
 						message('已删除');
+						getRecordList();
 					} else {
 						message('删除失败，请稍后重试');
 					}
@@ -1191,7 +1199,7 @@
 			})
 			// 聊天记录撤回
 			mui(".mui-popover").on("tap", ".recall-btn", function() {
-				logs(message_id);
+				// alert('撤回');
 				mui.post($ajaxUrl + 'chat&action=cancel', {
 					token: userInfo.token,
 					message_id: message_id
@@ -1212,12 +1220,14 @@
 							mols.parentNode.removeChild(mols);
 							selfDom.parentNode.removeChild(selfDom);
 						} else {
+							// selfDom.style.display="none";
 							selfDom.parentNode.removeChild(selfDom);
 						}
 						message('撤回成功');
-					} else if(res.errno == 2){
+						getRecordList();
+					} else if (res.errno == 2) {
 						message("超过三分钟，无法撤回");
-					}else{
+					} else {
 						message(res.message);
 					}
 				}, 'json');

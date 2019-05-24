@@ -128,7 +128,23 @@
 				padding:10px 0;
 				font-size: 0.30rem;
 			}
+			.mui-switch-blue.mui-active {
+				border: 2px solid #2289ff;
+				background-color: #2289ff;
+			}
+			.mui-table-view .mui-table-view-cell.mui-active{
+				background-color: #FFFFFF;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -144,7 +160,7 @@
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
 						<span>数据查看</span>
-						<div class="mui-switch">
+						<div class="mui-switch mui-switch-blue">
 							<div class="mui-switch-handle"></div>
 						</div>
 					</li>
@@ -215,13 +231,6 @@
 	<script type="text/javascript">
 		mui.init();
 		var userInfo = getUserInfo();
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		// 初始化字体大小结束
 		var app = new Vue({
 			el: '#create-team',
 			data: {
