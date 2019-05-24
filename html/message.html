@@ -523,15 +523,15 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						app.systemMsg = res.data;
-					} else {
-						message(res.message, "center");
-					}
-					for (var i = 0; i < res.data.length; i++) {
-						if (res.data[i].count > 0) {
-							document.querySelector('.system-red-tips').style.display = "inline-block";
-						} else {
-							document.querySelector('.system-red-tips').style.display = "none";
+						for (var i = 0; i < res.data.length; i++) {
+							if (res.data[i].count > 0) {
+								document.querySelector('.system-red-tips').style.display = "inline-block";
+							} else {
+								document.querySelector('.system-red-tips').style.display = "none";
+							}
 						}
+					} else {
+						// message(res.message, "center");
 					}
 				}, 'json')
 			}
