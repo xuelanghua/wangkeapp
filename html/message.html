@@ -36,6 +36,8 @@
 				float: left;
 				padding: 10px 0;
 				text-align: center;
+				position: relative;
+				overflow: hidden;
 			}
 			
 			.hd li.current{
@@ -121,6 +123,7 @@
 			.mui-slider-handle{
 				display: flex;
 				align-items: center;
+				width: 100%;
 			}
 			/* 清除聊天记录 */
 			.join-team-verify {
@@ -199,6 +202,15 @@
 			.Record_list{
 				display: flex;
 			}
+			.chat-red-tips,.system-red-tips{
+				position: relative;
+				width: 6px;
+				height: 6px;
+				background-color: #FF0000;
+				border-radius: 50%;
+				top: -2px;
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -210,12 +222,14 @@
 			<div class="hd mui-clearfix">
 				<li class="current" data-type="chat">
 					<span>
+						<span class="chat-red-tips"></span>
 						<span>聊天</span>
 						<span id="chat_total">(0)</span>
 					</span>
 				</li>
 				<li data-type="system">
 					<span>
+						<span class="system-red-tips"></span>
 						<span>通知消息</span>
 						<span>(0)</span>
 					</span>
@@ -299,22 +313,27 @@
 						</div> -->
 					</div>
 					<div class="tab-container system-cont" id="system_message" data-type="system">
-						<div style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>
-						<ul class="mui-table-view mui-hidden">
-							<li class="Record_list mui-table-view-cell target-assistant">
+						<ul class="mui-table-view">
+							<li class="Record_list mui-table-view-cell target-assistant" :data-genre="list.type" v-for="(list,index) in systemMsg"
+							 :key="index">
 								<div class="Record_listL mui-pull-left">
-									<img src="../image/target-icon.png">
+									<img v-if="list.type==1" src="../image/target-icon.png">
+									<img v-else-if="list.type==2" src="../image/news1.png">
+									<img v-else-if="list.type==3" src="../image/news2.png">
+									<img v-else-if="list.type==4" src="../image/news3.png">
+									<img v-else-if="list.type==5" src="../image/news4.png">
+									<img v-else src="../image/news5.png">
 								</div>
 								<div class="Record_listR mui-pull-right">
 									<div class="mui-clearfix">
 										<span class="mui-pull-left">
 											<span style="font-size: 15px;">目标助理</span>
 										</span>
-										<span class="mui-pull-right date">19/05/23</span>
+										<span class="mui-pull-right date">{{list.time}}</span>
 									</div>
 									<div class="tishi mui-clearfix" style="margin-top: 5px;">
-										<span class="mui-pull-left mui-ellipsis last-message">幸辛苦苦一天来看看自己成绩自己成绩自己成绩自己成绩</span>
-										<p class="mui-badge mui-pull-right">1</p>
+										<span class="mui-pull-left mui-ellipsis last-message">{{list.title}}</span>
+										<p v-if="list.count>0" class="mui-badge mui-pull-right">{{list.count}}</p>
 									</div>
 								</div>
 							</li>
@@ -411,6 +430,7 @@
 								</div>
 							</li> -->
 						</ul>
+						<div v-if="systemMsg==undefined||systemMsg==''" style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>
 					</div>
 				</div>
 			</div>
@@ -429,70 +449,108 @@
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: true,
-				beforeback: function() {
-					var self = plus.webview.currentWebview();
-					if (self.prePage == 'chat' || self.prePage == 'member') {
-						plus.navigator.setStatusBarStyle(plus.webview.barStyle);
-					}
+			var userInfo = getUserInfo();
+			var chatId = '';
+			var refresh = false;
+			var app = new Vue({
+				el: "#system_message",
+				data: {
+					systemMsg: []
+				},
+				mounted: function() {
+					mui.init({
+						swipeBack: true,
+						beforeback: function() {
+							var self = plus.webview.currentWebview();
+							if (self.prePage == 'chat' || self.prePage == 'member') {
+								plus.navigator.setStatusBarStyle(plus.webview.barStyle);
+							}
+						}
+					})
+
+					mui.plusReady(function() {
+						window.addEventListener('refreshNotice', function(e) {
+							refresh = true;
+							getChatList();
+							getSystemMsg();
+						})
+						getChatList();
+						mui('#chat_message').on('tap', '.Record_list', function() {
+							var cid = this.dataset.cid;
+							var chatName = this.dataset.name;
+							var avatar = this.dataset.avatar;
+							fnOpenWin('dialog.html', 'dialog', {
+								statusbar: {
+									background: '#F7F7F7'
+								}
+							}, {
+								cid: cid,
+								chatName: chatName,
+								barStyle: 'dark',
+								avatar: avatar
+							}, 'slide-in-right');
+						})
+
+						mui('header').on('tap', 'li', function() {
+							var type = this.dataset.type;
+							this.className = 'current';
+							if (type == 'system') {
+								document.querySelector('.hd li[data-type=chat]').className = '';
+								document.querySelector('.chat-cont').classList.remove('current');
+								document.querySelector('.system-cont').classList.add("current");
+							} else {
+								document.querySelector('.hd li[data-type=system]').className = '';
+								document.querySelector('.system-cont').classList.remove('current');
+								document.querySelector('.chat-cont').classList.add("current");
+							}
+						})
+
+						//document.getElementById('back_chat').addEventListener('tap', function() {
+						//	mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'showChat');
+						//	plus.webview.close('message');
+						//})
+						getSystemMsg();
+					})
 				}
 			})
 
-			var userInfo = getUserInfo();
-			var chatId = '';
-			mui.plusReady(function() {
-				window.addEventListener('refreshNotice', function(e) {
-					getChatList();
-				})
-				getChatList();
-
-				mui('#chat_message').on('tap', '.Record_list', function() {
-					var cid = this.dataset.cid;
-					var chatName = this.dataset.name;
-					var avatar = this.dataset.avatar;
-					fnOpenWin('dialog.html', 'dialog', {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, {
-						cid: cid,
-						chatName: chatName,
-						barStyle: 'dark',
-						avatar: avatar
-					}, 'slide-in-right');
-				})
-
-				mui('header').on('tap', 'li', function() {
-					var type = this.dataset.type;
-					this.className = 'current';
-					if (type == 'system') {
-						document.querySelector('.hd li[data-type=chat]').className = '';
-						document.querySelector('.chat-cont').classList.remove('current');
-						document.querySelector('.system-cont').classList.add("current");
+			// 获取系统消息
+			function getSystemMsg() {
+				mui.post($ajaxUrl + 'chat&action=notice_list', {
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						app.systemMsg = res.data;
 					} else {
-						document.querySelector('.hd li[data-type=system]').className = '';
-						document.querySelector('.system-cont').classList.remove('current');
-						document.querySelector('.chat-cont').classList.add("current");
+						message(res.message, "center");
 					}
-				})
-
-				//document.getElementById('back_chat').addEventListener('tap', function() {
-				//	mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'showChat');
-				//	plus.webview.close('message');
-				//})
-			})
-
+					for (var i = 0; i < res.data.length; i++) {
+						if (res.data[i].count > 0) {
+							document.querySelector('.system-red-tips').style.display = "inline-block";
+						} else {
+							document.querySelector('.system-red-tips').style.display = "none";
+						}
+					}
+				}, 'json')
+			}
+			// 获取消息列表
 			function getChatList() {
-				plus.nativeUI.showWaiting();
+				if (!refresh) {
+					plus.nativeUI.showWaiting();
+				}
 				mui.post($ajaxUrl + 'chat', {
 					action: 'list',
 					token: userInfo.token
 				}, function(res) {
-					// logs(res);
 					var html = '';
 					if (res.errno == 0) {
+						if (res.message == true) {
+							document.querySelector('.chat-red-tips').style.display = "inline-block";
+						} else {
+							document.querySelector('.chat-red-tips').style.display = "none";
+						}
 						var chatList = res.data;
 						var total = chatList.length;
 						document.getElementById('chat_total').innerText = '(' + total + ')';
@@ -559,7 +617,11 @@
 						html += '<div style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
 					}
 					document.getElementById('chat_message').innerHTML = html;
-					plus.nativeUI.closeWaiting();
+					if (!refresh) {
+						plus.nativeUI.closeWaiting();
+					} else {
+						refresh = false;
+					}
 				}, 'json')
 			}
 			var listel = '';
@@ -571,7 +633,10 @@
 			})
 			// 跳转目标助理
 			mui(".mui-content").on("tap", ".target-assistant", function() {
-				openPage('target-assistant.html', 'target-assistant', '#f7f7f7', '');
+				var genre = this.dataset.genre;
+				openPage('target-assistant.html', 'target-assistant', '#f7f7f7', {
+					genre: genre
+				});
 			})
 			// 确认删除聊天
 			mui('.join-team-verify').on("tap", ".send-verify", function() {

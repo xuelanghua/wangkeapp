@@ -109,7 +109,8 @@
 				position: relative;
 				color: #2289ff;
 			}
-			.mui-navigate-right:after{
+
+			.mui-navigate-right:after {
 				font-size: 0.38rem;
 			}
 		</style>
@@ -121,45 +122,21 @@
 		</header>
 		<div id="mui-content" class="mui-content assistant" v-cloak>
 			<ul class="target-groups">
-				<li class="target-lists">
-					<span class="timer">5月20日 12:50</span>
+				<li class="target-lists" v-for="(list,index) in msgList" :key="index">
+					<span class="timer">{{list.create_time}}</span>
 					<div class="mui-card">
 						<div class="mui-card-content-inner">
 							<div class="target-head">
-								<img src="../image/every-day-img0.jpg">
+								<img :src="chickenSoup[list.rand_number].img">
 								<div class="target-lists-head">
-									<p>【尔之短处，在言语欠钝讷，举止欠端重，看书不能深入，而作文不能峥嵘。若能从此三事上下一番苦功，进之以猛，持之以恒，不过一二年，自尔精进而不觉】</p>
+									<p>{{chickenSoup[list.rand_number].title}}</p>
 								</div>
 							</div>
 							<ul class="desc-cont">
-								<li><span>曝光</span>
+								<li v-for="(items,idx) in list.content" :key="idx">
+									<span>{{items.title}}</span>
 									<p>
-										<pan>10/30</pan><span>&nbsp;[未达标]</span>
-									</p>
-								</li>
-								<li><span>拓客</span>
-									<p>
-										<pan>10/30</pan><span>&nbsp;[未达标]</span>
-									</p>
-								</li>
-								<li><span>客户跟进</span>
-									<p>
-										<pan>10/30</pan><span>&nbsp;[未达标]</span>
-									</p>
-								</li>
-								<li><span>有效沟通</span>
-									<p>
-										<pan>10/30</pan><span>&nbsp;[未达标]</span>
-									</p>
-								</li>
-								<li><span>转介绍</span>
-									<p>
-										<pan>10/30</pan><span>&nbsp;[未达标]</span>
-									</p>
-								</li>
-								<li><span>成交</span>
-									<p>
-										<pan>10/30</pan><span>&nbsp;[未达标]</span>
+										<pan>{{items.content}}</pan><span>&nbsp;[{{items.level}}]</span>
 									</p>
 								</li>
 							</ul>
@@ -173,16 +150,68 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo(),
+				genre = '',
+				limit = 5,
+				skip = 1,
+				refresh = 'down';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					random: '01'
+					msgList: [],
+					chickenSoup: [{
+						img: "../image/every-day-img0.jpg",
+						title: "【尔之短处，在言语欠钝讷，举止欠端重，看书不能深入，而作文不能峥嵘。若能从此三事上下一番苦功，进之以猛，持之以恒，不过一二年，自尔精进而不觉】"
+					}, {
+						img: "../image/every-day-img1.jpg",
+						title: "【是脚踏出来的，历史是人写出来的。人的每一步行动都在书写自己的历史。】"
+					}, {
+						img: "../image/every-day-img2.jpg",
+						title: "【所有成功的背后，都是苦苦堆积的坚持；所有人前的风光，都是背后傻傻的不放弃。只要你愿意，并为之坚持，总有一天，你会活成自己喜欢的模样！】"
+					}, {
+						img: "../image/every-day-img3.jpg",
+						title: "【不是每个人都能成为，自己想要的样子，但每个人，都可以努力，成为自己想要的样子。相信自己，你能作茧自缚，就能破茧成蝶。】"
+					}, {
+						img: "../image/every-day-img4.jpg",
+						title: "【人生是很累的，你现在不累，以后就会更累。人生是很苦的，你现在不苦，以后就会更苦。】"
+					}, {
+						img: "../image/every-day-img5.jpg",
+						title: "【不管怎么样，努力本身就是一件会让人觉得心安理得的事。如果成功了会心安理得地享受自己获得的一切，即使失败了也能心安理得地放下然后继续前行。】"
+					}]
 				},
 				methods: {
 
 				},
 				mounted: function() {
-					mui.init();
+					mui.init({
+						beforeback: function() {
+							mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+							mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
+						},
+						pullRefresh: {
+							container: "#mui-content", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+							up: {
+								height: 50,
+								auto: true,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									refresh = "up";
+									skip++;
+									getMsgList();
+								}
+							},
+							down: {
+								style: 'circle', //单webview模式的下拉刷新 
+								color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+								callback: function() {
+									refresh = "down";
+									skip = 1;
+									getMsgList();
+								}
+							}
+						}
+					});
 					// 初始化字体大小
 					var viewport = document.documentElement.clientWidth;
 					if (viewport > 750) {
@@ -194,12 +223,57 @@
 						// var arr=['01','02','03','04','05'];
 						// var idx = Math.floor((Math.random() * arr.length));
 						// app.random=arr[idx];
-						mui(".mui-content").on('tap','.check-detail',function(){
-							openPage('target_detail.html','target_detail','#f7f7f7','');
+
+						var self = plus.webview.currentWebview();
+						// 获得消息类型
+						genre = self.genre;
+						// 查看详情
+						mui(".mui-content").on('tap', '.check-detail', function() {
+							openPage('target_detail.html', 'target_detail', '#ffffff', '');
 						})
+						getMsgList();
+						readNotice();
 					})
 				}
 			})
+			
+			// 阅读消息
+			function readNotice(){
+				mui.post($ajaxUrl + 'chat&action=read_notice', {
+					token: userInfo.token,
+					type: genre
+				}, function(res) {
+					logs(res);
+				},'json')
+			}
+			// 获取消息列表
+			function getMsgList() {
+				mui.post($ajaxUrl + 'chat&action=notice_list_by_type', {
+					token: userInfo.token,
+					type: genre,
+					skip: skip,
+					limit: limit
+				}, function(res) {
+					if (res.errno == 0) {
+						if (refresh == 'up') {
+							app.msgList = app.msgList.concat(res.data);
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						} else if(refresh == 'down'){
+							app.msgList = res.data;
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}else{
+							app.msgList = res.data;
+						}
+					} else {
+						message(res.message, "center");
+						if (refresh == 'up') {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else {
+							
+						}
+					}
+				}, 'json')
+			}
 		</script>
 	</body>
 </html>
