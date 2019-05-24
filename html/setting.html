@@ -240,7 +240,10 @@
 				});
 			}, false);
 
-			mui('#app_version')[0].innerHTML = '版本号' + plus.runtime.version;
+			getAppInfo(function(e) {
+				mui('#app_version')[0].innerHTML = '版本号' + e.version;
+			})
+			
 			mui('#mobile')[0].innerHTML = userInfo.mobile;
 
 			mui(".setting-container").on("tap", ".change-num", function(e) {

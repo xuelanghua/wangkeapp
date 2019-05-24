@@ -907,6 +907,9 @@
 		//获取轮播图
 		function slideInit(refresh) {
 			if (!refresh) {
+				setTimeout(function() {
+					plus.nativeUI.closeWaiting();
+				}, 100)
 				plus.nativeUI.showWaiting();
 			}
 			mui.post($ajaxUrl + 'carousel', {

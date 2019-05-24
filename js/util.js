@@ -334,8 +334,8 @@ function launchMiniprogram(goodsId, toUid) {
 		// 更新分享列表
 		var ss = shareService['weixin'];
 		ss ? ss.launchMiniProgram({
-			id:'gh_9fa5f42ab939',
-			path: '/longbing_card/pages/shop/detail/detail?id=' + goodsId +'&to_uid=' + toUid,
+			id: 'gh_9fa5f42ab939',
+			path: '/longbing_card/pages/shop/detail/detail?id=' + goodsId + '&to_uid=' + toUid,
 			type: '0', //0-正式版； 1-测试版； 2-体验版
 			webUrl: 'https://app.wangkeapp.cn'
 		}) : message('打开小程序失败!');
@@ -729,6 +729,13 @@ function pushCallback(data, event) {
 						background: '#F7F7F7'
 					}
 				}, extra, '');
+			}  else if (url == 'message') {
+				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+				fnOpenWin('html/' + url + '.html', url, {
+					statusbar: {
+						background: '#FFFFFF'
+					}
+				}, extra, '');
 			} else {
 				if (url) {
 					logs(url);
@@ -780,7 +787,10 @@ function pushCallback(data, event) {
 			setTimeout(function() {
 				mui.fire(plus.webview.getWebviewById('shop_setting'), 'buySuccess');
 			}, 2000)
-		} else if (url == 'logout') {
+		} else if (url == 'message') {
+			mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+			playNoticeAudio();
+		}  else if (url == 'logout') {
 			fnLogout();
 		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
@@ -1009,5 +1019,12 @@ function installWgt(path) {
 		plus.nativeUI.closeWaiting();
 		console.log("安装文件失败[" + e.code + "]：" + e.message);
 		plus.nativeUI.alert("安装文件失败[" + e.code + "]：" + e.message);
+	});
+}
+
+//获取APP信息
+function getAppInfo(callback) {
+	plus.runtime.getProperty(plus.runtime.appid, function(wgtinfo) {
+		callback(wgtinfo);
 	});
 }

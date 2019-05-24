@@ -85,7 +85,7 @@
 			</button>
 
 			<div class="banben">
-				<span id="app_version">版本v1.1.0</span>
+				<span id="app_version">版本v2.0.0</span>
 			</div>
 
 			<div class="boten">
@@ -111,7 +111,9 @@
 			//修改系统状态栏样式dark/light
 			plus.navigator.setStatusBarStyle('light');
 			//获取和设置APP的版本
-			mui('#app_version')[0].innerHTML = '版本' + plus.runtime.version;
+			getAppInfo(function(e) {
+				mui('#app_version')[0].innerHTML = '版本' +  e.version;
+			})
 
 			//判断是否安装微信
 			var isWeixinInstalled = plus.runtime.isApplicationExist({

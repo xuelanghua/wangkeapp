@@ -80,8 +80,8 @@
 				//确定裁切
 				document.getElementById("confirm").addEventListener("tap", function(e) {
 					var dataURL = $("#userImage_id").cropper("getCroppedCanvas", {
-						width: 750,
-						height: 750
+						width: 1920,
+						height: 1920
 					})
 					var imgUrl = dataURL.toDataURL("image/png", 1);
 					base64ToImage(imgUrl, 10, function(e) {
@@ -99,6 +99,8 @@
 
 			//初始化裁剪组件
 			function initImageCropper() {
+				var clientWidth = document.body.clientWidth;
+				clientWidth = clientWidth || 300;
 				$("#userImage_id").cropper({
 					viewMode: 2, //暂不清楚什么功能
 					dragMode: "move", //设置移动图片、重新绘制选图区域(crop:在裁剪框外拖动鼠标会生成一个新的裁剪框, move:在裁剪框外拖动鼠标会移动原图, none:什么也不做)
@@ -126,12 +128,12 @@
 					cropBoxMovable: 0, //是否允许移动裁剪框。
 					cropBoxResizable: 0, //是否允许通过拖动裁剪框的边框来调整裁剪框的大小。
 					toggleDragModeOnDblclick: !0, //是否允许通过双击来在crop和move之间切换dragMode。
-					minCanvasWidth: 300, //canvas（原图）宽度最小值。
-					minCanvasHeight: 300, //剪切框宽度最小值。
+					minCanvasWidth: clientWidth, //canvas（原图）宽度最小值。
+					minCanvasHeight: clientWidth, //剪切框宽度最小值。
 					minCropBoxWidth: 0, //剪切框高度最小值。
 					minCropBoxHeight: 0, //canvas（原图）宽度最小值。
-					minContainerWidth: 300, //容器宽度最小值。
-					minContainerHeight: 300, //容器高度最小值。
+					minContainerWidth: clientWidth, //容器宽度最小值。
+					minContainerHeight: clientWidth, //容器高度最小值。
 					ready: null,
 					cropstart: null,
 					cropmove: null,
