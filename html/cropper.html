@@ -80,11 +80,18 @@
 				//确定裁切
 				document.getElementById("confirm").addEventListener("tap", function(e) {
 					var dataURL = $("#userImage_id").cropper("getCroppedCanvas", {
-						width: 1920,
-						height: 1920
+						width: 750,
+						height: 750,
+						minWidth: 600,
+						minHeight: 600,
+						maxWidth: 1024,
+						maxHeight: 1024,
+						fillColor: '#fff',
+						imageSmoothingEnabled: false,
+						imageSmoothingQuality: 'high',
 					})
 					var imgUrl = dataURL.toDataURL("image/png", 1);
-					base64ToImage(imgUrl, 10, function(e) {
+					base64ToImage(imgUrl, 100, function(e) {
 						uploadFile(e.target);
 						// console.log(JSON.stringify(e));
 					});
@@ -125,7 +132,7 @@
 					zoomOnTouch: !0, //是否允许在移动端上使用双指触摸缩放原图。
 					zoomOnWheel: !0, //是否允许使用鼠标滚轮缩放原图。
 					wheelZoomRatio: .1, //当使用鼠标滚轮缩放时的比例。
-					cropBoxMovable: 0, //是否允许移动裁剪框。
+					cropBoxMovable: !0, //是否允许移动裁剪框。
 					cropBoxResizable: 0, //是否允许通过拖动裁剪框的边框来调整裁剪框的大小。
 					toggleDragModeOnDblclick: !0, //是否允许通过双击来在crop和move之间切换dragMode。
 					minCanvasWidth: clientWidth, //canvas（原图）宽度最小值。
@@ -215,7 +222,7 @@
 			
 			//base64转本地图片
 			function base64ToImage(base64, quality, callback) {
-				quality = quality || 10;
+				quality = quality || 100;
 				var bitmap = new plus.nativeObj.Bitmap();
 				// 从本地加载Bitmap图片
 				bitmap.loadBase64Data(base64, function() {

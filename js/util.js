@@ -884,37 +884,39 @@ function fnLogout() {
 			mui.get($ajaxUrl + 'member', {
 				action: 'login_type',
 			}, function(res) {
-				if (res.data == 1) {
-					for (var i = 0; i < wvs.length; i++) {
-						if (wvs[i].getURL() == curr.getURL()) {
-							continue;
-						} else {
-							plus.webview.close(wvs[i]);
+				getAppInfo(function(e) {
+					if (res.data.login_type == 2 && res.data.app_version != e.version) {
+						for (var i = 0; i < wvs.length; i++) {
+							if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+								continue;
+							} else {
+								plus.webview.close(wvs[i]);
+							}
 						}
+						fnOpenWin('mobile_login.html', 'mobile_login', {
+							statusbar: {
+								background: '#2289FF'
+							}
+						}, '', 'slide-in-bottom');
+						curr.hide();
+						curr.close();
+					} else {
+						for (var i = 0; i < wvs.length; i++) {
+							if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+								continue;
+							} else {
+								plus.webview.close(wvs[i]);
+							}
+						}
+						fnOpenWin('login.html', 'login', {
+							statusbar: {
+								background: '#122c9a'
+							}
+						}, '', 'slide-in-bottom');
+						curr.hide();
+						curr.close();
 					}
-					fnOpenWin('/html/login.html', 'login', {
-						statusbar: {
-							background: '#122c9a'
-						}
-					}, '', 'slide-in-bottom');
-					curr.hide();
-					curr.close();
-				} else {
-					for (var i = 0; i < wvs.length; i++) {
-						if (wvs[i].getURL() == curr.getURL()) {
-							continue;
-						} else {
-							plus.webview.close(wvs[i]);
-						}
-					}
-					fnOpenWin('/html/mobile_login.html', 'mobile_login', {
-						statusbar: {
-							background: '#2289FF'
-						}
-					}, '', 'slide-in-bottom');
-					curr.hide();
-					curr.close();
-				}
+				})
 			}, 'json');
 		} else {
 			// plus.runtime.restart();
@@ -991,24 +993,25 @@ function getContactsInit() {
 // 下载wgt文件  
 function downWgt() {
 	var wgtUrl = "https://wangkeapp.oss-cn-shenzhen.aliyuncs.com/wangke.wgt";
-	plus.nativeUI.showWaiting("下载更新文件中...");
+	plus.nativeUI.showWaiting("文件下载中...");
 	plus.downloader.createDownload(wgtUrl, {
 		filename: "_doc/update/"
 	}, function(d, status) {
 		if (status == 200) {
 			console.log("下载文件成功：" + d.filename);
+			plus.nativeUI.closeWaiting();
 			installWgt(d.filename); // 安装wgt包  
 		} else {
 			console.log("下载文件失败！");
 			plus.nativeUI.alert("下载文件失败！");
+			plus.nativeUI.closeWaiting();
 		}
-		plus.nativeUI.closeWaiting();
 	}).start();
 }
 
 // 更新应用资源  
 function installWgt(path) {
-	plus.nativeUI.showWaiting("安装wgt文件...");
+	plus.nativeUI.showWaiting("文件安装中...");
 	plus.runtime.install(path, {}, function() {
 		plus.nativeUI.closeWaiting();
 		console.log("安装文件成功！");

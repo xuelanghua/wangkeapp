@@ -153,11 +153,18 @@
 				// 		});
 				// 		return;
 				// 	}
-				var btnArray = [{
-					title: "注销当前账号"
-				}, {
-					title: "关闭旺客"
-				}];
+				if (mui.os.ios) {
+					var btnArray = [{
+						title: "注销当前账号"
+					}];
+				} else {
+					var btnArray = [{
+						title: "注销当前账号"
+					}, {
+						title: "关闭旺客"
+					}];
+				}
+				
 				plus.nativeUI.actionSheet({
 					cancel: "取消",
 					buttons: btnArray
@@ -183,37 +190,39 @@
 								mui.get($ajaxUrl + 'member', {
 									action: 'login_type',
 								}, function(res) {
-									if (res.data == 1) {
-										for (var i = 0; i < wvs.length; i++) {
-											if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
-												continue;
-											} else {
-												plus.webview.close(wvs[i]);
+									getAppInfo(function(e) {
+										if (res.data.login_type == 2 && res.data.app_version != e.version) {
+											for (var i = 0; i < wvs.length; i++) {
+												if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+													continue;
+												} else {
+													plus.webview.close(wvs[i]);
+												}
 											}
+											fnOpenWin('mobile_login.html', 'mobile_login', {
+												statusbar: {
+													background: '#2289FF'
+												}
+											}, '', 'slide-in-bottom');
+											curr.hide();
+											curr.close();
+										} else {
+											for (var i = 0; i < wvs.length; i++) {
+												if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+													continue;
+												} else {
+													plus.webview.close(wvs[i]);
+												}
+											}
+											fnOpenWin('login.html', 'login', {
+												statusbar: {
+													background: '#122c9a'
+												}
+											}, '', 'slide-in-bottom');
+											curr.hide();
+											curr.close();
 										}
-										fnOpenWin('login.html', 'login', {
-											statusbar: {
-												background: '#122c9a'
-											}
-										}, '', 'slide-in-bottom');
-										curr.hide();
-										curr.close();
-									} else {
-										for (var i = 0; i < wvs.length; i++) {
-											if (wvs[i].getURL() == curr.getURL()) {
-												continue;
-											} else {
-												plus.webview.close(wvs[i]);
-											}
-										}
-										fnOpenWin('mobile_login.html', 'mobile_login', {
-											statusbar: {
-												background: '#2289FF'
-											}
-										}, '', 'slide-in-bottom');
-										curr.hide();
-										curr.close();
-									}
+									})
 								}, 'json');
 							} else {
 								// plus.runtime.restart();

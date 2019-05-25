@@ -200,13 +200,20 @@
 					mui.init();
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
-						// checkUpdate();
+						checkUpdate();
 						// plus.navigator.closeSplashscreen();	//主动关闭启动页
 						pushInit();
 						eventInit();
 						plus.navigator.setStatusBarStyle("dark");
 						plus.navigator.setStatusBarBackground('#FFFFFF');
-						if (!userInfo) {
+						var lastLoginTime = localStorage.getItem('lastLoginTime');
+						var currentTime = new Date().getTime();
+						var loginTime = parseInt((currentTime - lastLoginTime) / 1000);
+						var isExpire = loginTime > (60 * 60 * 24 * 5) ? true : false; 
+						if (isExpire) {
+							message('账号登录过期,重新登录');
+						}
+						if (!userInfo || isExpire) {
 							login();
 						} else if (userInfo.mobile.length == 0) {
 							bindMobile();
@@ -346,19 +353,22 @@
 					mui.get($ajaxUrl + 'member', {
 						action: 'login_type',
 					}, function(res) {
-						if (res.data == 1) {
-							fnOpenWin('html/login.html', 'login', {
-								statusbar: {
-									background: '#122c9a'
-								}
-							}, '', 'slide-in-bottom');
-						} else {
-							fnOpenWin('html/mobile_login.html', 'mobile_login', {
-								statusbar: {
-									background: '#2289FF'
-								}
-							}, '', 'slide-in-bottom');
-						}
+						getAppInfo(function(e) {
+							logs(e);
+							if (res.data.login_type == 2 && res.data.app_version != e.version) {
+								fnOpenWin('html/mobile_login.html', 'mobile_login', {
+									statusbar: {
+										background: '#2289FF'
+									}
+								}, '', 'slide-in-bottom');
+							} else {
+								fnOpenWin('html/login.html', 'login', {
+									statusbar: {
+										background: '#122c9a'
+									}
+								}, '', 'slide-in-bottom');
+							}
+						})
 					}, 'json');
 				} else {
 					fnOpenWin('html/login.html', 'login', {
@@ -450,11 +460,17 @@
 						var currentVersion = e.version;
 						var newVersion = systemSetting.app_version;
 						if (currentVersion != newVersion) {
-							plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?', function(e) {
-								if (e.index == 0) {
+							if (systemSetting.forced_updating == 1) {
+								plus.nativeUI.alert('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?', function(e) {
 									downWgt();
-								}
-							})
+								})
+							} else {
+								plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?', function(e) {
+									if (e.index == 0) {
+										downWgt();
+									}
+								})
+							}
 						}
 					})
 				}, 'json');
