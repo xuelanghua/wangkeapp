@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Hello MUI</title>
+		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -130,6 +130,7 @@
 		<script>
 			var main, menu, mask = mui.createMask(_closeMenu);
 			var showMenu = false,
+				refresh = '',
 				mode = 'main-move';
 			var viewport = document.documentElement.clientWidth;
 			if (viewport > 750) {
@@ -163,6 +164,7 @@
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
+									refresh = 'up';
 									skip += 1;
 									getUserBalanceLog();
 								}
@@ -171,6 +173,7 @@
 								style: 'circle',
 								color: '#2289FF',
 								callback: function() {
+									refresh = 'down';
 									skip = 1;
 									getUserBalanceLog();
 								}
@@ -243,9 +246,6 @@
 			})
 			//获取用户余额日志
 			function getUserBalanceLog() {
-				console.log(app.currentTime);
-				console.log(app.type);
-
 				mui.get($ajaxUrl + 'member', {
 					action: 'shop_balance_log',
 					token: userInfo.token,
@@ -253,21 +253,30 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					if (res.errno == 0 && skip == 1) {
-						app.balanceData = res.data;
-						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
-					} else if (res.errno == 0 && skip > 1) {
-						app.balanceData.list = app.balanceData.list.concat(res.data.list);
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+					console.log(res);
+					if (res.errno == 0) {
+						if (refresh == 'up') {
+							app.balanceData.list = app.balanceData.list.concat(res.data.list);
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+						} else if (refresh == 'down') {
+							app.balanceData = res.data;
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						} else {
+							app.balanceData = res.data;
+						}
 					} else {
+						if (refresh == 'up') {
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+							// message('没有更多了~');
+						}else if(refresh == 'down'){
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						}
 						if (skip == 1) {
 							app.balanceData.list = null;
 							app.balanceData.income = 0.00;
 							app.balanceData.expend = 0.00;
 						}
-						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-						message('没有更多了~');
 					}
 				}, 'json');
 			}
@@ -351,7 +360,7 @@
 				skip = 1;
 				getUserBalanceLog();
 				document.getElementById('show-btn').innerText = e.detail.text;
-				logs(app.type);
+				// logs(app.type);
 			}, false);
 			//重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
 			mui.menu = function() {

@@ -30,7 +30,7 @@
 							<span>{{list.nickName}}</span>
 							<!-- .vip,.vip1,.vip2,.vip3四种class -->
 							<span :class="'vip'+list.group_id">{{list.group_name}}</span>
-							<span class="mui-pull-right">+{{list.recommend_award}}</span>
+							<span v-if="list.recommend_award>0" class="mui-pull-right">+{{list.recommend_award}}</span>
 						</div>
 						<div class="bottom mui-clearfix">
 							<span>加入时间：{{list.activation_time}}</span>
@@ -64,7 +64,7 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					fansList: []
+					fansList: ['i']
 				},
 				created: function() {
 					getFansList();
@@ -107,7 +107,7 @@
 							var cid = this.dataset.cid,
 								chatName = this.dataset.chatname,
 								avatar = this.dataset.avatar;
-								logs(cid);
+							logs(cid);
 							openPage('dialog.html', 'dialog', '#f7f7f7', {
 								cid: cid,
 								chatName: chatName,
@@ -128,19 +128,19 @@
 					if (res.errno == 0 && skip == 1) {
 						app.fansList = res.data;
 						if (refresh == 'down') {
-							mui('#mui-content').pullRefresh().endPulldownToRefresh();
-							mui('#item1').pullRefresh().refresh(true);
+							mui('#fans-list').pullRefresh().endPulldownToRefresh();
+							mui('#fans-list').pullRefresh().refresh(true);
 						}
 					} else if (res.errno == 0 && skip > 1) {
 						app.fansList = app.fansList.concat(res.data);
 						if (refresh == 'up') {
-							mui('#mui-content').pullRefresh().endPullupToRefresh();
+							mui('#fans-list').pullRefresh().endPullupToRefresh();
 						}
 					} else {
 						if (refresh == 'up') {
-							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+							mui('#fans-list').pullRefresh().endPullupToRefresh(true);
+							message('没有更多了~');
 						}
-						message('没有更多了~');
 					}
 				}, 'json');
 			}

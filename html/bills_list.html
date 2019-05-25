@@ -144,6 +144,7 @@
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			var userInfo = getUserInfo();
 			var skip = 1;
+			var refresh = '';
 			var limit = 10;
 
 			var app = new Vue({
@@ -170,6 +171,7 @@
 								contentnomore: '没有更多数据了',
 								callback: function() {
 									skip += 1;
+									refresh = 'up';
 									getUserBalanceLog();
 								}
 							},
@@ -178,6 +180,7 @@
 								color: '#2289FF',
 								callback: function() {
 									skip = 1;
+									refresh = 'down';
 									getUserBalanceLog();
 								}
 							}
@@ -249,9 +252,6 @@
 			})
 			//获取用户余额日志
 			function getUserBalanceLog() {
-				console.log(app.currentTime);
-				console.log(app.type);
-
 				mui.get($ajaxUrl + 'member', {
 					action: 'balance_log',
 					token: userInfo.token,
@@ -260,20 +260,45 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					if (res.errno == 0 && skip == 1) {
-						app.balanceData = res.data;
-						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
-					} else if (res.errno == 0 && skip > 1) {
-						app.balanceData.list = app.balanceData.list.concat(res.data.list);
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+					if (res.errno == 0) {
+						if (refresh == 'up') {
+							app.balanceData.list = app.balanceData.list.concat(res.data.list);
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+						} else if (refresh == 'down') {
+							app.balanceData = res.data;
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						} else {
+							app.balanceData = res.data;
+						}
 					} else {
+						if (refresh == 'up') {
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+							// message('没有更多了~');
+						}else if(refresh == 'down'){
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						}
 						if (skip == 1) {
 							app.balanceData.list = null;
+							app.balanceData.income = 0.00;
+							app.balanceData.expend = 0.00;
 						}
-						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-						message('没有更多了~');
 					}
+					// 
+					// if (res.errno == 0 && skip == 1) {
+					// 	app.balanceData = res.data;
+					// 	mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					// } else if (res.errno == 0 && skip > 1) {
+					// 	app.balanceData.list = app.balanceData.list.concat(res.data.list);
+					// 	mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+					// } else {
+					// 	if (skip == 1) {
+					// 		app.balanceData.list = null;
+					// 	}
+					// 	mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+					// 	mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+					// 	message('没有更多了~');
+					// }
 				}, 'json');
 			}
 
