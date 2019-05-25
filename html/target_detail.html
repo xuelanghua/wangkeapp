@@ -134,7 +134,7 @@
 		<header class="mui-bar mui-bar-nav target-detail-header">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">目标详情</h1>
-			<a class="mui-pull-right my-target-menu" href="#centerPopover">我的目标</a>
+			<a class="mui-pull-right my-target-menu" href="">我的目标</a>
 		</header>
 		<div id="targetDetail" class="mui-content target-detail-container"  v-cloak>
 			<div class="target-detail-heade">
@@ -200,7 +200,7 @@
 				<div class="target-list">
 					<ul>
 						<li><i class="target-tag-icon"></i><span id="target_title">我的目标</span></li>
-						<li>
+						<!-- <li>
 							<i class="audio-tag-icon"></i>
 							<audio class="mui-hidden" id="audio" controls="controls" src=""></audio>
 							<div id="audio-control" class="play-control play">
@@ -211,15 +211,18 @@
 									<span id="target_record_time">5</span>
 								</div>
 							</div>
-						</li>
+						</li> -->
 					</ul>
 				</div>
 				<div class="target-tips">
-					<h2 class="title">根据大数据计算</h2>
+					<h2 class="title">根据大数据计算你需要</h2>
 					<ol>
-						<li>1、你需要每天开发<span id="target_new_customer">0</span>个客户</li>
-						<li>2、每天沟通回访<span id="target_communication">0</span>个客户</li>
-						<li>3、每天平均收款<span id="target_deal">0</span>元</li>
+						<li>1、每天曝光<span id="exposure_rate">0</span>次</li>
+						<li>2、每天拓客<span id="new_customer">0</span>人</li>
+						<li>3、每天跟进客户<span id="customer_follow">0</span>人</li>
+						<li>4、每天沟通客户<span id="share_card">0</span>人</li>
+						<li>5、每天被转介绍<span id="communication">0</span>次</li>
+						<li>6、每天成交<span id="deal">0</span>元</li>
 					</ol>
 				</div>
 			</div>
@@ -246,6 +249,7 @@
 				"type": "date"
 			};
 			var myDate = new Date();
+			targetPlan = null;
 			var app = new Vue({
 				el: "#targetDetail",
 				data: {
@@ -424,6 +428,10 @@
 				}, function(res) {
 					app.plan = res.data.plan;
 					app.finish = res.data.finish;
+					if (timeType == 1 && !targetPlan) {
+						targetPlan = app.plan;
+						getTargetInfo();
+					}
 				}, 'json')
 			}
 			// 显示我的目标
@@ -456,8 +464,14 @@
 					token: userInfo.token
 				}, function(res) {
 					if (res.errno == 0) {
-						app.plan = res.data.plan;
-						app.finish = res.data.finish;
+						document.querySelector('.my-target-menu').href = '#centerPopover';
+						document.querySelector('#target_title').innerText = res.data.target_name;
+						document.querySelector('#exposure_rate').innerText = targetPlan.exposure_rate;
+						document.querySelector('#new_customer').innerText = targetPlan.new_customer;
+						document.querySelector('#customer_follow').innerText = targetPlan.customer_follow;
+						document.querySelector('#share_card').innerText = targetPlan.share_card;
+						document.querySelector('#communication').innerText = targetPlan.communication;
+						document.querySelector('#deal').innerText = targetPlan.deal;
 					} else {
 						document.querySelector('.my-target-menu').innerText = '设定目标';
 					}
