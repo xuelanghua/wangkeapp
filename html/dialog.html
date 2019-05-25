@@ -1053,8 +1053,8 @@
 										var message = {
 											sender: chatId,
 											type: data.data2.message_type,
-											content:data.data2.content,
-											message_id:data.message_id
+											content: data.data2.content,
+											message_id: data.message_id
 										}
 										send(message);
 									} else {
@@ -1108,7 +1108,6 @@
 			var isFocus = null;
 			// 获取原来的高度
 			var oglHeight = document.querySelector("body").offsetHeight;
-
 			//显示操作菜单
 			mui('.mui-content').on("longtap", ".msg-content", function() {
 				// 获取高度
@@ -1117,27 +1116,30 @@
 				sender = this.dataset.sender;
 				message_id = this.dataset.tag;
 				var tempHeight = document.querySelector("body").offsetHeight;
-
+				// 高度差
+				var gap = oglHeight - tempHeight;
+				
 				if (types == "text") {
 					document.querySelector(".copy-btn").style.display = "flex";
 				} else {
 					document.querySelector(".copy-btn").style.display = "none";
 				}
-
+				
 				if (sender == "self") {
 					document.querySelector(".recall-btn").style.display = "flex";
 				} else {
 					document.querySelector(".recall-btn").style.display = "none";
 				}
 
-				if (tempHeight == oglHeight) {
-					// mui('#middlePopover').popover('hide');
+				if (gap < 55) {
+					mui('#middlePopover').popover('hide');
 					mui("#middlePopover").popover('toggle', document.getElementById(this.id));
 				} else {
 					// var input = document.getElementById("msg-text");
 					// input.focus();
 					// mui("#middlePopover").popover('toggle', document.getElementById(this.id));
 					plus.key.hideSoftKeybord();
+					// message('再按一次哟~','center');
 				}
 			})
 			// 删除单条聊天记录
