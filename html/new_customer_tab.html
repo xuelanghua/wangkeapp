@@ -24,29 +24,29 @@
 	<body>
 		<div id="mui-content" class="mui-content chat-container" v-cloak>
 			<ul class="tips-cont">
-				<li><i class="totalNum"></i>用户总数:{{totalNum}}</li>
-				<li><i class="followNum"></i>跟进数量:{{followNum}}</li>
-				<li><i class="bargainNum"></i>成交数量:{{bargainNum}}</li>
+				<li><i class="totalNum"></i>用户总数:{{customercount.new}}</li>
+				<li><i class="followNum"></i>跟进数量:{{customercount.follow}}</li>
+				<li><i class="bargainNum"></i>成交数量:{{customercount.deal}}</li>
 			</ul>
 			<div class="trapezium-container">
 				<div class="trapezium"></div>
-				<div class="trapezium-tips">用户总数:<span class="customer_total">{{totalNum}}</span></div>
+				<div class="trapezium-tips">用户总数:<span class="customer_total">{{customercount.new}}</span></div>
 				<div class="trapezium1"></div>
-				<div class="trapezium-tips">跟进数量:<span class="customer_total">{{followNum}}</span></div>
+				<div class="trapezium-tips">跟进数量:<span class="customer_total">{{customercount.follow}}</span></div>
 				<div class="trapezium2"></div>
-				<div class="trapezium-tips">成交数量:<span class="customer_total">{{bargainNum}}</span></div>
+				<div class="trapezium-tips">成交数量:<span class="customer_total">{{customercount.deal}}</span></div>
 			</div>
 			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item mui-active" href="#item1">新增客户</a>
-				<a class="mui-control-item" href="#item2">推荐锁定</a>
-				<a class="mui-control-item" href="#item3">跟进中</a>
-				<a class="mui-control-item" href="#item4">高意向</a>
-				<a class="mui-control-item" href="#item5">成交</a>
+				<a class="mui-control-item mui-active" href="#item1" data-type="new_customer">新增客户</a>
+				<a class="mui-control-item" href="#item2" data-type="recommend">推荐锁定</a>
+				<a class="mui-control-item" href="#item3" data-type="follow">跟进中</a>
+				<a class="mui-control-item" href="#item4" data-type="is_intention">高意向</a>
+				<a class="mui-control-item" href="#item5" data-type="deal">成交</a>
 			</div>
 			<div id="list-container" class="list-container">
 				<div id="item1" class="mui-control-content mui-active">
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.new" :key="index">
+						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData" :key="index">
 							<div class="user-head-img customer-head-img" :data-id="items.id" :data-type="items.type">
 								<img :src="items.avatar||items.avatarUrl">
 							</div>
@@ -71,14 +71,14 @@
 							</div>
 						</li>
 					</ul>
-					<div v-if="newcustomerData.new== undefined || newcustomerData.new.length <= 0" class="void-data-tips">
+					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
 						<p>没有数据</p>
 					</div>
 				</div>
 				<div id="item2" class="mui-control-content">
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.recommend" :key="index">
+						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData" :key="index">
 							<div class="user-head-img customer-head-img" :data-id="items.id">
 								<img :src="items.avatar||items.avatarUrl">
 							</div>
@@ -103,14 +103,14 @@
 							</div>
 						</li>
 					</ul>
-					<div v-if="newcustomerData.recommend== undefined || newcustomerData.recommend.length <= 0" class="void-data-tips">
+					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
 						<p>没有数据</p>
 					</div>
 				</div>
 				<div id="item3" class="mui-control-content">
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.follow" :key="index">
+						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData" :key="index">
 							<div class="user-head-img customer-head-img" :data-id="items.id">
 								<img :src="items.avatar||items.avatarUrl">
 							</div>
@@ -135,14 +135,14 @@
 							</div>
 						</li>
 					</ul>
-					<div v-if="newcustomerData.follow== undefined || newcustomerData.follow.length <= 0" class="void-data-tips">
+					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
 						<p>没有数据</p>
 					</div>
 				</div>
 				<div id="item4" class="mui-control-content">
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.intention" :key="index">
+						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData" :key="index">
 							<div class="user-head-img customer-head-img" :data-id="items.id">
 								<img :src="items.avatar||items.avatarUrl">
 							</div>
@@ -167,14 +167,14 @@
 							</div>
 						</li>
 					</ul>
-					<div v-if="newcustomerData.intention== undefined || newcustomerData.intention.length <= 0" class="void-data-tips">
+					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
 						<p>没有数据</p>
 					</div>
 				</div>
 				<div id="item5" class="mui-control-content">
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.deal" :key="index">
+						<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData" :key="index">
 							<div class="user-head-img customer-head-img" :data-id="items.id">
 								<img :src="items.avatar||items.avatarUrl">
 							</div>
@@ -199,7 +199,7 @@
 							</div>
 						</li>
 					</ul>
-					<div v-if="newcustomerData.deal== undefined || newcustomerData.deal.length <= 0" class="void-data-tips">
+					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
 						<p>没有数据</p>
 					</div>
@@ -212,13 +212,12 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var typer = 'new_customer';
 			refresh = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					totalNum: '0',
-					followNum: '0',
-					bargainNum: '0',
+					customercount: {},
 					// 当前项
 					nowaday: 'crm',
 					viewHeight: '',
@@ -235,7 +234,7 @@
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
-									getCustomerList('customer');
+									getCustomerList(typer);
 									setTimeout(function() {
 										mui('#mui-content').pullRefresh().endPullupToRefresh(false);
 									}, 1500)
@@ -246,7 +245,7 @@
 								color: '#2289FF',
 								callback: function() {
 									downRefresh = true;
-									getCustomerList('customer', false);
+									getCustomerList(typer);
 									setTimeout(function() {
 										mui('#mui-content').pullRefresh().endPulldownToRefresh();
 									}, 1500)
@@ -255,7 +254,8 @@
 						}
 					});
 					mui.plusReady(function() {
-						getCustomerList("customer");
+						getCustomerList(typer);
+						getnum();
 					})
 				}
 			})
@@ -265,6 +265,11 @@
 				openPage('customer_detail.html', 'customer_detail', '#2289FF', {
 					cid: cid
 				}, 'slide-in-right');
+			})
+			// 切换类型
+			mui('.mui-segmented-control').on('tap', 'a', function() {
+				typer = this.dataset.type;
+				getCustomerList(typer);
 			})
 			// 打开新增客户聊天
 			mui('.mui-table-view').on('tap', '.customer-chat', function() {
@@ -280,24 +285,28 @@
 				}, 'slide-in-right');
 				plus.navigator.setStatusBarStyle('dark');
 			})
+			//获取数量统计
+			function getnum() {
+				mui.post($ajaxUrl + 'customer', {
+					action: 'customer_count',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						app.customercount = res.data;
+					}
+				}, 'json')
+			}
 			// 获取客户列表
-			function getCustomerList(type) {
+			function getCustomerList(typer) {
 				if (!userInfo) return;
 				mui.post($ajaxUrl + 'customer', {
-					action: 'list',
+					action: 'customer_list',
 					token: userInfo.token,
-					type: type
+					type: typer
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						if (type == 'customer') {
-							app.newcustomerData = res.data;
-							app.totalNum = res.data.count.total;
-						} else if (type == 'crm') {
-							app.crmList = res.data;
-						} else {
-							app.friendList = res.data;
-						}
+						app.newcustomerData = res.data;
 					} else {
 						app.newcCustomerlist = [];
 					}

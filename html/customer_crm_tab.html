@@ -60,7 +60,7 @@
 				</div>
 				<div class="mui-indexed-list-alert"></div>
 				<div class="mui-indexed-list-inner">
-					<ul class="mui-table-view  crm-scroll-cont">
+					<ul class="mui-table-view  crm-scroll-cont" id="chat-bottom">
 						<template v-for="(list,key,index) in crmList" :key="index">
 							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
 							<li class="mui-table-view-cell customer-list" :data-tags="list.pinyin" v-for="(items,idx) in list" :key="idx">
@@ -148,22 +148,22 @@
 				},
 				mounted: function() {
 					mui.init({
-						pullRefresh: {
-							container: ".crm-scroll-cont",
-							down: {
-								style: 'circle',
-								color: '#2289FF',
-								height: '50px', 
-								range: '120px',	
-								callback: function() {
-									downRefresh = true;
-									getCustomerList('crm', false);
-									setTimeout(function() {
-										mui('.crm-scroll-cont').pullRefresh().endPulldownToRefresh();
-									}, 1500)
-								}
-							}
-						}
+						// pullRefresh: {
+						// 	container: "#chat-bottom",
+						// 	down: {
+						// 		style: 'circle',
+						// 		color: '#2289FF',
+						// 		height: '50px', 
+						// 		range: '120px',	
+						// 		callback: function() {
+						// 			downRefresh = true;
+						// 			getCustomerList('crm', false);
+						// 			setTimeout(function() {
+						// 				mui('#chat-bottom').pullRefresh().endPulldownToRefresh();
+						// 			}, 1500)
+						// 		}
+						// 	}
+						// }
 					});
 					var pageHeight = 0;
 					mui.plusReady(function() {
@@ -171,13 +171,13 @@
 						pageHeight = plus.display.resolutionHeight;
 						list.style.height = pageHeight - 230 + 'px';
 						window.indexedList = new mui.IndexedList(list);
-						getCustomerList("crm");
+						getCustomerList();
 					})
 				}
 			})
 
 			window.addEventListener('refreshCrm', function(e) {
-				getCustomerList("crm");
+				getCustomerList();
 				// alert("123123");
 			})
 			// 跳转详情页
@@ -203,23 +203,16 @@
 				}
 			})
 			// 获取客户列表
-			function getCustomerList(type) {
+			function getCustomerList() {
 				if (!userInfo) return;
 				mui.post($ajaxUrl + 'customer', {
-					action: 'list',
+					action: 'crm_list',
 					token: userInfo.token,
-					type: type
+					type: 'crm'
 				}, function(res) {
 					// logs(res);
 					if (res.errno == 0) {
-						if (type == 'customer') {
-							app.newcustomerData = res.data;
-							app.totalNum = res.data.count.total;
-						} else if (type == 'crm') {
-							app.crmList = res.data;
-						} else {
-							app.friendList = res.data;
-						}
+						app.crmList = res.data;
 					} else {
 						app.newcCustomerlist = [];
 					}

@@ -130,11 +130,11 @@
 							down: {
 								style: 'circle',
 								color: '#2289FF',
-								height: '50px', 
-								range: '120px',	
+								height: '50px',
+								range: '120px',
 								callback: function() {
 									downRefresh = true;
-									getCustomerList('friend', false);
+									getCustomerList();
 									setTimeout(function() {
 										mui('#chat-bottom').pullRefresh().endPulldownToRefresh();
 									}, 1500)
@@ -144,7 +144,7 @@
 					});
 					var pageHeight = 0;
 					mui.plusReady(function() {
-						getCustomerList("friend");
+						getCustomerList();
 						var list = document.getElementById('list');
 						pageHeight = plus.display.resolutionHeight;
 						list.style.height = pageHeight - 230 + 'px';
@@ -159,7 +159,12 @@
 			})
 			//好友新增客户 添加客户页面广播
 			window.addEventListener('refreshfriend', function(e) {
-				getCustomerList("friend");
+				getCustomerList();
+			})
+			// 点击添加好友
+			mui(".mui-content").on('tap', '#add_friend,#new_friend', function() {
+				openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
+				plus.navigator.setStatusBarStyle('dark');
 			})
 			// 跳转详情页
 			mui('.mui-content').on('tap', '.crm-user-head', function() {
@@ -183,23 +188,15 @@
 				}
 			})
 			// 获取客户列表
-			function getCustomerList(type) {
+			function getCustomerList() {
 				if (!userInfo) return;
 				mui.post($ajaxUrl + 'customer', {
-					action: 'list',
-					token: userInfo.token,
-					type: type
+					action: 'friend_list',
+					token: userInfo.token
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
-						if (type == 'customer') {
-							app.newcustomerData = res.data;
-							app.totalNum = res.data.count.total;
-						} else if (type == 'crm') {
-							app.crmList = res.data;
-						} else {
-							app.friendList = res.data;
-						}
+						app.friendList = res.data;
 					} else {
 						app.newcCustomerlist = [];
 					}
