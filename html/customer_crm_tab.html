@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.indexedlist.css" rel="stylesheet" />
+		<link href="../iconfont/iconfont.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/chat.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.mui-content {
+				padding-top: 0;
+			}
+
+			.mui-indexed-list-cont {
+				background-color: #0062CC;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" class="mui-content chat-container" v-cloak>
+			<div id='list' class="mui-indexed-list-cont">
+				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
+					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="serach">
+				</div>
+				<div class="mui-indexed-list-bar" id="list_bar">
+					<a>A</a>
+					<a>B</a>
+					<a>C</a>
+					<a>D</a>
+					<a>E</a>
+					<a>F</a>
+					<a>G</a>
+					<a>H</a>
+					<a>I</a>
+					<a>J</a>
+					<a>K</a>
+					<a>L</a>
+					<a>M</a>
+					<a>N</a>
+					<a>O</a>
+					<a>P</a>
+					<a>Q</a>
+					<a>R</a>
+					<a>S</a>
+					<a>T</a>
+					<a>U</a>
+					<a>V</a>
+					<a>W</a>
+					<a>X</a>
+					<a>Y</a>
+					<a>Z</a>
+				</div>
+				<div class="mui-indexed-list-alert"></div>
+				<div class="mui-indexed-list-inner">
+					<ul class="mui-table-view  crm-scroll-cont">
+						<template v-for="(list,key,index) in crmList" :key="index">
+							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
+							<li class="mui-table-view-cell customer-list" :data-tags="list.pinyin" v-for="(items,idx) in list" :key="idx">
+								<div class="user-head-img crm-user-head" data-type="crm" :data-id="items.id" :data-stauts="items.type">
+									<img :src="items.headimgurl||'../image/touxiang.png'">
+								</div>
+								<div class="customer-left" @tap="crmGoChat(items.uid!=0?items.uid:items.id,items.name,items.headimgurl,items.type)">
+									<div class="left-top">
+										<div class="mui-ellipsis user-name">
+											{{items.name}}
+										</div>
+										<div class="timer-tips">
+											<span v-if="items.mark==1" class="status">[跟进中]</span>
+											<span v-if="items.mark==2" class="mui-hidden">[成交]</span>
+										</div>
+									</div>
+									<div class="left-bottom">
+										<span v-if="items.company" class="tags mui-ellipsis">{{items.company}}</span>
+										<span v-if="items.job" class="tags tags-p">{{items.job}}</span>
+									</div>
+								</div>
+							</li>
+						</template>
+					</ul>
+					<div v-if="crmList== undefined || crmList.length <= 0" class="void-data-tips">
+						<img src="../image/icon/void-data.png">
+						<p>没有数据</p>
+					</div>
+				</div>
+				<!-- <div id="chat-bottom"></div> -->
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.indexedlist.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					tabs: [{
+						title: '新增客户',
+						icon: 'iconfont icon-friends',
+						id: 'customer',
+						checked: false
+					}, {
+						title: '客户CRM',
+						icon: 'iconfont icon-custom',
+						id: 'crm',
+						checked: true
+					}, {
+						title: '好 友',
+						icon: 'iconfont icon-friends',
+						id: 'friend',
+						checked: false
+					}],
+					totalNum: '0',
+					followNum: '0',
+					bargainNum: '0',
+					newcustomerData: {},
+					rendererList: [],
+					crmList: {},
+					friendList: {},
+					newfriendNum: '0',
+					messageNum: '0'
+				},
+				methods: {
+					// crm跳转聊天
+					crmGoChat: function(cid, chatName, avatar, type) {
+						if (type == 1) {
+							openPage('dialog.html', 'dialog', '#F7F7F7', {
+								cid: cid,
+								chatName: chatName,
+								avatar: avatar,
+								barStyle: 'light'
+							}, 'slide-in-right');
+							plus.navigator.setStatusBarStyle('dark');
+						} else {
+							openPage('crm_detail_app.html', 'crm_detail_app', '#2289FF', {
+								cid: cid,
+							}, 'slide-in-right');
+						}
+					}
+				},
+				mounted: function() {
+					mui.init({
+						pullRefresh: {
+							container: ".crm-scroll-cont",
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								height: '50px', 
+								range: '120px',	
+								callback: function() {
+									downRefresh = true;
+									getCustomerList('crm', false);
+									setTimeout(function() {
+										mui('.crm-scroll-cont').pullRefresh().endPulldownToRefresh();
+									}, 1500)
+								}
+							}
+						}
+					});
+					var pageHeight = 0;
+					mui.plusReady(function() {
+						var list = document.getElementById('list');
+						pageHeight = plus.display.resolutionHeight;
+						list.style.height = pageHeight - 230 + 'px';
+						window.indexedList = new mui.IndexedList(list);
+						getCustomerList("crm");
+					})
+				}
+			})
+
+			window.addEventListener('refreshCrm', function(e) {
+				getCustomerList("crm");
+				// alert("123123");
+			})
+			// 跳转详情页
+			mui('.mui-content').on('tap', '.crm-user-head', function() {
+				var cid = this.dataset.id;
+				var type = this.dataset.type;
+				console.log(type)
+				if (type == 'crm') {
+					var stauts = this.dataset.stauts;
+					if (stauts == 1) {
+						openPage('crm_detail_miniapp.html', 'crm_detail_miniapp', '#2289FF', {
+							cid: cid
+						}, 'slide-in-right');
+					} else {
+						openPage('crm_detail_app.html', 'crm_detail_app', '#2289FF', {
+							cid: cid
+						}, 'slide-in-right');
+					}
+				} else if (type == 'friend') {
+					openPage('customer_detail.html', 'customer_detail', '#2289FF', {
+						cid: cid
+					}, 'slide-in-right');
+				}
+			})
+			// 获取客户列表
+			function getCustomerList(type) {
+				if (!userInfo) return;
+				mui.post($ajaxUrl + 'customer', {
+					action: 'list',
+					token: userInfo.token,
+					type: type
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						if (type == 'customer') {
+							app.newcustomerData = res.data;
+							app.totalNum = res.data.count.total;
+						} else if (type == 'crm') {
+							app.crmList = res.data;
+						} else {
+							app.friendList = res.data;
+						}
+					} else {
+						app.newcCustomerlist = [];
+					}
+				}, 'json')
+			}
+		</script>
+	</body>
+
+</html>

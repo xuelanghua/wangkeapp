@@ -6,7 +6,6 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<link href="../css/mui.indexedlist.css" rel="stylesheet" />
 		<link href="../iconfont/iconfont.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/chat.css" />
 		<style type="text/css">
@@ -49,334 +48,38 @@
 					</div>
 				</div>
 			</div>
-			<div id='list' class="mui-indexed-list-cont">
-				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
-					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="serach">
-				</div>
-				<div class="mui-indexed-list-bar mui-hidden" v-show="nowaday=='crm'||nowaday=='friend'" id="list_bar">
-					<a>A</a>
-					<a>B</a>
-					<a>C</a>
-					<a>D</a>
-					<a>E</a>
-					<a>F</a>
-					<a>G</a>
-					<a>H</a>
-					<a>I</a>
-					<a>J</a>
-					<a>K</a>
-					<a>L</a>
-					<a>M</a>
-					<a>N</a>
-					<a>O</a>
-					<a>P</a>
-					<a>Q</a>
-					<a>R</a>
-					<a>S</a>
-					<a>T</a>
-					<a>U</a>
-					<a>V</a>
-					<a>W</a>
-					<a>X</a>
-					<a>Y</a>
-					<a>Z</a>
-				</div>
-				<div class="mui-indexed-list-alert"></div>
-				<div class="mui-indexed-list-inner">
-					<div v-show="'customer'==nowaday">
-						<ul class="tips-cont">
-							<li><i class="totalNum"></i>用户总数:{{totalNum}}</li>
-							<li><i class="followNum"></i>跟进数量:{{followNum}}</li>
-							<li><i class="bargainNum"></i>成交数量:{{bargainNum}}</li>
-						</ul>
-						<div class="trapezium-container">
-							<div class="trapezium"></div>
-							<div class="trapezium-tips">用户总数:<span class="customer_total">{{totalNum}}</span></div>
-							<div class="trapezium1"></div>
-							<div class="trapezium-tips">跟进数量:<span class="customer_total">{{followNum}}</span></div>
-							<div class="trapezium2"></div>
-							<div class="trapezium-tips">成交数量:<span class="customer_total">{{bargainNum}}</span></div>
-						</div>
-						<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-							<a class="mui-control-item mui-active" href="#item1">新增客户</a>
-							<a class="mui-control-item" href="#item2">推荐锁定</a>
-							<a class="mui-control-item" href="#item3">跟进中</a>
-							<a class="mui-control-item" href="#item4">高意向</a>
-							<a class="mui-control-item" href="#item5">成交</a>
-						</div>
-						<div id="list-container" class="list-container">
-							<div id="item1" class="mui-control-content mui-active" :style="viewHeight">
-								<div class="mui-scroll-wrapper">
-									<div class="mui-scroll">
-										<ul class="mui-table-view">
-											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.new" :key="index">
-												<div class="user-head-img customer-head-img" :data-id="items.id" :data-type="items.type">
-													<img :src="items.avatar||items.avatarUrl">
-												</div>
-												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
-												 :data-avatar="items.avatar||items.avatarUrl">
-													<div class="left-top">
-														<div class="mui-ellipsis user-name">
-															{{items.name||items.nickName}}
-														</div>
-														<div class="timer-tips">
-															{{items.last_time_text}}
-														</div>
-													</div>
-													<div class="left-bottom">
-														<div>
-															{{items.count}}次互动
-														</div>
-														<div class="bottom-last">
-															进行中
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div v-if="newcustomerData.new== undefined || newcustomerData.new.length <= 0" class="void-data-tips">
-									<img src="../image/icon/void-data.png">
-									<p>没有数据</p>
-								</div>
-							</div>
-							<div id="item2" class="mui-control-content" :style="viewHeight">
-								<div class="mui-scroll-wrapper">
-									<div class="mui-scroll">
-										<ul class="mui-table-view">
-											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.recommend" :key="index">
-												<div class="user-head-img customer-head-img" :data-id="items.id">
-													<img :src="items.avatar||items.avatarUrl">
-												</div>
-												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
-												 :data-avatar="items.avatar||items.avatarUrl">
-													<div class="left-top">
-														<div class="mui-ellipsis user-name">
-															{{items.name||items.nickName}}
-														</div>
-														<div class="timer-tips mui-hidden">
-															{{items.end_time}}
-														</div>
-													</div>
-													<div class="left-bottom">
-														<div>
-															{{items.create_time}}
-														</div>
-														<div class="bottom-last">
-															{{items.end_time}}
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div v-if="newcustomerData.recommend== undefined || newcustomerData.recommend.length <= 0" class="void-data-tips">
-									<img src="../image/icon/void-data.png">
-									<p>没有数据</p>
-								</div>
-							</div>
-							<div id="item3" class="mui-control-content" :style="viewHeight">
-								<div class="mui-scroll-wrapper">
-									<div class="mui-scroll">
-										<ul class="mui-table-view">
-											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.follow" :key="index">
-												<div class="user-head-img customer-head-img" :data-id="items.id">
-													<img :src="items.avatar||items.avatarUrl">
-												</div>
-												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
-												 :data-avatar="items.avatar||items.avatarUrl">
-													<div class="left-top">
-														<div class="mui-ellipsis user-name">
-															{{items.name||items.nickName}}
-														</div>
-														<div class="timer-tips">
-															{{items.last_time_text}}
-														</div>
-													</div>
-													<div class="left-bottom">
-														<div>
-															{{items.count}}次互动
-														</div>
-														<div class="bottom-last">
-															跟进中
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div v-if="newcustomerData.follow== undefined || newcustomerData.follow.length <= 0" class="void-data-tips">
-									<img src="../image/icon/void-data.png">
-									<p>没有数据</p>
-								</div>
-							</div>
-							<div id="item4" class="mui-control-content" :style="viewHeight">
-								<div class="mui-scroll-wrapper">
-									<div class="mui-scroll">
-										<ul class="mui-table-view">
-											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.intention" :key="index">
-												<div class="user-head-img customer-head-img" :data-id="items.id">
-													<img :src="items.avatar||items.avatarUrl">
-												</div>
-												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
-												 :data-avatar="items.avatar||items.avatarUrl">
-													<div class="left-top">
-														<div class="mui-ellipsis user-name">
-															{{items.name||items.nickName}}
-														</div>
-														<div class="timer-tips">
-															{{items.last_time_text}}
-														</div>
-													</div>
-													<div class="left-bottom">
-														<div>
-															{{items.count}}次互动
-														</div>
-														<div class="bottom-last">
-															高意向
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-									<div v-if="newcustomerData.intention== undefined || newcustomerData.intention.length <= 0" class="void-data-tips">
-										<img src="../image/icon/void-data.png">
-										<p>没有数据</p>
-									</div>
-								</div>
-							</div>
-							<div id="item5" class="mui-control-content" :style="viewHeight">
-								<div class="mui-scroll-wrapper">
-									<div class="mui-scroll">
-										<ul class="mui-table-view">
-											<li class="mui-table-view-cell customer-list" v-for="(items,index) in newcustomerData.deal" :key="index">
-												<div class="user-head-img customer-head-img" :data-id="items.id">
-													<img :src="items.avatar||items.avatarUrl">
-												</div>
-												<div class="customer-left customer-chat" :data-id="items.id" :data-type="items.type" :data-name="items.name||items.nickName"
-												 :data-avatar="items.avatar||items.avatarUrl">
-													<div class="left-top">
-														<div class="mui-ellipsis user-name">
-															{{items.name||items.nickName}}
-														</div>
-														<div class="timer-tips">
-															{{items.last_time_text}}
-														</div>
-													</div>
-													<div class="left-bottom">
-														<div>
-															{{items.count}}次互动
-														</div>
-														<div class="bottom-last">
-															完成
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-									<div v-if="newcustomerData.deal== undefined || newcustomerData.deal.length <= 0" class="void-data-tips">
-										<img src="../image/icon/void-data.png">
-										<p>没有数据</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div id="crm" v-show="'crm'==nowaday">
-						<div id="crm-scroll" class="mui-scroll-wrapper crm-scroll-cont">
-							<div class="mui-scroll">
-								<ul class="mui-table-view  crm-scroll-cont">
-									<template v-for="(list,key,index) in crmList" :key="index">
-										<!-- <li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li> -->
-										<li class="mui-table-view-cell customer-list" :data-tags="list.pinyin" v-for="(items,idx) in list" :key="idx">
-											<div class="user-head-img crm-user-head" data-type="crm" :data-id="items.id" :data-stauts="items.type">
-												<img :src="items.headimgurl||'../image/touxiang.png'">
-											</div>
-											<div class="customer-left" @tap="crmGoChat(items.uid!=0?items.uid:items.id,items.name,items.headimgurl,items.type)">
-												<div class="left-top">
-													<div class="mui-ellipsis user-name">
-														{{items.name}}
-													</div>
-													<div class="timer-tips">
-														<span v-if="items.mark==1" class="status">[跟进中]</span>
-														<span v-if="items.mark==2" class="mui-hidden">[成交]</span>
-													</div>
-												</div>
-												<div class="left-bottom">
-													<span v-if="items.company" class="tags mui-ellipsis">{{items.company}}</span>
-													<span v-if="items.job" class="tags tags-p">{{items.job}}</span>
-												</div>
-											</div>
-										</li>
-									</template>
-								</ul>
-								<div v-if="crmList== undefined || crmList.length <= 0" class="void-data-tips">
-									<img src="../image/icon/void-data.png">
-									<p>没有数据</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div v-show="'friend'==nowaday">
-						<div id="friend-scroll" class="mui-scroll-wrapper friend-scroll-cont">
-							<div class="mui-scroll">
-								<ul class="mui-table-view">
-									<li class="mui-table-view-cell customer-list" id="new_friend">
-										<div class="user-head-img">
-											<img src="../image/news1.png">
-										</div>
-										<div class="customer-left">
-											<span>新朋友</span>
-											<span class="mui-badge mui-badge-danger new-friend-badge" id="new-friend" v-show="newfriendNum!=0">{{newfriendNum}}</span>
-										</div>
-									</li>
-									<template v-for="(vel,key,idx) in friendList" :key="idx">
-										<!-- <li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li> -->
-										<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
-											<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
-												<img :src="list.avatarUrl||'../image/user_default.png'">
-											</div>
-											<div class="customer-left">
-												<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
-													{{list.name||list.nickName}}
-												</div>
-												<span class="check-business-card" data-number='list.fid' v-on:click.stop="friendDetail(list.fid)">查看名片</span>
-											</div>
-										</li>
-									</template>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div id="chat-bottom"></div>
-				</div>
-			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/mui.indexedlist.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo = getUserInfo();
+			var userInfo = getUserInfo(),
+				refresh = '',
+				aniShow = {},
+				styles = {
+					top: '140px',
+					bottom: '0',
+					render: "always",
+					scrollIndicator: "none"
+				},
+				activeTab = 'customer';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					tabs: [{
+						url: 'new_customer_tab.html',
 						title: '新增客户',
 						icon: 'iconfont icon-friends',
 						id: 'customer',
-						checked: false
+						checked: true
 					}, {
+						url: 'customer_crm_tab.html',
 						title: '客户CRM',
 						icon: 'iconfont icon-custom',
 						id: 'crm',
-						checked: true
+						checked: false
 					}, {
+						url: 'friend_tab.html',
 						title: '好 友',
 						icon: 'iconfont icon-friends',
 						id: 'friend',
@@ -386,130 +89,66 @@
 					followNum: '0',
 					bargainNum: '0',
 					// 当前项
-					nowaday: 'crm',
+					nowaday: 'customer',
 					viewHeight: '',
 					newcustomerData: {},
-					rendererList: [],
-					crmList: {},
-					friendList: {},
 					newfriendNum: '0',
 					messageNum: '0'
 				},
 				methods: {
 					onchangeTab: function(idx, tid) {
-						if (this.nowaday == tid) {
+						if (activeTab == tid) {
 							return;
 						}
-						getCustomerList(tid)
-						for (var i = 0; i < this.tabs.length; i++) {
-							this.tabs[i].checked = false;
-							this.tabs[idx].checked = true;
-						}
 						this.nowaday = tid;
-						pageinit();
-					},
-					// 跳转聊天
-					goChat: function(cid, chatName, avatar) {
-						openPage('dialog.html', 'dialog', '#F7F7F7', {
-							cid: cid,
-							chatName: chatName,
-							avatar: avatar,
-							barStyle: 'light'
-						}, 'slide-in-right');
-						plus.navigator.setStatusBarStyle('dark');
-					},
-					// crm跳转聊天
-					crmGoChat: function(cid, chatName, avatar, type) {
-						if (type == 1) {
-							openPage('dialog.html', 'dialog', '#F7F7F7', {
-								cid: cid,
-								chatName: chatName,
-								avatar: avatar,
-								barStyle: 'light'
-							}, 'slide-in-right');
-							plus.navigator.setStatusBarStyle('dark');
-						} else {
-							openPage('crm_detail_app.html', 'crm_detail_app', '#2289FF', {
-								cid: cid,
-							}, 'slide-in-right');
+						if (tid == activeTab) {
+							return;
 						}
-					},
-					// 跳转朋友详情
-					friendDetail: function(fid) {
-						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-							fid: fid
-						})
+						//显示目标选项卡
+						//若为iOS平台或非首次显示，则直接显示
+						if (mui.os.ios || aniShow[tid]) {
+							plus.webview.show(tid);
+						} else {
+							//否则，使用fade-in动画，且保存变量
+							var temp = {};
+							temp[tid] = "true";
+							mui.extend(aniShow, temp);
+							plus.webview.show(tid, "fade-in");
+						}
+						//隐藏当前;
+						plus.webview.hide(activeTab);
+						for (var i = 0; i < 3; i++) {
+							this.tabs[i].checked = false;
+						}
+						this.tabs[idx].checked = true;
+						activeTab = tid;
 					}
 				},
 				mounted: function() {
-					mui.init({
-						// pullRefresh: {
-						// 	container: "#chat-bottom",
-						// 	up: {
-						// 		height: 50,
-						// 		auto: true,
-						// 		contentrefresh: "正在加载...",
-						// 		contentnomore: '没有更多数据了',
-						// 		callback: function() {
-						// 			downRefresh = false;
-						// 			if (app.nowaday == 'crm') {
-						// 				getCustomerList('crm');
-						// 			} else if (app.nowaday == 'customer') {
-						// 				getCustomerList('customer');
-						// 			} else if (app.nowaday == 'friend') {
-						// 				getCustomerList('friend');
-						// 			}
-						// 			setTimeout(function() {
-						// 				mui('#chat-bottom').pullRefresh().endPullupToRefresh(false);
-						// 			}, 1500)
-						// 		}
-						// 	},
-						// 	down: {
-						// 		style: 'circle',
-						// 		color: '#2289FF',
-						// 		callback: function() {
-						// 			downRefresh = true;
-						// 			if (app.nowaday == 'crm') {
-						// 				getCustomerList('crm', false);
-						// 			} else if (app.nowaday == 'customer') {
-						// 				getCustomerList('customer', false);
-						// 			} else if (app.nowaday == 'friend') {
-						// 				getCustomerList('friend', false);
-						// 			}
-						// 			setTimeout(function() {
-						// 				mui('#chat-bottom').pullRefresh().endPulldownToRefresh();
-						// 			}, 1500)
-						// 		}
-						// 	}
-						// }
-					});
+					mui.init();
 					var pageHeight = 0;
 					mui.plusReady(function() {
 						pageinit();
-						getCustomerList("crm");
-						// 实际高度
-						// pageHeight=plus.android.invoke(plus.android.currentWebview(),"getHeight");
-						// pageHeight=plus.screen.resolutionHeight*plus.screen.scale;
-						// pageHeight = document.documentElement.clientHeight || document.body.clientHeight;
-						// pageHeight = window.screen.availHeight;
-						// 逻辑高度
-						// pageHeight = plus.screen.resolutionHeight;
 						pageHeight = plus.display.resolutionHeight;
 						app.viewHeight = 'height:' + (pageHeight - 400) + 'px';
+						// 创建页面
+						var self = plus.webview.currentWebview();
+						for (var i = 0; i < 3; i++) {
+							var temp = {};
+							var sub = plus.webview.create(app.tabs[i].url, app.tabs[i].id, styles);
+							if (i > 0) {
+								sub.hide();
+							} else {
+								temp[app.tabs[i].id] = "true";
+								mui.extend(aniShow, temp);
+							}
+							self.append(sub);
+						}
 					})
 				}
 			})
 
 			function pageinit() {
-				mui(".mui-scroll-wrapper").scroll({
-					scrollY: true, //是否竖向滚动
-					scrollX: false, //是否横向滚动
-					startX: 0, //初始化时滚动至x
-					startY: 0, //初始化时滚动至y
-					indicators: false, //是否显示滚动条
-					deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
-					bounce: true //是否启用回弹
-				});
 				//监听消息数量 首页广播
 				window.addEventListener('messgeNumber', function(e) {
 					app.messageNum = e.detail.number;
@@ -521,10 +160,6 @@
 				//好友新增客户 添加客户页面广播
 				window.addEventListener('refreshCustomer', function(e) {
 					getCustomerList("customer");
-				})
-				//crm 添加客户页面广播
-				window.addEventListener('refreshCrm', function(e) {
-					getCustomerList("crm");
 				})
 				//好友新增客户crm 添加客户页面广播
 				window.addEventListener('refreshFriend', function(e) {
@@ -565,48 +200,12 @@
 				})
 				setStatusBar('', 'dark');
 			})
-			// 跳转详情页
-			mui('.mui-content').on('tap', '.crm-user-head', function() {
-				var cid = this.dataset.id;
-				var type = this.dataset.type;
-				console.log(type)
-				if (type == 'crm') {
-					var stauts = this.dataset.stauts;
-					if (stauts == 1) {
-						openPage('crm_detail_miniapp.html', 'crm_detail_miniapp', '#2289FF', {
-							cid: cid
-						}, 'slide-in-right');
-					} else {
-						openPage('crm_detail_app.html', 'crm_detail_app', '#2289FF', {
-							cid: cid
-						}, 'slide-in-right');
-					}
-				} else if (type == 'friend') {
-					openPage('customer_detail.html', 'customer_detail', '#2289FF', {
-						cid: cid
-					}, 'slide-in-right');
-				}
-			})
 			// 打开新增客户详情页
 			mui('.mui-table-view').on('tap', '.customer-head-img', function() {
 				var cid = this.dataset.id;
 				openPage('customer_detail.html', 'customer_detail', '#2289FF', {
 					cid: cid
 				}, 'slide-in-right');
-			})
-			// 打开新增客户聊天
-			mui('.mui-table-view').on('tap', '.customer-chat', function() {
-				var cid = this.dataset.id,
-					type = this.dataset.type,
-					chatName = this.dataset.name,
-					avatar = this.dataset.avatar;
-				openPage('dialog.html', 'dialog', '#F7F7F7', {
-					cid: cid,
-					chatName: chatName,
-					avatar: avatar,
-					barStyle: 'light'
-				}, 'slide-in-right');
-				plus.navigator.setStatusBarStyle('dark');
 			})
 
 			// 点击消息
@@ -629,30 +228,6 @@
 				openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
 				plus.navigator.setStatusBarStyle('dark');
 			})
-
-			// 获取客户列表
-			function getCustomerList(type) {
-				if (!userInfo) return;
-				mui.post($ajaxUrl + 'customer', {
-					action: 'list',
-					token: userInfo.token,
-					type: type
-				}, function(res) {
-					// logs(res);
-					if (res.errno == 0) {
-						if (type == 'customer') {
-							app.newcustomerData = res.data;
-							app.totalNum = res.data.count.total;
-						} else if (type == 'crm') {
-							app.crmList = res.data;
-						} else {
-							app.friendList = res.data;
-						}
-					} else {
-						app.newcCustomerlist = [];
-					}
-				}, 'json')
-			}
 		</script>
 	</body>
 

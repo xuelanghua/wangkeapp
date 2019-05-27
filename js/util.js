@@ -711,11 +711,11 @@ function pushCallback(data, event) {
 		if (type == 'jump') {
 			if (url == 'chat') {
 				if (type == 'customer') {
-					mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
+					mui.fire(plus.webview.getWebviewById('customer'), 'refreshCustomer');
 				} else if (type == 'friend') {
-					mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
+					mui.fire(plus.webview.getWebviewById("friend"), 'refreshFriend');
 				} else if (data.chat == 'crm') {
-					mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
+					mui.fire(plus.webview.getWebviewById("crm"), 'refreshCrm');
 				}
 			} else if (url == 'dialog') {
 				// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');

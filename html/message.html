@@ -231,7 +231,7 @@
 					<span>
 						<span class="system-red-tips"></span>
 						<span>通知消息</span>
-						<span>(0)</span>
+						<span id="systemMsg_total">(0)</span>
 					</span>
 				</li>
 			</div>
@@ -481,16 +481,34 @@
 							var cid = this.dataset.cid;
 							var chatName = this.dataset.name;
 							var avatar = this.dataset.avatar;
-							fnOpenWin('dialog.html', 'dialog', {
-								statusbar: {
-									background: '#F7F7F7'
-								}
-							}, {
-								cid: cid,
-								chatName: chatName,
-								barStyle: 'dark',
-								avatar: avatar
-							}, 'slide-in-right');
+							// 关闭左滑菜单才能跳转
+							var swipemenu = mui('.mui-selected')[0];
+							if (swipemenu) {
+								mui.swipeoutClose(swipemenu);
+								setTimeout(function() {
+									fnOpenWin('dialog.html', 'dialog', {
+										statusbar: {
+											background: '#F7F7F7'
+										}
+									}, {
+										cid: cid,
+										chatName: chatName,
+										barStyle: 'dark',
+										avatar: avatar
+									}, 'slide-in-right');
+								}, 300);
+							} else {
+								fnOpenWin('dialog.html', 'dialog', {
+									statusbar: {
+										background: '#F7F7F7'
+									}
+								}, {
+									cid: cid,
+									chatName: chatName,
+									barStyle: 'dark',
+									avatar: avatar
+								}, 'slide-in-right');
+							}
 						})
 
 						mui('header').on('tap', 'li', function() {
@@ -530,6 +548,7 @@
 								document.querySelector('.system-red-tips').style.display = "none";
 							}
 						}
+						document.getElementById("systemMsg_total").innerText='('+res.data.length+')';
 					} else {
 						// message(res.message, "center");
 					}
@@ -554,8 +573,8 @@
 						var chatList = res.data;
 						var total = chatList.length;
 						document.getElementById('chat_total').innerText = '(' + total + ')';
+						html += '<ul class="mui-table-view">';
 						for (var i = 0; i < total; i++) {
-							html += '<ul class="mui-table-view">';
 							html += '<li class="Record_list mui-table-view-cell mui-transitioning" data-avatar="' + chatList[
 									i].user.avatarUrl + '" data-cid="' + chatList[i].user
 								.id + '" data-name="' + chatList[i].user.nickName +
@@ -610,9 +629,9 @@
 							html += '</div>';
 							html += '</div>';
 							html += '</li>';
-							html += '</ul>';
-							html += '</div>';
 						}
+						html += '</ul>';
+						html += '</div>';
 					} else {
 						html += '<div style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
 					}
@@ -634,7 +653,7 @@
 			// 跳转目标助理
 			mui(".mui-content").on("tap", ".target-assistant", function() {
 				var genre = this.dataset.genre;
-				openPage('target-assistant.html', 'target-assistant', '#f7f7f7', {
+				openPage('target_assistant.html', 'target_assistant', '#f7f7f7', {
 					genre: genre
 				});
 			})

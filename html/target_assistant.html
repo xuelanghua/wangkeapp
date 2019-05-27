@@ -154,7 +154,7 @@
 				genre = '',
 				limit = 5,
 				skip = 1,
-				refresh = 'down';
+				refresh = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -192,7 +192,7 @@
 							container: "#mui-content", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
 							up: {
 								height: 50,
-								auto: true,
+								auto: false,
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
@@ -205,6 +205,7 @@
 								style: 'circle', //单webview模式的下拉刷新 
 								color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
 								callback: function() {
+									mui('#mui-content').pullRefresh().refresh(true);
 									refresh = "down";
 									skip = 1;
 									getMsgList();
@@ -254,6 +255,7 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0) {
 						if (refresh == 'up') {
 							app.msgList = app.msgList.concat(res.data);
@@ -265,11 +267,12 @@
 							app.msgList = res.data;
 						}
 					} else {
-						message(res.message, "center");
 						if (refresh == 'up') {
 							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+							message(res.message);
 						} else {
-							
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+							message(res.message);
 						}
 					}
 				}, 'json')
