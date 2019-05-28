@@ -105,9 +105,9 @@ function imageResize(src, cb) {
 		src: src,
 		dst: '_doc/' + filename,
 		overwrite: true,
-		width: '1000px', //这里指定了宽度，同样可以修改  
+		width: '1024px', //这里指定了宽度，同样可以修改  
 		format: 'jpg',
-		quality: 90 //图片质量不再修改，以免失真  
+		quality: 100 //图片质量不再修改，以免失真  
 	}, function(e) {
 		upload(e.target, cb);
 	}, function(err) {
