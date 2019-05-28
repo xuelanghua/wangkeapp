@@ -18,6 +18,11 @@
 				padding-top: 0;
 				min-height: 100vh;
 			}
+
+			.mui-pull {
+				font-weight: normal;
+				color: #999999;
+			}
 		</style>
 	</head>
 
@@ -73,7 +78,7 @@
 					</ul>
 					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
-						<p>没有数据</p>
+						<!-- <p>没有数据</p> -->
 					</div>
 				</div>
 				<div id="item2" class="mui-control-content">
@@ -105,7 +110,7 @@
 					</ul>
 					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
-						<p>没有数据</p>
+						<!-- <p>没有数据</p> -->
 					</div>
 				</div>
 				<div id="item3" class="mui-control-content">
@@ -137,7 +142,7 @@
 					</ul>
 					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
-						<p>没有数据</p>
+						<!-- <p>没有数据</p> -->
 					</div>
 				</div>
 				<div id="item4" class="mui-control-content">
@@ -169,7 +174,7 @@
 					</ul>
 					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
-						<p>没有数据</p>
+						<!-- <p>没有数据</p> -->
 					</div>
 				</div>
 				<div id="item5" class="mui-control-content">
@@ -201,7 +206,7 @@
 					</ul>
 					<div v-if="newcustomerData== undefined || newcustomerData.length <= 0" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
-						<p>没有数据</p>
+						<!-- <p>没有数据</p> -->
 					</div>
 				</div>
 			</div>
@@ -212,8 +217,10 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
-			var typer = 'new_customer';
-			refresh = '';
+			var typer = 'new_customer',
+				refresh = '',
+				skip = 1,
+				limit = 10;
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -221,7 +228,7 @@
 					// 当前项
 					nowaday: 'crm',
 					viewHeight: '',
-					newcustomerData: {},
+					newcustomerData: [],
 					rendererList: []
 				},
 				mounted: function() {
@@ -234,21 +241,20 @@
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
+									skip++;
+									refresh = 'up';
 									getCustomerList(typer);
-									setTimeout(function() {
-										mui('#mui-content').pullRefresh().endPullupToRefresh(false);
-									}, 1500)
 								}
 							},
 							down: {
 								style: 'circle',
 								color: '#2289FF',
 								callback: function() {
-									downRefresh = true;
+									refresh = 'down';
+									skip = 1;
+									getnum();
 									getCustomerList(typer);
-									setTimeout(function() {
-										mui('#mui-content').pullRefresh().endPulldownToRefresh();
-									}, 1500)
+									// alert(typer);
 								}
 							}
 						}
@@ -268,8 +274,22 @@
 			})
 			// 切换类型
 			mui('.mui-segmented-control').on('tap', 'a', function() {
+				if (typer == this.dataset.type) {
+					return;
+				}
 				typer = this.dataset.type;
+				skip = 1;
+				refresh = '';
+				// plus.nativeUI.showWaiting("等待中...");
 				getCustomerList(typer);
+				// 切换选项卡重启上拉刷新
+				mui('#mui-content').pullRefresh().refresh(true);
+				if (this.dataset.type == 'is_intention') {
+					mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+					mui('.mui-pull-bottom-pocket')[0].classList.add('mui-hidden');
+				} else {
+					mui('.mui-pull-bottom-pocket')[0].classList.remove('mui-hidden');
+				}
 			})
 			// 打开新增客户聊天
 			mui('.mui-table-view').on('tap', '.customer-chat', function() {
@@ -302,19 +322,38 @@
 				mui.post($ajaxUrl + 'customer', {
 					action: 'customer_list',
 					token: userInfo.token,
-					type: typer
+					type: typer,
+					limit: limit,
+					skip: skip
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						app.newcustomerData = res.data;
+						if (refresh == 'up') {
+							app.newcustomerData = app.newcustomerData.concat(res.data);
+							mui('#mui-content').pullRefresh().endPullupToRefresh();
+						} else if (refresh == 'down') {
+							app.newcustomerData = res.data;
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						} else {
+							app.newcustomerData = res.data;
+						}
 					} else {
-						app.newcCustomerlist = [];
+						if (refresh == 'down') {
+							app.newcustomerData = [];
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						} else if (refresh == 'up') {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (skip == 1) {
+							app.newcustomerData = [];
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						}
 					}
+					// plus.nativeUI.closeWaiting();
 				}, 'json')
 			}
 			//好友新增客户 添加客户页面广播
 			window.addEventListener('refreshCustomer', function(e) {
-				getCustomerList("customer");
+				getCustomerList("deal");
 			})
 		</script>
 	</body>

@@ -559,7 +559,7 @@
 					<div id="deal_flag">
 						<!-- <img src="../image/wdeal.png"> -->
 						<span id="deal_icon" style="margin-top: 3px;margin-bottom: 2px;"><i class="iconfont icon-user-flag" style="font-size: 23px;"></i></span>
-						<span id="deal_title" id="deal_title">未成交</span>
+						<span id="deal_title">未成交</span>
 					</div>
 					<button id="call_up" style="margin-left: 15px;display: none;">电话</button>
 				</div>
@@ -678,6 +678,7 @@
 							document.getElementById('deal_title').innerText = '未成交';
 							document.getElementById('deal_title').style.color = '#999';
 							dealFlag = 0;
+							mui.fire(plus.webview.getWebviewById('customer'), 'refreshCustomer');
 						}
 					}, 'json')
 				} else {
@@ -693,6 +694,7 @@
 							document.getElementById('deal_title').innerText = '已成交';
 							document.getElementById('deal_title').style.color = 'red';
 							dealFlag = 1;
+							mui.fire(plus.webview.getWebviewById('customer'), 'refreshCustomer');
 						}
 					}, 'json')
 				}
