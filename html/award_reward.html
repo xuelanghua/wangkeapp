@@ -12,20 +12,17 @@
 			.service-award-container .mui-table-view .mui-table-view-cell {
 				height: 1.5rem;
 			}
-			[v-cloak] {
-				display: none;
-			}
 		</style>
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">我的粉丝</h1>
+			<h1 class="mui-title">推荐奖列表</h1>
 		</header>
 
-		<div id="mui-content" class="mui-content service-award-container" v-cloak>
-			<ul id="fans-list" class="mui-table-view" v-if="fansFlag">
+		<div id="mui-content" class="mui-content service-award-container">
+			<ul id="fans-list" class="mui-table-view" v-if="fansList.length>0">
 				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
 					<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
 					<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
@@ -33,7 +30,7 @@
 							<span>{{list.nickName}}</span>
 							<!-- .vip,.vip1,.vip2,.vip3四种class -->
 							<span :class="'vip'+list.group_id">{{list.group_name}}</span>
-							<!-- <span v-if="list.recommend_award>0" class="mui-pull-right">+{{list.recommend_award}}</span> -->
+							<span v-if="list.recommend_award>0" class="mui-pull-right">+{{list.recommend_award}}</span>
 						</div>
 						<div class="bottom mui-clearfix">
 							<span>加入时间：{{list.activation_time}}</span>
@@ -42,9 +39,9 @@
 					</div>
 				</li>
 			</ul>
-			<div v-if="emptyFlag" style="font-size: 0.28rem;color: #999999;">
+			<div v-else style="font-size: 0.28rem;color: #999999;">
 				<img style="width: 45%;display: block;margin: 10% auto 0;" class="no-friends" src="../image/icon/void-data.png">
-				<p style="text-align: center;">暂无粉丝</p>
+				<p style="text-align: center;">暂无数据</p>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
@@ -67,9 +64,7 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					fansList: [],
-					fansFlag: false,
-					emptyFlag: false
+					fansList: []
 				},
 				created: function() {
 					getFansList();
@@ -125,7 +120,7 @@
 			})
 
 			function getFansList() {
-				mui.post($ajaxUrl + 'member&action=fans', {
+				mui.post($ajaxUrl + 'member&action=recommend_award', {
 					token: userInfo.token,
 					skip: skip,
 					limit: limit
@@ -133,7 +128,6 @@
 					logs(res);
 					if (res.errno == 0 && skip == 1) {
 						app.fansList = res.data;
-						app.fansFlag = true;
 						if (refresh == 'down') {
 							mui('#fans-list').pullRefresh().endPulldownToRefresh();
 							mui('#fans-list').pullRefresh().refresh(true);
@@ -147,10 +141,9 @@
 						if (refresh == 'up') {
 							mui('#fans-list').pullRefresh().endPullupToRefresh(true);
 							message('没有更多了~');
-						}
-						if (skip == 1) {
-							app.emptyFlag = true;
-						}
+						}else if (refresh == 'down'){
+							mui('#fans-list').pullRefresh().endPulldownToRefresh();
+						} 
 					}
 				}, 'json');
 			}

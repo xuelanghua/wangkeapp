@@ -258,8 +258,8 @@
 					//若为iOS平台或非首次显示，则直接显示
 					setStatusBar(subpages[idx].statusBg, subpages[idx].style);
 					if (mui.os.ios || aniShow[targetTab]) {
-						plus.webview.show(targetTab);
-						// plus.webview.show(targetTab, "fade-in", 200);
+						// plus.webview.show(targetTab);
+						plus.webview.show(targetTab, "fade-in", 300);
 					} else {
 						//否则，使用fade-in动画，且保存变量
 						var temp = {};
@@ -443,8 +443,14 @@
 						mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
 							number: res.data
 						});
+						mui.fire(plus.webview.getWebviewById('friend'), 'friendApplyNumber', {
+							number: res.data
+						});
 					} else {
 						mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
+							number: 0
+						});
+						mui.fire(plus.webview.getWebviewById('friend'), 'friendApplyNumber', {
 							number: 0
 						});
 						app.numbers = 0;

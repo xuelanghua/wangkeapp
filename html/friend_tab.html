@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.indexedlist.css" rel="stylesheet" />
+		<link href="../iconfont/iconfont.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/chat.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.mui-content {
+				padding-top: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" class="mui-content chat-container" v-cloak>
+			<div id='list' class="mui-indexed-list-cont">
+				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
+					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="serach">
+				</div>
+				<div class="mui-indexed-list-bar" id="list_bar">
+					<a>A</a>
+					<a>B</a>
+					<a>C</a>
+					<a>D</a>
+					<a>E</a>
+					<a>F</a>
+					<a>G</a>
+					<a>H</a>
+					<a>I</a>
+					<a>J</a>
+					<a>K</a>
+					<a>L</a>
+					<a>M</a>
+					<a>N</a>
+					<a>O</a>
+					<a>P</a>
+					<a>Q</a>
+					<a>R</a>
+					<a>S</a>
+					<a>T</a>
+					<a>U</a>
+					<a>V</a>
+					<a>W</a>
+					<a>X</a>
+					<a>Y</a>
+					<a>Z</a>
+				</div>
+				<div class="mui-indexed-list-alert"></div>
+				<div class="mui-indexed-list-inner">
+					<div id="friend-scroll" class="mui-scroll-wrapper friend-scroll-cont">
+						<div class="mui-scroll">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell customer-list" id="new_friend">
+									<div class="user-head-img">
+										<img src="../image/news1.png">
+									</div>
+									<div class="customer-left">
+										<span>新朋友</span>
+										<span class="mui-badge mui-badge-danger new-friend-badge" id="new-friend" v-show="newfriendNum!=0">{{newfriendNum}}</span>
+									</div>
+								</li>
+								<template v-for="(vel,key,idx) in friendList" :key="idx">
+									<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
+									<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
+										<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
+											<img :src="list.avatarUrl||'../image/user_default.png'">
+										</div>
+										<div class="customer-left">
+											<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
+												{{list.name||list.nickName}}
+											</div>
+											<span class="check-business-card" data-number='list.fid' v-on:click.stop="friendDetail(list.fid)">查看名片</span>
+										</div>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="chat-bottom"></div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.indexedlist.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					newcustomerData: {},
+					rendererList: [],
+					crmList: {},
+					friendList: {},
+					newfriendNum: '0',
+					messageNum: '0'
+				},
+				methods: {
+					// 跳转聊天
+					goChat: function(cid, chatName, avatar) {
+						openPage('dialog.html', 'dialog', '#F7F7F7', {
+							cid: cid,
+							chatName: chatName,
+							avatar: avatar,
+							barStyle: 'light'
+						}, 'slide-in-right');
+						plus.navigator.setStatusBarStyle('dark');
+					},
+					// 跳转朋友详情
+					friendDetail: function(fid) {
+						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+							fid: fid
+						})
+					}
+				},
+				mounted: function() {
+					mui.init({
+						pullRefresh: {
+							container: "#chat-bottom",
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								height: '50px',
+								range: '120px',
+								callback: function() {
+									downRefresh = true;
+									getCustomerList();
+									setTimeout(function() {
+										mui('#chat-bottom').pullRefresh().endPulldownToRefresh();
+									}, 1500)
+								}
+							}
+						}
+					});
+					var pageHeight = 0;
+					mui.plusReady(function() {
+						getCustomerList();
+						var list = document.getElementById('list');
+						pageHeight = plus.display.resolutionHeight;
+						list.style.height = pageHeight - 230 + 'px';
+						window.indexedList = new mui.IndexedList(list);
+					})
+				}
+			})
+
+			//好友添加数量 首页广播
+			window.addEventListener('friendApplyNumber', function(e) {
+				app.newfriendNum = e.detail.number;
+			})
+			//好友新增客户 添加客户页面广播
+			window.addEventListener('refreshfriend', function(e) {
+				getCustomerList();
+			})
+			// 点击添加好友
+			mui(".mui-content").on('tap', '#add_friend,#new_friend', function() {
+				openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
+				plus.navigator.setStatusBarStyle('dark');
+			})
+			// 跳转详情页
+			mui('.mui-content').on('tap', '.crm-user-head', function() {
+				var cid = this.dataset.id;
+				var type = this.dataset.type;
+				if (type == 'crm') {
+					var stauts = this.dataset.stauts;
+					if (stauts == 1) {
+						openPage('crm_detail_miniapp.html', 'crm_detail_miniapp', '#2289FF', {
+							cid: cid
+						}, 'slide-in-right');
+					} else {
+						openPage('crm_detail_app.html', 'crm_detail_app', '#2289FF', {
+							cid: cid
+						}, 'slide-in-right');
+					}
+				} else if (type == 'friend') {
+					openPage('customer_detail.html', 'customer_detail', '#2289FF', {
+						cid: cid
+					}, 'slide-in-right');
+				}
+			})
+			// 获取客户列表
+			function getCustomerList() {
+				if (!userInfo) return;
+				mui.post($ajaxUrl + 'customer', {
+					action: 'friend_list',
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.friendList = res.data;
+					} else {
+						app.newcCustomerlist = [];
+					}
+				}, 'json')
+			}
+		</script>
+	</body>
+
+</html>

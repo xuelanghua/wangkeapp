@@ -49,6 +49,10 @@
 			}
 			.number,.number1{
 				width: 50%;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 			}
 			.number1{
 				border-left: 1px solid #999999;
@@ -142,6 +146,17 @@
 			[v-cloak] {
 				display: none;
 			}
+			.more-and-more.mui-navigate-right:after{
+				position: relative;
+				font-size: 16px;
+				display: inline-block;
+				margin-left: 0px;
+				color: #999999;
+				transform: translateY(0);
+				-webkit-transform: translateY(0);
+				right: 0;
+				top: 0;
+			}
 		</style>
 	</head>
 
@@ -164,10 +179,12 @@
 					<div class="mui-pull-left number">
 						<span>我的粉丝</span>
 						<span>{{memberInfo.fans_number||0}}</span>
+						<span class="more-and-more mui-navigate-right"></span>
 					</div>
 					<div class="mui-pull-right number1">
 						<span>推荐奖累计</span>
 						<span>{{memberInfo.recommended_award||'0'}}</span>
+						<span class="more-and-more mui-navigate-right"></span>
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -175,13 +192,14 @@
 				<img src="../image/member1.png">
 			</div>
 			<div class="fans">
-				<div class="fans-title"><span>我的粉丝</span> <span class="mui-pull-right mui-navigate-right">更多</span></div>
+				<div class="fans-title"><span>我的粉丝({{memberInfo.fans_number||0}})</span> <span class="mui-pull-right mui-navigate-right">更多</span></div>
 				<div v-if="fansLists.length>0">
 					<div class="fans_information" v-for="(lists,index) in fansLists" :key="index">
 						<div class="fans_information_chart mui-pull-left" :data-fid="list.id">
 							<img :src="lists.avatarUrl">
 						</div>
-						<div class="flex-right mui-pull-left" style="margin-left: 15px;" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
+						<div class="flex-right mui-pull-left" style="margin-left: 15px;" :data-cid="list.id" :data-chatname="list.nickName"
+						 :data-avatar="list.avatarUrl">
 							<div>
 								<span>{{lists.nickName}}</span>
 								<span>
@@ -243,15 +261,20 @@
 						})
 
 						// 跳转到粉丝页面
-						mui(".mui-content").on("tap", ".mui-navigate-right", function() {
+						mui(".mui-content").on("tap", ".mui-navigate-right,.number", function() {
 							openPage('my_fans.html', 'my_fans', '#f7f7f7', '');
+						})
+						
+						// 推荐奖累计
+						mui(".mui-content").on("tap", ".number1", function() {
+							openPage('award_reward.html', 'award_reward', '#f7f7f7', '');
 						})
 
 						// 我的权益
 						mui("header").on('tap', '.my-equity', function() {
 							openPage('equities_page.html', 'equities_page', '#f7f7f7', '');
 						})
-						
+
 						mui(".mui-content").on('tap', '.fans_information_chart', function() {
 							var fid = this.dataset.fid;
 							openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
@@ -262,7 +285,7 @@
 							var cid = this.dataset.cid,
 								chatName = this.dataset.chatname,
 								avatar = this.dataset.avatar;
-								logs(cid);
+							logs(cid);
 							openPage('dialog.html', 'dialog', '#f7f7f7', {
 								cid: cid,
 								chatName: chatName,

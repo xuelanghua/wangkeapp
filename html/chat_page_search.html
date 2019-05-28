@@ -93,6 +93,7 @@
 				font-size: 0.26rem;
 				color: #999999;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -104,7 +105,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">搜索</h1>
 		</header>
-		<div id="mui-content" class="mui-content chat-page-search"  v-cloak>
+		<div id="mui-content" class="mui-content chat-page-search" v-cloak>
 			<form action="" onsubmit="return false">
 				<div class="mui-input-row search-cont">
 					<span class="mui-icon mui-icon-search"></span>
@@ -115,14 +116,14 @@
 				<ul class="mui-table-view" v-if="customer.length>0">
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-friends"></i>新增客户</li>
 					<li class="mui-table-view-cell" v-for="(f,index) in customer" :key="index">
-						<img :src="f.avatarUrl" @tap="goDetail('customer',f.id,'')">
+						<img :src="f.avatarUrl" @tap="goDetail('customer',f.uid,'')">
 						<p @tap="goChat(f.nickName,f.avatarUrl,f.uid)">{{f.nickName}}</p>
 					</li>
 				</ul>
 				<ul class="mui-table-view" v-if="crm.length>0">
 					<li class="mui-table-view-cell headline"><i class="iconfont icon-custom"></i>客户CRM</li>
 					<li class="mui-table-view-cell" v-for="(f,index) in crm" :key="index">
-						<img :src="f.headimgurl||'../image/sound_recording_chart.png'" @tap="goDetail('crm',f.id,f.type)">
+						<img :src="f.headimgurl||'../image/sound_recording_chart.png'" @tap="goDetail('crm',f.id!=0?f.id:f.id,f.type)">
 						<p @tap="goChat(f.name,f.avatarUrl,f.uid,f.type)">{{f.name}}</p>
 					</li>
 				</ul>
@@ -209,7 +210,7 @@
 						}
 					}
 				},
-				mounted:function(){
+				mounted: function() {
 					mui.init({
 						swipeBack: false,
 						beforeback: function() {

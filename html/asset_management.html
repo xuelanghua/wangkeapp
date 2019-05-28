@@ -109,7 +109,10 @@
 	<script src="../js/vue.min.js"></script>
 	<script>
 		mui.init({
-			swipeBack: true
+			swipeBack: true,
+			beforeback: function() {
+				mui.fire(plus.webview.getWebviewById('redpacket_setting'), 'changecolor');
+			}
 		})
 		var viewport = document.documentElement.clientWidth;
 		if (viewport > 750) {

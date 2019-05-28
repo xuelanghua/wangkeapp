@@ -78,6 +78,17 @@
 			.input-money-cont{
 				padding: 5px 10px;
 			}
+			.asset-center{
+				width: 66px;
+				height: 44px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 14px;
+				position: relative;
+				z-index: 18;
+				color:#2289FF;
+			}
 		</style>
 	</head>
 	<body>
@@ -85,6 +96,7 @@
 			<div class="mui-icon mui-icon-left-nav mui-pull-left" id="back"></div>
 			<h1 class="mui-title">红包设置</h1>
 			<!-- <div class="mui-pull-right record">红包记录</div> -->
+			<div class="mui-pull-right asset-center">资产中心</div>
 		</header>
 
 		<div class="mui-content">
@@ -122,7 +134,6 @@
 			settingInit(); //初始化设置
 			var currentWebview = plus.webview.currentWebview();
 			var fro = currentWebview.from;
-
 			document.getElementById('back').addEventListener('tap', function() {
 				if (fro == 'setting') {
 					setStatusBar('', 'light');
@@ -149,12 +160,12 @@
 					plus.nativeUI.toast('红包个数输入错误!');
 					return;
 				}
-				
+
 				if (redpacket_fee < 0.5 || redpacket_fee > 200) {
 					plus.nativeUI.toast('红包金额输入错误!');
 					return;
 				}
-				
+
 				if (redpacket_wish.length == 0) {
 					plus.nativeUI.toast('请输入红包祝福语!');
 					return;
@@ -166,7 +177,7 @@
 					redpacket_fee: redpacket_fee,
 					redpacket_wish: redpacket_wish,
 					token: userInfo.token,
-					redpacket_number:redpacket_num
+					redpacket_number: redpacket_num
 				}, function(res) {
 					if (res.errno == 0) {
 						plus.nativeUI.toast(res.message);
@@ -207,5 +218,13 @@
 				plus.nativeUI.closeWaiting();
 			}, 'json')
 		}
+		mui('.mui-bar').on('tap', '.asset-center', function() {
+			openPage('asset_management.html', 'asset_management', '#2289ff', '');
+			plus.navigator.setStatusBarStyle("light");
+		})
+
+		window.addEventListener('changecolor', function(event) {
+			plus.navigator.setStatusBarStyle("dark");
+		})
 	</script>
 </html>
