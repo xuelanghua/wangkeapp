@@ -113,7 +113,9 @@
 			.mui-navigate-right:after {
 				font-size: 0.38rem;
 			}
-			.desc-cont li p span, .desc-cont .level-status{
+
+			.desc-cont li p span,
+			.desc-cont .level-status {
 				color: #666666;
 			}
 		</style>
@@ -143,7 +145,8 @@
 									</p>
 								</li>
 							</ul>
-							<div class="check-detail"><span class="mui-navigate-right">查看详情</span></div>
+							<!-- :data-timer="list.date" -->
+							<div class="check-detail" :data-timer="list.date"><span class="mui-navigate-right">查看详情</span></div>
 						</div>
 					</div>
 				</li>
@@ -227,28 +230,33 @@
 						// var arr=['01','02','03','04','05'];
 						// var idx = Math.floor((Math.random() * arr.length));
 						// app.random=arr[idx];
-
+						plus.webview.currentWebview().setStyle({
+							scrollIndicator: 'none'
+						})
 						var self = plus.webview.currentWebview();
 						// 获得消息类型
 						genre = self.genre;
 						// 查看详情
 						mui(".mui-content").on('tap', '.check-detail', function() {
-							openPage('target_detail.html', 'target_detail', '#ffffff', '');
+							var timer=this.dataset.timer;
+							openPage('target_detail.html', 'target_detail', '#ffffff', {
+								timer:timer
+							});
 						})
 						getMsgList();
 						readNotice();
 					})
 				}
 			})
-			
+
 			// 阅读消息
-			function readNotice(){
+			function readNotice() {
 				mui.post($ajaxUrl + 'chat&action=read_notice', {
 					token: userInfo.token,
 					type: genre
 				}, function(res) {
 					logs(res);
-				},'json')
+				}, 'json')
 			}
 			// 获取消息列表
 			function getMsgList() {
@@ -263,19 +271,17 @@
 						if (refresh == 'up') {
 							app.msgList = app.msgList.concat(res.data);
 							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
-						} else if(refresh == 'down'){
+						} else if (refresh == 'down') {
 							app.msgList = res.data;
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
-						}else{
+						} else {
 							app.msgList = res.data;
 						}
 					} else {
 						if (refresh == 'up') {
 							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
-							message(res.message);
 						} else {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
-							message(res.message);
 						}
 					}
 				}, 'json')
