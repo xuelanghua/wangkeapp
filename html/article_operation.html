@@ -180,6 +180,16 @@
 				background-color: #00cbbb;
 			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			 
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -201,19 +211,12 @@
 			</ul>
 			<img class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
 		</div>
+		
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			var status = true;
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			 
-			// 初始化字体大小结束
 			mui(".mui-content").on('tap', '.operation-btn', function() {
 				document.querySelector(".operation-btn").classList.toggle("active");
 				document.querySelector(".groups").classList.toggle("active");

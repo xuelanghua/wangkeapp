@@ -224,7 +224,19 @@
 				text-align: center;
 				color: #999999;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -234,7 +246,7 @@
 			<span class="mui-pull-right create-team-btn">创建团队</span>
 		</header>
 
-		<div id="mui-content" class="mui-content join-team-container">
+		<div id="mui-content" class="mui-content join-team-container" v-cloak>
 			<div class="mui-input-row search-cont">
 				<span class="mui-icon mui-icon-search"></span>
 				<input id="search" type="text" v-model="keywords" class="mui-input-clear" placeholder="团队名称/团队号">
@@ -286,16 +298,8 @@
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		mui.init();
-		// 初始化字体大小
 		var userInfo = getUserInfo();
-		var viewport = document.documentElement.clientWidth;
 		var teamid = '';
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
-		// 初始化字体大小结束
 		mui.plusReady(function() {})
 
 		var app = new Vue({

@@ -241,11 +241,23 @@
 				color: #999999;
 				/* background-color: #007AFF; */
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
-		<div id="mui-content">
+		<div id="mui-content"  v-cloak>
 			<header class="mui-bar mui-bar-nav">
 				<a v-if="identity" class="mui-pull-left create-team-btn cancel-btn" @tap="cancelOperate">取消</a>
 				<div v-else class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
@@ -353,14 +365,6 @@
 		var userInfo = getUserInfo();
 		var tid = '';
 		var captainUid = 0;
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
-		// 初始化字体大小结束
 		var app = new Vue({
 			el: "#mui-content",
 			data: {

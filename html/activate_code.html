@@ -212,6 +212,15 @@
 				display: none;
 			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -333,13 +342,6 @@
 				},
 				created: function() {
 					var ishow = true;
-					// 初始化字体大小
-					var viewport = document.documentElement.clientWidth;
-					if (viewport > 750) {
-						viewport = 750
-					}
-					document.documentElement.style.fontSize = viewport / 7.5 + "px";
-					// 初始化字体大小结束
 					mui.plusReady(function() {
 						plus.webview.currentWebview().setStyle({
 							statusbar: {

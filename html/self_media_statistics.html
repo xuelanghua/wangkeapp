@@ -47,7 +47,20 @@
 			text-align: center;
 			color: #999;
 		}
+		[v-cloak] {
+			display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -56,7 +69,7 @@
 			<h1 class="mui-title">自媒体广告</h1>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content" v-cloak>
 			<ul class="mui-table-view" v-if="articleList">
 				<template v-for="(item, key) in articleList" :key="key">
 					<li class="mui-table-view-cell">
@@ -91,18 +104,10 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
-			// 初始化字体大小结束
 
 			var userInfo = getUserInfo();
 			var vm = new Vue({
-				el: '.nui-content',
+				el: '.mui-content',
 				data: {
 					articleList: null,
 				},

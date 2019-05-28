@@ -25,7 +25,17 @@
 			#cash {
 				border: 1px solid rgba(255, 255, 255, .6);
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		</script>
 	</head>
 
 	<body>
@@ -34,7 +44,7 @@
 			<h1 class="mui-title">店铺资产管理</h1>
 		</header>
 
-		<div id="mui-content" class="mui-content bill-container">
+		<div id="mui-content" class="mui-content bill-container" v-cloak>
 			<div class="banner enterplorer-banner">
 				<div class="am-container">
 					<img src="../image/assets.png" style="width: 100%;margin-top: -40px;">
@@ -101,11 +111,6 @@
 		mui.init({
 			swipeBack: true
 		})
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		var userInfo = getUserInfo(),
 			skip = 1;
 		var vm = new Vue({

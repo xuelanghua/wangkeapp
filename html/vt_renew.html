@@ -31,7 +31,19 @@
 			.mui-table-view-cell.total.mui-active{
 				background-color: #FFFFFF;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body style="position: relative;min-height: 100%;">
@@ -39,7 +51,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">vip续费</h1>
 		</header>
-		<div id="collections" class="mui-content">
+		<div id="collections" class="mui-content"  v-cloak>
 			<div class="activation-code-activation">
 				<div class="pattern-of-payment">
 					<form class="mui-input-group">
@@ -75,14 +87,6 @@
 			mui.init({
 				swipeBack: true
 			});
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
-			 
 			//支付相关变量
 			var payType = 'wxpay';
 			var wxChannel = null; // 微信支付

@@ -6,10 +6,6 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
-			[v-cloak] {
-				display: none;
-			}
-
 			.target-groups {
 				padding: 0;
 				margin: 0;
@@ -118,7 +114,19 @@
 			.desc-cont .level-status {
 				color: #666666;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 	<body>
 		<header class="mui-bar mui-bar-nav">
@@ -219,13 +227,6 @@
 							}
 						}
 					});
-					// 初始化字体大小
-					var viewport = document.documentElement.clientWidth;
-					if (viewport > 750) {
-						viewport = 750
-					}
-					document.documentElement.style.fontSize = viewport / 7.5 + "px";
-					// 初始化字体大小结束
 					mui.plusReady(function() {
 						// var arr=['01','02','03','04','05'];
 						// var idx = Math.floor((Math.random() * arr.length));

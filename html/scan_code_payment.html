@@ -81,7 +81,19 @@
 				padding: 0;
 				font-size: 0.3rem;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -90,7 +102,7 @@
 			<h1 class="mui-title">付款</h1>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content" v-cloak>
 			<div class="payment-content">
 				<div class="payment-header mui-clearfix">
 					<div class="mui-pull-left">
@@ -118,15 +130,6 @@
 		mui.init({
 			swipeBack: true
 		});
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
-		// 初始化字体大小结束
-
 		//支付相关变量
 		var payType = 'wxpay';
 		var wxChannel = null; // 微信支付

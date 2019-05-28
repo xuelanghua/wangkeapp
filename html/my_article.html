@@ -178,7 +178,19 @@
 			.mui-backdrop {
 				background-color: rgba(0, 0, 0, 0);
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -186,7 +198,7 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">我的文章</h1>
 		</header>
-		<div id="mui-content" class="mui-content">
+		<div id="mui-content" class="mui-content" v-cloak>
 			<div v-if="articles.length>0" id="article_container">
 				<ul class="mui-table-view">
 					<li :id="'article'+article.id" class="mui-table-view-cell" :data-article="article.id" v-for="(article,index) in articles"
@@ -261,14 +273,7 @@
 				document.getElementById("verift-body").style.display = "none";
 			});
 
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
 			var userInfo = getUserInfo();
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
 			var app = new Vue({
 				el: "#mui-content",
 				data: {

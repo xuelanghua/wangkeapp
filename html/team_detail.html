@@ -309,8 +309,20 @@
 				border: 2px solid #2289ff;
 				background-color: #2289ff;
 			}
-		</style>
 
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -319,7 +331,7 @@
 			<h1 class="mui-title">团队详情</h1>
 		</header>
 
-		<div id="mui-content" class="mui-content team-detail-container">
+		<div id="mui-content" class="mui-content team-detail-container" v-cloak>
 			<div class="team-detail-header">
 				<div class="mui-clearfix">
 					<div class="mui-pull-left">
@@ -416,14 +428,6 @@
 	<script type="text/javascript">
 		mui.init();
 		var userInfo = getUserInfo();
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
-		// 初始化字体大小结束
 		var app = new Vue({
 			el: "#mui-content",
 			data: {

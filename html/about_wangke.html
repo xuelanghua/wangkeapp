@@ -57,6 +57,16 @@
 				margin-top: 0.3rem;
 			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -91,15 +101,7 @@
 	<script type="text/javascript">
 		mui.init();
 		var userInfo = getUserInfo();
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
 		var systemSetting = null;
-		// 初始化字体大小结束
 		mui.plusReady(function() {
 			getSystemSetting();
 			document.getElementById("confirmBtn").addEventListener('tap', function() {
