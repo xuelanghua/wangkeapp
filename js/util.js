@@ -710,9 +710,9 @@ function pushCallback(data, event) {
 	if (event == 'click') {
 		if (type == 'jump') {
 			if (url == 'chat') {
-				if (type == 'customer') {
+				if (data.chat == 'customer') {
 					mui.fire(plus.webview.getWebviewById('customer'), 'refreshCustomer');
-				} else if (type == 'friend') {
+				} else if (data.chat == 'friend') {
 					mui.fire(plus.webview.getWebviewById("friend"), 'refreshFriend');
 				} else if (data.chat == 'crm') {
 					mui.fire(plus.webview.getWebviewById("crm"), 'refreshCrm');
@@ -724,11 +724,11 @@ function pushCallback(data, event) {
 				// console.log(33333);
 				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-				fnOpenWin('html/' + url + '.html', url, {
-					statusbar: {
-						background: '#F7F7F7'
-					}
-				}, extra, '');
+				// fnOpenWin('html/' + url + '.html', url, {
+				// 	statusbar: {
+				// 		background: '#F7F7F7'
+				// 	}
+				// }, extra, '');
 			}  else if (url == 'message') {
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 				fnOpenWin('html/' + url + '.html', url, {
@@ -768,12 +768,12 @@ function pushCallback(data, event) {
 			}
 		} else if (url == 'chat') {
 			if (data.chat == 'customer') {
-				mui.fire(plus.webview.getWebviewById(url), 'refreshCustomer');
+				mui.fire(plus.webview.getWebviewById('customer'), 'refreshCustomer');
 			} else if (data.chat == 'friend') {
 				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
-				mui.fire(plus.webview.getWebviewById(url), 'refreshFriend');
+				mui.fire(plus.webview.getWebviewById('friend'), 'refreshFriend');
 			} else if (data.chat == 'crm') {
-				mui.fire(plus.webview.getWebviewById(url), 'refreshCrm');
+				mui.fire(plus.webview.getWebviewById('crm'), 'refreshCrm');
 			}
 			playNoticeAudio();
 		} else if (url == 'activation') {
