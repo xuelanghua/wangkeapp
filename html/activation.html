@@ -83,13 +83,16 @@
 				transform: scale(0.8);
 				-webkit-transform: scale(0.8);
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="vip-container" class="mui-content vip-container">
 			<div class="close-button">关闭</div>
 			<div class="activation-link">激活码激活</div>
-			<div class="mui-card" id="form">
+			<div class="mui-card" id="form" v-cloak>
 				<form class="mui-input-group">
 					<div v-for="(item, index) in group" :key="index" v-if="item.id < 3" class="radio-list" :class="{active: item.id == 1}"
 					 :data-id="item.id" :data-fee="item.activation_fee">

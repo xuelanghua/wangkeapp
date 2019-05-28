@@ -12,6 +12,9 @@
 			.service-award-container .mui-table-view .mui-table-view-cell {
 				height: 1.5rem;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -21,7 +24,7 @@
 			<h1 class="mui-title">推荐奖列表</h1>
 		</header>
 
-		<div id="mui-content" class="mui-content service-award-container">
+		<div id="mui-content" class="mui-content service-award-container" v-cloak>
 			<ul id="fans-list" class="mui-table-view" v-if="fansList.length>0">
 				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
 					<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
