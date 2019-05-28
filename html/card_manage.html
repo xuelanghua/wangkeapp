@@ -91,10 +91,17 @@
 
 			function setUserCard() {
 				var userInfo = getUserInfo();
-				document.getElementById("head-img").src = userInfo.avatarUrl;
-				document.getElementById("user-name").innerText = userInfo.nickName;
+				//获取用户信息
+				if (!userInfo) return;
+				mui.post($ajaxUrl + 'member', {
+					action: 'detail',
+					token: userInfo.token
+				}, function(res) {
+					var memberInfo = res.data;
+					document.getElementById("head-img").src = memberInfo.avatarUrl;
+					document.getElementById("user-name").innerText = memberInfo.nickName;
+				}, 'json');
 			}
 		</script>
 	</body>
-
 </html>

@@ -12,6 +12,9 @@
 			.service-award-container .mui-table-view .mui-table-view-cell {
 				height: 1.5rem;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -21,8 +24,8 @@
 			<h1 class="mui-title">我的粉丝</h1>
 		</header>
 
-		<div id="mui-content" class="mui-content service-award-container">
-			<ul id="fans-list" class="mui-table-view" v-if="fansList.length>0">
+		<div id="mui-content" class="mui-content service-award-container" v-cloak>
+			<ul id="fans-list" class="mui-table-view" v-if="fansFlag">
 				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
 					<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
 					<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
@@ -39,7 +42,7 @@
 					</div>
 				</li>
 			</ul>
-			<div v-else style="font-size: 0.28rem;color: #999999;">
+			<div v-if="emptyFlag" style="font-size: 0.28rem;color: #999999;">
 				<img style="width: 45%;display: block;margin: 10% auto 0;" class="no-friends" src="../image/icon/void-data.png">
 				<p style="text-align: center;">暂无粉丝</p>
 			</div>
@@ -64,7 +67,9 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					fansList: ['i']
+					fansList: [],
+					fansFlag: false,
+					emptyFlag: false
 				},
 				created: function() {
 					getFansList();
@@ -125,8 +130,10 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0 && skip == 1) {
 						app.fansList = res.data;
+						app.fansFlag = true;
 						if (refresh == 'down') {
 							mui('#fans-list').pullRefresh().endPulldownToRefresh();
 							mui('#fans-list').pullRefresh().refresh(true);
@@ -140,6 +147,9 @@
 						if (refresh == 'up') {
 							mui('#fans-list').pullRefresh().endPullupToRefresh(true);
 							message('没有更多了~');
+						}
+						if (skip == 1) {
+							app.emptyFlag = true;
 						}
 					}
 				}, 'json');
