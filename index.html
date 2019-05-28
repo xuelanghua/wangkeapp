@@ -66,6 +66,14 @@
 				display: none;
 			}
 		</style>
+		<script type="text/javascript">
+			//mui初始化
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		</script>
 	</head>
 
 	<body>
@@ -85,14 +93,6 @@
 		<script src="js/util.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
-			//mui初始化
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			var userInfo = getUserInfo();
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
 			var prevId = "home",
 				currentId = "",
 				tempId = "";
@@ -147,10 +147,10 @@
 					statusBg: "#2289FF",
 					style: "light",
 					// style: "dark",
-					render: "always",
 					styles: {
 						top: "0px",
 						bottom: "51px",
+						render: "always",
 						scrollIndicator: "none",
 						statusbar: {
 							background: "#2289FF"
@@ -163,6 +163,7 @@
 			var current = '';
 			var activeTab = subpages[0].ids;
 
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#index",
 				data: {
@@ -259,14 +260,14 @@
 					setStatusBar(subpages[idx].statusBg, subpages[idx].style);
 					if (mui.os.ios || aniShow[targetTab]) {
 						// plus.webview.show(targetTab);
-						plus.webview.show(targetTab, "fade-in", 300);
+						plus.webview.show(targetTab, "fade-in", 100);
 					} else {
 						//否则，使用fade-in动画，且保存变量
 						var temp = {};
 						temp[targetTab] = "true";
 						mui.extend(aniShow, temp);
-						plus.webview.show(targetTab);
-						// plus.webview.show(targetTab, "fade-in", 200);
+						// plus.webview.show(targetTab);
+						plus.webview.show(targetTab, "fade-in", 100);
 					}
 					//隐藏当前;
 					plus.webview.hide(activeTab);

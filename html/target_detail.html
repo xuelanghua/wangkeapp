@@ -244,11 +244,17 @@
 			var uid = 0;
 			userInfo = getUserInfo();
 			var selectTime = formatDate('y-m-d', '');
-			var choosetime='';
+			var choosetime = '';
 			document.querySelector('#select-time').innerText = selectTime;
 			var timeType = '1';
+			// var optionsCont = {
+			// 	"type": "date"
+			// };
 			var optionsCont = {
-				"type": "date"
+				"type": "date",
+				"beginYear": 2019,
+				"endYear": 2029,
+				"value": ""
 			};
 			var myDate = new Date();
 			targetPlan = null;
@@ -283,8 +289,8 @@
 						}
 						if (_self.timer) {
 							selectTime = _self.timer;
-							choosetime = _self.timer;
 							document.querySelector('#select-time').innerText = selectTime;
+							optionsCont['value'] = selectTime;
 						}
 						plus.webview.currentWebview().setStyle({
 							statusbar: {
@@ -321,19 +327,16 @@
 								"type": "month",
 								"beginYear": 2019,
 								"endYear": 2029,
-								"value": choosetime
 							}
 							selectTime = isYear + "-" + isMonth;
 							timeType = "2";
 							userTargetStatistics();
 						} else {
 							document.querySelector('#select-time').innerText = formatDate('y-m-d', '');
-							alert(choosetime);
 							optionsCont = {
 								"type": "date",
 								"beginYear": 2019,
 								"endYear": 2029,
-								"value": choosetime
 							}
 							var isYear = myDate.getFullYear();
 							selectTime = "" + isYear + "-" + isMonth + "-" + isDay;
@@ -393,6 +396,7 @@
 							_self.picker.show(function(res) {
 								mui("#select-time")[0].innerText = res.text;
 								selectTime = res.text;
+								optionsCont['value'] = selectTime;
 								// timeType = "2";
 								userTargetStatistics();
 								_self.picker = null;

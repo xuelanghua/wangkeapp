@@ -71,9 +71,12 @@
 								fid: fid
 							}, function(res) {
 								if (res.errno == 0) {
-									mui.fire(plus.webview.getWebviewById('chat'), 'refreshFriend');
+									mui.fire(plus.webview.getWebviewById('friend'), 'refreshFriend');
+									mui.fire(plus.webview.getWebviewById('friends_detail'), 'refreshFriendInfo');
 									message("解除成功");
-									mui.back();
+									setTimeout(function() {
+										mui.back();
+									}, 1500)
 								}
 							}, 'json')
 						}
