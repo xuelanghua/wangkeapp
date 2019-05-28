@@ -41,7 +41,7 @@
 			</ul>
 			<div v-else style="font-size: 0.28rem;color: #999999;">
 				<img style="width: 45%;display: block;margin: 10% auto 0;" class="no-friends" src="../image/icon/void-data.png">
-				<p style="text-align: center;">暂无粉丝</p>
+				<p style="text-align: center;">暂无数据</p>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
@@ -64,7 +64,7 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					fansList: ['i']
+					fansList: []
 				},
 				created: function() {
 					getFansList();
@@ -120,11 +120,12 @@
 			})
 
 			function getFansList() {
-				mui.post($ajaxUrl + 'member&action=fans', {
+				mui.post($ajaxUrl + 'member&action=recommend_award', {
 					token: userInfo.token,
 					skip: skip,
 					limit: limit
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0 && skip == 1) {
 						app.fansList = res.data;
 						if (refresh == 'down') {
@@ -140,7 +141,9 @@
 						if (refresh == 'up') {
 							mui('#fans-list').pullRefresh().endPullupToRefresh(true);
 							message('没有更多了~');
-						}
+						}else if (refresh == 'down'){
+							mui('#fans-list').pullRefresh().endPulldownToRefresh();
+						} 
 					}
 				}, 'json');
 			}
