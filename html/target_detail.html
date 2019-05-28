@@ -116,6 +116,7 @@
 			.mui-popover-arrow {
 				display: none;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -136,7 +137,7 @@
 			<h1 class="mui-title">目标详情</h1>
 			<a class="mui-pull-right my-target-menu" href="">我的目标</a>
 		</header>
-		<div id="targetDetail" class="mui-content target-detail-container"  v-cloak>
+		<div id="targetDetail" class="mui-content target-detail-container" v-cloak>
 			<div class="target-detail-heade">
 				<div class="mui-row">
 					<div class="mui-col-xs-6">
@@ -243,6 +244,7 @@
 			var uid = 0;
 			userInfo = getUserInfo();
 			var selectTime = formatDate('y-m-d', '');
+			var choosetime='';
 			document.querySelector('#select-time').innerText = selectTime;
 			var timeType = '1';
 			var optionsCont = {
@@ -279,6 +281,11 @@
 							uid = _self.uid;
 							document.querySelector('.my-target-menu').style.display = 'none';
 						}
+						if (_self.timer) {
+							selectTime = _self.timer;
+							choosetime = _self.timer;
+							document.querySelector('#select-time').innerText = selectTime;
+						}
 						plus.webview.currentWebview().setStyle({
 							statusbar: {
 								background: '#ffffff'
@@ -313,19 +320,22 @@
 							optionsCont = {
 								"type": "month",
 								"beginYear": 2019,
-								"endYear": 2029
+								"endYear": 2029,
+								"value": choosetime
 							}
 							selectTime = isYear + "-" + isMonth;
 							timeType = "2";
 							userTargetStatistics();
 						} else {
 							document.querySelector('#select-time').innerText = formatDate('y-m-d', '');
+							alert(choosetime);
 							optionsCont = {
 								"type": "date",
 								"beginYear": 2019,
-								"endYear": 2029
+								"endYear": 2029,
+								"value": choosetime
 							}
-							var itYear = myDate.getFullYear();
+							var isYear = myDate.getFullYear();
 							selectTime = "" + isYear + "-" + isMonth + "-" + isDay;
 							timeType = "1";
 							userTargetStatistics();
