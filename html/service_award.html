@@ -91,6 +91,14 @@
 				display: none;
 			}
 		</style>
+		<script type="text/javascript">
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -106,7 +114,7 @@
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell timer">
 							<span id="timer-choice"><span id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></span></span>
-							<span>收入&nbsp;&nbsp;&yen;{{serviceAward.income}}</span>
+							<span>收入&nbsp;&nbsp;&yen;{{serviceAward.income||'0.00'}}</span>
 						</li>
 						<li class="mui-table-view-cell" v-for="(list,index) in serviceAward.list" :key="index">
 							<img :src="list.avatarUrl" alt="">
@@ -148,6 +156,7 @@
 				genre = '',
 				skip = 1,
 				timer = '',
+				refresh = '',
 				limit = 10;
 			var date = new Date;
 			var year = date.getFullYear();
@@ -157,19 +166,12 @@
 			}
 			var timers = year + '-' + month;
 			timer = timers;
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			 
-			// 初始化字体大小结束
 			var app = new Vue({
 				el: '#mui-content',
-				data:{
-						serviceAward: {},
-						currentTime: formatDate('y-m', ''),
-						showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
+				data: {
+					serviceAward: {},
+					currentTime: formatDate('y-m', ''),
+					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
 				},
 				created: function() {
 					getServiceAward();
@@ -185,6 +187,7 @@
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
+									refresh = 'up'
 									timer = timers;
 									skip += 1;
 									getServiceAward();
@@ -194,6 +197,7 @@
 								style: 'circle',
 								color: '#2289FF',
 								callback: function() {
+									refresh = 'down'
 									skip = 1;
 									getServiceAward();
 								}
@@ -250,22 +254,30 @@
 			})
 
 			function getServiceAward() {
+				// alert("下拉");
 				mui.post($ajaxUrl + 'member&action=service_award_log', {
 					token: userInfo.token,
-					data: timer,
+					date: timer,
 					type: genre,
 					skip: skip,
-					limit: limit,
+					limit: limit, 
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0 && skip == 1) {
 						app.serviceAward = res.data;
-						mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						if (refresh == 'down') {
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						}
 					} else if (res.errno == 0 && skip > 1) {
 						app.serviceAward.list = app.serviceAward.list.concat(res.data.list);
 						mui('#pullrefresh').pullRefresh().endPullupToRefresh();
 					} else {
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-						message('没有更多了~');
+						if (refresh == 'down') {
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						} else if(refresh == 'up'){
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+							message('没有更多了~');
+						}
 					}
 				}, 'json');
 			}
