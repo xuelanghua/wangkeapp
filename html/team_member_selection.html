@@ -98,7 +98,18 @@
 				margin-left: 0.18rem;
 				top: 16px;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		</script>
 	</head>
 
 	<body>
@@ -109,7 +120,7 @@
 		</header>
 
 		<div class="mui-content setting-container">
-			<div id='list' class="mui-indexed-list">
+			<div id='list' class="mui-indexed-list" v-cloak>
 				<div class="mui-indexed-list-search mui-input-row mui-search">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
 				</div>
@@ -168,12 +179,6 @@
 		mui.init();
 		var userInfo = getUserInfo();
 		var tid = '';
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
 		var app = new Vue({
 			el: "#list",
 			data:{

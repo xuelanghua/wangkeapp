@@ -108,7 +108,21 @@
 				background-color: rgba(255, 255, 255, 0);
 				border: 1px solid #ffffff;
 			}
+
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -117,7 +131,7 @@
 			<h1 class="mui-title">团队二维码</h1>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content" v-cloak>
 			<div class="team-qr-code">
 				<div class="qr-code-body">
 					<!-- <h2>肖飞的团队</h2> -->
@@ -146,22 +160,13 @@
 		mui.init({
 			swipeBack: true
 		});
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		 
-		// 初始化字体大小结束
-		
 		var userInfo = getUserInfo();
 		var vm = new Vue({
 			el: '.mui-content',
-			data:{
-					teamName: '',
-					teamId: 0,
-					qrcodeImage: '../image/scan-qr.png'
+			data: {
+				teamName: '',
+				teamId: 0,
+				qrcodeImage: '../image/scan-qr.png'
 			},
 			mounted: function() {
 				mui.plusReady(function() {
@@ -172,18 +177,17 @@
 				})
 			}
 		})
-		
+
 		function getQrcode() {
-			mui.get($ajaxUrl + 'userqrcode',{
-					action: 'team',
-					token: userInfo.token,
-					team_id: vm.teamId
-				}, function(res){
-					if (res.errno == 0) {
-						vm.qrcodeImage = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-					}
-				},'json'
-			);
+			mui.get($ajaxUrl + 'userqrcode', {
+				action: 'team',
+				token: userInfo.token,
+				team_id: vm.teamId
+			}, function(res) {
+				if (res.errno == 0) {
+					vm.qrcodeImage = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+				}
+			}, 'json');
 		}
 	</script>
 </html>

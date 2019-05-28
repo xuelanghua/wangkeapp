@@ -86,7 +86,20 @@
 			}
 			.table-header-container .active {
 				color: #FFF!important;
+			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -95,11 +108,11 @@
 			<h1 class="mui-title">店铺营收</h1>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content"  v-cloak>
 			<div class="container">
 				<div class="table-header">
 					<div class="table-header-container">
-						<div class="item" :class="{active: item1}" @tap="changeDays(7)" >7天</div>
+						<div class="item" :class="{active: item1}" @tap="changeDays(7)">7天</div>
 						<div class="item" :class="{active: item2}" @tap="changeDays(15)">15天</div>
 						<div class="item" :class="{active: item3}" @tap="changeDays(30)">30天</div>
 					</div>
@@ -134,14 +147,6 @@
 		mui.init({
 			swipeBack: true
 		});
-		// 初始化字体大小
-		var viewport = document.documentElement.clientWidth;
-		if (viewport > 750) {
-			viewport = 750
-		}
-		document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		 
-		// 初始化字体大小结束
 		mui.plusReady(function() {})
 		mui('.mui-content').on('tap', '.mui-table-view-cell', function() {
 			openPage('asset_management.html', 'asset_management', '#2289ff', '');
@@ -196,20 +201,20 @@
 
 		var vm = new Vue({
 			el: '.mui-content',
-			data:{
-					days: 7,
-					item1: true,
-					item2: false,
-					item3: false,
-					total: 0.00,
-					unit: 0.00,
-					average: 0.00,
+			data: {
+				days: 7,
+				item1: true,
+				item2: false,
+				item3: false,
+				total: 0.00,
+				unit: 0.00,
+				average: 0.00,
 			},
 			mounted: function() {
 				myChart = echarts.init(document.getElementById('main'), 'macarons');
 				myChart.setOption(option);
-				mui.plusReady(function () {
-				   shopOrderStatistics(); 
+				mui.plusReady(function() {
+					shopOrderStatistics();
 				})
 			},
 			methods: {
@@ -237,28 +242,27 @@
 				}
 			}
 		});
-		
+
 		//获取数据统计
 		function shopOrderStatistics() {
 			mui.get($ajaxUrl + 'order', {
-					action: 'statistic',
-					token: userInfo.token,
-					days: vm.days
-				}, function(res){
-					if (res.errno == 0) {
-						option.xAxis.data = res.data.date;
-						option.series[0].data = res.data.fee;
-						vm.total = res.data.total;
-						vm.unit = res.data.unit;
-						vm.average = res.data.average;
-					}
-					myChart.setOption(option);
-				}, 'json'
-			);
+				action: 'statistic',
+				token: userInfo.token,
+				days: vm.days
+			}, function(res) {
+				if (res.errno == 0) {
+					option.xAxis.data = res.data.date;
+					option.series[0].data = res.data.fee;
+					vm.total = res.data.total;
+					vm.unit = res.data.unit;
+					vm.average = res.data.average;
+				}
+				myChart.setOption(option);
+			}, 'json');
 		}
 		// 跳转我的资产
-		mui('.mui-content').on("tap",".my-assets",function(){
-			openPage('asset_management.html','asset_management','#2289ff','');
+		mui('.mui-content').on("tap", ".my-assets", function() {
+			openPage('asset_management.html', 'asset_management', '#2289ff', '');
 		})
 	</script>
 </html>
