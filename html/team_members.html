@@ -544,10 +544,11 @@
 				team_id: tid,
 				type: 1
 			}, function(res) {
-				logs(res);
 				if (res.errno == 0) {
 					app.userList = res.data;
-					// app.iscaptain
+					setTimeout(function(){
+						mui("#list").indexedList().findElements();
+					},1000);
 				}
 			}, 'json');
 		}
