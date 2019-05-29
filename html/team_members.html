@@ -241,13 +241,13 @@
 				color: #999999;
 				/* background-color: #007AFF; */
 			}
-			.mui-table-view{
+			#list .mui-table-view{
 				padding-bottom: 50px;
 			}
-			.mui-table-view:after{
+			#list .mui-table-view:after{
 				bottom: 50px;
 			}
-			.mui-indexed-list-bar a{
+			#list .mui-indexed-list-bar a{
 				height: 3.5% !important;
 			}
 			[v-cloak] {
@@ -455,16 +455,12 @@
 							}
 						}, 'json');
 					})
+					setTimeout(function(){
+						mui("#list").indexedList().findElements();
+					},500);
 				});
 				mui.ready(function() {
-					var header = document.querySelector('header.mui-bar');
-					var list = document.getElementById('list');
 					var done = document.getElementById('done');
-					//calc hieght
-					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
-					//create
-					window.indexedList = new mui.IndexedList(list);
-					//done event
 					done.addEventListener('tap', function() {
 						var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
 						var checkedValues = [];
@@ -548,6 +544,13 @@
 				if (res.errno == 0) {
 					app.userList = res.data;
 					// app.iscaptain
+					var list = document.getElementById('list');
+					var header = document.querySelector('header.mui-bar');
+					//calc hieght
+					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+					//create
+					window.indexedList = new mui.IndexedList(list);
+					//done event
 				}
 			}, 'json');
 		}
