@@ -129,7 +129,7 @@
 				color: #2289FF;
 				height: 44px;
 				padding: 0 10px;
-				display: flex;
+				display: none;
 				position: relative;
 				align-items: center;
 				justify-content: center;
@@ -193,7 +193,7 @@
 			mui.fire(plus.webview.getWebviewById('media'), 'advSettingFinish');
 		}
 	});
-	
+
 	mui.plusReady(function() {
 		mui.showLoading("正在加载..", "div");
 		article_id = plus.webview.currentWebview().article_id;
@@ -247,26 +247,30 @@
 				}
 			}, 'json');
 		})
-		mui('.mui-bar-nav').on('tap','.del-advertising',function(){
-			alert(userInfo.token);
-			if (!userInfo) return;
-			mui.post($ajaxUrl + 'article&action=article_adv_delete', {
-				article_id: article_id,
-				token: userInfo.token
-			}, function(res) {
-				if(res.errno==0){
-					mui.toast(data.message);
-					var article = plus.webview.getWebviewById('article');
-					//触发详情页面的newsId事件
-					mui.fire(article, 'articleinfo');
-					setTimeout(function() {
-						var ws = plus.webview.currentWebview();
-						plus.webview.close(ws);
-					}, 1500);
-				}else{
-					mui.toast(data.message);
+		mui('.mui-bar-nav').on('tap', '.del-advertising', function() {
+			plus.nativeUI.confirm("确认要删除吗？", function(e) {
+				if (e.index == 0) {
+					if (!userInfo) return;
+					mui.post($ajaxUrl + 'article&action=article_adv_delete', {
+						article_id: article_id,
+						token: userInfo.token
+					}, function(res) {
+						if (res.errno == 0) {
+							mui.toast('删除成功');
+							var article = plus.webview.getWebviewById('article');
+							//触发详情页面的newsId事件
+							mui.fire(article, 'articleinfo');
+							setTimeout(function() {
+								var ws = plus.webview.currentWebview();
+								plus.webview.close(ws);
+							}, 1500);
+						} else {
+							mui.toast('删除失败');
+						}
+					}, 'json')
 				}
-			}, 'json')
+			});
+
 		})
 	})
 
@@ -281,13 +285,14 @@
 			console.log(JSON.stringify(data));
 			if (data.errno == '0') {
 				if (data.data.is_me_adv == '1') {
-					if (data.data.adv_info.top_pic.length>0) {
+					document.querySelector('.del-advertising').style.display='flex';
+					if (data.data.adv_info.top_pic.length > 0) {
 						document.getElementById('top_adv').innerHTML = '<img src="' + data.data.adv_info.top_pic + '">';
 						document.querySelector('input[name=top_adv]').value = data.data.adv_info.top_pic;
 					} else {
 						document.getElementById('top_adv').innerHTML = '<img src="../image/upload_tip.png" alt="">';
 					}
-					if (data.data.adv_info.bottom_pic.length>0) {
+					if (data.data.adv_info.bottom_pic.length > 0) {
 						document.getElementById('bottom_adv').innerHTML = '<img src="' + data.data.adv_info.bottom_pic + '">';
 						document.querySelector('input[name=bottom_adv]').value = data.data.adv_info.bottom_pic;
 					} else {
@@ -299,6 +304,8 @@
 					if (data.data.adv_info.bottom_link != '') {
 						document.getElementById('bottom_link').innerHTML = data.data.adv_info.bottom_link;
 					}
+				}else{
+					document.querySelector('.del-advertising').style.display='none';
 				}
 			}
 		}, 'json');
