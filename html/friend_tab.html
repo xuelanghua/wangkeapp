@@ -17,8 +17,9 @@
 			.mui-content {
 				padding-top: 0;
 			}
+
 			.chat-container .mui-indexed-list-bar a {
-			  height: 3.7% !important;
+				height: 3.7% !important;
 			}
 		</style>
 	</head>
@@ -60,35 +61,35 @@
 				</div>
 				<div class="mui-indexed-list-alert"></div>
 				<div class="mui-indexed-list-inner">
-					<div id="friend-scroll" class="mui-scroll-wrapper friend-scroll-cont">
-						<div class="mui-scroll">
-							<ul class="mui-table-view">
-								<li class="mui-table-view-cell customer-list" id="new_friend">
-									<div class="user-head-img">
-										<img src="../image/news1.png">
+					<!-- <div id="friend-scroll" class="mui-scroll-wrapper friend-scroll-cont">
+					<div class="mui-scroll"> -->
+					<ul class="mui-table-view friend-scroll-cont">
+						<li class="mui-table-view-cell customer-list" id="new_friend">
+							<div class="user-head-img">
+								<img src="../image/news1.png">
+							</div>
+							<div class="customer-left">
+								<span>新朋友</span>
+								<span class="mui-badge mui-badge-danger new-friend-badge" id="new-friend" v-show="newfriendNum!=0">{{newfriendNum}}</span>
+							</div>
+						</li>
+						<template v-for="(vel,key,idx) in friendList" :key="idx">
+							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
+							<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
+								<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
+									<img :src="list.avatarUrl||'../image/user_default.png'">
+								</div>
+								<div class="customer-left">
+									<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
+										{{list.name||list.nickName}}
 									</div>
-									<div class="customer-left">
-										<span>新朋友</span>
-										<span class="mui-badge mui-badge-danger new-friend-badge" id="new-friend" v-show="newfriendNum!=0">{{newfriendNum}}</span>
-									</div>
-								</li>
-								<template v-for="(vel,key,idx) in friendList" :key="idx">
-									<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
-									<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
-										<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
-											<img :src="list.avatarUrl||'../image/user_default.png'">
-										</div>
-										<div class="customer-left">
-											<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
-												{{list.name||list.nickName}}
-											</div>
-											<span class="check-business-card" data-number='list.fid' v-on:click.stop="friendDetail(list.fid)">查看名片</span>
-										</div>
-									</li>
-								</template>
-							</ul>
-						</div>
-					</div>
+									<span class="check-business-card" data-number='list.fid' v-on:click.stop="friendDetail(list.fid)">查看名片</span>
+								</div>
+							</li>
+						</template>
+					</ul>
+					<!-- </div>
+					</div> -->
 				</div>
 			</div>
 			<div id="chat-bottom"></div>
@@ -99,6 +100,7 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var refresh = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -128,31 +130,60 @@
 					}
 				},
 				mounted: function() {
-					mui.init({
-						pullRefresh: {
-							container: "#chat-bottom",
-							down: {
-								style: 'circle',
-								color: '#2289FF',
-								height: '50px',
-								range: '120px',
-								callback: function() {
-									downRefresh = true;
-									getCustomerList();
-									setTimeout(function() {
-										mui('#chat-bottom').pullRefresh().endPulldownToRefresh();
-									}, 1500)
-								}
-							}
-						}
-					});
+					mui.init();
 					var pageHeight = 0;
 					mui.plusReady(function() {
+						// mui(".mui-scroll-wrapper").scroll({
+						// 	scrollY: true, 
+						// 	scrollX: false,
+						// 	startX: 0, 
+						// 	startY: 0, 
+						// 	indicators: false, 
+						// 	deceleration: 0.0006, 
+						// 	bounce: false 
+						// });
 						getCustomerList();
 						var list = document.getElementById('list');
 						pageHeight = plus.display.resolutionHeight;
 						list.style.height = pageHeight - 230 + 'px';
 						window.indexedList = new mui.IndexedList(list);
+						//日志标记flag  
+						var flag = true;
+						//进入时开启刷新  
+						var selfpage = plus.webview.currentWebview();
+						selfpage.setPullToRefresh({
+							support: true,
+							style: 'circle',
+							height: '50px',
+							range: '40px',
+							color: '#2289FF',
+							offset: '0'
+						}, onRefresh);
+						//监听滚动事件  
+						document.querySelector('.mui-indexed-list-inner').addEventListener('scroll', function(e) {
+							if (this.scrollTop == 0) {
+								flag = true;
+								plus.webview.currentWebview().setPullToRefresh({
+									support: true,
+									style: 'circle',
+									height: '50px',
+									range: '40px',
+									color: '#2289FF',
+									offset: '0'
+								});
+							} else if (flag) {
+								flag = false;
+								selfpage.setPullToRefresh({
+									support: false
+								});
+							}
+						});
+						// 具体执行刷新的方法  
+						function onRefresh() {
+							refresh = 'down';
+							getCustomerList();
+							console.log("onRefresh");
+						}
 					})
 				}
 			})
@@ -161,13 +192,13 @@
 			window.addEventListener('friendApplyNumber', function(e) {
 				app.newfriendNum = e.detail.number;
 			})
-			
+
 			//好友新增客户 添加客户页面广播
 			window.addEventListener('refreshFriend', function(e) {
 				console.log('refreshFriend');
 				getCustomerList();
 			})
-			
+
 			// 点击添加好友
 			mui(".mui-content").on('tap', '#add_friend,#new_friend', function() {
 				openPage('add_contacts.html', 'add_contacts', '#f7f7f7', '');
@@ -201,11 +232,13 @@
 					action: 'friend_list',
 					token: userInfo.token
 				}, function(res) {
-					logs(res);
 					if (res.errno == 0) {
 						app.friendList = res.data;
+						if (refresh == 'down') {
+							plus.webview.currentWebview().endPullToRefresh();
+						}
 					} else {
-						app.newcCustomerlist = [];
+
 					}
 				}, 'json')
 			}
