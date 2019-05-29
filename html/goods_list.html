@@ -258,9 +258,9 @@
 				</div> -->
 				<div class="newly_added">
 					<div id="segmentedControl" class="mui-segmented-control">
-						<a class="mui-control-item mui-active" href="#item1">出售中</a>
-						<a class="mui-control-item" href="#item2">售罄的</a>
-						<a class="mui-control-item" href="#item3">仓库中</a>
+						<a class="mui-control-item mui-active" href="#item1">出售中(<span id="on_sale">0</span>)</a>
+						<a class="mui-control-item" href="#item2">售罄的(<span id="sale_out">0</span>)</a>
+						<a class="mui-control-item" href="#item3">仓库中(<span id="off_sale">0</span>)</a>
 					</div>
 				</div>
 			</div>
@@ -625,6 +625,9 @@
 			var onSale = goodsList.on_sale;
 			var soldOut = goodsList.sold_out;
 			var offSale = goodsList.off_sale;
+			document.getElementById('on_sale').innerText = onSale.length;
+			document.getElementById('sale_out').innerText = soldOut.length;
+			document.getElementById('off_sale').innerText = offSale.length;
 			var emptyContent =
 				'<div><img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png" ><p style="text-align: center;color:#717171;">暂无商品</p> </div>';
 			if (onSale.length > 0) {
