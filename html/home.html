@@ -7,7 +7,7 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/index.css" rel="stylesheet" />
 		<link href="../icomoon/style.css" rel="stylesheet" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
 		<style>
 			.clearfix {
 				clear: both;
@@ -471,7 +471,6 @@
 				width: 60px;
 				height: 50px;
 				margin: 0 auto;
-				overflow: hidden;
 			}
 
 			.weather-img .icon {
@@ -490,6 +489,10 @@
 
 			.mui-bar-nav~.mui-content {
 				padding-top: 121px;
+			}
+
+			.mui-slider-item {
+				touch-action: pan-y;
 			}
 		</style>
 	</head>
@@ -637,7 +640,6 @@
 				<div class="clearfix"></div>
 			</div>
 		</div>
-
 		<div id="popover" class="mui-popover">
 			<div class="Pop-up-menu">
 				<li id="quik_sharing">
@@ -660,29 +662,16 @@
 	</body>
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+	<script src="../js/swiper.min.js"></script>
 	<script>
 		mui.init({
 			swipeBack: false,
 			keyEventBind: {
-				backbutton: false, //Boolean(默认true)关闭back按键监听  
-				menubutton: true //Boolean(默认true)关闭menu按键监听  
+				backbutton: false,
+				menubutton: true
 			},
 			pullRefresh: {
-				// container: "body", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
-				// down: {
-				// 	height: 50, //可选,默认50.触发下拉刷新拖动距离,
-				// 	auto: false, //可选,默认false.首次加载自动下拉刷新一次
-				// 	contentdown: "下拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
-				// 	contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
-				// 	contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
-				// 	callback: function() {
-				// 		getNotice();
-				// 		weatherInit(); //天气初始化
-				// 		slideInit(true); //幻灯片初始化 
-				// 	}
-				// },
-				container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				container: ".mui-content",
 				down: {
 					style: 'circle',
 					color: '#2289FF',
@@ -920,6 +909,7 @@
 			mui.post($ajaxUrl + 'carousel', {
 				position: 1
 			}, function(res) {
+				// logs(res);
 				if (res.errno == 0) {
 					var carousel = res.data;
 					var len = carousel.length;
@@ -970,8 +960,9 @@
 			mui.ajax(jsonUrl, {
 				dataType: 'json',
 				type: 'get',
-				//timeout: 10000,
+				timeout: 10000,
 				success: function(data) {
+					// logs(data);
 					if (data.status == "success") {
 						var city = data.results[0].currentCity;
 						// var city = "红河哈尼族自治州天气不错";
@@ -1081,8 +1072,7 @@
 					noticeLen = notice.length;
 					var str = '<div class="swiper-container"><div class="swiper-wrapper">';
 					for (var i = 0; i < noticeLen; i++) {
-						str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '">' + notice[i].title +
-							'</div>';
+					  str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '">' + notice[i].title +'</div>';
 					}
 					str += '</div></div>';
 					document.getElementById('notice_container').innerHTML = str;

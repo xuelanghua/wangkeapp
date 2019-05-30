@@ -11,9 +11,11 @@
 			.friends-detail-container .first-card-container .card-left-cont #sixth-row {
 				flex-wrap: wrap;
 			}
+
 			.card-left-cont span {
 				color: #999999;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -173,9 +175,15 @@
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: true
-			});
+			if (mui.os.ios) {
+				mui.init({
+					swipeBack: true
+				});
+			} else {
+				mui.init({
+					swipeBack: false
+				});
+			}
 			var fid = "";
 			var userInfo = getUserInfo();
 			// 实例化vue对象
@@ -200,11 +208,11 @@
 						fid = self.fid;
 						getFriendsInfo();
 						// 跳转到更多页面
-						
+
 						window.addEventListener('refreshFriendInfo', function(e) {
 							getFriendsInfo();
 						})
-						
+
 						mui(".friends-detail-header").on("tap", "span", function() {
 							if (muiCont.is_friend == 1) {
 								openPage('friends_detail_more.html', 'friends_detail_more', '#f7f7f7', {
@@ -235,7 +243,7 @@
 									indicator: 'number',
 								});
 							});
-						}, 200)
+						}, 500)
 						mui(".mui-content").on("tap", ".share-card", function() {
 							var avatar = muiCont.friendData.avatar || '../image/user_default.jpg'
 							if (muiCont.contName == '') {
@@ -254,7 +262,7 @@
 							}
 						})
 					})
-					 
+
 				},
 				methods: {
 					addFriend: function() {
@@ -295,12 +303,12 @@
 					}
 				}, 'json')
 			}
-			
+
 			//小程序中打开商品
 			function openIngMiniprogram(goodsId) {
 				launchMiniprogram(goodsId, fid);
 			}
-			
+
 			// 音频播放
 			var timer = 0;
 			var audio = document.getElementById("audioPlay");

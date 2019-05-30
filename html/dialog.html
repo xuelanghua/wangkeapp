@@ -293,7 +293,7 @@
 				background-color: darkred;
 			}
 			.clear-chatting-records{
-				display: inline-flex;
+				display: none;
 				height: 44px;
 				width: 60px;
 				z-index: 999;
@@ -433,9 +433,9 @@
 					<div id="<%= ('parent'+item.message_id) %>" class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 						<% if(item.sender=='self' ) { %>
 							<!-- <i class="msg-user mui-icon mui-icon-person"></i> -->
-							<img class="msg-user-img msg-user" src="<%= (avatar.user) %>" alt="" />
+							<img class="msg-user-img msg-user my-chat-header"  src="<%= (avatar.user) %>" alt="" />
 						<% } else { %>
-							<img class="msg-user-img" src="<%= (avatar.target) %>" alt="" />
+							<img class="msg-user-img target-chat-header" src="<%= (avatar.target) %>"  alt="" />
 						<% } %>
 						<div class="msg-content" data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
 							<div class="msg-content-inner">
@@ -936,13 +936,13 @@
 				})
 				// 清除全部聊天记录
 				mui('.join-team-verify').on("tap", ".send-verify", function() {
-					logs(userInfo.id);
-					logs(userInfo.token);
+					// logs(userInfo.id);
+					// logs(userInfo.token);
 					mui.post($ajaxUrl + 'chat&action=delete_all', {
 						token: userInfo.token,
 						user_id: chatId
 					}, function(res) {
-						logs(res);
+						// logs(res);
 						mui('.join-team-verify')[0].style.display = "none";
 						if (res.errno == 0) {
 							window.location.reload();
@@ -952,6 +952,18 @@
 							message('清除失败，请稍后重试');
 						}
 					}, 'json');
+				})
+				// 跳转ta到名片
+				mui('.mui-content').on("tap", ".target-chat-header", function() {
+					openPage('friends_detail.html','friends_detail','#f7f7f7',{
+						fid:chatId
+					});
+				})
+				// 跳转到自己名片
+				mui('.mui-content').on("tap", ".my-chat-header", function() {
+					openPage('friends_detail.html','friends_detail','#f7f7f7',{
+						fid:userInfo.id
+					});
 				})
 				//获取聊天记录
 				function getRecordList(loadMore) {
@@ -972,6 +984,7 @@
 					}, function(res) {
 						logs(res);
 						if (res.errno == 0) {
+							document.querySelector('.clear-chatting-records').style.display = "inline-flex";
 							if (loadMore) {
 								var moreData = res.data;
 								var temp = recordData.data;
@@ -989,6 +1002,7 @@
 								// scrollInit();
 							}
 						} else {
+							document.querySelector('.clear-chatting-records').style.display = "none";
 							if (!loadMore) {
 								recordData.data = [];
 								recordData.data = res.data;
@@ -1047,7 +1061,7 @@
 								heartCheck.start();
 							} else {
 								data = JSON.parse(data);
-								logs(data);
+								// logs(data);
 								if (data.data2) {
 									if (data.data2.user_id == chatId) {
 										var message = {
@@ -1118,13 +1132,13 @@
 				var tempHeight = document.querySelector("body").offsetHeight;
 				// 高度差
 				var gap = oglHeight - tempHeight;
-				
+
 				if (types == "text") {
 					document.querySelector(".copy-btn").style.display = "flex";
 				} else {
 					document.querySelector(".copy-btn").style.display = "none";
 				}
-				
+
 				if (sender == "self") {
 					document.querySelector(".recall-btn").style.display = "flex";
 				} else {
@@ -1206,7 +1220,7 @@
 					token: userInfo.token,
 					message_id: message_id
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						var mols = document.getElementById('parent' + message_id).previousElementSibling;
 						var brother = document.getElementById('parent' + message_id).nextElementSibling;

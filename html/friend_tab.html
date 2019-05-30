@@ -19,7 +19,7 @@
 			}
 
 			.chat-container .mui-indexed-list-bar a {
-				height: 3.7% !important;
+				height: 3.5% !important;
 			}
 		</style>
 	</head>
@@ -133,7 +133,7 @@
 					mui.init();
 					var pageHeight = 0;
 					mui.plusReady(function() {
-						// mui(".mui-scroll-wrapper").scroll({
+						// mui(".mui-indexed-list-inner").scroll({
 						// 	scrollY: true, 
 						// 	scrollX: false,
 						// 	startX: 0, 
@@ -146,6 +146,7 @@
 						var list = document.getElementById('list');
 						pageHeight = plus.display.resolutionHeight;
 						list.style.height = pageHeight - 190 + 'px';
+						list.style.backgroundColor = "#007AFF";
 						window.indexedList = new mui.IndexedList(list);
 						//日志标记flag  
 						var flag = true;
@@ -155,15 +156,17 @@
 							support: true,
 							style: 'circle',
 							color: '#2289FF',
+							bounce: false
 						}, onRefresh);
 						//监听滚动事件  
 						document.querySelector('.mui-indexed-list-inner').addEventListener('scroll', function(e) {
-							if (this.scrollTop == 0) {
+							if (this.scrollTop < 0 || this.scrollTop == 0) {
 								flag = true;
-								plus.webview.currentWebview().setPullToRefresh({
+								selfpage.setPullToRefresh({
 									support: true,
 									style: 'circle',
 									color: '#2289FF',
+									bounce: false
 								});
 							} else if (flag) {
 								flag = false;
@@ -177,6 +180,9 @@
 							refresh = 'down';
 							getCustomerList();
 							console.log("onRefresh");
+							setTimeout(function(){
+								plus.webview.currentWebview().endPullToRefresh();
+							},3000);
 						}
 					})
 				}

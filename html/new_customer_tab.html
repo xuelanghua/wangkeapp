@@ -23,6 +23,16 @@
 				font-weight: normal;
 				color: #999999;
 			}
+			.mui-segmented-control.fixed-cont{
+				position: fixed !important;
+				top: 0;
+				width: 100%;
+				z-index: 16;
+				transition: all 0.2s ease-in-out;
+			}
+			.mui-segmented-control{
+				z-index: 16;
+			}
 		</style>
 	</head>
 
@@ -48,6 +58,8 @@
 				<a class="mui-control-item" href="#item4" data-type="is_intention">高意向</a>
 				<a class="mui-control-item" href="#item5" data-type="deal">成交</a>
 			</div>
+			<!-- 占位防止菜单固定定位之后的闪烁 -->
+			<div id="perch-cont" style="position: relative;width: 100%;height: 38px;display: none;"></div>
 			<div id="list-container" class="list-container">
 				<div id="item1" class="mui-control-content mui-active">
 					<ul class="mui-table-view">
@@ -264,6 +276,17 @@
 						getCustomerList(typer);
 						getnum();
 					})
+					var tab = document.getElementById("segmentedControl"),
+						list = document.getElementById("list-container");
+					window.addEventListener('scroll', function(e) {
+						if (list.getBoundingClientRect().top <= 38) {
+							document.getElementById('perch-cont').style.display="block";
+							tab.classList.add('fixed-cont');
+						} else {
+							document.getElementById('perch-cont').style.display="none";
+							tab.classList.remove('fixed-cont');
+						}
+					});
 				}
 			})
 			// 打开新增客户详情页
@@ -327,7 +350,7 @@
 					limit: limit,
 					skip: skip
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						if (refresh == 'up') {
 							app.newcustomerData = app.newcustomerData.concat(res.data);
@@ -338,6 +361,7 @@
 						} else {
 							app.newcustomerData = res.data;
 						}
+						refresh == '';
 					} else {
 						if (refresh == 'down') {
 							app.newcustomerData = [];
@@ -348,13 +372,14 @@
 							app.newcustomerData = [];
 							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 						}
+						refresh == '';
 					}
 					// plus.nativeUI.closeWaiting();
 				}, 'json')
 			}
 			//好友新增客户 添加客户页面广播
 			window.addEventListener('refreshCustomer', function(e) {
-				logs(22222222);
+				// logs(22222222);
 				if (typer == 'new_customer') {
 					getCustomerList(typer);
 				} else {
