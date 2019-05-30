@@ -234,16 +234,16 @@
 				for (var i = 0; i < 4; i++) {
 					var temp = {};
 					var sub = plus.webview.create(subpages[i].url, subpages[i].ids, subpages[i].styles);
-					// if (i == 0) {
-					// 	self.append(sub);
-					// }
-					if (i > 0) {
-						sub.hide();
-					} else {
-						temp[subpages[i].ids] = "true";
-						mui.extend(aniShow, temp);
+					if (i == 0) {
+						self.append(sub);
 					}
-					self.append(sub);
+					// if (i > 0) {
+					// 	sub.hide();
+					// } else {
+					// 	temp[subpages[i].ids] = "true";
+					// 	mui.extend(aniShow, temp);
+					// }
+					// self.append(sub);
 				}
 			}
 
@@ -259,7 +259,7 @@
 					//若为iOS平台或非首次显示，则直接显示
 					setTimeout(function() {
 						setStatusBar(subpages[idx].statusBg, subpages[idx].style);
-					}, 100)
+					}, 200)
 					if (mui.os.ios || aniShow[targetTab]) {
 						// plus.webview.show(targetTab);
 						plus.webview.show(targetTab, "fade-in", 200);
@@ -362,7 +362,7 @@
 						action: 'login_setting',
 					}, function(res) {
 						getAppInfo(function(e) {
-							if (res.data.login_type == 2 && res.data.app_version != e.version) {
+							if (res.data.login_type == 2 && res.data.app_version == e.version) {
 								fnOpenWin('html/mobile_login.html', 'mobile_login', {
 									statusbar: {
 										background: '#2289FF'
