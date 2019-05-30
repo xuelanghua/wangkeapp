@@ -204,11 +204,11 @@
 			.subMenu.fixed-cont {
 				position: fixed;
 				top: 44px;
-				z-index: 15;
-				/* background-color: #2289FF; */
-				/* color: #FFFFFF; */
+				z-index: 5;
+				color: #FFFFFF;
 				transition: all 0.3s ease-in-out;
 				-webkit-transition: all 0.3s ease-in-out;
+				box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.2);
 			}
 
 			.subMenu .mui-scroll-wrapper .mui-control-item {
@@ -221,103 +221,27 @@
 		</style>
 	</head>
 	<body>
-		<!-- <div style="margin-bottom: 100px;"> -->
 		<header class="mui-bar mui-bar-nav">
-			<!-- <img src="../image//index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;margin-top: 11px;"> -->
 			<h1 class="mui-title">自媒体</h1>
-			<!-- <span class="publish-article mui-pull-right">
-				发布文章
-			</span> -->
-			<!-- <img src="../image//index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;"> -->
 		</header>
 		<div class="mui-content">
 			<div id="slider" class="mui-slider">
-				<!-- <div class="mui-slider-group mui-slider-loop">
-				
-				<div class="mui-slider-item mui-slider-item-duplicate">
-					<a href="#">
-						<img src="../image//rotation_chart.png" alt="">
-						<p class="mui-slider-title">幸福就是可以一起睡觉</p>
-					</a>
-				</div>
-				<div class="mui-slider-item">
-					<a href="#">
-						<img src="../image/bj.jpg" alt="">
-						<p class="mui-slider-title">静静的看世界1</p>
-					</a>
-				</div>
-				<div class="mui-slider-item mui-slider-item-duplicate">
-					<a href="#">
-						<img src="../image//rotation_chart.png" alt="">
-						<p class="mui-slider-title">幸福就是可以一起睡觉</p>
-					</a>
-				</div>
-				<div class="mui-slider-item mui-slider-item-duplicate">
-					<a href="#">
-						<img src="../image/bj.jpg" alt="">
-						<p class="mui-slider-title">静静的看世界1</p>
-					</a>
-				</div>
 			</div>
-			<div class="mui-slider-indicator mui-text-right">
-                <div class="mui-indicator mui-active"></div>
-                <div class="mui-indicator"></div>
-            </div> -->
-			</div>
+			<!-- 防闪烁占位div -->
+			<div id="perch-cont" style="height: 38px;width: 100%;position: relative;display: none;"></div>
 			<div id="subMenu" class="subMenu">
 				<div class=" inner mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
 					<div class="mui-scroll" id="classification">
-						<!-- <a class="mui-control-item mui-active">
-						推荐
-					</a>
-					<a class="mui-control-item">
-						热点
-					</a>
-					<a class="mui-control-item">
-						昆明
-					</a>
-					<a class="mui-control-item">
-						社会
-					</a>
-					<a class="mui-control-item">
-						娱乐
-					</a>
-					<a class="mui-control-item">
-						科技
-					</a> -->
 					</div>
 				</div>
 			</div>
-
-			<div class="Information_list" id="article_list">
-				<!-- <div class="list1">
-					<div class="list1L">
-						<img src="../image//bj.jpg" >
-					</div>
-					<div class="list1R">
-						<p>京城今儿恍如初非夏，明天将有 弱冷空气撒地方大师傅</p>
-						<div class="list1Rl">
-							<span>小飞飞 </span>
-							<span style="margin-left: 10px;">2018-10-20</span>
-						</div>
-						<div class="list1Rr">
-							<span><img src="../image//eye.png" ></span>
-							<span>330</span>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-					<div class="clearfix"></div>
-				</div> -->
-			</div>
+			<div class="Information_list" id="article_list"></div>
 			<div id="article_bottom"></div>
 			<img class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
 		</div>
-		<!-- </div> -->
 	</body>
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
-	<!-- <script src="../js/jquery.min.js"></script> -->
-	<!-- <script src="../js/jquery.smint.js"></script> -->
 	<script src="../js/showLoading.js"></script>
 
 	<script>
@@ -328,16 +252,16 @@
 		var limit = 8;
 		var loadding = 0;
 		mui.init({
-			swipeBack: false, //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
+			swipeBack: false,
 			keyEventBind: {
-				backbutton: false, //Boolean(默认true)关闭back按键监听  
-				menubutton: true //Boolean(默认true)关闭menu按键监听  
+				backbutton: false,
+				menubutton: true
 			},
 			pullRefresh: {
-				container: "#article_bottom", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+				container: "#article_bottom",
 				up: {
 					height: 50,
-					auto: true,
+					auto: false,
 					contentrefresh: "正在加载...",
 					contentnomore: '没有更多数据了',
 					callback: function() {
@@ -345,48 +269,17 @@
 					}
 				},
 				down: {
-					style: 'circle', //单webview模式的下拉刷新 
-					color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+					style: 'circle',
+					color: '#2289FF',
 					callback: function() {
 						pullfresh_function(false, true)
 					}
 				}
 			}
 		});
-		/* var gallery = mui('.mui-slider');
-		gallery.slider({
-		interval:1000//自动轮播周期，若为0则不自动播放，默认为0；
-		}); */
-		// var webviewHeight = 0;
 		mui.plusReady(function() {
-			// plus.navigator.setStatusBarBackground("#2289FF");
-			// plus.navigator.setStatusBarStyle('dark');
-			// var self = plus.webview.currentWebview();
-			// webviewHeight = self.webviewHeight;
-			// self.setStyle({
-			// 	bottom: 51
-			// })
-			// 重写返回
-			// var first = null;
-			// mui.back = function() {
-			// 	var main = plus.android.runtimeMainActivity();
-			// 	main.moveTaskToBack(false);
-			// 	if (!first) {
-			// 		first = (new Date()).getTime();
-			// 		// logs(first);
-			// 		mui.toast('再按一次退出应用');
-			// 		setTimeout(function() {
-			// 			first = null;
-			// 		}, 1000);
-			// 	} else {
-			// 		var timer = (new Date()).getTime() - first;
-			// 		if (timer < 1000) {
-			// 			plus.runtime.quit();
-			// 		}
-			// 	}
-			// };
-
 			mui.showLoading("正在加载..", "div");
+			pullfresh_function();
 			window.addEventListener('scrollTop', function(event) {
 				window.scrollTo(0, 0);
 			});
@@ -409,19 +302,6 @@
 			mui("#article_list").on('tap', '.list1', function() {
 				//获取id
 				var id = this.dataset.id;
-				// 	var styles = {
-				// 		top: 20,
-				// 		bottom: 0
-				// 	};
-				// 	var extras = {
-				// 		article_id: id
-				// 	};
-				// var w = plus.webview.create('article.html', 'article.html', {
-				// 	hardwareAccelerated: false
-				// }, {
-				// 	article_id: id
-				// });
-				// w.show(); // 显示窗口
 				mui.openWindow({
 					url: 'article.html',
 					id: 'article',
@@ -434,7 +314,7 @@
 							background: "#ffffff"
 						}
 					},
-					extras:{
+					extras: {
 						article_id: id
 					},
 					createNew: false,
@@ -455,37 +335,23 @@
 				})
 			})
 
-			// window.addEventListener('resizeWindow', function(e) {
-			// 	console.log('resizeWindow');
-			// 	console.log(webviewHeight);
-			// 	plus.webview.currentWebview().setStyle({
-			// 		height: webviewHeight - 0.5
-			// 	});
-			// })
-
-			// window.onresize = function() {
-			// 	//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-			// 	var resizeHeight = document.querySelector("body").offsetHeight;
-			// 	if (resizeHeight * 1 != webviewHeight * 1) {
-			// 		console.log('resetWindowHeight');
-			// 		console.log(resizeHeight);
-			// 		plus.webview.currentWebview().setStyle({
-			// 			height: webviewHeight
-			// 		});
-			// 	}
-			// }
-
 			// 固定文章分类在顶部
 			var headH = document.querySelector('header').offsetHeight,
 				tab = document.getElementById("subMenu"),
-				list = document.getElementById("article_list")
+				list = document.getElementById("article_list"),
+				perch = document.getElementById("perch-cont");
 			window.addEventListener('scroll', function(e) {
-				if (list.getBoundingClientRect().top <= 90) {
+				if (list.getBoundingClientRect().top <= 79) {
 					tab.classList.add('fixed-cont');
+					perch.style.display = "block";
 				} else {
+					perch.style.display = "none";
 					tab.classList.remove('fixed-cont');
 				}
 			});
+			setTimeout(function() {
+				mui.hideLoading();
+			}, 10000);
 		})
 
 		function slideReady() {
@@ -583,7 +449,6 @@
 					}
 				}
 				document.getElementById('classification').innerHTML = str;
-
 				setTimeout(function() {
 					mui.hideLoading();
 				}, 500);

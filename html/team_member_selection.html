@@ -43,8 +43,9 @@
 
 			.mui-indexed-list-search input {
 				width: 100%;
-				background-color: #f2f2f2;
-				border-radius: 6px;
+				background-color: #FFFFFF;
+				border-radius: 0;
+				border: #FFFFFF;
 				color: #333333;
 				font-size: 0.3rem;
 			}
@@ -98,15 +99,19 @@
 				margin-left: 0.18rem;
 				top: 16px;
 			}
-			#list .mui-table-view{
+
+			#list .mui-table-view {
 				padding-bottom: 50px;
 			}
-			#list .mui-table-view:after{
+
+			#list .mui-table-view:after {
 				bottom: 50px;
 			}
-			#list .mui-indexed-list-bar a{
+
+			#list .mui-indexed-list-bar a {
 				height: 3.5% !important;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -191,9 +196,9 @@
 		var tid = '';
 		var app = new Vue({
 			el: "#list",
-			data:{
-					lists: {},
-					uids: []
+			data: {
+				lists: {},
+				uids: []
 			},
 			mounted: function() {
 				var checkedValues = [];
@@ -206,8 +211,8 @@
 						setTimeout(function() {
 							var list = document.getElementById('list');
 							var signs = list.querySelectorAll('.checkeds');
-							for (let i = 0; i < signs.length; i++) {
-								for (let j = 0; j < app.uids.length; j++) {
+							for (var i = 0; i < signs.length; i++) {
+								for (var j = 0; j < app.uids.length; j++) {
 									if (app.uids[j] == signs[i].value) {
 										signs[i].checked = "checked";
 									}
@@ -225,7 +230,7 @@
 									done.classList.add("mui-disabled");
 								}
 							}
-						}, 300);
+						}, 500);
 					} else {
 
 					}
@@ -285,7 +290,7 @@
 						}
 					});
 				});
-				 
+
 			}
 		})
 
@@ -295,12 +300,12 @@
 				token: userInfo.token,
 				team_id: tid
 			}, function(res) {
-				// logs(res);
+				logs(res);
 				if (res.errno == 0) {
 					app.lists = res.data;
-					setTimeout(function(){
+					setTimeout(function() {
 						mui("#list").indexedList().findElements();
-					},1000);
+					}, 1000);
 				} else {
 
 				}

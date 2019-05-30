@@ -21,8 +21,13 @@
 			.mui-indexed-list-cont {
 				background-color: #0062CC;
 			}
+
 			.chat-container .mui-indexed-list-bar a {
-			  height: 3.7% !important;
+				height: 3.7% !important;
+			}
+
+			.void-data-tips p {
+				margin-bottom: 0;
 			}
 		</style>
 	</head>
@@ -89,9 +94,9 @@
 							</li>
 						</template>
 					</ul>
-					<div v-if="crmList== undefined || crmList.length <= 0" class="void-data-tips">
+					<div v-if="JSON.stringify(crmList) == '{}'" class="void-data-tips">
 						<img src="../image/icon/void-data.png">
-						<p>没有数据</p>
+						<p>没有数据,双击试试！</p>
 					</div>
 				</div>
 				<!-- <div id="chat-bottom"></div> -->
@@ -152,22 +157,15 @@
 				},
 				mounted: function() {
 					mui.init({
-						// pullRefresh: {
-						// 	container: "#chat-bottom",
-						// 	down: {
-						// 		style: 'circle',
-						// 		color: '#2289FF',
-						// 		height: '50px', 
-						// 		range: '120px',	
-						// 		callback: function() {
-						// 			downRefresh = true;
-						// 			getCustomerList('crm', false);
-						// 			setTimeout(function() {
-						// 				mui('#chat-bottom').pullRefresh().endPulldownToRefresh();
-						// 			}, 1500)
-						// 		}
-						// 	}
-						// }
+						gestureConfig: {
+							// tap: true, //默认为true
+							doubletap: true, //默认为false
+							// longtap: true, //默认为false
+							// swipe: true, //默认为true
+							// drag: true, //默认为true
+							// release: false //默认为false，不监听
+							// hold: true, //默认为false，不监听
+						}
 					});
 					var pageHeight = 0;
 					mui.plusReady(function() {
@@ -182,9 +180,20 @@
 
 			window.addEventListener('refreshCrm', function(e) {
 				getCustomerList();
-				// alert("123123");
 			})
-			
+			// 双击刷新crm
+			mui('.void-data-tips')[0].addEventListener('doubletap', function() {
+				plus.nativeUI.showWaiting('加载中…',{
+					background:"rgba(0,0,0,0.7)",
+					modal:true,
+					back:"close"
+				})
+				setTimeout(function(){
+					getCustomerList();
+					plus.nativeUI.closeWaiting();
+				},1500);
+			})
+
 			// 跳转详情页
 			mui('.mui-content').on('tap', '.crm-user-head', function() {
 				var cid = this.dataset.id;
@@ -219,7 +228,7 @@
 					if (res.errno == 0) {
 						app.crmList = res.data;
 					} else {
-						app.newcCustomerlist = [];
+						app.crmList = {};
 					}
 				}, 'json')
 			}
