@@ -58,7 +58,7 @@
 			</div>
 			<!-- 名片样式一结束 -->
 			<!-- 名片样式二 -->
-			<div class="second-card-container" v-else>
+			<div class="second-card-container" v-if="cardType=='cardType1'">
 				<div class="card">
 					<img class="user-head-img" :src="friendData.avatar||'../image/user_default.jpg'">
 					<div class="user-qr-code mui-pull-right">
@@ -190,7 +190,7 @@
 			var muiCont = new Vue({
 				el: '#mui-content',
 				data: {
-					cardType: 'cardType1',
+					cardType: '',
 					friendData: {},
 					contName: '',
 					phoneNum: '',
@@ -261,6 +261,11 @@
 								}, 'miniProgram');
 							}
 						})
+						// plus.nativeUI.showWaiting('加载中……');
+						// setTimeout(function(){
+						// 	document.getElementById('mui-content').classList.remove('mui-hidden');
+						// 	plus.nativeUI.closeWaiting();
+						// },100);
 					})
 
 				},
