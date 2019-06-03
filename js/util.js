@@ -1,8 +1,12 @@
-$ajaxUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
-$uploadUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image&thumb=0'; //图片上传接口
+// $ajaxUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
+// $uploadUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image&thumb=0'; //图片上传接口
+// // $voiceUrl = 'https://wangke.ynhost.cn/web/index.php?c=utility&a=file&do=upload&upload_type=voice&uniacid=2'; //音频上传接口
+// $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
+// 
+$ajaxUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
+$uploadUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image&thumb=0'; //图片上传接口
 // $voiceUrl = 'https://wangke.ynhost.cn/web/index.php?c=utility&a=file&do=upload&upload_type=voice&uniacid=2'; //音频上传接口
-$voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
-
+$voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
 //获取用户信息
 var getUserInfo = function() {
 	return JSON.parse(localStorage.getItem('user'));
