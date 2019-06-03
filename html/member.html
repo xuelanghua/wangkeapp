@@ -26,14 +26,16 @@
 				text-align: center;
 			}
 			.member_chart img{
-				width: 331px;
+				width: 350px;
 			}
 			.member_title,.member_time{
 				position: relative;
 				top: 120px;
 				font-size: 28px;
-				left: -74px;
 				color: #496187;
+				text-align: left;
+				padding-left: 40px;
+				height: auto;
 			}
 			.member_time{
 				top: 139px;
@@ -157,6 +159,15 @@
 			[v-cloak] {
 				display: none;
 			}
+			.member_chart .referrers{
+				font-size: 10px;
+				background-color: #889ab7;
+				padding: 3px 6px;
+				border-radius: 10px;
+				color: #FFFFFF;
+				line-height: 1;
+				margin-left: 10px;
+			}
 		</style>
 	</head>
 
@@ -170,10 +181,12 @@
 		<div id="mui-content" class="mui-content" v-cloak>
 			<div class="member"></div>
 			<div class="member_chart">
-				<div class="member_title">{{memberInfo.group_name}}</div>
-				<div class="member_time">
-					<span>到期：</span>
-					<span>{{memberInfo.expire_time}}</span>
+				<div style="width: 331px;height: auto;margin: 0 auto;">
+					<div class="member_title">{{memberInfo.group_name}}<span class="referrers">推荐人：与华</span></div>
+					<div class="member_time">
+						<span>到期：</span>
+						<span>{{memberInfo.expire_time}}</span>
+					</div>
 				</div>
 				<div class="member_chart_number">
 					<div class="mui-pull-left number">
@@ -264,7 +277,7 @@
 						mui(".mui-content").on("tap", ".mui-navigate-right,.number", function() {
 							openPage('my_fans.html', 'my_fans', '#f7f7f7', '');
 						})
-						
+
 						// 推荐奖累计
 						mui(".mui-content").on("tap", ".number1", function() {
 							openPage('award_reward.html', 'award_reward', '#f7f7f7', '');

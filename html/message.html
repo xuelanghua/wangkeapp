@@ -240,82 +240,42 @@
 			</div>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content" id="mui-content"  v-cloak>
 			<div class="example">
 				<div class="bd">
 					<div class="current tab-container chat-cont" id="chat_message" data-type="chat">
-						<!-- <div class="Record_list">
-							<div class="Record_listL mui-pull-left">
-								<img src="../image/Alipay.png">
-							</div>
-							<div class="Record_listR mui-pull-right">
-								<div>
-									<span class="mui-pull-left">
-										<span class="Label">
-											<img src="../image/newsb2.png">
-										</span>
-										<span style="font-size: 15px;">小飞飞</span>
-									</span>
-									<span class="mui-pull-right date">19:10</span>
-									<div class="clearfix"></div>
+						<ul class="mui-table-view">
+							<li v-for="(lists,idx) in msgList" :key="idx" class="Record_list mui-table-view-cell mui-transitioning"
+							 :data-avatar="lists.user.avatarUrl" :data-cid="lists.user.id" :data-name="lists.user.nickName">
+								<div class="mui-slider-right mui-disabled">
+									<span class="mui-btn mui-btn-red" :data-chatid="lists.id">删除</span>
 								</div>
-								<div class="tishi">
-									<span class="mui-pull-left">欧尼酱,僵尸</span>
-									<p class="mui-badge mui-pull-right">1</p>
-									<div class="clearfix"></div>
+								<div class="mui-slider-handle mui-clearfix">
+									<div class="Record_listL mui-pull-left">
+										<img :src="lists.user.avatarUrl">
+									</div>
+									<div class="Record_listR mui-pull-right">
+										<div class="mui-clearfix">
+											<span class="mui-pull-left user-name  mui-ellipsis">
+												<span class="Label">
+													<img v-if="lists.type=='newbie'" src="../image/newsb1.png">
+													<img v-else-if="lists.type=='customer'" src="../image/newsb2.png">
+													<img v-else src="../image/newsb3.png">
+												</span>
+												<span style="font-size: 15px;">{{lists.user.nickName}}</span>
+											</span>
+											<span class="mui-pull-right date">{{lists.time}}</span>
+										</div>
+										<div class="tishi mui-clearfix">
+											<span class="mui-pull-left mui-ellipsis last-message">{{lists.message.content}}</span>
+											<p v-show="lists.message.count" class="mui-badge mui-pull-right">{{lists.message.count}}</p>
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-						<div class="Record_list">
-							<div class="Record_listL mui-pull-left">
-								<img src="../image/Alipay.png">
-							</div>
-							<div class="Record_listR mui-pull-right">
-								<div>
-									<span class="mui-pull-left">
-										<span class="Label">
-											<img src="../image/newsb1.png">
-										</span>
-										<span style="font-size: 15px;">小飞飞</span>
-										<span style="color: #2289FF;font-size: 15px;">(张飞)</span>
-									</span>
-									<span class="mui-pull-right date">19:10</span>
-									<div class="clearfix"></div>
-								</div>
-								<div class="tishi">
-									<span class="mui-pull-left">欧尼酱,僵尸</span>
-									<p class="mui-badge mui-pull-right">1</p>
-									<div class="clearfix"></div>
-								</div>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-						<div class="Record_list">
-							<div class="Record_listL mui-pull-left">
-								<img src="../image/Alipay.png">
-							</div>
-							<div class="Record_listR mui-pull-right">
-								<div>
-									<span class="mui-pull-left">
-										<span class="Label">
-											<img src="../image/newsb3.png">
-										</span>
-										<span style="font-size: 15px;">小飞飞</span>
-									</span>
-									<span class="mui-pull-right date">19:10</span>
-									<div class="clearfix"></div>
-								</div>
-								<div class="tishi">
-									<span class="mui-pull-left">欧尼酱,僵尸</span>
-									<p class="mui-badge mui-pull-right">1</p>
-									<div class="clearfix"></div>
-								</div>
-							</div>
-							<div class="clearfix"></div>
-						</div> -->
+							</li>
+						</ul>
 					</div>
-					<div class="tab-container system-cont" id="system_message" data-type="system" v-cloak>
+					<div class="tab-container system-cont" id="system_message" data-type="system">
 						<ul class="mui-table-view">
 							<li class="Record_list mui-table-view-cell target-assistant" :data-genre="list.type" v-for="(list,index) in systemMsg"
 							 :key="index">
@@ -438,7 +398,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- 删除聊天记录确认弹窗 -->
+		<!-- <!-- 删除聊天记录确认弹窗 -->
 		<div class="join-team-verify">
 			<div class="verift-body">
 				<div class="tips">
@@ -458,9 +418,10 @@
 			var chatId = '';
 			var refresh = false;
 			var app = new Vue({
-				el: "#system_message",
+				el: "#mui-content",
 				data: {
-					systemMsg: []
+					systemMsg: [],
+					msgList: []
 				},
 				mounted: function() {
 					mui.init({
@@ -472,8 +433,15 @@
 							}
 						}
 					})
-
 					mui.plusReady(function() {
+						var mod = getcache('msglist');
+						var systemMsg = getcache('systemMsg');
+						if (mod) {
+							app.msgList = mod;
+						}
+						if (systemMsg) {
+							app.systemMsg = systemMsg;
+						}
 						window.addEventListener('refreshNotice', function(e) {
 							refresh = true;
 							getChatList();
@@ -484,22 +452,10 @@
 							var cid = this.dataset.cid;
 							var chatName = this.dataset.name;
 							var avatar = this.dataset.avatar;
-							// 关闭左滑菜单才能跳转
 							var swipemenu = mui('.mui-selected')[0];
+							// 关闭左滑菜单才能跳转
 							if (swipemenu) {
 								mui.swipeoutClose(swipemenu);
-								setTimeout(function() {
-									fnOpenWin('dialog.html', 'dialog', {
-										statusbar: {
-											background: '#F7F7F7'
-										}
-									}, {
-										cid: cid,
-										chatName: chatName,
-										barStyle: 'dark',
-										avatar: avatar
-									}, 'slide-in-right');
-								}, 300);
 							} else {
 								fnOpenWin('dialog.html', 'dialog', {
 									statusbar: {
@@ -527,11 +483,6 @@
 								document.querySelector('.chat-cont').classList.add("current");
 							}
 						})
-
-						//document.getElementById('back_chat').addEventListener('tap', function() {
-						//	mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'showChat');
-						//	plus.webview.close('message');
-						//})
 						getSystemMsg();
 					})
 				}
@@ -544,6 +495,7 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						app.systemMsg = res.data;
+						cacheData('systemMsg', res.data);
 						for (var i = 0; i < res.data.length; i++) {
 							if (res.data[i].count > 0) {
 								document.querySelector('.system-red-tips').style.display = "inline-block";
@@ -551,7 +503,7 @@
 								document.querySelector('.system-red-tips').style.display = "none";
 							}
 						}
-						document.getElementById("systemMsg_total").innerText='('+res.data.length+')';
+						document.getElementById("systemMsg_total").innerText = '(' + res.data.length + ')';
 					} else {
 						// message(res.message, "center");
 					}
@@ -559,90 +511,14 @@
 			}
 			// 获取消息列表
 			function getChatList() {
-				if (!refresh) {
-					plus.nativeUI.showWaiting();
-				}
 				mui.post($ajaxUrl + 'chat', {
 					action: 'list',
 					token: userInfo.token
 				}, function(res) {
-					var html = '';
 					if (res.errno == 0) {
-						if (res.message == true) {
-							document.querySelector('.chat-red-tips').style.display = "inline-block";
-						} else {
-							document.querySelector('.chat-red-tips').style.display = "none";
-						}
-						var chatList = res.data;
-						var total = chatList.length;
-						document.getElementById('chat_total').innerText = '(' + total + ')';
-						html += '<ul class="mui-table-view">';
-						for (var i = 0; i < total; i++) {
-							html += '<li class="Record_list mui-table-view-cell mui-transitioning" data-avatar="' + chatList[
-									i].user.avatarUrl + '" data-cid="' + chatList[i].user
-								.id + '" data-name="' + chatList[i].user.nickName +
-								'">';
-							html += '<div class="mui-slider-right mui-disabled">';
-							html += '<span class="mui-btn mui-btn-red" data-chatid=' + chatList[i].id + '>删除</span>';
-							html += '</div>';
-							html += '<div class="mui-slider-handle mui-clearfix">';
-							html += '<div class="Record_listL mui-pull-left">';
-							if (!chatList[i].user.avatarUrl) {
-								html += '<img src="../image/user_default.png">';
-							} else {
-								html += '<img src="' + chatList[i].user.avatarUrl + '">';
-							}
-
-							html += '</div>';
-							html += '<div class="Record_listR mui-pull-right">';
-							html += '<div class="mui-clearfix">';
-							html += '<span class="mui-pull-left user-name  mui-ellipsis">';
-							html += '<span class="Label">';
-							if (chatList[i].type == 'friend') {
-								html += '<img src="../image/newsb3.png">';
-							} else if (chatList[i].type == 'customer') {
-								html += '<img src="../image/newsb2.png">';
-							} else {
-								html += '<img src="../image/newsb1.png">';
-							}
-							html += '</span>';
-							html += '<span style="font-size: 15px;">' + chatList[i].user.nickName + '</span>';
-							if (chatList[i].name) {
-								html += '<span style="color: #2289FF;font-size: 15px;">(' + chatList[i].name + ')</span>';
-							}
-							html += '</span>';
-							html += '<span class="mui-pull-right date">' + chatList[i].time + '</span>';
-							html += '</div>';
-							html += '<div class="tishi mui-clearfix">';
-							if (chatList[i].message !== 'empty') {
-								if (chatList[i].message.message_type == 'text') {
-									html += '<span class="mui-pull-left mui-ellipsis last-message">' + chatList[i].message.content + '</span>';
-								} else {
-									html += '<span class="mui-pull-left">[图片]</span>';
-								}
-								if (chatList[i].message.count > 0) {
-									html += '<p class="mui-badge mui-pull-right">' + chatList[i].message.count + '</p>';
-								}
-								html += '<div class="clearfix"></div>';
-							} else {
-								html += '<span class="mui-pull-left">  </span>';
-								// html += '<p class="mui-badge mui-pull-right"></p>';
-								html += '<div class="clearfix"></div>';
-							}
-							html += '</div>';
-							html += '</div>';
-							html += '</li>';
-						}
-						html += '</ul>';
-						html += '</div>';
-					} else {
-						html += '<div style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>';
-					}
-					document.getElementById('chat_message').innerHTML = html;
-					if (!refresh) {
-						plus.nativeUI.closeWaiting();
-					} else {
-						refresh = false;
+						document.getElementById('chat_total').innerText = '(' + res.data.length + ')';
+						app.msgList = res.data;
+						cacheData('msglist', res.data);
 					}
 				}, 'json')
 			}
@@ -662,12 +538,16 @@
 			})
 			// 确认删除聊天
 			mui('.join-team-verify').on("tap", ".send-verify", function() {
+				var swipemenu = mui('.mui-selected')[0];
 				mui.post($ajaxUrl + 'chat&action=delete_chat', {
 					token: userInfo.token,
 					chat_id: chatId
 				}, function(res) {
 					mui('.join-team-verify')[0].style.display = "none";
 					if (res.errno == 0) {
+						if (swipemenu) {
+							mui.swipeoutClose(swipemenu);
+						}
 						getChatList();
 						message('已删除');
 					} else {

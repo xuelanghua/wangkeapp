@@ -26,6 +26,7 @@
 				left: 0 !important;
 				right: 0 !important;
 				background-color: #FFFFFF;
+				height: auto;
 			}
 
 			.mui-backdrop.mui-active {
@@ -43,13 +44,54 @@
 			.first-popover .mui-table-view-cell {
 				background-color: #FFFFFF;
 				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 44px;
+				padding: 0;
+				overflow: hidden;
 			}
-			.first-popover .mui-table-view-cell.active{
+
+			.first-popover .mui-table-view-cell span {
+				position: relative;
+			}
+
+			.mui-table-view-cell.fans-option.active {
 				color: #2289FF;
 			}
-			.first-popover .mui-table-view-cell .mui-icon-checkmarkempty{
-				font-size: 0.48rem;
+
+			.first-popover .mui-table-view-cell .mui-icon-checkmarkempty {
+				font-size: 0.6rem;
 				color: #2289FF;
+				position: absolute;
+				right: -30px;
+				top: -5px;
+			}
+
+			.mui-popover .mui-table-view {
+				height: auto;
+				max-height: 600px;
+			}
+
+			.mui-table-view-cell:after {
+				right: 15px;
+			}
+
+			.mui-bar .mui-title {
+				font-weight: normal;
+			}
+
+			.action-btn .arrows {
+				color: #c2c2c2;
+				transition: all 0.25s ease-in-out;
+				-webkit-transition: all 0.25s ease-in-out;
+				position: relative;
+				display: inline-block;
+			}
+
+			.action-btn .arrows.active {
+				transform: rotate(180deg);
+				-webkit-transform: rotate(180deg);
 			}
 		</style>
 		<script type="text/javascript">
@@ -59,7 +101,6 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
 			// 初始化字体大小结束
 		</script>
 	</head>
@@ -67,9 +108,8 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<!-- <h1 class="mui-title">我的粉丝</h1> -->
-			<!-- <h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">我的粉丝（50）</a></h1> -->
-			<h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">我的粉丝</a></h1>
+			<h1 class="mui-title"><a id="action-btn" class="action-btn" href="#Popover">我的粉丝（50）<span class="arrows">▼</span></a></h1>
+			<!-- <h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">我的粉丝</a></h1> -->
 		</header>
 		<div id="mui-content" class="mui-content service-award-container" v-cloak>
 			<ul id="fans-list" class="mui-table-view" v-if="fansFlag">
@@ -80,7 +120,7 @@
 							<span>{{list.nickName}}</span>
 							<!-- .vip,.vip1,.vip2,.vip3四种class -->
 							<span :class="'vip'+list.group_id">{{list.group_name}}</span>
-							<!-- <span v-if="list.recommend_award>0" class="mui-pull-right">+{{list.recommend_award}}</span> -->
+							<span v-if="list.recommend_award>0" class="mui-pull-right">+{{list.recommend_award}}</span>
 						</div>
 						<div class="bottom mui-clearfix">
 							<span>加入时间：{{list.activation_time}}</span>
@@ -94,10 +134,11 @@
 				<p style="text-align: center;">暂无粉丝</p>
 			</div>
 		</div>
-		<div id="middlePopover" class="mui-popover first-popover mui-hidden">
+		<div id="Popover" class="mui-popover first-popover">
 			<ul class="mui-table-view">
-				<li :class="[index==0?'mui-table-view-cell fans-option active':'mui-table-view-cell fans-option']"   v-for="(item,index) in fansoption" :key="index">
-					<span>{{item.title}}({{item.num}})</span><span class="mui-icon mui-icon-checkmarkempty"></span>
+				<li class="mui-table-view-cell fans-option" :class="[item.active?' active':'']" v-for="(item,index) in fansoption"
+				 :key="index" @tap="screenfn(index)">
+					<span>{{item.title}}({{item.num}})<span v-show="item.active" class="mui-icon mui-icon-checkmarkempty"></span></span>
 				</li>
 			</ul>
 		</div>
@@ -105,7 +146,9 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				double:false
+			});
 			var userInfo = getUserInfo(),
 				skip = 1,
 				limit = 15;
@@ -168,13 +211,13 @@
 					})
 				}
 			})
-			var pop=new Vue({
-				el:"#middlePopover",
-				data:{
+			var pop = new Vue({
+				el: "#Popover",
+				data: {
 					fansoption: [{
 						title: '全部',
 						num: 31,
-						active: false
+						active: true
 					}, {
 						title: '分公司',
 						num: 6,
@@ -196,8 +239,29 @@
 						num: 10,
 						active: false
 					}]
+				},
+				methods: {
+					screenfn: function(idx) {
+						for (var i = 0; i < this.fansoption.length; i++) {
+							this.fansoption[i].active = false;
+						}
+						this.fansoption[idx].active = true;
+						mui('#Popover').popover('hide');
+						document.querySelector('.arrows').classList.remove('active');
+					}
 				}
 			})
+			
+			mui('.mui-bar-nav').on('tap', 'a', function() {
+				document.querySelector('.arrows').classList.toggle('active');
+			})
+			// 监听遮罩是否显示 为了让顶部的箭头处于正常位置
+			window.addEventListener('tap', function(e) {
+				if (e.target.className == 'mui-backdrop mui-active') {
+					var btn = mui(".arrows");
+					btn[0].classList.remove('active');
+				} else {}
+			}, true)
 			function getFansList() {
 				mui.post($ajaxUrl + 'member&action=fans', {
 					token: userInfo.token,

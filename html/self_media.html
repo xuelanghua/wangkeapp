@@ -265,14 +265,19 @@
 					contentrefresh: "正在加载...",
 					contentnomore: '没有更多数据了',
 					callback: function() {
-						pullfresh_function(true, false)
+						pullfresh_function(true, false);
 					}
 				},
 				down: {
 					style: 'circle',
 					color: '#2289FF',
 					callback: function() {
-						pullfresh_function(false, true)
+						pullfresh_function(false, true);
+						class_list();
+						slideReady();
+						setTimeout(function() {
+							mui('#article_bottom').pullRefresh().endPulldownToRefresh();
+						}, 10000);
 					}
 				}
 			}
@@ -441,6 +446,7 @@
 				token: 'eaa3242cd05ca923b66b60cbb10d01ad',
 				action: 'class_list'
 			}, function(data) {
+				logs(data);
 				str +=
 					'<a class="mui-control-item mui-active" data-id="-1">推荐</a><a class="mui-control-item" data-id="-2">热点</a>';
 				if (data.errno == '0') {
@@ -469,7 +475,7 @@
 				skip: skip,
 				limit: limit
 			}, function(data) {
-				//console.log(JSON.stringify(data));
+				console.log(JSON.stringify(data));
 				if (data.errno == '0') {
 					var str = '';
 					for (i in data.data) {
