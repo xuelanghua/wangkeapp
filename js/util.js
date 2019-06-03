@@ -733,7 +733,7 @@ function pushCallback(data, event) {
 				// 		background: '#F7F7F7'
 				// 	}
 				// }, extra, '');
-			}  else if (url == 'message') {
+			} else if (url == 'message') {
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 				fnOpenWin('html/' + url + '.html', url, {
 					statusbar: {
@@ -794,7 +794,7 @@ function pushCallback(data, event) {
 		} else if (url == 'message') {
 			mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 			playNoticeAudio();
-		}  else if (url == 'logout') {
+		} else if (url == 'logout') {
 			fnLogout();
 		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
@@ -1034,4 +1034,16 @@ function getAppInfo(callback) {
 	plus.runtime.getProperty(plus.runtime.appid, function(wgtinfo) {
 		callback(wgtinfo);
 	});
+}
+
+// 做页面数据缓存，key值一定是页面的id，如果有多个id_01、id_02依次类推
+function cacheData(key, val) {
+	// 默认传入的都是对象
+	plus.storage.setItem(key, JSON.stringify(val));
+}
+
+//获取缓存数据
+function getcache(key){
+	var _cache=plus.storage.getItem(key);
+	return JSON.parse(_cache);
 }
