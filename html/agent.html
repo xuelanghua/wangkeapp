@@ -281,8 +281,8 @@
 							 alt=""></span></h2>
 					<div class="wangwang"><span class="icon-wangwang"></span><span>旺旺</span>{{memberInfo.wang || 0}}</div>
 					<div class="card-bottom">
-						<div class="referrers">
-							推荐人：与华
+						<div v-if="memberInfo.recommend_name!=''" class="referrers">
+							推荐人：{{memberInfo.recommend_name}}
 						</div>
 						<span class="right-btn" v-if="memberInfo.activation_code!='0/0'" @tap="goCodeList">激活码：{{memberInfo.activation_code}}</span>
 						<span class="right-btn" v-else @tap="exchangeCode">激活码</span>
@@ -323,7 +323,7 @@
 				</div>
 			</div>
 		</div>
-		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
@@ -357,7 +357,6 @@
 						})
 						getMemberInfo();
 						getFans();
-
 						// 我的权益
 						mui("header").on('tap', '.my-equity', function() {
 							openPage('equities_page.html', 'equities_page', '#f7f7f7', '');

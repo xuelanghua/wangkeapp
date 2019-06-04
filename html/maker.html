@@ -227,6 +227,7 @@
 				border-radius: 10px;
 				color: #FFFFFF;
 				line-height: 1;
+				margin-left: 5px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -236,7 +237,7 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			 
+
 			// 初始化字体大小结束
 		</script>
 	</head>
@@ -248,10 +249,10 @@
 			<div class="mui-pull-right my-equity">我的权益</div>
 		</header>
 
-		<div id="mui-content" class="mui-content setting-container"  v-cloak>
+		<div id="mui-content" class="mui-content setting-container" v-cloak>
 			<div class="maker-head">
 				<div class="first-section">
-					<h2>{{memberInfo.group_name}}<span class="referrers">推荐人：与华</span></h2>
+					<h2>{{memberInfo.group_name}}<span v-if="memberInfo.recommend_name!=''" class="referrers">推荐人：{{memberInfo.recommend_name}}</span></h2>
 					<div class="wangwang"><span class="icon-wangwang"></span><span>旺旺</span>{{memberInfo.wang || 0}}</div>
 					<div class="card-bottom">
 						<div>
@@ -277,7 +278,7 @@
 				<ul v-if="fansLists.length>0" class="mui-table-view">
 					<li class="mui-table-view-cell" v-for="(list,index) in fansLists" :key="index">
 						<img class="user-head-img" :data-fid="list.id" :src="list.avatarUrl">
-						<div class="flex-right"  :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
+						<div class="flex-right" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
 							<div class="mui-clearfix">
 								<span class="user-name">{{list.nickName}}</span>
 								<span :class="[list.group_name=='创客'?'vip1':'vip']">{{list.group_name}}</span>
@@ -371,7 +372,7 @@
 							var cid = this.dataset.cid,
 								chatName = this.dataset.chatname,
 								avatar = this.dataset.avatar;
-								logs(cid);
+							logs(cid);
 							openPage('dialog.html', 'dialog', '#f7f7f7', {
 								cid: cid,
 								chatName: chatName,
