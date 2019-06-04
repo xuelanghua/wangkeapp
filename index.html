@@ -211,7 +211,7 @@
 						var currentTime = new Date().getTime();
 						var loginTime = parseInt((currentTime - lastLoginTime) / 1000);
 						var isExpire = loginTime > (60 * 60 * 24 * 5) ? true : false; 
-						if (isExpire) {
+						if (lastLoginTime && isExpire) {
 							message('账号登录过期,重新登录');
 						}
 						if (!userInfo || isExpire) {
@@ -234,16 +234,16 @@
 				for (var i = 0; i < 4; i++) {
 					var temp = {};
 					var sub = plus.webview.create(subpages[i].url, subpages[i].ids, subpages[i].styles);
-					if (i == 0) {
-						self.append(sub);
-					}
-					// if (i > 0) {
-					// 	sub.hide();
-					// } else {
-					// 	temp[subpages[i].ids] = "true";
-					// 	mui.extend(aniShow, temp);
+					// if (i == 0) {
+					// 	self.append(sub);
 					// }
-					// self.append(sub);
+					if (i > 0) {
+						sub.hide();
+					} else {
+						temp[subpages[i].ids] = "true";
+						mui.extend(aniShow, temp);
+					}
+					self.append(sub);
 				}
 			}
 

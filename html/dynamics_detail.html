@@ -32,7 +32,7 @@
 			<div class="dynamics-title-cont">
 				<div class="dynamics-title-left">
 					<h2>{{title}}</h2>
-					<p><span class="user-name">小飞飞</span><span class="release-time">{{create_time.substring(0,10)}}</span></p>
+					<p><span class="user-name">{{author}}</span><span class="release-time">{{create_time.substring(0,10)}}</span></p>
 				</div>
 			</div>
 			<div class="dynamics-content">
@@ -70,6 +70,7 @@
 					likes: [],
 					content: '',
 					cover: [],
+					author: '',
 					comment: []
 				},
 				created: function() {
@@ -105,6 +106,7 @@
 					token: userInfo.token,
 					tid: tid
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0) {
 						var data = res.data;
 						muiCont.title = data.title;
@@ -113,6 +115,7 @@
 						muiCont.create_time = data.create_time;
 						muiCont.comment = data.comment.data;
 						muiCont.likes = data.like.data;
+						muiCont.author = data.author;
 					} else {
 						message(res.message)
 					}

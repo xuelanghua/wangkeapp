@@ -893,7 +893,8 @@
 			plus.geolocation.getCurrentPosition(function(p) {
 				getTodayWeather(p.coords.longitude + ',' + p.coords.latitude);
 			}, function(e) {
-				message(e.message, 'center');
+				message('获取地理位置失败!', 'center');
+				console.log(e.message);
 				getTodayWeather('102.746571,24.980774');
 			});
 		}
