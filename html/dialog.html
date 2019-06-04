@@ -521,6 +521,7 @@
 					mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
 					mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
 					plus.navigator.setStatusBarStyle(plus.webview.currentWebview().barStyle);
+					cacheData('recorddata' + chatId, recordData);
 				}
 			});
 
@@ -582,7 +583,12 @@
 				chatId = self.cid;
 				chatAvatar = self.avatar;
 				document.getElementById('dialog_name').innerText = chatName;
-
+				var mod = getcache('recorddata' + chatId);
+				if (mod) {
+					recordData = mod;
+				}
+				// logs(mod);
+				// logs(recordData);
 				var avatar = {
 					user: userInfo.avatarUrl,
 					target: chatAvatar
@@ -681,7 +687,9 @@
 					ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 					// mui('.mui-scroll-wrapper').scroll().scrollToBottom();
 				};
-
+				
+				bindMsgList();
+				
 				window.addEventListener('resize', function() {
 					ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 				}, false);
@@ -955,14 +963,14 @@
 				})
 				// 跳转ta到名片
 				mui('.mui-content').on("tap", ".target-chat-header", function() {
-					openPage('friends_detail.html','friends_detail','#f7f7f7',{
-						fid:chatId
+					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+						fid: chatId
 					});
 				})
 				// 跳转到自己名片
 				mui('.mui-content').on("tap", ".my-chat-header", function() {
-					openPage('friends_detail.html','friends_detail','#f7f7f7',{
-						fid:userInfo.id
+					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+						fid: userInfo.id
 					});
 				})
 				//获取聊天记录
@@ -982,9 +990,9 @@
 						skip: skip,
 						limit: limit
 					}, function(res) {
-						logs(res);
+						// logs(res);
+						cacheData('recorddata' + chatId, res.data);
 						if (res.errno == 0) {
-							document.querySelector('.clear-chatting-records').style.display = "inline-flex";
 							if (loadMore) {
 								var moreData = res.data;
 								var temp = recordData.data;
@@ -1010,6 +1018,9 @@
 									lastIndex = index;
 								}
 							}
+						}
+						if(recordData){
+							document.querySelector('.clear-chatting-records').style.display = "inline-flex";
 						}
 					}, 'json');
 				}

@@ -246,7 +246,11 @@
 				margin-left: 2px;
 				margin-top: -2px;
 			}
-			
+			.card-bottom .referrers{
+				color: #885A3D;
+				font-size: 14px;
+				padding-left: 8px;
+			}
 			[v-cloak] {
 			  display: none;
 			}
@@ -258,7 +262,7 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			
+
 			// 初始化字体大小结束
 		</script>
 	</head>
@@ -277,8 +281,8 @@
 							 alt=""></span></h2>
 					<div class="wangwang"><span class="icon-wangwang"></span><span>旺旺</span>{{memberInfo.wang || 0}}</div>
 					<div class="card-bottom">
-						<div>
-							&nbsp;
+						<div v-if="memberInfo.recommend_name!=''" class="referrers">
+							推荐人：{{memberInfo.recommend_name}}
 						</div>
 						<span class="right-btn" v-if="memberInfo.activation_code!='0/0'" @tap="goCodeList">激活码：{{memberInfo.activation_code}}</span>
 						<span class="right-btn" v-else @tap="exchangeCode">激活码</span>
@@ -304,7 +308,7 @@
 							<div class="mui-clearfix">
 								<span class="user-name">{{list.nickName}}</span>
 								<span :class="[list.group_name=='创客'?'vip1':'vip']">{{list.group_name}}</span>
-								<span class="mui-pull-right">+{{list.recommend_award}}</span>
+								<span class="mui-pull-right" v-if="list.recommend_award>0">+{{list.recommend_award}}</span>
 							</div>
 							<div>
 								<span class="create-time">加入时间：{{list.activation_time}}</span>
@@ -319,12 +323,12 @@
 				</div>
 			</div>
 		</div>
-		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
-			
+
 			mui.plusReady(function() {})
 			var userInfo = getUserInfo(),
 				pageNum = 0;
@@ -353,7 +357,6 @@
 						})
 						getMemberInfo();
 						getFans();
-
 						// 我的权益
 						mui("header").on('tap', '.my-equity', function() {
 							openPage('equities_page.html', 'equities_page', '#f7f7f7', '');
@@ -427,7 +430,7 @@
 					barStyle: 'dark'
 				});
 			})
-			
+
 			mui(".mui-content").on('tap', '.user-head-img', function() {
 				var fid = this.dataset.fid;
 				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {

@@ -26,6 +26,7 @@
 				left: 0 !important;
 				right: 0 !important;
 				background-color: #FFFFFF;
+				height: auto;
 			}
 
 			.mui-backdrop.mui-active {
@@ -43,13 +44,58 @@
 			.first-popover .mui-table-view-cell {
 				background-color: #FFFFFF;
 				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 44px;
+				padding: 0;
+				overflow: hidden;
 			}
-			.first-popover .mui-table-view-cell.active{
+
+			.first-popover .mui-table-view-cell span {
+				position: relative;
+			}
+
+			.mui-table-view-cell.fans-option.active {
 				color: #2289FF;
 			}
-			.first-popover .mui-table-view-cell .mui-icon-checkmarkempty{
-				font-size: 0.48rem;
+
+			.first-popover .mui-table-view-cell .mui-icon-checkmarkempty {
+				font-size: 0.6rem;
 				color: #2289FF;
+				position: absolute;
+				right: -30px;
+				top: -5px;
+			}
+
+			.mui-popover .mui-table-view {
+				height: auto;
+				max-height: 600px;
+			}
+
+			.mui-table-view-cell:after {
+				right: 15px;
+			}
+
+			.mui-bar .mui-title {
+				font-weight: normal;
+			}
+
+			.action-btn .arrows {
+				color: #c2c2c2;
+				transition: all 0.25s ease-in-out;
+				-webkit-transition: all 0.25s ease-in-out;
+				position: relative;
+				display: inline-block;
+			}
+
+			.action-btn .arrows.active {
+				transform: rotate(180deg);
+				-webkit-transform: rotate(180deg);
+			}
+
+			.mui-content {
+				padding-top: 45px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -59,7 +105,6 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
 			// 初始化字体大小结束
 		</script>
 	</head>
@@ -67,63 +112,111 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<!-- <h1 class="mui-title">我的粉丝</h1> -->
-			<!-- <h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">我的粉丝（50）</a></h1> -->
-			<h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">我的粉丝</a></h1>
+			<h1 class="mui-title"><a id="action-btn" class="action-btn" href="#Popover">我的粉丝（0）<span class="arrows">▼</span></a></h1>
+			<!-- <h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">我的粉丝</a></h1> -->
 		</header>
-		<div id="mui-content" class="mui-content service-award-container" v-cloak>
-			<ul id="fans-list" class="mui-table-view" v-if="fansFlag">
-				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
-					<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
-					<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
-						<div class="top mui-clearfix">
-							<span>{{list.nickName}}</span>
-							<!-- .vip,.vip1,.vip2,.vip3四种class -->
-							<span :class="'vip'+list.group_id">{{list.group_name}}</span>
-							<!-- <span v-if="list.recommend_award>0" class="mui-pull-right">+{{list.recommend_award}}</span> -->
+		<div id="mui-content" v-cloak>
+			<div class="mui-content service-award-container" v-if="fansFlag">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
+						<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
+						<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
+							<div class="top mui-clearfix">
+								<span>{{list.nickName}}</span>
+								<!-- .vip,.vip1,.vip2,.vip3四种class -->
+								<span :class="'vip'+list.group_id">{{list.group_name}}</span>
+								<span v-if="list.recommend_award>0" class="mui-pull-right">+{{list.recommend_award}}</span>
+							</div>
+							<div class="bottom mui-clearfix">
+								<span>加入时间：{{list.activation_time}}</span>
+								<span class="mui-pull-right" v-if="list.direct==0">推荐人：{{list.recommend_user}}</span>
+							</div>
 						</div>
-						<div class="bottom mui-clearfix">
-							<span>加入时间：{{list.activation_time}}</span>
-							<span class="mui-pull-right" v-if="list.direct==0">推荐人：{{list.recommend_user}}</span>
-						</div>
-					</div>
-				</li>
-			</ul>
+					</li>
+				</ul>
+			</div>
 			<div v-if="emptyFlag" style="font-size: 0.28rem;color: #999999;">
 				<img style="width: 45%;display: block;margin: 10% auto 0;" class="no-friends" src="../image/icon/void-data.png">
-				<p style="text-align: center;">暂无粉丝</p>
+				<!-- <p style="text-align: center;">暂无粉丝</p> -->
 			</div>
-		</div>
-		<div id="middlePopover" class="mui-popover first-popover mui-hidden">
-			<ul class="mui-table-view">
-				<li :class="[index==0?'mui-table-view-cell fans-option active':'mui-table-view-cell fans-option']"   v-for="(item,index) in fansoption" :key="index">
-					<span>{{item.title}}({{item.num}})</span><span class="mui-icon mui-icon-checkmarkempty"></span>
-				</li>
-			</ul>
+			<div id="Popover" class="mui-popover first-popover">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell fans-option" :class="[item.active?' active':'']" v-for="(item,index) in fansoption"
+					 :key="index" @tap="screenfn(index,item.gid)">
+						<span>{{item.title}}<span :class="item.cls"></span><span v-show="item.active" class="mui-icon mui-icon-checkmarkempty"></span></span>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				double: false
+			});
 			var userInfo = getUserInfo(),
 				skip = 1,
-				limit = 15;
+				limit = 15,
+				refresh = '',
+				group_id = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					fansList: [],
 					fansFlag: false,
-					emptyFlag: false
+					emptyFlag: false,
+					fansoption: [{
+						title: '全部',
+						cls: 'total',
+						active: true,
+						gid: '0'
+					}, {
+						title: '分公司',
+						cls: 'company',
+						active: false,
+						gid: '5'
+					}, {
+						title: '服务中心',
+						cls: 'service_center',
+						active: false,
+						gid: '4'
+					}, {
+						title: '服务站',
+						cls: 'service_station',
+						active: false,
+						gid: '3'
+					}, {
+						title: '创客',
+						cls: 'maker',
+						active: false,
+						gid: '2'
+					}, {
+						title: 'VIP',
+						cls: 'vip',
+						active: false,
+						gid: '1'
+					}]
 				},
-				created: function() {
-					getFansList();
+				methods: {
+					screenfn: function(idx, gid) {
+						for (var i = 0; i < this.fansoption.length; i++) {
+							this.fansoption[i].active = false;
+						}
+						this.fansoption[idx].active = true;
+						document.querySelector('.arrows').classList.remove('active');
+						this.fansList = [];
+						skip = 1;
+						group_id = gid;
+						getFansList();
+						mui('#Popover').popover('hide');
+					}
 				},
 				mounted: function() {
 					mui.init({
 						swipeBack: false,
 						pullRefresh: {
-							container: "#fans-list",
+							container: "#mui-content",
 							up: {
 								height: 50,
 								auto: false,
@@ -146,6 +239,10 @@
 							}
 						}
 					});
+					// 获取列表
+					getFansList();
+					// 获取数量
+					getFansNum();
 					mui.plusReady(function() {
 						mui(".mui-content").on('tap', '.header-img', function() {
 							var fid = this.dataset.fid;
@@ -157,7 +254,6 @@
 							var cid = this.dataset.cid,
 								chatName = this.dataset.chatname,
 								avatar = this.dataset.avatar;
-							logs(cid);
 							openPage('dialog.html', 'dialog', '#f7f7f7', {
 								cid: cid,
 								chatName: chatName,
@@ -168,62 +264,63 @@
 					})
 				}
 			})
-			var pop=new Vue({
-				el:"#middlePopover",
-				data:{
-					fansoption: [{
-						title: '全部',
-						num: 31,
-						active: false
-					}, {
-						title: '分公司',
-						num: 6,
-						active: false
-					}, {
-						title: '服务中心',
-						num: 3,
-						active: false
-					}, {
-						title: '服务站',
-						num: 2,
-						active: false
-					}, {
-						title: '创客',
-						num: 10,
-						active: false
-					}, {
-						title: 'VIP',
-						num: 10,
-						active: false
-					}]
-				}
+			mui('.mui-bar-nav').on('tap', 'a', function() {
+				document.querySelector('.arrows').classList.toggle('active');
 			})
+			// 监听遮罩是否显示 为了让顶部的箭头处于正常位置
+			window.addEventListener('tap', function(e) {
+				if (e.target.className == 'mui-backdrop mui-active') {
+					var btn = mui(".arrows");
+					btn[0].classList.remove('active');
+				} else {}
+			}, true)
+
 			function getFansList() {
+				logs(group_id);
 				mui.post($ajaxUrl + 'member&action=fans', {
 					token: userInfo.token,
 					skip: skip,
-					limit: limit
+					limit: limit,
+					group_id: group_id
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0 && skip == 1) {
+						app.emptyFlag = false;
 						app.fansList = res.data;
 						app.fansFlag = true;
 						if (refresh == 'down') {
-							mui('#fans-list').pullRefresh().endPulldownToRefresh();
-							mui('#fans-list').pullRefresh().refresh(true);
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+							mui('#mui-content').pullRefresh().refresh(true);
 						}
 					} else if (res.errno == 0 && skip > 1) {
+						app.emptyFlag = false;
 						app.fansList = app.fansList.concat(res.data);
 						if (refresh == 'up') {
-							mui('#fans-list').pullRefresh().endPullupToRefresh();
+							mui('#mui-content').pullRefresh().endPullupToRefresh();
 						}
 					} else {
 						if (refresh == 'up') {
-							mui('#fans-list').pullRefresh().endPullupToRefresh(true);
-							message('没有更多了~');
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						}
+						if (refresh == 'down') {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
 						if (skip == 1) {
 							app.emptyFlag = true;
+						}
+					}
+				}, 'json');
+			}
+			// 获取粉丝数量
+			function getFansNum() {
+				mui.post($ajaxUrl + 'member&action=fans_count', {
+					token: userInfo.token
+				}, function(res) {
+					var data = res.data;
+					if (res.errno == 0) {
+						document.getElementById('action-btn').innerHTML = '我的粉丝数（' + data.total + '）<span class="arrows">▼</span>'
+						for (var i in data) {
+							document.querySelector('.' + i).innerHTML = '(' + data[i] + ')';
 						}
 					}
 				}, 'json');
