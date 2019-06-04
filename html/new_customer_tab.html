@@ -23,14 +23,16 @@
 				font-weight: normal;
 				color: #999999;
 			}
-			.mui-segmented-control.fixed-cont{
+
+			.mui-segmented-control.fixed-cont {
 				position: fixed !important;
 				top: 0;
 				width: 100%;
 				z-index: 16;
 				transition: all 0.2s ease-in-out;
 			}
-			.mui-segmented-control{
+
+			.mui-segmented-control {
 				z-index: 16;
 			}
 		</style>
@@ -267,6 +269,12 @@
 								color: '#2289FF',
 								callback: function() {
 									mui('#mui-content').pullRefresh().refresh(true);
+									if (typer == 'is_intention') {
+										mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+										mui('.mui-pull-bottom-pocket')[0].classList.add('mui-hidden');
+									} else {
+										mui('.mui-pull-bottom-pocket')[0].classList.remove('mui-hidden');
+									}
 									refresh = 'down';
 									skip = 1;
 									getnum();
@@ -284,10 +292,10 @@
 						list = document.getElementById("list-container");
 					window.addEventListener('scroll', function(e) {
 						if (list.getBoundingClientRect().top <= 38) {
-							document.getElementById('perch-cont').style.display="block";
+							document.getElementById('perch-cont').style.display = "block";
 							tab.classList.add('fixed-cont');
 						} else {
-							document.getElementById('perch-cont').style.display="none";
+							document.getElementById('perch-cont').style.display = "none";
 							tab.classList.remove('fixed-cont');
 						}
 					});
