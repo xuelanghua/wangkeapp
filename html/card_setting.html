@@ -1046,6 +1046,7 @@
 				message("Device not ready!");
 				return;
 			}
+			logs(r.supportedFormats);
 			timeInterval();
 			r.record({
 				filename: "_doc/audio/",
@@ -1081,6 +1082,10 @@
 
 		//文件上传
 		function voiceUpload(file) {
+			if (voiceTime < 2) {
+				message('录音小于2秒,请重新录制');
+				return;
+			}
 			plus.nativeUI.showWaiting('上传录音，请稍后……');
 			mask.show();
 			var task = plus.uploader.createUpload($voiceUrl, {
@@ -1094,7 +1099,8 @@
 						logs(res);
 						if (res.errno == 1) {
 							message(res.message);
-							plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+							plus.nativeUI.closeWaiting();
+							// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 						} else {
 							plus.nativeUI.closeWaiting();
 							mask.close();

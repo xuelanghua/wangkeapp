@@ -211,7 +211,7 @@
 						var currentTime = new Date().getTime();
 						var loginTime = parseInt((currentTime - lastLoginTime) / 1000);
 						var isExpire = loginTime > (60 * 60 * 24 * 5) ? true : false; 
-						if (isExpire) {
+						if (lastLoginTime && isExpire) {
 							message('账号登录过期,重新登录');
 						}
 						if (!userInfo || isExpire) {
