@@ -70,6 +70,24 @@
 				<div class="mui-indexed-list-alert"></div>
 				<div class="mui-indexed-list-inner">
 					<ul class="mui-table-view  crm-scroll-cont" id="chat-bottom">
+						<div class="">
+							<li class="mui-table-view-cell customer-list tags-list">
+								<div class="user-head-img crm-user-head">
+									<img src="../image/tags-list-icon.png">
+								</div>
+								<div class="customer-left">
+									标签
+								</div>
+							</li>
+							<li class="mui-table-view-cell customer-list">
+								<div class="user-head-img crm-user-head">
+									<img src="../image/groups-send-icon.png">
+								</div>
+								<div class="customer-left">
+									群发
+								</div>
+							</li>
+						</div>
 						<template v-for="(list,key,index) in crmList" :key="index">
 							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
 							<li class="mui-table-view-cell customer-list" :data-tags="list.pinyin" v-for="(items,idx) in list" :key="idx">
@@ -99,7 +117,6 @@
 						<p>没有数据,双击试试！</p>
 					</div>
 				</div>
-				<!-- <div id="chat-bottom"></div> -->
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -187,15 +204,15 @@
 			})
 			// 双击刷新crm
 			mui('.void-data-tips')[0].addEventListener('doubletap', function() {
-				plus.nativeUI.showWaiting('加载中…',{
-					background:"rgba(0,0,0,0.7)",
-					modal:true,
-					back:"close"
+				plus.nativeUI.showWaiting('加载中…', {
+					background: "rgba(0,0,0,0.7)",
+					modal: true,
+					back: "close"
 				})
-				setTimeout(function(){
+				setTimeout(function() {
 					getCustomerList();
 					plus.nativeUI.closeWaiting();
-				},1500);
+				}, 1500);
 			})
 
 			// 跳转详情页
@@ -236,6 +253,11 @@
 					}
 				}, 'json')
 			}
+			// 跳转标签页面
+			mui('.mui-content').on('tap','.tags-list',function(){
+				openPage('tags_setting.html','tags_setting','#f7f7f7');
+				plus.navigator.setStatusBarStyle("dark");
+			})
 		</script>
 	</body>
 

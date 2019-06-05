@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.create-tags {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #2289FF;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0;
+			}
+
+			h4 {
+				font-size: 15px;
+				color: #333333;
+				font-weight: normal;
+			}
+
+			p {
+				color: #999999;
+				font-size: 13px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">设置标签</h1>
+			<div class="mui-pull-right create-tags">
+				<span>新建标签</span>
+			</div>
+		</header>
+		<div id="mui-content" class="mui-content setting-container">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" data-tagid="123" data-tagname="意向客户">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<h4>意向客户(10)</h4>
+						<p class="mui-ellipsis">小飞飞，大飞飞，欧尼酱，强头光小飞飞，大飞飞，欧尼酱，强头光小飞飞，大飞飞，欧尼酱，强头光</p>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" data-tagid="345" data-tagname="昆明">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<h4>昆明(3)</h4>
+						<p class="mui-ellipsis">小飞飞，大飞飞，欧尼酱</p>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							plus.navigator.setStatusBarStyle("light");
+						}
+					})
+					mui.plusReady(function() {})
+					// 新建标签
+					mui(".mui-bar-nav").on('tap', '.create-tags', function() {
+						mui.toast('新建标签');
+					})
+					// 点击删除
+					mui('.mui-table-view-cell').on('tap', '.mui-btn', function(event) {
+						var _self = this;
+						var li = _self.parentNode.parentNode;
+						mui.confirm('确认删除该条记录？', '', ['确认', '取消'], function(e) {
+							if (e.index == 0) {
+								li.parentNode.removeChild(li);
+							} else {
+								setTimeout(function() {
+									mui.swipeoutClose(li);
+								}, 0);
+							}
+						});
+					});
+					// 点击跳转到标签编辑
+					mui('.mui-content').on('tap', '.mui-table-view-cell', function(event) {
+						var li = document.querySelector('.mui-selected');
+						var tagid=this.dataset.tagid;
+						var tagname=this.dataset.tagname;
+						if (li) {
+							mui.swipeoutClose(li);
+						} else {
+							openPage('tags_edit.html','tags_edit','#f7f7f7',{
+								tgid:tagid,
+								tgnm:tagname
+							})
+						}
+					});
+				}
+			})
+		</script>
+	</body>
+
+</html>

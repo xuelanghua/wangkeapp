@@ -226,8 +226,7 @@
 			<h1 class="mui-title">自媒体</h1>
 		</header>
 		<div class="mui-content">
-			<div id="slider" class="mui-slider">
-			</div>
+			<div id="slider" class="mui-slider"></div>
 			<!-- 防闪烁占位div -->
 			<div id="perch-cont" style="height: 38px;width: 100%;position: relative;display: none;"></div>
 			<div id="subMenu" class="subMenu">
@@ -244,7 +243,6 @@
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/showLoading.js"></script>
-
 	<script>
 		var recommend = 1;
 		var hot = 0;
@@ -372,6 +370,7 @@
 				type: 'post',
 				timeout: 10000,
 				success: function(data) {
+					logs(data);
 					if (data.errno == '0') {
 						var str = '';
 						if (data.data == '') {
@@ -524,7 +523,7 @@
 				cid = id;
 			}
 			skip = 1;
-			limit = 5;
+			limit = 8;
 			loadding = 0;
 			article_list();
 			mui('#article_bottom').pullRefresh().refresh(true);
