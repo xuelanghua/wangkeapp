@@ -13,6 +13,7 @@
 				height: 100%;
 				overflow: hidden;
 			}
+
 			.save-change {
 				height: 44px;
 				position: relative;
@@ -87,21 +88,30 @@
 			.user-head-img img {
 				width: 100%;
 				height: 100%;
-				
+
 			}
 
 			.member-lists {
 				display: flex;
 				align-items: center;
 			}
-			.mui-input-row .mui-input-clear~.mui-icon-clear{
+
+			.mui-input-row .mui-input-clear~.mui-icon-clear {
 				right: 15px;
 			}
-			.mui-input-group input{
+
+			.mui-input-group input {
 				padding-right: 50px;
 			}
-			.mui-table-view:before{
+
+			.mui-table-view:before {
 				height: 0;
+			}
+			.mui-table-view-cell:last-child:after{
+				height: 1px;
+			}
+			.mui-table-view{
+				padding-bottom: 50px;
 			}
 		</style>
 	</head>
@@ -116,21 +126,8 @@
 		</header>
 		<div class="mui-content" id="mui-content">
 			<div class="mui-indexed-list" id="list">
-				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
-					<input type="text" class="mui-input-clear mui-indexed-list-search-input">
-				</div>
-				<form class="mui-input-group">
-					<div class="mui-input-row">
-						<div class="mui-input-row">
-							<input type="text" class="mui-input-clear">
-						</div>
-					</div>
-				</form>
-				<h2>标签成员(10)</h2>
-				<div class="add-member">
-					<span class="mui-icon mui-icon-plus-filled"></span><span>添加成员</span>
-				</div>
 				<div class="mui-indexed-list-bar">
+					<a>#</a>
 					<a>A</a>
 					<a>B</a>
 					<a>C</a>
@@ -160,30 +157,35 @@
 				</div>
 				<div class="mui-indexed-list-alert"></div>
 				<div class="mui-indexed-list-inner">
+					<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
+						<input type="text" class="mui-input-clear mui-indexed-list-search-input">
+					</div>
+					<form class="mui-input-group" onsubmit="return false">
+						<div class="mui-input-row">
+							<div class="mui-input-row">
+								<input type="text" v-model="tagname" class="mui-input-clear">
+							</div>
+						</div>
+					</form>
+					<h2>标签成员(10)</h2>
+					<div class="add-member">
+						<span class="mui-icon mui-icon-plus-filled"></span><span>添加成员</span>
+					</div>
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-						<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" data-tagid="123"
-						 data-tagname="意向客户">
-							<div class="mui-slider-right mui-disabled">
-								<a class="mui-btn mui-btn-red">删除</a>
-							</div>
-							<div class="mui-slider-handle member-lists">
-								<div class="user-head-img"><img src="../image/bj.jpg"></div>
-								<p class="mui-ellipsis">阿波罗</p>
-							</div>
-						</li>
-						<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
-						<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" data-tagid="123"
-						 data-tagname="意向客户">
-							<div class="mui-slider-right mui-disabled">
-								<a class="mui-btn mui-btn-red">删除</a>
-							</div>
-							<div class="mui-slider-handle member-lists">
-								<div class="user-head-img"><img src="../image/bj.jpg"></div>
-								<p class="mui-ellipsis">菠菜</p>
-							</div>
-						</li>
+						<template v-for="(val,key,idx) in memberList" :key='idx'>
+							<li v-show="memberList[key].length>0" data-group="A" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
+							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" data-tagid="123"
+							 data-tagname="意向客户" v-for="(list,index) in val" :key="index">
+								<div class="mui-slider-right mui-disabled">
+									<a class="mui-btn mui-btn-red" :data-idx='index' :data-parent="key">删除</a>
+								</div>
+								<div class="mui-slider-handle member-lists">
+									<div class="user-head-img"><img :src="list.avatarUrl"></div>
+									<p class="mui-ellipsis">{{list.name}}</p>
+								</div>
+							</li>
+						</template>
 					</ul>
 				</div>
 			</div>
@@ -198,7 +200,126 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					tagname: '本地客户'
+					tagname: '',
+					memberList: {
+						"#": [{
+								"uid": "85",
+								"name": "1~12李浩铭13014817782",
+								"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/2WYSwXSqkeheXmiaib8Mr3cexrz5SzqmOMYG4pHkFPibGhgF3yymclKIAxQ8urv6HSph3x68NEJMATMiaRNuRJYeMQ/132",
+								"avatar": "http://app.ynhost.cn/attachment/images/6/2019/05/tbF0z6BHBB1ABQLhZ36HAljzq6q00h.jpg",
+								"join_status": 1,
+								"initial": "#",
+								"pinyin": "112LiHaoMing13014817782"
+							},
+							{
+								"uid": "1",
+								"name": "雪狼👉 🎥",
+								"avatarUrl": "http://thirdwx.qlogo.cn/mmopen/vi_32/TFZ8jXqNmA1lI2fajg1vuQ4HUvzT6mJDKM08JtcEE3U5kVkBYn0hmZRib78wdkgfqxoCI7st5g9WPmdKDbhFIwQ/132",
+								"avatar": "http://app.ynhost.cn/attachment/images/6/2019/05/Gafl665J44dKDJl15334XWIv4x6150.jpg",
+								"join_status": 1,
+								"initial": "#",
+								"pinyin": ""
+							}
+						],
+						"H": [{
+							"uid": "201",
+							"name": "胡尚",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJ0uVrNFB4W2ezVKvuiaBChKRFuNicOx02bFZXVNH5LwdTE9VSmdWEWicJ1MxlxLQ5KHV5KJV7MXS8ww/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "H",
+							"pinyin": "HuShang"
+						},{
+							"uid": "201",
+							"name": "胡尚",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJ0uVrNFB4W2ezVKvuiaBChKRFuNicOx02bFZXVNH5LwdTE9VSmdWEWicJ1MxlxLQ5KHV5KJV7MXS8ww/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "H",
+							"pinyin": "HuShang"
+						},{
+							"uid": "201",
+							"name": "胡尚",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJ0uVrNFB4W2ezVKvuiaBChKRFuNicOx02bFZXVNH5LwdTE9VSmdWEWicJ1MxlxLQ5KHV5KJV7MXS8ww/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "H",
+							"pinyin": "HuShang"
+						},{
+							"uid": "201",
+							"name": "胡尚",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJ0uVrNFB4W2ezVKvuiaBChKRFuNicOx02bFZXVNH5LwdTE9VSmdWEWicJ1MxlxLQ5KHV5KJV7MXS8ww/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "H",
+							"pinyin": "HuShang"
+						},{
+							"uid": "201",
+							"name": "胡尚",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJ0uVrNFB4W2ezVKvuiaBChKRFuNicOx02bFZXVNH5LwdTE9VSmdWEWicJ1MxlxLQ5KHV5KJV7MXS8ww/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "H",
+							"pinyin": "HuShang"
+						}],
+						"Z": [{
+							"uid": "11",
+							"name": "智鹿@加和",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/fwoziaQ4L3JGEOlHaUQZWQgE9j3ianU1mEcmAQsNCHcCJKaSydPNXsauIJ1w6wolVsiaTrRcC8t7E8Vuf0v0ria46A/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "Z",
+							"pinyin": "ZhiLuJiaHe"
+						},{
+							"uid": "11",
+							"name": "智鹿@加和",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/fwoziaQ4L3JGEOlHaUQZWQgE9j3ianU1mEcmAQsNCHcCJKaSydPNXsauIJ1w6wolVsiaTrRcC8t7E8Vuf0v0ria46A/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "Z",
+							"pinyin": "ZhiLuJiaHe"
+						},{
+							"uid": "11",
+							"name": "智鹿@加和",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/fwoziaQ4L3JGEOlHaUQZWQgE9j3ianU1mEcmAQsNCHcCJKaSydPNXsauIJ1w6wolVsiaTrRcC8t7E8Vuf0v0ria46A/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "Z",
+							"pinyin": "ZhiLuJiaHe"
+						},{
+							"uid": "11",
+							"name": "智鹿@加和",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/fwoziaQ4L3JGEOlHaUQZWQgE9j3ianU1mEcmAQsNCHcCJKaSydPNXsauIJ1w6wolVsiaTrRcC8t7E8Vuf0v0ria46A/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "Z",
+							"pinyin": "ZhiLuJiaHe"
+						},{
+							"uid": "11",
+							"name": "智鹿@加和",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/fwoziaQ4L3JGEOlHaUQZWQgE9j3ianU1mEcmAQsNCHcCJKaSydPNXsauIJ1w6wolVsiaTrRcC8t7E8Vuf0v0ria46A/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "Z",
+							"pinyin": "ZhiLuJiaHe"
+						},{
+							"uid": "11",
+							"name": "智鹿@加和",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/fwoziaQ4L3JGEOlHaUQZWQgE9j3ianU1mEcmAQsNCHcCJKaSydPNXsauIJ1w6wolVsiaTrRcC8t7E8Vuf0v0ria46A/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "Z",
+							"pinyin": "ZhiLuJiaHe"
+						},{
+							"uid": "11",
+							"name": "智鹿@加和",
+							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/fwoziaQ4L3JGEOlHaUQZWQgE9j3ianU1mEcmAQsNCHcCJKaSydPNXsauIJ1w6wolVsiaTrRcC8t7E8Vuf0v0ria46A/132",
+							"avatar": "",
+							"join_status": 1,
+							"initial": "Z",
+							"pinyin": "ZhiLuJiaHe"
+						}]
+					}
 				},
 				methods: {
 
@@ -222,16 +343,27 @@
 						tgid = self.tgid;
 						tgnm = self.tgnm;
 						document.querySelector('.mui-title').innerHTML = tgnm;
+						app.tagname = tgnm;
 					})
 					// 保存编辑
 					mui(".mui-bar-nav").on('tap', '.save-change', function() {
 						mui.toast('保存');
 					})
+					// 添加成员
+					mui(".mui-content").on('tap', '.add-member', function() {
+						openPage('add_tags_mebers.html', 'add_tags_mebers', '#f7f7f7', {
+
+						})
+					})
 					// 点击删除
 					mui('.mui-table-view-cell').on('tap', '.mui-btn', function(event) {
-						var _self = this;
-						var li = _self.parentNode.parentNode;
-						li.parentNode.removeChild(li);
+						// var _self = this;
+						var li = this.parentNode.parentNode;
+						// li.parentNode.removeChild(li);
+						mui.swipeoutClose(li);
+						var pr = this.dataset.parent;
+						var idx = this.dataset.idx;
+						app.memberList[pr].splice(app.memberList[pr].idx, 1);
 					});
 				}
 			})

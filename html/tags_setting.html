@@ -84,10 +84,13 @@
 							plus.navigator.setStatusBarStyle("light");
 						}
 					})
-					mui.plusReady(function() {})
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						logs(self.source);
+					})
 					// 新建标签
 					mui(".mui-bar-nav").on('tap', '.create-tags', function() {
-						openPage('create_tags.html','create_tags','#f7f7f7');
+						openPage('create_tags.html', 'create_tags', '#f7f7f7');
 					})
 					// 点击删除
 					mui('.mui-table-view-cell').on('tap', '.mui-btn', function(event) {
@@ -106,14 +109,14 @@
 					// 点击跳转到标签编辑
 					mui('.mui-content').on('tap', '.mui-table-view-cell', function(event) {
 						var li = document.querySelector('.mui-selected');
-						var tagid=this.dataset.tagid;
-						var tagname=this.dataset.tagname;
+						var tagid = this.dataset.tagid;
+						var tagname = this.dataset.tagname;
 						if (li) {
 							mui.swipeoutClose(li);
 						} else {
-							openPage('tags_edit.html','tags_edit','#f7f7f7',{
-								tgid:tagid,
-								tgnm:tagname
+							openPage('tags_edit.html', 'tags_edit', '#f7f7f7', {
+								tgid: tagid,
+								tgnm: tagname
 							})
 						}
 					});

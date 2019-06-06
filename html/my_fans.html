@@ -94,6 +94,10 @@
 				-webkit-transform: rotate(180deg);
 			}
 
+			[v-cloak] {
+				display: none;
+			}
+
 			.mui-content {
 				padding-top: 45px;
 			}
@@ -112,7 +116,13 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title"><a id="action-btn" class="action-btn" href="#Popover">我的粉丝（0）<span class="arrows">▼</span></a></h1>
+			<h1 class="mui-title">
+				<a id="action-btn" class="action-btn" href="#Popover">
+					<span id="fans-title">我的粉丝</span>
+					<span id="fans-number">（0）</span>
+					<span class="arrows">▼</span>
+				</a>
+			</h1>
 			<!-- <h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">我的粉丝</a></h1> -->
 		</header>
 		<div id="mui-content" v-cloak>
@@ -142,7 +152,7 @@
 			<div id="Popover" class="mui-popover first-popover">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell fans-option" :class="[item.active?' active':'']" v-for="(item,index) in fansoption"
-					 :key="index" @tap="screenfn(index,item.gid)">
+					 :key="index" @tap="screenfn(index,item.gid,item.title,item.cls)">
 						<span>{{item.title}}<span :class="item.cls"></span><span v-show="item.active" class="mui-icon mui-icon-checkmarkempty"></span></span>
 					</li>
 				</ul>
@@ -196,10 +206,11 @@
 						cls: 'vip',
 						active: false,
 						gid: '1'
-					}]
+					}],
+					fansnumber: {}
 				},
 				methods: {
-					screenfn: function(idx, gid) {
+					screenfn: function(idx, gid, title, cls) {
 						for (var i = 0; i < this.fansoption.length; i++) {
 							this.fansoption[i].active = false;
 						}
@@ -209,6 +220,8 @@
 						skip = 1;
 						group_id = gid;
 						getFansList();
+						document.getElementById('fans-title').innerText = title;
+						document.getElementById('fans-number').innerText = '（' + app.fansnumber[cls] + '）';
 						mui('#Popover').popover('hide');
 					}
 				},
@@ -276,14 +289,13 @@
 			}, true)
 
 			function getFansList() {
-				logs(group_id);
 				mui.post($ajaxUrl + 'member&action=fans', {
 					token: userInfo.token,
 					skip: skip,
 					limit: limit,
 					group_id: group_id
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0 && skip == 1) {
 						app.emptyFlag = false;
 						app.fansList = res.data;
@@ -317,8 +329,10 @@
 					token: userInfo.token
 				}, function(res) {
 					var data = res.data;
+					logs(data);
 					if (res.errno == 0) {
-						document.getElementById('action-btn').innerHTML = '我的粉丝数（' + data.total + '）<span class="arrows">▼</span>'
+						app.fansnumber = data;
+						document.getElementById('fans-number').innerText = '（' + data.total + '）';
 						for (var i in data) {
 							document.querySelector('.' + i).innerHTML = '(' + data[i] + ')';
 						}

@@ -100,8 +100,14 @@
 			.mui-input-group input{
 				padding-right: 50px;
 			}
-			.mui-table-view:before{
+			.mui-table-view:before {
 				height: 0;
+			}
+			.mui-table-view-cell:last-child:after{
+				height: 1px;
+			}
+			.mui-table-view{
+				padding-bottom: 50px;
 			}
 		</style>
 	</head>
@@ -109,28 +115,15 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title"></h1>
+			<h1 class="mui-title">新建标签</h1>
 			<div class="mui-pull-right save-change">
 				<span>保存</span>
 			</div>
 		</header>
 		<div class="mui-content" id="mui-content">
 			<div class="mui-indexed-list" id="list">
-				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
-					<input type="text" class="mui-input-clear mui-indexed-list-search-input" >
-				</div>
-				<form class="mui-input-group">
-					<div class="mui-input-row">
-						<div class="mui-input-row">
-							<input type="text" class="mui-input-clear" placeholder="标签名字">
-						</div>
-					</div>
-				</form>
-				<h2>标签成员(10)</h2>
-				<div class="add-member">
-					<span class="mui-icon mui-icon-plus-filled"></span><span>添加成员</span>
-				</div>
 				<div class="mui-indexed-list-bar">
+					<a>#</a>
 					<a>A</a>
 					<a>B</a>
 					<a>C</a>
@@ -160,19 +153,35 @@
 				</div>
 				<div class="mui-indexed-list-alert"></div>
 				<div class="mui-indexed-list-inner">
+					<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
+						<input type="text" class="mui-input-clear mui-indexed-list-search-input" >
+					</div>
+					<form class="mui-input-group" onsubmit="return false">
+						<div class="mui-input-row">
+							<div class="mui-input-row">
+								<input type="text" class="mui-input-clear" placeholder="标签名字">
+							</div>
+						</div>
+					</form>
+					<h2>标签成员(10)</h2>
+					<div class="add-member">
+						<span class="mui-icon mui-icon-plus-filled"></span><span>添加成员</span>
+					</div>
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-						<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" data-tagid="123"
-						 data-tagname="阿波罗">
-							<div class="mui-slider-right mui-disabled">
-								<a class="mui-btn mui-btn-red">删除</a>
-							</div>
-							<div class="mui-slider-handle member-lists">
-								<div class="user-head-img"><img src="../image/bj.jpg"></div>
-								<p class="mui-ellipsis">阿波罗</p>
-							</div>
-						</li>
+						<template v-for="(i,idx) in 10" :key="idx">
+							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
+							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" data-tagid="123"
+							 data-tagname="阿波罗">
+								<div class="mui-slider-right mui-disabled">
+									<a class="mui-btn mui-btn-red">删除</a>
+								</div>
+								<div class="mui-slider-handle member-lists">
+									<div class="user-head-img"><img src="../image/bj.jpg"></div>
+									<p class="mui-ellipsis">阿波罗</p>
+								</div>
+							</li>
+						</template>
 						<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
 						<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" data-tagid="123"
 						 data-tagname="菠菜">
@@ -220,8 +229,6 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						tgid = self.tgid;
-						tgnm = self.tgnm;
-						document.querySelector('.mui-title').innerHTML = tgnm;
 					})
 					// 保存编辑
 					mui(".mui-bar-nav").on('tap', '.save-change', function() {

@@ -85,18 +85,12 @@
 				color: #2889ff;
 			}
 
-			.mui-indexed-list-search {
-				margin-bottom: 0.1rem;
-				border-radius: 6px;
-				padding: 0 0.2rem;
-			}
 
 			.mui-search .mui-placeholder .mui-icon {
-				margin-left: 0.28rem;
+				margin-left: 0.18rem;
 			}
 
 			.mui-search.mui-active:before {
-				margin-left: 0.18rem;
 				top: 16px;
 			}
 
@@ -111,7 +105,32 @@
 			#list .mui-indexed-list-bar a {
 				height: 3.5% !important;
 			}
-
+			.mui-segmented-control{
+				position: relative;
+				width: 100%;
+			}
+			.mui-segmented-control .mui-control-item{
+				position: relative;
+				width: 33.3333%;
+			}
+			.mui-segmented-control::before,
+			.mui-segmented-control .mui-control-item.mui-active::before{
+				content:'';
+				display: block;
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				background-color: #DDDDDD;
+				height: 1px;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			.mui-segmented-control .mui-control-item.mui-active::before{
+				background-color: #2289FF;
+				height: 2px;
+				width: 25%;
+				left: 37.5%;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -137,6 +156,11 @@
 			<div id='list' class="mui-indexed-list" v-cloak>
 				<div class="mui-indexed-list-search mui-input-row mui-search">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
+				</div>
+				<div class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+					<a class="mui-control-item mui-active" href="javascript:void(0);" data-type="new_customer">新增客户</a>
+					<a class="mui-control-item" href="javascript:void(0);" data-type="customer_crm">客户CRM</a>
+					<a class="mui-control-item" href="javascript:void(0);" data-type="friend">好友</a>
 				</div>
 				<div class="mui-indexed-list-bar">
 					<a>#</a>
@@ -230,7 +254,7 @@
 									done.classList.add("mui-disabled");
 								}
 							}
-						}, 500);
+						}, 800);
 					} else {
 
 					}
@@ -263,14 +287,16 @@
 							}
 						});
 						if (checkedValues.length > 0) {
-							var view = plus.webview.currentWebview().opener();
-							mui.fire(view, 'doit', {
+							var prior = plus.webview.currentWebview().opener();
+							mui.fire(prior, 'doit', {
 								imagePath: checkedAvatar,
 								idGroup: checkedValues
 							});
-							var detailPage = plus.webview.getWebviewById('team_detail');
-							mui.fire(detailPage, 'doit');
-							mui.back();
+							// var detailPage = plus.webview.getWebviewById('team_detail');
+							// mui.fire(detailPage, 'doit');
+							setTimeout(function(){
+								mui.back();
+							},500);
 						} else {
 							mui.alert('你没选择任何成员');
 						}
@@ -300,6 +326,7 @@
 				token: userInfo.token,
 				team_id: tid
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					app.lists = res.data;
 					setTimeout(function() {
