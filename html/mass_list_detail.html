@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.block-list {
+				padding: 20px 15px;
+				margin-bottom: 8px;
+				background-color: #FFFFFF;
+				box-sizing: border-box;
+			}
+
+			.block-list p {
+				font-size: 15px;
+				color: #333333;
+				margin-bottom: 0;
+				text-align: justify;
+			}
+
+			.block-list h5 {
+				margin: 10px 0;
+				font-size: 15px;
+				color: #333333;
+			}
+
+			.block-list .tags {
+				display: inline-block;
+				font-size: 13px;
+				color: #999999;
+				background-color: #ebf4ff;
+				padding: 2px 6px;
+				margin: 4px 2px;
+			}
+
+			.block-list .desc-footer {
+				margin: 10px 0;
+			}
+
+			.mass-status {
+				position: relative;
+				margin: 0 10px;
+				padding-left: 10px;
+			}
+
+			.mass-status::before {
+				content: '';
+				position: absolute;
+				left: 0;
+				height: 80%;
+				top: 10%;
+				width: 1px;
+				background-color: #dddddd;
+			}
+
+			.block-list .slecet-person {
+				text-align: justify;
+				padding: 10px 15px;
+				font-size: 13px;
+				color: #333333;
+				margin: 0;
+				display: block;
+				position: relative;
+			}
+
+			.block-list .slecet-person::after {
+				content: '';
+				display: block;
+				position: absolute;
+				width: 200%;
+				height: 200%;
+				border: 1px solid #DDDDDD;
+				transform-origin: left top;
+				-webkit-transform-origin: left top;
+				transform: scale(0.5);
+				-webkit-transform: scale(0.5);
+				top: 0;
+				left: 0;
+				border-radius: 10px;
+			}
+
+			.mui-title {
+				font-weight: normal;
+			}
+
+			.block-list p img {
+				width: 100%;
+				height: auto;
+				max-height: 300px;
+				object-fit: cover;
+			}
+
+			/* 图片预览 */
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000000;
+			}
+
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4px;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+
+				100% {
+					opacity: 1;
+				}
+			}
+
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+
+				100% {
+					opacity: 1;
+				}
+			}
+
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+
+				100% {
+					opacity: 0;
+				}
+			}
+
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+
+				100% {
+					opacity: 0;
+				}
+			}
+
+			p img {
+				max-width: 100%;
+				height: auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">群发</h1>
+		</header>
+		<div id="mui-content" class="mui-content" v-cloak>
+			<div class="block-list">
+				<p class="mui-hidden">
+					萨科技的富豪是都疯狂拉萨的房间号阿斯顿发莱卡静安寺没地方卢卡斯京东方爱上了的咖啡机马上到了看见爱上对方垃圾水电费阿萨德立方空间阿水电费里看见爱上对方奥斯卡了的积分
+				</p>
+				<p>
+					<img src="../image/share/bg-img03.jpg" data-preview-src="" data-preview-group="1" />
+				</p>
+			</div>
+			<div class="block-list">
+				<h5>选择的标签</h5>
+				<span class="tags">昆明地区</span>
+				<span class="tags">东川</span>
+				<span class="tags">玉溪</span>
+				<span class="tags">云南万贤科技有限公司</span>
+				<span class="tags">呈贡校区</span>
+			</div>
+			<div class="block-list">
+				<p class="desc-footer">群发人数：500<span class="mass-status">发送失败：20</span></p>
+				<p class="slecet-person">
+					王花花、明日
+				</p>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/mui.zoom.js"></script>
+		<script src="../js/mui.previewimage.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					// 图片预览
+					mui.init({
+						beforeback: function() {
+							// plus.navigator.setStatusBarStyle("light");
+						}
+					})
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						document.querySelector(".mui-title").innerText = self.title + '群发';
+					})
+					mui.previewImage();
+				}
+			})
+		</script>
+	</body>
+
+</html>

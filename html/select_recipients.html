@@ -19,24 +19,6 @@
 				box-shadow: none;
 			}
 
-			#done.mui-disabled {
-				color: gray;
-			}
-
-			.create-team-btn {
-				height: 100%;
-				display: flex;
-				align-items: center;
-				color: #2289ff;
-				font-size: 0.3rem;
-				position: relative;
-				z-index: 999;
-			}
-
-			.mui-indexed-list-bar {
-				top: 0.66rem;
-			}
-
 			.mui-indexed-list-search {
 				width: 100%;
 			}
@@ -103,7 +85,7 @@
 			}
 
 			#list .mui-indexed-list-bar a {
-				height: 3.5% !important;
+				height: 3.2% !important;
 			}
 
 			.mui-segmented-control {
@@ -136,6 +118,52 @@
 				left: 37.5%;
 			}
 
+			.mui-title {
+				font-weight: normal;
+			}
+
+			.next-btn {
+				position: fixed;
+				bottom: 0;
+				width: 100%;
+				height: 50px;
+				background-color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 15px;
+				color: #2289ff;
+			}
+
+			.next-btn.next-disabled {
+				color: gray;
+			}
+
+			.next-btn::before {
+				content: '';
+				display: block;
+				width: 100%;
+				background-color: #DDDDDD;
+				height: 1px;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+				position: absolute;
+				top: 0;
+			}
+
+			.create-team-btn {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				color: #333333;
+				font-size: 15px;
+				position: relative;
+				padding: 0 15px;
+				/* background: #0062CC; */
+				margin-right: -10px;
+				z-index: 16;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -153,19 +181,15 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">成员选择</h1>
-			<span class="mui-pull-right create-team-btn mui-disabled" id="done">确定</span>
+			<h1 class="mui-title">选择收件人</h1>
+			<!-- <span class="mui-pull-right create-team-btn mui-disabled" id="next">确定</span> -->
+			<span class="mui-pull-right create-team-btn">全选</span>
 		</header>
 
 		<div class="mui-content setting-container">
 			<div id='list' class="mui-indexed-list" v-cloak>
-				<div class="mui-indexed-list-search mui-input-row mui-search">
+				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
-				</div>
-				<div class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-					<a class="mui-control-item mui-active" href="javascript:void(0);" data-type="new_customer">新增客户</a>
-					<a class="mui-control-item" href="javascript:void(0);" data-type="customer_crm">客户CRM</a>
-					<a class="mui-control-item" href="javascript:void(0);" data-type="friend">好友</a>
 				</div>
 				<div class="mui-indexed-list-bar">
 					<a>#</a>
@@ -213,6 +237,7 @@
 					</ul>
 				</div>
 			</div>
+			<div id="next_btn" class="next-btn next-disabled">下一步</div>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -223,6 +248,7 @@
 		mui.init();
 		var userInfo = getUserInfo();
 		var tid = '';
+		var count = 0;
 		var app = new Vue({
 			el: "#list",
 			data: {
@@ -235,6 +261,8 @@
 					var self = plus.webview.currentWebview();
 					tid = self.tid;
 					app.uids = self.uids;
+					document.querySelector('.mui-title').innerText = self.names;
+					// 会员组id  self.group_id
 					getUserList();
 					if (app.uids) {
 						setTimeout(function() {
@@ -247,16 +275,16 @@
 									}
 								}
 							}
-							var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+							count = list.querySelectorAll('input[type="checkbox"]:checked').length;
 							var value = count ? "完成(" + count + ")" : "完成";
-							done.innerHTML = value;
+							next.innerHTML = value;
 							if (count) {
-								if (done.classList.contains("mui-disabled")) {
-									done.classList.remove("mui-disabled");
+								if (next.classList.contains("next-disabled")) {
+									next.classList.remove("next-disabled");
 								}
 							} else {
-								if (!done.classList.contains("mui-disabled")) {
-									done.classList.add("mui-disabled");
+								if (!next.classList.contains("next-disabled")) {
+									next.classList.add("next-disabled");
 								}
 							}
 						}, 800);
@@ -274,13 +302,13 @@
 				mui.ready(function() {
 					var header = document.querySelector('header.mui-bar');
 					var list = document.getElementById('list');
-					var done = document.getElementById('done');
+					var next = document.getElementById('next_btn');
 					//calc hieght
 					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
 					//create
 					window.indexedList = new mui.IndexedList(list);
-					//done event
-					done.addEventListener('tap', function() {
+					//next event
+					next.addEventListener('tap', function() {
 						var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
 						var checkedAvatar = [];
 						var mber = {};
@@ -297,37 +325,62 @@
 							}
 						});
 						logs(mber);
-						if (checkedValues.length > 0) {
-							var prior = plus.webview.currentWebview().opener();
-							mui.fire(prior, 'doit', {
-								imagePath: checkedAvatar,
-								idGroup: checkedValues
-							});
+						if (count > 0) {
+							// var prior = plus.webview.currentWebview().opener();
+							// mui.fire(prior, 'doit', {
+							// 	imagePath: checkedAvatar,
+							// 	idGroup: checkedValues
+							// });
 							// var detailPage = plus.webview.getWebviewById('team_detail');
 							// mui.fire(detailPage, 'doit');
 							// setTimeout(function() {
 							// 	mui.back();
 							// }, 500);
+							openPage('mass_message.html', 'mass_message', '#f7f7f7', '');
 						} else {
-							mui.alert('你没选择任何成员');
+							message('你没选择任何成员');
+							// mui.alert('你没选择任何成员');
 						}
+						// if (count) {
+
+						// }
 					}, false);
+
 					mui('.mui-indexed-list-inner').on('change', 'input', function() {
-						var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
-						var value = count ? "完成(" + count + ")" : "完成";
-						done.innerHTML = value;
+						count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+						var value = count ? "下一步(" + count + ")" : "下一步";
+						next.innerHTML = value;
 						if (count) {
-							if (done.classList.contains("mui-disabled")) {
-								done.classList.remove("mui-disabled");
+							if (next.classList.contains("next-disabled")) {
+								next.classList.remove("next-disabled");
 							}
 						} else {
-							if (!done.classList.contains("mui-disabled")) {
-								done.classList.add("mui-disabled");
+							if (!next.classList.contains("next-disabled")) {
+								next.classList.add("next-disabled");
 							}
 						}
 					});
+					var allselect = false;
+					mui('.mui-bar').on('tap', '.create-team-btn', function() {
+						if (!allselect) {
+							mui("input[type='checkbox']").each(function() {
+								this.checked = true;
+							});
+							next.classList.remove("next-disabled");
+							document.querySelector('.create-team-btn').innerText="取消";
+							count=list.querySelectorAll('input[type="checkbox"]:checked').length;
+							allselect=true;
+						} else {
+							mui("input[type='checkbox']").each(function() {
+								this.checked = false;
+							});
+							count=0;
+							next.classList.add("next-disabled");
+							document.querySelector('.create-team-btn').innerText="全选";
+							allselect=false;
+						}
+					});
 				});
-
 			}
 		})
 

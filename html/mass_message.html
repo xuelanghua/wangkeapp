@@ -7,7 +7,170 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
+			.add-recipients {
+				background-color: #FFFFFF;
+				padding: 0 15px;
+				height: 56px;
+				margin-bottom: 15px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 15px;
+				color: #333333;
+				box-sizing: border-box;
+			}
 
+			.add-recipients .mui-icon {
+				font-size: 18px;
+			}
+
+			.mass-person {
+				background-color: #FFFFFF;
+				padding: 20px 15px;
+				box-sizing: border-box;
+			}
+
+			.mass-title,
+			.mass-title span {
+				font-size: 15px;
+				color: #333333;
+			}
+
+			.mass-title .mui-pull-left {
+				padding-top: 5px;
+			}
+
+			.mass-title .mui-pull-right {
+				display: flex;
+				align-items: center;
+			}
+
+			.mass-title .mui-pull-right span {
+				color: #999999;
+			}
+
+			.mass-title .mui-pull-right .mui-icon {
+				font-size: 28px;
+			}
+
+			.slecet-person {
+				margin-top: 16px;
+			}
+
+			.slecet-person p {
+				text-align: justify;
+				padding: 10px 15px;
+				font-size: 13px;
+				color: #333333;
+				margin: 0;
+				display: block;
+				position: relative;
+			}
+
+			.slecet-person p::after {
+				content: '';
+				display: block;
+				position: absolute;
+				width: 200%;
+				height: 200%;
+				border: 1px solid #DDDDDD;
+				transform-origin: left top;
+				-webkit-transform-origin: left top;
+				transform: scale(0.5);
+				-webkit-transform: scale(0.5);
+				top: 0;
+				left: 0;
+				border-radius: 10px;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+
+			html,
+			body {
+				height: 100%;
+				margin: 0px;
+				padding: 0px;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+			}
+
+			footer {
+				position: fixed;
+				width: 100%;
+				height: 50px;
+				min-height: 50px;
+				border-top: solid 1px #BBBBBB;
+				left: 0px;
+				bottom: 0px;
+				overflow: hidden;
+				padding: 0px 50px;
+				background-color: #fafafa;
+			}
+
+			.footer-left {
+				position: absolute;
+				width: 50px;
+				height: 50px;
+				left: 0px;
+				bottom: 0px;
+				text-align: center;
+				vertical-align: middle;
+				line-height: 100%;
+				padding: 12px 4px;
+			}
+
+			.footer-right {
+				position: absolute;
+				width: 50px;
+				height: 50px;
+				right: 0px;
+				bottom: 0px;
+				text-align: center;
+				padding: 12px 5px;
+				display: inline-flex;
+				align-items: center;
+				color: #2289FF;
+			}
+
+			.footer-center {
+				height: 100%;
+				padding: 5px 0px;
+			}
+
+			.footer-center [class*=input] {
+				width: 100%;
+				height: 100%;
+				border-radius: 5px;
+			}
+
+			.footer-center .input-text {
+				background: #fff;
+				border: solid 1px #ddd;
+				padding: 10px !important;
+				font-size: 16px !important;
+				line-height: 18px !important;
+				font-family: verdana !important;
+				overflow: hidden;
+			}
+
+			.mui-content {
+				padding-bottom: 49px;
+			}
+			.mass-record{
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #333333;
+				/* background-color: #007AFF; */
+				margin-right: -10px;
+			}
 		</style>
 	</head>
 
@@ -15,18 +178,74 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">群发</h1>
+			<div class="mass-record mui-pull-right">
+				群发记录
+			</div>
 		</header>
-		<div id="mui-content" class="mui-content setting-container">
-			标签
+		<div id="mui-content" class="mui-content" v-cloak>
+			<div class="add-recipients">
+				<span>添加收件人</span><span class="mui-icon mui-icon-arrowright"></span>
+			</div>
+			<div class="mass-person">
+				<div class="mass-title mui-clearfix">
+					<div class="mui-pull-left">
+						群发人数：205
+					</div>
+					<div class="mui-pull-right clear-selcet">
+						<span class="mui-icon mui-icon-closeempty"></span><span>清除</span>
+					</div>
+				</div>
+				<div class="slecet-person">
+					<!-- <p v-if="person.length>0" v-for="i in 30"> -->
+					<p v-if="person.length>0">
+						<template v-for="(items,idx) in person" :key="idx">{{items.name}}<template v-if="idx<person.length-1">、</template></template>
+					</p>
+				</div>
+			</div>
 		</div>
+		<footer>
+			<div class="footer-left">
+				<i id='msg-image' class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
+			</div>
+			<div class="footer-center">
+				<textarea id='msg-text' type="text" class='input-text'></textarea>
+			</div>
+			<label id="msg-type" class="footer-right">
+				发送
+			</label>
+		</footer>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/mui.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					person: [{
+						name: '王花花',
+						id: 3
+					}, {
+						name: '刘备备',
+						id: 4
+					}, {
+						name: '李栓蛋',
+						id: 6
+					}, {
+						name: '米斯特吴',
+						id: 7
+					}, {
+						name: '张飞飞',
+						id: 8
+					}, {
+						name: '诸葛亮',
+						id: 9
+					}, {
+						name: '嘉文',
+						id: 10
+					}, {
+						name: '赵信',
+						id: 11
+					}]
 				},
 				methods: {
 
@@ -37,7 +256,115 @@
 							plus.navigator.setStatusBarStyle("light");
 						}
 					})
-					mui.plusReady(function() {})
+					// 添加收件人
+					mui(".mui-content").on('tap','.add-recipients',function(){
+						openPage('select_group.html','select_group','#f7f7f7','');
+					})
+					// 群发记录
+					mui(".mui-bar").on('tap','.mass-record',function(){
+						openPage('mass_list.html','mass_list','#f7f7f7','');
+					})
+					// 清除
+					mui(".mui-content").on('tap','.clear-selcet',function(){
+						app.person=[];
+					})
+					mui.plusReady(function() {});
+					(function($, doc) {
+						if (mui.os.ios) {
+							// 解决在ios上fixed元素focusin时位置出现错误的问题 
+							document.addEventListener('DOMContentLoaded', function() {
+								var footerDom = document.querySelector('footer');
+								document.addEventListener('focusin', function() {
+									footerDom.style.position = 'absolute';
+								});
+								document.addEventListener('focusout', function() {
+									footerDom.style.position = 'fixed';
+								});
+							});
+						}
+						$.plusReady(function() {
+							plus.webview.currentWebview().setStyle({
+								softinputMode: "adjustResize"
+							});
+						});
+						var ui = {
+							body: doc.querySelector('body'),
+							footer: doc.querySelector('footer'),
+							footerRight: doc.querySelector('.footer-right'),
+							footerLeft: doc.querySelector('.footer-left'),
+							content: doc.querySelector('.mui-content'),
+							btnMsgType: document.querySelector('#msg-type'),
+							boxMsgText: document.querySelector('#msg-text')
+						};
+						var showKeyboard = function() {
+							if ($.os.ios) {
+								var webView = plus.webview.currentWebview().nativeInstanceObject();
+								webView.plusCallMethod({
+									"setKeyboardDisplayRequiresUserAction": false
+								});
+							} else {
+								var Context = plus.android.importClass("android.content.Context");
+								var InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
+								var main = plus.android.runtimeMainActivity();
+								var imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
+								imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+								//var view = ((ViewGroup)main.findViewById(android.R.id.content)).getChildAt(0);
+								imm.showSoftInput(main.getWindow().getDecorView(), InputMethodManager.SHOW_IMPLICIT);
+								//alert("ll");
+							}
+						};
+						//解决长按“发送”按钮，导致键盘关闭的问题；
+						ui.footerRight.addEventListener('touchstart', function(event) {
+							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
+								msgTextFocus();
+								event.preventDefault();
+							}
+						});
+						//解决长按“发送”按钮，导致键盘关闭的问题；
+						ui.footerRight.addEventListener('touchmove', function(event) {
+							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
+								msgTextFocus();
+								event.preventDefault();
+							}
+						});
+						ui.footerLeft.addEventListener('tap', function(event) {
+							var btnArray = [{
+								title: "拍照"
+							}, {
+								title: "从相册选择"
+							}];
+							plus.nativeUI.actionSheet({
+								title: "选择照片",
+								cancel: "取消",
+								buttons: btnArray
+							}, function(e) {
+								var index = e.index;
+								switch (index) {
+									case 0:
+										break;
+									case 1:
+										var cmr = plus.camera.getCamera();
+										cmr.captureImage(function(path) {
+											send({
+												sender: 'self',
+												type: 'image',
+												content: "file://" + plus.io.convertLocalFileSystemURL(path)
+											});
+										}, function(err) {});
+										break;
+									case 2:
+										plus.gallery.pick(function(path) {
+											send({
+												sender: 'self',
+												type: 'image',
+												content: path
+											});
+										}, function(err) {}, null);
+									break;
+								}
+							});
+						}, false);
+					}(mui, document));
 				}
 			})
 		</script>

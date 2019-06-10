@@ -159,7 +159,7 @@
 					<form class="mui-input-group" onsubmit="return false">
 						<div class="mui-input-row">
 							<div class="mui-input-row">
-								<input type="text" class="mui-input-clear" placeholder="标签名字">
+								<input maxlength="8" v-model="label_name" type="text" class="mui-input-clear" placeholder="标签名字">
 							</div>
 						</div>
 					</form>
@@ -169,7 +169,7 @@
 					</div>
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<template v-for="(i,idx) in 10" :key="idx">
+						<template :key="idx">
 							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
 							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" data-tagid="123"
 							 data-tagname="阿波罗">
@@ -182,17 +182,6 @@
 								</div>
 							</li>
 						</template>
-						<li data-group="B" class="mui-table-view-divider mui-indexed-list-group">B</li>
-						<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" data-tagid="123"
-						 data-tagname="菠菜">
-							<div class="mui-slider-right mui-disabled">
-								<a class="mui-btn mui-btn-red">删除</a>
-							</div>
-							<div class="mui-slider-handle member-lists">
-								<div class="user-head-img"><img src="../image/bj.jpg"></div>
-								<p class="mui-ellipsis">菠菜</p>
-							</div>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -204,10 +193,13 @@
 		<script type="text/javascript">
 			var tgid = '';
 			var tgnm = '';
+			var userInfo=getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					tagname: '本地客户'
+					tagname: '本地客户',
+					label_name:'',
+					uids:['12','45','58','1']
 				},
 				methods: {
 
@@ -232,7 +224,14 @@
 					})
 					// 保存编辑
 					mui(".mui-bar-nav").on('tap', '.save-change', function() {
-						mui.toast('保存');
+						mui.post($ajaxUrl +'label&action=create',{
+								token:userInfo.token,
+								label_name:app.label_name,
+								uids:app.uids.join(",")
+							},function(res){
+								logs(res);
+							},'json'
+						);
 					})
 					// 点击删除
 					mui('.mui-table-view-cell').on('tap', '.mui-btn', function(event) {
