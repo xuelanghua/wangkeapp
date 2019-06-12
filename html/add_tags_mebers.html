@@ -14,6 +14,10 @@
 				overflow: hidden;
 			}
 
+			.mui-control-item {
+				touch-action: pan-y;
+			}
+
 			.mui-bar {
 				-webkit-box-shadow: none;
 				box-shadow: none;
@@ -94,12 +98,12 @@
 				top: 16px;
 			}
 
-			#list .mui-table-view {
+			/* #list .mui-table-view {
 				padding-bottom: 50px;
-			}
+			} */
 
 			#list .mui-table-view:after {
-				bottom: 50px;
+				bottom: 0;
 			}
 
 			#list .mui-indexed-list-bar a {
@@ -139,6 +143,10 @@
 			[v-cloak] {
 				display: none;
 			}
+
+			.mui-indexed-list-inner {
+				padding-bottom: 40px;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -157,15 +165,15 @@
 			<span class="mui-pull-right create-team-btn mui-disabled" id="done">确定</span>
 		</header>
 
-		<div class="mui-content setting-container">
+		<div id="mui-content" class="mui-content setting-container">
 			<div id='list' class="mui-indexed-list" v-cloak>
 				<div class="mui-indexed-list-search mui-input-row mui-search">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
 				</div>
 				<div class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-					<a class="mui-control-item mui-active" href="javascript:void(0);" data-type="new_customer">新增客户</a>
-					<a class="mui-control-item" href="javascript:void(0);" data-type="customer_crm">客户CRM</a>
-					<a class="mui-control-item" href="javascript:void(0);" data-type="friend">好友</a>
+					<a class="mui-control-item mui-active" href="javascript:void(0);" data-types="new_customer">新增客户</a>
+					<a class="mui-control-item" href="javascript:void(0);" data-types="crm">客户CRM</a>
+					<a class="mui-control-item" href="javascript:void(0);" data-types="friend">好友</a>
 				</div>
 				<div class="mui-indexed-list-bar">
 					<a>#</a>
@@ -203,11 +211,9 @@
 						<template v-for="(vel,key,i) in lists" :key="i">
 							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
 							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input class="checkeds" type="checkbox" :data-father="key" :value="items.uid" :data-avatar="items.avatar||items.avatarUrl"
-								 :disabled="items.join_status==1" />
+								<input class="checkeds" type="checkbox" :data-father="key" :value="items.id" :data-avatar="items.avatarUrl" />
 								<img :src="items.avatar||items.avatarUrl" alt=" ">
-								<span>{{items.name}}</span>
-								<span v-if="items.join_status" style="color: #2289ff;">(已加入)</span>
+								<span>{{items.nickName}}</span>
 							</li>
 						</template>
 					</ul>
@@ -220,9 +226,18 @@
 	<script src="../js/mui.indexedlist.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
-		mui.init();
 		var userInfo = getUserInfo();
-		var tid = '';
+		var tgid = '';
+		var refresh = '';
+		var skip = 1;
+		var types = 'new_customer';
+		// 之前的
+		var yuids = [];
+		// 选中的全部
+		var allChecked = [];
+		var checkedNewCustomer = {};
+		var checkedCrm = {};
+		var checkedFriend = {};
 		var app = new Vue({
 			el: "#list",
 			data: {
@@ -230,90 +245,106 @@
 				uids: []
 			},
 			mounted: function() {
-				var checkedValues = [];
 				mui.plusReady(function() {
-					var self = plus.webview.currentWebview();
-					tid = self.tid;
-					app.uids = self.uids;
-					getUserList();
-					if (app.uids) {
-						setTimeout(function() {
-							var list = document.getElementById('list');
-							var signs = list.querySelectorAll('.checkeds');
-							for (var i = 0; i < signs.length; i++) {
-								for (var j = 0; j < app.uids.length; j++) {
-									if (app.uids[j] == signs[i].value) {
-										signs[i].checked = "checked";
-									}
-								}
-							}
-							var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
-							var value = count ? "完成(" + count + ")" : "完成";
-							done.innerHTML = value;
-							if (count) {
-								if (done.classList.contains("mui-disabled")) {
-									done.classList.remove("mui-disabled");
-								}
-							} else {
-								if (!done.classList.contains("mui-disabled")) {
-									done.classList.add("mui-disabled");
-								}
-							}
-						}, 800);
-					} else {
-
-					}
-					// mui.back = function() {
-					// 	// self.hide();
-					// 	plus.webview.hide( self, "slide-out-right");
-					// };
-					// setTimeout(function(){
-					// 	mui("#list").indexedList().findElements();
-					// },500);
-				})
-				mui.ready(function() {
-					var header = document.querySelector('header.mui-bar');
-					var list = document.getElementById('list');
 					var done = document.getElementById('done');
-					//calc hieght
-					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
-					//create
-					window.indexedList = new mui.IndexedList(list);
-					//done event
+					var self = plus.webview.currentWebview();
+					var opener = self.opener();
+					tgid = self.tgid;
+					yuids = self.yuids;
+					// logs(yuids.join(','));
+					getUserList();
+					var uidgroup = self.yuids;
+// 					if (uidgroup) {
+// 						setTimeout(function() {
+// 							var list = document.getElementById('list');
+// 							var signs = list.querySelectorAll('.checkeds');
+// 							for (var i = 0; i < signs.length; i++) {
+// 								for (var j = 0; j < uidgroup.length; j++) {
+// 									if (uidgroup[j] == signs[i].value) {
+// 										signs[i].checked = "checked";
+// 									}
+// 								}
+// 							}
+// 							var count = allChecked.length;
+// 							var value = count ? "完成(" + count + ")" : "完成";
+// 							done.innerHTML = value;
+// 							if (count) {
+// 								if (done.classList.contains("mui-disabled")) {
+// 									done.classList.remove("mui-disabled");
+// 								}
+// 							} else {
+// 								if (!done.classList.contains("mui-disabled")) {
+// 									done.classList.add("mui-disabled");
+// 								}
+// 							}
+// 						}, 800);
+// 					} else {
+// 
+// 					}
 					done.addEventListener('tap', function() {
-						var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
-						var checkedAvatar = [];
-						var mber = {};
-						var merbers = {};
-						checkboxArray.forEach(function(box) {
-							merbers[box.dataset.father] = [];
-							if (box.checked) {
-								checkedValues.push(box.value);
-								merbers[box.dataset.father].push(box.value)
-								mber[box.dataset.father] = merbers[box.dataset.father];
-								// 获取id
-								// 获取头像地址
-								checkedAvatar.push(box.dataset.avatar);
+						// checkSelect();
+						// logs(tgid);
+						// plus.nativeUI.showWaiting();
+						//格式化选中成员
+						if (yuids.length > 0) {
+							var conts = allChecked.concat(yuids);
+							if (allChecked.length > 0) {
+								mui.post($ajaxUrl + 'label&action=uid2info', {
+									token: userInfo.token,
+									label_id: tgid,
+									uids: conts.join(",")
+								}, function(res) {
+									// logs(res);
+									if (res.errno == 0) {
+										mui.fire(opener, 'acceptIdGroup', {
+											idGroup: allChecked.concat(yuids),
+											lists: res.data
+										});
+										// plus.nativeUI.closeWaiting();
+										self.close();
+									}
+								}, 'json');
 							}
-						});
-						logs(mber);
-						if (checkedValues.length > 0) {
-							var prior = plus.webview.currentWebview().opener();
-							mui.fire(prior, 'doit', {
-								imagePath: checkedAvatar,
-								idGroup: checkedValues
-							});
-							// var detailPage = plus.webview.getWebviewById('team_detail');
-							// mui.fire(detailPage, 'doit');
-							// setTimeout(function() {
-							// 	mui.back();
-							// }, 500);
 						} else {
-							mui.alert('你没选择任何成员');
+							if (allChecked.length > 0) {
+								yuids = allChecked;
+								mui.post($ajaxUrl + 'label&action=uid2info', {
+									token: userInfo.token,
+									label_id: tgid,
+									uids: allChecked.join(",")
+								}, function(res) {
+									// logs(res);
+									if (res.errno == 0) {
+										mui.fire(opener, 'acceptIdGroup', {
+											idGroup: allChecked,
+											lists: res.data
+										});
+										// plus.nativeUI.closeWaiting();
+										self.close();
+									}
+								}, 'json');
+							}
 						}
 					}, false);
+					// 选中
 					mui('.mui-indexed-list-inner').on('change', 'input', function() {
-						var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+						var val = this.value;
+						logs(allChecked);
+						if (this.checked) {
+							var index = allChecked.indexOf(val);
+							if (index > -1) {
+								//有就不添加,否则添加
+							} else {
+								allChecked.push(val);
+							}
+						} else {
+							var index = allChecked.indexOf(val);
+							if (index > -1) {
+								allChecked.splice(index, 1);
+							}
+						}
+						logs(allChecked);
+						var count = allChecked.length;
 						var value = count ? "完成(" + count + ")" : "完成";
 						done.innerHTML = value;
 						if (count) {
@@ -326,27 +357,121 @@
 							}
 						}
 					});
-				});
-
-			}
-		})
-
-		function getUserList() {
-			// console.log(tid);
-			mui.post($ajaxUrl + 'team&action=friend_list', {
-				token: userInfo.token,
-				team_id: tid
-			}, function(res) {
-				logs(res);
-				if (res.errno == 0) {
-					app.lists = res.data;
+					// 切换类型
+					mui('.mui-content').on('tap', '.mui-control-item', function() {
+						if(types == this.dataset.types){
+							 return;
+						}
+						types = this.dataset.types;
+						console.log(types);
+						// return;
+						mui.trigger(mui(".mui-icon-clear")[0], 'tap');
+						document.querySelector('.mui-indexed-list-search-input').blur();
+						// alert(JSON.stringify(checkedCrm) == "{}");
+						if (types == 'new_customer') {
+							if (JSON.stringify(checkedNewCustomer) == "{}") {
+								app.lists = [];
+								getUserList();
+							} else {
+								app.lists = checkedNewCustomer;
+								// logs(app.lists);
+							}
+						} else if (types == 'crm') {
+							if (JSON.stringify(checkedCrm) == "{}") {
+								app.lists = [];
+								getUserList();
+							} else {
+								app.lists = checkedCrm;
+								// logs(app.lists);
+							}
+						} else {
+							if (JSON.stringify(checkedFriend) == "{}") {
+								app.lists = [];
+								getUserList();
+							} else {
+								app.lists = checkedFriend;
+								// logs(app.lists);
+							}
+						}
+						// 标记选中的
+						setTimeout(function() {
+							var list = document.getElementById('list');
+							var signs = list.querySelectorAll('.checkeds');
+							logs(22222);
+							logs(signs);
+							logs(allChecked);
+							logs(22222);
+							for (var i = 0; i < signs.length; i++) {
+								for (var j = 0; j < allChecked.length; j++) {
+									if (allChecked[j] == signs[i].value) {
+										signs[i].checked = "checked";
+									}
+								}
+							}
+						}, 100)
+					});
+					mui.back = function() {
+						plus.webview.close(self, "slide-out-right");
+					};
 					setTimeout(function() {
 						mui("#list").indexedList().findElements();
-					}, 1000);
-				} else {
-
-				}
-			}, 'json');
-		}
+					}, 500);
+					// 获取列表
+					function getUserList() {
+						logs(types);
+						logs(yuids.join(','));
+						// logs(skip += 1);
+						mui.post($ajaxUrl + 'label&action=member_list', {
+							token: userInfo.token,
+							type: types,
+							exist_uids: yuids.join(','),
+						}, function(res) {
+							console.log(JSON.stringify(res));
+							if (res.errno == 0) {
+								app.lists = res.data;
+								if (types == 'new_customer') {
+									checkedNewCustomer = res.data;
+								} else if (types == 'crm') {
+									checkedCrm = res.data;
+								} else {
+									checkedFriend = res.data;
+								}
+								setTimeout(function() {
+									mui("#list").indexedList().findElements();
+								}, 1000);
+							} else {
+							}
+						}, 'json');
+					}
+				})
+				mui.ready(function() {
+					var header = document.querySelector('header.mui-bar');
+					var list = document.getElementById('list');
+					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+					window.indexedList = new mui.IndexedList(list);
+				});
+				mui.init({
+					pullRefresh: {
+						container: ".mui-indexed-list-inner",
+						up: {
+							height: 50,
+							auto: false,
+							contentrefresh: "正在加载...",
+							contentnomore: '没有更多数据了',
+							callback: function() {
+								refresh = 'up';
+								skip += 1;
+								setTimeout(function() {
+									mui('.mui-indexed-list-inner').pullRefresh().endPullupToRefresh(false);
+									if (skip > 4) {
+										mui('.mui-indexed-list-inner').pullRefresh().endPullupToRefresh(true);
+									}
+								}, 800)
+							}
+						}
+					}
+				});
+			}
+		})
 	</script>
 </html>

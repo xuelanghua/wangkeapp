@@ -29,6 +29,28 @@
 			.void-data-tips p {
 				margin-bottom: 0;
 			}
+
+			.tags-list,
+			.mass-texting-list {
+				display: flex;
+				align-items: center;
+				font-size: 14px;
+				padding: 10px 15px;
+				box-sizing: border-box;
+			}
+
+			.tags-list-head {
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				overflow: hidden;
+				margin-right: 15px;
+			}
+			.tags-list-head img{
+				width: 100%;
+				height: 100%;
+			}
+			
 		</style>
 	</head>
 
@@ -71,16 +93,16 @@
 				<div class="mui-indexed-list-inner">
 					<ul class="mui-table-view  crm-scroll-cont" id="chat-bottom">
 						<div class="">
-							<li class="mui-table-view-cell customer-list tags-list">
-								<div class="user-head-img crm-user-head">
+							<li class="mui-table-view-cell tags-list">
+								<div class="tags-list-head">
 									<img src="../image/tags-list-icon.png">
 								</div>
 								<div class="customer-left">
 									标签
 								</div>
 							</li>
-							<li class="mui-table-view-cell customer-list mass-texting-list">
-								<div class="user-head-img crm-user-head">
+							<li class="mui-table-view-cell mass-texting-list">
+								<div class="tags-list-head">
 									<img src="../image/groups-send-icon.png">
 								</div>
 								<div class="customer-left">
@@ -254,13 +276,13 @@
 				}, 'json')
 			}
 			// 跳转标签页面
-			mui('.mui-content').on('tap','.tags-list',function(){
-				openPage('tags_setting.html','tags_setting','#f7f7f7');
+			mui('.mui-content').on('tap', '.tags-list', function() {
+				openPage('tags_setting.html', 'tags_setting', '#f7f7f7');
 				plus.navigator.setStatusBarStyle("dark");
 			})
 			// 跳转群发页面
-			mui('.mui-content').on('tap','.mass-texting-list',function(){
-				openPage('mass_message.html','mass_message','#f7f7f7');
+			mui('.mui-content').on('tap', '.mass-texting-list', function() {
+				openPage('mass_message.html', 'mass_message', '#f7f7f7');
 				plus.navigator.setStatusBarStyle("dark");
 			})
 		</script>

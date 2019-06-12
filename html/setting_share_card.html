@@ -1,0 +1,545 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+
+			.mui-content {
+				height: 100%;
+				padding-bottom: 90px;
+			}
+
+			.mui-control-content {
+				height: auto;
+				background-color: #f1f2f3;
+			}
+
+			.mui-bar-tab.theme-change {
+				height: 90px;
+				top: 100vh;
+				bottom: auto;
+				margin-top: -90px;
+				-webkit-box-shadow: 0 0 1px rgba(0, 0, 0, .1);
+				box-shadow: 0 0 1px rgba(0, 0, 0, .1);
+			}
+
+			.mui-bar-tab .mui-tab-item {
+				height: 90px;
+				position: relative;
+				overflow: hidden;
+				width: 25%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 10px 0;
+			}
+
+			.theme-change img {
+				height: 80%;
+				width: auto;
+				transition: all 0.1s ease-in-out;
+				-webkit-transition: all 0.1s ease-in-out;
+			}
+
+			.theme-change .mui-tab-item.mui-active {
+				padding: 0;
+			}
+
+			.theme-change .mui-tab-item.mui-active img {
+				height: 90%;
+			}
+
+			.save-edit {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #2289FF;
+				margin-right: -5px;
+			}
+
+			.mui-tab-item {
+				touch-action: pan-y;
+			}
+
+			.qrimg {
+				width: 125px;
+				height: auto;
+			}
+
+			/* 主题一 */
+			.theme1 {
+				position: relative;
+				height: 580px;
+				overflow: hidden;
+			}
+
+			.theme1 .bgimg,
+			.theme2 .bgimg {
+				width: 100%;
+				height: auto;
+				position: relative;
+				z-index: 1;
+			}
+
+			.theme-body {
+				position: absolute;
+				width: 100%;
+				height: auto;
+				top: 40px;
+				bottom: 0;
+				z-index: 2;
+			}
+
+			.user-head-img {
+				width: 72px;
+				height: 72px;
+				overflow: hidden;
+				border-radius: 50%;
+			}
+
+			.theme-body1 {
+				width: 6.5rem;
+				left: 50%;
+				margin-left: -3.25rem;
+				background: url("../image/share/bg-img05.png")center top no-repeat;
+				background-size: contain;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				padding-top: 50px;
+			}
+
+			.theme-body1 .qrimg {
+				margin-top: 10px;
+			}
+
+			.theme-body1 h2 {
+				font-size: 18px;
+				font-weight: normal;
+				padding: 20px 0;
+				margin-bottom: 10px;
+				position: relative;
+			}
+
+			.theme-body1 h2::after {
+				content: '';
+				width: 40px;
+				height: 2px;
+				display: block;
+				position: absolute;
+				left: 50%;
+				margin-left: -20px;
+				bottom: 0;
+				background-color: #2289FF;
+			}
+
+			.input-section {
+				/* border: 2px dashed #DDDDDD; */
+				margin-bottom: 5px;
+				width: 80%;
+			}
+
+			.input-section textarea {
+				width: 100%;
+				overflow: auto;
+				word-break: break-all;
+				margin: 0;
+				border: none;
+				background: transparent;
+				text-align: center;
+				font-size: 0.3rem;
+			}
+
+			.theme-body1 .bottom-logo {
+				margin-top: 1.1rem;
+				width: 75px;
+			}
+
+			/* 第二个主题 */
+			.theme2 {
+				height: auto;
+				min-height: 500px;
+				background-color: #fff;
+			}
+
+			.theme2 .qrimg {
+				margin-top: 20px;
+			}
+
+			.head-img-cont {
+				overflow: hidden;
+				height: 6rem;
+				position: relative;
+				padding: 0;
+				line-height: 0;
+				z-index: 1;
+			}
+
+			.head-img-cont .bgimg {
+				height: 6rem;
+				object-fit: cover;
+			}
+			.theme-body2 {
+				width: 90%;
+				left: 5%;
+				background-size: contain;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+			}
+
+			.theme-body2 h2 {
+				font-size: 18px;
+				font-weight: normal;
+				padding: 10px 0;
+				position: relative;
+				color: #FFFFFF;
+			}
+
+			.theme-body2 .user-head-img {
+				box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.6);
+			}
+
+			.theme-body2 .input-section {
+				border: none;
+				color: #FFFFFF;
+				margin-bottom: 0;
+			}
+
+			.theme-body2 textarea::-webkit-input-placeholder {
+				color: #FFFFFF;
+			}
+
+			.theme-body2 .qrimg {
+				border: 4px solid #FFFFFF;
+				border-radius: 10px;
+				background-color: #FFFFFF;
+				box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
+				margin-bottom: 5px;
+			}
+
+			.head-img-cont .circular-bead {
+				width: 100%;
+				height: auto;
+				position: absolute;
+				bottom: 0;
+				z-index: 3;
+			}
+
+			.theme-body2 .bottom-logo {
+				margin-top: 20px;
+				width: 75px;
+			}
+
+			/* 第三个主题 */
+			.theme3 {
+				width: 100%;
+				min-height: 550px;
+				line-height: 0;
+			}
+
+			.theme3 .bgimg {
+				width: 100%;
+				height: auto;
+				position: relative;
+				z-index: 1;
+				line-height: 0;
+			}
+
+			.theme-body3 {
+				width: 100%;
+				background-size: contain;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				box-sizing: border-box;
+			}
+
+			.theme-body3 h2 {
+				font-size: 18px;
+				font-weight: normal;
+				padding: 10px 0;
+				position: relative;
+				color: #FFFFFF;
+			}
+
+			.theme-body3 .qr-cont {
+				line-height: 1.4;
+				margin-bottom: 1rem;
+			}
+
+			.theme-body3 .type_desc {
+				color: #FFFFFF;
+				margin-bottom: 0;
+			}
+
+			.theme-body3 .bottom-logo {
+				width: 90px;
+				height: auto;
+				margin-top: 0.3rem;
+			}
+
+			.theme-body3 .input-section {
+				margin: 20px 0;
+				width: 6rem;
+				border: none;
+				color: #FFFFFF;
+			}
+
+			.theme-body3 textarea::-webkit-input-placeholder {
+				color: #FFFFFF;
+			}
+
+			/* 第四个主题 */
+			.theme4.mui-control-content.mui-active {
+				background-color: #FFFFFF;
+				min-height: 500px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding-bottom: 10px;
+			}
+
+			.theme4 .bgimg {
+				width: 100%;
+				max-height: 250px;
+				z-index: 1;
+			}
+
+			.theme4 .user-head-img {
+				position: relative;
+				margin-top: -36px;
+				z-index: 2;
+			}
+
+			.theme4 h2 {
+				font-size: 18px;
+				font-weight: normal;
+				padding: 10px 0;
+				position: relative;
+				color: #333333;
+			}
+
+			.theme4 .input-section {
+				border: none;
+			}
+
+			.theme4 .bottom-logo {
+				position: absolute;
+				left: 0.3rem;
+				top: 0.3rem;
+				z-index: 3;
+				width: 1.5rem;
+			}
+
+			.replace-img {
+				position: absolute;
+				right: 0.3rem;
+				top: 0.3rem;
+				z-index: 9;
+				border: 1px dashed #FFFFFF;
+				color: #FFFFFF;
+				font-size: 0.28rem;
+				padding: 0 4px;
+				line-height: 1.4;
+			}
+		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">名片样式</h1>
+			<div id="shareImg" class="mui-pull-right save-edit">
+				<span>保存</span>
+			</div>
+		</header>
+		<nav id="theme-change" class="mui-bar mui-bar-tab theme-change">
+			<a href="#theme1" class="mui-tab-item mui-active"><img src="../image/share/styles-icon01.png"></a>
+			<a href="#theme2" class="mui-tab-item"><img src="../image/share/styles-icon02.png"></a>
+			<a href="#theme4" class="mui-tab-item"><img src="../image/share/styles-icon03.png"></a>
+			<a href="#theme3" class="mui-tab-item"><img src="../image/share/styles-icon04.png"></a>
+		</nav>
+		<div id="mui-content" class="mui-content setting-container" v-cloak>
+			<div id="theme1" class="theme1 mui-control-content mui-active">
+				<img class="bgimg" :src="bgimg1">
+				<div class="replace-img" data-imgtype="bgimg1">
+					点击替换图片
+				</div>
+				<div class="theme-body theme-body1">
+					<img class="user-head-img" :src="userhead">
+					<h2>{{username}}</h2>
+					<div class="input-section">
+						<textarea maxlength="26" rows="2" placeholder="输入文字内容输入文字内容"></textarea>
+					</div>
+					<img class="qrimg" :src="qrpath">
+					<p class="type_desc">{{type_desc}}</p>
+					<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+				</div>
+			</div>
+			<div id="theme2" class="theme2 mui-control-content">
+				<div class="replace-img" data-imgtype="bgimg2">
+					点击替换图片
+				</div>
+				<div class="head-img-cont">
+					<img class="bgimg" :src="bgimg2">
+					<img class="circular-bead" src="../image/share/circular-bead-bg.png">
+					<!-- <span class="radius"></span> -->
+				</div>
+				<div class="theme-body theme-body2">
+					<img class="user-head-img" :src="userhead">
+					<h2>{{username}}</h2>
+					<div class="input-section">
+						<textarea maxlength="26" rows="2" placeholder="这里是添加自定义文字"></textarea>
+					</div>
+					<img class="qrimg" :src="qrpath">
+					<p class="type_desc">{{type_desc}}</p>
+					<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+				</div>
+			</div>
+			<div id="theme3" class="theme3 mui-control-content">
+				<div class="replace-img" data-imgtype="bgimg3">
+					点击替换图片
+				</div>
+				<img class="bgimg" :src="bgimg3">
+				<div class="theme-body theme-body3">
+					<img class="user-head-img" :src="userhead">
+					<h2>{{username}}</h2>
+					<div class="input-section">
+						<textarea maxlength="26" rows="2" placeholder="这里是添加自定义文字"></textarea>
+					</div>
+					<div class="qr-cont">
+						<img class="qrimg" :src="qrpath">
+						<p class="type_desc">{{type_desc}}</p>
+					</div>
+					<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+				</div>
+			</div>
+			<div id="theme4" class="theme4 mui-control-content">
+				<div class="replace-img" data-imgtype="bgimg4">
+					点击替换图片
+				</div>
+				<img class="bgimg" :src="bgimg4">
+				<img class="user-head-img" :src="userhead">
+				<h2>{{username}}</h2>
+				<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+				<div class="input-section">
+					<textarea maxlength="26" rows="2" placeholder="输入文字内容输入文字内容"></textarea>
+				</div>
+				<img class="qrimg" :src="qrpath">
+				<p class="type_desc">{{type_desc}}</p>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					userhead: '',
+					username: '',
+					imgtyp: '',
+					qrpath: '',
+					bgimg1: '../image/share/bg-img01.jpg',
+					bgimg2: '../image/share/bg-img02.jpg',
+					bgimg3: '../image/share/bg-img03.jpg',
+					bgimg4: '../image/share/bg-img04.jpg',
+					type_desc: ''
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							// plus.navigator.setStatusBarStyle("dark");
+						}
+					})
+					mui.plusReady(function() {
+						app.userhead = userInfo.avatarUrl;
+						app.username = userInfo.nickName;
+						var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						window.onresize = function() {
+							//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+							var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+							if (resizeHeight * 1 < originalHeight * 1) {
+								//resizeHeight<originalHeight证明窗口被挤压了
+								document.getElementById('theme-change').style.zIndex = '-150';
+								document.getElementById('theme-change').style.display = 'none';
+							} else {
+								document.getElementById('theme-change').style.zIndex = '999';
+								document.getElementById('theme-change').style.display = 'table';
+							}
+						}
+						//获取二维码图片
+						function getQrcodePic() {
+							// plus.nativeUI.showWaiting('', {
+							// 	width: 60,
+							// 	height: 60,
+							// 	background: 'rgba(0, 0, 0, 0.9)'
+							// });
+							mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
+								token: userInfo.token
+							}, function(res) {
+								logs(res);
+								if (res.errno == 0) {
+									var type = res.data.type;
+									app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+									if (type == 'redpacket') {
+										app.type_desc = '扫描二维码领红包';
+									} else if (type == 'card') {
+										app.type_desc = '扫描二维码加我好友';
+									} else if (type == 'link') {
+										app.type_desc = '扫描二维码了解更多精彩';
+									} else if (type == 'pic') {
+										app.type_desc = '扫描二维码看美图';
+									}
+								} else {
+
+								}
+								// setTimeout(function() {
+								// 	plus.nativeUI.closeWaiting();
+								// }, 1000)
+							}, 'json');
+						}
+						getQrcodePic();
+					})
+					mui(".mui-content").on('tap', '.replace-img', function() {
+						app.imgtyp = this.dataset.imgtype;
+						message(app.imgtyp);
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>

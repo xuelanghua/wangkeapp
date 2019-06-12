@@ -159,7 +159,7 @@
 			<h5 class="personality-desc">图片展示</h5>
 			<div class="img-show" id="img-show">
 				<ul v-if="friendData.images">
-					<li v-for="img in friendData.images"><img class="image-fit" :src="img"></li>
+					<li v-for="(img,idx) in friendData.images" :key="idx"><img :data-idx="idx" class="image-fit" :src="img"></li>
 				</ul>
 				<p v-else style="margin: 10px 0;text-align: left;">暂无图片</p>
 			</div>
@@ -225,25 +225,6 @@
 								message("请先添加好友！");
 							}
 						})
-						// 预览图片
-						var self = plus.webview.currentWebview();
-						tid = self.aid;
-						setTimeout(function() {
-							var images = [].slice.call(document.querySelectorAll('#img-show img'));
-							var urls = [];
-							images.forEach(function(item) {
-								urls.push(item.src);
-							});
-							mui('.img-show').on('tap', 'img', function() {
-								var index = images.indexOf(this);
-								plus.navigator.setStatusBarBackground("#000000")
-								plus.nativeUI.previewImage(urls, {
-									current: index,
-									loop: true,
-									indicator: 'number',
-								});
-							});
-						}, 500)
 						mui(".mui-content").on("tap", ".share-card", function() {
 							var avatar = muiCont.friendData.avatar || '../image/user_default.jpg'
 							if (muiCont.contName == '') {
@@ -294,7 +275,6 @@
 						muiCont.is_voice_like = data.is_voice_like;
 						muiCont.audioUrl = data.voice;
 						muiCont.view_total = data.card_view.length;
-
 						mui(".mui-title")[0].innerText = data.name;
 						var selfid = userInfo.id;
 						if (fid != selfid && muiCont.is_friend != 1) {
@@ -303,6 +283,19 @@
 						if (fid != selfid && muiCont.is_friend == 1) {
 							document.querySelector('.mui-icon-more').style.display = 'block';
 						}
+						// 预览图片
+						var self = plus.webview.currentWebview();
+						tid = self.aid;
+						var urls = muiCont.friendData.images;
+						mui('.img-show').on('tap', 'img', function() {
+							var index=this.dataset.idx;
+							plus.navigator.setStatusBarBackground("#000000")
+							plus.nativeUI.previewImage(urls, {
+								current: index,
+								loop: true,
+								indicator: 'number',
+							});
+						});
 					} else {
 						message(res.errno.message)
 					}

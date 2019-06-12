@@ -9,10 +9,14 @@ doctype html>
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
+			html,body{
+				height: 100%;
+				width: 100%;
+			}
 			.mui-content {
-				min-height: 100vh;
+				/* height: 100vh; */
+				height: 100%;
 				background-color: #2889FF;
-				overflow: hidden;
 			}
 
 			.qr-code-body {
@@ -20,7 +24,7 @@ doctype html>
 				height: 7.4rem;
 				position: relative;
 				border-radius: 0.1rem;
-				margin: 1.2rem auto;
+				margin: 1rem auto;
 				background: #ffffff url("../image/scana-qr-bottom-bg.png")center bottom no-repeat;
 				background-size: contain;
 				overflow: hidden;
@@ -138,6 +142,20 @@ doctype html>
 				box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.3);
 				-webkit-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.3);
 			}
+
+			.setting-card {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #333333;
+				/* background-color: #007AFF; */
+				margin-right: -5px;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -154,6 +172,9 @@ doctype html>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">二维码名片</h1>
+			<div class="mui-pull-right setting-card">
+				<span>设置名片</span>
+			</div>
 		</header>
 		<div class="mui-content">
 			<div class="team-qr-code">
@@ -184,20 +205,21 @@ doctype html>
 			<img src="" id="#down1">
 		</div>
 	</body>
-	<script src="../js/mui.min.js"></script>
+	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/Zepto.min.js"></script>
 	<script src="../js/canvas2image.js"></script>
-	<script src="../js/vue.min.js"></script>
 	<script src="../js/html2canvas.min.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			swipeBack: true
+			swipeBack: true,
+			beforeback: function() {
+				setStatusBar('#2289ff', 'light');
+			}
 		});
-		
+
 		var imgPath = "";
 		var numbers = Date.parse(new Date());
-
 		var userInfo = getUserInfo();
 		mui.plusReady(function() {
 			document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
@@ -207,7 +229,11 @@ doctype html>
 			document.getElementById('saveImage').addEventListener('tap', function() {
 				generateImg('图片保存成功！');
 			})
-
+			
+			// 设置名片样式
+			mui(".mui-bar").on('tap','.setting-card',function(){
+				openPage('setting_share_card.html','setting_share_card','#f7f7f7','');
+			})
 			// 分享
 			document.getElementById('shareImg').addEventListener('tap', function() {
 				generateImg(false);
@@ -240,7 +266,11 @@ doctype html>
 
 		//获取二维码图片
 		function getQrcodePic() {
-			plus.nativeUI.showWaiting('', {width: 60, height: 60, background: 'rgba(0, 0, 0, 0.9)'});
+			plus.nativeUI.showWaiting('', {
+				width: 60,
+				height: 60,
+				background: 'rgba(0, 0, 0, 0.9)'
+			});
 			mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
 				token: userInfo.token
 			}, function(res) {
@@ -273,7 +303,7 @@ doctype html>
 			plus.nativeUI.showWaiting();
 			html2canvas(document.getElementById("code-body"), {
 				useCORS: true
-			}).then(function(canvas){
+			}).then(function(canvas) {
 				var imgUrl = canvas.toDataURL("image/jpeg", 1);
 				baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
 					if (tips) {

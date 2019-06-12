@@ -33,6 +33,10 @@
 				color: #999999;
 				font-size: 13px;
 			}
+
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -44,24 +48,15 @@
 				<span>新建标签</span>
 			</div>
 		</header>
-		<div id="mui-content" class="mui-content setting-container">
+		<div id="mui-content" class="mui-content setting-container" v-cloak>
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell" data-tagid="123" data-tagname="意向客户">
+				<li class="mui-table-view-cell" v-for="(list,idx) in tagsList" :key="idx" :data-tagid="list.id" :data-tagname="list.name">
 					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-red">删除</a>
+						<a class="mui-btn mui-btn-red" :data-tagid="list.id">删除</a>
 					</div>
 					<div class="mui-slider-handle">
-						<h4>意向客户(10)</h4>
-						<p class="mui-ellipsis">小飞飞，大飞飞，欧尼酱，强头光小飞飞，大飞飞，欧尼酱，强头光小飞飞，大飞飞，欧尼酱，强头光</p>
-					</div>
-				</li>
-				<li class="mui-table-view-cell" data-tagid="345" data-tagname="昆明">
-					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-red">删除</a>
-					</div>
-					<div class="mui-slider-handle">
-						<h4>昆明(3)</h4>
-						<p class="mui-ellipsis">小飞飞，大飞飞，欧尼酱</p>
+						<h4>{{list.name}}({{list.total}})</h4>
+						<p class="mui-ellipsis"><template v-for="(i,index) in list.member" :key="index">{{i}}<template v-if="index<list.member.length-1">、</template></template></p>
 					</div>
 				</li>
 			</ul>
@@ -70,15 +65,17 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					tagsList: []
 				},
 				methods: {
 
 				},
 				mounted: function() {
+					getTagsList();
 					mui.init({
 						beforeback: function() {
 							plus.navigator.setStatusBarStyle("light");
@@ -86,23 +83,33 @@
 					})
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						logs(self.source);
+						// logs(self.source);
 					})
 					// 新建标签
 					mui(".mui-bar-nav").on('tap', '.create-tags', function() {
 						openPage('create_tags.html', 'create_tags', '#f7f7f7');
 					})
 					// 点击删除
-					mui('.mui-table-view-cell').on('tap', '.mui-btn', function(event) {
-						var _self = this;
-						var li = _self.parentNode.parentNode;
+					mui('.mui-content').on('tap', '.mui-btn-red', function(event) {
+						var li = this.parentNode.parentNode;
+						var tagid = this.dataset.tagid;
 						mui.confirm('确认删除该条记录？', '', ['确认', '取消'], function(e) {
 							if (e.index == 0) {
-								li.parentNode.removeChild(li);
+								mui.post($ajaxUrl + 'label&action=delete_label', {
+									token: userInfo.token,
+									label_id: tagid
+								}, function(res) {
+									if (res.errno == 0) {
+										li.parentNode.removeChild(li);
+										// 先删除节点在请求
+										getTagsList();
+										message('删除成功');
+									} else {
+										message('删除失败，请稍后重试');
+									}
+								}, 'json');
 							} else {
-								setTimeout(function() {
-									mui.swipeoutClose(li);
-								}, 0);
+								mui.swipeoutClose(li);
 							}
 						});
 					});
@@ -120,8 +127,21 @@
 							})
 						}
 					});
+					window.addEventListener('refreshList', function(event) {
+						getTagsList();
+					})
 				}
 			})
+			// 获取标签列表
+			function getTagsList() {
+				mui.post($ajaxUrl + 'label&action=label_list', {
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						app.tagsList = res.data;
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 
