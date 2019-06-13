@@ -34,6 +34,17 @@
 				font-size: 13px;
 			}
 
+			.void-tags {
+				padding-top: 60px;
+				text-align: center;
+				font-size: 14px;
+				color: #999999;
+			}
+
+			.void-tags span {
+				color: #2289FF;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -60,6 +71,9 @@
 					</div>
 				</li>
 			</ul>
+			<div v-if="isVoid" class="void-tags">
+				暂时没有标签，<span>去创建</span>
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -69,10 +83,8 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					tagsList: []
-				},
-				methods: {
-
+					tagsList: [],
+					isVoid: false
 				},
 				mounted: function() {
 					getTagsList();
@@ -87,6 +99,10 @@
 					})
 					// 新建标签
 					mui(".mui-bar-nav").on('tap', '.create-tags', function() {
+						openPage('create_tags.html', 'create_tags', '#f7f7f7');
+					})
+					// 去创建标签
+					mui(".mui-content").on('tap', '.void-tags', function() {
 						openPage('create_tags.html', 'create_tags', '#f7f7f7');
 					})
 					// 点击删除
@@ -138,7 +154,10 @@
 					token: userInfo.token
 				}, function(res) {
 					if (res.errno == 0) {
+						app.isVoid = false;
 						app.tagsList = res.data;
+					} else {
+						app.isVoid = true;
 					}
 				}, 'json');
 			}

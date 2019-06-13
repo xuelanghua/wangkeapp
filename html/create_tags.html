@@ -112,8 +112,12 @@
 				height: 1px;
 			}
 
-			.mui-table-view {
+			/* .mui-table-view {
 				padding-bottom: 50px;
+			} */
+			[v-cloak] {
+				display: none;
+				transition: all 0.25 ease-in-out;
 			}
 		</style>
 	</head>
@@ -126,7 +130,7 @@
 				<span>保存</span>
 			</div>
 		</header>
-		<div class="mui-content" id="mui-content">
+		<div class="mui-content" id="mui-content" v-cloak>
 			<div class="mui-indexed-list" id="list">
 				<div class="mui-indexed-list-bar">
 					<a>#</a>
@@ -169,21 +173,22 @@
 							</div>
 						</div>
 					</form>
-					<h2>标签成员(10)</h2>
+					<h2>标签成员({{yuids.length}})</h2>
 					<div class="add-member">
 						<span class="mui-icon mui-icon-plus-filled"></span><span>添加成员</span>
 					</div>
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<template :key="idx">
-							<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">A</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item">
+						<template v-for="(val,key,idx) in lists" :key='idx'>
+							<li v-show="lists[key].length>0" :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
+							<li :data-value="list.initial" :data-tags="list.pinyin" class="mui-table-view-cell mui-indexed-list-item" v-for="(list,index) in val"
+							 :key="index">
 								<div class="mui-slider-right mui-disabled">
-									<a class="mui-btn mui-btn-red">删除</a>
+									<a class="mui-btn mui-btn-red" :data-uid="list.id" :data-idx='index' :data-parent="key">删除</a>
 								</div>
 								<div class="mui-slider-handle member-lists">
-									<div class="user-head-img"><img src="../image/bj.jpg"></div>
-									<p class="mui-ellipsis">阿波罗</p>
+									<div class="user-head-img"><img :src="list.avatarUrl"></div>
+									<p class="mui-ellipsis">{{list.nickName}}</p>
 								</div>
 							</li>
 						</template>
@@ -198,14 +203,14 @@
 		<script type="text/javascript">
 			var tgid = '';
 			var tgnm = '';
-			var yuids=null;
 			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					tagname: '本地客户',
 					label_name: '',
-					lists: []
+					lists: [],
+					yuids:[]
 				},
 				methods: {
 
@@ -227,13 +232,28 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						tgid = self.tgid;
+						mui('.mui-content').on('tap','.mui-icon-clear',function(){
+								app.tagname = '';
+						})
 						// 保存编辑
 						mui(".mui-bar-nav").on('tap', '.save-change', function() {
+							if(!app.label_name){
+								message('请输入标签名');
+								return;
+							}else if(app.label_name.length>8){
+								message('请输入长度小于8个字符的标签名');
+								return;
+							}
+							if(app.yuids.length<1||app.yuids=='[]'){
+								message('请选择成员');
+								return;
+							}
 							mui.post($ajaxUrl + 'label&action=create', {
 								token: userInfo.token,
 								label_name: app.label_name,
-								uids: yuids.join(",")
+								uids: app.yuids.join(",")
 							}, function(res) {
+								logs(res);
 								if (res.errno == 0) {
 									message("创建成功");
 									mui.fire(plus.webview.getWebviewById('tags_setting'), 'refreshList');
@@ -243,21 +263,42 @@
 						})
 					})
 					// 点击删除
-					mui('.mui-table-view-cell').on('tap', '.mui-btn', function(event) {
-						var _self = this;
-						var li = _self.parentNode.parentNode;
-						li.parentNode.removeChild(li);
+					mui('.mui-content').on('tap', '.mui-btn', function(event) {
+						var uid = this.dataset.uid;
+						var li = this.parentNode.parentNode;
+						var pr = this.dataset.parent;
+						var idx = this.dataset.idx;
+						// mui.post($ajaxUrl + 'label&action=delete_label_member', {
+						// 	token: userInfo.token,
+						// 	label_id: tgid,
+						// 	uid: uid
+						// }, function(res) {
+						// 	if (res.errno == 0) {
+						console.log(app.yuids);
+						console.log(uid);
+						var index = app.yuids.indexOf(uid);
+						console.log(index);
+						//使用splice函数进行移除：
+						if (index > -1) {
+							mui.swipeoutClose(li);
+							app.yuids.splice(index, 1);
+							app.memberList[pr].splice(idx, 1);
+							message('已删除');
+							console.log(app.yuids);
+						} else {
+							message('删除失败，请稍后重试');
+						}
 					});
 					// 点击添加成员
 					mui('.mui-content').on('tap', '.add-member', function(event) {
 						openPage('add_tags_mebers.html', 'add_tags_mebers', '#f7f7f7',{
-							yuids:yuids
+							yuids:app.yuids
 						})
 					});
 					
 					window.addEventListener('acceptIdGroup', function(event) {
 						// logs(event.detail.lists);
-						yuids=event.detail.idGroup;
+						app.yuids=event.detail.idGroup;
 						app.lists=event.detail.lists;
 					})
 				}

@@ -8,97 +8,34 @@ doctype html>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/card_theme.css" rel="stylesheet" />
 		<style type="text/css">
-			html,body{
+			html,
+			body {
 				height: 100%;
 				width: 100%;
 			}
+
 			.mui-content {
-				/* height: 100vh; */
+				padding: 0;
 				height: 100%;
+				box-sizing: border-box;
 				background-color: #2889FF;
 			}
 
 			.qr-code-body {
-				width: 6rem;
-				height: 7.4rem;
+				width: 6.8rem;
+				height: auto;
 				position: relative;
 				border-radius: 0.1rem;
 				margin: 1rem auto;
-				background: #ffffff url("../image/scana-qr-bottom-bg.png")center bottom no-repeat;
 				background-size: contain;
 				overflow: hidden;
 				display: flex;
 				flex-direction: column;
-			}
-
-			.qr-code-body h2 {
-				font-size: 0.28rem;
-				color: #323333;
-				font-weight: normal;
-				margin-bottom: 0.1rem;
-			}
-
-			.qr-code-body p {
-				margin: 0;
-				font-size: 0.24rem;
-				color: #999999;
-			}
-
-
-			.qr-code-body .qr-img {
-				width: 4.2rem;
-				height: 4.2rem;
-				margin: 0.3rem auto 0.3rem;
-				align-self: center;
-			}
-
-			.qr-code-body .logo-img {
-				width: 1.24rem;
-				height: auto;
-				align-self: center;
-			}
-
-			.linellae {
-				width: 100%;
-				overflow: hidden;
-				text-align: justify;
-				display: flex;
-				align-items: center;
-			}
-
-			.team-qr-code {
-				position: relative;
-			}
-
-			.line {
-				margin-top: 0.38rem;
-				border-top: 1px dashed #999999;
-				transform: translateY(0.5);
-				-webkit-transform: translateY(0.5);
-				width: 100%;
-				height: 0;
-			}
-
-			.left-semicircle,
-			.right-semicircle {
-				width: 0.15rem;
-				height: 0.3rem;
-				background-color: #2289FF;
-				border-radius: 0 0.3rem 0.3rem 0;
-				position: absolute;
-				top: 1.4rem;
-			}
-
-			.right-semicircle {
-				border-radius: 0.3rem 0 0 0.3rem;
-				right: 0.75rem;
-				z-index: 3;
-			}
-
-			.left-semicircle {
-				left: 0.74rem;
-				z-index: 3;
+				box-sizing: border-box;
+				background-color: #FFFFFF;
+				padding: 0.15rem;
 			}
 
 			.operation-section {
@@ -126,23 +63,6 @@ doctype html>
 				border: 1px solid #ffffff;
 			}
 
-			.qrcode-section {
-				display: flex;
-				align-items: center;
-				padding-left: 0.2rem;
-				margin-top: 0.3rem;
-			}
-
-			.user-head-img {
-				width: 0.8rem;
-				height: 0.8rem;
-				border-radius: 0.1rem;
-				margin-right: 0.1rem;
-				/* border: 1px solid #eeeeee; */
-				box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.3);
-				-webkit-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.3);
-			}
-
 			.setting-card {
 				height: 44px;
 				position: relative;
@@ -155,6 +75,17 @@ doctype html>
 				color: #333333;
 				/* background-color: #007AFF; */
 				margin-right: -5px;
+			}
+
+			.qr-img {
+				width: auto;
+				height: auto;
+			}
+
+			[v-cloak] {
+				display: none;
+				transition: all 0.25 ease-in-out;
+				-webkit-transition: all 0.25 ease-in-out;
 			}
 		</style>
 		<script type="text/javascript">
@@ -176,26 +107,75 @@ doctype html>
 				<span>设置名片</span>
 			</div>
 		</header>
-		<div class="mui-content">
+		<div class="mui-content" id="mui-content" v-cloak>
 			<div class="team-qr-code">
-				<div class="left-semicircle"></div>
-				<div class="right-semicircle"></div>
+				<div class="change" style="position: absolute;top: 60px;left: 44%;color: #FFFFFF;">
+					<span>change</span>
+				</div>
 				<div id="code-body" class="qr-code-body">
-					<div class="qrcode-section">
-						<img id="user-head-img" class="user-head-img" src="../image/user_default.jpg">
-						<div>
+					<!-- 主题一 -->
+					<div v-show="serial==1" id="theme1" class="theme1">
+						<img class="bgimg" :src="bgimg1">
+						<div class="theme-body theme-body1">
+							<img id="user-head-img" class="user-head-img mui-hidden" src="">
+							<img class="user-head-img" src="../image/kaol.jpg">
 							<h2 id="user-name">旺客</h2>
-							<p id="type_desc">扫二维码加我好友</p>
+							<div class="input-section mui-text-center">
+								<p>越努力越幸运,越努力越幸运！</p>
+							</div>
+							<img id="qr-img" class="qrimg" src="../image/QR.png">
+							<p class="type_desc">{{description}}</p>
+							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 						</div>
 					</div>
-					<div class="line"></div>
-					<!-- <div class="linellae">
-						<div class="left-semicircle"></div>
-						<div class="line"></div>
-						<div class="right-semicircle"></div>
-					</div> -->
-					<img id="qr-img" class="qr-img" src="../image/QR.png">
-					<img class="logo-img" src="../image/wangkelogo.png">
+					<!-- 主题二 -->
+					<div v-show="serial==2"  id="theme2" class="theme2">
+						<div class="head-img-cont">
+							<img class="bgimg" :src="bgimg2">
+							<img class="circular-bead" src="../image/share/circular-bead-bg.png">
+							<!-- <span class="radius"></span> -->
+						</div>
+						<div class="theme-body theme-body2">
+							<img id="user-head-img" class="user-head-img mui-hidden" src="">
+							<img class="user-head-img" src="../image/kaol.jpg">
+							<h2 id="user-name">旺客</h2>
+							<div class="input-section mui-text-center">
+								<p>越努力越幸运！</p>
+							</div>
+							<img id="qr-img" class="qrimg" src="../image/QR.png">
+							<p class="type_desc">{{description}}</p>
+							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+						</div>
+					</div>
+					<!-- 主题三 -->
+					<div v-show="serial==3"  id="theme3" class="theme3">
+						<img class="bgimg" :src="bgimg3">
+						<div class="theme-body theme-body3">
+							<img id="user-head-img" class="user-head-img mui-hidden" src="">
+							<img class="user-head-img" src="../image/kaol.jpg">
+							<h2 id="user-name">旺客</h2>
+							<div class="input-section mui-text-center">
+								<p>越努力越幸运！</p>
+							</div>
+							<div class="qr-cont">
+								<img id="qr-img" class="qrimg" src="../image/QR.png">
+								<p class="type_desc">{{description}}</p>
+							</div>
+							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+						</div>
+					</div>
+					<!-- 主题四 -->
+					<div  v-show="serial==4"  id="theme4" class="theme4 mui-clearfix">
+						<img class="bgimg" :src="bgimg4">
+						<img class="user-head-img" src="../image/kaol.jpg">
+						<h2 id="user-name">旺客</h2>
+						<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+						<div class="input-section mui-text-center">
+							<p>越努力越幸运！</p>
+						</div>
+						<img id="qr-img" class="qrimg" src="../image/QR.png">
+						<p class="type_desc">{{description}}</p>
+					</div>
 				</div>
 				<div class="operation-section">
 					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
@@ -210,109 +190,131 @@ doctype html>
 	<script src="../js/Zepto.min.js"></script>
 	<script src="../js/canvas2image.js"></script>
 	<script src="../js/html2canvas.min.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
-		mui.init({
-			swipeBack: true,
-			beforeback: function() {
-				setStatusBar('#2289ff', 'light');
-			}
-		});
-
-		var imgPath = "";
-		var numbers = Date.parse(new Date());
-		var userInfo = getUserInfo();
-		mui.plusReady(function() {
-			document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
-			document.getElementById('user-name').innerText = userInfo.nickName;
-			getQrcodePic();
-
-			document.getElementById('saveImage').addEventListener('tap', function() {
-				generateImg('图片保存成功！');
-			})
-			
-			// 设置名片样式
-			mui(".mui-bar").on('tap','.setting-card',function(){
-				openPage('setting_share_card.html','setting_share_card','#f7f7f7','');
-			})
-			// 分享
-			document.getElementById('shareImg').addEventListener('tap', function() {
-				generateImg(false);
-				// message(imgPath);
-				plus.share.getServices(function(list) {
-					for (var i = 0; i < list.length; i++) {
-						if (list[i].authenticated) {
-							shares = list[i];
-						}
+		var app = new Vue({
+			el: "#mui-content",
+			data: {
+				imgtyp: '',
+				description: '',
+				serial: 1,
+				bgimg1: '../image/share/bg-img01.jpg',
+				bgimg2: '../image/share/bg-img02.jpg',
+				bgimg3: '../image/share/bg-img03.jpg',
+				bgimg4: '../image/share/bg-img04.jpg'
+			},
+			mounted: function() {
+				mui('.mui-content').on('tap', '.change', function() {
+					if(app.serial<4){
+						app.serial+=1;
+						// message(app.serial);
+					}else{
+						app.serial=1;
 					}
-					if (shares != undefined) {
-						var msg = {
-							type: 'image',
-							pictures: [imgPath], //这里的pictures是要分享的图片 该图片放在项目根目录下
-							extra: {
-								scene: "WXSceneSession"
-							}
-						};
-						shares.send(msg, function(success) {
-							message("分享成功!");
-						}, function(error) {
-							console.log(JSON.stringify(error))
-						});
-					}
-				}, function(e) {
-					alert("获取分享服务列表失败：" + e.message);
-				});
-			})
-		})
-
-		//获取二维码图片
-		function getQrcodePic() {
-			plus.nativeUI.showWaiting('', {
-				width: 60,
-				height: 60,
-				background: 'rgba(0, 0, 0, 0.9)'
-			});
-			mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
-				token: userInfo.token
-			}, function(res) {
-				if (res.errno == 0) {
-					var type = res.data.type;
-					var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-					document.getElementById('qr-img').setAttribute('src', url);
-					if (type == 'redpacket') {
-						document.getElementById('type_desc').innerText = '扫二维码领红包';
-					} else if (type == 'card') {
-						document.getElementById('type_desc').innerText = '扫二维码加我好友';
-					} else if (type == 'link') {
-						document.getElementById('type_desc').innerText = '扫二维码了解更多精彩';
-					} else if (type == 'pic') {
-						document.getElementById('type_desc').innerText = '扫二维码看美图';
-					}
-				} else {
-					message(res.message);
-					setTimeout(function() {
-						mui.back();
-					}, 2000)
-				}
-				setTimeout(function() {
-					plus.nativeUI.closeWaiting();
-				}, 1000)
-			}, 'json');
-		}
-		// 生成二维码图片
-		function generateImg(tips) {
-			plus.nativeUI.showWaiting();
-			html2canvas(document.getElementById("code-body"), {
-				useCORS: true
-			}).then(function(canvas) {
-				var imgUrl = canvas.toDataURL("image/jpeg", 1);
-				baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
-					if (tips) {
-						message(tips);
-					}
-					imgPath = i.target;
-					plus.nativeUI.closeWaiting();
 				})
-			});
-		}
+				mui.init({
+					swipeBack: true,
+					beforeback: function() {
+						setStatusBar('#2289ff', 'light');
+					}
+				});
+				var imgPath = "";
+				var numbers = Date.parse(new Date());
+				var userInfo = getUserInfo();
+				mui.plusReady(function() {
+					document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
+					document.getElementById('user-name').innerText = userInfo.nickName;
+					// 获取二维码
+					getQrcodePic();
+					// 保存图片
+					document.getElementById('saveImage').addEventListener('tap', function() {
+						generateImg('图片保存成功！');
+					})
+					// 设置名片样式
+					mui(".mui-bar").on('tap', '.setting-card', function() {
+						openPage('setting_share_card.html', 'setting_share_card', '#f7f7f7', '');
+					})
+					// 分享
+					document.getElementById('shareImg').addEventListener('tap', function() {
+						generateImg(false);
+						// message(imgPath);
+						plus.share.getServices(function(list) {
+							for (var i = 0; i < list.length; i++) {
+								if (list[i].authenticated) {
+									shares = list[i];
+								}
+							}
+							if (shares != undefined) {
+								var msg = {
+									type: 'image',
+									pictures: [imgPath], //这里的pictures是要分享的图片 该图片放在项目根目录下
+									extra: {
+										scene: "WXSceneSession"
+									}
+								};
+								shares.send(msg, function(success) {
+									message("分享成功!");
+								}, function(error) {
+									console.log(JSON.stringify(error))
+								});
+							}
+						}, function(e) {
+							alert("获取分享服务列表失败：" + e.message);
+						});
+					})
+				})
+				//获取二维码图片
+				function getQrcodePic() {
+					plus.nativeUI.showWaiting('', {
+						width: 60,
+						height: 60,
+						background: 'rgba(0, 0, 0, 0.9)'
+					});
+					mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
+						token: userInfo.token
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							var type = res.data.type;
+							var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+							document.getElementById('qr-img').setAttribute('src', url);
+							if (type == 'redpacket') {
+								app.description = '扫二维码领红包';
+							} else if (type == 'card') {
+								app.description = '扫二维码加我好友';
+							} else if (type == 'link') {
+								app.description = '扫二维码了解更多精彩';
+							} else if (type == 'pic') {
+								app.description = '扫二维码看美图';
+							}
+							setTimeout(function() {
+								plus.nativeUI.closeWaiting();
+							}, 500)
+						} else {
+							message(res.message);
+							setTimeout(function() {
+								mui.back();
+							}, 2000)
+						}
+					}, 'json');
+				}
+				// 生成二维码图片
+				function generateImg(tips) {
+					plus.nativeUI.showWaiting();
+					html2canvas(document.getElementById("code-body"), {
+						useCORS: true
+					}).then(function(canvas) {
+						var imgUrl = canvas.toDataURL("image/jpeg", 1);
+						baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
+							if (tips) {
+								message(tips);
+							}
+							imgPath = i.target;
+							plus.nativeUI.closeWaiting();
+						})
+					});
+				}
+			}
+		})
 	</script>
 </html>

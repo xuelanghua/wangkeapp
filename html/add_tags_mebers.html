@@ -232,7 +232,6 @@
 		var skip = 1;
 		var types = 'new_customer';
 		// 之前的
-		var yuids = [];
 		// 选中的全部
 		var allChecked = [];
 		var checkedNewCustomer = {};
@@ -242,214 +241,10 @@
 			el: "#list",
 			data: {
 				lists: {},
-				uids: []
+				uids: [],
+				yuids: []
 			},
 			mounted: function() {
-				mui.plusReady(function() {
-					var done = document.getElementById('done');
-					var self = plus.webview.currentWebview();
-					var opener = self.opener();
-					tgid = self.tgid;
-					yuids = self.yuids;
-					// logs(yuids.join(','));
-					getUserList();
-					var uidgroup = self.yuids;
-// 					if (uidgroup) {
-// 						setTimeout(function() {
-// 							var list = document.getElementById('list');
-// 							var signs = list.querySelectorAll('.checkeds');
-// 							for (var i = 0; i < signs.length; i++) {
-// 								for (var j = 0; j < uidgroup.length; j++) {
-// 									if (uidgroup[j] == signs[i].value) {
-// 										signs[i].checked = "checked";
-// 									}
-// 								}
-// 							}
-// 							var count = allChecked.length;
-// 							var value = count ? "完成(" + count + ")" : "完成";
-// 							done.innerHTML = value;
-// 							if (count) {
-// 								if (done.classList.contains("mui-disabled")) {
-// 									done.classList.remove("mui-disabled");
-// 								}
-// 							} else {
-// 								if (!done.classList.contains("mui-disabled")) {
-// 									done.classList.add("mui-disabled");
-// 								}
-// 							}
-// 						}, 800);
-// 					} else {
-// 
-// 					}
-					done.addEventListener('tap', function() {
-						// checkSelect();
-						// logs(tgid);
-						// plus.nativeUI.showWaiting();
-						//格式化选中成员
-						if (yuids.length > 0) {
-							var conts = allChecked.concat(yuids);
-							if (allChecked.length > 0) {
-								mui.post($ajaxUrl + 'label&action=uid2info', {
-									token: userInfo.token,
-									label_id: tgid,
-									uids: conts.join(",")
-								}, function(res) {
-									// logs(res);
-									if (res.errno == 0) {
-										mui.fire(opener, 'acceptIdGroup', {
-											idGroup: allChecked.concat(yuids),
-											lists: res.data
-										});
-										// plus.nativeUI.closeWaiting();
-										self.close();
-									}
-								}, 'json');
-							}
-						} else {
-							if (allChecked.length > 0) {
-								yuids = allChecked;
-								mui.post($ajaxUrl + 'label&action=uid2info', {
-									token: userInfo.token,
-									label_id: tgid,
-									uids: allChecked.join(",")
-								}, function(res) {
-									// logs(res);
-									if (res.errno == 0) {
-										mui.fire(opener, 'acceptIdGroup', {
-											idGroup: allChecked,
-											lists: res.data
-										});
-										// plus.nativeUI.closeWaiting();
-										self.close();
-									}
-								}, 'json');
-							}
-						}
-					}, false);
-					// 选中
-					mui('.mui-indexed-list-inner').on('change', 'input', function() {
-						var val = this.value;
-						logs(allChecked);
-						if (this.checked) {
-							var index = allChecked.indexOf(val);
-							if (index > -1) {
-								//有就不添加,否则添加
-							} else {
-								allChecked.push(val);
-							}
-						} else {
-							var index = allChecked.indexOf(val);
-							if (index > -1) {
-								allChecked.splice(index, 1);
-							}
-						}
-						logs(allChecked);
-						var count = allChecked.length;
-						var value = count ? "完成(" + count + ")" : "完成";
-						done.innerHTML = value;
-						if (count) {
-							if (done.classList.contains("mui-disabled")) {
-								done.classList.remove("mui-disabled");
-							}
-						} else {
-							if (!done.classList.contains("mui-disabled")) {
-								done.classList.add("mui-disabled");
-							}
-						}
-					});
-					// 切换类型
-					mui('.mui-content').on('tap', '.mui-control-item', function() {
-						if(types == this.dataset.types){
-							 return;
-						}
-						types = this.dataset.types;
-						console.log(types);
-						// return;
-						mui.trigger(mui(".mui-icon-clear")[0], 'tap');
-						document.querySelector('.mui-indexed-list-search-input').blur();
-						// alert(JSON.stringify(checkedCrm) == "{}");
-						if (types == 'new_customer') {
-							if (JSON.stringify(checkedNewCustomer) == "{}") {
-								app.lists = [];
-								getUserList();
-							} else {
-								app.lists = checkedNewCustomer;
-								// logs(app.lists);
-							}
-						} else if (types == 'crm') {
-							if (JSON.stringify(checkedCrm) == "{}") {
-								app.lists = [];
-								getUserList();
-							} else {
-								app.lists = checkedCrm;
-								// logs(app.lists);
-							}
-						} else {
-							if (JSON.stringify(checkedFriend) == "{}") {
-								app.lists = [];
-								getUserList();
-							} else {
-								app.lists = checkedFriend;
-								// logs(app.lists);
-							}
-						}
-						// 标记选中的
-						setTimeout(function() {
-							var list = document.getElementById('list');
-							var signs = list.querySelectorAll('.checkeds');
-							logs(22222);
-							logs(signs);
-							logs(allChecked);
-							logs(22222);
-							for (var i = 0; i < signs.length; i++) {
-								for (var j = 0; j < allChecked.length; j++) {
-									if (allChecked[j] == signs[i].value) {
-										signs[i].checked = "checked";
-									}
-								}
-							}
-						}, 100)
-					});
-					mui.back = function() {
-						plus.webview.close(self, "slide-out-right");
-					};
-					setTimeout(function() {
-						mui("#list").indexedList().findElements();
-					}, 500);
-					// 获取列表
-					function getUserList() {
-						logs(types);
-						logs(yuids.join(','));
-						// logs(skip += 1);
-						mui.post($ajaxUrl + 'label&action=member_list', {
-							token: userInfo.token,
-							type: types,
-							exist_uids: yuids.join(','),
-						}, function(res) {
-							console.log(JSON.stringify(res));
-							if (res.errno == 0) {
-								app.lists = res.data;
-								if (types == 'new_customer') {
-									checkedNewCustomer = res.data;
-								} else if (types == 'crm') {
-									checkedCrm = res.data;
-								} else {
-									checkedFriend = res.data;
-								}
-								setTimeout(function() {
-									mui("#list").indexedList().findElements();
-								}, 1000);
-							} else {
-							}
-						}, 'json');
-					}
-				})
-				mui.ready(function() {
-					var header = document.querySelector('header.mui-bar');
-					var list = document.getElementById('list');
-					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
-					window.indexedList = new mui.IndexedList(list);
-				});
 				mui.init({
 					pullRefresh: {
 						container: ".mui-indexed-list-inner",
@@ -471,6 +266,179 @@
 						}
 					}
 				});
+				mui.ready(function() {
+					var header = document.querySelector('header.mui-bar');
+					var list = document.getElementById('list');
+					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+					window.indexedList = new mui.IndexedList(list);
+				});
+				mui.plusReady(function() {
+					var done = document.getElementById('done');
+					var self = plus.webview.currentWebview();
+					var opener = self.opener();
+					tgid = self.tgid;
+					app.yuids = self.yuids;
+					getUserList();
+					done.addEventListener('tap', function() {
+						// plus.nativeUI.showWaiting();
+						//格式化选中成员
+						if (app.yuids) {
+							var conts = allChecked.concat(app.yuids);
+							if (allChecked.length > 0) {
+								mui.post($ajaxUrl + 'label&action=uid2info', {
+									token: userInfo.token,
+									label_id: tgid,
+									uids: conts.join(",")
+								}, function(res) {
+									// logs(res);
+									if (res.errno == 0) {
+										mui.fire(opener, 'acceptIdGroup', {
+											idGroup: allChecked.concat(app.yuids),
+											lists: res.data
+										});
+										// plus.nativeUI.closeWaiting();
+										self.close();
+									}
+								}, 'json');
+							}
+						} else {
+							if (allChecked.length > 0) {
+								app.yuids = allChecked;
+								mui.post($ajaxUrl + 'label&action=uid2info', {
+									token: userInfo.token,
+									label_id: tgid,
+									uids: allChecked.join(",")
+								}, function(res) {
+									// logs(res);
+									if (res.errno == 0) {
+										mui.fire(opener, 'acceptIdGroup', {
+											idGroup: allChecked,
+											lists: res.data
+										});
+										// plus.nativeUI.closeWaiting();
+										self.close();
+									}
+								}, 'json');
+							}
+						}
+					}, false);
+					// 选中
+					mui('.mui-indexed-list-inner').on('change', 'input', function() {
+						var val = this.value;
+						if (this.checked) {
+							var index = allChecked.indexOf(val);
+							if (index > -1) {
+								//有就不添加,否则添加
+							} else {
+								allChecked.push(val);
+							}
+						} else {
+							var index = allChecked.indexOf(val);
+							if (index > -1) {
+								allChecked.splice(index, 1);
+							}
+						}
+						// logs(allChecked);
+						var count = allChecked.length;
+						var value = count ? "完成(" + count + ")" : "完成";
+						done.innerHTML = value;
+						if (count) {
+							if (done.classList.contains("mui-disabled")) {
+								done.classList.remove("mui-disabled");
+							}
+						} else {
+							if (!done.classList.contains("mui-disabled")) {
+								done.classList.add("mui-disabled");
+							}
+						}
+					});
+					// 切换类型
+					mui('.mui-content').on('tap', '.mui-control-item', function() {
+						if (types == this.dataset.types) {
+							return;
+						}
+						types = this.dataset.types;
+						var list = document.getElementById('list');
+						var signs = list.querySelectorAll('.checkeds');
+						// 切换时清空input
+						mui.trigger(mui(".mui-icon-clear")[0], 'tap');
+						// 让input失去焦点
+						document.querySelector('.mui-indexed-list-search-input').blur();
+						if (types == 'new_customer') {
+							if (JSON.stringify(checkedNewCustomer) == "{}") {
+								app.lists = [];
+								getUserList();
+							} else {
+								app.lists = checkedNewCustomer;
+							}
+						} else if (types == 'crm') {
+							if (JSON.stringify(checkedCrm) == "{}") {
+								app.lists = [];
+								getUserList();
+							} else {
+								app.lists = checkedCrm;
+							}
+						} else {
+							if (JSON.stringify(checkedFriend) == "{}") {
+								app.lists = [];
+								getUserList();
+							} else {
+								app.lists = checkedFriend;
+							}
+						}
+						// 标记选中的
+						setTimeout(function(){
+							for (var i = 0; i < signs.length; i++) {
+								for (var j = 0; j < allChecked.length; j++) {
+									if (allChecked[j] == signs[i].value) {
+										signs[i].checked = "checked";
+									}
+								}
+							}
+						},500)
+					});
+					mui.back = function() {
+						plus.webview.close(self, "slide-out-right");
+					};
+					setTimeout(function() {
+						mui("#list").indexedList().findElements();
+					}, 500);
+					// 获取列表
+					function getUserList() {
+						// logs(types);
+						// logs(yuids.join(','));
+						// logs(skip += 1);
+						var getstr = '';
+						if (app.yuids) {
+							getstr = app.yuids.join(',');
+						} else {
+							getstr = ''
+						}
+						mui.post($ajaxUrl + 'label&action=member_list', {
+							token: userInfo.token,
+							type: types,
+							exist_uids: getstr,
+						}, function(res) {
+							console.log(JSON.stringify(res));
+							if (res.errno == 0) {
+								app.lists = res.data;
+								if (types == 'new_customer') {
+									checkedNewCustomer = res.data;
+									// alert('new_customer');
+								} else if (types == 'crm') {
+									checkedCrm = res.data;
+									// alert('crm');
+								} else {
+									checkedFriend = res.data;
+									// alert('friend');
+								}
+								setTimeout(function() {
+									mui("#list").indexedList().findElements();
+								}, 1000);
+							} else {}
+						}, 'json');
+					}
+				})
 			}
 		})
 	</script>

@@ -112,6 +112,11 @@
 				height: 1px;
 			}
 
+			[v-cloak] {
+				display: none;
+				transition: all 0.25 ease-in-out;
+			}
+
 			/* .mui-table-view{
 				padding-bottom: 50px;
 			} */
@@ -126,7 +131,7 @@
 				<span>保存</span>
 			</div>
 		</header>
-		<div class="mui-content" id="mui-content">
+		<div class="mui-content" id="mui-content" v-cloak>
 			<div class="mui-indexed-list" id="list">
 				<div class="mui-indexed-list-bar">
 					<a>#</a>
@@ -165,19 +170,19 @@
 					<form class="mui-input-group" onsubmit="return false">
 						<div class="mui-input-row">
 							<div class="mui-input-row">
-								<input type="text" v-model="tagname" class="mui-input-clear">
+								<input name="tagname" type="text" v-model="tagname" class="mui-input-clear">
 							</div>
 						</div>
 					</form>
-					<h2>标签成员({{total}})</h2>
+					<h2>标签成员（{{yuids.length}}）</h2>
 					<div class="add-member">
 						<span class="mui-icon mui-icon-plus-filled"></span><span>添加成员</span>
 					</div>
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
 						<template v-for="(val,key,idx) in memberList" :key='idx'>
-							<li v-show="memberList[key].length>0" data-group="A" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
-							<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item" v-for="(list,index) in val"
+							<li v-show="memberList[key].length>0" :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
+							<li :data-uid="list.id" :data-value="list.initial" :data-tags="list.pinyin" class="mui-table-view-cell mui-indexed-list-item" v-for="(list,index) in val"
 							 :key="index">
 								<div class="mui-slider-right mui-disabled">
 									<a class="mui-btn mui-btn-red" :data-uid="list.id" :data-idx='index' :data-parent="key">删除</a>
@@ -200,14 +205,14 @@
 			var tgid = '';
 			var tgnm = '';
 			var userInfo = getUserInfo();
-			var yuids = [];
 			var self = null;
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					tagname: '',
 					memberList: {},
-					total: 0
+					total: 0,
+					yuids: []
 				},
 				methods: {
 
@@ -226,6 +231,7 @@
 						//create
 						window.indexedList = new mui.IndexedList(list);
 					});
+					
 					mui.plusReady(function() {
 						self = plus.webview.currentWebview();
 						tgid = self.tgid;
@@ -233,16 +239,30 @@
 						document.querySelector('.mui-title').innerHTML = tgnm;
 						app.tagname = tgnm;
 						getMeber();
+						// 监听清除按钮
+						mui('.mui-content').on('tap','.mui-icon-clear',function(){
+							app.tagname = '';
+						})
 						// 保存编辑
 						mui(".mui-bar-nav").on('tap', '.save-change', function() {
-							// alert(JSON.stringify(yuids));
+							if (!app.tagname) {
+								message('请输入标签名');
+								return;
+							} else if (app.tagname.length > 8) {
+								message('请输入长度小于8个字符的标签名');
+								return;
+							}
+							if(app.yuids.length<1||app.yuids=='[]'){
+								message('请选择成员');
+								return;
+							}
 							mui.post($ajaxUrl + 'label&action=edit', {
 								token: userInfo.token,
 								label_id: tgid,
 								label_name: app.tagname,
-								uids: yuids.join(',')
+								uids: app.yuids.join(',')
 							}, function(res) {
-								// logs(res);
+								logs(res);
 								if (res.errno == 0) {
 									message('修改成功');
 									mui.fire(plus.webview.getWebviewById('tags_setting'), 'refreshList');
@@ -256,11 +276,18 @@
 
 					// 添加成员
 					mui(".mui-content").on('tap', '.add-member', function() {
-						// logs(yuids);
+						// logs(app.yuids);
 						openPage('add_tags_mebers.html', 'add_tags_mebers', '#f7f7f7', {
 							tgid: tgid,
-							yuids: yuids
+							yuids: app.yuids
 						})
+					})
+					// 查看成员名片
+					mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
+						var fid=this.dataset.uid;
+						openPage('friends_detail.html','friends_detail','#f7f7f7',{
+							fid:fid
+						});
 					})
 					// 点击删除
 					mui('.mui-content').on('tap', '.mui-btn', function(event) {
@@ -274,15 +301,17 @@
 						// 	uid: uid
 						// }, function(res) {
 						// 	if (res.errno == 0) {
-						// logs(yuids);
-						var index = yuids.indexOf(uid);
+						console.log(app.yuids);
+						console.log(uid);
+						var index = app.yuids.indexOf(uid);
+						console.log(index);
 						//使用splice函数进行移除：
 						if (index > -1) {
-							yuids.splice(index, 1);
 							mui.swipeoutClose(li);
-							app.memberList[pr].splice(app.memberList[pr].idx, 1);
+							app.yuids.splice(index, 1);
+							app.memberList[pr].splice(idx, 1);
 							message('已删除');
-							logs(yuids);
+							console.log(app.yuids);
 						} else {
 							message('删除失败，请稍后重试');
 						}
@@ -293,9 +322,7 @@
 					});
 					// 监听传过来的值
 					window.addEventListener('acceptIdGroup', function(event) {
-						// logs(yuids);
-						// logs(event.detail.lists);
-						yuids = event.detail.idGroup;
+						app.yuids = event.detail.idGroup;
 						app.memberList = event.detail.lists;
 					})
 				}
@@ -306,14 +333,13 @@
 					token: userInfo.token,
 					label_id: tgid
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						app.memberList = res.data.member;
-						app.total = res.data.total;
 						var person = res.data.member;
 						for (var i in person) {
 							for (var j = 0; j < person[i].length; j++) {
-								yuids.push(person[i][j].id);
+								app.yuids.push(person[i][j].id);
 								// logs(person[i][j].id);
 							}
 						}
