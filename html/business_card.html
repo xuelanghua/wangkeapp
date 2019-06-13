@@ -14,11 +14,13 @@ doctype html>
 			body {
 				height: 100%;
 				width: 100%;
+				background-color: #2889FF;
+				padding-bottom: 0.5rem;
 			}
 
 			.mui-content {
 				padding: 0;
-				height: 100%;
+				min-height: 100%;
 				box-sizing: border-box;
 				background-color: #2889FF;
 			}
@@ -28,7 +30,7 @@ doctype html>
 				height: auto;
 				position: relative;
 				border-radius: 0.1rem;
-				margin: 1rem auto;
+				margin: 0.5rem auto;
 				background-size: contain;
 				overflow: hidden;
 				display: flex;
@@ -40,7 +42,7 @@ doctype html>
 
 			.operation-section {
 				width: 100%;
-				padding: 0 0.53rem;
+				padding: 0 0.53rem 0.5rem;
 				display: flex;
 			}
 
@@ -123,13 +125,13 @@ doctype html>
 							<div class="input-section mui-text-center">
 								<p>越努力越幸运,越努力越幸运！</p>
 							</div>
-							<img id="qr-img" class="qrimg" src="../image/QR.png">
+							<img class="qrimg" :src="qrpath">
 							<p class="type_desc">{{description}}</p>
 							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 						</div>
 					</div>
 					<!-- 主题二 -->
-					<div v-show="serial==2"  id="theme2" class="theme2">
+					<div v-show="serial==2" id="theme2" class="theme2">
 						<div class="head-img-cont">
 							<img class="bgimg" :src="bgimg2">
 							<img class="circular-bead" src="../image/share/circular-bead-bg.png">
@@ -142,13 +144,13 @@ doctype html>
 							<div class="input-section mui-text-center">
 								<p>越努力越幸运！</p>
 							</div>
-							<img id="qr-img" class="qrimg" src="../image/QR.png">
+							<img class="qrimg" :src="qrpath">
 							<p class="type_desc">{{description}}</p>
 							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 						</div>
 					</div>
 					<!-- 主题三 -->
-					<div v-show="serial==3"  id="theme3" class="theme3">
+					<div v-show="serial==3" id="theme3" class="theme3">
 						<img class="bgimg" :src="bgimg3">
 						<div class="theme-body theme-body3">
 							<img id="user-head-img" class="user-head-img mui-hidden" src="">
@@ -158,14 +160,14 @@ doctype html>
 								<p>越努力越幸运！</p>
 							</div>
 							<div class="qr-cont">
-								<img id="qr-img" class="qrimg" src="../image/QR.png">
+								<img class="qrimg" :src="qrpath">
 								<p class="type_desc">{{description}}</p>
 							</div>
 							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 						</div>
 					</div>
 					<!-- 主题四 -->
-					<div  v-show="serial==4"  id="theme4" class="theme4 mui-clearfix">
+					<div v-show="serial==4" id="theme4" class="theme4 mui-clearfix">
 						<img class="bgimg" :src="bgimg4">
 						<img class="user-head-img" src="../image/kaol.jpg">
 						<h2 id="user-name">旺客</h2>
@@ -173,11 +175,11 @@ doctype html>
 						<div class="input-section mui-text-center">
 							<p>越努力越幸运！</p>
 						</div>
-						<img id="qr-img" class="qrimg" src="../image/QR.png">
+						<img class="qrimg" :src="qrpath">
 						<p class="type_desc">{{description}}</p>
 					</div>
 				</div>
-				<div class="operation-section">
+				<div class="operation-section mui-clearfix">
 					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
 					<button type="button" id="shareImg" class="mui-btn">分享二维码</button>
 				</div>
@@ -192,12 +194,14 @@ doctype html>
 	<script src="../js/html2canvas.min.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
+		var userInfo = getUserInfo();
 		var app = new Vue({
 			el: "#mui-content",
 			data: {
 				imgtyp: '',
 				description: '',
 				serial: 1,
+				qrpath: '../image/QR.png',
 				bgimg1: '../image/share/bg-img01.jpg',
 				bgimg2: '../image/share/bg-img02.jpg',
 				bgimg3: '../image/share/bg-img03.jpg',
@@ -205,11 +209,11 @@ doctype html>
 			},
 			mounted: function() {
 				mui('.mui-content').on('tap', '.change', function() {
-					if(app.serial<4){
-						app.serial+=1;
+					if (app.serial < 4) {
+						app.serial += 1;
 						// message(app.serial);
-					}else{
-						app.serial=1;
+					} else {
+						app.serial = 1;
 					}
 				})
 				mui.init({
@@ -220,12 +224,13 @@ doctype html>
 				});
 				var imgPath = "";
 				var numbers = Date.parse(new Date());
-				var userInfo = getUserInfo();
 				mui.plusReady(function() {
 					document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
 					document.getElementById('user-name').innerText = userInfo.nickName;
 					// 获取二维码
 					getQrcodePic();
+					// 获取名片样式
+					getCardStyle();
 					// 保存图片
 					document.getElementById('saveImage').addEventListener('tap', function() {
 						generateImg('图片保存成功！');
@@ -263,6 +268,22 @@ doctype html>
 						});
 					})
 				})
+				// 生成二维码图片
+				function generateImg(tips) {
+					plus.nativeUI.showWaiting();
+					html2canvas(document.getElementById("code-body"), {
+						useCORS: true
+					}).then(function(canvas) {
+						var imgUrl = canvas.toDataURL("image/jpeg", 1);
+						baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
+							if (tips) {
+								message(tips);
+							}
+							imgPath = i.target;
+							plus.nativeUI.closeWaiting();
+						})
+					});
+				}
 				//获取二维码图片
 				function getQrcodePic() {
 					plus.nativeUI.showWaiting('', {
@@ -273,11 +294,11 @@ doctype html>
 					mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
 						token: userInfo.token
 					}, function(res) {
-						logs(res);
+						// logs(res);
 						if (res.errno == 0) {
 							var type = res.data.type;
-							var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-							document.getElementById('qr-img').setAttribute('src', url);
+							app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+							// document.getElementById('qr-img').setAttribute('src', url);
 							if (type == 'redpacket') {
 								app.description = '扫二维码领红包';
 							} else if (type == 'card') {
@@ -298,23 +319,20 @@ doctype html>
 						}
 					}, 'json');
 				}
-				// 生成二维码图片
-				function generateImg(tips) {
-					plus.nativeUI.showWaiting();
-					html2canvas(document.getElementById("code-body"), {
-						useCORS: true
-					}).then(function(canvas) {
-						var imgUrl = canvas.toDataURL("image/jpeg", 1);
-						baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
-							if (tips) {
-								message(tips);
-							}
-							imgPath = i.target;
-							plus.nativeUI.closeWaiting();
-						})
-					});
-				}
+				// 监听名片更改
+				window.addEventListener('changeCard', function() {
+					message('执行了');
+				}, false);
 			}
 		})
+		// 获取名片样式
+		function getCardStyle() {
+			mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
+				token: userInfo.token
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {}
+			}, 'json');
+		}
 	</script>
 </html>

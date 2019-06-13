@@ -12,7 +12,7 @@
 				height: 100%;
 				margin: 0;
 				padding: 0;
-				background-color: #000;
+				background-color: #000000;
 			}
 
 			#imgBox {
@@ -70,18 +70,31 @@
 				}
 			});
 			var self = null;
+			var ratio = 1;
+			var imgw = 750;
+			var imgh = 750;
 			mui.plusReady(function() {
 				self = plus.webview.currentWebview();
+				if (self.ratio) {
+					ratio = self.ratio;
+					if (ratio == 1000 / 666) {
+						imgw = 900;
+						imgh = 599;
+					} else {
+						imgw = 900;
+						imgh = 1440;
+					}
+				}
 				document.getElementById('imgBox').style.height = (document.body.offsetHeight - 50) + 'px';
-				
+
 				loadImage(self.image);
 				initImageCropper();
 
 				//确定裁切
 				document.getElementById("confirm").addEventListener("tap", function(e) {
 					var dataURL = $("#userImage_id").cropper("getCroppedCanvas", {
-						width: 750,
-						height: 750,
+						width: imgw,
+						height: imgh,
 						minWidth: 600,
 						minHeight: 600,
 						maxWidth: 1024,
@@ -111,7 +124,7 @@
 				$("#userImage_id").cropper({
 					viewMode: 2, //暂不清楚什么功能
 					dragMode: "move", //设置移动图片、重新绘制选图区域(crop:在裁剪框外拖动鼠标会生成一个新的裁剪框, move:在裁剪框外拖动鼠标会移动原图, none:什么也不做)
-					aspectRatio: 1, //裁剪框的纵横比，默认是不限制的。例如1:1的头像就写1,16:9可写成16 / 9。,
+					aspectRatio: ratio, //裁剪框的纵横比，默认是不限制的。例如1:1的头像就写1,16:9可写成16 / 9。,
 					data: null, //直接设置data 
 					preview: "", //预览图的位置，用jQuery选择器表示
 					responsive: !0, //在更改窗口大小后是否重新渲染cropper。
@@ -167,10 +180,10 @@
 			function loadImage(path) {
 				var img = document.getElementById("userImage_id");
 				img.src = path;
-// 				if (window.imageDisable == true) {
-// 					$("#userImage_id").cropper("enable");
-// 				}
-// 				$("#userImage_id").cropper("replace", path);
+				// 				if (window.imageDisable == true) {
+				// 					$("#userImage_id").cropper("enable");
+				// 				}
+				// 				$("#userImage_id").cropper("replace", path);
 			}
 
 			function uploadFile(file) {
@@ -187,9 +200,11 @@
 								plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 							} else {
 								// logs(res);
-								mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {image: res.url});
-								fnCloseWin('cropper');
+								mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {
+									image: res.url
+								});
 								waiting.close();
+								fnCloseWin('cropper');
 							}
 						} else {
 							console.log("上传失败：" + status);
@@ -219,7 +234,7 @@
 					type: mimeString
 				});
 			}
-			
+
 			//base64转本地图片
 			function base64ToImage(base64, quality, callback) {
 				quality = quality || 100;
@@ -227,7 +242,7 @@
 				// 从本地加载Bitmap图片
 				bitmap.loadBase64Data(base64, function() {
 					//    console.log('加载图片成功');
-					bitmap.save("_doc/avatar_" + Math.ceil(Math.random()*100) + ".jpg", {
+					bitmap.save("_doc/avatar_" + Math.ceil(Math.random() * 100) + ".jpg", {
 						overwrite: true,
 						quality: quality
 					}, function(e) {

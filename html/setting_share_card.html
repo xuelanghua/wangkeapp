@@ -177,7 +177,7 @@
 			.theme2 {
 				height: auto;
 				min-height: 500px;
-				background-color: #fff;
+				background-color: #ffffff;
 			}
 
 			.theme2 .qrimg {
@@ -191,12 +191,15 @@
 				padding: 0;
 				line-height: 0;
 				z-index: 1;
+				margin-bottom: 0;
+				background-color: #FFFFFF;
 			}
 
 			.head-img-cont .bgimg {
 				height: 6rem;
 				object-fit: cover;
 			}
+
 			.theme-body2 {
 				width: 90%;
 				left: 5%;
@@ -510,7 +513,7 @@
 							mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
 								token: userInfo.token
 							}, function(res) {
-								logs(res);
+								// logs(res);
 								if (res.errno == 0) {
 									var type = res.data.type;
 									app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
@@ -532,10 +535,110 @@
 							}, 'json');
 						}
 						getQrcodePic();
+
+						// mui(".mui-content").on('tap', '.replace-img', function() {
+						// 	app.imgtyp = this.dataset.imgtype;
+						// 	message(app.imgtyp);
+						// })
+						// 上传背景图片
+						var ratio = 900 / 1440;
+						mui('.mui-content').on('tap', '.replace-img', function() {
+							app.imgtyp = this.dataset.imgtype;
+							// logs(app[app.imgtyp]);
+							// message(app.imgtyp);
+							if (app.imgtyp == 'bgimg2' || app.imgtyp == 'bgimg4') {
+								ratio = 900 / 599;
+							} else {
+								ratio = 900 / 1440;
+							}
+							var editButtons = new Array();
+							editButtons.push({
+								title: "拍照上传",
+								style: "default"
+							});
+							editButtons.push({
+								title: "从相册选择",
+								style: "default"
+							});
+							plus.nativeUI.actionSheet({
+								cancel: "取消",
+								buttons: editButtons
+							}, function(e) {
+								var index = e.index;
+								switch (index) {
+									case 1:
+										getImage(ratio); //拍照
+										break;
+									case 2:
+										galleryImage(ratio); //相册选择
+										break;
+								}
+							});
+						});
+
+						// 拍照获取图片
+						function getImage() {
+							var camera = plus.camera.getCamera();
+							camera.captureImage(function(e) {
+								plus.io.resolveLocalFileSystemURL(e, function(entry) {
+									cropperImg(entry.toLocalURL(), 'setting_share_card', ratio);
+									// imageResize(entry.toLocalURL());
+									// 其他操作,比如预览展示
+								}, function(e) {
+									console.log("读取拍照文件错误：" + e.message);
+								});
+							}, function(s) {
+								console.log("error" + s);
+							}, {
+								filename: "_doc/camera/"
+							})
+						}
+						// 从相册中选择图片 
+						function galleryImage(cb) {
+							// 从相册中选择图片
+							plus.gallery.pick(function(e) {
+								cropperImg(e, 'setting_share_card', ratio);
+							}, function(e) {
+								console.log("取消选择图片");
+							}, {
+								filter: "image",
+								multiple: false,
+								maximum: 5,
+								system: false,
+								onmaxed: function() {
+									plus.nativeUI.alert('最多只能选择1张图片');
+								}
+							});
+						}
+						// plus.nativeUI.showWaiting("图片加载中…");
+						// setTimeout(function() {
+						// 	plus.nativeUI.closeWaiting();
+						// }, Math.ceil(Math.random() * 1000))
+						window.addEventListener('cropperSuccess', function(event) {
+							plus.nativeUI.showWaiting("图片加载中…");
+							app[app.imgtyp] = event.detail.image;
+							// logs(event.detail.image);
+							setTimeout(function() {
+								plus.nativeUI.closeWaiting();
+							}, Math.floor(Math.random() * 1000 + 1000));
+						})
 					})
-					mui(".mui-content").on('tap', '.replace-img', function() {
-						app.imgtyp = this.dataset.imgtype;
-						message(app.imgtyp);
+					// 保存设置
+					mui(".mui-bar").on("tap", ".save-edit", function() {
+						var pview = plus.webview.currentWebview().opener();
+						mui.post($ajaxUrl + 'userqrcode&action=poster_setting', {
+							token: userInfo.token,
+							card_type: 1,
+							background_image: "https://app.wangkeapp.cn/attachment/images/6/2019/06/Yjm25SVNZVNjXNSJkTjvStwx2x95Jj.jpg",
+							card_text: '越努力越幸运'
+						}, function(res) {
+							logs(res);
+							logs(res.message);
+							if (res.errno == 0) {
+								mui.fire(pview, 'changeCard');
+								mui.back();
+							}
+						}, 'json');
 					})
 				}
 			})
