@@ -119,8 +119,7 @@ doctype html>
 					<div v-if="serial==1" id="theme1" class="theme1">
 						<img class="bgimg" :src="bgimg">
 						<div class="theme-body theme-body1">
-							<img class="user-head-img mui-hidden" :src="userhead">
-							<img class="user-head-img" src="../image/kaol.jpg">
+							<img class="user-head-img" :src="userhead">
 							<h2>{{username}}</h2>
 							<div class="input-section mui-text-center">
 								<p>{{card_text}}</p>
@@ -138,8 +137,7 @@ doctype html>
 							<!-- <span class="radius"></span> -->
 						</div>
 						<div class="theme-body theme-body2">
-							<img class="user-head-img mui-hidden" :src="userhead">
-							<img class="user-head-img" src="../image/kaol.jpg">
+							<img class="user-head-img" :src="userhead">
 							<h2>{{username}}</h2>
 							<div class="input-section mui-text-center">
 								<p>{{card_text}}</p>
@@ -289,6 +287,7 @@ doctype html>
 						})
 					});
 				}
+
 				//获取二维码图片
 				function getQrcodePic() {
 					plus.nativeUI.showWaiting('', {
@@ -304,9 +303,6 @@ doctype html>
 							var type = res.data.type;
 							qrurl = res.data.url;
 							app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-							setInterval(function() {
-								app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + qrurl;
-							}, 20000);
 							// app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 							// document.getElementById('qr-img').setAttribute('src', url);
 							if (type == 'redpacket') {
@@ -322,10 +318,26 @@ doctype html>
 								plus.nativeUI.closeWaiting();
 							}, 500)
 						} else {
-							message(res.message);
+							// message(res.message);
 							setTimeout(function() {
 								mui.back();
 							}, 2000)
+						}
+					}, 'json');
+				}
+				//刷新二维码
+				setInterval(function() {
+					refreshQrcode();
+				}, 10000);
+				//刷新二维码
+				function refreshQrcode() {
+					mui.post($ajaxUrl + 'userqrcode', {
+						action: 'make_url',
+						token: userInfo.token,
+						type: 'setting'
+					}, function(res) {
+						if (res.errno == 0) {
+							app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 						}
 					}, 'json');
 				}
@@ -340,10 +352,10 @@ doctype html>
 			mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
 				token: userInfo.token
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.serial = res.data.card_type;
-					message(app.serial);
+					// message(app.serial);
 					app.card_text = res.data['card_text_' + res.data.card_type];
 					app.bgimg = res.data['background_image_' + res.data.card_type + '_url'];
 				}
