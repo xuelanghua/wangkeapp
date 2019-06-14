@@ -358,8 +358,8 @@
 							return;
 						}
 						types = this.dataset.types;
-						var list = document.getElementById('list');
-						var signs = list.querySelectorAll('.checkeds');
+						// var list = document.getElementById('list');
+						// var signs = list.querySelectorAll('.checkeds');
 						// 切换时清空input
 						mui.trigger(mui(".mui-icon-clear")[0], 'tap');
 						// 让input失去焦点
@@ -370,6 +370,7 @@
 								getUserList();
 							} else {
 								app.lists = checkedNewCustomer;
+								markSelect();
 							}
 						} else if (types == 'crm') {
 							if (JSON.stringify(checkedCrm) == "{}") {
@@ -377,6 +378,7 @@
 								getUserList();
 							} else {
 								app.lists = checkedCrm;
+								markSelect();
 							}
 						} else {
 							if (JSON.stringify(checkedFriend) == "{}") {
@@ -384,30 +386,18 @@
 								getUserList();
 							} else {
 								app.lists = checkedFriend;
+								markSelect();
 							}
 						}
-						// 标记选中的
-						setTimeout(function(){
-							for (var i = 0; i < signs.length; i++) {
-								for (var j = 0; j < allChecked.length; j++) {
-									if (allChecked[j] == signs[i].value) {
-										signs[i].checked = "checked";
-									}
-								}
-							}
-						},500)
 					});
 					mui.back = function() {
 						plus.webview.close(self, "slide-out-right");
 					};
 					setTimeout(function() {
 						mui("#list").indexedList().findElements();
-					}, 500);
+					}, 1000);
 					// 获取列表
 					function getUserList() {
-						// logs(types);
-						// logs(yuids.join(','));
-						// logs(skip += 1);
 						var getstr = '';
 						if (app.yuids) {
 							getstr = app.yuids.join(',');
@@ -419,7 +409,7 @@
 							type: types,
 							exist_uids: getstr,
 						}, function(res) {
-							console.log(JSON.stringify(res));
+							// console.log(JSON.stringify(res));
 							if (res.errno == 0) {
 								app.lists = res.data;
 								if (types == 'new_customer') {
@@ -432,6 +422,7 @@
 									checkedFriend = res.data;
 									// alert('friend');
 								}
+								markSelect();
 								setTimeout(function() {
 									mui("#list").indexedList().findElements();
 								}, 1000);
@@ -441,5 +432,24 @@
 				})
 			}
 		})
+		
+		function markSelect() {
+			// 标记选中的
+			var firstSelect = document.querySelector('.checkeds');
+			if (firstSelect) {
+				firstSelect.checked = false;
+			}
+			setTimeout(function(){
+				var list = document.getElementById('list');
+				var signs = list.querySelectorAll('.checkeds');
+				mui.each(signs, function(index, item) {
+					for (var i = 0; i < allChecked.length; i++) {
+						if (allChecked[i] == item.value) {
+							item.checked = true;
+						}
+					}
+				})
+			}, 500)
+		}
 	</script>
 </html>
