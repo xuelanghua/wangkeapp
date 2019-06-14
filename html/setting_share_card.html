@@ -401,14 +401,14 @@
 				<span>保存</span>
 			</div>
 		</header>
-		<nav id="theme-change" class="mui-bar mui-bar-tab theme-change">
-			<a href="#theme1" data-imgtype="1" class="mui-tab-item mui-active"><img src="../image/share/styles-icon01.png"></a>
-			<a href="#theme2" data-imgtype="2" class="mui-tab-item"><img src="../image/share/styles-icon02.png"></a>
-			<a href="#theme3" data-imgtype="3" class="mui-tab-item"><img src="../image/share/styles-icon03.png"></a>
-			<a href="#theme4" data-imgtype="4" class="mui-tab-item"><img src="../image/share/styles-icon04.png"></a>
-		</nav>
 		<div id="mui-content" class="mui-content setting-container" v-cloak>
-			<div id="theme1" class="theme1 mui-control-content mui-active">
+			<nav id="theme-change" class="mui-bar mui-bar-tab theme-change">
+				<a href="#theme1" data-imgtype="1" class="mui-tab-item" :class="card_type==1?'mui-active':''"><img src="../image/share/styles-icon01.png"></a>
+				<a href="#theme2" data-imgtype="2" class="mui-tab-item" :class="card_type==2?'mui-active':''"><img src="../image/share/styles-icon02.png"></a>
+				<a href="#theme3" data-imgtype="3" class="mui-tab-item" :class="card_type==3?'mui-active':''"><img src="../image/share/styles-icon03.png"></a>
+				<a href="#theme4" data-imgtype="4" class="mui-tab-item" :class="card_type==4?'mui-active':''"><img src="../image/share/styles-icon04.png"></a>
+			</nav>
+			<div id="theme1" class="theme1 mui-control-content" :class="card_type==1?'mui-active':''">
 				<img class="bgimg" :src="resultData.background_image_1_url||background_image_1">
 				<div class="replace-img">
 					点击替换图片
@@ -424,7 +424,7 @@
 					<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 				</div>
 			</div>
-			<div id="theme2" class="theme2 mui-control-content">
+			<div id="theme2" class="theme2 mui-control-content" :class="card_type==2?'mui-active':''">
 				<div class="replace-img">
 					点击替换图片
 				</div>
@@ -444,7 +444,7 @@
 					<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 				</div>
 			</div>
-			<div id="theme3" class="theme4 mui-control-content">
+			<div id="theme3" class="theme4 mui-control-content" :class="card_type==3?'mui-active':''">
 				<div class="replace-img">
 					点击替换图片
 				</div>
@@ -458,7 +458,7 @@
 				<img class="qrimg" :src="qrpath">
 				<p class="type_desc">{{type_desc}}</p>
 			</div>
-			<div id="theme4" class="theme3 mui-control-content">
+			<div id="theme4" class="theme3 mui-control-content" :class="card_type==4?'mui-active':''">
 				<div class="replace-img">
 					点击替换图片
 				</div>
@@ -486,6 +486,7 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
+					card_type: 1,
 					userhead: '',
 					username: '',
 					imgtyp: '1',
@@ -680,11 +681,11 @@
 						mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
 							token: userInfo.token
 						}, function(res) {
-							// logs(res);
+							logs(res);
 							var data = res.data;
 							if (res.errno == 0) {
+								app.card_type = res.data.card_type;
 								app.resultData = res.data;
-								app['uperimg' + app.imgtyp]
 								app.uperimg1 = data.background_image_1 || app.uperimg1;
 								app.uperimg2 = data.background_image_2 || app.uperimg1;
 								app.uperimg3 = data.background_image_3 || app.uperimg3;
