@@ -178,14 +178,15 @@ function logs(data) {
 
 
 //打开裁剪窗口
-function cropperImg(img, id) {
+function cropperImg(img, id,ratio) {
 	fnOpenWin('cropper.html', 'cropper', {
 		statusbar: {
 			background: '#000'
 		}
 	}, {
 		image: img,
-		wid: id
+		wid: id,
+		ratio:ratio
 	}, '');
 }
 

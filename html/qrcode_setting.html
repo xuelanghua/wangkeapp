@@ -92,6 +92,19 @@
 				margin-left: 30%;
 				margin-bottom: 50px;
 			}
+			.share-card {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #FFFFFF;
+				/* background-color: #007AFF; */
+				margin-right: -5px;
+			}
 		</style>
 	</head>
 
@@ -99,6 +112,9 @@
 		<header class="mui-bar mui-bar-nav" style="background-color: #2289FF;box-shadow: none;">
 			<a class="mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;" id="back"></a>
 			<h1 class="mui-title" style="color: #FFFFFF;">营销码设置</h1>
+			<div id="shareImg" class="mui-pull-right share-card">
+				<span>分享名片</span>
+			</div>
 		</header>
 
 		<div class="mui-content" style="background-color: #2289FF;">
@@ -183,7 +199,7 @@
 					<div class="clearfix"></div>
 				</div> -->
 			</div>
-			<button type="button" id="shareImg" class="operation-section mui-btn">分享名片</button>
+			<!-- <button type="button" id="shareImg" class="operation-section mui-btn">分享名片</button> -->
 		</div>
 	</body>
 	<script src="../js/mui.js"></script>
@@ -211,7 +227,7 @@
 				setStatusBar('#FFF', 'dark');
 				mui.back();
 			})
-			
+
 			mui.post($ajaxUrl + 'userqrcode', {
 				action: 'redpacket_check',
 				token: userInfo.token
@@ -223,7 +239,7 @@
 				}
 				initQrcode();
 			}, 'json');
-			
+
 			mui('.Collection_records').on('tap', '.mui-radio', function() {
 				if (timer) {
 					clearInterval(timer);
@@ -253,8 +269,9 @@
 				var qtype = this.dataset.type;
 				openSettingWin(qtype);
 			})
-			mui('.mui-content').on('tap', '#shareImg', function() {
-				openPage('business_card.html','business_card','#f7f7f7');
+			mui('.mui-bar').on('tap', '#shareImg', function() {
+				openPage('business_card.html', 'business_card', '#f7f7f7');
+				setStatusBar('#f7f7f7', 'dark');
 			})
 		})
 
@@ -307,10 +324,9 @@
 				}
 			}, 'json');
 		}
-		
+
 		window.addEventListener('doit', function() {
 			window.location.reload();
 		}, false);
-		
 	</script>
 </html>

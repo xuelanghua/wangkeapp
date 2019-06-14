@@ -1,0 +1,405 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>成员选择</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.indexedlist.css" />
+		<style type="text/css">
+			html,
+			body {
+				height: 100%;
+				overflow: hidden;
+			}
+
+			.mui-bar {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+
+			.mui-indexed-list-search {
+				width: 100%;
+			}
+
+			.mui-indexed-list-search input {
+				width: 100%;
+				background-color: #FFFFFF;
+				border-radius: 0;
+				color: #333333;
+				font-size: 0.3rem;
+				border: none;
+			}
+
+			.mui-search .mui-placeholder {
+				color: #909090;
+				border-radius: 0;
+				text-align: left;
+				font-size: 0.3rem;
+			}
+
+			.mui-table-view-cell {
+				display: flex;
+				align-items: center;
+			}
+
+			.mui-table-view-cell img {
+				width: 0.78rem;
+				height: 0.78rem;
+				margin: 0 0.1rem;
+				border-radius: 50%;
+				overflow: hidden;
+			}
+
+			.mui-table-view-cell.mui-checkbox input[type=checkbox] {
+				position: relative;
+				top: 0;
+				left: 0;
+			}
+
+			.mui-table-view-cell.mui-checkbox.mui-left {
+				padding-left: 0.2rem;
+			}
+
+			.mui-checkbox input[type=checkbox]:checked:before,
+			.mui-radio input[type=radio]:checked:before {
+				color: #2889ff;
+			}
+
+
+			.mui-search .mui-placeholder .mui-icon {
+				margin-left: 0.18rem;
+			}
+
+			.mui-search.mui-active:before {
+				top: 16px;
+			}
+
+			#list .mui-table-view {
+				padding-bottom: 50px;
+			}
+
+			#list .mui-table-view:after {
+				bottom: 50px;
+			}
+
+			#list .mui-indexed-list-bar a {
+				height: 3.2% !important;
+			}
+
+			.mui-segmented-control {
+				position: relative;
+				width: 100%;
+			}
+
+			.mui-segmented-control .mui-control-item {
+				position: relative;
+				width: 33.3333%;
+			}
+
+			.mui-segmented-control::before,
+			.mui-segmented-control .mui-control-item.mui-active::before {
+				content: '';
+				display: block;
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				background-color: #DDDDDD;
+				height: 1px;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.mui-segmented-control .mui-control-item.mui-active::before {
+				background-color: #2289FF;
+				height: 2px;
+				width: 25%;
+				left: 37.5%;
+			}
+
+			.mui-title {
+				font-weight: normal;
+			}
+
+			.next-btn {
+				position: fixed;
+				bottom: 0;
+				width: 100%;
+				height: 50px;
+				background-color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 15px;
+				color: #2289ff;
+			}
+
+			.next-btn.next-disabled {
+				color: gray;
+			}
+
+			.next-btn::before {
+				content: '';
+				display: block;
+				width: 100%;
+				background-color: #DDDDDD;
+				height: 1px;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+				position: absolute;
+				top: 0;
+			}
+
+			.create-team-btn {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				color: #333333;
+				font-size: 15px;
+				position: relative;
+				padding: 0 15px;
+				/* background: #0062CC; */
+				margin-right: -10px;
+				z-index: 16;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">选择收件人</h1>
+			<!-- <span class="mui-pull-right create-team-btn mui-disabled" id="next">确定</span> -->
+			<span class="mui-pull-right create-team-btn">全选</span>
+		</header>
+
+		<div class="mui-content setting-container">
+			<div id='list' class="mui-indexed-list" v-cloak>
+				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
+					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
+				</div>
+				<div class="mui-indexed-list-bar">
+					<a>#</a>
+					<a>A</a>
+					<a>B</a>
+					<a>C</a>
+					<a>D</a>
+					<a>E</a>
+					<a>F</a>
+					<a>G</a>
+					<a>H</a>
+					<a>I</a>
+					<a>J</a>
+					<a>K</a>
+					<a>L</a>
+					<a>M</a>
+					<a>N</a>
+					<a>O</a>
+					<a>P</a>
+					<a>Q</a>
+					<a>R</a>
+					<a>S</a>
+					<a>T</a>
+					<a>U</a>
+					<a>V</a>
+					<a>W</a>
+					<a>X</a>
+					<a>Y</a>
+					<a>Z</a>
+				</div>
+				<div class="mui-indexed-list-alert"></div>
+				<div class="mui-indexed-list-inner">
+					<div class="mui-indexed-list-empty-alert">没有数据</div>
+					<ul class="mui-table-view">
+						<template v-for="(vel,key,i) in lists" :key="i">
+							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
+							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+								<input class="checkeds" type="checkbox" :data-father="key" :value="items.uid" :data-avatar="items.avatar||items.avatarUrl"
+								 :disabled="items.join_status==1" />
+								<img :src="items.avatar||items.avatarUrl" alt=" ">
+								<span>{{items.name}}</span>
+								<span v-if="items.join_status" style="color: #2289ff;">(已加入)</span>
+							</li>
+						</template>
+					</ul>
+				</div>
+			</div>
+			<div id="next_btn" class="next-btn next-disabled">下一步</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/mui.indexedlist.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script type="text/javascript">
+		mui.init();
+		var userInfo = getUserInfo();
+		var tid = '';
+		var count = 0;
+		var app = new Vue({
+			el: "#list",
+			data: {
+				lists: {},
+				uids: []
+			},
+			mounted: function() {
+				var checkedValues = [];
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					tid = self.tid;
+					app.uids = self.uids;
+					document.querySelector('.mui-title').innerText = self.names;
+					// 会员组id  self.group_id
+					getUserList();
+					if (app.uids) {
+						setTimeout(function() {
+							var list = document.getElementById('list');
+							var signs = list.querySelectorAll('.checkeds');
+							for (var i = 0; i < signs.length; i++) {
+								for (var j = 0; j < app.uids.length; j++) {
+									if (app.uids[j] == signs[i].value) {
+										signs[i].checked = "checked";
+									}
+								}
+							}
+							count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+							var value = count ? "完成(" + count + ")" : "完成";
+							next.innerHTML = value;
+							if (count) {
+								if (next.classList.contains("next-disabled")) {
+									next.classList.remove("next-disabled");
+								}
+							} else {
+								if (!next.classList.contains("next-disabled")) {
+									next.classList.add("next-disabled");
+								}
+							}
+						}, 800);
+					} else {
+
+					}
+					// mui.back = function() {
+					// 	// self.hide();
+					// 	plus.webview.hide( self, "slide-out-right");
+					// };
+					// setTimeout(function(){
+					// 	mui("#list").indexedList().findElements();
+					// },500);
+				})
+				mui.ready(function() {
+					var header = document.querySelector('header.mui-bar');
+					var list = document.getElementById('list');
+					var next = document.getElementById('next_btn');
+					//calc hieght
+					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+					//create
+					window.indexedList = new mui.IndexedList(list);
+					//next event
+					next.addEventListener('tap', function() {
+						var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
+						var checkedAvatar = [];
+						var mber = {};
+						var merbers = {};
+						checkboxArray.forEach(function(box) {
+							merbers[box.dataset.father] = [];
+							if (box.checked) {
+								checkedValues.push(box.value);
+								merbers[box.dataset.father].push(box.value)
+								mber[box.dataset.father] = merbers[box.dataset.father];
+								// 获取id
+								// 获取头像地址
+								checkedAvatar.push(box.dataset.avatar);
+							}
+						});
+						logs(mber);
+						if (count > 0) {
+							// var prior = plus.webview.currentWebview().opener();
+							// mui.fire(prior, 'doit', {
+							// 	imagePath: checkedAvatar,
+							// 	idGroup: checkedValues
+							// });
+							// var detailPage = plus.webview.getWebviewById('team_detail');
+							// mui.fire(detailPage, 'doit');
+							// setTimeout(function() {
+							// 	mui.back();
+							// }, 500);
+							openPage('mass_message.html', 'mass_message', '#f7f7f7', '');
+						} else {
+							message('你没选择任何成员');
+							// mui.alert('你没选择任何成员');
+						}
+						// if (count) {
+
+						// }
+					}, false);
+
+					mui('.mui-indexed-list-inner').on('change', 'input', function() {
+						count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+						var value = count ? "下一步(" + count + ")" : "下一步";
+						next.innerHTML = value;
+						if (count) {
+							if (next.classList.contains("next-disabled")) {
+								next.classList.remove("next-disabled");
+							}
+						} else {
+							if (!next.classList.contains("next-disabled")) {
+								next.classList.add("next-disabled");
+							}
+						}
+					});
+					var allselect = false;
+					mui('.mui-bar').on('tap', '.create-team-btn', function() {
+						if (!allselect) {
+							mui("input[type='checkbox']").each(function() {
+								this.checked = true;
+							});
+							next.classList.remove("next-disabled");
+							document.querySelector('.create-team-btn').innerText="取消";
+							count=list.querySelectorAll('input[type="checkbox"]:checked').length;
+							allselect=true;
+						} else {
+							mui("input[type='checkbox']").each(function() {
+								this.checked = false;
+							});
+							count=0;
+							next.classList.add("next-disabled");
+							document.querySelector('.create-team-btn').innerText="全选";
+							allselect=false;
+						}
+					});
+				});
+			}
+		})
+
+		function getUserList() {
+			// console.log(tid);
+			mui.post($ajaxUrl + 'team&action=friend_list', {
+				token: userInfo.token,
+				team_id: tid
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					app.lists = res.data;
+					setTimeout(function() {
+						mui("#list").indexedList().findElements();
+					}, 1000);
+				} else {
+
+				}
+			}, 'json');
+		}
+	</script>
+</html>

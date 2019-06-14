@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				height: 0;
+			}
+
+			.mui-table-view-cell .mui-navigate-right {
+				font-size: 15px;
+				color: #333333;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+			}
+			.mui-table-view-cell.mui-active{
+				background-color: #f9f9f9;
+			}
+			h5{
+				font-size: 15px;
+				color: #333333;
+				margin: 10px 0;
+			}
+			.mass-desc{
+				text-align: justify;
+				font-size: 15px;
+				color: #333333;
+				margin-bottom: 0;
+			}
+			.mui-table-view-cell p.desc-footer{
+				margin: 10px 0;
+			}
+			.mass-status{
+				position: relative;
+				margin: 0 10px;
+				padding-left: 10px;
+			}
+			.mass-status::before{
+				content: '';
+				position: absolute;
+				left: 0;
+				height: 80%;
+				top: 10%;
+				width: 1px;
+				background-color: #dddddd;
+			}
+			.mui-table-view-cell .mass-desc img{
+				width: 102px;
+				height: 102px;
+				object-fit: cover;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">选择分组</h1>
+		</header>
+		<div id="mui-content" class="mui-content setting-container" v-cloak>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" data-title="2019-06-10" data-mass_id="123">
+					<h5>2019-06-10</h5>
+					<p class="mui-ellipsis-2 mass-desc">
+						这里是群发的内容，要做字段限制最多显示两排，两排是多少个字符。字号是30号字，呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+					</p>
+					<p class="desc-footer">群发人数：500<span class="mass-status">发送失败：20</span></p>
+				</li>
+				<li class="mui-table-view-cell" data-title="2019-06-06" data-mass_id="123">
+					<h5>2019-06-10</h5>
+					<p class="mui-ellipsis-2 mass-desc">
+						<img src="../image/5E0eH.png" >
+					</p>
+					<p class="desc-footer">群发人数：500<span class="mass-status">发送失败：20</span></p>
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					name: 'asdf'
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							// plus.navigator.setStatusBarStyle("light");
+						}
+					})
+					mui.plusReady(function() {})
+					mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
+						var title = this.dataset.title;
+						var mass_id = this.dataset.mass_id;
+						openPage('mass_list_detail.html', 'mass_list_detail', '#f7f7f7', {
+							mass_id: mass_id,
+							title: title
+						})
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>
