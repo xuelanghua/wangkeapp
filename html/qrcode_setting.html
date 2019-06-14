@@ -198,6 +198,7 @@
 
 		var userInfo = getUserInfo();
 		var currentType = '';
+		var timer = null;
 		var qrType = {
 			'redpacket': '红包码',
 			'card': '名片码',
@@ -224,6 +225,9 @@
 			}, 'json');
 			
 			mui('.Collection_records').on('tap', '.mui-radio', function() {
+				if (timer) {
+					clearInterval(timer);
+				}
 				var type = this.dataset.type;
 				if (currentType == type) return;
 				mui.post($ajaxUrl + 'userqrcode', {
@@ -236,7 +240,9 @@
 						document.querySelector('.QR-code img').setAttribute('src', url);
 						currentType = type;
 						document.querySelector('#qrcode_type').innerHTML = qrType[type];
-						// this.disabled = false;
+						timer = setInterval(function() {
+							refreshQrcode();
+						}, 10000)
 					} else if (res.errno == 1) {
 						plus.nativeUI.toast(res.message);
 					}
@@ -263,6 +269,9 @@
 					document.querySelector('.mui-radio[data-type=' + res.data.type + '] input').setAttribute('checked', true);
 					var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 					document.querySelector('.QR-code img').setAttribute('src', url);
+					timer = setInterval(function() {
+						refreshQrcode();
+					}, 10000)
 				} else {
 					document.querySelector('.mui-radio[data-type=card] input').setAttribute('checked', true);
 				}
@@ -283,6 +292,20 @@
 			// newPage.show('slide-in-bottom');
 			newPage.show('slide-in-right');
 			setStatusBar('', 'dark');
+		}
+		
+		//刷新二维码
+		function refreshQrcode() {
+			mui.post($ajaxUrl + 'userqrcode', {
+				action: 'make_url',
+				token: userInfo.token,
+				type: 'setting'
+			}, function(res) {
+				if (res.errno == 0) {
+					var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+					document.querySelector('.QR-code img').setAttribute('src', url);
+				}
+			}, 'json');
 		}
 		
 		window.addEventListener('doit', function() {

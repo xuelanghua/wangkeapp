@@ -58,11 +58,11 @@
 				<div id="confirm">完成</div>
 			</div>
 		</div>
-		<script src="../js/mui.min.js"></script>
-		<script src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
 		<script type="text/javascript" src="../plugins/jquery-3.1.1.slim.min.js"></script>
 		<script type="text/javascript" src="../plugins/cropper/js/cropper.min.js"></script>
-		<script type="text/javascript" charset="utf-8">
+		<script type="text/javascript">
 			mui.init({
 				swipeBack: false,
 				beforeback: function() {
@@ -179,14 +179,12 @@
 						method: "POST",
 						blocksize: 614400,
 						priority: 100
-					},
-					function(t, status) { //上传完成
+					}, function(t, status) { //上传完成
 						if (status == 200) {
 							var res = JSON.parse(t.responseText);
 							if (res.error) {
 								plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 							} else {
-								// logs(res);
 								mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {image: res.url});
 								fnCloseWin('cropper');
 								waiting.close();
