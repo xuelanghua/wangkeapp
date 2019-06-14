@@ -199,9 +199,10 @@
 							if (res.error) {
 								plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 							} else {
-								// logs(res);
+								logs(res);
 								mui.fire(plus.webview.getWebviewById(self.wid), 'cropperSuccess', {
-									image: res.url
+									image: res.url,
+									filename:res.filename
 								});
 								waiting.close();
 								fnCloseWin('cropper');

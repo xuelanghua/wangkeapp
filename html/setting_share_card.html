@@ -10,16 +10,16 @@
 			html,
 			body {
 				width: 100%;
-				height: 100%;
+				/* height: 100%; */
 			}
 
 			[v-cloak] {
 				display: none;
 			}
 
-			.mui-content {
-				height: 100%;
-				padding-bottom: 90px;
+			.mui-bar-tab~.mui-content {
+				min-height: 100vh;
+				padding-bottom: 100px;
 			}
 
 			.mui-control-content {
@@ -34,6 +34,7 @@
 				margin-top: -90px;
 				-webkit-box-shadow: 0 0 1px rgba(0, 0, 0, .1);
 				box-shadow: 0 0 1px rgba(0, 0, 0, .1);
+				z-index: 12;
 			}
 
 			.mui-bar-tab .mui-tab-item {
@@ -106,6 +107,10 @@
 				top: 40px;
 				bottom: 0;
 				z-index: 2;
+			}
+
+			.type_desc {
+				position: relative;
 			}
 
 			.user-head-img {
@@ -196,14 +201,13 @@
 			}
 
 			.head-img-cont .bgimg {
+				width: auto;
 				height: 6rem;
-				object-fit: cover;
 			}
 
 			.theme-body2 {
 				width: 90%;
 				left: 5%;
-				background-size: contain;
 				display: flex;
 				align-items: center;
 				flex-direction: column;
@@ -225,6 +229,7 @@
 				border: none;
 				color: #FFFFFF;
 				margin-bottom: 0;
+
 			}
 
 			.theme-body2 textarea::-webkit-input-placeholder {
@@ -336,9 +341,21 @@
 			.theme4 h2 {
 				font-size: 18px;
 				font-weight: normal;
-				padding: 10px 0;
+				padding: 20px 0;
 				position: relative;
 				color: #333333;
+			}
+
+			.theme4 h2::after {
+				content: '';
+				width: 40px;
+				height: 2px;
+				display: block;
+				position: absolute;
+				left: 50%;
+				margin-left: -20px;
+				bottom: 0;
+				background-color: #2289FF;
 			}
 
 			.theme4 .input-section {
@@ -385,22 +402,22 @@
 			</div>
 		</header>
 		<nav id="theme-change" class="mui-bar mui-bar-tab theme-change">
-			<a href="#theme1" class="mui-tab-item mui-active"><img src="../image/share/styles-icon01.png"></a>
-			<a href="#theme2" class="mui-tab-item"><img src="../image/share/styles-icon02.png"></a>
-			<a href="#theme4" class="mui-tab-item"><img src="../image/share/styles-icon03.png"></a>
-			<a href="#theme3" class="mui-tab-item"><img src="../image/share/styles-icon04.png"></a>
+			<a href="#theme1" data-imgtype="1" class="mui-tab-item mui-active"><img src="../image/share/styles-icon01.png"></a>
+			<a href="#theme2" data-imgtype="2" class="mui-tab-item"><img src="../image/share/styles-icon02.png"></a>
+			<a href="#theme3" data-imgtype="3" class="mui-tab-item"><img src="../image/share/styles-icon03.png"></a>
+			<a href="#theme4" data-imgtype="4" class="mui-tab-item"><img src="../image/share/styles-icon04.png"></a>
 		</nav>
 		<div id="mui-content" class="mui-content setting-container" v-cloak>
 			<div id="theme1" class="theme1 mui-control-content mui-active">
-				<img class="bgimg" :src="bgimg1">
-				<div class="replace-img" data-imgtype="bgimg1">
+				<img class="bgimg" :src="resultData.background_image_1_url||background_image_1">
+				<div class="replace-img">
 					点击替换图片
 				</div>
 				<div class="theme-body theme-body1">
 					<img class="user-head-img" :src="userhead">
 					<h2>{{username}}</h2>
 					<div class="input-section">
-						<textarea maxlength="26" rows="2" placeholder="输入文字内容输入文字内容"></textarea>
+						<textarea v-model="signature1" maxlength="26" rows="2" placeholder="输入文字内容输入文字内容"></textarea>
 					</div>
 					<img class="qrimg" :src="qrpath">
 					<p class="type_desc">{{type_desc}}</p>
@@ -408,11 +425,11 @@
 				</div>
 			</div>
 			<div id="theme2" class="theme2 mui-control-content">
-				<div class="replace-img" data-imgtype="bgimg2">
+				<div class="replace-img">
 					点击替换图片
 				</div>
 				<div class="head-img-cont">
-					<img class="bgimg" :src="bgimg2">
+					<img class="bgimg" :src="resultData.background_image_2_url||background_image_2">
 					<img class="circular-bead" src="../image/share/circular-bead-bg.png">
 					<!-- <span class="radius"></span> -->
 				</div>
@@ -420,23 +437,37 @@
 					<img class="user-head-img" :src="userhead">
 					<h2>{{username}}</h2>
 					<div class="input-section">
-						<textarea maxlength="26" rows="2" placeholder="这里是添加自定义文字"></textarea>
+						<textarea v-model="signature2" maxlength="26" rows="2" placeholder="这里是添加自定义文字"></textarea>
 					</div>
 					<img class="qrimg" :src="qrpath">
 					<p class="type_desc">{{type_desc}}</p>
 					<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 				</div>
 			</div>
-			<div id="theme3" class="theme3 mui-control-content">
-				<div class="replace-img" data-imgtype="bgimg3">
+			<div id="theme3" class="theme4 mui-control-content">
+				<div class="replace-img">
 					点击替换图片
 				</div>
-				<img class="bgimg" :src="bgimg3">
+				<img class="bgimg" :src="resultData.background_image_3_url||background_image_3">
+				<img class="user-head-img" :src="userhead">
+				<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+				<h2>{{username}}</h2>
+				<div class="input-section">
+					<textarea v-model="signature3" maxlength="26" rows="2" placeholder="输入文字内容输入文字内容"></textarea>
+				</div>
+				<img class="qrimg" :src="qrpath">
+				<p class="type_desc">{{type_desc}}</p>
+			</div>
+			<div id="theme4" class="theme3 mui-control-content">
+				<div class="replace-img">
+					点击替换图片
+				</div>
+				<img class="bgimg" :src="resultData.background_image_4_url||background_image_4">
 				<div class="theme-body theme-body3">
 					<img class="user-head-img" :src="userhead">
 					<h2>{{username}}</h2>
 					<div class="input-section">
-						<textarea maxlength="26" rows="2" placeholder="这里是添加自定义文字"></textarea>
+						<textarea v-model="signature4" maxlength="26" rows="2" placeholder="这里是添加自定义文字"></textarea>
 					</div>
 					<div class="qr-cont">
 						<img class="qrimg" :src="qrpath">
@@ -445,43 +476,43 @@
 					<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 				</div>
 			</div>
-			<div id="theme4" class="theme4 mui-control-content">
-				<div class="replace-img" data-imgtype="bgimg4">
-					点击替换图片
-				</div>
-				<img class="bgimg" :src="bgimg4">
-				<img class="user-head-img" :src="userhead">
-				<h2>{{username}}</h2>
-				<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
-				<div class="input-section">
-					<textarea maxlength="26" rows="2" placeholder="输入文字内容输入文字内容"></textarea>
-				</div>
-				<img class="qrimg" :src="qrpath">
-				<p class="type_desc">{{type_desc}}</p>
-			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var card_type = 1;
 			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					userhead: '',
 					username: '',
-					imgtyp: '',
+					imgtyp: '1',
 					qrpath: '',
-					bgimg1: '../image/share/bg-img01.jpg',
-					bgimg2: '../image/share/bg-img02.jpg',
-					bgimg3: '../image/share/bg-img03.jpg',
-					bgimg4: '../image/share/bg-img04.jpg',
-					type_desc: ''
+					background_image_1: '../image/share/bg-img01.jpg',
+					background_image_2: '../image/share/bg-img02.jpg',
+					background_image_3: '../image/share/bg-img03.jpg',
+					background_image_4: '../image/share/bg-img04.jpg',
+					uperimg1: 'images/6/2019/05/bg-img01.jpg',
+					uperimg2: 'images/6/2019/05/bg-img02.jpg',
+					uperimg3: 'images/6/2019/05/bg-img03.jpg',
+					uperimg4: 'images/6/2019/05/bg-img04.jpg',
+					type_desc: '',
+					// 个性签名
+					signature1: '',
+					signature2: '',
+					signature3: '',
+					signature4: '',
+					// 全部资料
+					resultData: {}
 				},
 				methods: {
 
 				},
 				mounted: function() {
+					// 上传图片的比例
+					var ratio = 900 / 1440;
 					mui.init({
 						beforeback: function() {
 							// plus.navigator.setStatusBarStyle("dark");
@@ -540,13 +571,19 @@
 						// 	app.imgtyp = this.dataset.imgtype;
 						// 	message(app.imgtyp);
 						// })
-						// 上传背景图片
-						var ratio = 900 / 1440;
-						mui('.mui-content').on('tap', '.replace-img', function() {
+						// 点击底部样式切换
+						mui(".theme-change").on('tap', '.mui-tab-item', function() {
 							app.imgtyp = this.dataset.imgtype;
-							// logs(app[app.imgtyp]);
 							// message(app.imgtyp);
-							if (app.imgtyp == 'bgimg2' || app.imgtyp == 'bgimg4') {
+							if (app.imgtyp == '2' || app.imgtyp == '3') {
+								ratio = 900 / 599;
+							} else {
+								ratio = 900 / 1440;
+							}
+						})
+						// 上传背景图片
+						mui('.mui-content').on('tap', '.replace-img', function() {
+							if (app.imgtyp == '2' || app.imgtyp == '3') {
 								ratio = 900 / 599;
 							} else {
 								ratio = 900 / 1440;
@@ -610,14 +647,11 @@
 								}
 							});
 						}
-						// plus.nativeUI.showWaiting("图片加载中…");
-						// setTimeout(function() {
-						// 	plus.nativeUI.closeWaiting();
-						// }, Math.ceil(Math.random() * 1000))
 						window.addEventListener('cropperSuccess', function(event) {
+							message(app.imgtyp);
 							plus.nativeUI.showWaiting("图片加载中…");
-							app[app.imgtyp] = event.detail.image;
-							// logs(event.detail.image);
+							app.resultData['background_image_' + app.imgtyp + '_url'] = event.detail.image;
+							app['uperimg' + app.imgtyp] = event.detail.filename;
 							setTimeout(function() {
 								plus.nativeUI.closeWaiting();
 							}, Math.floor(Math.random() * 1000 + 1000));
@@ -625,21 +659,45 @@
 					})
 					// 保存设置
 					mui(".mui-bar").on("tap", ".save-edit", function() {
+						// message( app['signature' + app.imgtyp]);
+						// message(app['signature' + app.imgtyp]);
 						var pview = plus.webview.currentWebview().opener();
 						mui.post($ajaxUrl + 'userqrcode&action=poster_setting', {
 							token: userInfo.token,
-							card_type: 1,
-							background_image: "https://app.wangkeapp.cn/attachment/images/6/2019/06/Yjm25SVNZVNjXNSJkTjvStwx2x95Jj.jpg",
-							card_text: '越努力越幸运'
+							card_type: app.imgtyp,
+							background_image: app['uperimg' + app.imgtyp],
+							card_text: app['signature' + app.imgtyp]
 						}, function(res) {
 							logs(res);
-							logs(res.message);
 							if (res.errno == 0) {
 								mui.fire(pview, 'changeCard');
 								mui.back();
 							}
 						}, 'json');
 					})
+					// 获取前一次名片样式
+					function getBeforeStyle() {
+						mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
+							token: userInfo.token
+						}, function(res) {
+							logs(res);
+							var data = res.data;
+							if (res.errno == 0) {
+								app.resultData = res.data;
+								app['uperimg' + app.imgtyp]
+								app.uperimg1 = data.background_image_1 || app.uperimg1;
+								app.uperimg2 = data.background_image_2 || app.uperimg1;
+								app.uperimg3 = data.background_image_3 || app.uperimg3;
+								app.uperimg4 = data.background_image_4 || app.uperimg4;
+								// 个性签名
+								app.signature1 = data.card_text_1;
+								app.signature2 = data.card_text_2;
+								app.signature3 = data.card_text_3;
+								app.signature4 = data.card_text_4;
+							}
+						}, 'json');
+					}
+					getBeforeStyle();
 				}
 			})
 		</script>

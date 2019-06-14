@@ -111,19 +111,19 @@ doctype html>
 		</header>
 		<div class="mui-content" id="mui-content" v-cloak>
 			<div class="team-qr-code">
-				<div class="change" style="position: absolute;top: 60px;left: 44%;color: #FFFFFF;">
+				<!-- <div class="change" style="position: absolute;top: 60px;left: 44%;color: #FFFFFF;">
 					<span>change</span>
-				</div>
+				</div> -->
 				<div id="code-body" class="qr-code-body">
 					<!-- 主题一 -->
-					<div v-show="serial==1" id="theme1" class="theme1">
-						<img class="bgimg" :src="bgimg1">
+					<div v-if="serial==1" id="theme1" class="theme1">
+						<img class="bgimg" :src="bgimg">
 						<div class="theme-body theme-body1">
-							<img id="user-head-img" class="user-head-img mui-hidden" src="">
+							<img class="user-head-img mui-hidden" :src="userhead">
 							<img class="user-head-img" src="../image/kaol.jpg">
-							<h2 id="user-name">旺客</h2>
+							<h2>{{username}}</h2>
 							<div class="input-section mui-text-center">
-								<p>越努力越幸运,越努力越幸运！</p>
+								<p>{{card_text}}</p>
 							</div>
 							<img class="qrimg" :src="qrpath">
 							<p class="type_desc">{{description}}</p>
@@ -131,18 +131,18 @@ doctype html>
 						</div>
 					</div>
 					<!-- 主题二 -->
-					<div v-show="serial==2" id="theme2" class="theme2">
+					<div v-if="serial==2" id="theme2" class="theme2">
 						<div class="head-img-cont">
-							<img class="bgimg" :src="bgimg2">
+							<img class="bgimg" :src="bgimg">
 							<img class="circular-bead" src="../image/share/circular-bead-bg.png">
 							<!-- <span class="radius"></span> -->
 						</div>
 						<div class="theme-body theme-body2">
-							<img id="user-head-img" class="user-head-img mui-hidden" src="">
+							<img class="user-head-img mui-hidden" :src="userhead">
 							<img class="user-head-img" src="../image/kaol.jpg">
-							<h2 id="user-name">旺客</h2>
+							<h2>{{username}}</h2>
 							<div class="input-section mui-text-center">
-								<p>越努力越幸运！</p>
+								<p>{{card_text}}</p>
 							</div>
 							<img class="qrimg" :src="qrpath">
 							<p class="type_desc">{{description}}</p>
@@ -150,14 +150,25 @@ doctype html>
 						</div>
 					</div>
 					<!-- 主题三 -->
-					<div v-show="serial==3" id="theme3" class="theme3">
-						<img class="bgimg" :src="bgimg3">
+					<div v-if="serial==3" id="theme4" class="theme4 mui-clearfix">
+						<img class="bgimg" :src="bgimg">
+						<img class="user-head-img" :src="userhead">
+						<h2>{{username}}</h2>
+						<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
+						<div class="input-section mui-text-center">
+							<p>{{card_text}}</p>
+						</div>
+						<img class="qrimg" :src="qrpath">
+						<p class="type_desc">{{description}}</p>
+					</div>
+					<!-- 主题四 -->
+					<div v-if="serial==4" id="theme3" class="theme3">
+						<img class="bgimg" :src="bgimg">
 						<div class="theme-body theme-body3">
-							<img id="user-head-img" class="user-head-img mui-hidden" src="">
-							<img class="user-head-img" src="../image/kaol.jpg">
-							<h2 id="user-name">旺客</h2>
+							<img class="user-head-img" :src="userhead">
+							<h2>{{username}}</h2>
 							<div class="input-section mui-text-center">
-								<p>越努力越幸运！</p>
+								<p>{{card_text}}</p>
 							</div>
 							<div class="qr-cont">
 								<img class="qrimg" :src="qrpath">
@@ -166,18 +177,7 @@ doctype html>
 							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 						</div>
 					</div>
-					<!-- 主题四 -->
-					<div v-show="serial==4" id="theme4" class="theme4 mui-clearfix">
-						<img class="bgimg" :src="bgimg4">
-						<img class="user-head-img" src="../image/kaol.jpg">
-						<h2 id="user-name">旺客</h2>
-						<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
-						<div class="input-section mui-text-center">
-							<p>越努力越幸运！</p>
-						</div>
-						<img class="qrimg" :src="qrpath">
-						<p class="type_desc">{{description}}</p>
-					</div>
+
 				</div>
 				<div class="operation-section mui-clearfix">
 					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
@@ -195,12 +195,17 @@ doctype html>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		var userInfo = getUserInfo();
+		var qrurl = null;
 		var app = new Vue({
 			el: "#mui-content",
 			data: {
+				userhead: '',
+				username: '',
 				imgtyp: '',
 				description: '',
-				serial: 1,
+				serial: 3,
+				card_text: '',
+				bgimg: '',
 				qrpath: '../image/QR.png',
 				bgimg1: '../image/share/bg-img01.jpg',
 				bgimg2: '../image/share/bg-img02.jpg',
@@ -208,14 +213,14 @@ doctype html>
 				bgimg4: '../image/share/bg-img04.jpg'
 			},
 			mounted: function() {
-				mui('.mui-content').on('tap', '.change', function() {
-					if (app.serial < 4) {
-						app.serial += 1;
-						// message(app.serial);
-					} else {
-						app.serial = 1;
-					}
-				})
+				// mui('.mui-content').on('tap', '.change', function() {
+				// 	if (app.serial < 4) {
+				// 		app.serial += 1;
+				// 		// message(app.serial);
+				// 	} else {
+				// 		app.serial = 1;
+				// 	}
+				// })
 				mui.init({
 					swipeBack: true,
 					beforeback: function() {
@@ -225,8 +230,8 @@ doctype html>
 				var imgPath = "";
 				var numbers = Date.parse(new Date());
 				mui.plusReady(function() {
-					document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
-					document.getElementById('user-name').innerText = userInfo.nickName;
+					app.userhead = userInfo.avatarUrl;
+					app.username = userInfo.nickName;
 					// 获取二维码
 					getQrcodePic();
 					// 获取名片样式
@@ -297,7 +302,12 @@ doctype html>
 						// logs(res);
 						if (res.errno == 0) {
 							var type = res.data.type;
+							qrurl = res.data.url;
 							app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+							setInterval(function() {
+								app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + qrurl;
+							}, 20000);
+							// app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
 							// document.getElementById('qr-img').setAttribute('src', url);
 							if (type == 'redpacket') {
 								app.description = '扫二维码领红包';
@@ -321,7 +331,7 @@ doctype html>
 				}
 				// 监听名片更改
 				window.addEventListener('changeCard', function() {
-					message('执行了');
+					getCardStyle();
 				}, false);
 			}
 		})
@@ -331,7 +341,12 @@ doctype html>
 				token: userInfo.token
 			}, function(res) {
 				logs(res);
-				if (res.errno == 0) {}
+				if (res.errno == 0) {
+					app.serial = res.data.card_type;
+					message(app.serial);
+					app.card_text = res.data['card_text_' + res.data.card_type];
+					app.bgimg = res.data['background_image_' + res.data.card_type + '_url'];
+				}
 			}, 'json');
 		}
 	</script>
