@@ -170,7 +170,7 @@
 					<form class="mui-input-group" onsubmit="return false">
 						<div class="mui-input-row">
 							<div class="mui-input-row">
-								<input name="tagname" type="text" v-model="tagname" class="mui-input-clear">
+								<input name="tagname" type="text" v-model="tagname" class="tag-name-input mui-input-clear">
 							</div>
 						</div>
 					</form>
@@ -277,10 +277,17 @@
 					// 添加成员
 					mui(".mui-content").on('tap', '.add-member', function() {
 						// logs(app.yuids);
-						openPage('add_tags_mebers.html', 'add_tags_mebers', '#f7f7f7', {
-							tgid: tgid,
-							yuids: app.yuids
-						})
+						// 点击添加成员
+						mui('.mui-content').on('tap', '.add-member', function(event) {
+							document.querySelector('.tag-name-input').blur();
+							setTimeout(function() {
+								openPage('add_tags_mebers.html', 'add_tags_mebers', '#f7f7f7', {
+									tgid: tgid,
+									yuids: app.yuids
+								})
+							}, 100);
+						});
+						
 					})
 					// 查看成员名片
 					mui(".mui-content").on('tap', '.mui-table-view-cell', function() {

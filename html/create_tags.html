@@ -169,7 +169,7 @@
 					<form class="mui-input-group" onsubmit="return false">
 						<div class="mui-input-row">
 							<div class="mui-input-row">
-								<input maxlength="8" v-model="label_name" type="text" class="mui-input-clear" placeholder="标签名字">
+								<input maxlength="8" v-model="label_name" type="text" class="tag-name-input mui-input-clear" placeholder="标签名字">
 							</div>
 						</div>
 					</form>
@@ -210,7 +210,7 @@
 					tagname: '本地客户',
 					label_name: '',
 					lists: [],
-					yuids:[]
+					yuids: []
 				},
 				methods: {
 
@@ -232,19 +232,19 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						tgid = self.tgid;
-						mui('.mui-content').on('tap','.mui-icon-clear',function(){
-								app.tagname = '';
+						mui('.mui-content').on('tap', '.mui-icon-clear', function() {
+							app.tagname = '';
 						})
 						// 保存编辑
 						mui(".mui-bar-nav").on('tap', '.save-change', function() {
-							if(!app.label_name){
+							if (!app.label_name) {
 								message('请输入标签名');
 								return;
-							}else if(app.label_name.length>8){
+							} else if (app.label_name.length > 8) {
 								message('请输入长度小于8个字符的标签名');
 								return;
 							}
-							if(app.yuids.length<1||app.yuids=='[]'){
+							if (app.yuids.length < 1 || app.yuids == '[]') {
 								message('请选择成员');
 								return;
 							}
@@ -291,15 +291,18 @@
 					});
 					// 点击添加成员
 					mui('.mui-content').on('tap', '.add-member', function(event) {
-						openPage('add_tags_mebers.html', 'add_tags_mebers', '#f7f7f7',{
-							yuids:app.yuids
-						})
+						document.querySelector('.tag-name-input').blur();
+						setTimeout(function() {
+							openPage('add_tags_mebers.html', 'add_tags_mebers', '#f7f7f7', {
+								yuids: app.yuids
+							})
+						}, 100);
 					});
-					
+
 					window.addEventListener('acceptIdGroup', function(event) {
 						// logs(event.detail.lists);
-						app.yuids=event.detail.idGroup;
-						app.lists=event.detail.lists;
+						app.yuids = event.detail.idGroup;
+						app.lists = event.detail.lists;
 					})
 				}
 			})
