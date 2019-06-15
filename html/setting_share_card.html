@@ -17,7 +17,7 @@
 				display: none;
 			}
 
-			.mui-bar-tab~.mui-content {
+			.mui-bar-nav~.mui-content {
 				min-height: 100vh;
 				padding-bottom: 100px;
 			}
@@ -174,7 +174,8 @@
 			}
 
 			.theme-body1 .bottom-logo {
-				margin-top: 0.1rem;
+				position: absolute;
+				bottom: 0.3rem;
 				width: 75px;
 			}
 
@@ -649,9 +650,12 @@
 							});
 						}
 						window.addEventListener('cropperSuccess', function(event) {
-							message(app.imgtyp);
+							console.log(app.imgtyp);
+							console.log(event.detail.image);
+							console.log(app.resultData['background_image_' + app.imgtyp + '_url']);
 							plus.nativeUI.showWaiting("图片加载中…");
 							app.resultData['background_image_' + app.imgtyp + '_url'] = event.detail.image;
+							console.log(app.resultData['background_image_' + app.imgtyp + '_url']);
 							app['uperimg' + app.imgtyp] = event.detail.filename;
 							setTimeout(function() {
 								plus.nativeUI.closeWaiting();
@@ -684,10 +688,10 @@
 							logs(res);
 							var data = res.data;
 							if (res.errno == 0) {
-								app.card_type = res.data.card_type;
 								app.resultData = res.data;
+								app.card_type = res.data.card_type==0?1:res.data.card_type;
 								app.uperimg1 = data.background_image_1 || app.uperimg1;
-								app.uperimg2 = data.background_image_2 || app.uperimg1;
+								app.uperimg2 = data.background_image_2 || app.uperimg2;
 								app.uperimg3 = data.background_image_3 || app.uperimg3;
 								app.uperimg4 = data.background_image_4 || app.uperimg4;
 								// 个性签名

@@ -1,0 +1,318 @@
+doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>二维码名片</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			html,body{
+				height: 100%;
+				width: 100%;
+			}
+			.mui-content {
+				/* height: 100vh; */
+				height: 100%;
+				background-color: #2889FF;
+			}
+
+			.qr-code-body {
+				width: 6rem;
+				height: 7.4rem;
+				position: relative;
+				border-radius: 0.1rem;
+				margin: 1rem auto;
+				background: #ffffff url("../image/scana-qr-bottom-bg.png")center bottom no-repeat;
+				background-size: contain;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.qr-code-body h2 {
+				font-size: 0.28rem;
+				color: #323333;
+				font-weight: normal;
+				margin-bottom: 0.1rem;
+			}
+
+			.qr-code-body p {
+				margin: 0;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+
+			.qr-code-body .qr-img {
+				width: 4.2rem;
+				height: 4.2rem;
+				margin: 0.3rem auto 0.3rem;
+				align-self: center;
+			}
+
+			.qr-code-body .logo-img {
+				width: 1.24rem;
+				height: auto;
+				align-self: center;
+			}
+
+			.linellae {
+				width: 100%;
+				overflow: hidden;
+				text-align: justify;
+				display: flex;
+				align-items: center;
+			}
+
+			.team-qr-code {
+				position: relative;
+			}
+
+			.line {
+				margin-top: 0.38rem;
+				border-top: 1px dashed #999999;
+				transform: translateY(0.5);
+				-webkit-transform: translateY(0.5);
+				width: 100%;
+				height: 0;
+			}
+
+			.left-semicircle,
+			.right-semicircle {
+				width: 0.15rem;
+				height: 0.3rem;
+				background-color: #2289FF;
+				border-radius: 0 0.3rem 0.3rem 0;
+				position: absolute;
+				top: 1.4rem;
+			}
+
+			.right-semicircle {
+				border-radius: 0.3rem 0 0 0.3rem;
+				right: 0.75rem;
+				z-index: 3;
+			}
+
+			.left-semicircle {
+				left: 0.74rem;
+				z-index: 3;
+			}
+
+			.operation-section {
+				width: 100%;
+				padding: 0 0.53rem;
+				display: flex;
+			}
+
+			.operation-section .mui-btn,
+			.operation-section .mui-btn:active {
+				flex-grow: 1;
+				margin: 0 0.2rem;
+				height: 0.79rem;
+				border-radius: 0.1rem;
+				color: #333333;
+				background-color: #FFFFFF;
+				outline: none;
+				border: none;
+			}
+
+			.operation-section .mui-btn-outlined,
+			.operation-section .mui-btn-outlined:active {
+				color: #ffffff;
+				background-color: rgba(255, 255, 255, 0);
+				border: 1px solid #ffffff;
+			}
+
+			.qrcode-section {
+				display: flex;
+				align-items: center;
+				padding-left: 0.2rem;
+				margin-top: 0.3rem;
+			}
+
+			.user-head-img {
+				width: 0.8rem;
+				height: 0.8rem;
+				border-radius: 0.1rem;
+				margin-right: 0.1rem;
+				/* border: 1px solid #eeeeee; */
+				box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.3);
+				-webkit-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.3);
+			}
+
+			.setting-card {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #333333;
+				/* background-color: #007AFF; */
+				margin-right: -5px;
+			}
+		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">二维码名片</h1>
+			<div class="mui-pull-right setting-card">
+				<span>设置名片</span>
+			</div>
+		</header>
+		<div class="mui-content">
+			<div class="team-qr-code">
+				<div class="left-semicircle"></div>
+				<div class="right-semicircle"></div>
+				<div id="code-body" class="qr-code-body">
+					<div class="qrcode-section">
+						<img id="user-head-img" class="user-head-img" src="../image/user_default.jpg">
+						<div>
+							<h2 id="user-name">旺客</h2>
+							<p id="type_desc">扫二维码加我好友</p>
+						</div>
+					</div>
+					<div class="line"></div>
+					<!-- <div class="linellae">
+						<div class="left-semicircle"></div>
+						<div class="line"></div>
+						<div class="right-semicircle"></div>
+					</div> -->
+					<img id="qr-img" class="qr-img" src="../image/QR.png">
+					<img class="logo-img" src="../image/wangkelogo.png">
+				</div>
+				<div class="operation-section">
+					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
+					<button type="button" id="shareImg" class="mui-btn">分享二维码</button>
+				</div>
+			</div>
+			<img src="" id="#down1">
+		</div>
+	</body>
+	<script src="../js/mui.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/Zepto.min.js"></script>
+	<script src="../js/canvas2image.js"></script>
+	<script src="../js/html2canvas.min.js"></script>
+	<script type="text/javascript">
+		mui.init({
+			swipeBack: true,
+			beforeback: function() {
+				setStatusBar('#2289ff', 'light');
+			}
+		});
+
+		var imgPath = "";
+		var numbers = Date.parse(new Date());
+		var userInfo = getUserInfo();
+		mui.plusReady(function() {
+			document.getElementById('user-head-img').setAttribute('src', userInfo.avatarUrl);
+			document.getElementById('user-name').innerText = userInfo.nickName;
+			getQrcodePic();
+
+			document.getElementById('saveImage').addEventListener('tap', function() {
+				generateImg('图片保存成功！');
+			})
+			
+			// 设置名片样式
+			mui(".mui-bar").on('tap','.setting-card',function(){
+				openPage('setting_share_card.html','setting_share_card','#f7f7f7','');
+			})
+			// 分享
+			document.getElementById('shareImg').addEventListener('tap', function() {
+				generateImg(false);
+				// message(imgPath);
+				plus.share.getServices(function(list) {
+					for (var i = 0; i < list.length; i++) {
+						if (list[i].authenticated) {
+							shares = list[i];
+						}
+					}
+					if (shares != undefined) {
+						var msg = {
+							type: 'image',
+							pictures: [imgPath], //这里的pictures是要分享的图片 该图片放在项目根目录下
+							extra: {
+								scene: "WXSceneSession"
+							}
+						};
+						shares.send(msg, function(success) {
+							message("分享成功!");
+						}, function(error) {
+							console.log(JSON.stringify(error))
+						});
+					}
+				}, function(e) {
+					alert("获取分享服务列表失败：" + e.message);
+				});
+			})
+		})
+
+		//获取二维码图片
+		function getQrcodePic() {
+			plus.nativeUI.showWaiting('', {
+				width: 60,
+				height: 60,
+				background: 'rgba(0, 0, 0, 0.9)'
+			});
+			mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					var type = res.data.type;
+					var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+					document.getElementById('qr-img').setAttribute('src', url);
+					if (type == 'redpacket') {
+						document.getElementById('type_desc').innerText = '扫二维码领红包';
+					} else if (type == 'card') {
+						document.getElementById('type_desc').innerText = '扫二维码加我好友';
+					} else if (type == 'link') {
+						document.getElementById('type_desc').innerText = '扫二维码了解更多精彩';
+					} else if (type == 'pic') {
+						document.getElementById('type_desc').innerText = '扫二维码看美图';
+					}
+				} else {
+					message(res.message);
+					setTimeout(function() {
+						mui.back();
+					}, 2000)
+				}
+				setTimeout(function() {
+					plus.nativeUI.closeWaiting();
+				}, 1000)
+			}, 'json');
+		}
+		// 生成二维码图片
+		function generateImg(tips) {
+			plus.nativeUI.showWaiting();
+			html2canvas(document.getElementById("code-body"), {
+				useCORS: true
+			}).then(function(canvas) {
+				var imgUrl = canvas.toDataURL("image/jpeg", 1);
+				baseImgFile(numbers + 'codeImg', imgUrl, 100, function(i) {
+					if (tips) {
+						message(tips);
+					}
+					imgPath = i.target;
+					plus.nativeUI.closeWaiting();
+				})
+			});
+		}
+	</script>
+</html>
