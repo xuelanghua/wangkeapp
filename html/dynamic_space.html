@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<link rel="stylesheet" href="../css/dynamic.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<div id="mui-content" class="mui-content" v-cloak>
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide" v-for="(banner,index) in slider" :key="index">
+						<img :src="banner.image">
+					</div>
+				</div>
+				<div class="swiper-pagination"></div>
+			</div>
+			<div style="height: 1200px;" id="dynamic-container">
+				<div class="user-part1">
+					<div class="user-head-cont" @tap="dynamicSpace('113')">
+						<div class="user-head-img">
+							<img class="head-img" src="../image/discover/MUJ11mx.jpg">
+						</div>
+						<img class="rank" src="../image/discover/rank_icon_03.png">
+					</div>
+					<div class="user-info">
+						<div class="user-info-top">
+							<div class="user-name mui-ellipsis">张飞飞</div><span class="vip">vip</span>
+						</div>
+						<p class="signature mui-ellipsis">个性签名，个性签名，个性签名，个性签名个性签名个性签名。</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					slider: [{
+						type: 'article',
+						id: '2',
+						image: "../image/share/bg-img02.jpg"
+					}, {
+						type: 'goods',
+						id: '36',
+						image: "../image/share/bg-img03.jpg"
+					}, {
+						type: 'goods',
+						id: '69',
+						image: "../image/bj.jpg"
+					}],
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							plus.navigator.setStatusBarStyle("dark");
+						}
+					})
+					initSlider();
+					mui.plusReady(function() {
+						var ws = plus.webview.currentWebview();
+						ws.setStyle({
+							scrollIndicator: 'none',
+							"titleNView": {
+								backgroundColor: '#FFFFFF', //导航栏背景色
+								titleText: '',
+								titleColor: '#000000', //文字颜色
+								type: 'transparent', //透明渐变样式
+								autoBackButton: true
+							}
+						})
+						// 滚动的时候动态修改状态栏颜色
+						var conts = document.getElementById("dynamic-container");
+						window.addEventListener('scroll', function() {
+							if (conts.getBoundingClientRect().top < 280) {
+								plus.navigator.setStatusBarStyle("dark");
+							} else {
+								plus.navigator.setStatusBarStyle("light");
+							}
+						});
+					})
+				}
+			})
+			function initSlider() {
+				// 初始化轮播
+				var mySwiper = new Swiper('.swiper-container', {
+					//可选选项，自动滑动
+					autoplay: {
+						delay: 3000,
+						// 用户操作之后不会停止轮播
+						disableOnInteraction: false,
+					},
+					loop: true,
+					// 分页器
+					pagination: {
+						el: '.swiper-pagination',
+					},
+				})
+			}
+		</script>
+	</body>
+
+</html>

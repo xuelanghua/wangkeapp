@@ -3,20 +3,25 @@
 	padding: 0 0.2rem;
 	box-sizing: border-box;
 }
+.discover-body{
+	background-color: #ffffff;
+}
 .user-head-cont{
 	width: 2.14rem;
-	height: 2.14rem;
+	height: 2.44rem;
 	position: relative;
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;
-	margin-top: -1.2rem;
 	flex-shrink: 0;
+	overflow: hidden;
 	// background-color: aliceblue;
-	z-index: 3;
+	padding-bottom: 0.12rem;
+	z-index: 6;
+	margin-top: -0.93rem;
 	.user-head-img{
-		width: 1.6rem;
-		height: 1.6rem;
+		width: 1.7rem;
+		height: 1.7rem;
 		overflow: hidden;
 		border-radius: 50%;
 		img{
@@ -30,5 +35,400 @@
 		position: absolute;
 		top: 0;
 		left: 0;
+		bottom: 0;
+		z-index: 3;
 	}
+}
+.user-info{
+	max-width: 5rem;
+	overflow: hidden;
+	padding-top: 0.3rem;
+	.user-info-top{
+		font-size: 0.35rem;
+		color: #333333;
+		margin-bottom: 0.2rem;
+		display: flex;
+		align-items: center;
+		.user-name{
+			display: inline-block;
+			max-width: 3.6rem;
+		}
+		// 用户等级
+		 .vip,
+		 .vip1,
+		 .vip2,
+		 .vip3{
+			padding: 0 0.16rem;
+			height: 0.3rem;
+			overflow: hidden;
+			display: inline-flex;
+			line-height: 0.3rem;
+			font-size: 0.2rem;
+			color: #FFFFFF;
+			margin-left: 0.2rem;
+			border-bottom-left-radius: 0.2rem;
+			border-top-right-radius: 0.2rem;
+			background: linear-gradient(to right, #B7C4DC , #8A9BB9);
+		}
+		 .vip1{
+			background: linear-gradient(to right, #F3E3B9 , #E9CB7D);
+		}
+		 .vip2{
+			background: linear-gradient(to right, #f4dec6 , #e3a472);
+		}
+		 .vip3,.vip4,.vip5{
+			background: linear-gradient(to right, #f4dec6 , #e3a472);
+		}
+	}
+	p{
+		margin: 0;
+		font-size: 0.26rem;
+		color: #999999;
+	}
+}
+.screen-menu{
+	padding: 0.3rem 0.1rem 0.3rem;
+	margin: 0;
+	display: flex;
+	list-style: none;
+	position: relative;
+	// background-color: #E9CB7D;
+	transition: all 0.25s ease-in-out;
+	-webkit-transition: all 0.25s ease-in-out;
+	&.fixed{
+		position: fixed;
+		z-index: 10;
+		width: 100%;
+		padding:0.2rem 0.1rem;
+		background-color: #ffffff;
+	}
+	&::after{
+		content: '';
+		position:absolute;
+		display: block;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 1px;
+		background-color: #DDDDDD;
+		transform: scaleY(0.5);
+		-webkit-transform: scaleY(0.5);
+	}
+	li{
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		flex-grow: 1;
+		font-size: 0.24rem;
+		height: 0.5rem;
+		background-color: #F2F2F2;
+		border-radius: 0.3rem;
+		margin: 0 0.1rem;
+		color: #333333;
+		box-sizing: border-box;
+	}
+	li.active{
+		background-color: #D7EAFF;
+		color: #2289FF;
+		position: relative;
+		overflow: visible;
+		box-sizing: border-box;
+	}
+	li.active::after{
+		content: '';
+		display: block;
+		position: absolute;
+		width: 200%;
+		height: 200%;
+		border: 1px solid #2289FF;
+		left: 0;
+		top:0;
+		border-radius: 0.6rem;
+		transform-origin: 0 0;
+		-webkit-transform-origin: 0 0;
+		transform: scale(0.5,0.5);
+		-webkit-transform: scale(0.5,0.5);
+		box-sizing: border-box;
+	}
+}
+// 列表部分
+.discover-list-container{
+	box-sizing: border-box;
+	padding-bottom: 0.5rem;
+	ul{
+		margin: 0;
+		padding: 0;
+	}
+	.mui-table-view-cell{
+		padding: 0.4rem 0.2rem;
+		&.mui-active{
+			background-color: #f9f9f9;
+		}
+		&::after{
+			background-color: #DDDDDD;
+			transform: scaleY(0.2);
+			-webkit-transform: scaleY(0.2);
+		}
+	}
+	// 自己发布的动态
+	.my-dynamic-list{
+		position: relative;
+		.user-head-image{
+			width: 0.46rem;
+			height: 0.46rem;
+			border-radius: 50%;
+			margin-right: 0.15rem;
+		}
+		.user-names{
+			margin-right: 0.15rem;
+		}
+		.user-names,.cretae-timer,.click-heart{
+			font-size: 0.26rem;
+			color: #333333;
+			display: inline-block;
+			max-width: 3rem;
+		}
+		.cretae-timer{
+			color: #999999;
+		}
+		.dynamic-list-head{
+			margin-bottom: 0.2rem;
+		}
+		.dynamic-list-head,.dynamic-list-left{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.click-heart{
+			display: inline-flex;
+			align-items: center;
+			.heart-icon{
+				display: inline-flex;
+				width: 0.37rem;
+				height: 0.3rem;
+				background: url("../image/icon/friends_detail-icon-01.png")center  center no-repeat;
+				background-size: contain;
+				margin-right: 5px;
+			}
+		}
+		.click-heart{
+			.heart-icon.heartBeat{
+				display: inline-flex;
+				width: 0.37rem;
+				height: 0.3rem;
+				background: url("../image/icon/friends_detail-icon-02.png")center  center no-repeat;
+				background-size: contain;
+				margin-right: 5px;
+			}
+		}
+		.illustrating-picture{
+			margin: 0;
+			padding: 0;
+			li{
+				display: inline-flex;
+				width: 2.3rem;
+				height: 1.65rem;
+				overflow: hidden;
+				margin-top: 0.26rem;
+				background-color: #2289FF;
+			}
+			img{
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+		.dynamic-desc{
+			text-align: justify;
+			line-height: 1.4;
+			font-size: 0.28rem;
+			color: #040404;
+		}
+		.delete-list{
+			font-size: 0.28rem;
+			color: #2289FF;
+			margin-left: 0.3rem;
+		}
+	}
+	// 官方文章
+	.official-article{
+		display: flex;
+		.article-img{
+			width: 2.27rem;
+			height: 1.61rem;
+			overflow: hidden;
+			flex-shrink: 0;
+			margin-right: 0.24rem;
+			img{
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+		.article-right{
+			width: 4.63rem;
+			p{
+				text-align: justify;
+				color: #084C9A;
+				font-size: 0.28rem;
+				
+			}
+		}
+		.stick-sign{
+			margin: 0.1rem 0;
+			display: flex;
+			align-items: center;
+			img{
+				width: 0.5rem;
+				height: auto;	
+			}
+		}
+		.official-article-status{
+			font-size: 0.24rem;
+			color: #999999;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			img{
+				height: 0.31rem;
+			}
+			span{
+				img{
+					height: 0.22rem;
+					width: auto;
+					margin: 0 5px 0 10px;
+				}
+			}
+		}
+	}
+	// 产品列表
+	.goods-list{
+		display: flex;
+		.goods-img{
+			width: 2.27rem;
+			height: 2.27rem;
+			overflow: hidden;
+			flex-shrink: 0;
+			margin-right: 0.24rem;
+			 img{
+				 width: 100%;
+				 height: 100%;
+				 object-fit: cover;
+			 }
+		}
+		.goods-list-right{
+			width: 4.63rem;
+			p{
+				text-align: justify;
+				color: #333333;
+				font-size: 0.28rem;
+			}
+			p.stick-sign{
+				color: #084C9A;
+			}
+		}
+		.goods-nature{
+			display: flex;
+			justify-content: space-between;
+			font-size: 0.24rem;
+			color: #999999;
+			padding: 0.6rem 0 0.1rem;
+		}
+		.goods-earnings {
+			display: flex;
+			justify-content: space-between;
+			span{
+				font-size: 0.24rem;
+				color: #F01B14;
+			}
+			img{
+				height: 0.31rem;
+			}
+		}
+	}
+	.team-name{
+		position: relative;
+		font-size: 0.24rem;
+		color: #333333;
+		display: inline-flex;
+		padding: 3px;
+		line-height: 1;
+		max-width: 1.6rem;
+		overflow: visible;
+		align-items: center;
+		&::after{
+			content: '';
+			display: block;
+			position: absolute;
+			width: 200%;
+			height: 200%;
+			border: 1px solid #333333;
+			left: 0;
+			top:0;
+			border-radius: 0.1rem;
+			transform-origin: 0 0;
+			-webkit-transform-origin: 0 0;
+			transform: scale(0.5,0.5);
+			-webkit-transform: scale(0.5,0.5);
+			box-sizing: border-box;
+		}
+		img.team-icon{
+			width: 0.25rem;	
+			height: auto;
+			margin-right: 2px;
+			flex-shrink: 0;
+		}
+		span.mui-ellipsis{
+			color: #333333;
+			margin-right: -2px;
+		}
+	}
+	// 课程列表
+	.curriculum-list{
+		display: flex;
+		p{
+			color: #333333;
+		}
+		.curriculum-img{
+			width: 2.27rem;
+			height: 1.61rem;
+			overflow: hidden;
+			flex-shrink: 0;
+			margin-right: 0.24rem;
+			 img{
+				 width: 100%;
+				 height: 100%;
+				 object-fit: cover;
+			 }
+		}
+		.status-cont{
+			padding-top: 0.1rem;
+		}
+		.cretae-timer{
+			font-size: 0.24rem;
+			color: #999999;
+			display: inline-block;
+			max-width: 3rem;
+		}
+		.train-ing,.ting-ke{
+			font-size: 0.24rem;
+			color: #999999;
+		}
+		.train-ing{
+			display: inline-flex;
+			align-items: center;
+			color: #2289FF;
+		}
+	}
+}
+// 三行
+.mui-ellipsis-3 {
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal!important;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }

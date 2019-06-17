@@ -8,6 +8,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
 		<link rel="stylesheet" href="../css/swiper.min.css">
 		<link rel="stylesheet" href="../css/discover.css">
 		<style type="text/css">
@@ -16,7 +17,7 @@
 			}
 
 			.swiper-container {
-				min-height: 300px;
+				min-height: 5.63rem;
 			}
 
 			.swiper-slide {
@@ -24,7 +25,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				height: 300px;
+				height: 5.63rem;
 				width: 100%;
 				background-color: #FFFFFF;
 			}
@@ -58,7 +59,7 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			 
+
 			// 初始化字体大小结束
 		</script>
 	</head>
@@ -73,22 +74,127 @@
 				</div>
 				<div class="swiper-pagination"></div>
 			</div>
-			<div id="discover-container">
+			<div class="discover-body">
 				<div class="user-part1">
-					<div class="user-head-cont">
+					<div class="user-head-cont" @tap="dynamicSpace('113')">
 						<div class="user-head-img">
-							<img class="head-img" src="../image/discover/MUJ11mx.jpg" >
+							<img class="head-img" src="../image/discover/MUJ11mx.jpg">
 						</div>
-						<img class="rank" src="../image/discover/rank_icon_03.png" alt="">
+						<img class="rank" src="../image/discover/rank_icon_03.png">
 					</div>
 					<div class="user-info">
-						<div class="user-info-top">张飞飞</div>
+						<div class="user-info-top">
+							<div class="user-name mui-ellipsis">张飞飞</div><span class="vip">vip</span>
+						</div>
 						<p class="signature mui-ellipsis">个性签名，个性签名，个性签名，个性签名个性签名个性签名。</p>
 					</div>
 				</div>
-				<div style="height: 1200px;display: flex;overflow: hidden; padding:20px 20px 0;box-sizing: border-box;">
-					Expedita est ipsa dicta ad consectetur sequi eos odit placeat ut voluptatibus. Expedita recusandae inventore
-					accusamus sit iure earum dolorem numquam ut voluptas quis excepturi alias voluptatum.
+				<div id="zhanwei" style="width: 100%;height:58px;position: relative;display: none;">
+					<!-- 占位 -->
+				</div>
+				<ul id="screen-menu" class="screen-menu">
+					<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)"><span>{{menu.title}}</span></li>
+				</ul>
+				<div id="discover-container" class="discover-list-container">
+					<ul>
+						<!-- 自己发布的动态 -->
+						<li v-for="(i,m) in 4" class="mui-table-view-cell my-dynamic-list">
+							<div class="dynamic-list-head">
+								<div class="dynamic-list-left">
+									<img class="user-head-image" src="../image/kaol.jpg" @tap="openDynamically('569')">
+									<span class="user-names mui-ellipsis" @tap="openDynamically('569')">刘备备</span>
+									<span class="cretae-timer" @tap="openDynamically('569')">2019-06-25</span>
+									<!-- 如果是自己的动态则显示删除 -->
+									<span v-if="m==1" class="delete-list" @tap="detele('333')">删除</span>
+								</div>
+								<div class="mui-pull-right click-heart" @tap="likeThis('123')">
+									<i class="heart-icon animated" :class="like==true?'heartBeat':'tada'"></i>
+									<span>20</span>
+								</div>
+							</div>
+							<!-- 带图片的两行 -->
+							<!-- 没图片的三行 mui-ellipsis-3-->
+							<p class=" dynamic-desc" :class="m<3?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail('123')">
+								哈哈哈-我是卖报的小行家，天不怕地不怕,我是卖报报的小行，小行家在马路边推到1毛钱，把它缴给警察蜀黍手里边，把它缴给警察蜀黍手里边，把它缴给警察蜀黍手里边，把它缴给警察蜀黍手里边
+							</p>
+							<ul class="illustrating-picture" @tap="dynamicDetail('123')">
+								<li v-if="m<3">
+									<img class="illustrating" src="../image/5E0eH.png" alt="">
+								</li>
+								<li v-if="m<2">
+									<img class="illustrating" src="../image/bj.jpg" alt="">
+								</li>
+								<li v-if="m<1">
+									<img class="illustrating" src="../image/share/bg-img03.jpg" alt="">
+								</li>
+							</ul>
+						</li>
+						<!-- 官方文章 -->
+						<li class="mui-table-view-cell official-article" @tap="articleDetail('333')">
+							<div class="article-img">
+								<img src="../image/5E0eH.png">
+							</div>
+							<div class="article-right">
+								<p class="mui-ellipsis-2">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
+								<div class="stick-sign">
+									<img src="../image/discover/stick-sign.png">
+								</div>
+								<div class="official-article-status">
+									<span>2019-06-17</span>
+									<span><img src="../image/eye.png">300</span>
+									<img src="../image/discover/official-sign.png">
+								</div>
+							</div>
+						</li>
+						<!-- 产品列表 -->
+						<li class="mui-table-view-cell goods-list">
+							<div class="goods-img" @tap="goodsDetail('369')">
+								<img src="../image/5E0eH.png">
+							</div>
+							<div class="goods-list-right">
+								<!-- 官方加stick-sign -->
+								<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail('369')">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
+								<div class="goods-nature" @tap="goodsDetail('369')">
+									<span>供货价：￥250.00</span>
+									<span>销量： 520件</span>
+								</div>
+								<div class="goods-earnings" @tap="teamDetail('369')">
+									<span>利润：￥50</span>
+									<!-- 团队 -->
+									<!-- <div class="team-name">
+										<img class="team-icon" src="../image/discover/team-icon.png">
+										<span class="mui-ellipsis">房东的猫猫猫猫猫</span>
+									</div> -->
+									<!-- <div class="team-name mui-ellipsis">房东的,猫猫猫猫猫猫猫猫猫猫猫猫猫猫猫</div> -->
+									<!-- 官方 -->
+									<img src="../image/discover/official-sign.png">
+								</div>
+							</div>
+						</li>
+						<!-- 课程列表列表 -->
+						<li class="mui-table-view-cell curriculum-list">
+							<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
+							<div class="curriculum-img" @tap="curriculumDetail('233332')">
+								<img src="../image/5E0eH.png">
+							</div>
+							<div class="curriculum-list-right">
+								<!-- 官方加stick-sign -->
+								<p class="mui-ellipsis-2" @tap="curriculumDetail('233332')">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
+								<div class="status-cont mui-clearfix">
+									<div class="mui-pull-left">
+										<span class="train-ing"><img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</span>
+										<!-- <span class="ting-ke">125人已听课</span> -->
+									</div>
+									<div class="team-name mui-pull-right" @tap="teamDetail('369')">
+										<img class="team-icon" src="../image/discover/team-icon.png">
+										<span class="mui-ellipsis">房东的猫猫猫猫猫</span>
+									</div>
+								</div>
+								<div class="cretae-timer">20人在听课</div>
+								<!-- <div class="cretae-timer">2018-05-18  20:50</div> -->
+							</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -97,8 +203,7 @@
 		<script src="../js/swiper.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo=getUserInfo();
-			logs(userInfo);
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -114,10 +219,83 @@
 						type: 'goods',
 						id: '69',
 						image: "../image/bj.jpg"
-					}, ]
+					}],
+					screen: [{
+						title: '旺客总仓',
+						id: '1',
+						selected: false
+					}, {
+						title: '企业总仓',
+						id: '2',
+						selected: false
+					}, {
+						title: '旺客头条',
+						id: '3',
+						selected: false
+					}, {
+						title: '团队课程',
+						id: '4',
+						selected: false
+					}, {
+						title: '好友动态',
+						id: '5',
+						selected: false
+					}],
+					selectedId: [],
+					like: false
 				},
 				methods: {
-
+					// 选择标签
+					selectedTj: function(id, idx) {
+						this.screen[idx].selected = !this.screen[idx].selected;
+						var index = app.selectedId.indexOf(id);
+						//使用splice函数进行移除：
+						if (index > -1) {
+							app.selectedId.splice(index, 1);
+						} else {
+							app.selectedId.push(id);
+						}
+						// console.log(app.selectedId);
+					},
+					// 跳转好友动态
+					openDynamically: function(id) {
+						mui.toast("好友动态" + id);
+					},
+					// 点赞
+					likeThis: function(id) {
+						mui.toast("点赞" + id);
+						this.like = !this.like;
+					},
+					// 我发布的动态详情
+					dynamicDetail: function(id) {
+						mui.toast("打开动态" + id);
+					},
+					// 删除自己发的动态
+					detele: function(id) {
+						mui.toast("删除动态" + id);
+					},
+					//打开动态页面
+					dynamicSpace:function(id){
+						mui.openWindow('dynamic_space.html','dynamic_space',{
+							id:id
+						})
+					},
+					// 打开文章
+					articleDetail: function(id) {
+						mui.toast("打开文章" + id);
+					},
+					// 打开产品详情
+					goodsDetail: function(id) {
+						mui.toast("打开产品详情" + id);
+					},
+					// 打开团队详情
+					teamDetail: function(id) {
+						mui.toast("打开团队详情" + id);
+					},
+					//打开课程详情
+					curriculumDetail: function(id) {
+						mui.toast("打开课程详情" + id);
+					}
 				},
 				mounted: function() {
 					mui.init();
@@ -126,24 +304,37 @@
 					mui.plusReady(function() {
 						var ws = plus.webview.currentWebview();
 						ws.setStyle({
-							scrollIndicator:'none',
+							scrollIndicator: 'none',
 							"titleNView": {
-								backgroundColor: '#ededed', //导航栏背景色
+								backgroundColor: '#FFFFFF', //导航栏背景色
+								titleText: '发现~身边的商业机会',
 								titleColor: '#000000', //文字颜色
 								type: 'transparent', //透明渐变样式
 								buttons: [{
-									fontSrc:'../fonts/iconfont.ttf',
-									text: '\ue60e',
+									fontSrc: '../fonts/iconfont.ttf',
+									text: '\ue60b',
 									float: 'right',
+									width: '60px',
 									onclick: "javascript:plus.webview.currentWebview().evalJS('shareHref();')"
 								}]
 							}
 						})
-
 						// 滚动的时候动态修改状态栏颜色
+						var statusbarHeight = plus.navigator.getStatusbarHeight();
+						var menuBar = document.getElementById('screen-menu');
 						var conts = document.getElementById("discover-container");
+						var distance = statusbarHeight + 100;
 						window.addEventListener('scroll', function() {
-							if (conts.getBoundingClientRect().top <= 280) {
+							if (conts.getBoundingClientRect().top < distance) {
+								document.getElementById("zhanwei").style.display = "block";
+								menuBar.classList.add("fixed");
+								menuBar.style.top = 44 + statusbarHeight + 'px';
+							} else {
+								menuBar.style.top = '0';
+								document.getElementById("zhanwei").style.display = "none";
+								menuBar.classList.remove("fixed");
+							}
+							if (conts.getBoundingClientRect().top < 280) {
 								plus.navigator.setStatusBarStyle("dark");
 							} else {
 								plus.navigator.setStatusBarStyle("light");
@@ -152,6 +343,7 @@
 					})
 				}
 			})
+
 			function initSlider() {
 				// 初始化轮播
 				var mySwiper = new Swiper('.swiper-container', {
@@ -169,8 +361,9 @@
 				})
 			}
 			// 点击自定义图标
-			function shareHref(){
-				message("骚年，你想干嘛？");
+			function shareHref() {
+				openPage('issue_dynamics.html', 'issue_dynamics', '#f7f7f7');
+				plus.navigator.setStatusBarStyle("dark");
 			}
 		</script>
 	</body>
