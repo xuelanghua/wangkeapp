@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../css/swiper.min.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
 		<link rel="stylesheet" href="../css/dynamic.css">
 		<style type="text/css">
 			[v-cloak] {
@@ -25,6 +26,13 @@
 	</head>
 
 	<body>
+		<footer class="footer mui-bar mui-bar-footer">
+			<!-- 评论 -->
+			<div class="comment-container">
+				<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
+				<span class="send-comment">发送</span>
+			</div>
+		</footer>
 		<div id="mui-content" class="mui-content" v-cloak>
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
@@ -34,7 +42,7 @@
 				</div>
 				<div class="swiper-pagination"></div>
 			</div>
-			<div style="height: 1200px;" id="dynamic-container">
+			<div id="dynamic-container" class="dynamic-container">
 				<div class="user-part1">
 					<div class="user-head-cont" @tap="dynamicSpace('113')">
 						<div class="user-head-img">
@@ -49,12 +57,61 @@
 						<p class="signature mui-ellipsis">个性签名，个性签名，个性签名，个性签名个性签名个性签名。</p>
 					</div>
 				</div>
+				<h3 class="year-dom">2019年</h3>
 				<div class="issue-dynamics">
-					<span>发动态</span><div class="camera-cont"><span class="iconfont camera-icon">&#xe60b;</span></div>
+					<span>发动态</span>
+					<div class="camera-cont"><span class="iconfont camera-icon">&#xe60b;</span></div>
 				</div>
-				<ul>
-					<li>单条动态</li>
-				</ul>
+				<!-- 每天的组 -->
+				<div class="everyday-group mui-clearfix" v-for="(u,l) in 3" :key="l">
+					<div class="mui-pull-left issue-time">
+						<span class="day-time">05</span>
+						<span class="month-time">10月</span>
+						<p>23:50</p>
+					</div>
+					<div class="mui-pull-right dynamic-groups">
+						<ul>
+							<li class="dynamic-lists" v-for="(i,o) in 2" :key="o">
+								<div class="dynamic-lists-body">
+									<!-- 箭头 -->
+									<div class="lan-arrow"></div>
+									<ul class="img-groups">
+										<li v-for="(i,m) in 9" class="img-cont"><img src="../image/5E0eH.png"></li>
+									</ul>
+									<p class="mui-ellipsis-2 dynamic-character">旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，</p>
+								</div>
+								<div class="operation-menu">
+									<span v-show="!menuStatus" class="check-detail">查看详情</span>
+									<div class="menu-list" :class="menuStatus?'active':''">
+										<div class="menu-body">
+											<!-- 箭头 -->
+											<div class="menu-arrow"></div>
+											<div class="item"><span class="iconfont icon-delete">&#xe603;</span>删除</div>
+											<div class="item"><span class="iconfont icon-share">&#xe604;</span>分享</div>
+											<div class="item" @tap="likeThis('10')" :class="like==true?'heartBeat':'tada'"><span class="iconfont icon-like">&#xe601;</span>{{likeDesc}}</div>
+											<div class="item" @tap="commentDynamic('10')"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
+										</div>
+										<span v-show="!menuStatus">&nbsp;</span>
+										<div class="comment-icon-cont" @tap="showMenu">
+											<span class="iconfont comment-icon">&#xe504;</span>
+										</div>
+									</div>
+								</div>
+								<div class="dynamic-lists-issue">
+									<!-- 箭头 -->
+									<div class="lan-arrows"></div>
+									<p>
+										<span class="iconfont icon-like">&#xe601;</span>
+										刘备备、王花花、关羽羽、德玛、诺克萨斯、德莱厄斯、璐璐、厄加特、辛吉德、婕拉、弗拉基米尔
+									</p>
+									<p class="comment-inside"><span class="user-name">刘备备：</span>66666，给大</p>
+									<p class="comment-inside"><span class="user-name">璐璐：</span>10分钟抓下，有大,有大,有大,有大,有大,有大,有大,有大,有大,有大,有大</p>
+									<p class="comment-inside"><span class="user-name">弗拉基米尔：</span>闪现迁坟，我给101分</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -62,6 +119,14 @@
 		<script src="../js/swiper.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var nativeWebview, imm, InputMethodManager;
+			var userinfo = getUserInfo();
+			var mask = mui.createMask(function() {
+				app.menuStatus = false;
+				app.isComment = false;
+				mui('.mui-bar-footer')[0].style.display = "none";
+				plus.key.hideSoftKeybord();
+			});
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -78,9 +143,69 @@
 						id: '69',
 						image: "../image/bj.jpg"
 					}],
+					likeDesc: '点赞',
+					menuStatus: false,
+					like: false,
+					isComment: false
 				},
 				methods: {
-
+					// 显示菜单
+					showMenu: function() {
+						// this.menuStatus = !this.menuStatus;
+						if (this.menuStatus) {
+							mask.close();
+							this.menuStatus = false;
+						} else {
+							this.menuStatus = true;
+							mask.show();
+						}
+					},
+					// 点赞
+					likeThis: function() {
+						this.like = !this.like;
+						if (this.like) {
+							this.likeDesc = '取消';
+						} else {
+							this.likeDesc = '点赞';
+						}
+						setTimeout(function() {
+							app.menuStatus = false;
+							mask.close();
+						}, 500)
+					},
+					// 评论
+					commentDynamic: function() {
+						this.menuStatus = false;
+						this.isComment = true;
+						mui('.mui-bar-footer')[0].style.display = "block";
+						this.initNativeObjects();
+						this.showSoftInput();
+					},
+					// 弹出键盘
+					initNativeObjects: function() {
+						if (mui.os.android) {
+							var main = plus.android.runtimeMainActivity();
+							var Context = plus.android.importClass("android.content.Context");
+							InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
+							imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
+						} else {
+							nativeWebview = plus.webview.currentWebview().nativeInstanceObject();
+						}
+					},
+					showSoftInput: function() {
+						if (mui.os.android) {
+							imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+						} else {
+							nativeWebview.plusCallMethod({
+								"setKeyboardDisplayRequiresUserAction": false
+							});
+						}
+						setTimeout(function() {
+							var inputElem = document.getElementById("comment_matter"); //需要获得焦点的input  
+							inputElem.focus();
+							// inputElem.parentNode.classList.add('mui-active'); //第一个是search，加上激活样式  
+						}, 200);
+					}
 				},
 				mounted: function() {
 					mui.init({
@@ -91,6 +216,11 @@
 					initSlider();
 					mui.plusReady(function() {
 						var ws = plus.webview.currentWebview();
+						if (mui.os.ios) {
+							ws.setStyle({
+								softinputMode: "adjustResize"
+							});
+						}
 						ws.setStyle({
 							scrollIndicator: 'none',
 							"titleNView": {
@@ -113,6 +243,7 @@
 					})
 				}
 			})
+
 			function initSlider() {
 				// 初始化轮播
 				var mySwiper = new Swiper('.swiper-container', {
