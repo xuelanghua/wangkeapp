@@ -5,8 +5,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<title></title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<link href="../css/mui.picker.min.css" rel="stylesheet" />
-		<link href="../css/mui.poppicker.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
 		<style>
 			.close-button {
@@ -63,14 +61,27 @@
 				color: #DDDDDD;
 				position: absolute;
 				right:10px;
-				top: 49%;
+				top: 49%; 
 				transform: translateY(-50%);
 				-webkit-transform: translateY(-50%);
 			}
-			.mui-content-padded span{
+			.content-paddeds{
+				padding: 0.2rem;
+				z-index: 16;
+			}
+			.content-paddeds span{
 				color:#2289ff;
 			}
-			.mui-content-padded p{
+			.content-paddeds label{
+				width: auto;
+				display: inline-block;
+				min-width: 0;
+				padding: 0;
+			}
+			.content-paddeds input{
+				margin-top: -2px;
+			}
+			.content-paddeds p{
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -82,6 +93,161 @@
 				left: auto;
 				transform: scale(0.8);
 				-webkit-transform: scale(0.8);
+			}
+			.vip-container .mui-card{
+				padding:0.4rem 0.3rem 0.2rem;
+			}
+			.mui-input-group .mui-input-row:after{
+				display: none;
+			}
+			.mui-input-row.mui-radio.mui-left{
+				margin-bottom: 0.3rem;
+				height: auto;
+				border-radius: 0.1rem;
+				position: relative;
+				overflow: hidden;
+				height: 1.33rem;
+				box-shadow: 0 0 5px 0 rgba(0,0,0,0.2);
+			}
+			.mui-radio.mui-left label{
+				padding: 0;
+				margin: 0;
+				display: flex;
+				height: 100%;
+				border-left: 0.1rem solid #89a1ca;
+				align-items: center;
+				justify-content: space-between;
+				padding-left: 0.88rem;
+				position: relative;
+			}
+			.mui-radio.mui-left .label1{
+				border-color: #89a1ca;
+			}.mui-radio.mui-left .label2{
+				border-color: #e4c246;
+			}
+			.mui-radio.mui-left .label3,
+			.mui-radio.mui-left .label4,
+			.mui-radio.mui-left .label5{
+				border-color: #cf8b47;
+			}
+			.mui-radio.mui-left input[type=radio]{
+				top: 50%;
+				margin-top: -14px;
+				left: 0.1rem;
+			}
+			.mui-radio.mui-left label p{
+				margin: 0;
+			}
+			.mui-radio .uni-right-cont .title,.price{
+				font-size:0.3rem ;
+				color: #333333;
+				margin-bottom: 0.05rem;
+			}
+			.mui-radio .uni-right-cont .price span{
+				color:#999999;
+				font-size:0.24rem;
+			}
+			.mui-radio.mui-left label0{
+				border-left: 0.1rem solid #89a1ca;
+			}
+			.award-conts{
+				position: absolute;
+				right: 0;
+				height: 100%;
+				z-index: 9;
+				top: 0;
+				/* background-color: #0062CC; */
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0;
+			}
+			.award-conts span{
+				font-size: 0.24rem;
+				color: #999999;
+				display: inline-block;
+				padding: 0 0.4rem;
+				position: relative;
+				line-height: 1;
+			}
+			.award-conts .mui-navigate-right:after{
+				right: 5px;
+				color: #999999;
+				font-size: 0.32rem;
+			}
+			.vip-container{
+				padding-bottom: 140px;
+			}
+			.vip-container .mui-card .border-top{
+				border-top: none;
+			}
+			.mui-popover .mui-popover-arrow {
+				display: none;
+			}
+			.mui-popover,.mui-popover.mui-active{
+				width: 6.2rem;
+				height: 8.3rem;
+			}
+			.middlePopover-body{
+				height: 7.12rem;
+				width: 100%;
+				background: #FFFFFF url("../image/model-top-bg.png")center top no-repeat;
+				background-size: contain;
+				border-radius: 0.1rem;
+				position: relative;
+				overflow: hidden;
+				padding-top: 0.63rem;
+			}
+			.middlePopover-body .rank-sign{
+				width: 1.35rem;
+				height: 1.35rem;
+				display: block;
+				margin: 0 auto 0.37rem;
+			}
+			.middlePopover-body h2{
+				text-align: center;
+				font-size: 0.35rem;
+				color: #FFFFFF;
+				margin-bottom: 0.8rem;
+			}
+			.mui-popover.mui-active ul{
+				padding: 0 0.2rem;
+				list-style: none; 
+			}
+			.mui-popover.mui-active ul li{
+				position: relative;
+				display: flex;
+				align-items: center;
+				font-size: 0.28rem;
+				color: #333333;
+				line-height: 1.2;
+				margin-bottom: 0.1rem;
+				text-align: justify;
+			}
+			.mui-popover.mui-active ul li::before{
+				content: '';
+				width: 10px;
+				height: 10px;
+				background-color: #424242;
+				display: inline-flex;
+				border-radius: 50%;
+				margin-right: 0.1rem;
+				flex-shrink: 0;
+			}
+			.mui-popover .close-model{
+				display: block;
+				width: 0.72rem;
+				height: 0.72rem;
+				margin: 0 auto;
+				margin-top: 0.4rem;
+			}
+			#div {
+				width: 0px;
+				height: 0px;
+				background: red;
+				position: fixed;
+				top: 50%;
+				left: 50%;
 			}
 			[v-cloak] {
 				display: none;
@@ -99,10 +265,25 @@
 	</head>
 	<body>
 		<div id="vip-container" class="mui-content vip-container">
+			<div id="div"></div>
 			<div class="close-button">关闭</div>
 			<div class="activation-link">激活码激活</div>
 			<div class="mui-card" id="form" v-cloak>
 				<form class="mui-input-group">
+					<div class="mui-input-row mui-radio mui-left" v-for="(h,i) in group" :key="i">
+						<label :class="'label'+h.id">
+							<input name="radio1" type="radio" :checked="i==0||false">
+							<div class="uni-right-cont">
+								<p class="title">{{h.name}}</p>
+								<p class="price">&yen;{{h.activation_fee}} <span v-if="h.annual_fee!=0">续费：{{h.annual_fee}}</span></p>
+							</div>
+						</label>
+						<div class="award-conts">
+							<span class="mui-navigate-right " @tap="showEquities(h.id)">权益</span>
+						</div>
+					</div>
+				</form>
+				<!-- <form class="mui-input-group">
 					<div v-for="(item, index) in group" :key="index" v-if="item.id < 3" class="radio-list" :class="{active: item.id == 1}"
 					 :data-id="item.id" :data-fee="item.activation_fee">
 						<div class="mui-radio mui-left">
@@ -115,28 +296,11 @@
 							<label>{{ item.rights }}</label>
 							<!-- <label>{{ item.rights }}</label>
 							<label>{{ item.rights }}</label> -->
-							<input name="group" type="radio" value="{{ item.id }}" :checked="item.id == 1">
+				<!--<input name="group" type="radio" value="{{ item.id }}" :checked="item.id == 1">
 						</div>
 					</div>
-					<!-- <div class="radio-list">
-						<div class="mui-radio mui-left">
-							<label>创客</label>
-							<label>推广收益/送50个会员/送9999旺旺</label>
-							<input name="radio1" type="radio">
-						</div>
-						<div class="mui-right">
-							<span>&yen;9999</span>
-							<span>续费69</span>
-						</div>
-					</div> -->
-				</form>
-				<div class="radio-list last agent-apply">
-					<span>代理</span>
-					<span class="apply">立即预约<i class="mui-icon mui-icon mui-icon-arrowright" style="font-size: 16px;font-weight: bold;"></i></span>
-				</div>
+				</form> -->
 				<ul class="mui-table-view border-top">
-					<li class="mui-table-view-cell"><span>应付金额</span><span class="price">&yen;<span id="activation_fee">199</span></span></li>
-					<li class="mui-table-view-cell pay-type"><span>支付方式</span><span style="font-weight: normal;" class="pay-title">微信</span></li>
 					<li class="mui-table-view-cell recommend-person" v-if="recommendId==0">
 						<span>推荐人</span>
 						<input type="number" class="mui-input mui-input-clear" v-model="recommendPhone" name="recommend_phone"
@@ -145,9 +309,14 @@
 					</li>
 				</ul>
 			</div>
-			<div class="mui-content-padded">
+			<div class="content-paddeds" style="background-color: #FFFFFF;position: fixed;bottom: 0;left: 0;right: 0; width: 100%;">
 				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">立即支付</button>
-				<p style="text-align: center;" class="mui-input-row mui-checkbox"><input id="agree" name="checkbox" value="" type="checkbox">开通即视为同意<span id="agreement">《旺客-用户协议》</span></p>
+				<!-- <button type="button" class="mui-btn mui-btn-blue mui-btn-block">立即预约</button> -->
+				<p style="text-align: center;" class="mui-input-row mui-checkbox">
+					<input id="agree" name="checkbox" value="" type="checkbox">
+					<label for="agree">开通即视为同意</label>
+					<span id="agreement">《旺客-用户协议》</span>
+				</p>
 			</div>
 			<!-- 创客弹窗开始 -->
 			<div class="maker-model-container mui-hidden">
@@ -205,6 +374,16 @@
 				</div>
 			</div>
 			<!-- vip弹窗结束 -->
+			<div id="middlePopover" class="mui-popover">
+				<div class="middlePopover-body">
+					<img class="rank-sign" :src="'../image/huiyuanqy'+viptype+'.png'">
+					<h2>{{group[viptype-1].name}}权益</h2>
+					<ul>
+						<li v-for="(k,o) in group[viptype-1].rights" :key="o">{{k}}</li>
+					</ul>
+				</div>
+				<img class="close-model" src="../image/Close.png">
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
@@ -214,25 +393,7 @@
 		<script src="../js/city.data-3.js"></script>
 
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: false,
-			});
-
-
 			var userInfo = getUserInfo();
-			//vue初始化
-			var vm = new Vue({
-				el: "#form",
-				data: {
-					recommendId: 0,
-					recommendPhone: '',
-					group: []
-				},
-				created: function() {
-					getRecommendUser();
-				}
-			});
-
 			var groupId = 0;
 			var activationFee = 0;
 			var groupData = null;
@@ -246,147 +407,312 @@
 			var channel = null; //支付通道
 			var ALIPAYSERVER = $ajaxUrl + 'member&action=activation';
 			var WXPAYSERVER = $ajaxUrl + 'member&action=activation';
-			mui.plusReady(function() {
-				// 获取支付通道  
-				plus.payment.getChannels(function(channels) {
-					for (var i in channels) {
-						if (channels[i].id == "wxpay") {
-							wxChannel = channels[i];
-						} else {
-							aliChannel = channels[i];
+			//vue初始化
+			var vm = new Vue({
+				el: "#vip-container",
+				data: {
+					recommendId: 0,
+					recommendPhone: '',
+					viptype:1,
+					group: [{
+							"id": "1",
+							"uniacid": "6",
+							"name": "VIP",
+							"status": "1",
+							"activation_fee": "199",
+							"annual_fee": "69",
+							"is_check": "0",
+							"rights": [
+								"使用软件",
+								"拥有3个商品展位",
+								"分享收益"
+							],
+							"goods": "5",
+							"wang": "0",
+							"delete": "disable",
+							"recommend_rate_1": "30",
+							"recommend_rate_2": "20",
+							"team_number": "0",
+							"renew_award": "0",
+							"booth_award": "0",
+							"knowledge_award": "0"
+						},
+						{
+							"id": "2",
+							"uniacid": "6",
+							"name": "创客",
+							"status": "1",
+							"activation_fee": "9999",
+							"annual_fee": "69",
+							"is_check": "0",
+							"rights": [
+								"使用软件全部功能",
+								"拥有10个商品展位",
+								"拥有200个VIP名额",
+								"分享收益",
+								"会员续费收益10%",
+								"会员购买商品展位收益10%",
+								"会员知识付费收益10%"
+							],
+							"goods": "10",
+							"wang": "39800",
+							"delete": "disable",
+							"recommend_rate_1": "30",
+							"recommend_rate_2": "20",
+							"team_number": "100",
+							"renew_award": "10",
+							"booth_award": "10",
+							"knowledge_award": "10"
+						},
+						{
+							"id": "3",
+							"uniacid": "6",
+							"name": "服务站",
+							"status": "1",
+							"activation_fee": "50000",
+							"annual_fee": "0",
+							"is_check": "1",
+							"rights": [
+								"使用软件全部功能",
+								"商品展位无限",
+								"拥有20个创客套餐包",
+								"分享收益",
+								"会员续费收益15%",
+								"会员购买商品展位收益15%",
+								"会员知识付费收益15%"
+							],
+							"goods": "9999",
+							"wang": "199980",
+							"delete": "disable",
+							"recommend_rate_1": "30",
+							"recommend_rate_2": "20",
+							"team_number": "500",
+							"renew_award": "15",
+							"booth_award": "15",
+							"knowledge_award": "15"
+						},
+						{
+							"id": "4",
+							"uniacid": "6",
+							"name": "服务中心",
+							"status": "1",
+							"activation_fee": "200000",
+							"annual_fee": "0",
+							"is_check": "1",
+							"rights": [
+								"使用软件全部功能",
+								"商品展位无限",
+								"拥有20个服务站套餐包",
+								"分享收益",
+								"会员续费收益20%",
+								"会员购买商品展位收益20%",
+								"会员知识付费收益20%"
+							],
+							"goods": "9999",
+							"wang": "1000000",
+							"delete": "disable",
+							"recommend_rate_1": "30",
+							"recommend_rate_2": "20",
+							"team_number": "1000",
+							"renew_award": "20",
+							"booth_award": "20",
+							"knowledge_award": "20"
+						},
+						{
+							"id": "5",
+							"uniacid": "6",
+							"name": "分公司",
+							"status": "1",
+							"activation_fee": "500000",
+							"annual_fee": "0",
+							"is_check": "1",
+							"rights": [
+								"使用软件全部功能",
+								"商品展位无限",
+								"拥有20个服务中心套餐包",
+								"分享收益",
+								"会员续费收益25%",
+								"会员购买商品展位收益25%",
+								"会员知识付费收益25%"
+							],
+							"goods": "9999",
+							"wang": "4000000",
+							"delete": "disable",
+							"recommend_rate_1": "30",
+							"recommend_rate_2": "20",
+							"team_number": "2000",
+							"renew_award": "25",
+							"booth_award": "25",
+							"knowledge_award": "25"
 						}
+					]
+				},
+				created: function() {
+					// getRecommendUser();
+				},
+				methods: {
+					showEquities: function(id) {
+						vm.viptype = parseInt(id)-1;
+						// mui.toast(app.vipType);
+						mui('#middlePopover').popover("show", document.getElementById("div"));
 					}
-				}, function(e) {
-					plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
-				});
-
-				eventInit();
-				getGroupInfo();
-			});
-
-			//事件初始化
-			function eventInit() {
-				//关闭页面
-				mui('.mui-content').on('tap', '.close-button', function() {
-					var statusBarStyle = plus.webview.currentWebview().statusBarStyle;
-					setStatusBar('', statusBarStyle);
-					mui.back();
-				})
-				mui('.mui-content').on('tap', '#agreement', function() {
-					openPage('user_agreement.html','user_agreement','#ffffff','');
-				})
-
-				//跳转激活码激活
-				mui('.mui-content').on('tap', '.activation-link', function() {
-					fnOpenWin('activation_code.html', 'activation_code', {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, '', 'slid-in-right');
-					plus.navigator.setStatusBarStyle('dark');
-				})
-
-				//跳转代理申请
-				mui('.mui-content').on('tap', '.agent-apply', function() {
-					fnOpenWin('agent_apply.html', 'agent_apply', {
-						statusbar: {
-							background: '#FFF'
-						}
-					}, {
-						groupData: groupData
-					}, 'slide-in-right');
-					plus.navigator.setStatusBarStyle('dark');
-				})
-
-				//选择会员类型
-				mui('form').on('tap', '.radio-list', function() {
-					mui('.radio-list').each(function() {
-						this.classList.remove('active');
-					})
-					groupId = this.dataset.id;
-					activationFee = this.dataset.fee;
-					document.getElementById('activation_fee').innerText = activationFee;
-					this.classList.add('active');
-				})
-
-				//支付方式选择
-				mui('.mui-content').on('tap', '.pay-type', function() {
-					var picker = new mui.PopPicker({
-						layer: 1
-					});
-					picker.setData([{
-							value: 'wxpay',
-							text: '微信'
-						}
-						/*, {
-							value: 'alipay',
-							text: '支付宝'
-						}, {
-							value: 'unionpay',
-							text: '银联'
-						}*/
-					]);
-					picker.show(function(selectItems) {
-						payType = selectItems[0].value;
-						if (payType == 'wxpay') {
-							mui('.pay-title')[0].innerText = selectItems[0].text;
-						} else {
-							message('暂不支持', 'center');
-						}
-					})
-				})
-
-				//支付
-				mui('.mui-content').on('tap', '.mui-pay', function() {
-				var cheackd=document.getElementById('agree').checked;
-					document.activeElement.blur();
-					if (vm.recommendId == 0) {
-						if (vm.recommendPhone.length == 0) {
-							message('请输入推荐人手机号码!');
-							return;
-						}
-						if (!/1[\d]{10}/.test(vm.recommendPhone)) {
-							message('推荐人手机号码输入有误!');
-							return;
-						}
-					}
-					if (!cheackd) {
-						message('需要同意旺客用户协议');
-						return;
-					}
-					pay(payType);
-				})
-			}
-
-			//获取会员等级信息
-			function getGroupInfo() {
-				plus.nativeUI.showWaiting();
-				mui.post($ajaxUrl + 'member', {
-					action: 'group_info'
-				}, function(res) {
-					var data = res.data;
-					groupData = data;
-					mui.each(data, function(index, item) {
-						if (index < 2) {
-							var rights = item.rights;
-							var temp = '';
-							for (var i in rights) {
-								if (i > 0) {
-									temp += '/' + rights[i];
-								} else {
-									temp += rights[i];
+				},
+				mounted: function() {
+					if (mui.os.ios) {
+						mui.init({
+							swipeBack: true,
+							beforeback: function() {
+								var view = plus.webview.currentWebview().opener();
+								if (view.id == 'activation') {
+									setStatusBar('', 'light');
 								}
 							}
-							item.rights = temp;
+						})
+					} else {
+						mui.init({
+							swipeBack: false,
+							beforeback: function() {
+								var view = plus.webview.currentWebview().opener();
+								if (view.id == 'activation') {
+									setStatusBar('', 'light');
+								}
+							}
+						})
+					}
+					mui.plusReady(function() {
+						var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						window.onresize = function() {
+							//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+							var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+							var paddeds = document.querySelector(".content-paddeds");
+							if (resizeHeight * 1 < originalHeight * 1) {
+								//resizeHeight<originalHeight证明窗口被挤压了
+								paddeds.style.zIndex = '-150';
+								paddeds.style.display = 'none';
+								document.querySelector('.vip-container').style.paddingBottom = "0px";
+							} else {
+								paddeds.style.zIndex = '999';
+								paddeds.style.display = 'block';
+								document.querySelector('.vip-container').style.paddingBottom = "120px";
+							}
 						}
-					})
-					groupId = data[0].id;
-					activationFee = data[0].activation_fee;
-					vm.group = res.data;
-					plus.nativeUI.closeWaiting();
-					document.querySelector('body').classList.remove('mui-hidden');
-				}, 'json');
-			}
+						// 获取支付通道  
+						plus.payment.getChannels(function(channels) {
+							for (var i in channels) {
+								if (channels[i].id == "wxpay") {
+									wxChannel = channels[i];
+								} else {
+									aliChannel = channels[i];
+								}
+							}
+						}, function(e) {
+							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
+						});
+
+						eventInit();
+						getGroupInfo();
+					});
+
+					//事件初始化
+					function eventInit() {
+						//关闭页面
+						mui('.mui-content').on('tap', '.close-button', function() {
+							var statusBarStyle = plus.webview.currentWebview().statusBarStyle;
+							setStatusBar('', statusBarStyle);
+							mui.back();
+						})
+						mui('.mui-content').on('tap', '#agreement', function() {
+							openPage('user_agreement.html', 'user_agreement', '#ffffff', '');
+						})
+
+						//跳转激活码激活
+						mui('.mui-content').on('tap', '.activation-link', function() {
+							fnOpenWin('activation_code.html', 'activation_code', {
+								statusbar: {
+									background: '#F7F7F7'
+								}
+							}, '', 'slid-in-right');
+							plus.navigator.setStatusBarStyle('dark');
+						})
+
+						//跳转代理申请
+						mui('.mui-content').on('tap', '.agent-apply', function() {
+							fnOpenWin('agent_apply.html', 'agent_apply', {
+								statusbar: {
+									background: '#FFF'
+								}
+							}, {
+								groupData: groupData
+							}, 'slide-in-right');
+							plus.navigator.setStatusBarStyle('dark');
+						})
+
+						//选择会员类型
+						mui('form').on('tap', '.radio-list', function() {
+							mui('.radio-list').each(function() {
+								this.classList.remove('active');
+							})
+							groupId = this.dataset.id;
+							activationFee = this.dataset.fee;
+							document.getElementById('activation_fee').innerText = activationFee;
+							this.classList.add('active');
+						})
+
+						//支付方式选择
+						mui('.mui-content').on('tap', '.pay-type', function() {
+							var picker = new mui.PopPicker({
+								layer: 1
+							});
+							picker.setData([{
+									value: 'wxpay',
+									text: '微信'
+								}
+								/*, {
+									value: 'alipay',
+									text: '支付宝'
+								}, {
+									value: 'unionpay',
+									text: '银联'
+								}*/
+							]);
+							picker.show(function(selectItems) {
+								payType = selectItems[0].value;
+								if (payType == 'wxpay') {
+									mui('.pay-title')[0].innerText = selectItems[0].text;
+								} else {
+									message('暂不支持', 'center');
+								}
+							})
+						})
+
+						//支付
+						mui('.mui-content').on('tap', '.mui-pay', function() {
+							var cheackd = document.getElementById('agree').checked;
+							document.activeElement.blur();
+							if (vm.recommendId == 0) {
+								if (vm.recommendPhone.length == 0) {
+									message('请输入推荐人手机号码!');
+									return;
+								}
+								if (!/1[\d]{10}/.test(vm.recommendPhone)) {
+									message('推荐人手机号码输入有误!');
+									return;
+								}
+							}
+							if (!cheackd) {
+								message('需要同意旺客用户协议');
+								return;
+							}
+							pay(payType);
+						})
+					}
+
+				}
+			});
+			
+			mui('#middlePopover').on('tap', '.close-model', function() {
+				mui('#middlePopover').popover("hide", document.getElementById("div"));
+			})
 
 			// 2. 发起支付请求  
 			function pay(id) {
@@ -458,7 +784,6 @@
 					action: 'recommend_id',
 					token: userInfo.token
 				}, function(res) {
-					logs(res);
 					vm.recommendId = res.data;
 				}, 'json');
 			}
@@ -484,6 +809,36 @@
 			// 		});
 			// 	}, false);
 			// })
+			//获取会员等级信息
+			function getGroupInfo() {
+				plus.nativeUI.showWaiting();
+				mui.post($ajaxUrl + 'member', {
+					action: 'group_info'
+				}, function(res) {
+					// logs(res);
+					var data = res.data;
+					// groupData = data;
+					// mui.each(data, function(index, item) {
+					// 	if (index < 2) {
+					// 		var rights = item.rights;
+					// 		var temp = '';
+					// 		for (var i in rights) {
+					// 			if (i > 0) {
+					// 				temp += '/' + rights[i];
+					// 			} else {
+					// 				temp += rights[i];
+					// 			}
+					// 		}
+					// 		item.rights = temp;
+					// 	}
+					// })
+					groupId = data[0].id;
+					activationFee = data[0].activation_fee;
+					vm.group = res.data;
+					plus.nativeUI.closeWaiting();
+					document.querySelector('body').classList.remove('mui-hidden');
+				}, 'json');
+			}
 		</script>
 	</body>
 </html>

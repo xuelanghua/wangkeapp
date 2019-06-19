@@ -19,6 +19,14 @@
 			.menu-list.active {
 				width: 100%;
 			}
+
+			.menu-body .item {
+				min-width: 1.4rem;
+			}
+
+			.menu-body {
+				flex-grow: 0;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -100,14 +108,15 @@
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var tid = 0;
 			var nativeWebview, imm, InputMethodManager;
 			var mask = mui.createMask(function() {
 				muiCont.menuStatus = false;
-				// muiCont.isComment = false;
+				muiCont.isComment = false;
 				mui('.mui-bar-footer')[0].style.display = "none";
-				// plus.key.hideSoftKeybord();
+				plus.key.hideSoftKeybord();
 			});
-			var tid = 0;
 			var muiCont = new Vue({
 				el: '#mui-content',
 				data: {
@@ -258,13 +267,9 @@
 						}
 					]
 				},
-				created: function() {
-					userInfo = getUserInfo();
-				},
 				methods: {
 					// 显示菜单
 					showMenu: function() {
-						// this.menuStatus = !this.menuStatus;
 						if (this.menuStatus) {
 							mask.close();
 							this.menuStatus = false;
@@ -272,7 +277,6 @@
 							this.menuStatus = true;
 							mask.show();
 						}
-						// console.log(this.menuStatus);
 					},
 					// 点赞
 					likeThis: function() {
@@ -302,12 +306,14 @@
 							var Context = plus.android.importClass("android.content.Context");
 							InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
 							imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
-						} else {
-							nativeWebview = plus.webview.currentWebview().nativeInstanceObject();
-						}
+						} 
 					},
-					showSoftInput: function() {
+					showSoftInput:function() {
+						var nativeWebview = plus.webview.currentWebview().nativeInstanceObject();
 						if (mui.os.android) {
+							//强制当前webview获得焦点  
+							plus.android.importClass(nativeWebview);
+							nativeWebview.requestFocus();
 							imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
 						} else {
 							nativeWebview.plusCallMethod({
@@ -315,12 +321,14 @@
 							});
 						}
 						setTimeout(function() {
-							var inputElem = document.getElementById("comment_matter"); //需要获得焦点的input  
+							//此处可写具体逻辑设置获取焦点的input  
+							var inputElem = document.getElementById('comment_matter');
 							inputElem.focus();
 						}, 200);
 					}
 				},
 				mounted: function() {
+					mui.init();
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						if (mui.os.ios) {
@@ -333,15 +341,13 @@
 					});
 				}
 			});
-			// mui.previewImage();
-			mui.init();
 
 			function getDynamicsDetail() {
 				mui.post($ajaxUrl + 'timeline&action=detail', {
 					token: userInfo.token,
 					tid: tid
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						var data = res.data;
 						muiCont.title = data.title;

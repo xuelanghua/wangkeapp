@@ -12,6 +12,31 @@
 			[v-cloak] {
 				display: none;
 			}
+
+			.team-list {
+				position: relative;
+			}
+
+			.sign-tags {
+				position: absolute;
+				right: 0;
+				top: 0;
+				z-index: 9;
+				width: 0.75rem;
+				height: auto;
+			}
+
+			.rank-num {
+				font-size: 0.24rem;
+				color: #333333;
+				display: inline-flex;
+				align-items: center;
+			}
+
+			.rank-sign {
+				width: 0.27rem;
+				margin-right: 5px;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -32,16 +57,23 @@
 
 		<div class="mui-content team-list-container" v-cloak>
 			<div class="my-team" v-if="createFlag">
-				<h2><i></i>我创建的团队</h2>
+				<h2><i></i>数据团队</h2>
 				<ul>
 					<template v-for="(list, index) in createList" :key="index">
-						<li class="team-list" v-if="list.is_captain==1" @tap="teamDetail(list.team_id)">
-							<div class="inside">
+						<li class="team-list" v-if="list.is_captain==1">
+							<img class="sign-tags" src="../image/icon/sign-tags-data-y.png" @tap="teamDetail(list.team_id)">
+							<div class="inside" @tap="groupsChat('12')">
 								<i class="adorn"></i>
-								<div class="team-title">{{list.name}}<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span>
-										{{list.current_number}} 人</span></div>
+								<div class="team-title">
+									{{list.name}}
+									<span class="mui-badge mui-badge-primary">
+										<span class="iconfont icon-friends"></span>
+										{{list.current_number}} 人
+									</span>
+								</div>
 								<div class="time-person">
 									<span class="create-time">创建时间：{{list.create_time}}</span>
+									<span class="create-time">创建人：{{userSelf}}</span>
 								</div>
 							</div>
 						</li>
@@ -51,17 +83,24 @@
 					暂未创建团队
 				</div>
 			</div>
-			<div class="my-join-team" v-if="joinFlag">
-				<h2><i></i>我加入的团队</h2>
+			<div class="my-join-team">
+				<h2><i></i>正式团队</h2>
 				<ul>
 					<template v-for="(list, index) in joinList" :key="index">
-						<li class="team-list" v-if="list.is_captain==0" @tap="teamDetail(list.team_id)">
-							<div class="inside">
+						<li class="team-list" v-if="list.is_captain==0">
+							<img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id)">
+							<div class="inside" @tap="groupsChat('12')">
 								<i class="adorn"></i>
-								<div class="team-title">{{list.name}}<span class="mui-badge mui-badge-primary"><span class="iconfont icon-friends"></span>
-										{{list.current_number}} 人</span></div>
+								<div class="team-title">
+									{{list.name}}
+									<span class="mui-badge mui-badge-primary">
+										<span class="iconfont icon-friends"></span>
+										{{list.current_number}} 人
+									</span>
+								</div>
 								<div class="time-person">
-									<span class="create-time">创建时间：{{list.create_time}}</span>
+									<span class="rank-num"><img class="rank-sign" :src="'../image/icon/rank'+list.grade+'.png'">千级别收入</span>
+									<span class="rank-num">排名：{{list.ranking}}</span>
 									<span class="create-person">创建人：{{list.captain_name.name || list.captain_name.nickName}}</span>
 								</div>
 							</div>
@@ -86,20 +125,33 @@
 			});
 
 			var userInfo = getUserInfo();
-			var vm = new Vue({
+			var app = new Vue({
 				el: '.mui-content',
 				data: {
 					createList: null,
-					joinList: null,
+					joinList: [{
+						is_captain: '0',
+						name: '明天你好',
+						current_number: '200',
+						create_time: '2019-06-19',
+						captain_name: {
+							name: '刘备备',
+							nickName: ''
+						},
+						grade: '1',
+						ranking: '200'
+					}],
 					createFlag: false,
 					joinFlag: false,
-					teamLists:{}
+					teamLists: {},
+					userSelf: "刘贝呗"
+					// userSelf:userInfo.nickName
 				},
 				mounted: function() {
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						var teamList = self.teamList;
-						vm.teamLists=self.teamList;
+						app.teamLists = self.teamList;
 						var createList = new Array();
 						var joinList = new Array();
 						mui.each(teamList, function(index, item) {
@@ -109,13 +161,13 @@
 								joinList.push(item);
 							}
 						})
-						vm.createList = createList;
-						vm.joinList = joinList;
+						app.createList = createList;
+						// app.joinList = joinList;
 						if (createList.length > 0) {
-							vm.createFlag = true;
+							app.createFlag = true;
 						}
 						if (joinList.length > 0) {
-							vm.joinFlag = true;
+							app.joinFlag = true;
 						}
 
 						mui('.mui-content').on('tap', '.create-team', function() {
@@ -133,7 +185,7 @@
 				},
 				methods: {
 					teamDetail: function(team_id) {
-						if (vm.teamLists[0].data_status!=0||vm.teamLists[0].is_captain!=0) {
+						if (app.teamLists[0].data_status != 0 || app.teamLists[0].is_captain != 0) {
 							fnOpenWin('webview.html', 'webview', {
 								statusbar: {
 									background: '#FFFFFF'
@@ -146,10 +198,14 @@
 									'&m=longbing_card'
 							}, 'slide-in-right');
 						} else {
-							openPage('team_detail.html','team_detail','#f7f7f7',{
+							openPage('team_detail.html', 'team_detail', '#f7f7f7', {
 								teamid: team_id
 							});
 						}
+					},
+					// 群聊
+					groupsChat: function(id) {
+						mui.toast("群聊");
 					}
 				}
 			})
@@ -158,6 +214,7 @@
 				mui.post($ajaxUrl + 'team&action=team_list', {
 					token: userInfo.token
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0) {
 						var teamList = res.data;
 						var createList = new Array();
@@ -169,17 +226,17 @@
 								joinList.push(item);
 							}
 						})
-						vm.createList = createList;
-						vm.joinList = joinList;
+						app.createList = createList;
+						// app.joinList = joinList;
 						if (createList.length > 0) {
-							vm.createFlag = true;
+							app.createFlag = true;
 						} else {
-							vm.createFlag = false;
+							app.createFlag = false;
 						}
 						if (joinList.length > 0) {
-							vm.joinFlag = true;
+							app.joinFlag = true;
 						} else {
-							vm.joinFlag = false;
+							app.joinFlag = false;
 						}
 					}
 				}, 'json');

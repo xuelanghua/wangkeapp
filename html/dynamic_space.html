@@ -72,7 +72,7 @@
 					<div class="mui-pull-right dynamic-groups">
 						<ul>
 							<li class="dynamic-lists" v-for="(i,o) in 2" :key="o">
-								<div class="dynamic-lists-body">
+								<div class="dynamic-lists-body"  @tap="dynamicDetail('133')">
 									<!-- 箭头 -->
 									<div class="lan-arrow"></div>
 									<ul class="img-groups">
@@ -81,7 +81,7 @@
 									<p class="mui-ellipsis-2 dynamic-character">旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，</p>
 								</div>
 								<div class="operation-menu">
-									<span v-show="!menuStatus" class="check-detail">查看详情</span>
+									<span v-show="!menuStatus" class="check-detail"  @tap="dynamicDetail('133')">查看详情</span>
 									<div class="menu-list" :class="menuStatus?'active':''">
 										<div class="menu-body">
 											<!-- 箭头 -->
@@ -173,6 +173,12 @@
 							mask.close();
 						}, 500)
 					},
+					// 动态详情
+					dynamicDetail:function(id){
+						openPage('dynamics_detail.html','dynamics_detail.html','#f7f7f7',{
+							aid:id
+						});
+					},
 					// 评论
 					commentDynamic: function() {
 						this.menuStatus = false;
@@ -221,12 +227,13 @@
 								softinputMode: "adjustResize"
 							});
 						}
+						// 设置渐变导航栏
 						ws.setStyle({
 							scrollIndicator: 'none',
 							"titleNView": {
-								backgroundColor: '#FFFFFF', //导航栏背景色
+								backgroundColor: '#FFFFFF', 
 								titleText: '',
-								titleColor: '#000000', //文字颜色
+								titleColor: '#000000', 
 								type: 'transparent', //透明渐变样式
 								autoBackButton: true
 							}

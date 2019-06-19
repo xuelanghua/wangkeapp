@@ -41,15 +41,27 @@
 	<script type="text/javascript" src="../js/mui.js"></script>
 	<script type="text/javascript" src="../js/util.js"></script>
 	<script>
-		mui.init({
-			swipeBack: true,
-			beforeback: function() {
-				var view = plus.webview.currentWebview().opener();
-				if (view.id == 'activation') {
-					setStatusBar('', 'light');
+		if (mui.os.ios) {
+			mui.init({
+				swipeBack: true,
+				beforeback: function() {
+					var view = plus.webview.currentWebview().opener();
+					if (view.id == 'activation') {
+						setStatusBar('', 'light');
+					}
 				}
-			}
-		})
+			})
+		} else {
+			mui.init({
+				swipeBack: false,
+				beforeback: function() {
+					var view = plus.webview.currentWebview().opener();
+					if (view.id == 'activation') {
+						setStatusBar('', 'light');
+					}
+				}
+			})
+		}
 
 		mui.plusReady(function() {
 			plus.navigator.setStatusBarStyle("dark");
@@ -63,7 +75,7 @@
 			mui.post($ajaxUrl + 'util&action=system_setting', '', function(res) {
 				if (res.errno == 0) {
 					var detail = res.data.user_agreement;
-					document.getElementsByClassName('article')[0].innerHTML = detail||'暂无用户协议';
+					document.getElementsByClassName('article')[0].innerHTML = detail || '暂无用户协议';
 				} else {
 					console.log(res.message);
 				}
