@@ -177,6 +177,7 @@
 			}
 			.vip-container{
 				padding-bottom: 140px;
+				position: relative;
 			}
 			.vip-container .mui-card .border-top{
 				border-top: none;
@@ -264,18 +265,18 @@
 		</script>
 	</head>
 	<body>
-		<div id="vip-container" class="mui-content vip-container">
+		<div id="vip-container" class="mui-content vip-container" v-cloak>
 			<div id="div"></div>
 			<div class="close-button">关闭</div>
 			<div class="activation-link">激活码激活</div>
-			<div class="mui-card" id="form" v-cloak>
+			<div class="mui-card" id="form">
 				<form class="mui-input-group">
-					<div class="mui-input-row mui-radio mui-left" v-for="(h,i) in group" :key="i">
+					<div class="mui-input-row mui-radio mui-left" v-for="(h,i) in group" :key="i" @tap="changeTc(h.id)">
 						<label :class="'label'+h.id">
 							<input name="radio1" type="radio" :checked="i==0||false">
 							<div class="uni-right-cont">
 								<p class="title">{{h.name}}</p>
-								<p class="price">&yen;{{h.activation_fee}} <span v-if="h.annual_fee!=0">续费：{{h.annual_fee}}</span></p>
+								<p class="price">&yen;{{h.activation_fee}}<span v-if="h.annual_fee!=0">续费：{{h.annual_fee}}</span></p>
 							</div>
 						</label>
 						<div class="award-conts">
@@ -302,6 +303,7 @@
 				</form> -->
 				<ul class="mui-table-view border-top">
 					<li class="mui-table-view-cell recommend-person" v-if="recommendId==0">
+						<!-- <li class="mui-table-view-cell recommend-person"> -->
 						<span>推荐人</span>
 						<input type="number" class="mui-input mui-input-clear" v-model="recommendPhone" name="recommend_phone"
 						 placeholder="输入推荐人手机号码">
@@ -310,8 +312,8 @@
 				</ul>
 			</div>
 			<div class="content-paddeds" style="background-color: #FFFFFF;position: fixed;bottom: 0;left: 0;right: 0; width: 100%;">
-				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">立即支付</button>
-				<!-- <button type="button" class="mui-btn mui-btn-blue mui-btn-block">立即预约</button> -->
+				<button v-if="setMeal==1" type="button" class="mui-btn mui-btn-blue mui-btn-block mui-pay">立即支付</button>
+				<button v-else type="button" class="mui-btn mui-btn-blue mui-btn-block action-order-btn">立即预约</button>
 				<p style="text-align: center;" class="mui-input-row mui-checkbox">
 					<input id="agree" name="checkbox" value="" type="checkbox">
 					<label for="agree">开通即视为同意</label>
@@ -376,22 +378,19 @@
 			<!-- vip弹窗结束 -->
 			<div id="middlePopover" class="mui-popover">
 				<div class="middlePopover-body">
-					<img class="rank-sign" :src="'../image/huiyuanqy'+viptype+'.png'">
-					<h2>{{group[viptype-1].name}}权益</h2>
+					<img class="rank-sign" :src="'../image/huiyuanqy'+(viptype+1)+'.png'">
+					<!-- <h2>{{group[viptype].name}}权益</h2> -->
+					<h2>{{group[viptype].name}}权益</h2>
 					<ul>
-						<li v-for="(k,o) in group[viptype-1].rights" :key="o">{{k}}</li>
+						<li v-for="(k,o) in group[viptype].rights" :key="o">{{k}}</li>
 					</ul>
 				</div>
 				<img class="close-model" src="../image/Close.png">
 			</div>
 		</div>
-		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
-		<script src="../js/mui.picker.min.js"></script>
-		<script src="../js/mui.poppicker.js"></script>
-		<script src="../js/city.data-3.js"></script>
-
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
 			var groupId = 0;
@@ -413,148 +412,22 @@
 				data: {
 					recommendId: 0,
 					recommendPhone: '',
-					viptype:1,
-					group: [{
-							"id": "1",
-							"uniacid": "6",
-							"name": "VIP",
-							"status": "1",
-							"activation_fee": "199",
-							"annual_fee": "69",
-							"is_check": "0",
-							"rights": [
-								"使用软件",
-								"拥有3个商品展位",
-								"分享收益"
-							],
-							"goods": "5",
-							"wang": "0",
-							"delete": "disable",
-							"recommend_rate_1": "30",
-							"recommend_rate_2": "20",
-							"team_number": "0",
-							"renew_award": "0",
-							"booth_award": "0",
-							"knowledge_award": "0"
-						},
-						{
-							"id": "2",
-							"uniacid": "6",
-							"name": "创客",
-							"status": "1",
-							"activation_fee": "9999",
-							"annual_fee": "69",
-							"is_check": "0",
-							"rights": [
-								"使用软件全部功能",
-								"拥有10个商品展位",
-								"拥有200个VIP名额",
-								"分享收益",
-								"会员续费收益10%",
-								"会员购买商品展位收益10%",
-								"会员知识付费收益10%"
-							],
-							"goods": "10",
-							"wang": "39800",
-							"delete": "disable",
-							"recommend_rate_1": "30",
-							"recommend_rate_2": "20",
-							"team_number": "100",
-							"renew_award": "10",
-							"booth_award": "10",
-							"knowledge_award": "10"
-						},
-						{
-							"id": "3",
-							"uniacid": "6",
-							"name": "服务站",
-							"status": "1",
-							"activation_fee": "50000",
-							"annual_fee": "0",
-							"is_check": "1",
-							"rights": [
-								"使用软件全部功能",
-								"商品展位无限",
-								"拥有20个创客套餐包",
-								"分享收益",
-								"会员续费收益15%",
-								"会员购买商品展位收益15%",
-								"会员知识付费收益15%"
-							],
-							"goods": "9999",
-							"wang": "199980",
-							"delete": "disable",
-							"recommend_rate_1": "30",
-							"recommend_rate_2": "20",
-							"team_number": "500",
-							"renew_award": "15",
-							"booth_award": "15",
-							"knowledge_award": "15"
-						},
-						{
-							"id": "4",
-							"uniacid": "6",
-							"name": "服务中心",
-							"status": "1",
-							"activation_fee": "200000",
-							"annual_fee": "0",
-							"is_check": "1",
-							"rights": [
-								"使用软件全部功能",
-								"商品展位无限",
-								"拥有20个服务站套餐包",
-								"分享收益",
-								"会员续费收益20%",
-								"会员购买商品展位收益20%",
-								"会员知识付费收益20%"
-							],
-							"goods": "9999",
-							"wang": "1000000",
-							"delete": "disable",
-							"recommend_rate_1": "30",
-							"recommend_rate_2": "20",
-							"team_number": "1000",
-							"renew_award": "20",
-							"booth_award": "20",
-							"knowledge_award": "20"
-						},
-						{
-							"id": "5",
-							"uniacid": "6",
-							"name": "分公司",
-							"status": "1",
-							"activation_fee": "500000",
-							"annual_fee": "0",
-							"is_check": "1",
-							"rights": [
-								"使用软件全部功能",
-								"商品展位无限",
-								"拥有20个服务中心套餐包",
-								"分享收益",
-								"会员续费收益25%",
-								"会员购买商品展位收益25%",
-								"会员知识付费收益25%"
-							],
-							"goods": "9999",
-							"wang": "4000000",
-							"delete": "disable",
-							"recommend_rate_1": "30",
-							"recommend_rate_2": "20",
-							"team_number": "2000",
-							"renew_award": "25",
-							"booth_award": "25",
-							"knowledge_award": "25"
-						}
-					]
+					viptype: 1,
+					group: [{"id":"1","uniacid":"6","name":"VIP","status":"1","activation_fee":"199","annual_fee":"69","is_check":"0","rights":["使用软件","拥有3个商品展位","分享收益"],"goods":"5","wang":"0","delete":"disable","recommend_rate_1":"30","recommend_rate_2":"20","team_number":"0","renew_award":"0","booth_award":"0","knowledge_award":"0"},{"id":"2","uniacid":"6","name":"创客","status":"1","activation_fee":"9999","annual_fee":"69","is_check":"0","rights":["使用软件全部功能","拥有10个商品展位","拥有200个VIP名额","分享收益","会员续费收益10%","会员购买商品展位收益10%","会员知识付费收益10%"],"goods":"10","wang":"39800","delete":"disable","recommend_rate_1":"30","recommend_rate_2":"20","team_number":"100","renew_award":"10","booth_award":"10","knowledge_award":"10"},{"id":"3","uniacid":"6","name":"服务站","status":"1","activation_fee":"50000","annual_fee":"0","is_check":"1","rights":["使用软件全部功能","商品展位无限","拥有20个创客套餐包","分享收益","会员续费收益15%","会员购买商品展位收益15%","会员知识付费收益15%"],"goods":"9999","wang":"199980","delete":"disable","recommend_rate_1":"30","recommend_rate_2":"20","team_number":"500","renew_award":"15","booth_award":"15","knowledge_award":"15"},{"id":"4","uniacid":"6","name":"服务中心","status":"1","activation_fee":"200000","annual_fee":"0","is_check":"1","rights":["使用软件全部功能","商品展位无限","拥有20个服务站套餐包","分享收益","会员续费收益20%","会员购买商品展位收益20%","会员知识付费收益20%"],"goods":"9999","wang":"1000000","delete":"disable","recommend_rate_1":"30","recommend_rate_2":"20","team_number":"1000","renew_award":"20","booth_award":"20","knowledge_award":"20"},{"id":"5","uniacid":"6","name":"分公司","status":"1","activation_fee":"500000","annual_fee":"0","is_check":"1","rights":["使用软件全部功能","商品展位无限","拥有20个服务中心套餐包","分享收益","会员续费收益25%","会员购买商品展位收益25%","会员知识付费收益25%"],"goods":"9999","wang":"4000000","delete":"disable","recommend_rate_1":"30","recommend_rate_2":"20","team_number":"2000","renew_award":"25","booth_award":"25","knowledge_award":"25"}],
+					setMeal: 1
 				},
 				created: function() {
-					// getRecommendUser();
+					getRecommendUser();
 				},
 				methods: {
 					showEquities: function(id) {
-						vm.viptype = parseInt(id)-1;
+						vm.viptype = parseInt(id) - 1;
 						// mui.toast(app.vipType);
 						mui('#middlePopover').popover("show", document.getElementById("div"));
+					},
+					// 切换套餐
+					changeTc: function(setMeal) {
+						this.setMeal = setMeal;
 					}
 				},
 				mounted: function() {
@@ -580,21 +453,28 @@
 						})
 					}
 					mui.plusReady(function() {
+						eventInit();
+						getGroupInfo();
 						var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 						window.onresize = function() {
 							//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 							var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
 							var paddeds = document.querySelector(".content-paddeds");
 							if (resizeHeight * 1 < originalHeight * 1) {
-								//resizeHeight<originalHeight证明窗口被挤压了
-								paddeds.style.zIndex = '-150';
+								paddeds.style.zIndex = '-1';
 								paddeds.style.display = 'none';
 								document.querySelector('.vip-container').style.paddingBottom = "0px";
 							} else {
 								paddeds.style.zIndex = '999';
 								paddeds.style.display = 'block';
-								document.querySelector('.vip-container').style.paddingBottom = "120px";
+								document.querySelector('.vip-container').style.paddingBottom = "140px";
 							}
+						}
+						var ws = plus.webview.currentWebview();
+						if (mui.os.ios) {
+							ws.setStyle({
+								softinputMode: "adjustResize"
+							});
 						}
 						// 获取支付通道  
 						plus.payment.getChannels(function(channels) {
@@ -608,9 +488,6 @@
 						}, function(e) {
 							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
 						});
-
-						eventInit();
-						getGroupInfo();
 					});
 
 					//事件初始化
@@ -623,6 +500,48 @@
 						})
 						mui('.mui-content').on('tap', '#agreement', function() {
 							openPage('user_agreement.html', 'user_agreement', '#ffffff', '');
+						})
+						// 预约服务
+						mui('.mui-content').on('tap', '.action-order-btn', function() {
+							var inputs = document.querySelector(".mui-input-clear");
+							if (inputs) {
+								inputs.blur();
+							}
+							var cheackd = document.getElementById('agree').checked;
+							if (vm.recommendId == 0) {
+								if (vm.recommendPhone.length == 0) {
+									message('请输入推荐人手机号码!');
+									return;
+								}
+								if (!/1[\d]{10}/.test(vm.recommendPhone)) {
+									message('推荐人手机号码输入有误!');
+									return;
+								}
+							}
+							if (!cheackd) {
+								message('需要同意旺客用户协议');
+								return;
+							}
+							mui.post($ajaxUrl + 'member', {
+								action: 'agent_apply',
+								token: userInfo.token,
+								group_id: vm.setMeal, //2345
+								type: 1,
+								province_id: 0,
+								city_id: 0, //0
+								area_id: 0, //0
+								recommend_phone: vm.recommendPhone //推荐人手机号
+							}, function(res) {
+								logs(res);
+								if (res.errno == 0) {
+									plus.nativeUI.alert('申请成功, 等待审核!', function() {
+										plus.webview.close('activation');
+									})
+								} else {
+									plus.nativeUI.alert(res.message);
+								}
+								plus.nativeUI.closeWaiting();
+							}, 'json');
 						})
 
 						//跳转激活码激活
@@ -647,44 +566,6 @@
 							plus.navigator.setStatusBarStyle('dark');
 						})
 
-						//选择会员类型
-						mui('form').on('tap', '.radio-list', function() {
-							mui('.radio-list').each(function() {
-								this.classList.remove('active');
-							})
-							groupId = this.dataset.id;
-							activationFee = this.dataset.fee;
-							document.getElementById('activation_fee').innerText = activationFee;
-							this.classList.add('active');
-						})
-
-						//支付方式选择
-						mui('.mui-content').on('tap', '.pay-type', function() {
-							var picker = new mui.PopPicker({
-								layer: 1
-							});
-							picker.setData([{
-									value: 'wxpay',
-									text: '微信'
-								}
-								/*, {
-									value: 'alipay',
-									text: '支付宝'
-								}, {
-									value: 'unionpay',
-									text: '银联'
-								}*/
-							]);
-							picker.show(function(selectItems) {
-								payType = selectItems[0].value;
-								if (payType == 'wxpay') {
-									mui('.pay-title')[0].innerText = selectItems[0].text;
-								} else {
-									message('暂不支持', 'center');
-								}
-							})
-						})
-
 						//支付
 						mui('.mui-content').on('tap', '.mui-pay', function() {
 							var cheackd = document.getElementById('agree').checked;
@@ -703,13 +584,12 @@
 								message('需要同意旺客用户协议');
 								return;
 							}
-							pay(payType);
+							pay('wxpay');
 						})
 					}
-
 				}
 			});
-			
+
 			mui('#middlePopover').on('tap', '.close-model', function() {
 				mui('#middlePopover').popover("hide", document.getElementById("div"));
 			})
@@ -718,12 +598,7 @@
 			function pay(id) {
 				// 从服务器请求支付订单
 				var PAYSERVER = '';
-				if (id == 'alipay') {
-					message("暂不支持支付宝支付!", 'center');
-					return;
-					PAYSERVER = ALIPAYSERVER;
-					channel = aliChannel;
-				} else if (id == 'wxpay') {
+				if (id == 'wxpay') {
 					PAYSERVER = WXPAYSERVER;
 					channel = wxChannel;
 				} else {
@@ -788,27 +663,6 @@
 				}, 'json');
 			}
 
-			// 城市选择
-			// mui.ready(function() {
-			// 	var _getParam = function(obj, param) {
-			// 		return obj[param] || '';
-			// 	};
-			// 	var showCityPickerButton = document.getElementById('area-select');
-			// 	var cityResult = document.getElementById('area-desc');
-			// 	showCityPickerButton.addEventListener('tap', function(event) {
-			// 		var cityPicker = new mui.PopPicker({
-			// 			layer: 3
-			// 		});
-			// 		cityPicker.setData(cityData3);
-			// 		cityPicker.show(function(items) {
-			// 			provinceId = _getParam(items[0], 'value');
-			// 			cityId = _getParam(items[1], 'value');
-			// 			areaId = _getParam(items[2], 'value');
-			// 			cityResult.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(
-			// 				items[2], 'text');
-			// 		});
-			// 	}, false);
-			// })
 			//获取会员等级信息
 			function getGroupInfo() {
 				plus.nativeUI.showWaiting();
@@ -817,26 +671,11 @@
 				}, function(res) {
 					// logs(res);
 					var data = res.data;
-					// groupData = data;
-					// mui.each(data, function(index, item) {
-					// 	if (index < 2) {
-					// 		var rights = item.rights;
-					// 		var temp = '';
-					// 		for (var i in rights) {
-					// 			if (i > 0) {
-					// 				temp += '/' + rights[i];
-					// 			} else {
-					// 				temp += rights[i];
-					// 			}
-					// 		}
-					// 		item.rights = temp;
-					// 	}
-					// })
 					groupId = data[0].id;
 					activationFee = data[0].activation_fee;
-					vm.group = res.data;
+					vm.group = data;
+					logs(vm.group);
 					plus.nativeUI.closeWaiting();
-					document.querySelector('body').classList.remove('mui-hidden');
 				}, 'json');
 			}
 		</script>

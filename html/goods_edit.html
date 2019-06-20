@@ -344,6 +344,17 @@
 					opacity: 0;
 				}
 			}
+			.cause-conts{
+				color: #FF0000;
+				background-color: #FFFFFF;
+				margin: 0;
+				padding: 10px 15px;
+				text-align: justify;
+				/* display: none; */
+			}
+			.cause-conts span{
+				font-size:14px;
+			}
 		</style>
 	</head>
 	<body>
@@ -352,6 +363,9 @@
 			<h1 class="mui-title">编辑商品</h1>
 		</header>
 		<div class="mui-content">
+			<p id="cause_conts" class="cause-conts">
+				<span style="font-weight: 700;">未通过原因：</span><span id="cause_info"> 巴拉巴拉了巴拉巴拉霸来了吧拔萝卜阿拉伯巴拉巴拉巴拉了巴拉巴拉霸来了吧拔萝卜阿拉伯巴拉</span>
+			</p>
 			<!-- 商品id -->
 			<input type="hidden" id="goods_id" value="" />
 			<div class="mui-input-row" style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
@@ -374,7 +388,9 @@
 				</div>
 			</div>
 			<div class="tips">
-				<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 --> 精美的商品图片让商品脱颖而出 </div>
+				<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 -->
+				精美的商品图片让商品脱颖而出
+			</div>
 			<div class="bian">
 				<div class="recommend">
 					<div class="mui-input-row">
@@ -553,15 +569,15 @@
 							newImgDiv.dataset.specid = specId;
 							var html = '<div class="choice" style="padding: 10px 0;">';
 							html += '<span>规格</span>';
-							html += '<input type="text" placeholder="尺寸,大小,颜色等" value="'+good_spec_container[i].title+'" />';
+							html += '<input type="text" placeholder="尺寸,大小,颜色等" value="' + good_spec_container[i].title + '" />';
 							html += '</div>';
 							html += '<div class="choice" style="padding: 10px 0;">';
 							html += '<span>价格</span>';
-							html += '<input type="number" placeholder="给商品定个好价格" value="'+good_spec_container[i].price+'" />';
+							html += '<input type="number" placeholder="给商品定个好价格" value="' + good_spec_container[i].price + '" />';
 							html += '</div>';
 							html += '<div class="choice" style="padding: 10px 0;">';
 							html += '<span>库存</span>';
-							html += '<input type="number" placeholder="设置合理的库存避免超卖" value="'+good_spec_container[i].stock+'" />';
+							html += '<input type="number" placeholder="设置合理的库存避免超卖" value="' + good_spec_container[i].stock + '" />';
 							html += '</div>';
 							html += '<img src="../image/add_choice.png" class="spec-remove">';
 							newImgDiv.innerHTML = html;
@@ -750,10 +766,10 @@
 				//表单提交 上传商品
 				mui('.selection_function').on('tap', '.form-submit', function() {
 					status = this.dataset.status;
-					var goods_id=document.querySelector('input[id=goods_id]').value;
+					var goods_id = document.querySelector('input[id=goods_id]').value;
 					var goods_name = document.querySelector('textarea[name=name]').value;
 					var goods_price = document.querySelector('input[name=price]').value;
-					var goods_stock = document.querySelector('input[name=stock]').value;
+					var goods_stock = parseInt(document.querySelector('input[name=stock]').value);
 					var goods_sale = document.querySelector('input[name=sale_count]').value;
 					var goods_view = document.querySelector('input[name=view_count]').value;
 					var goods_top = document.querySelector('input[name=top]').value;
@@ -778,12 +794,12 @@
 						message('商品价格填写有误!');
 						return;
 					}
-					if (isNaN(goods_stock) || goods_stock.length == 0) {
+					if (isNaN(goods_stock) || goods_stock == 0) {
 						message('请填写商品库存!');
 						return;
 					}
-					if (parseInt(goods_price) <= 0) {
-						message('商品库存填写有误!');
+					if (goods_stock < 0) {
+						message('商品库存有误!');
 						return;
 					}
 					mui('.add_choice').each(function(index, object) {
@@ -820,7 +836,7 @@
 						spec[sid] = temp;
 					})
 					var submitData = {
-						goodId:goods_id,
+						goodId: goods_id,
 						name: goods_name,
 						images: images,
 						recommend: recommend,

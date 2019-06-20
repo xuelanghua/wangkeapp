@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			body {
+				background-color: #F7F7F7;
+				color: #333333;
+			}
+
+			.mui-table-view-cell {
+				height: 50px;
+				padding: 0 15px;
+			}
+
+			.mui-table-view-cell span {
+				line-height: 50px;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after,
+			.mui-table-view-cell:after,
+			.mui-table-view-cell:before {
+				background-color: #DDDDDD;
+				left: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">群聊设置</h1>
+		</header>
+		<div id="mui-content" class="mui-content" v-cloak>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<span>置顶消息</span>
+					<div class="mui-switch mui-switch-blue sticks">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>消息免打扰</span>
+					<div class="mui-switch mui-switch-blue disturbing">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+
+			</ul>
+			<ul class="mui-table-view" style="margin: 10px 0;">
+				<li class="mui-table-view-cell clear-record">
+					<span>清空聊天记录</span>
+				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin: 10px 0;">
+				<li class="mui-table-view-cell mui-text-center quit-team">
+					<span>退出团队</span>
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init();
+					mui.plusReady(function() {
+						// 清空聊天记录
+						mui(".mui-content").on("tap", ".clear-record", function() {
+							plus.nativeUI.confirm('确认清空聊天记录吗？该操作无法撤销。', function(e) {
+								if (e.index) {
+									// 取消
+									mui.toast("取消");
+								} else {
+									// 删除
+									mui.toast("已清空");
+								}
+							})
+						});
+						// 退出团队
+						mui(".mui-content").on("tap", ".quit-team", function() {
+							plus.nativeUI.confirm('确认退出团队吗？该操作无法撤销。', function(e) {
+								if (e.index) {
+									// 取消
+									mui.toast("取消");
+								} else {
+									// 删除
+									mui.toast("已清空");
+								}
+							})
+						});
+					})
+					// 监听是否置顶
+					mui(".mui-content").on("toggle", ".sticks", function(event) {
+						console.log(event.detail.isActive);
+					});
+					// 监听消息免打扰
+					mui(".mui-content").on("toggle", ".disturbing", function(event) {
+						console.log(event.detail.isActive);
+					});
+				}
+			})
+		</script>
+	</body>
+
+</html>

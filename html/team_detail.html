@@ -204,112 +204,19 @@
 				font-size: 0.3rem;
 				margin: 1rem auto 0.5rem;
 			}
-
-			/* 验证弹窗 */
-			.join-team-verify {
-				position: fixed;
-				z-index: 996;
-				top: 0;
-				bottom: 0;
-				width: 100%;
-				background: rgba(0, 0, 0, 0.6);
+			.team-setting{
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				flex-direction: column;
-			}
-
-
-			.verift-body {
-				width: 80%;
-				background-color: #ffffff;
-				border-radius: 0.2rem;
+				height: 44px;
+				padding: 0 12px;
+				z-index: 16;
 				position: relative;
-				overflow: hidden;
-				padding-top: 0.1rem;
-			}
-
-			.verift-footer:before {
-				content: '';
-				display: block;
-				height: 1px;
-				width: 100%;
-				top: 0;
-				left: 0;
-				position: absolute;
-				background-color: #dddddd;
-				transform: scaleY(0.5);
-				-webkit-transform: scaleY(0.5);
-			}
-
-			.verift-body textarea {
-				margin-bottom: 0;
-				border-color: #fefefe;
-				margin-bottom: 1px;
-				font-size: 0.3rem;
-			}
-
-			.verift-footer {
-				position: relative;
-				display: flex;
-				justify-content: center;
-			}
-
-			.verift-footer .mui-btn {
-				width: 100%;
-				height: 100%;
-				padding: 0.3rem 0.2rem;
-			}
-
-			.close-verify-window:before {
-				content: '';
-				display: block;
-				height: 100%;
-				width: 1PX;
-				top: 0;
-				bottom: 0;
-				right: 0;
-				position: absolute;
-				background-color: #dddddd;
-				transform: scaleX(0.5);
-				-webkit-transform: scaleX(0.5);
-			}
-
-			/* 团队名称编辑*/
-			.team-name-input {
-				font-size: 0.3rem;
+				font-size: 24px;
+				font-weight: bold;
 				color: #333333;
-				margin: 0.2rem 0 !important;
+				margin-right: -10px;
 			}
-
-			.team-members ul.mui-table-view {
-				margin-bottom: 10px;
-			}
-
-			.mui-table-view .mui-table-view-cell {
-				display: flex;
-				width: 100%;
-				align-items: center;
-				justify-content: space-between;
-				margin: 0;
-				padding: 10px 0;
-				font-size: 0.30rem;
-			}
-
-			.mui-table-view .mui-table-view-cell.mui-active {
-				background-color: #FFFFFF;
-			}
-
-			.mui-table-view-cell:last-child:after {
-				height: 0;
-				left: 0;
-			}
-
-			.mui-switch-blue.mui-active {
-				border: 2px solid #2289ff;
-				background-color: #2289ff;
-			}
-
 			[v-cloak] {
 				display: none;
 			}
@@ -329,6 +236,9 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">团队详情</h1>
+			<span class="mui-pull-right team-setting">
+				···
+			</span>
 		</header>
 
 		<div id="mui-content" class="mui-content team-detail-container" v-cloak>
@@ -336,7 +246,6 @@
 				<div class="mui-clearfix">
 					<div class="mui-pull-left">
 						<span class="team-name">{{teamName}}</span>
-						<img v-if="role" src="../image/team-detail-img03.png" @tap="editTname">
 					</div>
 					<img class="mui-pull-right team-qrCode" src="../image/team-detail-img04.png" alt="">
 				</div>
@@ -344,19 +253,9 @@
 			</div>
 			<div class="notice-cont">
 				<h2 class="headline">
-					公告<img v-if="role" class="title-img" src="../image/team-detail-img02.png" @tap="showEdit">
+					公告
 				</h2>
 				<p>{{desc}}</p>
-			</div>
-			<div v-if="role" style="margin-bottom: 0.2rem;padding: 0 0.2rem; background-color: #FFFFFF;">
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell">
-						<h2 class="headline team-member-more">数据查看</h2>
-						<div class="mui-switch mui-switch-blue" :class="data_status?'mui-active':''">
-							<div class="mui-switch-handle"></div>
-						</div>
-					</li>
-				</ul>
 			</div>
 			<div class="team-members">
 				<h2 class="headline team-member-more">团队成员<p class="more-member mui-pull-right">共{{teamNum}}人<span class="mui-icon mui-icon-arrowright"></span></p>
@@ -398,28 +297,6 @@
 				</div>
 			</div>
 			<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
-			<!-- 公告编辑 -->
-			<div class="join-team-verify" v-if="iseditDesc">
-				<div class="verift-body">
-					<textarea rows="3" placeholder="请输入团队公告" v-model="conts" :value="desc"></textarea>
-					<div class="verift-footer">
-						<button type="button" class="mui-btn mui-btn-link close-verify-window" @tap="iseditDesc=!iseditDesc">取消</button>
-						<button type="button" class="mui-btn mui-btn-link send-verify" @tap="confirmEditor">确定</button>
-					</div>
-				</div>
-			</div>
-			<!-- 团队名称编辑 -->
-			<div class="join-team-verify" v-if="iseditName">
-				<div class="verift-body">
-					<input id="teamNames" :value="teamName" v-model="newTeamName" class="team-name-input" type="text" maxlength="12"
-					 placeholder="请输入团队名" style="border: none;">
-					<!-- <p>名字长度不超过十二个字</p> -->
-					<div class="verift-footer">
-						<button type="button" class="mui-btn mui-btn-link close-verify-window" @tap="iseditName=!iseditName">取消</button>
-						<button type="button" class="mui-btn mui-btn-link send-verify" @tap="confirmName">确定</button>
-					</div>
-				</div>
-			</div>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -433,9 +310,6 @@
 			data: {
 				desc: '',
 				teamName: '',
-				newTeamName: '',
-				iseditDesc: false,
-				iseditName: false,
 				conts: '',
 				role: 1,
 				tid: '',
@@ -446,56 +320,6 @@
 				data_status: false
 			},
 			methods: {
-				showEdit: function() {
-					this.iseditDesc = true;
-					this.conts = this.desc;
-				},
-				editTname: function() {
-					this.iseditName = true;
-					this.newTeamName = this.teamName;
-				},
-				confirmEditor: function() {
-					mui.post($ajaxUrl + 'team&action=edit_notice', {
-						token: userInfo.token,
-						team_id: this.tid,
-						notice: this.conts
-					}, function(res) {
-						if (res.errno == 0) {
-							app.iseditDesc = false;
-							getInfo();
-						}
-					}, 'json');
-				},
-				confirmName: function() {
-					mui.post($ajaxUrl + 'team&action=edit_name', {
-						token: userInfo.token,
-						team_id: this.tid,
-						name: this.newTeamName
-					}, function(res) {
-						if (res.errno == 0) {
-							app.iseditName = false;
-							getInfo();
-						}
-					}, 'json');
-				},
-				examine: function(status, userId) {
-					mui.post($ajaxUrl + 'team&action=check', {
-						token: userInfo.token,
-						team_id: app.tid,
-						user_id: userId,
-						status: status
-					}, function(res) {
-						if (res.errno == 0) {
-							message(res.message);
-							getInfo();
-							getApplyList();
-							getMember();
-						} else {
-							getInfo();
-							message(res.message);
-						}
-					}, 'json');
-				},
 				quitTeam: function() {
 					plus.nativeUI.confirm('确认退出团队?', function(e) {
 						if (e.index == 0) {
@@ -523,7 +347,7 @@
 		mui.plusReady(function() {
 			var self = plus.webview.currentWebview();
 			app.tid = self.teamid;
-			logs(self.teamid);
+			// alert(self.teamid);
 			getInfo();
 			getMember();
 			getApplyList();
@@ -534,6 +358,15 @@
 				teamName: app.teamName
 			});
 		})
+		//团队设置
+		mui(".mui-bar").on("tap", ".team-setting", function() { 
+			openPage('team_setting.html', 'team_setting', '#f7f7f7', {
+				teamId: app.tid,
+				teamName: app.teamName,
+				desc:app.desc,
+				img:"../image/share/bg-img03.jpg"
+			});
+		})
 		// 添加团队成员
 		mui(".mui-content").on("tap", ".member-selection", function() {
 			openPage('team_member_selection.html', 'team_member_selection', '#f7f7f7', {
@@ -542,7 +375,7 @@
 		})
 		// 更多成员
 		mui(".mui-content").on("tap", ".team-member-more", function() {
-			logs(app.tid);
+			// logs(app.tid);
 			openPage('team_members.html', 'team_members', '#f7f7f7', {
 				tid: app.tid,
 				captainUid: app.captain_uid
@@ -626,20 +459,5 @@
 			getInfo();
 			getMember();
 		});
-		mui('.mui-content').on('toggle', '.mui-switch', function(event) {
-			if (event.detail.isActive) {
-				app.data_status = 1;
-			} else {
-				app.data_status = 0;
-			}
-			logs(app.data_status);
-			mui.post($ajaxUrl + 'team&action=edit_data_status', {
-				token: userInfo.token,
-				team_id: app.tid,
-				status: app.data_status
-			}, function(res) {
-				logs(res);
-			}, 'json');
-		})
 	</script>
 </html>

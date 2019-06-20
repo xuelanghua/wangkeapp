@@ -72,7 +72,7 @@
 					<div class="mui-pull-right dynamic-groups">
 						<ul>
 							<li class="dynamic-lists" v-for="(i,o) in 2" :key="o">
-								<div class="dynamic-lists-body"  @tap="dynamicDetail('133')">
+								<div class="dynamic-lists-body" @tap="dynamicDetail('133')">
 									<!-- 箭头 -->
 									<div class="lan-arrow"></div>
 									<ul class="img-groups">
@@ -81,7 +81,7 @@
 									<p class="mui-ellipsis-2 dynamic-character">旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，</p>
 								</div>
 								<div class="operation-menu">
-									<span v-show="!menuStatus" class="check-detail"  @tap="dynamicDetail('133')">查看详情</span>
+									<span v-show="!menuStatus" class="check-detail" @tap="dynamicDetail('133')">查看详情</span>
 									<div class="menu-list" :class="menuStatus?'active':''">
 										<div class="menu-body">
 											<!-- 箭头 -->
@@ -174,9 +174,9 @@
 						}, 500)
 					},
 					// 动态详情
-					dynamicDetail:function(id){
-						openPage('dynamics_detail.html','dynamics_detail.html','#f7f7f7',{
-							aid:id
+					dynamicDetail: function(id) {
+						openPage('dynamics_detail.html', 'dynamics_detail.html', '#f7f7f7', {
+							aid: id
 						});
 					},
 					// 评论
@@ -184,8 +184,11 @@
 						this.menuStatus = false;
 						this.isComment = true;
 						mui('.mui-bar-footer')[0].style.display = "block";
-						this.initNativeObjects();
-						this.showSoftInput();
+						var _self=this;
+						setTimeout(function() {
+							_self.initNativeObjects();
+							_self.showSoftInput();
+						}, 100)
 					},
 					// 弹出键盘
 					initNativeObjects: function() {
@@ -231,9 +234,9 @@
 						ws.setStyle({
 							scrollIndicator: 'none',
 							"titleNView": {
-								backgroundColor: '#FFFFFF', 
+								backgroundColor: '#FFFFFF',
 								titleText: '',
-								titleColor: '#000000', 
+								titleColor: '#000000',
 								type: 'transparent', //透明渐变样式
 								autoBackButton: true
 							}
