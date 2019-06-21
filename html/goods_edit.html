@@ -118,6 +118,7 @@
 				position: fixed;
 				bottom: 0;
 				background-color: #F5CA3A;
+				color: #FFFFFF;
 			}
 			.upper_shelf{
 				width: 100%;
@@ -350,7 +351,7 @@
 				margin: 0;
 				padding: 10px 15px;
 				text-align: justify;
-				/* display: none; */
+				display: none;
 			}
 			.cause-conts span{
 				font-size:14px;
@@ -529,6 +530,19 @@
 				getGoodInfo();
 				eventInit();
 				mui.previewImage();
+				var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+				window.onresize = function() {
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+					var paddeds = document.querySelector(".selection_function");
+					if (resizeHeight * 1 < originalHeight * 1) {
+						paddeds.style.zIndex = '-1';
+						paddeds.style.display = 'none';
+					} else {
+						paddeds.style.zIndex = '999';
+						paddeds.style.display = 'block';
+					}
+				}
 			})
 			//获取商品的信息
 			function getGoodInfo() {
@@ -545,8 +559,15 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(ret) {
-						console.log(JSON.stringify(ret));
-						console.log(JSON.stringify(ret.data.name));
+						// console.log(JSON.stringify(ret));
+						// console.log(JSON.stringify(ret.data.name));
+						// logs(ret.data.check_status);
+						if(ret.data.check_status==2){
+							mui("#cause_info")[0].innerText=ret.data.remark;
+							mui("#cause_conts")[0].style.display="block";
+						}else{
+							mui("#cause_conts")[0].style.display="none";
+						}
 						//商品id
 						$('#goods_id').val(ret.data.id);
 						//商品名称
@@ -634,7 +655,10 @@
 							str = str.replace(/&#039;/g, "'");
 							return str;
 						}
-						content = htmlspecialchars_decode(ret.data.content);
+						// logs(ret.data.content);
+						// content = htmlspecialchars_decode(ret.data.content);
+						content = ret.data.content;
+						
 					},
 					error: function(xhr, type, errorThrown) {
 						console.log(JSON.stringify('失败'));
@@ -700,7 +724,7 @@
 				mui('.mui-content').on('tap', '#goods_detail', function() {
 					fnOpenWin('goods_detail.html', 'goods_detail', {
 						statusbar: {
-							background: '#FFF'
+							background: '#f7f7f7'
 						}
 					}, {
 						content: content

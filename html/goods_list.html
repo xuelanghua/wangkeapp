@@ -432,17 +432,17 @@
 		mui.init({
 			swipeBack: true,
 			pullRefresh: {
-				container: "#goods_container", 
+				container: "#goods_container",
 				down: {
-					style: 'circle', 
-					color: '#2289FF', 
-					height: '50px', 
-					range: '100px', 
-					offset: '0px', 
-					auto: false, 
+					style: 'circle',
+					color: '#2289FF',
+					height: '50px',
+					range: '100px',
+					offset: '0px',
+					auto: false,
 					callback: function() {
 						getGoodsList(true);
-					} 
+					}
 				}
 			}
 		});
@@ -450,17 +450,17 @@
 		mui.init({
 			swipeBack: false,
 			pullRefresh: {
-				container: "#goods_container", 
+				container: "#goods_container",
 				down: {
-					style: 'circle', 
-					color: '#2289FF', 
-					height: '50px', 
-					range: '100px', 
-					offset: '0px', 
-					auto: false, 
+					style: 'circle',
+					color: '#2289FF',
+					height: '50px',
+					range: '100px',
+					offset: '0px',
+					auto: false,
 					callback: function() {
 						getGoodsList(true);
-					} 
+					}
 				}
 			}
 		});
@@ -473,6 +473,20 @@
 		})
 		getGoodsList(false);
 		eventInit();
+		
+		var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+		window.onresize = function() {
+			//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+			var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+			var paddeds =document.getElementById("add_goods");
+			if (resizeHeight * 1 < originalHeight * 1) {
+				paddeds.style.zIndex = '-1';
+				paddeds.style.display = 'none';
+			} else {
+				paddeds.style.zIndex = '999';
+				paddeds.style.display = 'block';
+			}
+		}
 	})
 
 	function eventInit() {
@@ -640,7 +654,7 @@
 			token: userInfo.token,
 			goods_name: goodsName
 		}, function(res) {
-			// logs(res);
+			logs(res);
 			var goodsList = res.data;
 			var onSale = goodsList.on_sale;
 			var soldOut = goodsList.sold_out;
@@ -662,7 +676,13 @@
 					onSaleStr += '<h4>￥' + onSale[i].price + '</h4>';
 					onSaleStr += '<div style="font-size: 12px;">';
 					onSaleStr += '<span class="mui-pull-left">库存：' + onSale[i].stock + '</span>';
-					onSaleStr += '<span class="mui-pull-left" style="margin-left:20px;">' + '审核中' + '</span>';
+					if (onSale[i].check_status == 0) {
+						onSaleStr += '<span class="mui-pull-left" style="margin-left:20px;">' + '审核中' + '</span>';
+					} else if (onSale[i].check_status == 1) {
+						onSaleStr += '<span class="mui-pull-left" style="margin-left:20px;color:#3abb71">' + '审核通过' + '</span>';
+					} else if(onSale[i].check_status == 2){
+						onSaleStr += '<span class="mui-pull-left" style="margin-left:20px;color:#ff0000">' + '审核失败' + '</span>';
+					}
 					onSaleStr += '<span class="mui-pull-right genduo">...</span>';
 					onSaleStr += '</div>';
 					onSaleStr += '<div class="playb">';

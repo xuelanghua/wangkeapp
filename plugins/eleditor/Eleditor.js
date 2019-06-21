@@ -313,7 +313,7 @@
 		_$wrap.addClass('Eleditor-area');
 		_$wrap.after(_$editorWrap);
 
-		console.log('|--Eleditor Mounted To', _$wrap);
+		console.log('|--Eleditor  To', _$wrap);
 
 		/*bindEvent*/
 		var _$selected = null,

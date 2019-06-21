@@ -227,7 +227,7 @@
 						<template v-for="(vel,key,i) in lists" :key="i">
 							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
 							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input class="checkeds" type="checkbox" :data-father="key" :value="items.uid" :data-avatar="items.avatar||items.avatarUrl"
+								<input class="checkeds" type="checkbox" :data-names="items.name" :value="items.uid" :data-avatar="items.avatar||items.avatarUrl"
 								 :disabled="items.join_status==1" />
 								<img :src="items.avatar||items.avatarUrl" alt=" ">
 								<span>{{items.name}}</span>
@@ -253,103 +253,67 @@
 			el: "#list",
 			data: {
 				lists: {},
-				uids: []
+				uids: [],
+				userName: [],
+				tagsname:'',
+				// 选择的标签
+				tags: []
 			},
 			mounted: function() {
 				var checkedValues = [];
 				mui.plusReady(function() {
-					var self = plus.webview.currentWebview();
-					tid = self.tid;
-					app.uids = self.uids;
-					document.querySelector('.mui-title').innerText = self.names;
-					// 会员组id  self.group_id
-					getUserList();
-					if (app.uids) {
-						setTimeout(function() {
-							var list = document.getElementById('list');
-							var signs = list.querySelectorAll('.checkeds');
-							for (var i = 0; i < signs.length; i++) {
-								for (var j = 0; j < app.uids.length; j++) {
-									if (app.uids[j] == signs[i].value) {
-										signs[i].checked = "checked";
-									}
-								}
-							}
-							count = list.querySelectorAll('input[type="checkbox"]:checked').length;
-							var value = count ? "完成(" + count + ")" : "完成";
-							next.innerHTML = value;
-							if (count) {
-								if (next.classList.contains("next-disabled")) {
-									next.classList.remove("next-disabled");
-								}
-							} else {
-								if (!next.classList.contains("next-disabled")) {
-									next.classList.add("next-disabled");
-								}
-							}
-						}, 800);
-					} else {
-
-					}
-					// mui.back = function() {
-					// 	// self.hide();
-					// 	plus.webview.hide( self, "slide-out-right");
-					// };
-					// setTimeout(function(){
-					// 	mui("#list").indexedList().findElements();
-					// },500);
-				})
-				mui.ready(function() {
 					var header = document.querySelector('header.mui-bar');
 					var list = document.getElementById('list');
 					var next = document.getElementById('next_btn');
+					var self = plus.webview.currentWebview();
+					tid = self.tid;
+					if (self.uids) {
+						app.uids = self.uids;
+						count = app.uids.length;
+						if (count) {
+							if (next.classList.contains("next-disabled")) {
+								next.classList.remove("next-disabled");
+								var context = count ? "下一步(" + count + ")" : "下一步";
+								next.innerHTML = context;
+							}
+						} else {
+							if (!next.classList.contains("next-disabled")) {
+								next.classList.add("next-disabled");
+							}
+						}
+					}
+					if (self.person) {
+						app.userName = self.person;
+					}
+					if(self.tags){
+						app.tags=self.tags;
+					}
+					document.querySelector('.mui-title').innerText = self.names;
+					app.tagsname = self.names;
+					// 会员组id 
+					getUserList();
 					//calc hieght
 					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
 					//create
 					window.indexedList = new mui.IndexedList(list);
-					//next event
-					next.addEventListener('tap', function() {
-						var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
-						var checkedAvatar = [];
-						var mber = {};
-						var merbers = {};
-						checkboxArray.forEach(function(box) {
-							merbers[box.dataset.father] = [];
-							if (box.checked) {
-								checkedValues.push(box.value);
-								merbers[box.dataset.father].push(box.value)
-								mber[box.dataset.father] = merbers[box.dataset.father];
-								// 获取id
-								// 获取头像地址
-								checkedAvatar.push(box.dataset.avatar);
-							}
-						});
-						logs(mber);
-						if (count > 0) {
-							// var prior = plus.webview.currentWebview().opener();
-							// mui.fire(prior, 'doit', {
-							// 	imagePath: checkedAvatar,
-							// 	idGroup: checkedValues
-							// });
-							// var detailPage = plus.webview.getWebviewById('team_detail');
-							// mui.fire(detailPage, 'doit');
-							// setTimeout(function() {
-							// 	mui.back();
-							// }, 500);
-							openPage('mass_message.html', 'mass_message', '#f7f7f7', '');
-						} else {
-							message('你没选择任何成员');
-							// mui.alert('你没选择任何成员');
-						}
-						// if (count) {
-
-						// }
-					}, false);
-
 					mui('.mui-indexed-list-inner').on('change', 'input', function() {
-						count = list.querySelectorAll('input[type="checkbox"]:checked').length;
-						var value = count ? "下一步(" + count + ")" : "下一步";
-						next.innerHTML = value;
+						var index = app.uids.indexOf(this.value);
+						var idx = app.userName.indexOf(this.dataset.names);
+						// 添加选择的id
+						if (index > -1) {
+							app.uids.splice(index, 1);
+						} else {
+							app.uids.push(this.value);
+						}
+						// 添加删除用户名
+						if (idx > -1) {
+							app.userName.splice(index, 1);
+						} else {
+							app.userName.push(this.dataset.names);
+						}
+						count = app.uids.length;
+						var context = count ? "下一步(" + count + ")" : "下一步";
+						next.innerHTML = context;
 						if (count) {
 							if (next.classList.contains("next-disabled")) {
 								next.classList.remove("next-disabled");
@@ -360,27 +324,60 @@
 							}
 						}
 					});
+					//next event
+					next.addEventListener('tap', function() {
+						var index = app.tags.indexOf(app.tagsname);
+						// 添加选择的id
+						if (index > -1) {
+							// app.uids.splice(index, 1);
+						} else {
+							app.tags.push(app.tagsname);
+						}
+						if (count > 0) {
+							mui.fire(plus.webview.getWebviewById('mass_message'), 'reloadMyself', {
+								uids: app.uids,
+								userName: app.userName,
+								tags: app.tags
+							});
+							openPage('mass_message.html', 'mass_message', '#f7f7f7', '');
+						} else {
+							mui.toast('没有选择任何人员');
+						}
+					}, false);
+
+					// 全选操作
 					var allselect = false;
 					mui('.mui-bar').on('tap', '.create-team-btn', function() {
 						if (!allselect) {
+							app.uids = [];
+							app.userName = [];
 							mui("input[type='checkbox']").each(function() {
 								this.checked = true;
+								app.uids.push(this.value);
+								app.userName.push(this.dataset.names);
 							});
 							next.classList.remove("next-disabled");
-							document.querySelector('.create-team-btn').innerText="取消";
-							count=list.querySelectorAll('input[type="checkbox"]:checked').length;
-							allselect=true;
+							document.querySelector('.create-team-btn').innerText = "取消";
+							count = app.uids.length;
+							var context = count ? "下一步(" + count + ")" : "下一步";
+							next.innerHTML = context;
+							allselect = true;
 						} else {
 							mui("input[type='checkbox']").each(function() {
 								this.checked = false;
+								app.uids = [];
+								app.userName = [];
 							});
-							count=0;
+							count = 0;
 							next.classList.add("next-disabled");
-							document.querySelector('.create-team-btn').innerText="全选";
-							allselect=false;
+							document.querySelector('.create-team-btn').innerText = "全选";
+							count = app.uids.length;
+							var context = count ? "下一步(" + count + ")" : "下一步";
+							next.innerHTML = context;
+							allselect = false;
 						}
 					});
-				});
+				})
 			}
 		})
 

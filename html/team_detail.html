@@ -8,18 +8,36 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
 			.team-detail-header {
-				height: 3rem;
-				background: #ffffff url("../image/team-detail-img01.jpg")center top no-repeat;
+				height: 3.97rem;
+				/* background: #ffffff url("../image/team-detail-img01.jpg")center top no-repeat; */
+				background: #ffffff;
 				background-size: contain;
-				padding: 0.9rem 0.3rem 0;
+				padding: 0.6rem 0.3rem 0;
 				color: #ffffff;
 				font-size: 0.4rem;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.team-detail-header .team-bgimg {
+				width: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 1;
+			}
+
+			.team-desc {
+				z-index: 2;
+				position: relative;
 			}
 
 			.team-number {
 				font-size: 0.24rem;
 				color: #ffffff;
 				margin-top: 0.18rem;
+				z-index: 2;
+				position: relative;
 			}
 
 			.team-detail-header .mui-pull-left img,
@@ -27,6 +45,8 @@
 				width: 0.28rem;
 				height: auto;
 			}
+
+			team-detail-header {}
 
 			.title-img {
 				margin-left: 0.1rem;
@@ -41,7 +61,6 @@
 				padding: 0 0.2rem;
 				background-color: #ffffff;
 			}
-
 			.headline {
 				font-size: 0.3rem;
 				color: #373737;
@@ -64,7 +83,7 @@
 
 			.notice-cont p {
 				padding: 0.2rem 0 0.4rem;
-				font-size: 0.24rem;
+				font-size: 0.26rem;
 				color: #333333;
 				text-align: justify;
 			}
@@ -204,7 +223,8 @@
 				font-size: 0.3rem;
 				margin: 1rem auto 0.5rem;
 			}
-			.team-setting{
+
+			.team-setting {
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -217,6 +237,57 @@
 				color: #333333;
 				margin-right: -10px;
 			}
+
+			.more-menu {
+				width: 90px;
+			}
+
+			.more-menu .mui-table-view-cell {
+				padding: 10px;
+				font-size: 14px;
+				display: flex;
+				align-items: center;
+			}
+
+			.more-menu .mui-table-view-cell::after {
+				left: 0;
+			}
+
+			.mui-backdrop.mui-active {
+				opacity: 0;
+			}
+			.team-grade-container{
+				position: relative;
+				z-index: 10;
+				height: 1.4rem;
+				background-color: #FFFFFF;
+			}
+			.team-grade-cont {
+				position: absolute;
+				transform: translateY(-50%);
+				width: 7.1rem;
+				background-color: #FFFFFF;
+				padding: 0.4rem 0.7rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+				left: 0.2rem;
+				border-radius: 0.1rem;
+			}
+			.team-grade-cont p{
+				margin-bottom: 5px;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+			.team-grade-cont span{
+				font-size: 0.3rem;
+				color: #373737;
+			}
+			.team-grade-items {
+				text-align: center;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -236,24 +307,41 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">团队详情</h1>
-			<span class="mui-pull-right team-setting">
+			<a href="#menu" class="mui-pull-right team-setting">
 				···
-			</span>
+			</a>
 		</header>
 
 		<div id="mui-content" class="mui-content team-detail-container" v-cloak>
 			<div class="team-detail-header">
-				<div class="mui-clearfix">
+				<div class="mui-clearfix team-desc">
 					<div class="mui-pull-left">
 						<span class="team-name">{{teamName}}</span>
 					</div>
 					<img class="mui-pull-right team-qrCode" src="../image/team-detail-img04.png" alt="">
 				</div>
+				<img class="team-bgimg" src="../image/share/bg-img03.jpg">
 				<p class="team-number">{{tid}}</p>
+			</div>
+			<div class="team-grade-container">
+				<div class="team-grade-cont">
+					<div class="team-grade-items">
+						<p>团队排名</p>
+						<span>第3名</span>
+					</div>
+					<div class="team-grade-items">
+						<p>团队活跃度</p>
+						<span>99分</span>
+					</div>
+					<div class="team-grade-items">
+						<p>团队总收入</p>
+						<span>百万级</span>
+					</div>
+				</div>
 			</div>
 			<div class="notice-cont">
 				<h2 class="headline">
-					公告
+					团队公告
 				</h2>
 				<p>{{desc}}</p>
 			</div>
@@ -297,6 +385,12 @@
 				</div>
 			</div>
 			<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
+		</div>
+		<div id="menu" class="mui-popover more-menu">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell delete-team">解散团队</li>
+				<li class="mui-table-view-cell team-settings">设置</li>
+			</ul>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -342,16 +436,18 @@
 					})
 				}
 			},
-			mounted: function() {}
+			mounted: function() {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					app.tid = self.teamid;
+					// alert(self.teamid);
+					getInfo();
+					getMember();
+					getApplyList();
+				})
+			}
 		})
-		mui.plusReady(function() {
-			var self = plus.webview.currentWebview();
-			app.tid = self.teamid;
-			// alert(self.teamid);
-			getInfo();
-			getMember();
-			getApplyList();
-		})
+
 		mui(".mui-content").on("tap", ".team-qrCode", function() {
 			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', {
 				teamId: app.tid,
@@ -359,13 +455,36 @@
 			});
 		})
 		//团队设置
-		mui(".mui-bar").on("tap", ".team-setting", function() { 
+		mui(".more-menu").on("tap", ".team-settings", function() {
+			mui('.more-menu').popover('hide');
 			openPage('team_setting.html', 'team_setting', '#f7f7f7', {
 				teamId: app.tid,
 				teamName: app.teamName,
-				desc:app.desc,
-				img:"../image/share/bg-img03.jpg"
+				desc: app.desc,
+				img: "../image/share/bg-img03.jpg"
 			});
+		})
+		//解散团队
+		mui(".more-menu").on("tap", ".delete-team", function() {
+			mui('.more-menu').popover('hide');
+			plus.nativeUI.confirm('确认解散团队吗？该操作不可撤销。', function(e) {
+				if (e.index == 1) {
+					// mui.toast("取消");
+				} else {
+					mui.post($ajaxUrl + 'team&action=delete', {
+						token: userInfo.token,
+						team_id: app.tid
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							mui.toast("团队已经解散");
+						} else {
+							mui.toast("操作失败");
+						}
+					}, 'json');
+
+				}
+			})
 		})
 		// 添加团队成员
 		mui(".mui-content").on("tap", ".member-selection", function() {
@@ -424,7 +543,7 @@
 		}
 		// 获取团队成员
 		function getMember() {
-			logs(app.tid);
+			// logs(app.tid);
 			mui.post($ajaxUrl + 'team&action=member_list', {
 				token: userInfo.token,
 				team_id: app.tid
@@ -446,7 +565,7 @@
 				team_id: app.tid,
 				uids: checkedValues.join(',')
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					message("添加成功");
 				} else {

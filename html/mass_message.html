@@ -99,44 +99,41 @@
 			footer {
 				position: fixed;
 				width: 100%;
-				height: 50px;
 				min-height: 50px;
 				border-top: solid 1px #BBBBBB;
 				left: 0px;
 				bottom: 0px;
 				overflow: hidden;
-				padding: 0px 50px;
 				background-color: #fafafa;
-			}
-
-			.footer-left {
-				position: absolute;
-				width: 50px;
-				height: 50px;
-				left: 0px;
-				bottom: 0px;
-				text-align: center;
-				vertical-align: middle;
-				line-height: 100%;
-				padding: 12px 4px;
-			}
-
-			.footer-right {
-				position: absolute;
-				width: 50px;
-				height: 50px;
-				right: 0px;
-				bottom: 0px;
-				text-align: center;
-				padding: 12px 5px;
-				display: inline-flex;
+				display: flex;
 				align-items: center;
-				color: #2289FF;
+			}
+
+			.footer-left,
+			.footer-right {
+				display: inline-flex;
+				position: relative;
+				width: 50px;
+				height: 50px;
+				text-align: center;
+				align-items: center;
+				flex-shrink: 0;
+				justify-content: center;
 			}
 
 			.footer-center {
-				height: 100%;
+				min-height: 50px;
+				height: auto;
 				padding: 5px 0px;
+				position: relative;
+				overflow: hidden;
+				flex-grow: 1;
+			}
+
+			.footer-center img {
+				width: 100px;
+				height: 100px;
+				object-fit: cover;
 			}
 
 			.footer-center [class*=input] {
@@ -153,12 +150,17 @@
 				line-height: 18px !important;
 				font-family: verdana !important;
 				overflow: hidden;
+				margin-bottom: 0;
+				box-sizing: border-box;
+				height: 44px;
+				width: 100%;
 			}
 
 			.mui-content {
 				padding-bottom: 49px;
 			}
-			.mass-record{
+
+			.mass-record {
 				height: 44px;
 				position: relative;
 				display: flex;
@@ -168,7 +170,6 @@
 				z-index: 16;
 				font-size: 14px;
 				color: #333333;
-				/* background-color: #007AFF; */
 				margin-right: -10px;
 			}
 		</style>
@@ -189,7 +190,7 @@
 			<div class="mass-person">
 				<div class="mass-title mui-clearfix">
 					<div class="mui-pull-left">
-						群发人数：205
+						群发人数：{{person.length}}
 					</div>
 					<div class="mui-pull-right clear-selcet">
 						<span class="mui-icon mui-icon-closeempty"></span><span>清除</span>
@@ -198,54 +199,48 @@
 				<div class="slecet-person">
 					<!-- <p v-if="person.length>0" v-for="i in 30"> -->
 					<p v-if="person.length>0">
-						<template v-for="(items,idx) in person" :key="idx">{{items.name}}<template v-if="idx<person.length-1">、</template></template>
+						<template v-for="(items,idx) in person" :key="idx">{{items}}<template v-if="idx<person.length-1">、</template></template>
 					</p>
+					<!-- <div class="mui-text-center" style="font-size: 14px; color:#999999;">请选择收件人</div> -->
+					<p v-if="person.length>0">
+						<template v-for="(items,idx) in uids" :key="idx">{{items}}<template v-if="idx<uids.length-1">、</template></template>
+					</p>
+					<p v-if="tags.length>0">
+						<template v-for="(items,idx) in tags" :key="idx">{{items}}<template v-if="idx<tags.length-1">、</template></template>
+					</p>
+					<!-- <div class="" style="max-width: 100%;overflow: hidden;"> -->
+					<!-- <img :src="sendImg" style="width: 100%;height:auto;"> -->
+					<!-- </div> -->
 				</div>
 			</div>
+			<footer>
+				<div class="footer-left">
+					<i id='msg-image' class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
+				</div>
+				<div class="footer-center">
+					<textarea v-model="message" id='msg-text' type="text" class='input-text'></textarea>
+				</div>
+				<label id="msg-type" class="footer-right">
+					发送
+				</label>
+			</footer>
 		</div>
-		<footer>
-			<div class="footer-left">
-				<i id='msg-image' class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
-			</div>
-			<div class="footer-center">
-				<textarea id='msg-text' type="text" class='input-text'></textarea>
-			</div>
-			<label id="msg-type" class="footer-right">
-				发送
-			</label>
-		</footer>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/upload.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo=getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					person: [{
-						name: '王花花',
-						id: 3
-					}, {
-						name: '刘备备',
-						id: 4
-					}, {
-						name: '李栓蛋',
-						id: 6
-					}, {
-						name: '米斯特吴',
-						id: 7
-					}, {
-						name: '张飞飞',
-						id: 8
-					}, {
-						name: '诸葛亮',
-						id: 9
-					}, {
-						name: '嘉文',
-						id: 10
-					}, {
-						name: '赵信',
-						id: 11
-					}]
+					person: [],
+					uids: [],
+					// 选择的标签
+					tags: [],
+					message: '',
+					jurisdiction: true,
+					sendImg: '../image/5E0eH.png'
 				},
 				methods: {
 
@@ -256,19 +251,27 @@
 							plus.navigator.setStatusBarStyle("light");
 						}
 					})
-					// 添加收件人
-					mui(".mui-content").on('tap','.add-recipients',function(){
-						openPage('select_group.html','select_group','#f7f7f7','');
-					})
 					// 群发记录
-					mui(".mui-bar").on('tap','.mass-record',function(){
-						openPage('mass_list.html','mass_list','#f7f7f7','');
+					mui(".mui-bar").on('tap', '.mass-record', function() {
+						openPage('mass_list.html', 'mass_list', '#f7f7f7', '');
 					})
 					// 清除
-					mui(".mui-content").on('tap','.clear-selcet',function(){
-						app.person=[];
+					mui(".mui-content").on('tap', '.clear-selcet', function() {
+						app.person = [];
+						app.uids = [];
+						app.tags = [];
 					})
-					mui.plusReady(function() {});
+					// 清除
+					mui(".mui-content").on('tap', '.mui-icon-clear', function() {
+						app.jurisdiction = true;
+						app.sendImg = "";
+					})
+
+					function material() {
+						// app.uids = getcache("uids");
+						// app.person = getcache("userName");
+					}
+
 					(function($, doc) {
 						if (mui.os.ios) {
 							// 解决在ios上fixed元素focusin时位置出现错误的问题 
@@ -286,6 +289,21 @@
 							plus.webview.currentWebview().setStyle({
 								softinputMode: "adjustResize"
 							});
+							// 添加收件人
+							mui(".mui-content").on('tap', '.add-recipients', function() {
+								// 先隐藏后两个页面再关闭
+								plus.webview.hide("select_group");
+								plus.webview.hide("select_recipients");
+								plus.webview.close("select_group");
+								plus.webview.close("select_recipients");
+								setTimeout(function() {
+									openPage('select_group.html', 'select_group', '#f7f7f7', {
+										uids: app.uids,
+										person: app.person,
+										tags: app.tags
+									});
+								}, 100);
+							})
 						});
 						var ui = {
 							body: doc.querySelector('body'),
@@ -327,7 +345,23 @@
 								event.preventDefault();
 							}
 						});
+						ui.footerRight.addEventListener('tap', function(event) {
+							if (app.uids.length < 1) {
+								alert("请先添加收件人。")
+								return;
+							}
+							if (!app.message) {
+								alert("群发内容不能为空。")
+								return;
+							}
+							plus.nativeUI.showWaiting("正在发送…");
+							groupSend();
+						});
 						ui.footerLeft.addEventListener('tap', function(event) {
+							if (app.uids.length < 1) {
+								alert("请先添加收件人。")
+								return;
+							}
 							var btnArray = [{
 								title: "拍照"
 							}, {
@@ -345,28 +379,62 @@
 									case 1:
 										var cmr = plus.camera.getCamera();
 										cmr.captureImage(function(path) {
-											send({
-												sender: 'self',
-												type: 'image',
-												content: "file://" + plus.io.convertLocalFileSystemURL(path)
+											var imgpath = "file://" + plus.io.convertLocalFileSystemURL(path);
+											upload(path,function(e){
+												app.sendImg=e.filename;
+												groupSend()
 											});
 										}, function(err) {});
 										break;
 									case 2:
 										plus.gallery.pick(function(path) {
-											send({
-												sender: 'self',
-												type: 'image',
-												content: path
+											upload(path,function(e){
+												app.sendImg=e.filename;
+												groupSend()
 											});
 										}, function(err) {}, null);
-									break;
+										break;
 								}
 							});
 						}, false);
 					}(mui, document));
 				}
 			})
+			window.addEventListener('reloadMyself', function(e) {
+				app.uids = e.detail.uids;
+				app.person = e.detail.userName;
+				app.tags = e.detail.tags;
+			})
+			// 群发
+			function groupSend(){
+				mui.ajax($ajaxUrl + 'member', {
+					data: {
+						token: userInfo.token,
+						uids: app.uids,
+						content: app.message,
+						tags: app.tags,
+						person: app.person
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 180000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(res) {
+						if (res.errno == 0) {
+							plus.nativeUI.closeWaiting();
+							message("群发成功");
+						} else {
+						
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}
 		</script>
 	</body>
 
