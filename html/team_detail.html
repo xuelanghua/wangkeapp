@@ -6,7 +6,12 @@
 		<title>团队详情</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/swiper.min.css" rel="stylesheet" />
 		<style type="text/css">
+			.team-detail-container {
+				position: relative;
+			}
+
 			.team-detail-header {
 				height: 3.97rem;
 				/* background: #ffffff url("../image/team-detail-img01.jpg")center top no-repeat; */
@@ -61,6 +66,7 @@
 				padding: 0 0.2rem;
 				background-color: #ffffff;
 			}
+
 			.headline {
 				font-size: 0.3rem;
 				color: #373737;
@@ -247,6 +253,7 @@
 				font-size: 14px;
 				display: flex;
 				align-items: center;
+				justify-content: center;
 			}
 
 			.more-menu .mui-table-view-cell::after {
@@ -254,14 +261,16 @@
 			}
 
 			.mui-backdrop.mui-active {
-				opacity: 0;
+				opacity: 0.5;
 			}
-			.team-grade-container{
+
+			.team-grade-container {
 				position: relative;
-				z-index: 10;
+				z-index: 8;
 				height: 1.4rem;
 				background-color: #FFFFFF;
 			}
+
 			.team-grade-cont {
 				position: absolute;
 				transform: translateY(-50%);
@@ -272,20 +281,273 @@
 				align-items: center;
 				justify-content: space-between;
 				box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
-				left: 0.2rem;
+				left: 50%;
+				margin-left: -3.55rem;
 				border-radius: 0.1rem;
 			}
-			.team-grade-cont p{
+
+			.team-grade-cont p {
 				margin-bottom: 5px;
 				font-size: 0.24rem;
 				color: #999999;
 			}
-			.team-grade-cont span{
+
+			.team-grade-cont span {
 				font-size: 0.3rem;
 				color: #373737;
 			}
+
 			.team-grade-items {
 				text-align: center;
+			}
+
+			.mui-segmented-control {
+				background-color: #FFFFFF;
+				padding-bottom: 0.6rem;
+			}
+
+			.mui-control-content {
+				background-color: #FFFFFF;
+			}
+
+			.mui-control-item {
+				position: relative;
+				touch-action: pan-y;
+				-webkit-transition: all 0.25s ease-in-out;
+				transition: all 0.25s ease-in-out;
+			}
+
+			.mui-control-item.mui-active:after {
+				content: '';
+				display: block;
+				position: absolute;
+				height: 1px;
+				width: 48%;
+				bottom: 6px;
+				left: 26%;
+				background-color: #007aff;
+			}
+
+			.team-master {
+				padding: 0;
+				position: relative;
+			}
+
+			.team-master .swiper-slide {
+				width: 5.06rem;
+				height: 3.46rem;
+				background-color: #0062CC;
+				overflow: hidden;
+				box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+				border-radius: 0.1rem;
+				background-color: #FFFFFF;
+				position: relative;
+				padding: 0.2rem;
+			}
+
+			.team-master .swiper-slide .master-top {
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding-bottom: 0.2rem;
+			}
+
+			.team-master .swiper-slide .master-top::after {
+				content: '';
+				display: block;
+				position: absolute;
+				height: 1px;
+				width: 100%;
+				bottom: 0;
+				left: 0;
+				background-color: #DDDDDD;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+
+			.swiper-slide .master-headimg {
+				width: 1.58rem;
+				height: 1.58rem;
+				border-radius: 50%;
+				object-fit: cover;
+				margin-right: 0.2rem;
+				flex-shrink: 0;
+			}
+
+			.mui-ellipsis-3 {
+				display: -webkit-box;
+				overflow: hidden;
+				white-space: normal !important;
+				text-overflow: ellipsis;
+				word-wrap: break-word;
+				-webkit-line-clamp: 3;
+				-webkit-box-orient: vertical;
+			}
+
+			.swiper-slide h4 {
+				align-items: center;
+				font-size: 0.3rem;
+				color: #333333;
+				font-weight: normal;
+				overflow: hidden;
+				vertical-align: middle;
+			}
+
+			.swiper-slide .master-bottom {
+				width: 100%;
+				padding-top: 0.1rem;
+			}
+
+			.swiper-slide .master-bottom p {
+				font-size: 0.26rem;
+				color: #333333;
+			}
+
+			.swiper-slide h4 img {
+				width: 0.3rem;
+				height: 0.3rem;
+				display: inline-flex;
+				flex-shrink: 0;
+				margin-right: 3px;
+			}
+
+			.swiper-slide .data-bank {
+				max-width: 3rem;
+			}
+
+			.swiper-slide .data-bank p {
+				font-size: 0.24rem;
+				margin-bottom: 0;
+			}
+
+			.team-master .headline,
+			.team-honor .headline {
+				padding: 0.2rem 10px;
+			}
+
+			.card-sign-cont {
+				width: 0.75rem;
+				height: 0.75rem;
+				position: absolute;
+				top: 0;
+				right: 0;
+				z-index: 8;
+			}
+
+			.swiper-container {
+				padding: 10px;
+				overflow: hidden;
+			}
+
+			.team-master .swiper-slide-prev {
+				box-shadow: none;
+			}
+
+			.team-honor-sign {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				padding: 0 0.4rem;
+			}
+
+			.team-honor-sign .sign-items {
+				width: 1.98rem;
+				height: 2.16rem;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				background: #FFFFFF url("../image/team-honor-bg.png")center center no-repeat;
+				background-size: contain;
+				padding: 0.35rem;
+				margin-bottom: 0.2rem;
+			}
+
+			.team-honor-sign .sign-items span {
+				display: inline-flex;
+				max-width: 2rem;
+				margin-top: 0.3rem;
+				font-size: 0.3rem;
+				color: #2289FF;
+				text-align: center;
+			}
+
+			.master-card {
+				width: 5.82rem !important;
+				height: 9.48rem !important;
+				position: fixed;
+				top: 50% !important;
+				left: 50% !important;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+
+			.master-card .close-btn {
+				width: 0.72rem;
+				height: 0.72rem;
+				display: block;
+				margin: 30px auto 0;
+			}
+
+			.master-card .master-card-body {
+				width: 5.82rem;
+				height: 8.73rem;
+				border-radius: 0.1rem;
+				background: #FFFFFF url("../image/master-sign-bg.png")center top no-repeat;
+				background-size: contain;
+				padding-top: 1.35rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.master-card .master-card-body h4 {
+				display: flex;
+				align-items: center;
+				font-size: 0.3rem;
+				color: #333333;
+				font-weight: normal;
+			}
+
+			.master-card .master-card-body h4 img {
+				width: 0.3rem;
+				height: 0.3rem;
+				margin-right: 0.05rem;
+			}
+
+			.master-card .user-head-cont {
+				width: 1.68rem;
+				height: 1.68rem;
+				border-radius: 50%;
+				margin-bottom: 0.2rem;
+				object-fit: cover;
+			}
+
+			.mui-control-item.mui-active {
+				font-weight: 700;
+				font-size: 0.32rem;
+			}
+
+			.master-inside {
+				width: 100%;
+				flex-grow: 1;
+				/* background-color: #0062CC; */
+				padding: 0.2rem 0.2rem 0;
+			}
+
+			.master-inside p {
+				font-size: 0.24rem;
+				color: #999999;
+				margin: 0;
+			}
+
+			.master-inside span {
+				color: #333333;
+			}
+
+			.master-inside .desc {
+				color: #333333;
+				font-size: 0.26rem;
+				margin-top: 0.1rem;
 			}
 
 			[v-cloak] {
@@ -339,62 +601,138 @@
 					</div>
 				</div>
 			</div>
-			<div class="notice-cont">
-				<h2 class="headline">
-					团队公告
-				</h2>
-				<p>{{desc}}</p>
+			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+				<a class="mui-control-item mui-active" href="#item1">
+					基本信息
+				</a>
+				<a class="mui-control-item" href="#item2">
+					主力商品
+				</a>
+				<a class="mui-control-item" href="#item3">
+					团队课程
+				</a>
 			</div>
-			<div class="team-members">
-				<h2 class="headline team-member-more">团队成员<p class="more-member mui-pull-right">共{{teamNum}}人<span class="mui-icon mui-icon-arrowright"></span></p>
-				</h2>
-				<ul>
-					<li v-for="(items,index) in teamMember" :key="index">
-						<div class="user-head-img">
-							<img :src="items.avatar||items.avatarUrl" />
-						</div>
-					</li>
-					<li>
-						<div class="user-head-img member-selection">
-							<img type="image" src="../image/team-detail-img05.png" />
-						</div>
-					</li>
-				</ul>
-			</div>
-			<div class="validation-messages" v-if="role">
-				<h2 class="headline">验证消息</h2>
-				<ul v-if="applyList.length>0" class="mui-table-view">
-					<li class="mui-table-view-cell" v-for="(list,index) in applyList" :key="index">
-						<div class="member-left">
-							<img :src="list.avatar!=null?list.avatar:list.avatarUrl" alt="">
-							<div>
-								<p class="name">{{list.name!=null?list.name:list.nickName}}</p>
-								<p>{{list.remark}}</p>
+			<div id="item1" class="mui-control-content mui-active">
+				<div class=" notice-cont">
+					<h2 class="headline">
+						团队公告
+					</h2>
+					<p>{{desc}}</p>
+				</div>
+				<div class="team-members">
+					<h2 class="headline team-member-more">团队成员<p class="more-member mui-pull-right">共{{teamNum}}人<span class="mui-icon mui-icon-arrowright"></span></p>
+					</h2>
+					<ul>
+						<li v-for="(items,index) in teamMember" :key="index">
+							<div class="user-head-img">
+								<img :src="items.avatar||items.avatarUrl" />
+							</div>
+						</li>
+						<li>
+							<div class="user-head-img member-selection">
+								<img type="image" src="../image/team-detail-img05.png" />
+							</div>
+						</li>
+					</ul>
+				</div>
+				<!-- 团队大咖 -->
+				<div class="team-master">
+					<h2 class="headline team-master-more">
+						<span>团队大咖</span>
+						<p class="more-master mui-pull-right">更多<span class="mui-icon mui-icon-arrowright"></span></p>
+					</h2>
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							<div class="swiper-slide" v-for="(h,i) in person" :key="i">
+								<div class="master-top" @tap="checkBusinessCard(i)">
+									<img class="master-headimg" :src="h.img">
+									<div class="data-bank">
+										<h4 class="mui-ellipsis"><img src="../image/master-sign.png"><span>{{h.name}}</span></h4>
+										<p class="mui-ellipsis">职业：{{h.job}}</p>
+										<p>行业：{{h.trade}}</p>
+										<p>职位：{{h.position}}</p>
+									</div>
+								</div>
+								<div class="master-bottom" @tap="checkBusinessCard(i)">
+									<p class="mui-ellipsis-3">{{h.desc}}</p>
+								</div>
+								<img class="card-sign-cont" src="../image/business-card-sign.png">
 							</div>
 						</div>
-						<div class="member-right">
-							<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
-							<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button>
-							<span v-else-if="list.status==1">已添加</span>
-							<span v-else>已拒绝</span>
-						</div>
-					</li>
-				</ul>
-				<div v-else style="width: 100%;margin: 0.6rem 0;text-align: center;color: #999999;">
-					暂无验证消息
+					</div>
 				</div>
+				<!-- 团队荣誉 -->
+				<div class="team-honor">
+					<h2 class="headline team-member-more">
+						<span>团队荣誉</span>
+						<!-- v-if="role" -->
+						<p class="more-member mui-pull-right">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
+					</h2>
+					<div class="team-honor-sign">
+						<div class="sign-items" v-for="(j,i) in 6">
+							<span>百百万团队</span>
+						</div>
+					</div>
+				</div>
+				<div class="validation-messages" v-if="role">
+					<h2 class="headline">验证消息</h2>
+					<ul v-if="applyList.length>0" class="mui-table-view">
+						<li class="mui-table-view-cell" v-for="(list,index) in applyList" :key="index">
+							<div class="member-left">
+								<img :src="list.avatar!=null?list.avatar:list.avatarUrl" alt="">
+								<div>
+									<p class="name">{{list.name!=null?list.name:list.nickName}}</p>
+									<p>{{list.remark}}</p>
+								</div>
+							</div>
+							<div class="member-right">
+								<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
+								<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button>
+								<span v-else-if="list.status==1">已添加</span>
+								<span v-else>已拒绝</span>
+							</div>
+						</li>
+					</ul>
+					<div v-else style="width: 100%;margin: 0.6rem 0;text-align: center;color: #999999;">
+						暂无验证消息
+					</div>
+				</div>
+				<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
 			</div>
-			<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
-		</div>
-		<div id="menu" class="mui-popover more-menu">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell delete-team">解散团队</li>
-				<li class="mui-table-view-cell team-settings">设置</li>
-			</ul>
+			<!-- 主力商品 -->
+			<div id="item2" class="mui-control-content">
+				主力商品
+			</div>
+			<!-- 团队课程 -->
+			<div id="item3" class="mui-control-content">
+				团队课程
+			</div>
+			<div id="menu" class="mui-popover more-menu">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell delete-team">解散团队</li>
+					<li class="mui-table-view-cell team-settings">团队设置</li>
+				</ul>
+			</div>
+			<div id="master_model" class="mui-popover master-card">
+				<div class="master-card-body">
+					<img class="user-head-cont" :src="person[serial].img">
+					<h4 class=""><img src="../image/master-sign.png"><span>{{person[serial].name}}</span></h4>
+					<div class="master-inside">
+						<p class="mui-ellipsis">职业：<span>{{person[serial].job}}</span></p>
+						<p>行业：<span>{{person[serial].trade}}</span></p>
+						<p>职位：<span>{{person[serial].position}}</span></p>
+						<p class="desc">
+							{{person[serial].desc}}
+						</p>
+					</div>
+				</div>
+				<img class="close-btn" src="../image/Close.png">
+			</div>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/swiper.min.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		mui.init();
@@ -411,7 +749,30 @@
 				applyList: [],
 				teamNum: 1,
 				captain_uid: 0,
-				data_status: false
+				data_status: false,
+				person: [{
+					img: '../image/share/bg-img03.jpg',
+					name: '李飞飞',
+					job: '唱跳rap',
+					trade: '偶像，明星',
+					position: '个人练习生',
+					desc: '从前有座山，山上有座庙，庙里有个老和尚在给小和尚讲故事'
+				}, {
+					img: '../image/share/bg-img02.jpg',
+					name: '皮尔特沃夫来的凯特琳',
+					job: '篮球篮球篮球篮球篮球',
+					trade: '体育竞技',
+					position: '前锋',
+					desc: '从前有座山，山上有座庙，庙里有个老和尚在给小和尚讲故事，从前有座山，山上有座庙，庙里有个老和庙里有个老和庙里有个老和庙里有个老和'
+				}, {
+					img: '../image/discover/MUJ11mx.jpg',
+					name: '阿怡酱',
+					job: '自由舞',
+					trade: '明星练习生',
+					position: '舞娘',
+					desc: '舞娘的喜悲没人了解'
+				}],
+				serial: 0
 			},
 			methods: {
 				quitTeam: function() {
@@ -434,6 +795,10 @@
 							}, 'json');
 						}
 					})
+				},
+				checkBusinessCard: function(i) {
+					app.serial = i;
+					mui("#master_model").popover("show", mui(".master-top")[0]);
 				}
 			},
 			mounted: function() {
@@ -445,13 +810,43 @@
 					getMember();
 					getApplyList();
 				})
+				initSlider();
 			}
 		})
-
+		// 轮播初始化
+		function initSlider() {
+			// 初始化轮播
+			var mySwiper = new Swiper('.swiper-container', {
+				//可选选项，自动滑动
+				slidesPerView: 'auto',
+				spaceBetween: 20,
+				// autoplay: {
+				// 	delay: 0,
+				// 	// 用户操作之后不会停止轮播
+				// 	disableOnInteraction: false,
+				// },
+				loop: false
+			})
+		}
+		// 团队二维码
 		mui(".mui-content").on("tap", ".team-qrCode", function() {
 			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', {
 				teamId: app.tid,
 				teamName: app.teamName
+			});
+		})
+		// 点击名片标志
+		mui(".mui-content").on("tap", ".card-sign-cont", function() {
+			mui.toast("准备打开个人详情");
+		})
+		// 关闭卡片
+		mui(".master-card").on("tap", ".close-btn", function() {
+			mui("#master_model").popover("hide", mui(".master-top")[0]);
+		})
+		// 更多大咖
+		mui(".mui-content").on("tap", ".team-master-more", function() {
+			openPage('more_master.html', 'more_master', '#f7f7f7', {
+				tid: '100005'
 			});
 		})
 		//团队设置

@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.master-container {
+				padding: 0.2rem;
+			}
+
+			.mui-table-view {
+				background-color: transparent;
+			}
+
+			.mui-table-view-cell {
+				/* background-color: #FFFFFF; */
+				width: 7.13rem;
+				/* height: 4.83rem; */
+				margin-bottom: 0.2rem;
+				border-radius: 0.1rem;
+				padding: 0;
+			}
+
+			.mui-table-view-cell:after,
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-slider-handle {
+				padding: 0.2rem;
+				height: 100%;
+				border-radius: 0.1rem;
+			}
+
+			.mui-slider-handle .master-top {
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding-bottom: 0.2rem;
+			}
+
+			.mui-slider-handle .master-top::after {
+				content: '';
+				display: block;
+				position: absolute;
+				height: 1px;
+				width: 100%;
+				bottom: 0;
+				left: 0;
+				background-color: #DDDDDD;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+
+			.mui-slider-handle .master-headimg {
+				width: 1.58rem;
+				height: 1.58rem;
+				border-radius: 50%;
+				object-fit: cover;
+				margin-right: 0.2rem;
+				flex-shrink: 0;
+			}
+
+			.mui-ellipsis-3 {
+				display: -webkit-box;
+				overflow: hidden;
+				white-space: normal !important;
+				text-overflow: ellipsis;
+				word-wrap: break-word;
+				-webkit-line-clamp: 3;
+				-webkit-box-orient: vertical;
+			}
+
+			.mui-slider-handle h4 {
+				align-items: center;
+				font-size: 0.3rem;
+				color: #333333;
+				font-weight: normal;
+				overflow: hidden;
+				vertical-align: middle;
+			}
+
+			.mui-slider-handle .master-bottom {
+				width: 100%;
+				padding-top: 0.1rem;
+			}
+
+			.mui-slider-handle .master-bottom p {
+				font-size: 0.26rem;
+				color: #333333;
+			}
+
+			.mui-slider-handle h4 img {
+				width: 0.3rem;
+				height: 0.3rem;
+				display: inline-flex;
+				flex-shrink: 0;
+				margin-right: 3px;
+			}
+
+			.data-bank {
+				max-width: 3rem;
+			}
+
+			.data-bank p {
+				font-size: 0.24rem;
+				margin-bottom: 0;
+			}
+
+			.card-sign-cont {
+				width: 0.75rem;
+				height: 0.75rem;
+				position: absolute;
+				top: 0;
+				right: 0;
+				z-index: 8;
+			}
+
+			.mui-slider-right .stick-btn {
+				margin-left: 0.2rem;
+				border-top-left-radius: 0.1rem !important;
+				border-bottom-left-radius: 0.1rem !important;
+			}
+
+			.mui-slider-right .modifier-btn {
+				position: relative;
+			}
+
+			.mui-table-view-cell>.mui-slider-right>.mui-btn.modifier-btn {
+				border-left: 1px solid #f9f9f9 !important;
+			}
+			.mui-table-view-cell>.mui-slider-right>.mui-btn.delete-btn {
+				border-left: 1px solid #f9f9f9 !important;
+			}
+			.mui-table-view-cell>.mui-slider-left>.mui-btn:after, .mui-table-view-cell>.mui-slider-right>.mui-btn:after{
+				z-index: -66;
+			}
+
+			.mui-btn.mui-btn-primary {
+				background-color: #FFFFFF;
+				color: #333333 !important;
+			}
+		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">团队大咖</h1>
+		</header>
+		<div id="mui-content" class="mui-content master-container" v-cloak>
+			<ul id="OA_task_1" class="mui-table-view">
+				<li class="mui-table-view-cell" v-for="(h,i) in person" :key="i">
+					<div class="mui-slider-right mui-disabled">
+						<span class="mui-btn mui-btn-primary stick-btn">置顶</span>
+						<span class="mui-btn mui-btn-primary modifier-btn">修改</span>
+						<span class="mui-btn mui-btn-primary delete-btn">删除</span>
+					</div>
+					<div class="mui-slider-handle">
+						<div class="master-top">
+							<img class="master-headimg" :src="h.img">
+							<div class="data-bank">
+								<h4 class="mui-ellipsis"><img src="../image/master-sign.png"><span>{{h.name}}</span></h4>
+								<p class="mui-ellipsis">职业：{{h.job}}</p>
+								<p>行业：{{h.trade}}</p>
+								<p>职位：{{h.position}}</p>
+							</div>
+						</div>
+						<div class="master-bottom">
+							<p class="mui-ellipsis-3">{{h.desc}}</p>
+						</div>
+						<img class="card-sign-cont" src="../image/business-card-sign.png">
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					person: [{
+						img: '../image/share/bg-img03.jpg',
+						name: '李飞飞',
+						job: '唱跳rap',
+						trade: '偶像，明星',
+						position: '个人练习生',
+						desc: '从前有座山，山上有座庙，庙里有个老和尚在给小和尚讲故事'
+					}, {
+						img: '../image/share/bg-img02.jpg',
+						name: '皮尔特沃夫来的凯特琳',
+						job: '篮球篮球篮球篮球篮球',
+						trade: '体育竞技',
+						position: '前锋',
+						desc: '从前有座山，山上有座庙，庙里有个老和尚在给小和尚讲故事，从前有座山，山上有座庙，庙里有个老和庙里有个老和庙里有个老和庙里有个老和'
+					}, {
+						img: '../image/discover/MUJ11mx.jpg',
+						name: '阿怡酱',
+						job: '自由舞',
+						trade: '明星练习生',
+						position: '舞娘',
+						desc: '舞娘的喜悲没人了解'
+					}]
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							plus.navigator.setStatusBarStyle("dark");
+						}
+					})
+					mui.plusReady(function() {})
+				}
+			})
+		</script>
+	</body>
+
+</html>
