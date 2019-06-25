@@ -61,7 +61,7 @@
 				<ul>
 					<template v-for="(list, index) in createList" :key="index">
 						<li class="team-list" v-if="list.is_captain==1">
-							<img class="sign-tags" src="../image/icon/sign-tags-data-y.png" @tap="teamDetail(list.team_id)">
+							<img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
 							<div class="inside" @tap="groupsChat('12')">
 								<i class="adorn"></i>
 								<div class="team-title">
@@ -73,7 +73,7 @@
 								</div>
 								<div class="time-person">
 									<span class="create-time">创建时间：{{list.create_time}}</span>
-									<span class="create-time">创建人：{{userSelf}}</span>
+									<span class="create-time">创建人：{{list.captain_name.name||list.captain_name.nickName}}</span>
 								</div>
 							</div>
 						</li>
@@ -88,7 +88,7 @@
 				<ul>
 					<template v-for="(list, index) in joinList" :key="index">
 						<li class="team-list" v-if="list.is_captain==0">
-							<img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id)">
+							<img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
 							<div class="inside" @tap="groupsChat('12')">
 								<i class="adorn"></i>
 								<div class="team-title">
@@ -150,26 +150,7 @@
 				mounted: function() {
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						var teamList = self.teamList;
-						app.teamLists = self.teamList;
-						var createList = new Array();
-						var joinList = new Array();
-						mui.each(teamList, function(index, item) {
-							if (item.is_captain == 1) {
-								createList.push(item);
-							} else {
-								joinList.push(item);
-							}
-						})
-						app.createList = createList;
-						// app.joinList = joinList;
-						if (createList.length > 0) {
-							app.createFlag = true;
-						}
-						if (joinList.length > 0) {
-							app.joinFlag = true;
-						}
-
+						getTeamList();
 						mui('.mui-content').on('tap', '.create-team', function() {
 							if (userInfo.group_id < 2) {
 								message('您没有创建团队的权限!');
@@ -184,8 +165,8 @@
 					})
 				},
 				methods: {
-					teamDetail: function(team_id) {
-						if (app.teamLists[0].data_status != 0 || app.teamLists[0].is_captain != 0) {
+					teamDetail: function(team_id,data_status,is_captain) {
+						if (data_status == 1 || is_captain == 1) {
 							fnOpenWin('webview.html', 'webview', {
 								statusbar: {
 									background: '#FFFFFF'

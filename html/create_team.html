@@ -216,7 +216,7 @@
 			<div class="invite-team-members">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
-						<div class="mui-input-row mui-radio team-type" data-team="1">
+						<div class="mui-input-row mui-radio team-type" data-team="2">
 							<label for="data-team">
 								<p class="title">数据团队</p>
 								<p>只展示团队数据。</p>
@@ -225,7 +225,7 @@
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
-						<div class="mui-input-row mui-radio team-type" data-team="2">
+						<div class="mui-input-row mui-radio team-type" data-team="1">
 							<label for="official_team">
 								<p class="title">正式团队</p>
 								<p>即可以查看团队数据，又可以进行团队分销。</p>
@@ -315,7 +315,7 @@
 				notice: '',
 				imagePath: [],
 				data_status: false,
-				teamType:'1'
+				teamType:'2'
 			},
 			mounted: function() {
 				// mui('.mui-content .mui-switch').each(function() {
@@ -347,6 +347,7 @@
 				notice: app.notice,
 				uids: app.uids.join(","),
 				token: userInfo.token,
+				type:app.teamType,
 				data_status: app.data_status
 			}, function(res) {
 				if (res.errno == 0) {
@@ -379,7 +380,6 @@
 		// 团队类型选择
 		mui('.mui-content').on('tap', '.team-type', function() {
 			app.teamType = this.dataset.team;
-			console.log(app.teamType);
 		})
 	</script>
 </html>

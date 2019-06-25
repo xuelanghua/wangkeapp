@@ -31,7 +31,8 @@
 			}
 
 			.tags-list,
-			.mass-texting-list,.jihuo-texting-list {
+			.mass-texting-list,
+			.jihuo-texting-list {
 				display: flex;
 				align-items: center;
 				font-size: 14px;
@@ -114,7 +115,7 @@
 									<img src="../image/groups-send-icon.png">
 								</div>
 								<div class="customer-left">
-									激活
+									自媒体
 								</div>
 							</li>
 						</div>
@@ -292,11 +293,27 @@
 			mui('.mui-content').on('tap', '.mass-texting-list', function() {
 				openPage('mass_message.html', 'mass_message', '#f7f7f7');
 				plus.navigator.setStatusBarStyle("dark");
-				// mui.openWindow('discover.html','discover');
+
 			})
 			// 跳转激活页面
 			mui('.mui-content').on('tap', '.jihuo-texting-list', function() {
-				mui.openWindow('activation.html','activation');
+				// mui.openWindow('activation.html','activation');
+				mui.openWindow('discover.html', 'discover', {
+					waiting: { //系统等待框参数
+						autoShow: true,
+						title: '等待中…',
+						options: {
+							background: 'rgba(0,0,0,0)',
+							color: 'rgba(0,0,0,1)',
+							loading: {
+								display: 'block',
+								height: '60px',
+								icon: "../image/jump.png",
+								interval: 60
+							}
+						}
+					}
+				});
 			})
 		</script>
 	</body>

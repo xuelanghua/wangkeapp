@@ -148,6 +148,17 @@
 				background-color: #FFFFFF;
 				color: #333333 !important;
 			}
+			.add-master{
+				height: 44px;
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: auto;
+				color: #2289ff;
+				font-size: 14px;
+				z-index:12;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -164,6 +175,9 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">团队大咖</h1>
+			<div class="add-master mui-pull-right">
+				添加大咖
+			</div>
 		</header>
 		<div id="mui-content" class="mui-content master-container" v-cloak>
 			<ul id="OA_task_1" class="mui-table-view">
@@ -232,6 +246,11 @@
 					})
 					mui.plusReady(function() {})
 				}
+			})
+			mui(".mui-bar").on("tap",".add-master",function(){
+				openPage('add_master.html','add_master','#f7f7f7',{
+					masterId:"123"
+				});
 			})
 		</script>
 	</body>

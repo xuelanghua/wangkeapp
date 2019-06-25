@@ -73,7 +73,7 @@
 				margin: 0;
 				line-height: 1.4;
 				font-weight: normal;
-				padding-top: 0.03rem;
+				padding-top: 0.3rem;
 				overflow: hidden;
 			}
 
@@ -303,7 +303,7 @@
 
 			.mui-segmented-control {
 				background-color: #FFFFFF;
-				padding-bottom: 0.6rem;
+				padding-bottom: 0.1rem;
 			}
 
 			.mui-control-content {
@@ -551,11 +551,70 @@
 			}
 
 			/* 主力商品 */
-			.primary-goods{
+			.primary-goods {
 				padding-bottom: 1.1rem;
 			}
+
 			[v-cloak] {
 				display: none;
+			}
+
+			/* 团队课程 */
+			.team-class-container {
+				padding-bottom: 1.1rem;
+			}
+
+			.team-class-container .mui-table-view {
+				/* padding: 0 0.2rem; */
+			}
+
+			.team-class-container .mui-table-view-cell {
+				padding: 0 0.2rem;
+				height: 2.29rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.team-class-container .mui-table-view-cell:after {
+				left: 0.2rem;
+				right: 0.2rem;
+			}
+
+			.goods-img {
+				width: 2.27rem;
+				height: 1.61rem;
+				overflow: hidden;
+				margin-right: 0.24rem;
+			}
+
+			.goods-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.goods-right-cont {
+				max-width: 4.58rem;
+			}
+
+			.streaming-status {
+				height: 0.6rem;
+				display: flex;
+				align-items: center;
+				font-size: 0.24rem;
+				color: #2289FF;
+				align-items: center;
+			}
+
+			.streaming-status span {
+				display: inline-flex;
+				align-items: center;
+			}
+
+			.streaming-status img {
+				width: 0.38rem;
+				margin-right: 0.1rem;
 			}
 		</style>
 		<script>
@@ -606,17 +665,17 @@
 				</div>
 			</div>
 			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item mui-active" href="#item1">
+				<a class="mui-control-item" href="#item1">
 					基本信息
 				</a>
-				<a class="mui-control-item" href="#item2">
+				<a class="mui-control-item mui-hidden" href="#item2">
 					主力商品
 				</a>
-				<a class="mui-control-item" href="#item3">
+				<a class="mui-control-item mui-active" href="#item3">
 					团队课程
 				</a>
 			</div>
-			<div id="item1" class="mui-control-content mui-active">
+			<div id="item1" class="mui-control-content">
 				<div class=" notice-cont">
 					<h2 class="headline">
 						团队公告
@@ -667,7 +726,8 @@
 				</div>
 				<!-- 团队荣誉 -->
 				<div class="team-honor">
-					<h2 class="headline team-member-more">
+					<!-- team_honor_edit.html -->
+					<h2 class="headline team-honor-edit">
 						<span>团队荣誉</span>
 						<!-- v-if="role" -->
 						<p class="more-member mui-pull-right">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
@@ -704,15 +764,34 @@
 				<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
 			</div>
 			<!-- 主力商品 -->
-			<div id="item2" class="mui-control-content primary-goods">
+			<div id="item2" class="mui-control-content primary-goods  mui-hidden">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">主力商品</li>
 				</ul>
 			</div>
 			<!-- 团队课程 -->
-			<div id="item3" class="mui-control-content">
-				团队课程
+			<div id="item3" class="mui-control-content team-class-container mui-active">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<div class="goods-img">
+							<img src="../image/5E0eH.png">
+						</div>
+						<div class="goods-right-cont">
+							<p class="mui-ellipsis-2">葫芦娃葫芦娃一根藤上七朵花，风吹雨打都不怕，啦啦啦啦啦啦啦啦啦啦，都不怕，都不怕~</p>
+							<div class="streaming-status">
+								<span><img src="../image/discover/loading.gif">培训中</span>
+							</div>
+							<div class="hear-cont">
+								<p>20人在听课</p>
+								<!-- <span><img src="de" ></span> -->
+							</div>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">Item 2</li>
+					<li class="mui-table-view-cell">Item 3</li>
+				</ul>
 			</div>
+			<!-- 弹窗 -->
 			<div id="menu" class="mui-popover more-menu">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell delete-team">解散团队</li>
@@ -899,6 +978,12 @@
 			openPage('team_members.html', 'team_members', '#f7f7f7', {
 				tid: app.tid,
 				captainUid: app.captain_uid
+			});
+		})
+		// 编辑团队荣誉
+		mui(".mui-content").on("tap", ".team-honor-edit", function() {
+			openPage('team_honor_edit.html', 'team_honor_edit', '#f7f7f7', {
+				tid: app.tid
 			});
 		})
 
