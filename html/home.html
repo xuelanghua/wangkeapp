@@ -37,7 +37,7 @@
 			}
 
 			.titlecontent {
-				margin-top: 55px;
+				margin-top: 15px;
 			}
 
 			.titlecontentL {
@@ -120,7 +120,7 @@
 				margin-left: 5%;
 				border-radius: 8px;
 				padding: 15px 0 15px 0;
-				box-shadow: 0 0 6px 1px rgba(0,0,0,0.2);
+				box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.2);
 				background-color: #fff;
 			}
 
@@ -401,13 +401,14 @@
 
 			.add-btn {
 				display: inline-block;
-				position: relative;
+				position: absolute;
 				/* background-color: #007AFF; */
 				width: 60px;
 				height: 44px;
 				margin-right: -10px;
 				padding-right: 5px;
-				z-index: 999;
+				z-index: 16;
+				right: 0;
 			}
 
 			#popover {
@@ -427,20 +428,26 @@
 
 			#message,
 			#openPopover {
-				position: relative;
+				position: absolute;
 				z-index: 13;
 				/* background-color: #20D81F; */
 			}
 
+			.mui-bar {
+				padding: 0;
+			}
+
 			.open-message,
 			#openPopover {
-				position: relative;
+				position: absolute;
 				padding: 0 15px;
 				height: 42px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				z-index: 13;
+				/* background-color: #0062CC; */
+				flex-shrink: 0;
 			}
 
 			body {
@@ -494,19 +501,75 @@
 			.mui-slider-item {
 				touch-action: pan-y;
 			}
+
+			.bar-top {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.mui-bar .mui-title {
+				display: inline-flex;
+				font-size: 16px;
+				color: #333333;
+				position: relative;
+				flex-grow: 1;
+				align-items: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				overflow: visible;
+			}
+
+			.team-list {
+				top: 44px;
+				position: absolute;
+				height: auto;
+				z-index: 12;
+				width: 100%;
+				display: none;
+			}
+
+			.team-list .mui-table-view-cell {
+				padding: 0;
+				width: 100%;
+			}
+
+			.team-list .mui-table-view-cell:after {
+				left: 0;
+				background-color: #DDDDDD;
+			}
+
+			.mui-title .mui-icon {
+				font-size: 20px;
+				color: #333333;
+			}
 		</style>
 	</head>
 	<body>
 		<div style="margin-bottom: 50px;">
 			<header class="mui-bar mui-bar-nav" style="height:120px; background-color: #fff;box-shadow: 0 0 0 #fff;">
-				<div id="message" class="open-message mui-pull-left">
-					<img src="../image/index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;">
-					<span class="mui-badge mui-badge-danger" style="display: none;z-index: 14;" id="unread_message">0</span>
+				<div class="bar-top">
+					<div id="message" class="open-message">
+						<img src="../image/index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;">
+						<span class="mui-badge mui-badge-danger" style="display: none;z-index: 14;" id="unread_message">0</span>
+					</div>
+					<div class="mui-title">
+						<span id="team_name">团队切换</span>
+						<span class="mui-icon mui-icon-arrowup mui-icon-arrowdown"></span>
+						<div class="team-list">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell">团队一</li>
+								<li class="mui-table-view-cell">团队二</li>
+								<li class="mui-table-view-cell">团队三</li>
+							</ul>
+						</div>
+					</div>
+					<a href="#popover" class="add-btn" id="openPopover">
+						<img src="../image/index-add-icon.png" style="width: 20px;height: 20px;">
+					</a>
 				</div>
-				<h1 class="mui-title">旺客</h1>
-				<a href="#popover" class="add-btn mui-pull-right" id="openPopover">
-					<img src="../image/index-add-icon.png" style="width: 20px;height: 20px;">
-				</a>
 				<!-- <a href="#popover" id="openPopover">
 					<img src="../image/index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;margin-right: 10px;">
 				</a> -->
@@ -663,6 +726,7 @@
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/swiper.min.js"></script>
+	<script src="../js/Zepto.min.js"></script>
 	<script>
 		mui.init({
 			swipeBack: false,
@@ -819,6 +883,15 @@
 					page: 'home'
 				}, 'slide-in-right');
 			})
+			//切换团队
+			mui('.mui-bar').on('tap', '.mui-title', function() {
+				$(".mui-title .mui-icon").toggleClass("mui-icon-arrowdown");
+				$(".team-list").slideToggle();
+			})
+			// 切换团队名称
+			mui('.mui-bar').on('tap', '.mui-table-view-cell', function() {
+				$("#team_name").text(this.innerText);
+			})
 
 			//关闭二维码
 			document.getElementById('hide_qrcode').addEventListener('tap', function() {
@@ -934,7 +1007,7 @@
 						str += '</div>';
 					}
 					document.getElementById('slider_container').innerHTML = str;
-					
+
 					setTimeout(function() {
 						sliderPlay();
 					}, 2000)
@@ -1074,7 +1147,8 @@
 					noticeLen = notice.length;
 					var str = '<div class="swiper-container"><div class="swiper-wrapper">';
 					for (var i = 0; i < noticeLen; i++) {
-					  str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '">' + notice[i].title +'</div>';
+						str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '">' + notice[i].title +
+							'</div>';
 					}
 					str += '</div></div>';
 					document.getElementById('notice_container').innerHTML = str;

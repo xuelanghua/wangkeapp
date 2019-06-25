@@ -192,25 +192,15 @@
 					<div class="mui-pull-left">
 						群发人数：{{person.length}}
 					</div>
-					<div class="mui-pull-right clear-selcet">
+					<div v-show="person.length>0" class="mui-pull-right clear-selcet">
 						<span class="mui-icon mui-icon-closeempty"></span><span>清除</span>
 					</div>
 				</div>
 				<div class="slecet-person">
-					<!-- <p v-if="person.length>0" v-for="i in 30"> -->
 					<p v-if="person.length>0">
 						<template v-for="(items,idx) in person" :key="idx">{{items}}<template v-if="idx<person.length-1">、</template></template>
 					</p>
 					<!-- <div class="mui-text-center" style="font-size: 14px; color:#999999;">请选择收件人</div> -->
-					<p v-if="person.length>0">
-						<template v-for="(items,idx) in uids" :key="idx">{{items}}<template v-if="idx<uids.length-1">、</template></template>
-					</p>
-					<p v-if="tags.length>0">
-						<template v-for="(items,idx) in tags" :key="idx">{{items}}<template v-if="idx<tags.length-1">、</template></template>
-					</p>
-					<!-- <div class="" style="max-width: 100%;overflow: hidden;"> -->
-					<!-- <img :src="sendImg" style="width: 100%;height:auto;"> -->
-					<!-- </div> -->
 				</div>
 			</div>
 			<footer>
@@ -230,7 +220,8 @@
 		<script src="../js/upload.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo=getUserInfo();
+			var userInfo = getUserInfo();
+			var messageContent = "";
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -240,7 +231,8 @@
 					tags: [],
 					message: '',
 					jurisdiction: true,
-					sendImg: '../image/5E0eH.png'
+					sendImg: '../image/5E0eH.png',
+					messageType: 'text'
 				},
 				methods: {
 
@@ -251,26 +243,6 @@
 							plus.navigator.setStatusBarStyle("light");
 						}
 					})
-					// 群发记录
-					mui(".mui-bar").on('tap', '.mass-record', function() {
-						openPage('mass_list.html', 'mass_list', '#f7f7f7', '');
-					})
-					// 清除
-					mui(".mui-content").on('tap', '.clear-selcet', function() {
-						app.person = [];
-						app.uids = [];
-						app.tags = [];
-					})
-					// 清除
-					mui(".mui-content").on('tap', '.mui-icon-clear', function() {
-						app.jurisdiction = true;
-						app.sendImg = "";
-					})
-
-					function material() {
-						// app.uids = getcache("uids");
-						// app.person = getcache("userName");
-					}
 
 					(function($, doc) {
 						if (mui.os.ios) {
@@ -291,17 +263,13 @@
 							});
 							// 添加收件人
 							mui(".mui-content").on('tap', '.add-recipients', function() {
-								// 先隐藏后两个页面再关闭
-								plus.webview.hide("select_group");
-								plus.webview.hide("select_recipients");
-								plus.webview.close("select_group");
-								plus.webview.close("select_recipients");
+								mui.fire(plus.webview.getWebviewById('select_group'), 'reloadYouSelf', {
+									uids: app.uids,
+									person: app.person,
+									tags: app.tags
+								});
 								setTimeout(function() {
-									openPage('select_group.html', 'select_group', '#f7f7f7', {
-										uids: app.uids,
-										person: app.person,
-										tags: app.tags
-									});
+									openPage('select_group.html', 'select_group', '#f7f7f7');
 								}, 100);
 							})
 						});
@@ -326,9 +294,7 @@
 								var main = plus.android.runtimeMainActivity();
 								var imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
 								imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
-								//var view = ((ViewGroup)main.findViewById(android.R.id.content)).getChildAt(0);
 								imm.showSoftInput(main.getWindow().getDecorView(), InputMethodManager.SHOW_IMPLICIT);
-								//alert("ll");
 							}
 						};
 						//解决长按“发送”按钮，导致键盘关闭的问题；
@@ -354,7 +320,8 @@
 								alert("群发内容不能为空。")
 								return;
 							}
-							plus.nativeUI.showWaiting("正在发送…");
+							messageContent = app.message;
+							app.messageType = "text";
 							groupSend();
 						});
 						ui.footerLeft.addEventListener('tap', function(event) {
@@ -362,76 +329,82 @@
 								alert("请先添加收件人。")
 								return;
 							}
-							var btnArray = [{
-								title: "拍照"
-							}, {
-								title: "从相册选择"
-							}];
-							plus.nativeUI.actionSheet({
-								title: "选择照片",
-								cancel: "取消",
-								buttons: btnArray
-							}, function(e) {
-								var index = e.index;
-								switch (index) {
-									case 0:
-										break;
-									case 1:
-										var cmr = plus.camera.getCamera();
-										cmr.captureImage(function(path) {
-											var imgpath = "file://" + plus.io.convertLocalFileSystemURL(path);
-											upload(path,function(e){
-												app.sendImg=e.filename;
-												groupSend()
-											});
-										}, function(err) {});
-										break;
-									case 2:
-										plus.gallery.pick(function(path) {
-											upload(path,function(e){
-												app.sendImg=e.filename;
-												groupSend()
-											});
-										}, function(err) {}, null);
-										break;
-								}
+							imageUpload(function(res) {
+								app.messageType = "image";
+								messageContent = res.url;
+								groupSend();
 							});
 						}, false);
+						// 群发记录
+						mui(".mui-bar").on('tap', '.mass-record', function() {
+							openPage('mass_list.html', 'mass_list', '#f7f7f7', '');
+						})
+						// 清除
+						mui(".mui-content").on('tap', '.clear-selcet', function() {
+							app.person = [];
+							app.uids = [];
+							app.tags = [];
+						})
 					}(mui, document));
 				}
 			})
+
 			window.addEventListener('reloadMyself', function(e) {
 				app.uids = e.detail.uids;
 				app.person = e.detail.userName;
 				app.tags = e.detail.tags;
 			})
 			// 群发
-			function groupSend(){
-				mui.ajax($ajaxUrl + 'member', {
+			function groupSend() {
+				logs(userInfo.token);
+				logs(app.uids.join(","));
+				logs(app.messageType);
+				logs(messageContent);
+				logs(app.tags.join(","));
+				var persons=app.person.join(",");
+				// var persons="、,陈全,胡尚,刘与华,李浩铭,杨荣";
+				console.log(JSON.stringify(persons));
+				plus.nativeUI.showWaiting("正在发送…");
+				mui.ajax($ajaxUrl + 'groupmessage&action=create_message', {
 					data: {
 						token: userInfo.token,
-						uids: app.uids,
-						content: app.message,
-						tags: app.tags,
-						person: app.person
+						to_uids: app.uids.join(","),
+						message_type: app.messageType,
+						content: messageContent,
+						label_ids: app.tags.join(","),
+						to_names: persons
 					},
-					dataType: 'json', //服务器返回json格式数据
-					type: 'post', //HTTP请求类型
-					timeout: 180000, //超时时间设置为10秒；
+					dataType: 'json',
+					type: 'post',
+					timeout: 180000,
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Access-Control-Allow-Origin':'*'
 					},
 					success: function(res) {
+						logs(res);
 						if (res.errno == 0) {
 							plus.nativeUI.closeWaiting();
 							message("群发成功");
+							app.uids = [];
+							app.message='';
+							messageContent = ''; 
+							app.tags = [];
+							app.person = [];
+							setTimeout(function() {
+								openPage('mass_list.html', 'mass_list', '#f7f7f7');
+							}, 100);
 						} else {
-						
+							plus.nativeUI.closeWaiting();
+							message("群发失败，稍后重试");
 						}
 					},
 					error: function(xhr, type, errorThrown) {
+						// plus.nativeUI.closeWaiting();
 						//异常处理；
+						console.log(xhr);
 						console.log(type);
+						console.log(errorThrown);
 					}
 				});
 			}
