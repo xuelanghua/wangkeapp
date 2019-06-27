@@ -212,6 +212,7 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
+					tid:'',
 					person: [{
 						img: '../image/share/bg-img03.jpg',
 						name: '李飞飞',
@@ -244,12 +245,15 @@
 							plus.navigator.setStatusBarStyle("dark");
 						}
 					})
-					mui.plusReady(function() {})
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.tid = self.tid; 
+					})
 				}
 			})
 			mui(".mui-bar").on("tap",".add-master",function(){
 				openPage('add_master.html','add_master','#f7f7f7',{
-					masterId:"123"
+					tid:app.tid
 				});
 			})
 		</script>

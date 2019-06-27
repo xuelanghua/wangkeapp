@@ -1,0 +1,341 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>团队成员</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.indexedlist.css" />
+		<style type="text/css">
+			html,
+			body {
+				height: 100%;
+				overflow: hidden;
+			}
+
+			.mui-bar {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+
+			#done.mui-disabled {
+				color: gray;
+			}
+
+			.create-team-btn {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				color: #2289ff;
+				font-size: 0.3rem;
+				position: relative;
+				z-index: 999;
+			}
+
+			.mui-indexed-list-bar {
+				top: 0.66rem;
+			}
+
+			.mui-indexed-list-search {
+				width: 100%;
+			}
+
+			.mui-indexed-list-search input {
+				width: 100%;
+				background-color: #FFFFFF;
+				border-radius: 0;
+				color: #333333;
+				font-size: 0.3rem;
+				border: none;
+				margin: 0;
+			}
+
+			.mui-search .mui-placeholder {
+				color: #909090;
+				border-radius: 0;
+				text-align: left;
+				font-size: 0.3rem;
+			}
+
+			.mui-input-row {
+				display: flex;
+				align-items: center;
+			}
+
+			.mui-input-row img {
+				width: 0.78rem;
+				height: 0.78rem;
+				margin: 0 0.2rem 0 0.1rem;
+				border-radius: 50%;
+				overflow: hidden;
+			}
+
+			.mui-input-row.mui-radio.mui-left {
+				padding-left: 0;
+				padding-right: 1.8rem;
+				position: relative;
+			}
+
+			.mui-input-row.mui-radio.mui-left .user-name {
+				flex-grow: 1;
+				display: inline-flex;
+				height: 0.78rem;
+				align-items: center;
+			}
+
+			.mui-radio input[type=radio]:checked:before {
+				color: #2889ff;
+			}
+
+			.mui-indexed-list-search {
+				margin-bottom: 0.1rem;
+				border-radius: 6px;
+				padding: 0 0.2rem;
+			}
+
+			.mui-search .mui-placeholder .mui-icon {
+				margin-left: 0.28rem;
+			}
+
+			.mui-search.mui-active:before {
+				margin-left: 0.18rem;
+				top: 16px;
+			}
+
+			.check-target {
+				position: absolute;
+				right: 0.4rem;
+				top: 50%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				font-size: 0.26rem;
+				display: inline-flex;
+				height: 100%;
+				padding: 0 10px;
+				align-items: center;
+				color: #999999;
+				z-z-index: 9;
+			}
+
+			.mui-table-view {
+				padding-bottom: 50px;
+			}
+
+			.mui-table-view:after {
+				bottom: 50px;
+			}
+
+			.mui-indexed-list-bar a {
+				height: 3.5% !important;
+			}
+
+			.mui-input-row.mui-radio.mui-left label {
+				display: flex;
+				align-items: center;
+			}
+
+			.mui-radio input[type=radio] {
+				position: absolute;
+				top: 50%;
+				margin-top: -13px;
+				display: inline-block;
+				width: 28px;
+				height: 26px;
+				border: 0;
+				outline: 0 !important;
+				background-color: transparent;
+				-webkit-appearance: none;
+				left: 10px;
+				margin-left: -10px;
+			}
+
+			.mui-radio.mui-left label {
+				padding-left: 40px;
+			}
+
+			.mui-input-row.mui-radio.mui-left:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 15px;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #DDDDDD;
+			}
+
+			.done-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #2289FF;
+				/* background-color: #007AFF; */
+				margin-right: -10px;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+				<span id="done" class="mui-pull-right done-btn">确定</span>
+				<h1 class="mui-title"></h1>
+			</header>
+
+			<div class="mui-content setting-container">
+				<div id='list' class="mui-indexed-list">
+					<div class="mui-indexed-list-search mui-input-row mui-search ">
+						<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
+					</div>
+					<div class="mui-indexed-list-bar">
+						<a>#</a>
+						<a>A</a>
+						<a>B</a>
+						<a>C</a>
+						<a>D</a>
+						<a>E</a>
+						<a>F</a>
+						<a>G</a>
+						<a>H</a>
+						<a>I</a>
+						<a>J</a>
+						<a>K</a>
+						<a>L</a>
+						<a>M</a>
+						<a>N</a>
+						<a>O</a>
+						<a>P</a>
+						<a>Q</a>
+						<a>R</a>
+						<a>S</a>
+						<a>T</a>
+						<a>U</a>
+						<a>V</a>
+						<a>W</a>
+						<a>X</a>
+						<a>Y</a>
+						<a>Z</a>
+					</div>
+					<div class="mui-indexed-list-alert"></div>
+					<div class="mui-indexed-list-inner">
+						<div class="mui-indexed-list-empty-alert">没有数据</div>
+						<ul class="mui-table-view">
+							<template v-for="(items,key,index) in userList" :key="index">
+								<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
+								<li :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" class="mui-input-row mui-radio mui-left">
+									<input name="radio1" type="radio" :value="list.uid" />
+									<label class="chosen-one" :data-names="list.name||list.nickName" :data-ids="list.uid" :data-avatar="list.avatar||list.avatarUrl">
+										<img :src="list.avatar||list.avatarUrl" alt="">
+										<span class="user-name">{{list.name||list.nickName}}</span>
+									</label>
+									<span class="check-target" @tap="viewDetails(list.uid)">查看名片</span>
+								</li>
+							</template>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/mui.indexedlist.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script type="text/javascript">
+		var userInfo = getUserInfo();
+		var tid = '';
+		var app = new Vue({
+			el: "#mui-content",
+			data: {
+				userList: {}
+			},
+			methods: {
+				viewDetails: function(cid) {
+					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+						fid: cid
+					});
+				}
+			},
+			mounted: function() {
+				mui.init();
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					tid = self.tid;
+					// logs(tid);
+					document.querySelector(".mui-title").innerText = self.title;
+					getUserData();
+				});
+				mui.ready(function() {
+					var header = document.querySelector('header.mui-bar');
+					var list = document.getElementById('list');
+					var done = document.getElementById('done');
+					var ids = '';
+					var names='';
+					var avatar = '';
+					//calc hieght
+					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+					//create
+					window.indexedList = new mui.IndexedList(list);
+					//done event
+					mui('.mui-content').on('tap', '.chosen-one', function() {
+						ids = this.dataset.ids;
+						avatar = this.dataset.avatar;
+						names=this.dataset.names;
+					})
+					done.addEventListener('tap', function() {
+						if (!ids) {
+							message("请选择一个人");
+							return;
+						}
+						var view = plus.webview.currentWebview().opener();
+						mui.fire(view, 'doit', {
+							ids: ids,
+							name:names,
+							avatar:avatar
+						});
+						setTimeout(function(){
+							mui.back();
+						},100);
+					}, false);
+				});
+			}
+		})
+
+		function getUserData() {
+			// logs(tid);
+			mui.post($ajaxUrl + 'team&action=member_list', {
+				token: userInfo.token,
+				team_id: tid,
+				type: 1
+			}, function(res) {
+				if (res.errno == 0) {
+					app.userList = res.data;
+					setTimeout(function() {
+						mui("#list").indexedList().findElements();
+					}, 1000);
+				}
+			}, 'json');
+		}
+	</script>
+</html>

@@ -315,7 +315,7 @@
 				notice: '',
 				imagePath: [],
 				data_status: false,
-				teamType:'2'
+				teamType:'2',
 			},
 			mounted: function() {
 				// mui('.mui-content .mui-switch').each(function() {
@@ -348,8 +348,10 @@
 				uids: app.uids.join(","),
 				token: userInfo.token,
 				type:app.teamType,
-				data_status: app.data_status
+				data_status: app.data_status,
+				cover:"images/6/2019/05/team_bg.jpg"
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					message("创建成功！");
 					mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');

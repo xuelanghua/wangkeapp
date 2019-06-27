@@ -8,6 +8,24 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/swiper.min.css" rel="stylesheet" />
 		<style type="text/css">
+			@font-face {
+				font-family: 'aslkdfjlsdf';
+				src: url('../fonts/iconfont.eot');
+				src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'),
+					url('../fonts/iconfont.woff2') format('woff2'),
+					url('../fonts/iconfont.woff') format('woff'),
+					url('../fonts/iconfont.ttf') format('truetype'),
+					url('../ifonts/confont.svg#iconfont') format('svg');
+			}
+
+			.iconfont {
+				font-family: "aslkdfjlsdf" !important;
+				font-size: 24px;
+				font-style: normal;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+
 			.team-detail-container {
 				position: relative;
 			}
@@ -498,6 +516,7 @@
 				display: flex;
 				flex-direction: column;
 				align-items: center;
+				box-shadow: 0 0 0 300px rgba(0, 0, 0, 0.2);
 			}
 
 			.master-card .master-card-body h4 {
@@ -520,6 +539,10 @@
 				border-radius: 50%;
 				margin-bottom: 0.2rem;
 				object-fit: cover;
+			}
+
+			.master-card .mui-popover-arrow.mui-bottom {
+				display: none;
 			}
 
 			.mui-control-item.mui-active {
@@ -607,14 +630,179 @@
 				align-items: center;
 			}
 
-			.streaming-status span {
+
+			.hear-cont {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.hear-cont p {
+				margin: 0;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.delete-course,
+			.more-option {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 1.14rem;
+				height: 0.4rem;
+				background-color: #DDDDDD;
+				border-radius: 0.2rem;
+				font-size: 0.24rem;
+				color: #999999;
+				line-height: 1;
+				position: relative;
+			}
+
+			.delete-course img {
+				width: 0.27rem;
+				height: 0.27rem;
+				margin-right: 0.1rem;
+			}
+
+			.more-option {
+				width: 0.77rem;
+				height: 0.32rem;
+				line-height: 1;
+				position: relative;
+			}
+
+			.more-option .mui-icon {
+				font-size: 0.38rem;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			/* 更多 菜单 */
+			.hear-cont .menu-list {
+				width: 3.29rem;
+				height: 0.8rem;
+				position: absolute;
+				z-index: 999;
+				display: none;
+				align-items: center;
+				justify-content: flex-end;
+				overflow: visible;
+				padding: 0;
+				right: 0.8rem;
+				transition: all 0.2s ease-in-out;
+				-webkit-transition: all 0.2s ease-in-out;
+			}
+
+			.hear-cont .menu-list.active {
+				display: flex;
+			}
+
+			.loading-cont {
+				height: 0.6rem;
+				align-items: center;
+				font-size: 0.24rem;
+				color: #2289FF;
+				align-items: center;
 				display: inline-flex;
 				align-items: center;
 			}
 
-			.streaming-status img {
+			.loading-cont img {
 				width: 0.38rem;
 				margin-right: 0.1rem;
+			}
+
+			.menu-body {
+				display: flex;
+				flex-grow: 1;
+				align-items: center;
+				position: relative;
+				background-color: #2e2e2e;
+				height: 1rem;
+				margin-right: 0.22rem;
+				border-radius: 0.1rem;
+				z-index: 999;
+				height: 100%;
+			}
+
+			.menu-body .item {
+				height: 100%;
+				font-size: 0.26rem;
+				color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				flex-grow: 1;
+				justify-content: center;
+				position: relative;
+			}
+
+			.menu-body .item img {
+				width: 0.3rem;
+				height: 0.3rem;
+				margin-right: 0.1rem;
+			}
+
+			.menu-body .item1:after {
+				content: '';
+				display: block;
+				position: absolute;
+				width: 1px;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+				background-color: #DDDDDD;
+				height: 80%;
+				right: 0;
+			}
+
+			.menu-arrow {
+				position: absolute;
+				z-index: 9;
+				overflow: hidden;
+				width: 12px;
+				height: 20px;
+				top: 50%;
+				right: -12px;
+				margin-top: -12px;
+				background-color: transparent;
+			}
+
+			.menu-arrow::after {
+				top: 0;
+				left: -18px;
+				background: #2e2e2e;
+				position: absolute;
+				width: 22px;
+				height: 22px;
+				content: '';
+				-webkit-transform: rotate(45deg);
+				transform: rotate(45deg);
+				border-radius: 1px;
+			}
+
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
+			}
+
+			.create-course-btn {
+				position: fixed;
+				width: 100%;
+				height: 1.1rem;
+				background-color: #2289ff;
+				color: #FFFFFF;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				bottom: 0;
+				z-index: 99;
+			}
+
+			.mui-ellipsis-2 {
+				font-size: 0.28rem;
+				color: #040404;
 			}
 		</style>
 		<script>
@@ -645,7 +833,7 @@
 					</div>
 					<img class="mui-pull-right team-qrCode" src="../image/team-detail-img04.png" alt="">
 				</div>
-				<img class="team-bgimg" src="../image/share/bg-img03.jpg">
+				<img class="team-bgimg" :src="teamImg">
 				<p class="team-number">{{tid}}</p>
 			</div>
 			<div class="team-grade-container">
@@ -665,17 +853,17 @@
 				</div>
 			</div>
 			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item" href="#item1">
+				<a class="mui-control-item mui-active" href="#item1">
 					基本信息
 				</a>
 				<a class="mui-control-item mui-hidden" href="#item2">
 					主力商品
 				</a>
-				<a class="mui-control-item mui-active" href="#item3">
+				<a class="mui-control-item" href="#item3">
 					团队课程
 				</a>
 			</div>
-			<div id="item1" class="mui-control-content">
+			<div id="item1" class="mui-control-content mui-active">
 				<div class=" notice-cont">
 					<h2 class="headline">
 						团队公告
@@ -770,26 +958,56 @@
 				</ul>
 			</div>
 			<!-- 团队课程 -->
-			<div id="item3" class="mui-control-content team-class-container mui-active">
+			<div id="item3" class="mui-control-content team-class-container">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
 						<div class="goods-img">
-							<img src="../image/5E0eH.png">
+							<img src="../image/5E0eH.png" @tap="streaming(false)">
 						</div>
 						<div class="goods-right-cont">
-							<p class="mui-ellipsis-2">葫芦娃葫芦娃一根藤上七朵花，风吹雨打都不怕，啦啦啦啦啦啦啦啦啦啦，都不怕，都不怕~</p>
+							<p class="mui-ellipsis-2" @tap="streaming(false)">葫芦娃葫芦娃一根藤上七朵花，风吹雨打都不怕，啦啦啦啦啦啦啦啦啦啦，都不怕，都不怕~</p>
 							<div class="streaming-status">
-								<span><img src="../image/discover/loading.gif">培训中</span>
+								<p>主讲人：old six</p>
+							</div>
+							<div class="hear-cont mui-hidden">
+								<div class="loading-cont"><img src="../image/discover/loading.gif">培训中</div>
+								<div class="delete-course"><img src="../image/icon/delete-team-class-icon.png">删除</div>
 							</div>
 							<div class="hear-cont">
-								<p>20人在听课</p>
-								<!-- <span><img src="de" ></span> -->
+								<p>开播时间：2018-05-18 12:30</p>
+								<div class="menu-list" :class="'menu-cont'+midx">
+									<div class="menu-body">
+										<!-- 箭头 -->
+										<div class="menu-arrow"></div>
+										<div class="item item1"><img src="../image/icon/team-class-edit-icon.png">编辑</div>
+										<div class="item"><img src="../image/icon/delete-team-class-w-icon.png">删除</div>
+									</div>
+								</div>
+								<div class="more-option" @tap="showEdit(0)">
+									<span class="mui-icon mui-icon-more-filled"></span>
+								</div>
 							</div>
 						</div>
 					</li>
-					<li class="mui-table-view-cell">Item 2</li>
-					<li class="mui-table-view-cell">Item 3</li>
+					<li class="mui-table-view-cell">
+						<div class="goods-img" @tap="streaming(1)">
+							<img src="../image/5E0eH.png">
+						</div>
+						<div class="goods-right-cont">
+							<p class="mui-ellipsis-2" @tap="streaming(1)">葫芦娃葫芦娃一根藤上七朵花，风吹雨打都不怕，啦啦啦啦啦啦啦啦啦啦，都不怕，都不怕~</p>
+							<div class="streaming-status">
+								<p>主讲人：old six</p>
+							</div>
+							<div class="hear-cont">
+								<div class="loading-cont"><img src="../image/discover/loading.gif">培训中</div>
+								<div class="delete-course"><img src="../image/icon/delete-team-class-icon.png">删除</div>
+							</div>
+						</div>
+					</li>
 				</ul>
+				<div class="create-course-btn">
+					创建课程
+				</div>
 			</div>
 			<!-- 弹窗 -->
 			<div id="menu" class="mui-popover more-menu">
@@ -820,11 +1038,17 @@
 	<script src="../js/swiper.min.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
+		var menuidx = 0;
+		var mask = mui.createMask(function() {
+			var target = document.querySelector('.menu-cont' + menuidx);
+			target.classList.remove("active");
+		});
 		mui.init();
 		var userInfo = getUserInfo();
 		var app = new Vue({
 			el: "#mui-content",
 			data: {
+				midx: 0,
 				desc: '',
 				teamName: '',
 				conts: '',
@@ -835,6 +1059,7 @@
 				teamNum: 1,
 				captain_uid: 0,
 				data_status: false,
+				teamImg: "",
 				person: [{
 					img: '../image/share/bg-img03.jpg',
 					name: '李飞飞',
@@ -860,6 +1085,24 @@
 				serial: 0
 			},
 			methods: {
+				examine: function(status, userId) {
+					mui.post($ajaxUrl + 'team&action=check', {
+						token: userInfo.token,
+						team_id: app.tid,
+						user_id: userId,
+						status: status
+					}, function(res) {
+						if (res.errno == 0) {
+							message(res.message);
+							getInfo();
+							getApplyList();
+							getMember();
+						} else {
+							getInfo();
+							message(res.message);
+						}
+					}, 'json');
+				},
 				quitTeam: function() {
 					plus.nativeUI.confirm('确认退出团队?', function(e) {
 						if (e.index == 0) {
@@ -884,6 +1127,31 @@
 				checkBusinessCard: function(i) {
 					app.serial = i;
 					mui("#master_model").popover("show", mui(".master-top")[0]);
+				},
+				// 显示编辑菜单
+				showEdit: function(i) {
+					menuidx = i;
+					var target = document.querySelector('.menu-cont' + i);
+					target.classList.toggle("active");
+					if (target.classList.contains("active")) {
+						mask.show();
+					} else {
+						mask.close();
+					}
+				},
+				//直播详情
+				streaming: function(i) {
+					// 直播页面
+					if (i) {
+						openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+							id: i
+						});
+					} else {
+						// 未开播提示
+						openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
+							id: i
+						});
+					}
 				}
 			},
 			mounted: function() {
@@ -931,7 +1199,13 @@
 		// 更多大咖
 		mui(".mui-content").on("tap", ".team-master-more", function() {
 			openPage('more_master.html', 'more_master', '#f7f7f7', {
-				tid: '100005'
+				tid: app.tid
+			});
+		})
+		// 创建课程
+		mui(".mui-content").on("tap", ".create-course-btn", function() {
+			openPage('create_course.html', 'create_course', '#f7f7f7', {
+				tid: app.tid
 			});
 		})
 		//团队设置
@@ -941,7 +1215,7 @@
 				teamId: app.tid,
 				teamName: app.teamName,
 				desc: app.desc,
-				img: "../image/share/bg-img03.jpg"
+				img: app.teamImg
 			});
 		})
 		//解散团队
@@ -951,18 +1225,21 @@
 				if (e.index == 1) {
 					// mui.toast("取消");
 				} else {
+					var webview = plus.webview.all();
 					mui.post($ajaxUrl + 'team&action=delete', {
 						token: userInfo.token,
 						team_id: app.tid
 					}, function(res) {
-						logs(res);
+						// logs(res);
 						if (res.errno == 0) {
 							mui.toast("团队已经解散");
+							plus.webview.close('weburl');
+							plus.webview.close('webview');
+							plus.webview.close('team_detail');
 						} else {
 							mui.toast("操作失败");
 						}
 					}, 'json');
-
 				}
 			})
 		})
@@ -993,11 +1270,13 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
 					app.teamNum = res.data.current_number;
 					app.captain_uid = res.data.captain_uid;
+					app.teamImg = res.data.cover || "https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg";
 					var captainId = res.data.captain_uid;
 					if (userInfo.id == captainId) {
 						app.role = 1;
