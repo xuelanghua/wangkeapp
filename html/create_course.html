@@ -141,32 +141,32 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">创建课程</h1>
+			<h1 class="mui-title"></h1>
 		</header>
 		<div id="mui-content" class="mui-content" v-cloak>
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
 					<h2>课程名称</h2>
-					<input type="text" placeholder="请输入课程名称">
+					<input class="course-name" type="text" v-model="courseName" placeholder="请输入课程名称">
 				</li>
 				<li class="mui-table-view-cell">
 					<h2>培训通知<span>通知内容将在群聊显示</span></h2>
-					<input type="text" placeholder="输入内容">
+					<input class="course-message" type="text" v-model="courseMessage" placeholder="输入内容">
 				</li>
 				<li class="mui-table-view-cell select-speaker">
-					<h2>主讲人<span class="" id="finish_speaker">{{lecturer.name}}</span></h2>
+					<h2>主讲人<span class="" id="finish_speaker">{{lecturerName}}</span></h2>
 					<div class="mui-navigate-right mui-clearfix">
-						<img v-if="lecturer.avatar" class="mui-pull-right speaker-head-img" :src="lecturer.avatar">
+						<img v-if="lecturerAvatar" class="mui-pull-right speaker-head-img" :src="lecturerAvatar">
 						<span v-else class="mui-navigate-right finish-speaker">请选择</span>
 					</div>
 				</li>
 				<li class="mui-table-view-cell curriculum-time choice-time">
 					<h2>开课时间</h2>
-					<span class="mui-navigate-right ensure-time">请选择</span>
+					<span class="mui-navigate-right ensure-time">{{startCourse}}</span>
 				</li>
 				<li class="mui-table-view-cell curriculum-time end-time">
 					<h2>结束时间</h2>
-					<span class="mui-navigate-right finish-time">请选择</span>
+					<span class="mui-navigate-right finish-time">{{endCourse}}</span>
 				</li>
 				<li class="mui-table-view-cell course-img">
 					<h2>课程封面<span>(选填)</span></h2>
@@ -188,21 +188,27 @@
 		<script src="../js/mui.picker.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
 			// 初始日期、团队为空
-			var tid = null;
 			var timer = "";
-			// var tidx = "";
+			var endtimer = '';
+			var tid = "";
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					lecturer: {
-						name: '',
-						avatar: ''
-					},
-					// 讲师id
+					courseId: '',
+					courseName: '',
+					courseMessage: '',
+					lecturerName: '请选择',
+					lecturerAvatar: '',
 					lecturerId: '',
-					// 课程封面
-					courseImg: "../image/course-default-img.png"
+					startCourse: '请选择',
+					endCourse: '请选择',
+					// http://app.ynhost.cn/attachment/images/6/2019/06/H64Gn0FS4E0pBX140fFgFbEdZLf60d.jpg
+					courseImg: "https://cdn.wangkeapp.cn/images/6/2019/05/course_bg.png",
+					uplodImg: 'images/6/2019/05/course_bg.png',
+					isedit: false,
+					tid: ''
 				},
 				mounted: function() {
 					mui.init({
@@ -212,12 +218,27 @@
 					})
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
+						document.querySelector(".mui-title").innerText = self.title;
 						tid = self.tid;
-						logs(tid);
+						if (self.edit) {
+							app.tid=self.course.team_id;
+							app.isedit = true;
+							app.courseId = self.course.id;
+							app.courseName = self.course.title;
+							app.courseMessage = self.course.notice;
+							app.lecturerName = self.course.teacher_name;
+							app.lecturerAvatar = self.course.teacher_avatar;
+							app.lecturerId = self.course.teacher_id;
+							app.startCourse = self.course.start_time;
+							app.endCourse = self.course.end_time;
+							app.courseImg = self.course.cover_url;
+							app.uplodImg = self.course.cover;
+						}
 					});
 
 					// 选择主讲人
 					mui(".mui-content").on('tap', '.select-speaker', function() {
+						logs(tid);
 						openPage('speaker_list.html', 'speaker_list', '#f7f7f7', {
 							tid: tid,
 							title: "选择主讲人"
@@ -225,9 +246,9 @@
 					})
 					// 接收主讲人
 					window.addEventListener('doit', function(e) {
-						app.lecturer.name = e.detail.name;
-						app.lecturer.avatar = e.detail.avatar;
-						app.lecturerId = ids;
+						app.lecturerName = e.detail.name;
+						app.lecturerAvatar = e.detail.avatar;
+						app.lecturerId = e.detail.ids;
 					}, false);
 					// 选择开课时间
 					mui(".mui-content").on('tap', '.choice-time', function() {
@@ -239,7 +260,7 @@
 						}
 						var timePicker = new mui.DtPicker(options);
 						timePicker.show(function(rs) {
-							document.querySelector(".ensure-time").innerText = rs.text;
+							app.startCourse = rs.text;
 							timer = rs.text;
 						})
 					})
@@ -249,17 +270,20 @@
 							type: "datetime",
 							beginYear: 2019,
 							endYear: 2029,
-							value: timer
+							value: endtimer
 						}
 						var timePicker = new mui.DtPicker(options);
 						timePicker.show(function(rs) {
-							document.querySelector(".finish-time").innerText = rs.text;
-							timer = rs.text;
+							app.endCourse = rs.text;
+							endtimer = rs.text;
 						})
 					})
 					// 选择课程封面
 					var ratio = 454 / 322;
 					mui(".mui-content").on('tap', '.course-img', function() {
+						logs(app.uplodImg);
+						mui(".course-name")[0].blur();
+						mui(".course-message")[0].blur();
 						var editButtons = new Array();
 						editButtons.push({
 							title: "拍照上传",
@@ -319,10 +343,12 @@
 						}
 						window.addEventListener('cropperSuccess', function(event) {
 							plus.nativeUI.showWaiting("图片加载中…");
-							alert(event.detail.image);
+							// alert(event.detail.image);
 							// app.resultData['background_image_' + app.imgtyp + '_url'] = event.detail.image;
 							// app['uperimg' + app.imgtyp] = event.detail.filename;
 							app.courseImg = event.detail.image;
+							app.uplodImg = event.detail.filename;
+							logs(app.courseImg);
 							setTimeout(function() {
 								plus.nativeUI.closeWaiting();
 							}, Math.floor(Math.random() * 1000 + 1000));
@@ -330,7 +356,36 @@
 					})
 					// 保存课程
 					mui(".mui-content").on('tap', '.create-course-btn', function() {
-						message("save");
+						logs(app.uplodImg);
+						logs(app.courseId);
+						mui(".course-name")[0].blur();
+						mui(".course-message")[0].blur();
+						mui.post($ajaxUrl + 'team&action=add_course', {
+							token: userInfo.token,
+							course_id: app.courseId,
+							team_id: app.tid,
+							title: app.courseName,
+							notice: app.courseMessage,
+							cover: app.uplodImg,
+							teacher_id: app.lecturerId,
+							start_time: app.startCourse,
+							end_time: app.endCourse,
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								if (app.isedit) {
+									message("修改成功");
+								} else {
+									message("课程创建成功");
+								}
+								mui.fire(plus.webview.getWebviewById('team_detail'), 'addCourse');
+								setTimeout(function() {
+									mui.back();
+								}, 500);
+							} else {
+								message("请修改内容之后重试");
+							}
+						}, 'json');
 					})
 					// 选择团队
 					// mui(".mui-content").on('tap', '.choice-team', function() {

@@ -37,6 +37,9 @@
 				width: 0.27rem;
 				margin-right: 5px;
 			}
+			.mui-content.team-list-container{
+				padding-bottom: 100px;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -87,7 +90,7 @@
 				<h2><i></i>正式团队</h2>
 				<ul>
 					<template v-for="(list, index) in joinList" :key="index">
-						<li class="team-list" v-if="list.is_captain==0">
+						<li class="team-list">
 							<img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
 							<div class="inside" @tap="groupsChat('12')">
 								<i class="adorn"></i>
@@ -99,8 +102,8 @@
 									</span>
 								</div>
 								<div class="time-person">
-									<span class="rank-num"><img class="rank-sign" :src="'../image/icon/rank'+list.grade+'.png'">千级别收入</span>
-									<span class="rank-num">排名：{{list.ranking}}</span>
+									<span v-if="list.grade"  class="rank-num"><img class="rank-sign" :src="'../image/icon/rank'+list.grade+'.png'">千级别收入</span>
+									<span v-if="list.ranking" class="rank-num">排名：{{list.ranking}}</span>
 									<span class="create-person">创建人：{{list.captain_name.name || list.captain_name.nickName}}</span>
 								</div>
 							</div>
@@ -203,14 +206,17 @@
 						var createList = new Array();
 						var joinList = new Array();
 						mui.each(teamList, function(index, item) {
-							if (item.is_captain == 1) {
+							if (item.type == 2) {
 								createList.push(item);
 							} else {
 								joinList.push(item);
 							}
+							// app.createList = createList;
+							// app.joinList = joinList;
 						})
 						app.createList = createList;
-						// app.joinList = joinList;
+						app.joinList = joinList;
+						logs(app.joinList);
 						if (createList.length > 0) {
 							app.createFlag = true;
 						} else {

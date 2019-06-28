@@ -249,7 +249,6 @@
 			}
 
 			.team-setting {
-				display: flex;
 				align-items: center;
 				justify-content: center;
 				height: 44px;
@@ -260,6 +259,7 @@
 				font-weight: bold;
 				color: #333333;
 				margin-right: -10px;
+				display: none;
 			}
 
 			.more-menu {
@@ -609,6 +609,7 @@
 				height: 1.61rem;
 				overflow: hidden;
 				margin-right: 0.24rem;
+				flex-shrink: 0;
 			}
 
 			.goods-img img {
@@ -619,6 +620,7 @@
 
 			.goods-right-cont {
 				max-width: 4.58rem;
+				flex-grow: 1;
 			}
 
 			.streaming-status {
@@ -793,7 +795,7 @@
 				background-color: #2289ff;
 				color: #FFFFFF;
 				font-size: 0.3rem;
-				display: flex;
+				display: none;
 				align-items: center;
 				justify-content: center;
 				bottom: 0;
@@ -803,6 +805,15 @@
 			.mui-ellipsis-2 {
 				font-size: 0.28rem;
 				color: #040404;
+			}
+
+			.void-course-tips {
+				display: none;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.32rem;
+				color: #999999;
+				padding: 1rem 0 0;
 			}
 		</style>
 		<script>
@@ -918,7 +929,7 @@
 					<h2 class="headline team-honor-edit">
 						<span>团队荣誉</span>
 						<!-- v-if="role" -->
-						<p class="more-member mui-pull-right">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
+						<p v-if="role" class="more-member mui-pull-right">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
 					</h2>
 					<div class="team-honor-sign">
 						<div class="sign-items" v-for="(j,i) in 6">
@@ -960,36 +971,41 @@
 			<!-- 团队课程 -->
 			<div id="item3" class="mui-control-content team-class-container">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell">
+					<li class="mui-table-view-cell" v-for="(c,idx) in teamCourse" :key="idx">
 						<div class="goods-img">
-							<img src="../image/5E0eH.png" @tap="streaming(false)">
+							<img :src="c.cover_url" @tap="streaming(false)">
 						</div>
 						<div class="goods-right-cont">
-							<p class="mui-ellipsis-2" @tap="streaming(false)">葫芦娃葫芦娃一根藤上七朵花，风吹雨打都不怕，啦啦啦啦啦啦啦啦啦啦，都不怕，都不怕~</p>
+							<p class="mui-ellipsis-2" @tap="streaming(false)">
+								{{c.title}}
+							</p>
 							<div class="streaming-status">
-								<p>主讲人：old six</p>
+								<p>主讲人：{{c.teacher_name}}</p>
 							</div>
-							<div class="hear-cont mui-hidden">
-								<div class="loading-cont"><img src="../image/discover/loading.gif">培训中</div>
-								<div class="delete-course"><img src="../image/icon/delete-team-class-icon.png">删除</div>
-							</div>
-							<div class="hear-cont">
-								<p>开播时间：2018-05-18 12:30</p>
-								<div class="menu-list" :class="'menu-cont'+midx">
+							<div class="hear-cont" v-if="c.state==0">
+								<p>开播：{{c.start_time}}</p>
+								<div class="menu-list" :class="'menu-cont'+idx">
 									<div class="menu-body">
 										<!-- 箭头 -->
 										<div class="menu-arrow"></div>
-										<div class="item item1"><img src="../image/icon/team-class-edit-icon.png">编辑</div>
-										<div class="item"><img src="../image/icon/delete-team-class-w-icon.png">删除</div>
+										<div class="item item1" @tap="editCourse(idx)"><img src="../image/icon/team-class-edit-icon.png">编辑</div>
+										<div class="item" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-w-icon.png">删除</div>
 									</div>
 								</div>
-								<div class="more-option" @tap="showEdit(0)">
+								<div v-if="role" class="more-option" @tap="showEdit(idx)">
 									<span class="mui-icon mui-icon-more-filled"></span>
 								</div>
 							</div>
+							<div v-else-if="c.state==1" class="hear-cont">
+								<div class="loading-cont"><img src="../image/discover/loading.gif">培训中</div>
+								<div v-if="role" class="delete-course" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-icon.png">删除</div>
+							</div>
+							<div v-else class="hear-cont">
+								<p>结束：{{c.end_time}}</p>
+							</div>
 						</div>
 					</li>
-					<li class="mui-table-view-cell">
+					<!-- <li class="mui-table-view-cell">
 						<div class="goods-img" @tap="streaming(1)">
 							<img src="../image/5E0eH.png">
 						</div>
@@ -1003,8 +1019,11 @@
 								<div class="delete-course"><img src="../image/icon/delete-team-class-icon.png">删除</div>
 							</div>
 						</div>
-					</li>
+					</li> -->
 				</ul>
+				<div class="void-course-tips">
+					暂无团队课程~
+				</div>
 				<div class="create-course-btn">
 					创建课程
 				</div>
@@ -1052,14 +1071,16 @@
 				desc: '',
 				teamName: '',
 				conts: '',
-				role: 1,
+				role: 0,
 				tid: '',
 				teamMember: [],
 				applyList: [],
 				teamNum: 1,
 				captain_uid: 0,
 				data_status: false,
-				teamImg: "",
+				teamImg: '',
+				uperImg: '',
+				teamCourse: [],
 				person: [{
 					img: '../image/share/bg-img03.jpg',
 					name: '李飞飞',
@@ -1152,6 +1173,41 @@
 							id: i
 						});
 					}
+				},
+				// 删除课程
+				delCourse: function(e) {
+					plus.nativeUI.confirm("确认删除可吗？", function(e) {
+						var target = document.querySelector('.menu-cont' + menuidx);
+						target.classList.remove("active");
+						mask.close();
+						if (e.index == 1) {
+							// 取消
+						} else {
+							mui.post($ajaxUrl + 'team&action=delete_course', {
+								token: userInfo.token,
+								course_id: e
+							}, function(res) {
+								if (res.errno == 0) {
+									message("已删除");
+									teamCourse();
+								} else {
+									document.querySelector(".void-course-tips").style.display = "flex";
+								}
+							}, 'json');
+						}
+					})
+				},
+				// 编辑课程
+				editCourse: function(idx) {
+					var target = document.querySelector('.menu-cont' + menuidx);
+					target.classList.remove("active");
+					mask.close();
+					openPage('create_course.html', 'create_course', '#f7f7f7', {
+						edit: true,
+						title: "编辑课程",
+						course: app.teamCourse[idx],
+						tid:app.tid
+					});
 				}
 			},
 			mounted: function() {
@@ -1162,8 +1218,10 @@
 					getInfo();
 					getMember();
 					getApplyList();
+					initSlider();
+					// 获取团队课程
+					teamCourse();
 				})
-				initSlider();
 			}
 		})
 		// 轮播初始化
@@ -1205,7 +1263,8 @@
 		// 创建课程
 		mui(".mui-content").on("tap", ".create-course-btn", function() {
 			openPage('create_course.html', 'create_course', '#f7f7f7', {
-				tid: app.tid
+				tid: app.tid,
+				title: '创建课程'
 			});
 		})
 		//团队设置
@@ -1215,7 +1274,8 @@
 				teamId: app.tid,
 				teamName: app.teamName,
 				desc: app.desc,
-				img: app.teamImg
+				img: app.teamImg,
+				uperImg: app.uperImg
 			});
 		})
 		//解散团队
@@ -1233,6 +1293,7 @@
 						// logs(res);
 						if (res.errno == 0) {
 							mui.toast("团队已经解散");
+							mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
 							plus.webview.close('weburl');
 							plus.webview.close('webview');
 							plus.webview.close('team_detail');
@@ -1270,13 +1331,14 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
 					app.teamNum = res.data.current_number;
 					app.captain_uid = res.data.captain_uid;
-					app.teamImg = res.data.cover || "https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg";
+					app.teamImg = res.data.cover_url || "https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg";
+					app.uperImg = res.data.cover;
 					var captainId = res.data.captain_uid;
 					if (userInfo.id == captainId) {
 						app.role = 1;
@@ -1288,6 +1350,30 @@
 					} else {
 						app.data_status = false;
 					}
+					// 更多操作
+					if (res.data.captain_uid == userInfo.id) {
+						document.querySelector(".team-setting").style.display = "flex";
+						document.querySelector(".create-course-btn").style.display = "flex";
+					} else {
+						document.querySelector(".team-setting").style.display = "none";
+						document.querySelector(".create-course-btn").style.display = "none";
+					}
+				}
+			}, 'json');
+		}
+		// 获取团队课程
+		function teamCourse() {
+			mui.post($ajaxUrl + 'team&action=course_list', {
+				token: userInfo.token,
+				team_id: app.tid
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					app.teamCourse = res.data;
+					document.querySelector(".void-course-tips").style.display = "none";
+				} else {
+					app.teamCourse = [];
+					document.querySelector(".void-course-tips").style.display = "flex";
 				}
 			}, 'json');
 		}
@@ -1342,6 +1428,14 @@
 		window.addEventListener('remove', function(e) {
 			getInfo();
 			getMember();
+		});
+		// 修改团队信息
+		window.addEventListener('editTeamInfo', function(e) {
+			getInfo();
+		});
+		// 添加课程
+		window.addEventListener('addCourse', function(e) {
+			teamCourse();
 		});
 	</script>
 </html>

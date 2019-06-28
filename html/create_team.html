@@ -50,7 +50,7 @@
 			.invite-team-members {
 				width: 100%;
 				display: block;
-				padding: 0.8rem 0.2rem;
+				padding: 0.5rem 0.2rem;
 			}
 
 			.user-head-img {
@@ -192,6 +192,23 @@
 				color: #333333;
 				margin-bottom: 2px;
 			}
+
+			.cover-list .select-img {
+				margin-right: 0.7rem;
+				color: #999999;
+			}
+
+			.cover-list .mui-navigate-right:after {
+				color: #999999;
+				font-size: 0.36rem;
+			}
+
+			.cover-img {
+				width: 80px;
+				max-height: 1rem;
+				object-fit: cover;
+				margin-right: 0.7rem;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -215,6 +232,13 @@
 			<textarea class="team-notice" rows="6" cols="3" v-model="notice" maxlength="150" placeholder="填写团队公告"></textarea>
 			<div class="invite-team-members">
 				<ul class="mui-table-view">
+					<li class="mui-table-view-cell cover-list">
+						<div class="mui-input-row mui-radio team-type" data-team="2">
+							<span class="mui-navigate-right">团队封面</span>
+							<img v-if="coverImg" class="cover-img" :src="coverImg">
+							<span v-else class="select-img">请选择</span>
+						</div>
+					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row mui-radio team-type" data-team="2">
 							<label for="data-team">
@@ -315,7 +339,9 @@
 				notice: '',
 				imagePath: [],
 				data_status: false,
-				teamType:'2',
+				teamType: '2',
+				coverImg: '',
+				uploadCover: ''
 			},
 			mounted: function() {
 				// mui('.mui-content .mui-switch').each(function() {
@@ -342,14 +368,19 @@
 		// 创建团队
 		mui(".mui-content").on('tap', '#create-group', function() {
 			document.activeElement.blur();
+			logs(app.uids);
+			if(!app.teamName){
+				message("团队名称不能为空");
+				return;
+			}
 			mui.post($ajaxUrl + 'team&action=create', {
+				token: userInfo.token,
 				name: app.teamName,
+				type: app.teamType,
+				cover: "images/6/2019/05/team_bg.jpg",
 				notice: app.notice,
 				uids: app.uids.join(","),
-				token: userInfo.token,
-				type:app.teamType,
 				data_status: app.data_status,
-				cover:"images/6/2019/05/team_bg.jpg"
 			}, function(res) {
 				logs(res);
 				if (res.errno == 0) {
@@ -358,8 +389,7 @@
 					setTimeout(function() {
 						plus.webview.close('create_team');
 						plus.webview.close('boss_team');
-						openPage('team_detail.html', 'team_detail', '#f7f7f7', '');
-					}, 2000)
+					}, 800)
 				} else {
 					message(res.message);
 				}
@@ -383,5 +413,75 @@
 		mui('.mui-content').on('tap', '.team-type', function() {
 			app.teamType = this.dataset.team;
 		})
+		// 团队封面图选择
+		var ratio = 550 / 290;
+		mui('.mui-content').on('tap', '.cover-list', function() {
+			var editButtons = new Array();
+			editButtons.push({
+				title: "拍照上传",
+				style: "default"
+			});
+			editButtons.push({
+				title: "从相册选择",
+				style: "default"
+			});
+			plus.nativeUI.actionSheet({
+				cancel: "取消",
+				buttons: editButtons
+			}, function(e) {
+				var index = e.index;
+				switch (index) {
+					case 1:
+						getImage(ratio); //拍照
+						break;
+					case 2:
+						galleryImage(ratio); //相册选择
+						break;
+				}
+			});
+		});
+		// 拍照获取图片
+		function getImage() {
+			var camera = plus.camera.getCamera();
+			camera.captureImage(function(e) {
+				plus.io.resolveLocalFileSystemURL(e, function(entry) {
+					cropperImg(entry.toLocalURL(), 'create_team', ratio);
+					// imageResize(entry.toLocalURL());
+					// 其他操作,比如预览展示
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(s) {
+				console.log("error" + s);
+			}, {
+				filename: "_doc/camera/"
+			})
+		}
+		// 从相册中选择图片 
+		function galleryImage(cb) {
+			// 从相册中选择图片
+			plus.gallery.pick(function(e) {
+				cropperImg(e, 'create_team', ratio);
+			}, function(e) {
+				console.log("取消选择图片");
+			}, {
+				filter: "image",
+				multiple: false,
+				maximum: 5,
+				system: false,
+				onmaxed: function() {
+					plus.nativeUI.alert('最多只能选择1张图片');
+				}
+			});
+		}
+		window.addEventListener('cropperSuccess', function(event) {
+			plus.nativeUI.showWaiting("图片加载中…");
+			app.uploadCover = event.detail.filename;
+			app.coverImg = event.detail.image;
+			setTimeout(function() {
+				plus.nativeUI.closeWaiting();
+			}, Math.floor(Math.random() * 1000 + 1000));
+		})
+		// })
 	</script>
 </html>

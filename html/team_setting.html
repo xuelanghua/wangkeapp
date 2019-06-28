@@ -44,6 +44,12 @@
 
 			.mui-table-view {
 				margin-top: 0;
+				padding-bottom: 20px;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
 			}
 
 			.mui-table-view-cell.mui-active {
@@ -131,8 +137,8 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var ratio = 750 / 396; 
-			var userInfo=getUserInfo();
+			var ratio = 750 / 396;
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -153,20 +159,19 @@
 						app.teamName = self.teamName;
 						app.desc = self.desc;
 						app.image = self.img;
+						app.uperimg=self.uperImg;
 					})
 					// 保存修改
 					mui(".mui-bar").on("tap", ".save-setting", function() {
-						// mui.toast("保存");
-						console.log(userInfo.token+"#__#"+app.teamId+"#__#"+app.teamName+"#__#"+app.image+"#__#"+app.desc);
 						mui.post($ajaxUrl + 'team&action=team_setting', {
 							token: userInfo.token,
-							team_id:app.teamId,
-							name:app.teamName,
-							cover:app.uperimg,
-							notice:app.desc
+							team_id: app.teamId,
+							name: app.teamName,
+							cover: app.uperimg,
+							notice: app.desc
 						}, function(res) {
-							logs(res);
 							if (res.errno == 0) {
+								mui.fire(plus.webview.getWebviewById('team_detail'), 'editTeamInfo');
 								mui.back();
 							} else {}
 						}, 'json');
