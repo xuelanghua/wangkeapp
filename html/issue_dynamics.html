@@ -50,6 +50,7 @@
 			mui.init({
 				beforeback: function() {
 					var myDynamics = plus.webview.currentWebview().opener();
+					plus.navigator.setStatusBarStyle("light");
 					mui.fire(myDynamics, 'refresh');
 					return true;
 				}
@@ -57,7 +58,9 @@
 			userInfo = getUserInfo();
 			var imageId = 0;
 			var images = new Array();
-			mui.plusReady(function() {})
+			mui.plusReady(function() {
+				plus.navigator.setStatusBarStyle("dark");
+			})
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
 				imageUpload(function(res) {
@@ -80,7 +83,7 @@
 				parentDiv.remove();
 				delete images[imgId];
 			})
-			 
+
 			mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
 				e.preventDefault();
 				var titles = document.querySelector('input[name=title]').value;

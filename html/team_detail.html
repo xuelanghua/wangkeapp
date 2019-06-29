@@ -1206,12 +1206,21 @@
 						edit: true,
 						title: "编辑课程",
 						course: app.teamCourse[idx],
-						tid:app.tid
+						tid: app.tid
 					});
 				}
 			},
 			mounted: function() {
+				mui.init({
+					beforeback: function() {
+						var myDynamics = plus.webview.currentWebview().opener();
+						if (myDynamics.id = "discover") {
+							plus.navigator.setStatusBarStyle("light");
+						}
+					}
+				})
 				mui.plusReady(function() {
+					plus.navigator.setStatusBarStyle("dark");
 					var self = plus.webview.currentWebview();
 					app.tid = self.teamid;
 					// alert(self.teamid);

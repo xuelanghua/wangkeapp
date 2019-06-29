@@ -51,6 +51,21 @@
 				transition: all 0.25s ease-in-out;
 				-webkit-transition: all 0.25s ease-in-out;
 			}
+
+			.user-info .user-info-top {
+				margin-bottom: 0;
+				padding: 0.2rem 0 0.1rem;
+			}
+
+			.user-info p {
+				font-size: 0.24rem;
+				line-height: 1.2;
+			}
+
+			.user-info {
+				padding-top: 0;
+				padding-left: 0.1rem;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -75,17 +90,18 @@
 			</div>
 			<div class="discover-body">
 				<div class="user-part1">
-					<div class="user-head-cont" @tap="dynamicSpace('113')">
+					<div class="user-head-cont" @tap="openDynamically()">
 						<div class="user-head-img">
-							<img class="head-img" src="../image/discover/MUJ11mx.jpg">
+							<img class="head-img" :src="discover_info.avatar">
 						</div>
-						<img class="rank" src="../image/discover/rank_icon_03.png">
+						<img class="rank" :src="'../image/discover/rank_icon_'+discover_info.group_id+'.png'">
 					</div>
 					<div class="user-info">
 						<div class="user-info-top">
-							<div class="user-name mui-ellipsis">张飞飞</div><span class="vip">vip</span>
+							<div class="user-name mui-ellipsis">{{discover_info.name}}</div>
+							<span :class="'vip'+discover_info.group_id">vip</span>
 						</div>
-						<p class="signature mui-ellipsis">个性签名，个性签名，个性签名，个性签名个性签名个性签名。</p>
+						<p class="signature mui-ellipsis-2">{{discover_info.personalized_signature}}</p>
 					</div>
 				</div>
 				<div id="zhanwei" style="width: 100%;height:58px;position: relative;display: none;">
@@ -98,17 +114,17 @@
 					<ul>
 						<div v-show="typeler==1">
 							<!-- 自己发布的动态 -->
-							<li v-for="(i,m) in dynamic" class="mui-table-view-cell my-dynamic-list">
+							<li v-for="(i,m) in dynamic" :key="m" class="mui-table-view-cell my-dynamic-list">
 								<div class="dynamic-list-head">
 									<div class="dynamic-list-left">
 										<img class="user-head-image" :src="i.owner.avatar" @tap="openDynamically(i.user_id)">
 										<span class="user-names mui-ellipsis" @tap="openDynamically(i.user_id)">{{i.owner.name}}</span>
 										<span class="cretae-timer" @tap="openDynamically(i.user_id)">{{i.create_time}}</span>
 										<!-- 如果是自己的动态则显示删除 -->
-										<span v-if="i.is_mine==1" class="delete-list" @tap="detele(i.id)">删除</span>
+										<span v-if="i.is_mine==1" class="delete-list" @tap="deleteDynamics(i.id,m)">删除</span>
 									</div>
-									<div class="mui-pull-right click-heart" @tap="likeThis(i.id)">
-										<i class="heart-icon animated" :class="i.is_thumbs==true?'heartBeat':'tada'"></i>
+									<div class="mui-pull-right click-heart" @tap="likeThis(i.id,i.user_id,m)">
+										<i class="heart-icon animated" :class="i.is_thumbs==1?'heartBeat':'tada'"></i>
 										<span>{{i.thumbs_number}}</span>
 									</div>
 								</div>
@@ -126,18 +142,20 @@
 						</div>
 						<div v-show="typeler==2">
 							<!-- 官方文章 -->
-							<li class="mui-table-view-cell official-article" v-for="(a,index) in dynamic" :key="index" @tap="articleDetail('333')">
+							<li class="mui-table-view-cell official-article" v-for="(a,idx) in essay" :key="idx" @tap="articleDetail(a.id)">
 								<div class="article-img">
-									<img src="../image/5E0eH.png">
+									<img :src="a.thumb">
 								</div>
 								<div class="article-right">
-									<p class="mui-ellipsis-2">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
-									<div class="stick-sign">
+									<p class="mui-ellipsis-2">
+										{{a.title}}
+									</p>
+									<div v-if="a.is_top" class="stick-sign">
 										<img src="../image/discover/stick-sign.png">
 									</div>
 									<div class="official-article-status">
-										<span>2019-06-17</span>
-										<span><img src="../image/eye.png">300</span>
+										<span>{{a.add_time}}</span>
+										<span><img src="../image/eye.png">{{a.click}}</span>
 										<img src="../image/discover/official-sign.png">
 									</div>
 								</div>
@@ -146,26 +164,28 @@
 
 						<div v-show="typeler==3">
 							<!-- 课程列表列表 -->
-							<li class="mui-table-view-cell curriculum-list">
+							<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
 								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-								<div class="curriculum-img" @tap="curriculumDetail('233332')">
-									<img src="../image/5E0eH.png">
+								<div class="curriculum-img" @tap="curriculumDetail(c.id)">
+									<img :src="c.cover_url">
 								</div>
 								<div class="curriculum-list-right">
 									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2" @tap="curriculumDetail('233332')">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
+									<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id)">
+										{{c.title}}
+									</p>
 									<div class="status-cont mui-clearfix">
 										<div class="mui-pull-left">
-											<span class="ting-ke">主讲人：old six</span>
+											<span class="ting-ke">主讲人：{{c.teacher_name}}</span>
 										</div>
 									</div>
 									<div>
-										<div class="cretae-timer">开播：2018-05-18 18:50</div>
-										<!-- <div class="train-ing"><img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div> -->
-										<!-- <div class="cretae-timer">结束：2018-05-18  20:50</div> -->
-										<div class="team-name mui-pull-right" @tap="teamDetail('369')">
+										<div v-if="c.state==0" class="cretae-timer">开播：2018-05-18 18:50</div>
+										<div v-else-if="c.state==1" class="train-ing"><img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
+										<div v-else class="cretae-timer">结束：2018-05-18 20:50</div>
+										<div class="team-name mui-pull-right" @tap="teamDetail(c.team_id)">
 											<img class="team-icon" src="../image/discover/team-icon.png">
-											<span class="mui-ellipsis">房东的猫猫猫猫猫</span>
+											<span class="mui-ellipsis">{{c.team_name}}</span>
 										</div>
 									</div>
 								</div>
@@ -209,13 +229,36 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
-			var skip=1;
-			var limit=20;
+			var skip = 1;
+			var limit = 5;
+			var pullDirection = "";
+			// 点赞的是第几条
+			var _idx = 0;
+			// 动态id
+			var timeline_id = '';
+			// 发布动态人的id
+			var to_uid = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
+					// 个人消息
+					discover_info: {
+						id: "",
+						name: "",
+						avatar: "",
+						personalized_signature: "",
+						group_id: "",
+						group_name: "",
+						timeline_cover: ""
+					},
+					// 类型
 					typeler: '1',
+					// 动态
 					dynamic: [],
+					// 官方文章
+					essay: [],
+					// 团队课程
+					team_course: [],
 					slider: [{
 						type: 'article',
 						id: '2',
@@ -260,35 +303,75 @@
 						for (i in this.screen) {
 							this.screen[i].selected = false;
 						}
+						skip = 1;
 						this.screen[idx].selected = true;
 						this.typeler = idx + 1;
-						getDiscoverData();
+						if (pullDirection == 'up') {
+							mui('#mui-content').pullRefresh().refresh(true);
+						}
+						if (this.typeler == 1) {
+							if (app.dynamic.length > 0) {
+								//不请求
+							} else {
+								getDiscoverData(true);
+							}
+						} else if (this.typeler == 2) {
+							if (app.essay.length > 0) {
+								logs("不请求");
+								//不请求
+							} else {
+								getDiscoverData(true);
+							}
+						} else if (this.typeler == 3) {
+							if (app.team_course.length > 0) {
+								//不请求
+							} else {
+								getDiscoverData(true);
+							}
+						}
 					},
 					// 跳转好友动态
 					openDynamically: function(id) {
-						mui.toast("好友动态" + id);
+						mui.openWindow({
+							url: "dynamic_space.html",
+							id: 'dynamic_space',
+							extras: {
+								id: id,
+							},
+							waiting: {
+								autoShow: true, //自动显示等待框，默认为true
+								options: {
+									background: "rgba(0,0,0,0)",
+									loading: {
+										display: 'block',
+										height: '70px',
+										icon: "../image/jump.png",
+										interval: 25
+									}
+								}
+							}
+						})
 					},
 					// 点赞
-					likeThis: function(id) {
-
+					likeThis: function(id, pid, idx) {
+						timeline_id = id;
+						// 发布动态人的id
+						to_uid = pid;
+						_idx = idx;
+						adoreIt();
 					},
-					// 我发布的动态详情
+					// 打开动态详情
 					dynamicDetail: function(id) {
-						mui.toast("打开动态" + id);
-					},
-					// 删除自己发的动态
-					detele: function(id) {
-						mui.toast("删除动态" + id);
-					},
-					//打开动态页面
-					dynamicSpace: function(id) {
-						mui.openWindow('dynamic_space.html', 'dynamic_space', {
-							id: id
+						openPage('dynamics_detail.html', 'dynamics_detail', "#f7f7f7", {
+							aid: id,
 						})
 					},
 					// 打开文章
 					articleDetail: function(id) {
-						mui.toast("打开文章" + id);
+						// mui.toast("打开文章" + id);
+						openPage('article.html', 'article', '#ffffff', {
+							article_id: id
+						});
 					},
 					// 打开产品详情
 					goodsDetail: function(id) {
@@ -296,7 +379,9 @@
 					},
 					// 打开团队详情
 					teamDetail: function(id) {
-						mui.toast("打开团队详情" + id);
+						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+							teamid: id
+						});
 					},
 					//打开课程详情
 					curriculumDetail: function(id) {
@@ -304,10 +389,37 @@
 					}
 				},
 				mounted: function() {
-					mui.init();
+					mui.init({
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									getDiscoverData();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									pullDirection = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getDiscoverData();
+								}
+							}
+						}
+					});
 					// 初始化轮播
 					initSlider();
+					discoverInfo();
 					mui.plusReady(function() {
+						plus.navigator.setStatusBarStyle("light");
 						var ws = plus.webview.currentWebview();
 						ws.setStyle({
 							scrollIndicator: 'none',
@@ -332,15 +444,15 @@
 						var conts = document.getElementById("discover-container");
 						var distance = statusbarHeight + 100;
 						window.addEventListener('scroll', function() {
-							if (conts.getBoundingClientRect().top < distance) {
-								document.getElementById("zhanwei").style.display = "block";
-								menuBar.classList.add("fixed");
-								menuBar.style.top = 44 + statusbarHeight + 'px';
-							} else {
-								menuBar.style.top = '0';
-								document.getElementById("zhanwei").style.display = "none";
-								menuBar.classList.remove("fixed");
-							}
+							// if (conts.getBoundingClientRect().top < distance) {
+							// 	document.getElementById("zhanwei").style.display = "block";
+							// 	menuBar.classList.add("fixed");
+							// 	menuBar.style.top = 44 + statusbarHeight + 'px';
+							// } else {
+							// 	menuBar.style.top = '0';
+							// 	document.getElementById("zhanwei").style.display = "none";
+							// 	menuBar.classList.remove("fixed");
+							// }
 							if (conts.getBoundingClientRect().top < 280) {
 								plus.navigator.setStatusBarStyle("dark");
 							} else {
@@ -371,19 +483,110 @@
 			// 点击自定义图标
 			function shareHref() {
 				openPage('issue_dynamics.html', 'issue_dynamics', '#f7f7f7');
-				plus.navigator.setStatusBarStyle("dark");
+				// plus.navigator.setStatusBarStyle("dark");
 			}
 			// 数据请求
-			function getDiscoverData() {
+			function getDiscoverData(lpk) {
+				if (lpk) {
+					showload();
+				}
 				mui.post($ajaxUrl + 'discover&action=list', {
 					token: userInfo.token,
-					type: app.typeler
+					type: app.typeler,
+					limit: limit,
+					skip: skip
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
-						app.dynamic = res.data;
+						if (app.typeler == 1) {
+							if (skip == 1) {
+								app.dynamic = res.data;
+							} else {
+								app.dynamic = app.dynamic.concat(res.data);
+							}
+						} else if (app.typeler == 2) {
+							if (skip == 1) {
+								app.essay = res.data;
+							} else {
+								app.essay = app.essay.concat(res.data);
+							}
+						} else if (app.typeler == 3) {
+							if (skip == 1) {
+								app.team_course = res.data;
+							} else {
+								app.team_course = app.team_course.concat(res.data);
+							}
+						}
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
 					} else {
-						app.dynamic = [];
+						if (app.typeler == 1 && skip == 1) {
+							app.dynamic = [];
+						} else if (app.typeler == 2 && skip == 1) {
+							app.essay = [];
+						} else if (app.typeler == 3 && skip == 1) {
+							app.team_course = [];
+						}
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					}
+					if (lpk) {
+
+						showload(true, Math.floor(Math.random() * 1000 + 1000));
+					}
+				}, 'json');
+			}
+			// 获取用户信息
+			function discoverInfo() {
+				mui.post($ajaxUrl + 'discover&action=user_info', {
+					token: userInfo.token,
+					user_id: ''
+				}, function(res) {
+					if (res.errno == 0) {
+						app.discover_info = res.data;
+						// app.dynamic = res.data;
+					} else {
+						// app.dynamic = [];
+					}
+				}, 'json');
+			}
+			// 点赞
+			function adoreIt() {
+				mui.post($ajaxUrl + 'timeline&action=thumbs', {
+					token: userInfo.token,
+					timeline_id: timeline_id,
+					to_uid: to_uid
+				}, function(res) {
+					if (res.errno == 0) {
+						if (app.dynamic[_idx].is_thumbs == 1) {
+							app.$set(app.dynamic[_idx], "is_thumbs", "0");
+							app.$set(app.dynamic[_idx], "thumbs_number", parseInt(app.dynamic[_idx].thumbs_number) - 1);
+						} else {
+							app.$set(app.dynamic[_idx], "is_thumbs", "1");
+							app.$set(app.dynamic[_idx], "thumbs_number", parseInt(app.dynamic[_idx].thumbs_number) + 1);
+						}
+					} else {
+						// app.dynamic = [];
+					}
+				}, 'json');
+			}
+			// 删除动态
+			function deleteDynamics(tid, ii) {
+				mui.post($ajaxUrl + 'timeline&action=delete', {
+					token: userInfo.token,
+					tid: tid,
+				}, function(res) {
+					if (res.errno == 0) {
+						app.dynamic.splice(ii, 1);
+						message("删除成功");
+					} else {
+						message("删除失败，稍后重试");
 					}
 				}, 'json');
 			}

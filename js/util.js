@@ -178,7 +178,7 @@ function logs(data) {
 
 
 //打开裁剪窗口
-function cropperImg(img, id,ratio) {
+function cropperImg(img, id, ratio) {
 	fnOpenWin('cropper.html', 'cropper', {
 		statusbar: {
 			background: '#000'
@@ -186,7 +186,7 @@ function cropperImg(img, id,ratio) {
 	}, {
 		image: img,
 		wid: id,
-		ratio:ratio
+		ratio: ratio
 	}, '');
 }
 
@@ -1045,7 +1045,29 @@ function cacheData(key, val) {
 }
 
 //获取缓存数据
-function getcache(key){
-	var _cache=plus.storage.getItem(key);
+function getcache(key) {
+	var _cache = plus.storage.getItem(key);
 	return JSON.parse(_cache);
+}
+// 等待框
+function showload(status, delay) {
+	if (status) {
+		if (delay) {
+			setTimeout(function() {
+				plus.nativeUI.closeWaiting();
+			}, delay);
+		} else {
+			plus.nativeUI.closeWaiting();
+		}
+		return;
+	}
+	plus.nativeUI.showWaiting('', {
+		background: "rgba(0,0,0,0)",
+		loading: {
+			display: 'block',
+			height: '70px',
+			icon: "../image/jump.png",
+			interval: 25
+		}
+	});
 }
