@@ -1230,6 +1230,8 @@
 					initSlider();
 					// 获取团队课程
 					teamCourse();
+					// 获取团队大咖
+					getTeamMaster();
 				})
 			}
 		})
@@ -1446,5 +1448,17 @@
 		window.addEventListener('addCourse', function(e) {
 			teamCourse();
 		});
+		// 获取团队大咖
+		function getTeamMaster(){
+			mui.post($ajaxUrl + 'team&action=star_list', {
+				token: userInfo.token,
+				team_id: app.tid,
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+				} else {
+				}
+			}, 'json');
+		}
 	</script>
 </html>
