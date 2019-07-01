@@ -122,6 +122,8 @@
 					plus.webview.currentWebview().setStyle({
 						softinputMode: "adjustResize"
 					});
+					
+					WebSocketInit();
 
 					var showKeyboard = function() {
 						if ($.os.ios) {
@@ -462,6 +464,108 @@
 					})
 				});
 			}(mui, document));
+			
+			var timer = 0
+			var Snumber = 1;
+			//websocket 心跳检测
+			var heartCheck = {
+				timeout: 3e3,
+				timeoutObj: null,
+				serverTimeoutObj: null,
+				reset: function() {
+					clearTimeout(timer);
+					clearTimeout(this.serverTimeoutObj);
+					clearTimeout(this.timeoutObj);
+					// console.log("heartCheck.reset.timer");
+					return;
+				},
+				start: function() {
+					this.timeoutObj = setTimeout(function() {
+						if (Snumber == 3) {
+							console.log(797979);
+							var t = {
+								user_id: 1,
+								uniacid: 6,
+								type: 1,
+								team_id: 100137,
+								course_id: 10,
+								content: 'this is a test',
+								message_type: 'text'
+							};
+						} else {
+							var t = {
+								ping: !0,
+								user_id: 1,
+								uniacid: 6,
+								type: 1
+							};
+						}
+						Snumber++;
+						// logs(t);
+						ws.send(JSON.stringify(t));
+					}, this.timeout);
+				},
+			
+			};
+			
+			//socket初始化
+			function WebSocketInit() {
+				if ("WebSocket" in window) {
+					// 打开一个 web socket
+					ws = new WebSocket("wss://app.ynhost.cn/wss");
+					ws.onopen = function() {
+						if (ws.readyState == WebSocket.OPEN) {
+							console.log("连接已打开...");
+							heartCheck.reset();
+							heartCheck.start();
+						}
+					};
+					ws.onmessage = function(event) {
+						var data = event.data;
+						logs(data);
+						if (data == 'pong') {
+							console.log('websocket连接正常...');
+							heartCheck.reset();
+							heartCheck.start();
+						} else {
+							data = JSON.parse(data);
+							// logs(data);
+							if (data.data2) {
+								if (data.data2.user_id == chatId) {
+									var message = {
+										sender: chatId,
+										type: data.data2.message_type,
+										content: data.data2.content,
+										message_id: data.message_id
+									}
+									send(message);
+								} else {
+									mui.post($ajaxUrl + 'chat&action=unread_message', {
+										token: userInfo.token,
+										message_id: data.data2.id
+									}, function(res) {
+										if (res.errno == 0) {
+											// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+											// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+											// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+											// mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+										}
+									}, 'json')
+								}
+							}
+						}
+					};
+					ws.onclose = function(e) {
+						// 关闭 websocket
+						console.log("连接已关闭...");
+					};
+					ws.onerror = function(e) {
+						logs(e);
+					}
+				} else {
+					message("您的手机不支持 WebSocket!");
+				}
+			}
 		</script>
 	</body>
 
