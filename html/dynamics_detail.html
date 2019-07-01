@@ -26,6 +26,15 @@
 
 			.menu-body {
 				flex-grow: 0;
+				right: -100%;
+			}
+
+			.menu-list.active .menu-body {
+				right: 0;
+			}
+
+			.mui-backdropp {
+				background-color: rgba(0, 0, 0, .3);
 			}
 		</style>
 		<script type="text/javascript">
@@ -35,7 +44,6 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-
 			// 初始化字体大小结束
 		</script>
 	</head>
@@ -81,12 +89,16 @@
 						<div class="menu-body">
 							<!-- 箭头 -->
 							<div class="menu-arrow"></div>
-							<div class="item"><span class="iconfont icon-share">&#xe604;</span>分享</div>
-							<div class="item" @tap="likeThis('10')" :class="like==true?'heartBeat':'tada'"><span class="iconfont icon-like">&#xe601;</span>{{likeDesc}}</div>
-							<div class="item" @tap="commentDynamic('10')"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
+							<div class="item" @tap="shareBtn(all_datas.id,all_datas.title,all_datas.cover[0])">
+								<span class="iconfont icon-share">&#xe604;</span>分享
+							</div>
+							<div class="item" @tap="likeThis(all_datas.id)" :class="all_datas.is_thumbs==1?'heartBeat':'tada'">
+								<span class="iconfont icon-like">&#xe601;</span>{{all_datas.is_thumbs==1?'取消':'点赞'}}
+							</div>
+							<div class="item" @tap="commentDynamic(all_datas.id)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
 						</div>
 						<span v-show="!menuStatus">&nbsp;</span>
-						<div class="comment-icon-cont" @tap="showMenu">
+						<div class="comment-icon-cont" @tap="showMenu(all_datas.id)">
 							<span class="iconfont comment-icon">&#xe504;</span>
 						</div>
 					</div>
@@ -94,9 +106,9 @@
 				<div class="dynamic-lists-issue" v-if="comment.length>0||likes.length>0">
 					<!-- 箭头 -->
 					<div class="lan-arrows"></div>
-					<p>
+					<p v-if="all_datas.thumbs_user.length>0&&all_datas.thumbs_user!=''">
 						<span class="iconfont icon-like">&#xe601;</span>
-						<span v-for="(lists,i) in likes" :key="i">{{lists.nickName}}<template v-if="i<likes.length-1">、</template></span>
+						<span v-for="(lists,i) in likes" :key="i">{{lists}}<template v-if="i<likes.length-1">、</template></span>
 					</p>
 					<p v-if="comment.length>0" class="comment-inside" v-for="(com,index) in comment"><span class="user-name">{{com.nickName}}：</span>{{com.content}}</p>
 				</div>
@@ -109,7 +121,9 @@
 		<script src="../js/mui.previewimage.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
-			var tid = 0;
+			var tid = 0,
+				_tmline_id = "",
+				user_id = null;
 			var nativeWebview, imm, InputMethodManager;
 			var mask = mui.createMask(function() {
 				muiCont.menuStatus = false;
@@ -133,11 +147,14 @@
 					author: '',
 					comment: [
 						//评论用户列表
-					]
+					],
+					// 全部数据
+					all_datas: {}
 				},
 				methods: {
 					// 显示菜单
-					showMenu: function() {
+					showMenu: function(id) {
+						_tmline_id = id;
 						if (this.menuStatus) {
 							mask.close();
 							this.menuStatus = false;
@@ -147,27 +164,34 @@
 						}
 					},
 					// 点赞
-					likeThis: function() {
-						this.like = !this.like;
-						if (this.like) {
-							this.likeDesc = '取消';
-						} else {
-							this.likeDesc = '点赞';
-						}
-						setTimeout(function() {
-							muiCont.menuStatus = false;
-							mask.close();
-						}, 500)
+					likeThis: function(_t_id) {
+						logs(muiCont.all_datas);
+						mui.post($ajaxUrl + 'timeline&action=thumbs', {
+							token: userInfo.token,
+							timeline_id: _t_id,
+							to_uid: user_id
+						}, function(res) {
+							if (res.errno == 0) {
+								if (muiCont.all_datas.is_thumbs == 1) {
+									muiCont.$set(muiCont.all_datas, "is_thumbs", "0");
+									var index = muiCont.all_datas.thumbs_user.indexOf(userInfo.nickName);
+									muiCont.all_datas.thumbs_user.splice(index, 1);
+								} else {
+									muiCont.$set(muiCont.all_datas, "is_thumbs", "1");
+									muiCont.all_datas.thumbs_user.unshift(userInfo.nickName);
+								}
+								setTimeout(function() {
+									muiCont.menuStatus = false;
+									mask.close();
+								}, 500)
+							} else {
+
+							}
+						}, 'json');
 					},
 					// 评论
 					commentDynamic: function() {
-						// this.menuStatus = false;
-						// // this.isComment = true;
-						mui('.mui-bar-footer')[0].style.display = "block";
-						// this.initNativeObjects();
-						// this.showSoftInput();
 						this.menuStatus = false;
-						// this.isComment = true;
 						mui('.mui-bar-footer')[0].style.display = "block";
 						var _self = this;
 						setTimeout(function() {
@@ -197,9 +221,7 @@
 							});
 						}
 						setTimeout(function() {
-							//此处可写具体逻辑设置获取焦点的input  
-							var inputElem = document.getElementById('comment_matter');
-							inputElem.focus();
+							document.getElementById("comment_matter").focus();
 						}, 200);
 					}
 				},
@@ -221,40 +243,134 @@
 							});
 						}
 						tid = self.aid;
+						user_id = self.user_id;
+
+
+						// 获取数据
+						function getDynamicsDetail() {
+							mui.post($ajaxUrl + 'timeline&action=detail', {
+								token: userInfo.token,
+								tid: tid
+							}, function(res) {
+								logs(res);
+								if (res.errno == 0) {
+									var data = res.data;
+									muiCont.all_datas = res.data;
+									muiCont.title = data.title;
+									muiCont.cover = data.cover;
+									muiCont.content = data.content;
+									muiCont.create_time = data.create_time;
+									muiCont.comment = data.comment.data;
+									muiCont.likes = data.thumbs_user;
+									muiCont.author = data.author;
+									var urls = data.cover;
+									mui('.mui-content').on('tap', 'img', function() {
+										var index = this.dataset.idx;
+										plus.nativeUI.previewImage(urls, {
+											current: index,
+											loop: true,
+											indicator: 'number'
+										});
+									});
+								} else {
+									message(res.message)
+								}
+							}, 'json')
+						}
 						getDynamicsDetail();
 					});
 				}
 			});
 
-			function getDynamicsDetail() {
-				mui.post($ajaxUrl + 'timeline&action=detail', {
+
+			// 分享
+			function shareBtn(id, cont, img) {
+				muiCont.isComment = true;
+				mask.close();
+				var imgs = img.substring(img.lastIndexOf("/"));
+				var sd_path = "_downloads" + imgs;
+				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+					shareToMiniprogram({
+						title: cont,
+						content: cont,
+						thumbs: [sd_path],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				}, function(e) {
+					plus.nativeUI.showWaiting("图片处理中…");
+					var imgpath = '';
+					var imgDtask = plus.downloader.createDownload(img, {
+						method: 'GET'
+					}, function(d, status) {
+						if (status == 200) {
+							//图片压缩
+							plus.zip.compressImage({
+									src: d.filename,
+									dst: d.filename,
+									overwrite: true,
+									width: '500px',
+									format: 'jpg',
+									quality: 90
+								},
+								function(e) {
+									imgpath = e.target;
+									if (imgpath) {
+										plus.nativeUI.closeWaiting();
+										shareToMiniprogram({
+											title: cont,
+											content: cont,
+											thumbs: [imgpath],
+											miniProgram: {
+												id: 'gh_9fa5f42ab939',
+												// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+												path: '/longbing_card/pages/index/index?currentTabBar=toNews&to_uid=' + userInfo.id,
+												webUrl: 'https://app.wangkeapp.cn/'
+											}
+										}, 'miniProgram');
+									}
+								},
+								function(error) {
+									message("Compress error!");
+								});
+						} else {
+							mui.toast('保存失败')
+						}
+					});
+					imgDtask.start()
+				});
+			}
+			// 发送评论
+			mui(".mui-bar-footer").on("tap", ".send-comment", function() {
+				var conts = document.getElementById("comment_matter").value;
+				if (conts == " " || conts.length < 1) {
+					message("评论内容不能为空!");
+					return;
+				}
+				mui.post($ajaxUrl + 'timeline&action=comment', {
 					token: userInfo.token,
-					tid: tid
+					timeline_id: _tmline_id,
+					content: conts
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						var data = res.data;
-						muiCont.title = data.title;
-						muiCont.cover = data.cover;
-						muiCont.content = data.content;
-						muiCont.create_time = data.create_time;
-						muiCont.comment = data.comment.data;
-						muiCont.likes = data.like.data;
-						muiCont.author = data.author;
-						var urls = data.cover;
-						mui('.mui-content').on('tap', 'img', function() {
-							var index = this.dataset.idx;
-							plus.nativeUI.previewImage(urls, {
-								current: index,
-								loop: true,
-								indicator: 'number'
-							});
-						});
-					} else {
-						message(res.message)
-					}
-				}, 'json')
-			}
+						var self_comment = {
+							user_id: userInfo.id,
+							content: conts,
+							nickName: userInfo.nickName
+						}
+						document.getElementById("comment_matter").value = "";
+						document.activeElement.blur();
+						muiCont.comment.unshift(self_comment);
+						mask.close();
+						mui('.mui-bar-footer')[0].style.display = "none";
+						message("评论成功");
+					} else {}
+				}, 'json');
+			})
 		</script>
 	</body>
 

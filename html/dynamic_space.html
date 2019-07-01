@@ -89,7 +89,7 @@
 							<li class="dynamic-lists" v-for="(d,i) in u.list" :key="i">
 								<div class="dynamic-lists-body" @tap="dynamicDetail(d.id)">
 									<div class="lan-arrow"></div>
-									<ul class="img-groups">
+									<ul class="img-groups" v-if="d.cover.length>0&&d.cover!=''">
 										<li v-for="(img,m) in d.cover" class="img-cont"><img :src="img"></li>
 									</ul>
 									<p class="mui-ellipsis-2 dynamic-character">
@@ -101,12 +101,14 @@
 									<div class="menu-list" :class="'menu-list'+d.id">
 										<div class="menu-body">
 											<div class="menu-arrow"></div>
-											<div v-if="is_self" class="item"><span class="iconfont icon-delete">&#xe603;</span>删除</div>
-											<div class="item"><span class="iconfont icon-share">&#xe604;</span>分享</div>
-											<div class="item" @tap="likeThis(d.id)" :class="like==true?'heartBeat':'tada'"><span class="iconfont icon-like">&#xe601;</span>{{likeDesc}}</div>
+											<div v-if="is_self" class="item" @tap="delList(d.id,l,i)">
+												<span class="iconfont icon-delete">&#xe603;</span>删除
+											</div>
+											<div class="item" @tap="shareBtn(d.id,d.title,d.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
+											<div class="item" @tap="likeThis(d.id,l,i)" :class="d.is_thumbs==1?'heartBeat':'tada'">
+												<span class="iconfont icon-like">&#xe601;</span>{{d.is_thumbs==1?'取消':'点赞'}}</div>
 											<div class="item" @tap="commentDynamic(d.id,i,l)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
 										</div>
-										<span v-show="menuStatus">&nbsp;</span>
 										<div class="comment-icon-cont" @tap="showMenu(d.id)">
 											<span class="iconfont comment-icon">&#xe504;</span>
 										</div>
@@ -117,7 +119,7 @@
 									<p v-if="d.thumbs_user.length>0">
 										<span class="iconfont icon-like">&#xe601;</span>
 										<template v-for="(user,i) in d.thumbs_user" :key="i">
-											{{user.nickName}}<template v-if="i<d.thumbs_user.length-1">、</template>
+											{{user}}<template v-if="i<d.thumbs_user.length-1">、</template>
 										</template>
 									</p>
 									<p v-if="d.comment.length>0" v-for="(_com,idx) in d.comment" class="comment-inside">
@@ -150,7 +152,7 @@
 				app.menuStatus = false;
 				app.isComment = false;
 				document.querySelector(".menu-list" + _com_id).classList.remove("active");
-				document.querySelector(".check-detail" +_com_id).style.display = "block";
+				document.querySelector(".check-detail" + _com_id).style.display = "block";
 				mui('.mui-bar-footer')[0].style.display = "none";
 				plus.key.hideSoftKeybord();
 			});
@@ -206,28 +208,43 @@
 						}
 					},
 					// 点赞
-					likeThis: function() {
+					likeThis: function(_t_id, l, i) {
+						mui.post($ajaxUrl + 'timeline&action=thumbs', {
+							token: userInfo.token,
+							timeline_id: _t_id,
+							to_uid: user_id
+						}, function(res) {
+							if (res.errno == 0) {
+								if (app.spaceList[l].list[i].is_thumbs == 1) {
+									app.$set(app.spaceList[l].list[i], "is_thumbs", "0");
+									var index = app.spaceList[l].list[i].thumbs_user.indexOf(userInfo.nickName);
+									app.spaceList[l].list[i].thumbs_user.splice(index, 1);
+								} else {
+									app.$set(app.spaceList[l].list[i], "is_thumbs", "1");
+									app.spaceList[l].list[i].thumbs_user.unshift(userInfo.nickName);
+								}
+							} else {
+
+							}
+						}, 'json');
 						this.like = !this.like;
-						if (this.like) {
-							this.likeDesc = '取消';
-						} else {
-							this.likeDesc = '点赞';
-						}
 						setTimeout(function() {
 							app.menuStatus = false;
 							mask.close();
+							document.querySelector(".check-detail" + _com_id).style.display = "block";
 						}, 500)
 					},
 					// 动态详情
 					dynamicDetail: function(id) {
 						openPage('dynamics_detail.html', 'dynamics_detail.html', '#f7f7f7', {
-							aid: id
+							aid: id,
+							user_id:user_id
 						});
 					},
 					// 评论
 					commentDynamic: function(t_id, i_idx, l_idx) {
-						this.menuStatus = false;
 						this.isComment = true;
+						document.querySelector(".check-detail" + _com_id).style.display = "block";
 						document.querySelector(".menu-list" + _com_id).classList.remove("active");
 						mui('.mui-bar-footer')[0].style.display = "block";
 						var _self = this;
@@ -393,6 +410,93 @@
 						app.spaceList = res.data;
 					} else {}
 				}, 'json');
+			}
+			// 删除单条动态
+			function delList(_thisId, l, i) {
+				app.isComment = true;
+				document.querySelector(".check-detail" + _com_id).style.display = "block";
+				document.querySelector(".menu-list" + _com_id).classList.remove("active");
+				mask.close();
+				plus.nativeUI.confirm("确认删除该动态吗？", function(e) {
+					if (e.index) {
+						// 取消
+					} else {
+						mui.post($ajaxUrl + 'timeline&action=delete', {
+							token: userInfo.token,
+							tid: _thisId,
+						}, function(res) {
+							if (res.errno == 0) {
+								app.spaceList[l].list.splice(i, 1);
+								if (app.spaceList[l].list.length < 1) {
+									app.spaceList.splice(l, 1);
+								}
+								message("已删除");
+							} else {}
+						}, 'json');
+					}
+				})
+			}
+			// 分享
+			function shareBtn(id, cont, img) {
+				app.isComment = true;
+				document.querySelector(".check-detail" + _com_id).style.display = "block";
+				document.querySelector(".menu-list" + _com_id).classList.remove("active");
+				mask.close();
+				var imgs = img.substring(img.lastIndexOf("/"));
+				var sd_path = "_downloads" + imgs;
+				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+					shareToMiniprogram({
+						title: cont,
+						content: cont,
+						thumbs: [sd_path],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				}, function(e) {
+					plus.nativeUI.showWaiting("图片处理中…");
+					var imgpath = '';
+					var imgDtask = plus.downloader.createDownload(img, {
+						method: 'GET'
+					}, function(d, status) {
+						if (status == 200) {
+							//图片压缩
+							plus.zip.compressImage({
+									src: d.filename,
+									dst: d.filename,
+									overwrite: true,
+									width: '500px',
+									format: 'jpg',
+									quality: 90
+								},
+								function(e) {
+									imgpath = e.target;
+									if (imgpath) {
+										plus.nativeUI.closeWaiting();
+										shareToMiniprogram({
+											title: cont,
+											content: cont,
+											thumbs: [imgpath],
+											miniProgram: {
+												id: 'gh_9fa5f42ab939',
+												// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+												path: '/longbing_card/pages/index/index?currentTabBar=toNews&to_uid='+userInfo.id,
+												webUrl: 'https://app.wangkeapp.cn/'
+											}
+										}, 'miniProgram');
+									}
+								},
+								function(error) {
+									message("Compress error!");
+								});
+						} else {
+							mui.toast('保存失败')
+						}
+					});
+					imgDtask.start()
+				});
 			}
 		</script>
 	</body>
