@@ -42,7 +42,8 @@
 				<div class="card">
 					<img class="user-head-img" :src="friendData.avatar||'../image/user_default.jpg'">
 					<div class="user-qr-code mui-pull-right">
-						<img src="../image/Marketing-code-01.png">
+						<img v-if="friendData.redpacket_status" src="../image/redpacket_code.png">
+						<img v-else src="../image/Marketing-code-01.png">
 					</div>
 					<div class="card-left-cont">
 						<ul>
@@ -62,7 +63,8 @@
 				<div class="card">
 					<img class="user-head-img" :src="friendData.avatar||'../image/user_default.jpg'">
 					<div class="user-qr-code mui-pull-right">
-						<img src="../image/Marketing-code-01.png">
+						<img v-if="friendData.redpacket_status" src="../image/redpacket_code.png">
+						<img v-else src="../image/Marketing-code-01.png">
 					</div>
 					<div class="user-info">
 						<h4>{{friendData.name}}</h4>
@@ -408,7 +410,7 @@
 			}
 			// 跳转名片二维码页面
 			mui(".mui-content").on("tap", ".user-qr-code", function() {
-				openPage('business_card.html', 'business_card', '#f7f7f7', '');
+				openPage('business_card.html', 'business_card', '#f7f7f7', {toUid: fid});
 			})
 		</script>
 	</body>

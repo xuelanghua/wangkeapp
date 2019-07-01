@@ -328,6 +328,7 @@ doctype html>
 	<script type="text/javascript">
 		var userInfo = getUserInfo();
 		var qrurl = null;
+		var toUid = 0;
 		var app = new Vue({
 			el: "#mui-content",
 			data: {
@@ -369,8 +370,14 @@ doctype html>
 				var imgPath = "";
 				var numbers = Date.parse(new Date());
 				mui.plusReady(function() {
-					app.userhead = userInfo.avatarUrl;
-					app.username = userInfo.nickName;
+					var ws = plus.webview.currentWebview();
+					if (ws.toUid) {
+						toUid = ws.toUid;
+						getToUserInfo();
+					} else {
+						app.userhead = userInfo.avatarUrl;
+						app.username = userInfo.nickName;
+					}
 					// 获取二维码
 					getQrcodePic();
 					// 获取名片样式
@@ -442,7 +449,8 @@ doctype html>
 						background: 'rgba(0, 0, 0, 0.9)'
 					});
 					mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
-						token: userInfo.token
+						token: userInfo.token,
+						to_uid: toUid
 					}, function(res) {
 						// logs(res);
 						if (res.errno == 0) {
@@ -478,9 +486,9 @@ doctype html>
 				//刷新二维码
 				function refreshQrcode() {
 					mui.post($ajaxUrl + 'userqrcode', {
-						action: 'make_url',
+						action: 'make_share_url',
 						token: userInfo.token,
-						type: 'setting'
+						to_uid: toUid
 					}, function(res) {
 						if (res.errno == 0) {
 							app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
@@ -509,6 +517,25 @@ doctype html>
 					app.bgimg=app['bgimg'+app.serial];
 				}
 			}, 'json');
+		}
+		
+		function getToUserInfo() {
+			mui.get($ajaxUrl + 'member', {
+					action: 'get_userinfo_by_id',
+					token: userInfo.token,
+					to_uid: toUid
+				}, function(res){
+					logs(res);
+					if (res.errno == 0) {
+						app.userhead = res.data.avatar;
+						app.username = res.data.name;
+					} else {
+						plus.nativeUI.alert('用户不存在', function() {
+							mui.back();
+						})
+					}
+				},'json'
+			);
 		}
 	</script>
 </html>
