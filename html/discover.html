@@ -68,13 +68,13 @@
 			}
 		</style>
 		<script type="text/javascript">
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
+			// // 初始化字体大小
+			// var viewport = document.documentElement.clientWidth;
+			// if (viewport > 750) {
+			// 	viewport = 750
+			// }
+			// document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// // 初始化字体大小结束
 		</script>
 	</head>
 
@@ -90,18 +90,18 @@
 			</div>
 			<div class="discover-body">
 				<div class="user-part1">
-					<div class="user-head-cont" @tap="openDynamically()">
+					<div class="user-head-cont" @tap="openDynamically(discover_info.id)">
 						<div class="user-head-img">
 							<img class="head-img" :src="discover_info.avatar">
 						</div>
-						<img class="rank" :src="'../image/discover/rank_icon_'+discover_info.group_id+'.png'">
+						<img v-if="discover_info.group_id!=0" class="rank" :src="'../image/discover/rank_icon_'+discover_info.group_id+'.png'">
 					</div>
 					<div class="user-info">
 						<div class="user-info-top">
 							<div class="user-name mui-ellipsis">{{discover_info.name}}</div>
-							<span :class="'vip'+discover_info.group_id">vip</span>
+							<span :class="'vip'+discover_info.group_id">{{discover_info.group_name}}</span>
 						</div>
-						<p class="signature mui-ellipsis-2">{{discover_info.personalized_signature}}</p>
+						<p class="signature mui-ellipsis-2">{{discover_info.personalized_signature||'暂无签名'}}</p>
 					</div>
 				</div>
 				<div id="zhanwei" style="width: 100%;height:58px;position: relative;display: none;">
@@ -166,12 +166,12 @@
 							<!-- 课程列表列表 -->
 							<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
 								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-								<div class="curriculum-img" @tap="curriculumDetail(c.id)">
+								<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state)">
 									<img :src="c.cover_url">
 								</div>
 								<div class="curriculum-list-right">
 									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id)">
+									<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state)">
 										{{c.title}}
 									</p>
 									<div class="status-cont mui-clearfix">
@@ -297,6 +297,15 @@
 					],
 					like: false
 				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
 				methods: {
 					// 选择标签
 					selectedTj: function(id, idx) {
@@ -336,7 +345,7 @@
 							url: "dynamic_space.html",
 							id: 'dynamic_space',
 							extras: {
-								id: id,
+								user_id: id,
 							},
 							waiting: {
 								autoShow: true, //自动显示等待框，默认为true
@@ -384,8 +393,18 @@
 						});
 					},
 					//打开课程详情
-					curriculumDetail: function(id) {
-						mui.toast("打开课程详情" + id);
+					curriculumDetail: function(id, status) {
+						if (status == 1 || status == 2) {
+							openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+								id: id
+							});
+						} else {
+							// 未开播提示
+							openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
+								id: id
+							});
+						}
+						// mui.toast("打开课程详情" + status);
 					}
 				},
 				mounted: function() {
@@ -461,6 +480,14 @@
 						});
 						getDiscoverData();
 					})
+					// 初始化两次防止页面乱
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
 				}
 			})
 
@@ -549,6 +576,7 @@
 					user_id: ''
 				}, function(res) {
 					if (res.errno == 0) {
+						logs(res);
 						app.discover_info = res.data;
 						// app.dynamic = res.data;
 					} else {

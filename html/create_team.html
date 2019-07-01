@@ -368,7 +368,7 @@
 		// 创建团队
 		mui(".mui-content").on('tap', '#create-group', function() {
 			document.activeElement.blur();
-			logs(app.uids);
+			// logs(app.uids);
 			if(!app.teamName){
 				message("团队名称不能为空");
 				return;
@@ -377,7 +377,7 @@
 				token: userInfo.token,
 				name: app.teamName,
 				type: app.teamType,
-				cover: "images/6/2019/05/team_bg.jpg",
+				cover: app.uploadCover,
 				notice: app.notice,
 				uids: app.uids.join(","),
 				data_status: app.data_status,
@@ -416,6 +416,7 @@
 		// 团队封面图选择
 		var ratio = 550 / 290;
 		mui('.mui-content').on('tap', '.cover-list', function() {
+			document.activeElement.blur();
 			var editButtons = new Array();
 			editButtons.push({
 				title: "拍照上传",
