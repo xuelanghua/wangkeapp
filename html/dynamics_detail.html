@@ -64,7 +64,7 @@
 					<li v-for="(img,idx) in cover" :key="idx"><img :data-idx="idx" :src="img"></li>
 				</ul>
 			</div>
-			<div class="comment-cont" v-if="comment.length>0||likes.length>0">
+			<div class="comment-cont">
 				<!-- <div class="thumbs-cont">
 					<img src="../image/icon/give-the-thumbs-up.png">
 					<span v-for="lists in likes">{{lists.nickName}}</span>
@@ -91,14 +91,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="dynamic-lists-issue">
+				<div class="dynamic-lists-issue" v-if="comment.length>0||likes.length>0">
 					<!-- 箭头 -->
 					<div class="lan-arrows"></div>
 					<p>
 						<span class="iconfont icon-like">&#xe601;</span>
 						<span v-for="(lists,i) in likes" :key="i">{{lists.nickName}}<template v-if="i<likes.length-1">、</template></span>
 					</p>
-					<p class="comment-inside" v-for="(com,index) in comment"><span class="user-name">{{com.nickName}}：</span>{{com.content}}</p>
+					<p v-if="comment.length>0" class="comment-inside" v-for="(com,index) in comment"><span class="user-name">{{com.nickName}}：</span>{{com.content}}</p>
 				</div>
 			</div>
 		</div>
@@ -125,146 +125,14 @@
 					menuStatus: false,
 					like: false,
 					likeDesc: '点赞',
-					likes: [ //点赞用户列表
-						{
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "胡尚",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "王花花",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							//点赞id
-							"id": "124",
-							//点赞用户id
-							"user_id": "5987",
-							//点赞用户昵称
-							"nickName": "刘备备",
-							//点赞用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}
+					likes: [
+						//点赞用户列表
 					],
 					content: '',
 					cover: [],
 					author: '',
-					comment: [ //评论用户列表
-						{
-							"id": "1", //评论id
-							"user_id": "7088", //评论
-							"content": "下路没闪，记得来抓", //评论内容
-							"create_time": "2038-01-19 11:14:07", //评论时间
-							"nickName": "德玛西亚之翼", //评论用户昵称
-							//评论用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							"id": "1", //评论id
-							"user_id": "7088", //评论
-							"content": "写的非常好，如果三分", //评论内容
-							"create_time": "2038-01-19 11:14:07", //评论时间
-							"nickName": "王花花", //评论用户昵称
-							//评论用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}, {
-							"id": "1", //评论id
-							"user_id": "7088", //评论
-							"content": "我们总不愿意在别人面前落泪，因为怕输了风度；也总不愿意在别人面前认输，因为怕输了颜面。我们再三告诉自己，一定要坚强！", //评论内容
-							"create_time": "2038-01-19 11:14:07", //评论时间
-							"nickName": "刘备备", //评论用户昵称
-							//评论用户头像
-							"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIiaIOs60WlHpFnMHj3TsIDvl9eQGkaK1dFbTIF16Y5WyrJ35yia1hTa0sZP4y4aC36XQb2v5ibG643g/132"
-						}
+					comment: [
+						//评论用户列表
 					]
 				},
 				methods: {
@@ -301,7 +169,7 @@
 						this.menuStatus = false;
 						// this.isComment = true;
 						mui('.mui-bar-footer')[0].style.display = "block";
-						var _self=this;
+						var _self = this;
 						setTimeout(function() {
 							_self.initNativeObjects();
 							_self.showSoftInput();
@@ -314,9 +182,9 @@
 							var Context = plus.android.importClass("android.content.Context");
 							InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
 							imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
-						} 
+						}
 					},
-					showSoftInput:function() {
+					showSoftInput: function() {
 						var nativeWebview = plus.webview.currentWebview().nativeInstanceObject();
 						if (mui.os.android) {
 							//强制当前webview获得焦点  
@@ -336,9 +204,17 @@
 					}
 				},
 				mounted: function() {
-					mui.init();
+					mui.init({
+						beforeback: function() {
+							var view = plus.webview.currentWebview().opener();
+							if (view.id == 'discover') {
+								setStatusBar('', 'light');
+							}
+						}
+					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
+						plus.navigator.setStatusBarStyle("dark");
 						if (mui.os.ios) {
 							self.setStyle({
 								softinputMode: "adjustResize"
@@ -355,15 +231,15 @@
 					token: userInfo.token,
 					tid: tid
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						var data = res.data;
 						muiCont.title = data.title;
 						muiCont.cover = data.cover;
 						muiCont.content = data.content;
 						muiCont.create_time = data.create_time;
-						// muiCont.comment = data.comment.data;
-						// muiCont.likes = data.like.data;
+						muiCont.comment = data.comment.data;
+						muiCont.likes = data.like.data;
 						muiCont.author = data.author;
 						var urls = data.cover;
 						mui('.mui-content').on('tap', 'img', function() {

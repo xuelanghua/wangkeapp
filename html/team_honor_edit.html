@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.honor-wall {
+				display: flex;
+				flex-wrap: wrap;
+				margin: 0;
+				padding: 0.4rem 0.15rem;
+				list-style-type: none;
+				background-color: #FFFFFF;
+			}
+
+			.honor-wall li {
+				position: relative;
+				min-width: 33.3333%;
+			}
+
+			.honor-wall .done,
+			.honor-wall .add,
+			.honor-wall .edit {
+				width: 1.98rem;
+				height: 2.16rem;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				background: #FFFFFF url("../image/team-honor-bg.png")center center no-repeat;
+				background-size: contain;
+				margin-bottom: 0.2rem;
+			}
+
+			.honor-wall .add {
+				background: #FFFFFF url("../image/add-team-honor-icon.png")center center no-repeat;
+				background-size: contain;
+			}
+
+			.honor-wall .mui-icon-close {
+				position: absolute;
+				right: 0.25rem;
+				top: 0;
+				color: #FF0000;
+				z-index: 6;
+			}
+
+			.honor-wall .desc {
+				color: #2289FF;
+				margin-top: 0.2rem;
+				font-size: 0.3rem;
+				width: 0.6rem;
+			}
+
+			.honor-wall .edit textarea {
+				width: 1.2rem;
+				height: 0.8rem;
+				padding: 0;
+				margin: 0.2rem 0 0;
+				text-align: center;
+				overflow: hidden;
+				border: none;
+				font-size: 0.28rem;
+				color: #333333;
+			}
+
+			.honor-wall .edit textarea::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.28rem;
+			}
+			.save-team-edit{
+				height: 44px;
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 44px;
+				color: #2289ff;
+				font-size: 14px;
+			}
+		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">团队荣誉编辑</h1>
+			<div class="save-team-edit mui-pull-right">
+				保存
+			</div>
+		</header>
+		<div id="mui-content" class="mui-content team-honor-edit" v-cloak>
+			<ul class="honor-wall">
+				<li class="done">
+					<span class="mui-icon mui-icon-close"></span>
+					<span class="desc">百万团队</span>
+				</li>
+				<li class="edit">
+					<textarea maxlength="8" rows="" cols="" placeholder="最多输入8个字"></textarea>
+				</li>
+				<li class="add">
+
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					honorList:[
+						{
+							title:"百万团队",
+							status:0
+						},
+						{
+							pls:"百万团队",
+							status:1
+						}
+					]
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							// plus.navigator.setStatusBarStyle("light");
+						}
+					})
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						var tid = self.tid;
+					})
+				}
+			})
+			mui(".mui-bar").on('tap','.save-team-edit',function(){
+				mui.toast("保存");
+			})
+		</script>
+	</body>
+
+</html>

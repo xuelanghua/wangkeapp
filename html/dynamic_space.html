@@ -13,6 +13,20 @@
 			[v-cloak] {
 				display: none;
 			}
+
+			.vip0 {
+				padding: 0 0.16rem;
+				height: 0.3rem;
+				overflow: hidden;
+				display: inline-flex;
+				line-height: 0.3rem;
+				font-size: 0.2rem;
+				color: #FFFFFF;
+				margin-left: 0.2rem;
+				border-bottom-left-radius: 0.2rem;
+				border-top-right-radius: 0.2rem;
+				background: linear-gradient(to right, #c4c4c4, #6f6f6f);
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -30,7 +44,7 @@
 			<!-- 评论 -->
 			<div class="comment-container">
 				<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
-				<span class="send-comment">发送</span>
+				<span class="send-comment">评论</span>
 			</div>
 		</footer>
 		<div id="mui-content" class="mui-content" v-cloak>
@@ -44,69 +58,71 @@
 			</div>
 			<div id="dynamic-container" class="dynamic-container">
 				<div class="user-part1">
-					<div class="user-head-cont" @tap="dynamicSpace('113')">
+					<div class="user-head-cont">
 						<div class="user-head-img">
-							<img class="head-img" src="../image/discover/MUJ11mx.jpg">
+							<img class="head-img" :src="discover_info.avatar">
 						</div>
-						<img class="rank" src="../image/discover/rank_icon_03.png">
+						<img v-if="discover_info.group_id!=0" class="rank" :src="'../image/discover/rank_icon_'+discover_info.group_id+'.png'">
 					</div>
 					<div class="user-info">
 						<div class="user-info-top">
-							<div class="user-name mui-ellipsis">张飞飞</div><span class="vip">vip</span>
+							<div class="user-name mui-ellipsis">{{discover_info.name}}</div>
+							<span :class="'vip'+discover_info.group_id">{{discover_info.group_name}}</span>
 						</div>
-						<p class="signature mui-ellipsis">个性签名，个性签名，个性签名，个性签名个性签名个性签名。</p>
+						<p class="signature mui-ellipsis-2">{{discover_info.personalized_signature||'暂无签名'}}</p>
 					</div>
 				</div>
-				<h3 class="year-dom">2019年</h3>
-				<div class="issue-dynamics">
+				<h3 class="year-dom">{{current_year}}年</h3>
+				<div v-if="is_self" class="issue-dynamics">
 					<span>发动态</span>
-					<div class="camera-cont"><span class="iconfont camera-icon">&#xe60b;</span></div>
+					<div @tap="issueDynamics" class="camera-cont"><span class="iconfont camera-icon">&#xe60b;</span></div>
 				</div>
 				<!-- 每天的组 -->
-				<div class="everyday-group mui-clearfix" v-for="(u,l) in 3" :key="l">
-					<div class="mui-pull-left issue-time">
-						<span class="day-time">05</span>
-						<span class="month-time">10月</span>
-						<p>23:50</p>
+				<div class="everyday-group mui-clearfix" v-for="(u,l) in spaceList" :key="l">
+					<div class="issue-time">
+						<span class="day-time">{{u.day}}日</span>
+						<span class="month-time">{{u.month}}月</span>
+						<p>{{u.time}}</p>
 					</div>
-					<div class="mui-pull-right dynamic-groups">
+					<div class="dynamic-groups">
 						<ul>
-							<li class="dynamic-lists" v-for="(i,o) in 2" :key="o">
-								<div class="dynamic-lists-body" @tap="dynamicDetail('133')">
-									<!-- 箭头 -->
+							<li class="dynamic-lists" v-for="(d,i) in u.list" :key="i">
+								<div class="dynamic-lists-body" @tap="dynamicDetail(d.id)">
 									<div class="lan-arrow"></div>
 									<ul class="img-groups">
-										<li v-for="(i,m) in 9" class="img-cont"><img src="../image/5E0eH.png"></li>
+										<li v-for="(img,m) in d.cover" class="img-cont"><img :src="img"></li>
 									</ul>
-									<p class="mui-ellipsis-2 dynamic-character">旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，旺客精英训练营完美结束，</p>
+									<p class="mui-ellipsis-2 dynamic-character">
+										{{d.title}}
+									</p>
 								</div>
 								<div class="operation-menu">
-									<span v-show="!menuStatus" class="check-detail" @tap="dynamicDetail('133')">查看详情</span>
-									<div class="menu-list" :class="menuStatus?'active':''">
+									<span class="check-detail" :class="'check-detail'+d.id" @tap="dynamicDetail(d.id)">查看详情</span>
+									<div class="menu-list" :class="'menu-list'+d.id">
 										<div class="menu-body">
-											<!-- 箭头 -->
 											<div class="menu-arrow"></div>
-											<div class="item"><span class="iconfont icon-delete">&#xe603;</span>删除</div>
+											<div v-if="is_self" class="item"><span class="iconfont icon-delete">&#xe603;</span>删除</div>
 											<div class="item"><span class="iconfont icon-share">&#xe604;</span>分享</div>
-											<div class="item" @tap="likeThis('10')" :class="like==true?'heartBeat':'tada'"><span class="iconfont icon-like">&#xe601;</span>{{likeDesc}}</div>
-											<div class="item" @tap="commentDynamic('10')"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
+											<div class="item" @tap="likeThis(d.id)" :class="like==true?'heartBeat':'tada'"><span class="iconfont icon-like">&#xe601;</span>{{likeDesc}}</div>
+											<div class="item" @tap="commentDynamic(d.id,i,l)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
 										</div>
-										<span v-show="!menuStatus">&nbsp;</span>
-										<div class="comment-icon-cont" @tap="showMenu">
+										<span v-show="menuStatus">&nbsp;</span>
+										<div class="comment-icon-cont" @tap="showMenu(d.id)">
 											<span class="iconfont comment-icon">&#xe504;</span>
 										</div>
 									</div>
 								</div>
-								<div class="dynamic-lists-issue">
-									<!-- 箭头 -->
+								<div class="dynamic-lists-issue" v-if="d.thumbs_user.length>0||d.comment.length>0">
 									<div class="lan-arrows"></div>
-									<p>
+									<p v-if="d.thumbs_user.length>0">
 										<span class="iconfont icon-like">&#xe601;</span>
-										刘备备、王花花、关羽羽、德玛、诺克萨斯、德莱厄斯、璐璐、厄加特、辛吉德、婕拉、弗拉基米尔
+										<template v-for="(user,i) in d.thumbs_user" :key="i">
+											{{user.nickName}}<template v-if="i<d.thumbs_user.length-1">、</template>
+										</template>
 									</p>
-									<p class="comment-inside"><span class="user-name">刘备备：</span>66666，给大</p>
-									<p class="comment-inside"><span class="user-name">璐璐：</span>10分钟抓下，有大,有大,有大,有大,有大,有大,有大,有大,有大,有大,有大</p>
-									<p class="comment-inside"><span class="user-name">弗拉基米尔：</span>闪现迁坟，我给101分</p>
+									<p v-if="d.comment.length>0" v-for="(_com,idx) in d.comment" class="comment-inside">
+										<span class="user-name">{{_com.nickName}}：</span>{{_com.content}}
+									</p>
 								</div>
 							</li>
 						</ul>
@@ -120,10 +136,21 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var nativeWebview, imm, InputMethodManager;
-			var userinfo = getUserInfo();
+			var userInfo = getUserInfo(),
+				user_id = '',
+				skip = 1,
+				timeline_id = '',
+				// 列表的isindex
+				list_idx = '',
+				// 评论项的index
+				_idx = null,
+				_com_id = null,
+				limit = 20;
 			var mask = mui.createMask(function() {
 				app.menuStatus = false;
 				app.isComment = false;
+				document.querySelector(".menu-list" + _com_id).classList.remove("active");
+				document.querySelector(".check-detail" +_com_id).style.display = "block";
 				mui('.mui-bar-footer')[0].style.display = "none";
 				plus.key.hideSoftKeybord();
 			});
@@ -146,18 +173,36 @@
 					likeDesc: '点赞',
 					menuStatus: false,
 					like: false,
-					isComment: false
+					isComment: false,
+					// 个人消息
+					discover_info: {
+						id: "",
+						name: "",
+						avatar: "",
+						personalized_signature: "",
+						group_id: "",
+						group_name: "",
+						timeline_cover: ""
+					},
+					// 动态列表
+					spaceList: [],
+					current_year: '',
+					// 是否自己
+					is_self: false
 				},
 				methods: {
 					// 显示菜单
-					showMenu: function() {
-						// this.menuStatus = !this.menuStatus;
+					showMenu: function(_idd) {
+						_com_id = _idd;
+						document.querySelector(".menu-list" + _idd).classList.add("active");
 						if (this.menuStatus) {
 							mask.close();
-							this.menuStatus = false;
+							app.menuStatus = false;
+							document.querySelector(".check-detail" + _idd).style.display = "block";
 						} else {
-							this.menuStatus = true;
+							app.menuStatus = true;
 							mask.show();
+							document.querySelector(".check-detail" + _idd).style.display = "none";
 						}
 					},
 					// 点赞
@@ -180,15 +225,19 @@
 						});
 					},
 					// 评论
-					commentDynamic: function() {
+					commentDynamic: function(t_id, i_idx, l_idx) {
 						this.menuStatus = false;
 						this.isComment = true;
+						document.querySelector(".menu-list" + _com_id).classList.remove("active");
 						mui('.mui-bar-footer')[0].style.display = "block";
-						var _self=this;
+						var _self = this;
 						setTimeout(function() {
 							_self.initNativeObjects();
 							_self.showSoftInput();
-						}, 100)
+						}, 100);
+						timeline_id = t_id;
+						_idx = i_idx;
+						list_idx = l_idx;
 					},
 					// 弹出键盘
 					initNativeObjects: function() {
@@ -219,12 +268,21 @@
 				mounted: function() {
 					mui.init({
 						beforeback: function() {
-							plus.navigator.setStatusBarStyle("dark");
+							// plus.navigator.setStatusBarStyle("dark");
 						}
 					})
 					initSlider();
 					mui.plusReady(function() {
 						var ws = plus.webview.currentWebview();
+						// 获取传参
+						user_id = ws.user_id;
+						if (user_id == userInfo.id) {
+							app.is_self = true;
+						} else {
+							app.is_self = false;
+						}
+						discoverInfo();
+						getSpaceList();
 						if (mui.os.ios) {
 							ws.setStyle({
 								softinputMode: "adjustResize"
@@ -250,12 +308,45 @@
 								plus.navigator.setStatusBarStyle("light");
 							}
 						});
+						// 评论
+						mui(".mui-bar-footer").on("tap", ".send-comment", function() {
+							var conts = document.getElementById("comment_matter").value;
+							if (conts == " " || conts.length < 1) {
+								message("评论内容不能为空!");
+								return;
+							}
+							mui.post($ajaxUrl + 'timeline&action=comment', {
+								token: userInfo.token,
+								timeline_id: timeline_id,
+								content: conts
+							}, function(res) {
+								if (res.errno == 0) {
+									var self_comment = {
+										user_id: userInfo.id,
+										content: conts,
+										nickName: userInfo.nickName
+									}
+									app.spaceList[list_idx].list[_idx].comment.unshift(self_comment);
+									document.getElementById("comment_matter").value = "";
+									document.activeElement.blur();
+									mui('.mui-bar-footer')[0].style.display = "none";
+								} else {}
+							}, 'json');
+						})
 					})
+					// 初始化两次防止页面乱
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
 				}
 			})
 
+			// 初始化轮播
 			function initSlider() {
-				// 初始化轮播
 				var mySwiper = new Swiper('.swiper-container', {
 					//可选选项，自动滑动
 					autoplay: {
@@ -269,6 +360,39 @@
 						el: '.swiper-pagination',
 					},
 				})
+			}
+
+			// 发布动态
+			function issueDynamics() {
+				openPage('issue_dynamics.html', 'issue_dynamics', '#f7f7f7');
+			}
+			// 获取用户信息
+			function discoverInfo() {
+				mui.post($ajaxUrl + 'discover&action=user_info', {
+					token: userInfo.token,
+					user_id: user_id
+				}, function(res) {
+					if (res.errno == 0) {
+						app.discover_info = res.data;
+					} else {}
+				}, 'json');
+				// 获取当前年份
+				var current_time = new Date();
+				app.current_year = current_time.getFullYear();
+			}
+			// 获取数据列表
+			function getSpaceList() {
+				mui.post($ajaxUrl + 'timeline&action=list', {
+					token: userInfo.token,
+					user_id: user_id,
+					skip: skip,
+					limit: limit
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.spaceList = res.data;
+					} else {}
+				}, 'json');
 			}
 		</script>
 	</body>

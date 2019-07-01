@@ -276,6 +276,19 @@
 				max-width: 100%;
 				height: auto;
 			}
+
+			.delete-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #333333;
+				margin-right: -10px;
+			}
 		</style>
 	</head>
 
@@ -283,28 +296,27 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">群发</h1>
+			<div class="delete-btn mui-pull-right">
+				删除
+			</div>
 		</header>
 		<div id="mui-content" class="mui-content" v-cloak>
 			<div class="block-list">
-				<p class="mui-hidden">
-					萨科技的富豪是都疯狂拉萨的房间号阿斯顿发莱卡静安寺没地方卢卡斯京东方爱上了的咖啡机马上到了看见爱上对方垃圾水电费阿萨德立方空间阿水电费里看见爱上对方奥斯卡了的积分
+				<p v-if="msDetail.message_type=='text'">
+					{{msDetail.content}}
 				</p>
-				<p>
-					<img src="../image/share/bg-img03.jpg" data-preview-src="" data-preview-group="1" />
+				<p v-else>
+					<img :src="msDetail.content" data-preview-src="" data-preview-group="1" />
 				</p>
 			</div>
 			<div class="block-list">
 				<h5>选择的标签</h5>
-				<span class="tags">昆明地区</span>
-				<span class="tags">东川</span>
-				<span class="tags">玉溪</span>
-				<span class="tags">云南万贤科技有限公司</span>
-				<span class="tags">呈贡校区</span>
+				<span class="tags" v-for="t in tags">{{t}}</span>
 			</div>
 			<div class="block-list">
-				<p class="desc-footer">群发人数：500<span class="mass-status">发送失败：20</span></p>
+				<p class="desc-footer">群发人数：{{msDetail.total}}<span class="mass-status">发送失败：{{msDetail.fail}}</span></p>
 				<p class="slecet-person">
-					王花花、明日
+					{{to_names}}
 				</p>
 			</div>
 		</div>
@@ -314,14 +326,16 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var mssId = null;
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					msDetail: {},
+					tags: [],
+					to_names: ''
 				},
-				methods: {
-
-				},
+				methods: {},
 				mounted: function() {
 					// 图片预览
 					mui.init({
@@ -331,11 +345,54 @@
 					})
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
+						mssId = self.mass_id;
+						getDetail();
 						document.querySelector(".mui-title").innerText = self.title + '群发';
+						// 删除群发记录
+						mui(".mui-bar").on("tap", ".delete-btn", function() {
+							plus.nativeUI.confirm("确认删除这条群发吗？", function(e) {
+								if (e.index == 0) {
+									// 删除
+									mui.post($ajaxUrl + 'groupmessage&action=delete_message', {
+										token: userInfo.token,
+										message_id: mssId
+									}, function(res) {
+										logs(res);
+										if (res.errno == 0) {
+											message("已删除");
+											var opener = plus.webview.currentWebview().opener();
+											mui.fire(opener, 'refreshList');
+											setTimeout(function() {
+												mui.back();
+											}, 200)
+										} else {
+											message("删除失败，稍后重试哟~");
+										}
+									}, 'json');
+								} else {
+									// 取消
+								}
+							})
+						})
 					})
-					mui.previewImage();
-				}
+				},
+
 			})
+
+			function getDetail() {
+				mui.post($ajaxUrl + 'groupmessage&action=message_detail', {
+					token: userInfo.token,
+					message_id: mssId
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.msDetail = res.data;
+						app.to_names = res.data.to_names.replace(/,/g, "、");
+						app.tags = res.data.label_ids.split(",");
+						mui.previewImage();
+					} else {}
+				}, 'json');
+			}
 		</script>
 	</body>
 

@@ -105,7 +105,7 @@
 							</div>
 						</div>
 					</template>
-					
+
 					<template v-if="!expressList">
 						<div class="logistics_detailsL mui-pull-left">
 							<div class="circularw">
@@ -124,7 +124,7 @@
 						</div>
 					</div>
 					<div class="logistics_detailsR mui-pull-left" style="border-left:0px;">
-							<div>已发货</div>
+						<div>已发货</div>
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -134,7 +134,6 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			
 			var vm = new Vue({
 				el: '.mui-content',
 				data: {
@@ -144,7 +143,7 @@
 					expressList: null
 				},
 				created: function() {
-					
+
 				},
 				mounted: function() {
 					mui.init({
@@ -156,30 +155,30 @@
 						var userInfo = getUserInfo();
 						plus.nativeUI.showWaiting();
 						mui.get($ajaxUrl + 'order', {
-								token: userInfo.token,
-								action: 'get_express_info',
-								order_id: orderId
-							}, function(res){
-								if (res.errno == 0) {
-									vm.orderNumber = res.data.orderInfo.out_trade_no;
-									vm.expressCompany = res.data.orderInfo.express_company;
-									vm.courierNumber = res.data.orderInfo.courier_number;
-									if (res.data.expressInfo.message == 'ok') {
-										vm.expressList = res.data.expressInfo.data;
-									}
-								} else {
-									message(res.message);
-									setTimeout(function() {
-										mui.back();
-									}, 2000)
+							token: userInfo.token,
+							action: 'get_express_info',
+							order_id: orderId
+						}, function(res) {
+							if (res.errno == 0) {
+								vm.orderNumber = res.data.orderInfo.out_trade_no;
+								vm.expressCompany = res.data.orderInfo.express_company;
+								vm.courierNumber = res.data.orderInfo.courier_number;
+								if (res.data.expressInfo.message == 'ok') {
+									vm.expressList = res.data.expressInfo.data;
 								}
+							} else {
+								message(res.message);
 								setTimeout(function() {
-									plus.nativeUI.closeWaiting();
-								}, 1000)
-							}, 'json'
-						);
+									mui.back();
+								}, 2000)
+							}
+							setTimeout(function() {
+								plus.nativeUI.closeWaiting();
+							}, 1000)
+						}, 'json');
 					});
 				}
 			})
+		</script>
 	</body>
 </html>

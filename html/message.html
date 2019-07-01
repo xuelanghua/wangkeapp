@@ -290,7 +290,8 @@
 								<div class="Record_listR mui-pull-right">
 									<div class="mui-clearfix">
 										<span class="mui-pull-left">
-											<span style="font-size: 15px;">目标助理</span>
+											<span v-if="list.type==1" style="font-size: 15px;">目标助理</span>
+											<span v-else-if="list.type==2" style="font-size: 15px;">团队助理</span>
 										</span>
 										<span class="mui-pull-right date">{{list.time}}</span>
 									</div>
@@ -493,6 +494,7 @@
 				mui.post($ajaxUrl + 'chat&action=notice_list', {
 					token: userInfo.token
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0) {
 						app.systemMsg = res.data;
 						cacheData('systemMsg', res.data);

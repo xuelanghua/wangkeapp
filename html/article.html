@@ -376,6 +376,12 @@
 <script>
 	mui.init({
 		swipeBack: false,
+		beforeback: function() {
+			var view = plus.webview.currentWebview().opener();
+			if (view.id == 'discover') {
+				setStatusBar('', 'light');
+			}
+		}
 	});
 
 	var article_id = '', //文章id
@@ -396,6 +402,7 @@
 			File = plus.android.importClass("java.io.File");
 			Uri = plus.android.importClass("android.net.Uri");
 		}
+		plus.navigator.setStatusBarStyle("dark");
 		article_id = plus.webview.currentWebview().article_id;
 		article_info();
 		article_read();
@@ -434,7 +441,7 @@
 			// };
 			// var w = plus.webview.create('visitor.html', 'visitor.html', styles, extras);
 			// w.show(); // 显示窗口
-			openPage('visitor.html','visitor','#f7f7f7',{
+			openPage('visitor.html', 'visitor', '#f7f7f7', {
 				article_id: article_id
 			});
 		})

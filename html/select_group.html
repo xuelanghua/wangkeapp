@@ -49,17 +49,17 @@
 		</header>
 		<div id="mui-content" class="mui-content setting-container" v-cloak>
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell" data-names="新增客户" data-group_id="123">
+				<li class="mui-table-view-cell" data-names="新增客户" data-types="new_customer">
 					<span class="mui-navigate-right">
 						新增客户
 					</span>
 				</li>
-				<li class="mui-table-view-cell" data-names="客户CRM" data-group_id="4568">
+				<li class="mui-table-view-cell" data-names="客户CRM" data-types="crm">
 					<span class="mui-navigate-right">
 						客户CRM
 					</span>
 				</li>
-				<li class="mui-table-view-cell" data-names="好友" data-group_id="9355">
+				<li class="mui-table-view-cell" data-names="好友" data-types="friend">
 					<span class="mui-navigate-right">
 						好友
 					</span>
@@ -67,9 +67,9 @@
 			</ul>
 			<h5>标签</h5>
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell" data-names="昆明" data-group_id="23659">
+				<li class="mui-table-view-cell" :data-names="k.name" :data-group_id="k.id" v-for="(k,i) in showTags" :key="i">
 					<span class="mui-navigate-right">
-						昆明(50)
+						{{k.name}}({{k.number}})
 					</span>
 				</li>
 			</ul>
@@ -78,14 +78,17 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					name: 'asdf',
-					uids:[],
-					person:[],
+					uids: [],
+					person: [],
 					// 选择的标签
-					tags:[]
+					tags: [],
+					// 展示的标签
+					showTags: []
 				},
 				methods: {
 
@@ -96,30 +99,53 @@
 							// plus.navigator.setStatusBarStyle("light");
 						}
 					})
+					showTags();
 					mui.plusReady(function() {
-						var self = plus.webview.currentWebview();
-						if(self.uids){
-							app.uids = self.uids; 
-						}
-						if(self.person){
-							app.person = self.person; 
-						}
-						if(self.tags){
-							logs(self.tags);
-							app.tags = self.tags; 
-						}
-					})
-					mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
-						var names = this.dataset.names;
-						var group_id = this.dataset.group_id;
-						openPage('select_recipients.html', 'select_recipients', '#f7f7f7', {
-							group_id: group_id,
-							names: names,
-							uids:app.uids,
-							person:app.person,
-							tags:app.tags
+						mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
+							var names = this.dataset.names;
+							var types = this.dataset.types;
+							var group_id = this.dataset.group_id;
+							plus.webview.hide("select_recipients");
+							plus.webview.close("select_recipients");
+							openPage('select_recipients.html', 'select_recipients', '#f7f7f7', {
+								group_id: group_id,
+								names: names,
+								uids: app.uids,
+								person: app.person,
+								tags: app.tags,
+								types: types
+							})
 						})
 					})
+				}
+			})
+			// 获取标签列表groupmessage&action=label_list
+			function showTags() {
+				mui.post($ajaxUrl + 'groupmessage&action=label_list', {
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						app.showTags = res.data;
+					} else {}
+				}, 'json');
+			}
+
+			// 更新传值
+			window.addEventListener('reloadYouSelf', function(self) {
+				if (self.detail.uids) {
+					app.uids = self.detail.uids;
+				} else {
+					app.uids = [];
+				}
+				if (self.detail.person) {
+					app.person = self.detail.person;
+				} else {
+					app.uids = [];
+				}
+				if (self.detail.tags) {
+					app.tags = self.detail.tags;
+				} else {
+					app.uids = [];
 				}
 			})
 		</script>

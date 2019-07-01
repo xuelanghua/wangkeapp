@@ -37,6 +37,9 @@
 				width: 0.27rem;
 				margin-right: 5px;
 			}
+			.mui-content.team-list-container{
+				padding-bottom: 100px;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -61,7 +64,7 @@
 				<ul>
 					<template v-for="(list, index) in createList" :key="index">
 						<li class="team-list" v-if="list.is_captain==1">
-							<img class="sign-tags" src="../image/icon/sign-tags-data-y.png" @tap="teamDetail(list.team_id)">
+							<img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
 							<div class="inside" @tap="groupsChat('12')">
 								<i class="adorn"></i>
 								<div class="team-title">
@@ -73,7 +76,7 @@
 								</div>
 								<div class="time-person">
 									<span class="create-time">创建时间：{{list.create_time}}</span>
-									<span class="create-time">创建人：{{userSelf}}</span>
+									<span class="create-time">创建人：{{list.captain_name.name||list.captain_name.nickName}}</span>
 								</div>
 							</div>
 						</li>
@@ -87,8 +90,8 @@
 				<h2><i></i>正式团队</h2>
 				<ul>
 					<template v-for="(list, index) in joinList" :key="index">
-						<li class="team-list" v-if="list.is_captain==0">
-							<img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id)">
+						<li class="team-list">
+							<img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
 							<div class="inside" @tap="groupsChat('12')">
 								<i class="adorn"></i>
 								<div class="team-title">
@@ -99,8 +102,8 @@
 									</span>
 								</div>
 								<div class="time-person">
-									<span class="rank-num"><img class="rank-sign" :src="'../image/icon/rank'+list.grade+'.png'">千级别收入</span>
-									<span class="rank-num">排名：{{list.ranking}}</span>
+									<span v-if="list.grade"  class="rank-num"><img class="rank-sign" :src="'../image/icon/rank'+list.grade+'.png'">千级别收入</span>
+									<span v-if="list.ranking" class="rank-num">排名：{{list.ranking}}</span>
 									<span class="create-person">创建人：{{list.captain_name.name || list.captain_name.nickName}}</span>
 								</div>
 							</div>
@@ -150,26 +153,7 @@
 				mounted: function() {
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						var teamList = self.teamList;
-						app.teamLists = self.teamList;
-						var createList = new Array();
-						var joinList = new Array();
-						mui.each(teamList, function(index, item) {
-							if (item.is_captain == 1) {
-								createList.push(item);
-							} else {
-								joinList.push(item);
-							}
-						})
-						app.createList = createList;
-						// app.joinList = joinList;
-						if (createList.length > 0) {
-							app.createFlag = true;
-						}
-						if (joinList.length > 0) {
-							app.joinFlag = true;
-						}
-
+						getTeamList();
 						mui('.mui-content').on('tap', '.create-team', function() {
 							if (userInfo.group_id < 2) {
 								message('您没有创建团队的权限!');
@@ -184,8 +168,8 @@
 					})
 				},
 				methods: {
-					teamDetail: function(team_id) {
-						if (app.teamLists[0].data_status != 0 || app.teamLists[0].is_captain != 0) {
+					teamDetail: function(team_id,data_status,is_captain) {
+						if (data_status == 1 || is_captain == 1) {
 							fnOpenWin('webview.html', 'webview', {
 								statusbar: {
 									background: '#FFFFFF'
@@ -222,14 +206,17 @@
 						var createList = new Array();
 						var joinList = new Array();
 						mui.each(teamList, function(index, item) {
-							if (item.is_captain == 1) {
+							if (item.type == 2) {
 								createList.push(item);
 							} else {
 								joinList.push(item);
 							}
+							// app.createList = createList;
+							// app.joinList = joinList;
 						})
 						app.createList = createList;
-						// app.joinList = joinList;
+						app.joinList = joinList;
+						logs(app.joinList);
 						if (createList.length > 0) {
 							app.createFlag = true;
 						} else {

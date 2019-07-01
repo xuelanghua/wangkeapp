@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.mui-content {
+				min-height: 100vh;
+				box-sizing: border-box;
+				background-color: #FFFFFF;
+			}
+
+			.mui-table-view-cell {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 15px;
+				height: 1.05rem;
+				position: relative;
+			}
+
+			.mui-table-view-cell .head-img {
+				width: 0.8rem;
+				height: 0.8rem;
+				overflow: hidden;
+				margin-right: 0.5rem;
+				border-radius: 50%;
+			}
+
+			.mui-table-view-cell .head-img img {
+				width: 100%;
+				height: 100%;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+			}
+
+			.mui-table-view-cell input {
+				border-radius: 0;
+				border: none;
+				width: 6rem;
+				margin-bottom: 0;
+			}
+
+			.briefing-conts {
+				padding: 0.2rem;
+			}
+
+			.mui-table-view-cell span,
+			.briefing-conts h4 {
+				font-weight: normal;
+				font-size: 0.3rem;
+				color: #323333;
+			}
+
+			.briefing-conts h4 {
+				margin: 0.2rem 0 0.18rem;
+			}
+
+			.briefing-conts textarea {
+				display: block;
+				border: none;
+				position: relative;
+				z-index: 6;
+				width: 100%;
+				height: 100%;
+				padding: 0.1rem;
+				margin-bottom: 0;
+			}
+
+			.briefing-conts .textarea-cont {
+				position: relative;
+				padding: 2px;
+				box-sizing: border-box;
+				overflow: visible;
+			}
+
+			.briefing-conts .textarea-cont:after {
+				content: '';
+				display: block;
+				position: absolute;
+				width: 200%;
+				height: 200%;
+				border: 1px solid #DDDDDD;
+				left: 0;
+				top: 0;
+				border-radius: 0.2rem;
+				transform-origin: 0 0;
+				-webkit-transform-origin: 0 0;
+				transform: scale(0.5, 0.5);
+				-webkit-transform: scale(0.5, 0.5);
+				box-sizing: border-box;
+			}
+
+			.mui-table-view:after,
+			.mui-table-view:before {
+				display: none;
+			}
+
+			.mui-content .mui-table-view:first-child {
+				margin-top: 0;
+			}
+
+			.mui-content .mui-table-view .mui-table-view-cell:first-child {
+				height: 1.4rem;
+			}
+
+			.mui-table-view-cell .select-person {
+				display: inline-block;
+				margin-right: 0.5rem;
+				color: #999999;
+			}
+
+			.mui-table-view-cell input::-webkit-input-placeholder,
+			.briefing-conts textarea::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.3rem;
+			}
+			.save-btn{
+				width: 7.08rem;
+				height: 1rem;
+				border-radius: 0.1rem;
+				margin: 0.72rem auto 0;
+				background-color: #2289ff;
+				color: #FFFFFF;
+				font-size: 0.32rem;
+				text-align: center;
+				line-height: 1rem;
+			}
+		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">添加大咖</h1>
+		</header>
+		<div id="mui-content" class="mui-content master-container" v-cloak>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell choice-master">
+					<span class="mui-navigate-right">选择大咖</span>
+					<span class="select-person" v-if="!masterImg">请选择</span>
+					<div v-else class="head-img">
+						<img :src="masterImg">
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>姓名</span>
+					<input type="text" name="" id="" value="" v-model="masterName" placeholder="请输入姓名" />
+				</li>
+				<li class="mui-table-view-cell">
+					<span>职业</span>
+					<input type="text" name="" id="" value="" v-model="masterJob" placeholder="请输入职业" />
+				</li>
+				<li class="mui-table-view-cell">
+					<span>行业</span>
+					<input type="text" name="" id="" value="" v-model="masterVocation" placeholder="请输入行业" />
+				</li>
+				<li class="mui-table-view-cell">
+					<span>职位</span>
+					<input type="text" name="" id="" value="" v-model="masterPostion" placeholder="请输入职位" />
+				</li>
+			</ul>
+			<div class="briefing-conts">
+				<h4>简介</H4>
+				<div class="textarea-cont">
+					<textarea rows="5" cols="" placeholder="请输入简介"></textarea>
+				</div>
+			</div>
+			<div class="save-btn">
+				保存
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					masterImg: '',
+					masterName: '',
+					masterJob: '',
+					masterVocation: '',
+					masterPostion: '',
+					masterId: '',
+					tid: ''
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							// plus.navigator.setStatusBarStyle("light");
+						}
+					})
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.tid = self.tid;
+					})
+					// 大咖选择
+					mui(".mui-content").on('tap', '.choice-master', function() {
+						openPage('speaker_list.html', 'speaker_list', '#f7f7f7', {
+							tid: app.tid,
+							title: '选择大咖'
+						});
+					})
+					// 接收大咖
+					window.addEventListener('doit', function(e) {
+						app.masterImg = e.detail.avatar;
+						app.masterName = e.detail.name;
+						app.masterId = ids;
+					}, false);
+				}
+			})
+		</script>
+	</body>
+
+</html>

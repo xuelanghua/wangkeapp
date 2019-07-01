@@ -6,6 +6,8 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
 		<style>
 			.clearfix{
 				clear: both;
@@ -177,20 +179,20 @@
 			/* 弹出框 */
 			#cover{
 			    position: fixed;
-				z-index: 9999;
+				z-index: 30;
 				top: 0;
 				left: 0;
 				display: none;
 				width: 100%;
 				height: 100%;
-				opacity: 0.5;
-				background: #333333 none repeat scroll 0% 0%;
+				opacity: 0.3;
+				background: #333333;
 			}
 			.tanchu{
 				border-radius: 5px;
 				background-color: #FFFFFF;
 				position: fixed;
-				z-index: 99999;
+				z-index: 1045;
 				width: 92%;
 				top: 25%;
 				left: 4%;
@@ -210,9 +212,17 @@
 			.tanchu_express{
 				width: 90%;
 				margin: 0 auto;
-				padding: 10px 13px;
+				display: flex;
+				height: 50px;
+				align-items: center;
 				font-size: 14px;
 				background-color: #F2F2F2;
+				padding: 0 15px;
+				box-sizing: border-box;
+				overflow: hidden;
+			}
+			.tanchu_express span{
+				margin-left: 15px;
 			}
 			.tanchu_express input{
 				width: 75%;
@@ -466,8 +476,8 @@
 			<div class="tanchu">
 				<div class="tanchu_title">物流信息</div>
 				<div class="tanchu_input">
-					<div class="tanchu_express">
-						物流公司<input type="text" name="express_company" />
+					<div class="tanchu_express" id="express_company">
+						物流公司<span id="select_company" style=""></span>
 					</div>
 					<div class="tanchu_express" style="margin-top: 16px;">
 						单号<input type="text" name="courier_number" style="margin-left: 10%;" />
@@ -479,8 +489,11 @@
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
+			var express_id = '';
 			mui.init({
 				swipeBack: true,
 				pullRefresh: {
@@ -549,9 +562,9 @@
 
 				//发货
 				mui('.mui-content').on('tap', '.tanchu_button', function() {
-					var expressCompany = document.querySelector('input[name=express_company]').value;
+					// var expressCompany = document.querySelector('input[name=express_company]').value;
 					var courierNumber = document.querySelector('input[name=courier_number]').value;
-					if (expressCompany.length == 0) {
+					if (express_id.length == 0) {
 						message('请填写物流公司!');
 						return;
 					}
@@ -561,7 +574,7 @@
 					}
 					document.querySelector('#cover').style.display = 'none';
 					document.querySelector('.tanchu').style.display = 'none';
-					fnExpress(expressCompany, courierNumber, orderId);
+					fnExpress(express_id, courierNumber, orderId);
 				})
 			}
 
@@ -892,14 +905,41 @@
 					orderId: orderId
 				}, 'slide-in-right');
 			}
+			// 获取物流公司
+			function logisticsCompany() {
 
+			}
+			// 选择物流公司
+			mui(".mui-content").on('tap', '#express_company', function() {
+				// logisticsCompany();
+				document.querySelector('input[name=courier_number]').blur();
+				var userPicker = new mui.PopPicker();
+				mui.post($ajaxUrl + 'util&action=express_list', {}, function(res) {
+					if (res.errno == 0) {
+						var data = res.data;
+						data.forEach(function(item) {
+							item.value = item.id;
+							item.text = item.e_name;
+							delete item.id;
+							delete item.e_name;
+						})
+						userPicker.setData(data);
+						userPicker.show(function(items) {
+							mui("#select_company")[0].innerText = JSON.stringify(items[0].text).replace(/"/g, "");
+							express_id=items[0].value;
+						});
+					} else {
+
+					}
+				}, 'json');
+			})
 			//发货
-			function fnExpress(expressCompany, courierNumber, orderId) {
+			function fnExpress(express_id, courierNumber, orderId) {
 				mui.post($ajaxUrl + 'order', {
 					action: 'express',
 					token: userInfo.token,
 					order_id: orderId,
-					express_company: expressCompany,
+					express_id: express_id,
 					courier_number: courierNumber
 				}, function(res) {
 					if (res.errno == 0) {

@@ -222,19 +222,21 @@
 				</div>
 				<div class="mui-indexed-list-alert"></div>
 				<div class="mui-indexed-list-inner">
-					<div class="mui-indexed-list-empty-alert">没有数据</div>
-					<ul class="mui-table-view">
+					<div class="mui-indexed-list-empty-alert mui-hidden">没有数据</div>
+					<ul v-if="!voidData" class="mui-table-view">
 						<template v-for="(vel,key,i) in lists" :key="i">
 							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
 							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input class="checkeds" type="checkbox" :data-names="items.name" :value="items.uid" :data-avatar="items.avatar||items.avatarUrl"
+								<input class="checkeds" type="checkbox" :data-names="items.nickName" :value="items.id" :data-avatar="items.avatarUrl"
 								 :disabled="items.join_status==1" />
-								<img :src="items.avatar||items.avatarUrl" alt=" ">
-								<span>{{items.name}}</span>
-								<span v-if="items.join_status" style="color: #2289ff;">(已加入)</span>
+								<img :src="items.avatarUrl" alt=" ">
+								<span>{{items.nickName}}</span>
 							</li>
 						</template>
 					</ul>
+					<div class="mui-text-center" v-else style="padding-top: 60px;color: #999999;">
+						没有数据
+					</div>
 				</div>
 			</div>
 			<div id="next_btn" class="next-btn next-disabled">下一步</div>
@@ -255,9 +257,17 @@
 				lists: {},
 				uids: [],
 				userName: [],
-				tagsname:'',
+				tagsname: '',
 				// 选择的标签
-				tags: []
+				tags: [],
+				// 组id
+				grId: '',
+				// 组名称
+				types: '',
+				// 页码
+				skip: 1,
+				// 没有数据
+				voidData:false
 			},
 			mounted: function() {
 				var checkedValues = [];
@@ -266,7 +276,6 @@
 					var list = document.getElementById('list');
 					var next = document.getElementById('next_btn');
 					var self = plus.webview.currentWebview();
-					tid = self.tid;
 					if (self.uids) {
 						app.uids = self.uids;
 						count = app.uids.length;
@@ -285,9 +294,16 @@
 					if (self.person) {
 						app.userName = self.person;
 					}
-					if(self.tags){
-						app.tags=self.tags;
+					if (self.tags) {
+						app.tags = self.tags;
 					}
+					if (self.types) {
+						app.types = self.types;
+					}
+					if (self.group_id) {
+						app.grId = self.group_id;
+					}
+
 					document.querySelector('.mui-title').innerText = self.names;
 					app.tagsname = self.names;
 					// 会员组id 
@@ -303,13 +319,21 @@
 						if (index > -1) {
 							app.uids.splice(index, 1);
 						} else {
-							app.uids.push(this.value);
+							if(app.uids.length<200){
+								app.uids.push(this.value);
+							}else{
+								alert("群发人数不能超过200人")
+							}
 						}
 						// 添加删除用户名
 						if (idx > -1) {
 							app.userName.splice(index, 1);
 						} else {
-							app.userName.push(this.dataset.names);
+							if(app.uids.length<200){
+								app.userName.push(this.dataset.names);
+							}else{
+								logs("群发人数不能超过200人")
+							}
 						}
 						count = app.uids.length;
 						var context = count ? "下一步(" + count + ")" : "下一步";
@@ -383,18 +407,20 @@
 
 		function getUserList() {
 			// console.log(tid);
-			mui.post($ajaxUrl + 'team&action=friend_list', {
+			mui.post($ajaxUrl + 'groupmessage&action=member_list', {
 				token: userInfo.token,
-				team_id: tid
+				label_id: app.grId,
+				type: app.types,
+				exist_uids: app.uids.join(","),
+				skip: app.skip,
+				limit: 200
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.lists = res.data;
-					setTimeout(function() {
-						mui("#list").indexedList().findElements();
-					}, 1000);
+					app.voidData = false;
 				} else {
-
+					app.voidData = true;
 				}
 			}, 'json');
 		}

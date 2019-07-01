@@ -14,7 +14,7 @@
 			.banner-cont {
 				position: relative;
 				line-height: 0;
-				max-height:198PX;
+				max-height: 198PX;
 			}
 
 			.banner {
@@ -37,15 +37,25 @@
 				font-size: 14px;
 				line-height: 1.6;
 			}
-			.mui-content{
-				min-height:100vh;
+
+			.mui-content {
+				min-height: 100vh;
 			}
-			.mui-table-view{
+
+			.mui-table-view {
 				margin-top: 0;
+				padding-bottom: 20px;
 			}
-			.mui-table-view-cell.mui-active{
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell.mui-active {
 				background-color: #FFFFFF;
 			}
+
 			.mui-table-view-cell span {
 				font-size: 18px;
 			}
@@ -55,23 +65,28 @@
 				color: #999999;
 				font-size: 15px;
 			}
+
 			.row-conts {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 				padding: 10px 0;
 			}
-			.row-conts .mui-icon{
+
+			.row-conts .mui-icon {
 				font-size: 26px;
 				color: #999999;
 			}
-			.row-conts input,.row-conts textarea{
+
+			.row-conts input,
+			.row-conts textarea {
 				width: 90%;
 				margin: 0;
 				font-size: 16px;
 				color: #333333;
 			}
-			.save-setting{
+
+			.save-setting {
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -106,7 +121,7 @@
 					<span>团队名称：</span>
 					<div class="row-conts">
 						<input v-model="teamName" style="" type="text" maxlength="10" name="" id="" value="" placeholder="请填写团队名称" />
-						<span v-show="teamName" class="mui-icon mui-icon-clear"  @tap="teamName=''"></span>
+						<span v-show="teamName" class="mui-icon mui-icon-clear" @tap="teamName=''"></span>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
@@ -123,6 +138,7 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var ratio = 750 / 396;
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -130,7 +146,7 @@
 					teamName: '',
 					desc: '',
 					image: '',
-					uperimguperimg:''
+					uperimg: 'images/6/2019/05/team_bg.jpg'
 				},
 				methods: {
 
@@ -143,12 +159,24 @@
 						app.teamName = self.teamName;
 						app.desc = self.desc;
 						app.image = self.img;
+						app.uperimg=self.uperImg;
 					})
 					// 保存修改
-					mui(".mui-bar").on("tap",".save-setting",function(){
-						mui.toast("保存");
+					mui(".mui-bar").on("tap", ".save-setting", function() {
+						mui.post($ajaxUrl + 'team&action=team_setting', {
+							token: userInfo.token,
+							team_id: app.teamId,
+							name: app.teamName,
+							cover: app.uperimg,
+							notice: app.desc
+						}, function(res) {
+							if (res.errno == 0) {
+								mui.fire(plus.webview.getWebviewById('team_detail'), 'editTeamInfo');
+								mui.back();
+							} else {}
+						}, 'json');
 					})
-					
+
 					// 上传背景图片
 					mui('.mui-content').on('tap', '.change-banner', function() {
 						var editButtons = new Array();
@@ -210,7 +238,7 @@
 					window.addEventListener('cropperSuccess', function(event) {
 						plus.nativeUI.showWaiting("图片加载中…");
 						app.image = event.detail.image;
-						app.uperimg= event.detail.filename;
+						app.uperimg = event.detail.filename;
 						setTimeout(function() {
 							plus.nativeUI.closeWaiting();
 						}, Math.floor(Math.random() * 1000 + 1000));
