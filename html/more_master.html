@@ -137,10 +137,13 @@
 			.mui-table-view-cell>.mui-slider-right>.mui-btn.modifier-btn {
 				border-left: 1px solid #f9f9f9 !important;
 			}
+
 			.mui-table-view-cell>.mui-slider-right>.mui-btn.delete-btn {
 				border-left: 1px solid #f9f9f9 !important;
 			}
-			.mui-table-view-cell>.mui-slider-left>.mui-btn:after, .mui-table-view-cell>.mui-slider-right>.mui-btn:after{
+
+			.mui-table-view-cell>.mui-slider-left>.mui-btn:after,
+			.mui-table-view-cell>.mui-slider-right>.mui-btn:after {
 				z-index: -66;
 			}
 
@@ -148,7 +151,8 @@
 				background-color: #FFFFFF;
 				color: #333333 !important;
 			}
-			.add-master{
+
+			.add-master {
 				height: 44px;
 				position: relative;
 				display: inline-flex;
@@ -157,7 +161,7 @@
 				width: auto;
 				color: #2289ff;
 				font-size: 14px;
-				z-index:12;
+				z-index: 12;
 			}
 		</style>
 		<script>
@@ -189,16 +193,16 @@
 					</div>
 					<div class="mui-slider-handle">
 						<div class="master-top">
-							<img class="master-headimg" :src="h.img">
+							<img class="master-headimg" :src="h.avatar">
 							<div class="data-bank">
 								<h4 class="mui-ellipsis"><img src="../image/master-sign.png"><span>{{h.name}}</span></h4>
 								<p class="mui-ellipsis">职业：{{h.job}}</p>
-								<p>行业：{{h.trade}}</p>
+								<p>行业：{{h.industry}}</p>
 								<p>职位：{{h.position}}</p>
 							</div>
 						</div>
 						<div class="master-bottom">
-							<p class="mui-ellipsis-3">{{h.desc}}</p>
+							<p class="">{{h.introduce}}</p>
 						</div>
 						<img class="card-sign-cont" src="../image/business-card-sign.png">
 					</div>
@@ -209,31 +213,18 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo=getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					tid:'',
+					tid: '',
 					person: [{
-						img: '../image/share/bg-img03.jpg',
-						name: '李飞飞',
-						job: '唱跳rap',
-						trade: '偶像，明星',
-						position: '个人练习生',
-						desc: '从前有座山，山上有座庙，庙里有个老和尚在给小和尚讲故事'
-					}, {
-						img: '../image/share/bg-img02.jpg',
-						name: '皮尔特沃夫来的凯特琳',
-						job: '篮球篮球篮球篮球篮球',
-						trade: '体育竞技',
-						position: '前锋',
-						desc: '从前有座山，山上有座庙，庙里有个老和尚在给小和尚讲故事，从前有座山，山上有座庙，庙里有个老和庙里有个老和庙里有个老和庙里有个老和'
-					}, {
-						img: '../image/discover/MUJ11mx.jpg',
-						name: '阿怡酱',
-						job: '自由舞',
-						trade: '明星练习生',
-						position: '舞娘',
-						desc: '舞娘的喜悲没人了解'
+						img: '',
+						name: '',
+						job: '',
+						industry: '',
+						position: '',
+						introduce: ''
 					}]
 				},
 				methods: {
@@ -247,14 +238,32 @@
 					})
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						app.tid = self.tid; 
+						app.tid = self.tid;
+						getPerson();
 					})
 				}
 			})
-			mui(".mui-bar").on("tap",".add-master",function(){
-				openPage('add_master.html','add_master','#f7f7f7',{
-					tid:app.tid
+			mui(".mui-bar").on("tap", ".add-master", function() {
+				openPage('add_master.html', 'add_master', '#f7f7f7', {
+					tid: app.tid
 				});
+			})
+			// 获取大咖列表
+			function getPerson(){
+				mui.post($ajaxUrl + 'team&action=star_list', {
+					token: userInfo.token,
+					team_id: app.tid,
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.person=res.data;
+					} else {
+					}
+				}, 'json');
+			}
+			// 监听大咖添加
+			window.addEventListener('reloadList', function() {
+				getPerson();
 			})
 		</script>
 	</body>

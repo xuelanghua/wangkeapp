@@ -124,7 +124,8 @@
 				color: #999999;
 				font-size: 0.3rem;
 			}
-			.save-btn{
+
+			.save-btn {
 				width: 7.08rem;
 				height: 1rem;
 				border-radius: 0.1rem;
@@ -179,9 +180,9 @@
 				</li>
 			</ul>
 			<div class="briefing-conts">
-				<h4>简介</H4>
+				<h4>简介</h4>
 				<div class="textarea-cont">
-					<textarea rows="5" cols="" placeholder="请输入简介"></textarea>
+					<textarea rows="5" cols="" v-model="introduce" placeholder="请输入简介"></textarea>
 				</div>
 			</div>
 			<div class="save-btn">
@@ -192,6 +193,8 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var star_id = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -201,12 +204,20 @@
 					masterVocation: '',
 					masterPostion: '',
 					masterId: '',
-					tid: ''
+					tid: '',
+					introduce: ''
 				},
 				methods: {
 
 				},
 				mounted: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
 					mui.init({
 						beforeback: function() {
 							// plus.navigator.setStatusBarStyle("light");
@@ -223,15 +234,59 @@
 							title: '选择大咖'
 						});
 					})
-					// 接收大咖
+					// 接收大咖信息
 					window.addEventListener('doit', function(e) {
 						app.masterImg = e.detail.avatar;
 						app.masterName = e.detail.name;
-						app.masterId = ids;
+						app.masterId = e.detail.ids;
 					}, false);
+					// 保存大咖
+					mui(".mui-content").on('tap', ".save-btn", function() {
+						document.activeElement.blur();
+						if(app.masterName.replace(/(^\s*)|(\s*$)/g, "")==""){
+							message("请输入大咖名字");
+							return;
+						}
+						if(app.masterJob.replace(/(^\s*)|(\s*$)/g, "")==""){
+							message("请输入大咖职业");
+							return;
+						}
+						if(app.masterVocation.replace(/(^\s*)|(\s*$)/g, "")==""){
+							message("请输入大咖行业");
+							return;
+						}
+						if(app.masterPostion.replace(/(^\s*)|(\s*$)/g, "")==""){
+							message("请输入大咖职位");
+							return;
+						}
+						if(app.introduce.replace(/(^\s*)|(\s*$)/g, "")==""){
+							message("请输入大咖简介");
+							return;
+						}
+						mui.post($ajaxUrl + 'team&action=add_star', {
+							token: userInfo.token,
+							star_id: star_id,
+							team_id: app.tid,
+							uid: app.masterId,
+							name: app.masterName,
+							avatar: app.masterImg,
+							job: app.masterJob,
+							industry: app.masterVocation,
+							position: app.masterPostion,
+							introduce: app.introduce,
+						}, function(res) {
+							if (res.errno == 0) {
+								// location.reload();
+								 mui.fire(plus.webview.getWebviewById('more_master'), 'reloadList');
+								mui.back();
+								message("添加成功");								
+							} else {
+								message(res.message);
+							}
+						}, 'json');
+					})
 				}
 			})
 		</script>
 	</body>
-
 </html>

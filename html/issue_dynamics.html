@@ -103,9 +103,13 @@
 					}, function(res) {
 						if (res.errno == 0) {
 							plus.key.hideSoftKeybord();
-							mui.back();
+							var view = plus.webview.currentWebview().opener();
+							mui.fire(view, 'doit');
 							message("发布成功");
-						}else{
+							setTimeout(function(){
+								mui.back();
+							},200)
+						} else {
 							message("发布失败，请稍后重试。");
 						}
 					}, 'json')
