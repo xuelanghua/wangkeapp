@@ -9,33 +9,46 @@
 		<link href="../css/mui.imageviewer.css" rel="stylesheet" />
 		<link href="../css/team_chat.css" rel="stylesheet" />
 		<style>
-
+			.msg-item .msg-content{
+				margin-top: 16px;
+			}
+			.msg-item{
+				position: relative;
+			}
+			.self-name,.other-name{
+				font-size: 12px;
+				color: #999999;
+				position: absolute;
+				top: 5px;
+			}
+			.self-name{
+				right: 54px;
+			}
+			.other-name{
+				left:54px;
+			}
 		</style>
 	</head>
 
 	<body contextmenu="return false;">
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">房东的猫</h1>
-			<div class="mui-pull-right team-chat-more">
-				<span class="setting-btn">
-					<img src="../image/team-chat-setting-icon.png">
-				</span>
-				<span class="detail-btn">详情</span>
-			</div>
+			<h1 class="mui-title">教你如何在最短的时间内吸50万粉，成为团队大咖。</h1>
 		</header>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
 			<% for(var i in record){ var item=record[i]; %>
 				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 					<% if(item.sender=='self' ) { %>
+						<span class="self-name ">喜欢上小姐姐</span>
 						<img class="msg-user" src="../image/discover/MUJ11mx.jpg" alt="" />
 					<% } else { %>
+						<span class="other-name">其他人</span>
 						<img class="msg-user-img" src="../image/kaol.jpg" alt="" />
 					<% } %>
 					<div class="msg-content">
 						<div class="msg-content-inner">
-							<% if(item.type=='text' ) { %>
+							<% if(item.type=='text' ) { %> 
 								<%=( item.content|| '&nbsp;&nbsp;') %>
 							<% } else if(item.type=='image' ) { %>
 								<img class="msg-content-image" src="<%=(item.content)%>" style="max-width: 100px;" />
@@ -77,6 +90,9 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
+			var ws = null;
+			var chatData = null;
+			var userInfo = getUserInfo();
 			(function($, doc) {
 				var MIN_SOUND_TIME = 800;
 				$.init({
@@ -106,9 +122,20 @@
 				}
 
 				$.plusReady(function() {
+					chatData = {
+						team_id: 100137,
+						course_id: 10,
+						user_id: userInfo.id,
+						uniacid: userInfo.uniacid,
+						type: 2,
+						content: '',
+						message_type: '',
+					};
 					plus.webview.currentWebview().setStyle({
 						softinputMode: "adjustResize"
 					});
+					
+					WebSocketInit();
 
 					var showKeyboard = function() {
 						if ($.os.ios) {
@@ -132,10 +159,6 @@
 					// showKeyboard();
 					var record = [{
 						sender: 'zs',
-						type: 'text',
-						content: 'Hi，我是 MUI 小管家！'
-					}, {
-						sender: 'self',
 						type: 'text',
 						content: 'Hi，我是 MUI 小管家！'
 					}, {
@@ -216,7 +239,7 @@
 						record.push(msg);
 						// console.log(record);
 						bindMsgList();
-						toRobot(msg.content);
+						// toRobot(msg.content);
 					};
 					var toRobot = function(info) {
 						var apiUrl = 'http://www.tuling123.com/openapi/api';
@@ -280,6 +303,9 @@
 								type: 'text',
 								content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
 							});
+							chatData['message_type'] = 'text';
+							chatData['content'] = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
+							ws.send(JSON.stringify(chatData)); //向服务器发送消息
 							ui.boxMsgText.value = '';
 							$.trigger(ui.boxMsgText, 'input', null);
 						} else if (ui.btnMsgType.classList.contains('mui-icon-mic')) {
@@ -370,7 +396,8 @@
 						}
 						startTimestamp = (new Date()).getTime();
 						recorder.record({
-							filename: "_doc/audio/"
+							filename: "_doc/audio/",
+							format: "mp3"
 						}, function(path) {
 							if (recordCancel) return;
 							send({
@@ -378,10 +405,14 @@
 								type: 'sound',
 								content: path
 							});
+							chatData['message_type'] = 'audio';
+							chatData['content'] = path;
+							ws.send(JSON.stringify(chatData));
 						}, function(e) {
 							plus.nativeUI.toast("录音时出现异常: " + e.message);
 						});
 					}, false);
+					
 					ui.body.addEventListener('drag', function(event) {
 						//console.log('drag');
 						if (Math.abs(event.detail.deltaY) > 50) {
@@ -452,19 +483,93 @@
 						}
 					})
 				});
-				// 打开设置页面
-				$(".mui-bar").on("tap",".setting-btn",function(){
-					openPage('team_chat_setting.html','team_chat_setting','#f7f7f7',{
-						tid:'102'
-					})
-				})
-				// 打开详情页面
-				$(".mui-bar").on("tap",".detail-btn",function(){
-					openPage('team_detail.html','team_detail','#f7f7f7',{
-						teamid:'100005'
-					})
-				})
 			}(mui, document));
+			
+			var timer = 0
+			//websocket 心跳检测
+			var heartCheck = {
+				timeout: 3e3,
+				timeoutObj: null,
+				serverTimeoutObj: null,
+				reset: function() {
+					clearTimeout(timer);
+					clearTimeout(this.serverTimeoutObj);
+					clearTimeout(this.timeoutObj);
+					// console.log("heartCheck.reset.timer");
+					return;
+				},
+				start: function() {
+					this.timeoutObj = setTimeout(function() {
+						var t = {
+							ping: !0,
+							user_id: 1,
+							uniacid: 6,
+							type: 2
+						};
+						ws.send(JSON.stringify(t));
+					}, this.timeout);
+				},
+			
+			};
+			
+			//socket初始化
+			function WebSocketInit() {
+				if ("WebSocket" in window) {
+					// 打开一个 web socket
+					ws = new WebSocket("wss://app.wangkeapp.cn/wss");
+					ws.onopen = function() {
+						if (ws.readyState == WebSocket.OPEN) {
+							console.log("连接已打开...");
+							heartCheck.reset();
+							heartCheck.start();
+						}
+					};
+					ws.onmessage = function(event) {
+						var data = event.data;
+						logs(data);
+						if (data == 'pong') {
+							console.log('websocket连接正常...');
+							heartCheck.reset();
+							heartCheck.start();
+						} else {
+							data = JSON.parse(data);
+							logs(data);
+							if (data.data2) {
+								if (data.data2.user_id == chatId) {
+									var message = {
+										sender: chatId,
+										type: data.data2.message_type,
+										content: data.data2.content,
+										message_id: data.message_id
+									}
+									send(message);
+								} else {
+									mui.post($ajaxUrl + 'chat&action=unread_message', {
+										token: userInfo.token,
+										message_id: data.data2.id
+									}, function(res) {
+										if (res.errno == 0) {
+											// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+											// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+											// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+											// mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+										}
+									}, 'json')
+								}
+							}
+						}
+					};
+					ws.onclose = function(e) {
+						// 关闭 websocket
+						console.log("连接已关闭...");
+					};
+					ws.onerror = function(e) {
+						logs(e);
+					}
+				} else {
+					message("您的手机不支持 WebSocket!");
+				}
+			}
 		</script>
 	</body>
 

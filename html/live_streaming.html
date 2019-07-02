@@ -90,6 +90,9 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
+			var ws = null;
+			var chatData = null;
+			var userInfo = getUserInfo();
 			(function($, doc) {
 				var MIN_SOUND_TIME = 800;
 				$.init({
@@ -119,6 +122,15 @@
 				}
 
 				$.plusReady(function() {
+					chatData = {
+						team_id: 100137,
+						course_id: 10,
+						user_id: userInfo.id,
+						uniacid: userInfo.uniacid,
+						type: 2,
+						content: '',
+						message_type: '',
+					};
 					plus.webview.currentWebview().setStyle({
 						softinputMode: "adjustResize"
 					});
@@ -227,7 +239,7 @@
 						record.push(msg);
 						// console.log(record);
 						bindMsgList();
-						toRobot(msg.content);
+						// toRobot(msg.content);
 					};
 					var toRobot = function(info) {
 						var apiUrl = 'http://www.tuling123.com/openapi/api';
@@ -291,6 +303,9 @@
 								type: 'text',
 								content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
 							});
+							chatData['message_type'] = 'text';
+							chatData['content'] = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
+							ws.send(JSON.stringify(chatData)); //向服务器发送消息
 							ui.boxMsgText.value = '';
 							$.trigger(ui.boxMsgText, 'input', null);
 						} else if (ui.btnMsgType.classList.contains('mui-icon-mic')) {
@@ -381,7 +396,8 @@
 						}
 						startTimestamp = (new Date()).getTime();
 						recorder.record({
-							filename: "_doc/audio/"
+							filename: "_doc/audio/",
+							format: "mp3"
 						}, function(path) {
 							if (recordCancel) return;
 							send({
@@ -389,10 +405,14 @@
 								type: 'sound',
 								content: path
 							});
+							chatData['message_type'] = 'audio';
+							chatData['content'] = path;
+							ws.send(JSON.stringify(chatData));
 						}, function(e) {
 							plus.nativeUI.toast("录音时出现异常: " + e.message);
 						});
 					}, false);
+					
 					ui.body.addEventListener('drag', function(event) {
 						//console.log('drag');
 						if (Math.abs(event.detail.deltaY) > 50) {
@@ -466,7 +486,6 @@
 			}(mui, document));
 			
 			var timer = 0
-			var Snumber = 1;
 			//websocket 心跳检测
 			var heartCheck = {
 				timeout: 3e3,
@@ -481,27 +500,12 @@
 				},
 				start: function() {
 					this.timeoutObj = setTimeout(function() {
-						if (Snumber == 3) {
-							console.log(797979);
-							var t = {
-								user_id: 1,
-								uniacid: 6,
-								type: 1,
-								team_id: 100137,
-								course_id: 10,
-								content: 'this is a test',
-								message_type: 'text'
-							};
-						} else {
-							var t = {
-								ping: !0,
-								user_id: 1,
-								uniacid: 6,
-								type: 1
-							};
-						}
-						Snumber++;
-						// logs(t);
+						var t = {
+							ping: !0,
+							user_id: 1,
+							uniacid: 6,
+							type: 2
+						};
 						ws.send(JSON.stringify(t));
 					}, this.timeout);
 				},
@@ -512,7 +516,7 @@
 			function WebSocketInit() {
 				if ("WebSocket" in window) {
 					// 打开一个 web socket
-					ws = new WebSocket("wss://app.ynhost.cn/wss");
+					ws = new WebSocket("wss://app.wangkeapp.cn/wss");
 					ws.onopen = function() {
 						if (ws.readyState == WebSocket.OPEN) {
 							console.log("连接已打开...");
@@ -529,7 +533,7 @@
 							heartCheck.start();
 						} else {
 							data = JSON.parse(data);
-							// logs(data);
+							logs(data);
 							if (data.data2) {
 								if (data.data2.user_id == chatId) {
 									var message = {
