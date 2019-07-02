@@ -96,6 +96,7 @@
 			.mui-slider-handle .master-bottom p {
 				font-size: 0.26rem;
 				color: #333333;
+				text-align: justify;
 			}
 
 			.mui-slider-handle h4 img {
@@ -184,12 +185,12 @@
 			</div>
 		</header>
 		<div id="mui-content" class="mui-content master-container" v-cloak>
-			<ul id="OA_task_1" class="mui-table-view">
-				<li class="mui-table-view-cell" v-for="(h,i) in person" :key="i">
+			<ul id="OA_task_1" class="mui-table-view" v-if="person.length>0">
+				<li class="mui-table-view-cell" :id="'master-list'+h.id" v-for="(h,i) in person" :key="i">
 					<div class="mui-slider-right mui-disabled">
-						<span class="mui-btn mui-btn-primary stick-btn">置顶</span>
-						<span class="mui-btn mui-btn-primary modifier-btn">修改</span>
-						<span class="mui-btn mui-btn-primary delete-btn">删除</span>
+						<span class="mui-btn mui-btn-primary stick-btn" @tap="stickMaster(h.id)">置顶</span>
+						<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(h)">修改</span>
+						<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
 					</div>
 					<div class="mui-slider-handle">
 						<div class="master-top">
@@ -202,30 +203,26 @@
 							</div>
 						</div>
 						<div class="master-bottom">
-							<p class="">{{h.introduce}}</p>
+							<p>{{h.introduce}}</p>
 						</div>
 						<img class="card-sign-cont" src="../image/business-card-sign.png">
 					</div>
 				</li>
 			</ul>
+			<div class="" v-else style="padding: 30%;text-align: center;color:#999999;font-size:18px;">
+				暂无团队大咖~
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo=getUserInfo();
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					tid: '',
-					person: [{
-						img: '',
-						name: '',
-						job: '',
-						industry: '',
-						position: '',
-						introduce: ''
-					}]
+					person: []
 				},
 				methods: {
 
@@ -249,22 +246,70 @@
 				});
 			})
 			// 获取大咖列表
-			function getPerson(){
+			function getPerson() {
 				mui.post($ajaxUrl + 'team&action=star_list', {
 					token: userInfo.token,
 					team_id: app.tid,
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						app.person=res.data;
-					} else {
-					}
+						app.person = res.data;
+					} else {}
 				}, 'json');
 			}
 			// 监听大咖添加
 			window.addEventListener('reloadList', function() {
 				getPerson();
 			})
+			// 删除大咖
+			function deleteMaster(s_id,i) {
+				var _this_dom = document.getElementById('master-list' + s_id);
+				plus.nativeUI.confirm("确认删除该动态吗？", function(e) {
+					if (e.index) {
+						// 取消
+						message("取消");
+						mui.swipeoutClose(_this_dom);
+					} else {
+						mui.swipeoutClose(_this_dom);
+						mui.post($ajaxUrl + 'team&action=delete_star', {
+							token: userInfo.token,
+							star_id: s_id,
+						}, function(res) {
+							if (res.errno == 0) {
+								message("已删除");
+								app.person.splice(i,1);
+								mui.fire(plus.webview.getWebviewById('team_detail'), 'reloadList');
+							} else {
+								message("删除失败，稍后重试");
+							}
+						}, 'json');
+					}
+				})
+			}
+			// 置顶大咖
+			function stickMaster(s_id) {
+				var _this_dom = document.getElementById('master-list' + s_id);
+				mui.swipeoutClose(_this_dom);
+				mui.post($ajaxUrl + 'team&action=top_star', {
+					token: userInfo.token,
+					star_id: s_id,
+				}, function(res) {
+					if (res.errno == 0) {
+						message("已置顶");
+						getPerson();
+					} else {
+						message("置顶，稍后重试");
+					}
+				}, 'json');
+			}
+			// 修改大咖
+			function editMaster(lst) {
+				var _this_dom = document.getElementById('master-list' + lst.id);
+				mui.swipeoutClose(_this_dom);
+				openPage('add_master.html', 'add_master', '#f7f7f7', {
+					list: lst
+				})
+			}
 		</script>
 	</body>
 

@@ -545,6 +545,9 @@
 				font-size: 20px;
 				color: #333333;
 			}
+			.mui-backdrop{
+				z-index: 9;
+			}
 		</style>
 	</head>
 	<body>
@@ -559,11 +562,7 @@
 						<span id="team_name">团队切换</span>
 						<span class="mui-icon mui-icon-arrowup mui-icon-arrowdown"></span>
 						<div class="team-list">
-							<ul class="mui-table-view">
-								<li class="mui-table-view-cell">团队一</li>
-								<li class="mui-table-view-cell">团队二</li>
-								<li class="mui-table-view-cell">团队三</li>
-							</ul>
+							<ul class="mui-table-view" id="team-list"></ul>
 						</div>
 					</div>
 					<a href="#popover" class="add-btn" id="openPopover">
@@ -667,7 +666,7 @@
 						<img src="../image/customers.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>团队详情</p>
-							<span style="color: #000;">团队的力量</span> 
+							<span style="color: #000;">团队的力量</span>
 						</div>
 						<div class="clearfix"></div>
 					</div>
@@ -698,7 +697,7 @@
 					<img src="../image/QR.png" id="qrcode_pic">
 				</div>
 				<span>二维码类型（<i id="qrcode_type">名片</i>）</span>
-				<a id="card_setting" style="float: left;margin-left: 45%;">设置 ></a>
+				<a id="card_setting" style="float: left;margin-left: 45%;">设置</a>
 				<img id="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;float: left;margin-top: 50px;margin-left: 45%;">
 				<div class="clearfix"></div>
 			</div>
@@ -728,6 +727,11 @@
 	<script src="../js/swiper.min.js"></script>
 	<script src="../js/Zepto.min.js"></script>
 	<script>
+		var mask = mui.createMask(function(){
+			$(".mui-title .mui-icon").removeClass("mui-icon-arrowdown");
+			$(".team-list").slideUp();
+		});
+		var default_team_id = '';
 		mui.init({
 			swipeBack: false,
 			keyEventBind: {
@@ -883,27 +887,22 @@
 					page: 'home'
 				}, 'slide-in-right');
 			})
-			//切换团队
-			mui('.mui-bar').on('tap', '.mui-title', function() {
-				$(".mui-title .mui-icon").toggleClass("mui-icon-arrowdown");
-				$(".team-list").slideToggle();
-			})
-			// 切换团队名称
-			mui('.mui-bar').on('tap', '.mui-table-view-cell', function() {
-				$("#team_name").text(this.innerText);
-			})
-
 			//关闭二维码
 			document.getElementById('hide_qrcode').addEventListener('tap', function() {
 				hideQrcode();
 			})
 
 			//查看新增客户
+			// document.getElementById('new_customer').addEventListener('tap', function() {
+			// 	mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
+			// 	mui.fire(plus.webview.getWebviewById('chat'), 'newCustomer');
+			// })
+			//跳转团队详情
 			document.getElementById('new_customer').addEventListener('tap', function() {
-				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
-				mui.fire(plus.webview.getWebviewById('chat'), 'newCustomer');
+				openPage('team_detail.html','team_detail','#f7f7f7',{
+					teamid:default_team_id
+				});
 			})
-
 			//查看公告
 			mui('.mui-content').on('tap', '.Notice', function() {
 				noticeDeail();
@@ -959,6 +958,8 @@
 				mui('#popover').popover('hide');
 				// document.getElementById('popover').classList.add('mui-hidden');
 			})
+			// 获取团队信息
+			getTeamList();
 		});
 
 		//获取地理位置
@@ -1215,5 +1216,52 @@
 			newPage.show('slide-in-bottom');
 			hideQrcode();
 		}
+		//获取团队信息
+		function getTeamList() {
+			mui.post($ajaxUrl + 'team&action=personal_team_list', {
+				token: userInfo.token,
+			}, function(res) {
+				if (res.errno == 0) {
+					var data = res.data;
+					if (data.length > 1) {
+						var html = "";
+						for (var i in data) {
+							if (data[i].is_default == 1) {
+								document.getElementById("team_name").innerText = data[i].name;
+								default_team_id = data[i].team_id;
+							}
+							html += '<li class="mui-table-view-cell" data-tid=' + data[i].team_id + '>' + data[i].name + '</li>';
+						}
+						document.getElementById("team-list").innerHTML = html;
+					} else if (data.length == 1 && data != "") {
+						document.getElementById("team_name").innerText = data[0].name;
+					} else {
+						document.getElementById("team_name").innerText = "旺客"
+						mui(".mui-title .mui-icon")[0].style.display = "none";
+					}
+				} else {}
+			}, 'json');
+		}
+		//切换团队
+		mui('.mui-bar').on('tap', '.mui-title', function() {
+			mask.show();
+			$(".mui-title .mui-icon").toggleClass("mui-icon-arrowdown");
+			$(".team-list").slideToggle();
+		})
+		// 切换团队名称
+		mui('.mui-bar').on('tap', '.mui-table-view-cell', function() {
+			default_team_id = this.dataset.tid;
+			var _self = this;
+			mui.post($ajaxUrl + 'team&action=set_default_team', {
+				token: userInfo.token,
+				team_id: default_team_id
+			}, function(res) {
+				if (res.errno == 0) {
+					$("#team_name").text(_self.innerText);
+				} else {
+					message("切换失败，请稍后重试");
+				}
+			}, 'json');
+		})
 	</script>
 </html>

@@ -373,7 +373,7 @@
 					dynamicDetail: function(id) {
 						openPage('dynamics_detail.html', 'dynamics_detail', "#f7f7f7", {
 							aid: id,
-							user_id:user_id
+							user_id: user_id
 						})
 					},
 					// 打开文章
@@ -579,7 +579,7 @@
 					if (res.errno == 0) {
 						logs(res);
 						app.discover_info = res.data;
-						user_id=res.data.id;
+						user_id = res.data.id;
 						// app.dynamic = res.data;
 					} else {
 						// app.dynamic = [];
@@ -608,17 +608,23 @@
 			}
 			// 删除动态
 			function deleteDynamics(tid, ii) {
-				mui.post($ajaxUrl + 'timeline&action=delete', {
-					token: userInfo.token,
-					tid: tid,
-				}, function(res) {
-					if (res.errno == 0) {
-						app.dynamic.splice(ii, 1);
-						message("删除成功");
+				plus.nativeUI.confirm("确认删除该动态吗？", function(e) {
+					if (e.index) {
+						// 取消
 					} else {
-						message("删除失败，稍后重试");
+						mui.post($ajaxUrl + 'timeline&action=delete', {
+							token: userInfo.token,
+							tid: tid,
+						}, function(res) {
+							if (res.errno == 0) {
+								app.dynamic.splice(ii, 1);
+								message("删除成功");
+							} else {
+								message("删除失败，稍后重试");
+							}
+						}, 'json');
 					}
-				}, 'json');
+				})
 			}
 			// 监听发布新动态
 			window.addEventListener('doit', function() {

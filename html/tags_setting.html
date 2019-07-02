@@ -61,9 +61,10 @@
 		</header>
 		<div id="mui-content" class="mui-content setting-container" v-cloak>
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell" v-for="(list,idx) in tagsList" :key="idx" :data-tagid="list.id" :data-tagname="list.name">
+				<li class="mui-table-view-cell" :class="'lists'+list.id" v-for="(list,idx) in tagsList" :key="idx" :data-tagid="list.id"
+				 :data-tagname="list.name">
 					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-red" :data-tagid="list.id">删除</a>
+						<span class="mui-btn mui-btn-red" @tap="delteLi(idx,list.id)">删除</span>
 					</div>
 					<div class="mui-slider-handle">
 						<h4>{{list.name}}({{list.total}})</h4>
@@ -97,56 +98,58 @@
 						var self = plus.webview.currentWebview();
 						// logs(self.source);
 					})
-					// 新建标签
-					mui(".mui-bar-nav").on('tap', '.create-tags', function() {
-						openPage('create_tags.html', 'create_tags', '#f7f7f7');
-					})
-					// 去创建标签
-					mui(".mui-content").on('tap', '.void-tags', function() {
-						openPage('create_tags.html', 'create_tags', '#f7f7f7');
-					})
-					// 点击删除
-					mui('.mui-content').on('tap', '.mui-btn-red', function(event) {
-						var li = this.parentNode.parentNode;
-						var tagid = this.dataset.tagid;
-						mui.confirm('确认删除该条记录？', '', ['确认', '取消'], function(e) {
-							if (e.index == 0) {
-								mui.post($ajaxUrl + 'label&action=delete_label', {
-									token: userInfo.token,
-									label_id: tagid
-								}, function(res) {
-									if (res.errno == 0) {
-										li.parentNode.removeChild(li);
-										// 先删除节点在请求
-										getTagsList();
-										message('删除成功');
-									} else {
-										message('删除失败，请稍后重试');
-									}
-								}, 'json');
+
+				}
+			})
+			// 新建标签
+			mui(".mui-bar-nav").on('tap', '.create-tags', function() {
+				openPage('create_tags.html', 'create_tags', '#f7f7f7');
+			})
+			// 去创建标签
+			mui(".mui-content").on('tap', '.void-tags', function() {
+				openPage('create_tags.html', 'create_tags', '#f7f7f7');
+			})
+			// 点击删除
+			function delteLi(idx, tagid) {
+				mui.swipeoutClose(mui('.lists' + tagid)[0]);
+				mui.confirm('确认删除该条记录？', function(e) {
+					if (e.index == 0) {
+						mui.post($ajaxUrl + 'label&action=delete_label', {
+							token: userInfo.token,
+							label_id: tagid
+						}, function(res) {
+							if (res.errno == 0) {
+								app.tagsList.splice(idx, 1);
+								if (app.tagsList.length == 0) {
+									app.isVoid = true;
+								}
+								// 先删除节点在请求
+								message('删除成功');
 							} else {
-								mui.swipeoutClose(li);
+								message('删除失败，请稍后重试');
 							}
-						});
-					});
-					// 点击跳转到标签编辑
-					mui('.mui-content').on('tap', '.mui-table-view-cell', function(event) {
-						var li = document.querySelector('.mui-selected');
-						var tagid = this.dataset.tagid;
-						var tagname = this.dataset.tagname;
-						if (li) {
-							mui.swipeoutClose(li);
-						} else {
-							openPage('tags_edit.html', 'tags_edit', '#f7f7f7', {
-								tgid: tagid,
-								tgnm: tagname
-							})
-						}
-					});
-					window.addEventListener('refreshList', function(event) {
-						getTagsList();
+						}, 'json');
+					} else {
+						// mui.swipeoutClose(mui('.lists' + tagid)[0]);
+					}
+				});
+			};
+			// 点击跳转到标签编辑
+			mui('.mui-content').on('tap', '.mui-table-view-cell', function(event) {
+				var li = document.querySelector('.mui-selected');
+				var tagid = this.dataset.tagid;
+				var tagname = this.dataset.tagname;
+				if (li) {
+					mui.swipeoutClose(li);
+				} else {
+					openPage('tags_edit.html', 'tags_edit', '#f7f7f7', {
+						tgid: tagid,
+						tgnm: tagname
 					})
 				}
+			});
+			window.addEventListener('refreshList', function(event) {
+				getTagsList();
 			})
 			// 获取标签列表
 			function getTagsList() {

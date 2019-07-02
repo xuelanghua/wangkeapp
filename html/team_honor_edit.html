@@ -55,7 +55,8 @@
 				color: #2289FF;
 				margin-top: 0.2rem;
 				font-size: 0.3rem;
-				width: 0.6rem;
+				width: 60%;
+				text-align: center;
 			}
 
 			.honor-wall .edit textarea {
@@ -74,7 +75,8 @@
 				color: #999999;
 				font-size: 0.28rem;
 			}
-			.save-team-edit{
+
+			.save-team-edit {
 				height: 44px;
 				position: relative;
 				display: inline-flex;
@@ -106,35 +108,28 @@
 		</header>
 		<div id="mui-content" class="mui-content team-honor-edit" v-cloak>
 			<ul class="honor-wall">
-				<li class="done">
-					<span class="mui-icon mui-icon-close"></span>
-					<span class="desc">百万团队</span>
+				<li class="done" v-for="(h,i) in honorList" :key="i">
+					<span class="mui-icon mui-icon-close" @tap="deleteHonor(i,h.id)"></span>
+					<span class="desc">{{h.name}}</span>
 				</li>
-				<li class="edit">
-					<textarea maxlength="8" rows="" cols="" placeholder="最多输入8个字"></textarea>
+				<li class="edit" v-show="is_edit">
+					<textarea maxlength="8" rows="" cols="" v-model="names" placeholder="最多输入8个字"></textarea>
 				</li>
-				<li class="add">
-
-				</li>
+				<li class="add"></li>
 			</ul>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var team_id = '';
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					honorList:[
-						{
-							title:"百万团队",
-							status:0
-						},
-						{
-							pls:"百万团队",
-							status:1
-						}
-					]
+					is_edit: false,
+					names: '',
+					honorList: []
 				},
 				methods: {
 
@@ -147,13 +142,76 @@
 					})
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						var tid = self.tid;
+						team_id = self.tid;
+						getlists();
 					})
 				}
 			})
-			mui(".mui-bar").on('tap','.save-team-edit',function(){
-				mui.toast("保存");
+			mui(".mui-bar").on('tap', '.save-team-edit', function() {
+				editHonor('', '', app.names);
 			})
+			mui(".mui-content").on('tap', '.add', function() {
+				app.is_edit = true;
+				this.style.display = "none";
+			})
+			// 删除荣誉
+			function deleteHonor(idx, dl_id) {
+				plus.nativeUI.confirm("确认删除该称号吗？", function(e) {
+					if (e.index) {
+						// 取消
+						message("取消");
+					} else {
+						editHonor(idx, dl_id, '');
+					}
+				})
+			}
+			// 编辑称号
+			function editHonor(idx, dl, add) {
+				mui.post($ajaxUrl + 'team&action=edit_title', {
+					token: userInfo.token,
+					team_id: team_id,
+					delete_ids: dl,
+					names: add
+				}, function(res) {
+					if (res.errno == 0) {
+						mui.fire(plus.webview.getWebviewById('team_detail'), 'reloadHonor');
+						if (dl) {
+							message("已删除");
+							app.honorList.splice(idx, 1);
+							if (app.honorList.length > 6 || app.honorList.length == 6) {
+								document.querySelector(".add").style.display = "none";
+							} else {
+								document.querySelector(".add").style.display = "inline-flex";
+							}
+						} else {
+							message("已添加");
+							mui.back();
+						}
+					} else {
+						if (dl) {
+							message("删除失败，稍后重试");
+						} else {
+							message("添加失败，稍后重试");
+						}
+					}
+				}, 'json');
+			}
+			// 获取列表
+			function getlists() {
+				mui.post($ajaxUrl + 'team&action=title_list', {
+					token: userInfo.token,
+					team_id: team_id,
+				}, function(res) {
+					if (res.errno == 0) {
+						app.honorList = res.data;
+						if (app.honorList.length > 6 || app.honorList.length == 6) {
+							document.querySelector(".add").style.display = "none";
+						} else {
+							document.querySelector(".add").style.display = "inline-flex";
+						}
+					} else {}
+				}, 'json');
+			}
 		</script>
 	</body>
 

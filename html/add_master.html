@@ -226,6 +226,19 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.tid = self.tid;
+						if (self.list) {
+							logs(self.list);
+							var person = self.list;
+							app.masterImg = person.avatar;
+							app.masterName = person.name;
+							app.masterJob = person.job;
+							app.masterVocation = person.industry;
+							app.masterPostion = person.position;
+							star_id = person.id;
+							app.masterId = person.uid;
+							app.tid = person.team_id;
+							app.introduce = person.introduce;
+						}
 					})
 					// 大咖选择
 					mui(".mui-content").on('tap', '.choice-master', function() {
@@ -243,23 +256,23 @@
 					// 保存大咖
 					mui(".mui-content").on('tap', ".save-btn", function() {
 						document.activeElement.blur();
-						if(app.masterName.replace(/(^\s*)|(\s*$)/g, "")==""){
+						if (app.masterName.replace(/(^\s*)|(\s*$)/g, "") == "") {
 							message("请输入大咖名字");
 							return;
 						}
-						if(app.masterJob.replace(/(^\s*)|(\s*$)/g, "")==""){
+						if (app.masterJob.replace(/(^\s*)|(\s*$)/g, "") == "") {
 							message("请输入大咖职业");
 							return;
 						}
-						if(app.masterVocation.replace(/(^\s*)|(\s*$)/g, "")==""){
+						if (app.masterVocation.replace(/(^\s*)|(\s*$)/g, "") == "") {
 							message("请输入大咖行业");
 							return;
 						}
-						if(app.masterPostion.replace(/(^\s*)|(\s*$)/g, "")==""){
+						if (app.masterPostion.replace(/(^\s*)|(\s*$)/g, "") == "") {
 							message("请输入大咖职位");
 							return;
 						}
-						if(app.introduce.replace(/(^\s*)|(\s*$)/g, "")==""){
+						if (app.introduce.replace(/(^\s*)|(\s*$)/g, "") == "") {
 							message("请输入大咖简介");
 							return;
 						}
@@ -277,9 +290,12 @@
 						}, function(res) {
 							if (res.errno == 0) {
 								// location.reload();
-								 mui.fire(plus.webview.getWebviewById('more_master'), 'reloadList');
-								mui.back();
-								message("添加成功");								
+								message("添加成功");
+								mui.fire(plus.webview.getWebviewById('more_master'), 'reloadList');
+								mui.fire(plus.webview.getWebviewById('team_detail'), 'reloadList');
+								setTimeout(function() {
+									mui.back();
+								}, 200);
 							} else {
 								message(res.message);
 							}

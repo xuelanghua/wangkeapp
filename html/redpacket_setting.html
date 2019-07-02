@@ -89,6 +89,24 @@
 				z-index: 18;
 				color:#2289FF;
 			}
+			.mutual-red{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 15px 0;
+			}
+			.mui-table-view-cell.mutual-red:after{
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			/* share_status 0 开启1*/
 		</style>
 	</head>
 	<body>
@@ -113,6 +131,12 @@
 						<input type="number" name="redpacket_num" placeholder="1~500" /><span>个</span>
 					</div>
 				</li>
+				<li class="mui-table-view-cell mutual-red">
+					<span>双向红包</span>
+					<div class="mui-switch mui-switch-blue">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
 			</ul>
 			<div class="money">
 				<div class="redpacket-wish-title">输入红包祝福语(必填)</div>
@@ -124,6 +148,7 @@
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
 	<script type="text/javascript">
+		var red_status = 0;
 		mui.init({
 			swipeBack: true,
 		});
@@ -177,7 +202,8 @@
 					redpacket_fee: redpacket_fee,
 					redpacket_wish: redpacket_wish,
 					token: userInfo.token,
-					redpacket_number: redpacket_num
+					redpacket_number: redpacket_num,
+					data_status:red_status
 				}, function(res) {
 					if (res.errno == 0) {
 						plus.nativeUI.toast(res.message);
@@ -225,6 +251,14 @@
 
 		window.addEventListener('changecolor', function(event) {
 			plus.navigator.setStatusBarStyle("dark");
+		})
+		mui('.mui-content').on('toggle', '.mui-switch', function(event) {
+			if (event.detail.isActive) {
+				red_status = 1;
+			} else {
+				red_status = 0;
+			}
+			// message("状态"+red_status);
 		})
 	</script>
 </html>

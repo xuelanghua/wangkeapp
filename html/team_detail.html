@@ -815,6 +815,15 @@
 				color: #999999;
 				padding: 1rem 0 0;
 			}
+
+			.void-tips-cont {
+				height: 1.2rem;
+				padding-left: 0.2rem;
+				display: flex;
+				align-items: center;
+				background-color: rgb(250, 250, 250);
+				color: #DDDDDD;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -903,24 +912,27 @@
 						<span>团队大咖</span>
 						<p class="more-master mui-pull-right">更多<span class="mui-icon mui-icon-arrowright"></span></p>
 					</h2>
-					<div class="swiper-container">
+					<div v-if="person!=''" class="swiper-container">
 						<div class="swiper-wrapper">
 							<div class="swiper-slide" v-for="(h,i) in person" :key="i">
 								<div class="master-top" @tap="checkBusinessCard(i)">
-									<img class="master-headimg" :src="h.img">
+									<img class="master-headimg" :src="h.avatar">
 									<div class="data-bank">
 										<h4 class="mui-ellipsis"><img src="../image/master-sign.png"><span>{{h.name}}</span></h4>
 										<p class="mui-ellipsis">职业：{{h.job}}</p>
-										<p>行业：{{h.trade}}</p>
+										<p>行业：{{h.industry}}</p>
 										<p>职位：{{h.position}}</p>
 									</div>
 								</div>
 								<div class="master-bottom" @tap="checkBusinessCard(i)">
-									<p class="mui-ellipsis-3">{{h.desc}}</p>
+									<p class="mui-ellipsis-3">{{h.introduce}}</p>
 								</div>
 								<img class="card-sign-cont" src="../image/business-card-sign.png">
 							</div>
 						</div>
+					</div>
+					<div class="void-tips-cont" v-else>
+						暂无团队大咖~
 					</div>
 				</div>
 				<!-- 团队荣誉 -->
@@ -931,10 +943,13 @@
 						<!-- v-if="role" -->
 						<p v-if="role" class="more-member mui-pull-right">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
 					</h2>
-					<div class="team-honor-sign">
-						<div class="sign-items" v-for="(j,i) in 6">
-							<span>百百万团队</span>
+					<div v-if="honorList!=''" class="team-honor-sign">
+						<div class="sign-items" v-for="(j,i) in honorList" :key="i">
+							<span>{{j.name}}</span>
 						</div>
+					</div>
+					<div class="void-tips-cont" v-else>
+						暂无团队荣誉~
 					</div>
 				</div>
 				<div class="validation-messages" v-if="role">
@@ -1037,14 +1052,14 @@
 			</div>
 			<div id="master_model" class="mui-popover master-card">
 				<div class="master-card-body">
-					<img class="user-head-cont" :src="person[serial].img">
-					<h4 class=""><img src="../image/master-sign.png"><span>{{person[serial].name}}</span></h4>
+					<img class="user-head-cont" :src="modeldata.avatar">
+					<h4 class=""><img src="../image/master-sign.png"><span>{{modeldata.name}}</span></h4>
 					<div class="master-inside">
-						<p class="mui-ellipsis">职业：<span>{{person[serial].job}}</span></p>
-						<p>行业：<span>{{person[serial].trade}}</span></p>
-						<p>职位：<span>{{person[serial].position}}</span></p>
+						<p class="mui-ellipsis">职业：<span>{{modeldata.job}}</span></p>
+						<p>行业：<span>{{modeldata.industry}}</span></p>
+						<p>职位：<span>{{modeldata.position}}</span></p>
 						<p class="desc">
-							{{person[serial].desc}}
+							{{modeldata.introduce}}
 						</p>
 					</div>
 				</div>
@@ -1081,29 +1096,10 @@
 				teamImg: '',
 				uperImg: '',
 				teamCourse: [],
-				person: [{
-					img: '../image/share/bg-img03.jpg',
-					name: '李飞飞',
-					job: '唱跳rap',
-					trade: '偶像，明星',
-					position: '个人练习生',
-					desc: '从前有座山，山上有座庙，庙里有个老和尚在给小和尚讲故事'
-				}, {
-					img: '../image/share/bg-img02.jpg',
-					name: '皮尔特沃夫来的凯特琳',
-					job: '篮球篮球篮球篮球篮球',
-					trade: '体育竞技',
-					position: '前锋',
-					desc: '从前有座山，山上有座庙，庙里有个老和尚在给小和尚讲故事，从前有座山，山上有座庙，庙里有个老和庙里有个老和庙里有个老和庙里有个老和'
-				}, {
-					img: '../image/discover/MUJ11mx.jpg',
-					name: '阿怡酱',
-					job: '自由舞',
-					trade: '明星练习生',
-					position: '舞娘',
-					desc: '舞娘的喜悲没人了解'
-				}],
-				serial: 0
+				person: [],
+				honorList: [],
+				serial: 0,
+				modeldata: {}
 			},
 			methods: {
 				examine: function(status, userId) {
@@ -1147,6 +1143,7 @@
 				},
 				checkBusinessCard: function(i) {
 					app.serial = i;
+					app.modeldata=app.person[i];
 					mui("#master_model").popover("show", mui(".master-top")[0]);
 				},
 				// 显示编辑菜单
@@ -1223,15 +1220,15 @@
 					plus.navigator.setStatusBarStyle("dark");
 					var self = plus.webview.currentWebview();
 					app.tid = self.teamid;
-					// alert(self.teamid);
+					// alert(app.tid);
 					getInfo();
 					getMember();
 					getApplyList();
-					initSlider();
 					// 获取团队课程
 					teamCourse();
 					// 获取团队大咖
-					getTeamMaster();
+					getPerson();
+					getlists();
 				})
 			}
 		})
@@ -1259,7 +1256,8 @@
 		})
 		// 点击名片标志
 		mui(".mui-content").on("tap", ".card-sign-cont", function() {
-			mui.toast("准备打开个人详情");
+			// mui.toast("准备打开个人详情");
+			// modeldata
 		})
 		// 关闭卡片
 		mui(".master-card").on("tap", ".close-btn", function() {
@@ -1410,6 +1408,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
+				// logs(res);
 				if (res.errno == 0) {
 					app.teamMember = res.data;
 				} else {
@@ -1448,16 +1447,43 @@
 		window.addEventListener('addCourse', function(e) {
 			teamCourse();
 		});
-		// 获取团队大咖
-		function getTeamMaster(){
+		// 删除团队大咖
+		window.addEventListener('reloadList', function(e) {
+			getPerson();
+		});
+		// 添加或者删除团队荣誉
+		window.addEventListener('reloadHonor', function(e) {
+			getlists();
+		});
+		// 获取大咖列表
+		function getPerson() {
 			mui.post($ajaxUrl + 'team&action=star_list', {
 				token: userInfo.token,
 				team_id: app.tid,
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
+					app.modeldata = res.data[0];
+					app.person = res.data;
+					setTimeout(function() {
+						initSlider();
+					}, 100);
 				} else {
+					app.person = [];
 				}
+				// logs(app.person); 
+			}, 'json');
+		}
+		// 获取荣誉列表
+		function getlists() {
+			mui.post($ajaxUrl + 'team&action=title_list', {
+				token: userInfo.token,
+				team_id: app.tid,
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					app.honorList = res.data;
+				} else {}
 			}, 'json');
 		}
 	</script>

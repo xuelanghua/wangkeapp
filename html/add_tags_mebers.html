@@ -166,7 +166,7 @@
 		</header>
 
 		<div id="mui-content" class="mui-content setting-container">
-			<div id='list' class="mui-indexed-list" v-cloak>
+			<div id="list" class="mui-indexed-list" v-cloak>
 				<div class="mui-indexed-list-search mui-input-row mui-search">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
 				</div>
@@ -218,6 +218,9 @@
 						</template>
 					</ul>
 				</div>
+				<div id="" class="page-number">
+					<span>当前页4</span>
+				</div>
 			</div>
 		</div>
 	</body>
@@ -245,27 +248,12 @@
 				yuids: []
 			},
 			mounted: function() {
-				mui.init({
-					pullRefresh: {
-						container: ".mui-indexed-list-inner",
-						up: {
-							height: 50,
-							auto: false,
-							contentrefresh: "正在加载...",
-							contentnomore: '没有更多数据了',
-							callback: function() {
-								refresh = 'up';
-								skip += 1;
-								setTimeout(function() {
-									mui('.mui-indexed-list-inner').pullRefresh().endPullupToRefresh(false);
-									if (skip > 4) {
-										mui('.mui-indexed-list-inner').pullRefresh().endPullupToRefresh(true);
-									}
-								}, 800)
-							}
-						}
-					}
-				});
+				var viewport = document.documentElement.clientWidth;
+				if (viewport > 750) {
+					viewport = 750
+				}
+				document.documentElement.style.fontSize = viewport / 7.5 + "px";
+				mui.init();
 				mui.ready(function() {
 					var header = document.querySelector('header.mui-bar');
 					var list = document.getElementById('list');
@@ -405,8 +393,8 @@
 							getstr = ''
 						}
 						mui.post($ajaxUrl + 'label&action=member_list', {
-							// token: userInfo.token,
-							token: 'f0cd140a588aefa885ea316c4bb16945',
+							token: userInfo.token,
+							// token: 'f0cd140a588aefa885ea316c4bb16945',
 							type: types,
 							exist_uids: getstr,
 						}, function(res) {
@@ -415,13 +403,10 @@
 								app.lists = res.data;
 								if (types == 'new_customer') {
 									checkedNewCustomer = res.data;
-									// alert('new_customer');
 								} else if (types == 'crm') {
 									checkedCrm = res.data;
-									// alert('crm');
 								} else {
 									checkedFriend = res.data;
-									// alert('friend');
 								}
 								markSelect();
 								setTimeout(function() {
