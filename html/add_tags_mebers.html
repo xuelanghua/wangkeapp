@@ -147,6 +147,25 @@
 			.mui-indexed-list-inner {
 				padding-bottom: 40px;
 			}
+
+			.page-number {
+				background-color: #EEEEEE;
+				padding: 0 20%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.current-page {
+				color: #999999;
+				padding: 0.2rem 0;
+			}
+
+			.nex-page {
+				padding: 0.2rem;
+				margin-left: 0.5rem;
+				color: #2289FF;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -208,18 +227,20 @@
 				<div class="mui-indexed-list-inner">
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<template v-for="(vel,key,i) in lists" :key="i">
-							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
-							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-								<input class="checkeds" type="checkbox" :data-father="key" :value="items.id" :data-avatar="items.avatarUrl" />
+						<template v-for="(vel,k,i) in lists" :key="i">
+							<li :data-group="k" class="mui-table-view-divider mui-indexed-list-group">{{k}}</li>
+							<li class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left" :data-value="items.initial"
+							 :data-tags="items.pinyin" v-for="(items in vel">
+								<input class="checkeds" type="checkbox" :data-father="k" :value="items.id" :data-avatar="items.avatarUrl" />
 								<img :src="items.avatar||items.avatarUrl" alt=" ">
-								<span>{{items.nickName}}</span>
+								<span>{{items.nickName}}{{lists.length}}</span>
 							</li>
 						</template>
 					</ul>
-				</div>
-				<div id="" class="page-number">
-					<span>当前页4</span>
+					<div class="page-number">
+						<span class="current-page">当前页{{skip}}</span>
+						<span class="nex-page">下一页</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -229,11 +250,11 @@
 	<script src="../js/mui.indexedlist.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
-		var userInfo = getUserInfo();
-		var tgid = '';
-		var refresh = '';
-		var skip = 1;
-		var types = 'new_customer';
+		var userInfo = getUserInfo(),
+			tgid = '',
+			refresh = '',
+			skip = 0,
+			types = 'new_customer';
 		// 之前的
 		// 选中的全部
 		var allChecked = [];
@@ -245,7 +266,9 @@
 			data: {
 				lists: {},
 				uids: [],
-				yuids: []
+				yuids: [],
+				skip: 0,
+				isNext: true,
 			},
 			mounted: function() {
 				var viewport = document.documentElement.clientWidth;
@@ -318,6 +341,12 @@
 							if (index > -1) {
 								//有就不添加,否则添加
 							} else {
+								// 选择个数限制
+								if (allChecked.length == 200 || allChecked.length > 200) {
+									alert("最多选择200个");
+									this.checked = false;
+									return;
+								}
 								allChecked.push(val);
 							}
 						} else {
@@ -345,6 +374,8 @@
 						if (types == this.dataset.types) {
 							return;
 						}
+						app.skip = 0;
+						app.isNext = true;
 						types = this.dataset.types;
 						// var list = document.getElementById('list');
 						// var signs = list.querySelectorAll('.checkeds');
@@ -386,6 +417,7 @@
 					}, 1000);
 					// 获取列表
 					function getUserList() {
+						showload();
 						var getstr = '';
 						if (app.yuids) {
 							getstr = app.yuids.join(',');
@@ -393,12 +425,14 @@
 							getstr = ''
 						}
 						mui.post($ajaxUrl + 'label&action=member_list', {
-							token: userInfo.token,
-							// token: 'f0cd140a588aefa885ea316c4bb16945',
+							// token: userInfo.token,
+							token: 'f0cd140a588aefa885ea316c4bb16945',
 							type: types,
 							exist_uids: getstr,
+							skip: app.skip,
+							limit: 200
 						}, function(res) {
-							// console.log(JSON.stringify(res));
+							console.log(JSON.stringify(res));
 							if (res.errno == 0) {
 								app.lists = res.data;
 								if (types == 'new_customer') {
@@ -412,20 +446,36 @@
 								setTimeout(function() {
 									mui("#list").indexedList().findElements();
 								}, 1000);
-							} else {}
+								showload(true, 1000);
+								app.skip += 1;
+							} else {
+								showload(true, 1000);
+								if (app.skip != 0) {
+									app.isNext = false;
+									alert("没有下一页啦");
+								}
+							}
 						}, 'json');
 					}
+					// 下一页
+					mui(".mui-content").on("tap", ".nex-page", function() {
+						if (app.isNext) {
+							getUserList();
+						} else {
+							alert("没有下一页啦");
+						}
+					})
 				})
 			}
 		})
-		
+
 		function markSelect() {
 			// 标记选中的
 			var firstSelect = document.querySelector('.checkeds');
 			if (firstSelect) {
 				firstSelect.checked = false;
 			}
-			setTimeout(function(){
+			setTimeout(function() {
 				var list = document.getElementById('list');
 				var signs = list.querySelectorAll('.checkeds');
 				mui.each(signs, function(index, item) {
