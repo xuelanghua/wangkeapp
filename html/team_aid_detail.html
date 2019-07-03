@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.target-groups {
+				padding: 0;
+				margin: 0;
+				list-style-type: none;
+			}
+
+			.target-groups .target-lists {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				margin: 20px 0;
+				padding: 0 0.6rem;
+			}
+
+			.target-lists .timer {
+				background-color: #DDDDDD;
+				color: #FFFFFF;
+				font-size: 0.22rem;
+				padding: 2px 6px;
+				border-radius: 3px;
+				margin-bottom: 0.1rem;
+			}
+
+			.target-lists img {
+				max-width: 100%;
+			}
+
+			.target-lists-head p {
+				color: #FFFFFF;
+				margin-bottom: 0;
+				font-size: 0.28rem;
+				line-height: 1.2;
+				text-align: justify;
+			}
+
+			.target-head {
+				position: relative;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			.target-lists-head {
+				position: absolute;
+				padding: 0 0.25rem 0.2rem 0.25rem;
+				bottom: 0;
+			}
+
+			.mui-card-content-inner {
+				padding: 0;
+			}
+
+			.mui-card {
+				border-radius: 5px;
+				box-shadow: none;
+			}
+
+			.desc-cont {
+				margin: 0;
+				padding: 0.1rem 0.25rem;
+				list-style-type: none;
+			}
+
+			.desc-cont li {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.15rem 0;
+				font-size: 0.28rem;
+				position: relative;
+			}
+
+			.desc-cont li span {
+				color: #999999;
+			}
+
+			.desc-cont li p,
+			.desc-cont li p span {
+				margin: 0;
+				color: #333333;
+				font-size: 0.28rem;
+			}
+
+			.desc-cont li:last-of-type:after {
+				position: absolute;
+				bottom: -0.1rem;
+				right: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #F2F2F2;
+			}
+
+			.check-detail {
+				padding: 0.3rem 0.25rem;
+				position: relative;
+				color: #2289ff;
+			}
+
+			.mui-navigate-right:after {
+				font-size: 0.38rem;
+			}
+
+			.desc-cont li p span,
+			.desc-cont .level-status {
+				color: #666666;
+			}
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">目标助理</h1>
+		</header>
+		<div id="mui-content" class="mui-content assistant" v-cloak>
+			<ul class="target-groups">
+				<li class="target-lists" v-for="(list,index) in msgList" :key="index">
+					<span class="timer">{{list.create_time}}</span>
+					<div class="mui-card">
+						<div class="mui-card-content-inner">
+							<div class="target-head">
+								<img :src="chickenSoup[list.rand_number].img">
+								<div class="target-lists-head">
+									<p>{{chickenSoup[list.rand_number].title}}</p>
+								</div>
+							</div>
+							<ul class="desc-cont">
+								<li v-for="(items,idx) in list.content" :key="idx">
+									<span>{{items.title}}</span>
+									<p>
+										<span>{{items.content}}</span><span class="level-status">&nbsp;[{{items.level}}]</span>
+									</p>
+								</li>
+							</ul>
+							<!-- :data-timer="list.date" -->
+							<div class="check-detail" :data-timer="list.date"><span class="mui-navigate-right">查看详情</span></div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo(),
+				genre = '',
+				limit = 5,
+				skip = 1,
+				refresh = '';
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					msgList: [],
+					chickenSoup: [{
+						img: "../image/every-day-img0.jpg",
+						title: "【尔之短处，在言语欠钝讷，举止欠端重，看书不能深入，而作文不能峥嵘。若能从此三事上下一番苦功，进之以猛，持之以恒，不过一二年，自尔精进而不觉】"
+					}, {
+						img: "../image/every-day-img1.jpg",
+						title: "【是脚踏出来的，历史是人写出来的。人的每一步行动都在书写自己的历史。】"
+					}, {
+						img: "../image/every-day-img2.jpg",
+						title: "【所有成功的背后，都是苦苦堆积的坚持；所有人前的风光，都是背后傻傻的不放弃。只要你愿意，并为之坚持，总有一天，你会活成自己喜欢的模样！】"
+					}, {
+						img: "../image/every-day-img3.jpg",
+						title: "【不是每个人都能成为，自己想要的样子，但每个人，都可以努力，成为自己想要的样子。相信自己，你能作茧自缚，就能破茧成蝶。】"
+					}, {
+						img: "../image/every-day-img4.jpg",
+						title: "【人生是很累的，你现在不累，以后就会更累。人生是很苦的，你现在不苦，以后就会更苦。】"
+					}, {
+						img: "../image/every-day-img5.jpg",
+						title: "【不管怎么样，努力本身就是一件会让人觉得心安理得的事。如果成功了会心安理得地享受自己获得的一切，即使失败了也能心安理得地放下然后继续前行。】"
+					}]
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+							mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
+						},
+						pullRefresh: {
+							container: "#mui-content", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									refresh = "up";
+									skip++;
+									getMsgList();
+								}
+							},
+							down: {
+								style: 'circle', //单webview模式的下拉刷新 
+								color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+								callback: function() {
+									mui('#mui-content').pullRefresh().refresh(true);
+									refresh = "down";
+									skip = 1;
+									getMsgList();
+								}
+							}
+						}
+					});
+					mui.plusReady(function() {
+						// var arr=['01','02','03','04','05'];
+						// var idx = Math.floor((Math.random() * arr.length));
+						// app.random=arr[idx];
+						plus.webview.currentWebview().setStyle({
+							scrollIndicator: 'none'
+						})
+						var self = plus.webview.currentWebview();
+						// 获得消息类型
+						genre = self.genre;
+						// 查看详情
+						mui(".mui-content").on('tap', '.check-detail', function() {
+							var timer=this.dataset.timer;
+							openPage('target_detail.html', 'target_detail', '#ffffff', {
+								timer:timer
+							});
+						})
+						getMsgList();
+						readNotice();
+					})
+				}
+			})
+
+			// 阅读消息
+			function readNotice() {
+				mui.post($ajaxUrl + 'chat&action=read_notice', {
+					token: userInfo.token,
+					type: genre
+				}, function(res) {
+					logs(res);
+				}, 'json')
+			}
+			// 获取消息列表
+			function getMsgList() {
+				mui.post($ajaxUrl + 'chat&action=notice_list_by_type', {
+					token: userInfo.token,
+					type: genre,
+					skip: skip,
+					limit: limit
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						if (refresh == 'up') {
+							app.msgList = app.msgList.concat(res.data);
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						} else if (refresh == 'down') {
+							app.msgList = res.data;
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						} else {
+							app.msgList = res.data;
+						}
+					} else {
+						if (refresh == 'up') {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					}
+				}, 'json')
+			}
+		</script>
+	</body>
+</html>
