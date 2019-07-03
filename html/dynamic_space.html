@@ -27,6 +27,22 @@
 				border-top-right-radius: 0.2rem;
 				background: linear-gradient(to right, #c4c4c4, #6f6f6f);
 			}
+
+			.user-info .user-info-top .vip4,
+			.user-info .user-info-top .vip5,
+			.user-info .user-info-top .vip3 {
+				padding: 0 0.16rem;
+				height: 0.3rem;
+				overflow: hidden;
+				display: inline-flex;
+				line-height: 0.3rem;
+				font-size: 0.2rem;
+				color: #FFFFFF;
+				margin-left: 0.2rem;
+				border-bottom-left-radius: 0.2rem;
+				border-top-right-radius: 0.2rem;
+				background: linear-gradient(to right, #f4dec6, #e3a472);
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -51,7 +67,7 @@
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
 					<div class="swiper-slide" v-for="(banner,index) in slider" :key="index">
-						<img :src="banner.image">
+						<img :src="banner">
 					</div>
 				</div>
 				<div class="swiper-pagination"></div>
@@ -147,6 +163,7 @@
 				// 评论项的index
 				_idx = null,
 				_com_id = null,
+				pullDirection='',
 				limit = 20;
 			var mask = mui.createMask(function() {
 				app.menuStatus = false;
@@ -159,19 +176,8 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					slider: [{
-						type: 'article',
-						id: '2',
-						image: "../image/share/bg-img02.jpg"
-					}, {
-						type: 'goods',
-						id: '36',
-						image: "../image/share/bg-img03.jpg"
-					}, {
-						type: 'goods',
-						id: '69',
-						image: "../image/bj.jpg"
-					}],
+					// slider: ["../image/share/bg-img02.jpg","../image/share/bg-img03.jpg","../image/bj.jpg"],
+					slider: [],
 					likeDesc: '点赞',
 					menuStatus: false,
 					like: false,
@@ -221,7 +227,9 @@
 									app.spaceList[l].list[i].thumbs_user.splice(index, 1);
 								} else {
 									app.$set(app.spaceList[l].list[i], "is_thumbs", "1");
+									app.spaceList[l].list[i].thumbs_user = new Array();
 									app.spaceList[l].list[i].thumbs_user.unshift(userInfo.nickName);
+									// logs(app.spaceList[l]);
 								}
 							} else {
 
@@ -286,9 +294,33 @@
 					mui.init({
 						beforeback: function() {
 							// plus.navigator.setStatusBarStyle("dark");
+						},
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									getSpaceList();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									pullDirection = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getSpaceList();
+									discoverInfo();
+								}
+							}
 						}
 					})
-					initSlider();
 					mui.plusReady(function() {
 						var ws = plus.webview.currentWebview();
 						// 获取传参
@@ -350,6 +382,7 @@
 								} else {}
 							}, 'json');
 						})
+
 					})
 					// 初始化两次防止页面乱
 					// 初始化字体大小
@@ -391,7 +424,24 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						app.discover_info = res.data;
-					} else {}
+						if (res.data.timeline_cover != "''") {
+							app.slider = [];
+							app.slider = res.data.timeline_cover;
+							setTimeout(function(){
+							initSlider();
+							},200);
+						} else {
+							app.slider = ["../image/share/bg-img02.jpg", "../image/share/bg-img03.jpg", "../image/bj.jpg"]
+							setTimeout(function(){
+							initSlider();
+							},200);
+						}
+					} else {
+						app.slider = ["../image/share/bg-img02.jpg", "../image/share/bg-img03.jpg", "../image/bj.jpg"]
+						setTimeout(function(){
+						initSlider();
+						},200);
+					}
 				}, 'json');
 				// 获取当前年份
 				var current_time = new Date();
@@ -405,10 +455,21 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						app.spaceList = res.data;
-					} else {}
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					} else {
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					}
 				}, 'json');
 			}
 			// 删除单条动态
@@ -500,8 +561,39 @@
 			}
 			// 监听发布新动态
 			window.addEventListener('doit', function() {
+				location.reload();
 				getSpaceList();
 			}, false);
+			// app.is_self
+			// 更换封面
+			mui(".mui-content").on("tap", ".swiper-slide", function() {
+				if (app.is_self) {
+					plus.nativeUI.actionSheet({
+						// title: "更换封面照片",
+						cancel: "取消",
+						buttons: [{
+							title: "更换封面照片"
+						}]
+					}, function(e) {
+						var index = e.index;
+						switch (index) {
+							case 0:
+								// text += "取消";
+								break;
+							case 1:
+								openPage('change_cover.html', 'change_cover', '#f7f7f7', {
+									cover: app.slider
+								});
+								break;
+						}
+					});
+				}
+			})
+			// 刷新更改的封面图
+			window.addEventListener('reloadCover', function(event) {
+				location.reload();
+				discoverInfo();
+			})
 		</script>
 	</body>
 

@@ -83,7 +83,7 @@
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
 					<div class="swiper-slide" v-for="(banner,index) in slider" :key="index">
-						<img :src="banner.image">
+						<img :src="banner">
 					</div>
 				</div>
 				<div class="swiper-pagination"></div>
@@ -259,19 +259,7 @@
 					essay: [],
 					// 团队课程
 					team_course: [],
-					slider: [{
-						type: 'article',
-						id: '2',
-						image: "../image/share/bg-img02.jpg"
-					}, {
-						type: 'goods',
-						id: '36',
-						image: "../image/share/bg-img03.jpg"
-					}, {
-						type: 'goods',
-						id: '69',
-						image: "../image/bj.jpg"
-					}],
+					slider: [],
 					screen: [{
 							title: '好友动态',
 							id: '1',
@@ -435,8 +423,6 @@
 							}
 						}
 					});
-					// 初始化轮播
-					initSlider();
 					discoverInfo();
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("light");
@@ -524,7 +510,6 @@
 					limit: limit,
 					skip: skip
 				}, function(res) {
-					logs(res);
 					if (res.errno == 0) {
 						if (app.typeler == 1) {
 							if (skip == 1) {
@@ -577,12 +562,26 @@
 					user_id: ''
 				}, function(res) {
 					if (res.errno == 0) {
-						logs(res);
 						app.discover_info = res.data;
 						user_id = res.data.id;
-						// app.dynamic = res.data;
+						// 初始化轮播
+						if (res.data.timeline_cover != "''") {
+							app.slider = [];
+							app.slider = res.data.timeline_cover;
+							setTimeout(function() {
+								initSlider();
+							}, 200);
+						} else {
+							app.slider = ["../image/share/bg-img02.jpg", "../image/share/bg-img03.jpg", "../image/bj.jpg"]
+							setTimeout(function() {
+								initSlider();
+							}, 200);
+						}
 					} else {
-						// app.dynamic = [];
+						app.slider = ["../image/share/bg-img02.jpg", "../image/share/bg-img03.jpg", "../image/bj.jpg"];
+						setTimeout(function() {
+							initSlider();
+						}, 200);
 					}
 				}, 'json');
 			}
@@ -629,6 +628,11 @@
 			// 监听发布新动态
 			window.addEventListener('doit', function() {
 				getDiscoverData();
+			}, false);
+			// 监听封面修改
+			window.addEventListener('reloadCover', function() {
+				location.reload();
+				// discoverInfo();
 			}, false);
 		</script>
 	</body>
