@@ -1,7 +1,7 @@
 $ajaxUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
 $uploadUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
 $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
-
+// 
 // $ajaxUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
 // $uploadUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
 // $voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
@@ -1047,8 +1047,9 @@ function getcache(key) {
 	return JSON.parse(_cache);
 }
 
+
+function showload(status, delay) {
 // 等待框
-function showload(status, delay, msg, bgc) {
 	if (status) {
 		if (delay) {
 			setTimeout(function() {
@@ -1059,8 +1060,8 @@ function showload(status, delay, msg, bgc) {
 		}
 		return;
 	}
-	plus.nativeUI.showWaiting(msg, {
-		background: bgc || "rgba(0,0,0,0)",
+	plus.nativeUI.showWaiting('', {
+		background: "rgba(0,0,0,0)",
 		loading: {
 			display: 'block',
 			height: '70px',
