@@ -1,598 +1,646 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
+		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<title>自媒体</title>
-		<link href="../css/mui.min.css" rel="stylesheet" />
-		<link href="../css/index.css" rel="stylesheet" />
-		<link href="../icomoon/style.css" rel="stylesheet" />
-		<link href="../css/showLoading.css" rel="stylesheet" />
-
-		<style>
-			* {
-				margin: 0;
-				padding: 0;
-				outline: 0;
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/animate.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<link rel="stylesheet" href="../css/discover.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
 			}
 
-			body {
-				font-family: Helvetica, Arial, Verdana, sans-serif;
-				color: #999;
-				font-size: 12px;
+			.swiper-container {
+				min-height: 281.5px;
 			}
 
-			.mui-slider-item {
-				max-height: 300px;
-				overflow: hidden;
-			}
-
-			.inner {
-				margin: 0 auto;
-				padding: 35px 0;
-				font-size: 15px;
-				position: relative;
-				font-family: 'Open Sans', sans-serif;
-			}
-
-			.subMenu {
-				position: relative;
-				/* position: absolute; */
-				/* top: 232px; */
-				/* z-index: 10; */
-			}
-
-			.subMenu .inner {
-				padding: 0;
-			}
-
-			ul,
-			li {
-				list-style: none;
-			}
-
-			.clearfix {
-				clear: both;
-			}
-
-			.Information_list {
+			.swiper-slide {
+				color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 281.5px;
+				width: 100%;
 				background-color: #FFFFFF;
-				/* margin-bottom 50px; */
-				/* margin-top: 35px; */
 			}
 
-			.list1 {
-				padding: 15px 10px 15px 0;
-				border-bottom: 1px solid #F2F2F2;
-				margin-left: 10px;
-			}
-
-			.list1L {
-				width: 113px;
-				height: 80px;
-				float: left;
-			}
-
-			.list1L img {
+			.swiper-slide img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 			}
 
-			.list1R {
-				width: 65%;
-				color: #999999;
+			.swiper-pagination-bullet.swiper-pagination-bullet-active {
+				background-color: #FFFFFF;
+				opacity: 0.8;
+				transform: scale(1.3);
+				-webkit-transform: scale(1.3);
+				transition: all 0.25s ease-in-out;
+				-webkit-transition: all 0.25s ease-in-out;
+			}
+
+			.swiper-pagination-bullet {
+				background-color: rgba(255, 255, 255, 1);
+				opacity: 0.3;
+				transition: all 0.25s ease-in-out;
+				-webkit-transition: all 0.25s ease-in-out;
+			}
+
+			.user-info .user-info-top {
+				margin-bottom: 0;
+				padding: 10px 0 5px;
+			}
+
+			.user-info p {
 				font-size: 12px;
-				float: right;
+				line-height: 1.2;
 			}
 
-			.list1R p {
-				color: #333333;
-				font-size: 15px;
-				line-height: 23px;
-				text-align: left;
-				margin-top: -2px;
+			.user-info {
+				padding-top: 0;
+				padding-left: 5px;
 			}
-
-			.list1Rl {
-				float: left;
-				margin-top: 10px;
+			/* test */
+			@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
+			
+			canvas {
+			  position: absolute;
+			  top: 0px;
+			  left: 0px;
+			  z-index: 0;
 			}
-
-			.list1Rr {
-				float: right;
-				margin-top: 10px;
-			}
-
-			.list1Rr img {
-				width: 19px;
-				margin-right: 10px;
-			}
-
-			#quick {
-				width: 80%;
-				margin: 0 auto;
-				box-shadow: 0 0 15px 3px #D1D1D3;
-				border-radius: 20px;
-				background-color: #fff;
-				display: none;
-				margin-top: -133px;
-				z-index: 9999;
-			}
-
-			#quick li {
-				width: 25%;
-				float: left;
-				margin-top: 15px;
-			}
-
-			#quick li img {
-				height: 22px;
-			}
-
-			#quick li p {
-				font-size: 10px;
-				color: #000000;
-			}
-
-			.jiandou {
-				width: 19px;
-				position: absolute;
-				margin-left: -12px;
-			}
-
-			#back {
-				position: fixed;
-				top: 0;
-				left: 0;
-				display: none;
-				width: 100%;
-				height: 100%;
-				opacity: 0.5;
-			}
-
-			.mui-slider-item img {
-				width: 100%;
-				height: auto;
-			}
-
-			.mui-plus-pullrefresh .subMenu .mui-scroll {
-				position: absolute;
-			}
-
-			.mui-plus-pullrefresh .subMenu {
-				width: 100%;
-				overflow: hidden;
-			}
-
-			.mui-slider-group {
-				height: auto;
-			}
-
-			.publish-article {
-				height: 44px;
-				width: 80px;
-				position: relative;
-				display: flex;
-				align-items: center;
-				justify-content: flex-end;
-				padding-right: 10px;
-				margin-right: -10px;
-				font-size: 14px;
-				color: #666666;
-				z-index: 12;
-			}
-
-			.operation-btn {
-				width: 45px;
-				height: 45px;
-				position: fixed;
-				left: 50%;
-				margin-left: -22.5px;
-				bottom: 50px;
-				opacity: 0.96;
-			}
-
-			.mui-bar.mui-bar-nav {
-				background-color: #fff;
-				box-shadow: none;
-			}
-
-			.subMenu {
-				background-color: #F5F6F8;
-			}
-
-			.subMenu.fixed-cont {
-				position: fixed;
-				top: 44px;
-				z-index: 5;
-				color: #FFFFFF;
-				transition: all 0.3s ease-in-out;
-				-webkit-transition: all 0.3s ease-in-out;
-				box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.2);
-			}
-
-			.subMenu .mui-scroll-wrapper .mui-control-item {
-				color: #333333;
-			}
-
-			* {
-				touch-action: pan-y;
+			
+			#welcome {
+			  position: relative;
+			  z-index: 1;
+			  margin: auto 0;
+			  margin-left: 0;
+			 background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); 
+			  /* Chrome 10-25, Safari 5.1-6 */
+			background: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); 
+			  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
 	</head>
+
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<h1 class="mui-title">自媒体</h1>
-		</header>
-		<div class="mui-content">
-			<div id="slider" class="mui-slider"></div>
-			<!-- 防闪烁占位div -->
-			<div id="perch-cont" style="height: 38px;width: 100%;position: relative;display: none;"></div>
-			<div id="subMenu" class="subMenu">
-				<div class=" inner mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-					<div class="mui-scroll" id="classification">
+		<div id="mui-content" class="mui-content discover-container" v-cloak>
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide" v-for="(banner,index) in slider" :key="index">
+						<img :src="banner">
 					</div>
 				</div>
+				<div class="swiper-pagination"></div>
 			</div>
-			<div class="Information_list" id="article_list"></div>
-			<div id="article_bottom"></div>
-			<img class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
+			<!-- <div id="welcome" style="width: 750px;height: 300px;">
+			</div> -->
+			<div class="discover-body">
+				<div class="user-part1">
+					<div class="user-head-cont" @tap="openDynamically(discover_info.id)">
+						<div class="user-head-img">
+							<img class="head-img" :src="discover_info.avatar">
+						</div>
+						<img v-if="discover_info.group_id!=0" class="rank" :src="'../image/discover/rank_icon_'+discover_info.group_id+'.png'">
+					</div>
+					<div class="user-info">
+						<div class="user-info-top">
+							<div class="user-name mui-ellipsis">{{discover_info.name}}</div>
+							<span :class="'vip'+discover_info.group_id">{{discover_info.group_name}}</span>
+						</div>
+						<p class="signature mui-ellipsis-2">{{discover_info.personalized_signature||'暂无签名'}}</p>
+					</div>
+				</div>
+				<div id="zhanwei" style="width: 100%;height:58px;position: relative;display: none;">
+					<!-- 占位 -->
+				</div>
+				<ul id="screen-menu" class="screen-menu">
+					<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)"><span>{{menu.title}}</span></li>
+				</ul>
+				<div id="discover-container" class="discover-list-container">
+					<ul>
+						<div v-show="typeler==1">
+							<!-- 自己发布的动态 -->
+							<li v-for="(i,m) in dynamic" :key="m" class="mui-table-view-cell my-dynamic-list">
+								<div class="dynamic-list-head">
+									<div class="dynamic-list-left">
+										<img class="user-head-image" :src="i.owner.avatar" @tap="openDynamically(i.user_id)">
+										<span class="user-names mui-ellipsis" @tap="openDynamically(i.user_id)">{{i.owner.name}}</span>
+										<span class="cretae-timer" @tap="openDynamically(i.user_id)">{{i.create_time}}</span>
+										<!-- 如果是自己的动态则显示删除 -->
+										<span v-if="i.is_mine==1" class="delete-list" @tap="deleteDynamics(i.id,m)">删除</span>
+									</div>
+									<div class="mui-pull-right click-heart" @tap="likeThis(i.id,i.user_id,m)">
+										<i class="heart-icon animated" :class="i.is_thumbs==1?'heartBeat':'tada'"></i>
+										<span>{{i.thumbs_number}}</span>
+									</div>
+								</div>
+								<!-- 带图片的两行 -->
+								<!-- 没图片的三行 mui-ellipsis-3-->
+								<p class="dynamic-desc" :class="i.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.id)">
+									{{i.title}}
+								</p>
+								<ul class="illustrating-picture" @tap="dynamicDetail(i.id)">
+									<li v-for="img in i.cover">
+										<img class="illustrating" :src="img">
+									</li>
+								</ul>
+							</li>
+						</div>
+						<div v-show="typeler==2">
+							<!-- 官方文章 -->
+							<li class="mui-table-view-cell official-article" v-for="(a,idx) in essay" :key="idx" @tap="articleDetail(a.id)">
+								<div class="article-img">
+									<img :src="a.thumb">
+								</div>
+								<div class="article-right">
+									<p class="mui-ellipsis-2">
+										{{a.title}}
+									</p>
+									<div v-if="a.is_top" class="stick-sign">
+										<img src="../image/discover/stick-sign.png">
+									</div>
+									<div class="official-article-status">
+										<span>{{a.add_time}}</span>
+										<span><img src="../image/eye.png">{{a.click}}</span>
+										<img src="../image/discover/official-sign.png">
+									</div>
+								</div>
+							</li>
+						</div>
+
+						<div v-show="typeler==3">
+							<!-- 课程列表列表 -->
+							<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
+								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
+								<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state)">
+									<img :src="c.cover_url">
+								</div>
+								<div class="curriculum-list-right">
+									<!-- 官方加stick-sign -->
+									<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state)">
+										{{c.title}}
+									</p>
+									<div class="status-cont mui-clearfix">
+										<div class="mui-pull-left">
+											<span class="ting-ke">主讲人：{{c.teacher_name}}</span>
+										</div>
+									</div>
+									<div>
+										<div v-if="c.state==0" class="cretae-timer">开播：2018-05-18 18:50</div>
+										<div v-else-if="c.state==1" class="train-ing"><img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
+										<div v-else class="cretae-timer">结束：2018-05-18 20:50</div>
+										<div class="team-name mui-pull-right" @tap="teamDetail(c.team_id)">
+											<img class="team-icon" src="../image/discover/team-icon.png">
+											<span class="mui-ellipsis">{{c.team_name}}</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</div>
+
+						<div v-show="typeler==4">
+							<!-- 产品列表 -->
+							<li class=" mui-table-view-cell goods-list">
+								<div class="goods-img" @tap="goodsDetail('369')">
+									<img src="../image/5E0eH.png">
+								</div>
+								<div class="goods-list-right">
+									<!-- 官方加stick-sign -->
+									<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail('369')">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
+									<div class="goods-nature" @tap="goodsDetail('369')">
+										<span>供货价：￥250.00</span>
+										<span>销量： 520件</span>
+									</div>
+									<div class="goods-earnings" @tap="teamDetail('369')">
+										<span>利润：￥50</span>
+										<!-- 团队 -->
+										<!-- <div class="team-name">
+											<img class="team-icon" src="../image/discover/team-icon.png">
+											<span class="mui-ellipsis">房东的猫猫猫猫猫</span>
+										</div> -->
+										<!-- <div class="team-name mui-ellipsis">房东的,猫猫猫猫猫猫猫猫猫猫猫猫猫猫猫</div> -->
+										<!-- 官方 -->
+										<img src="../image/discover/official-sign.png">
+									</div>
+								</div>
+							</li>
+						</div>
+					</ul>
+				</div>
+			</div>
 		</div>
-	</body>
-	<script src="../js/mui.js"></script>
-	<script src="../js/util.js"></script>
-	<script src="../js/showLoading.js"></script>
-	<script>
-		var recommend = 1;
-		var hot = 0;
-		var cid = 0;
-		var skip = 1;
-		var limit = 8;
-		var loadding = 0;
-		mui.init({
-			swipeBack: false,
-			keyEventBind: {
-				backbutton: false,
-				menubutton: true
-			},
-			pullRefresh: {
-				container: "#article_bottom",
-				up: {
-					height: 50,
-					auto: false,
-					contentrefresh: "正在加载...",
-					contentnomore: '没有更多数据了',
-					callback: function() {
-						pullfresh_function(true, false);
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<!-- <script src="../js/three.min.js"></script> -->
+		<!-- <script src="../js/indexs.js"></script> -->
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var skip = 1;
+			var limit = 5;
+			var pullDirection = "";
+			// 点赞的是第几条
+			var _idx = 0;
+			// 动态id
+			var timeline_id = '';
+			// 发布动态人的id
+			var to_uid = '';
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					// 个人消息
+					discover_info: {
+						id: "",
+						name: "",
+						avatar: "",
+						personalized_signature: "",
+						group_id: "",
+						group_name: "",
+						timeline_cover: ""
+					},
+					// 类型
+					typeler: '1',
+					// 动态
+					dynamic: [],
+					// 官方文章
+					essay: [],
+					// 团队课程
+					team_course: [],
+					slider: [],
+					screen: [{
+							title: '好友动态',
+							id: '1',
+							selected: true
+						}, {
+							title: '旺客头条',
+							id: '2',
+							selected: false
+						}, {
+							title: '团队课程',
+							id: '3',
+							selected: false
+						},
+						// 	{
+						// 	title: '旺客总仓',
+						// 	id: '4',
+						// 	selected: false
+						// }, {
+						// 	title: '企业总仓',
+						// 	id: '5',
+						// 	selected: false
+						// }
+					],
+					like: false
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					// 选择标签
+					selectedTj: function(id, idx) {
+						for (i in this.screen) {
+							this.screen[i].selected = false;
+						}
+						skip = 1;
+						this.screen[idx].selected = true;
+						this.typeler = idx + 1;
+						if (pullDirection == 'up') {
+							mui('#mui-content').pullRefresh().refresh(true);
+						}
+						if (this.typeler == 1) {
+							if (app.dynamic.length > 0) {
+								//不请求
+							} else {
+								getDiscoverData(true);
+							}
+						} else if (this.typeler == 2) {
+							if (app.essay.length > 0) {
+								logs("不请求");
+								//不请求
+							} else {
+								getDiscoverData(true);
+							}
+						} else if (this.typeler == 3) {
+							if (app.team_course.length > 0) {
+								//不请求
+							} else {
+								getDiscoverData(true);
+							}
+						}
+					},
+					// 跳转好友动态
+					openDynamically: function(id) {
+						mui.openWindow({
+							url: "dynamic_space.html",
+							id: 'dynamic_space',
+							extras: {
+								user_id: id,
+							},
+							waiting: {
+								autoShow: true, //自动显示等待框，默认为true
+								options: {
+									background: "rgba(0,0,0,0)",
+									loading: {
+										display: 'block',
+										height: '70px',
+										icon: "../image/jump.png",
+										interval: 25
+									}
+								}
+							}
+						})
+					},
+					// 点赞
+					likeThis: function(id, pid, idx) {
+						timeline_id = id;
+						// 发布动态人的id
+						to_uid = pid;
+						_idx = idx;
+						adoreIt();
+					},
+					// 打开动态详情
+					dynamicDetail: function(id) {
+						openPage('dynamics_detail.html', 'dynamics_detail', "#f7f7f7", {
+							aid: id,
+							user_id: user_id
+						})
+					},
+					// 打开文章
+					articleDetail: function(id) {
+						// mui.toast("打开文章" + id);
+						openPage('article.html', 'article', '#ffffff', {
+							article_id: id
+						});
+					},
+					// 打开产品详情
+					goodsDetail: function(id) {
+						mui.toast("打开产品详情" + id);
+					},
+					// 打开团队详情
+					teamDetail: function(id) {
+						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+							teamid: id
+						});
+					},
+					//打开课程详情
+					curriculumDetail: function(id, status) {
+						if (status == 1 || status == 2) {
+							openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+								id: id
+							});
+						} else {
+							// 未开播提示
+							openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
+								id: id
+							});
+						}
+						// mui.toast("打开课程详情" + status);
 					}
 				},
-				down: {
-					style: 'circle',
-					color: '#2289FF',
-					callback: function() {
-						pullfresh_function(false, true);
-						class_list();
-						slideReady();
-						setTimeout(function() {
-							mui('#article_bottom').pullRefresh().endPulldownToRefresh();
-						}, 10000);
+				mounted: function() {
+					mui.init({
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									getDiscoverData();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									pullDirection = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getDiscoverData();
+								}
+							}
+						}
+					});
+					discoverInfo();
+					mui.plusReady(function() {
+						plus.navigator.setStatusBarStyle("light");
+						var ws = plus.webview.currentWebview();
+						// 滚动的时候动态修改状态栏颜色
+						var statusbarHeight = plus.navigator.getStatusbarHeight();
+						var menuBar = document.getElementById('screen-menu');
+						var conts = document.getElementById("discover-container");
+						var distance = statusbarHeight + 100;
+						window.addEventListener('scroll', function() {
+							// if (conts.getBoundingClientRect().top < distance) {
+							// 	document.getElementById("zhanwei").style.display = "block";
+							// 	menuBar.classList.add("fixed");
+							// 	menuBar.style.top = 44 + statusbarHeight + 'px';
+							// } else {
+							// 	menuBar.style.top = '0';
+							// 	document.getElementById("zhanwei").style.display = "none";
+							// 	menuBar.classList.remove("fixed");
+							// }
+							if (conts.getBoundingClientRect().top < 280) {
+								plus.navigator.setStatusBarStyle("dark");
+							} else {
+								plus.navigator.setStatusBarStyle("light");
+							}
+						});
+						getDiscoverData();
+					})
+					// 初始化两次防止页面乱
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
 					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
 				}
+			})
+
+			function initSlider() {
+				// 初始化轮播
+				var mySwiper = new Swiper('.swiper-container', {
+					//可选选项，自动滑动
+					autoplay: {
+						delay: 3000,
+						// 用户操作之后不会停止轮播
+						disableOnInteraction: false,
+					},
+					loop: true,
+					// 分页器
+					pagination: {
+						el: '.swiper-pagination',
+					},
+				})
 			}
-		});
-		mui.plusReady(function() {
-			mui.showLoading("正在加载..", "div");
-			pullfresh_function();
-			window.addEventListener('scrollTop', function(event) {
-				window.scrollTo(0, 0);
-			});
-
-			window.addEventListener('advSettingFinish', function() {
-				// console.log('advSettingFinish');
-				window.location.reload();
-			})
-			slideReady(); //幻灯片
-			class_list(); //文章分类
-
-			//监听分类点击事件
-			mui("#classification").on('tap', 'a', function() {
-				//获取id
-				var id = this.getAttribute("data-id");
-				//更新分类数据
-				update_class(id);
-			})
-			//监听文章列表
-			mui("#article_list").on('tap', '.list1', function() {
-				//获取id
-				var id = this.dataset.id;
-				mui.openWindow({
-					url: 'article.html',
-					id: 'article',
-					styles: {
-						bounce: 'none',
-						scrollsToTop: true,
-						popGesture: 'close',
-						hardwareAccelerated: true,
-						statusbar: {
-							background: "#ffffff"
+			// 点击自定义图标
+			function shareHref() {
+				openPage('issue_dynamics.html', 'issue_dynamics', '#f7f7f7');
+				// plus.navigator.setStatusBarStyle("dark");
+			}
+			// 数据请求
+			function getDiscoverData(lpk) {
+				if (lpk) {
+					showload();
+				}
+				mui.post($ajaxUrl + 'discover&action=list', {
+					token: userInfo.token,
+					type: app.typeler,
+					limit: limit,
+					skip: skip
+				}, function(res) {
+					if (res.errno == 0) {
+						if (app.typeler == 1) {
+							if (skip == 1) {
+								app.dynamic = res.data;
+							} else {
+								app.dynamic = app.dynamic.concat(res.data);
+							}
+						} else if (app.typeler == 2) {
+							if (skip == 1) {
+								app.essay = res.data;
+							} else {
+								app.essay = app.essay.concat(res.data);
+							}
+						} else if (app.typeler == 3) {
+							if (skip == 1) {
+								app.team_course = res.data;
+							} else {
+								app.team_course = app.team_course.concat(res.data);
+							}
 						}
-					},
-					extras: {
-						article_id: id
-					},
-					createNew: false,
-					show: {
-						autoShow: true,
-						aniShow: 'slide-in-right',
-						duration: 300,
-						event: 'titleUpdate',
-						extras: {
-							acceleration: 'auto',
-							capture: '',
-							otherCapture: ''
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
-					},
-					waiting: {
-						autoShow: false
+					} else {
+						if (app.typeler == 1 && skip == 1) {
+							app.dynamic = [];
+						} else if (app.typeler == 2 && skip == 1) {
+							app.essay = [];
+						} else if (app.typeler == 3 && skip == 1) {
+							app.team_course = [];
+						}
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					}
+					if (lpk) {
+						showload(true, Math.floor(Math.random() * 1000 + 1000));
+					}
+				}, 'json');
+			}
+			// 获取用户信息
+			function discoverInfo() {
+				mui.post($ajaxUrl + 'discover&action=user_info', {
+					token: userInfo.token,
+					user_id: ''
+				}, function(res) {
+					if (res.errno == 0) {
+						app.discover_info = res.data;
+						user_id = res.data.id;
+						// 初始化轮播
+						if (res.data.timeline_cover.length>0) {
+							app.slider = [];
+							app.slider = res.data.timeline_cover;
+							setTimeout(function() {
+								initSlider();
+							}, 200);
+						} else {
+							app.slider = ["../image/share/bg-img02.jpg", "../image/share/bg-img03.jpg", "../image/bj.jpg"]
+							setTimeout(function() {
+								initSlider();
+							}, 200);
+						}
+					} else {
+						app.slider = ["../image/share/bg-img02.jpg", "../image/share/bg-img03.jpg", "../image/bj.jpg"];
+						setTimeout(function() {
+							initSlider();
+						}, 200);
+					}
+				}, 'json');
+			}
+			// 点赞
+			function adoreIt() {
+				mui.post($ajaxUrl + 'timeline&action=thumbs', {
+					token: userInfo.token,
+					timeline_id: timeline_id,
+					to_uid: to_uid
+				}, function(res) {
+					if (res.errno == 0) {
+						if (app.dynamic[_idx].is_thumbs == 1) {
+							app.$set(app.dynamic[_idx], "is_thumbs", "0");
+							app.$set(app.dynamic[_idx], "thumbs_number", parseInt(app.dynamic[_idx].thumbs_number) - 1);
+						} else {
+							app.$set(app.dynamic[_idx], "is_thumbs", "1");
+							app.$set(app.dynamic[_idx], "thumbs_number", parseInt(app.dynamic[_idx].thumbs_number) + 1);
+						}
+					} else {
+						// app.dynamic = [];
+					}
+				}, 'json');
+			}
+			// 删除动态
+			function deleteDynamics(tid, ii) {
+				plus.nativeUI.confirm("确认删除该动态吗？", function(e) {
+					if (e.index) {
+						// 取消
+					} else {
+						mui.post($ajaxUrl + 'timeline&action=delete', {
+							token: userInfo.token,
+							tid: tid,
+						}, function(res) {
+							if (res.errno == 0) {
+								app.dynamic.splice(ii, 1);
+								message("删除成功");
+							} else {
+								message("删除失败，稍后重试");
+							}
+						}, 'json');
 					}
 				})
-			})
-
-			// 固定文章分类在顶部
-			var headH = document.querySelector('header').offsetHeight,
-				tab = document.getElementById("subMenu"),
-				list = document.getElementById("article_list"),
-				perch = document.getElementById("perch-cont");
-			window.addEventListener('scroll', function(e) {
-				if (list.getBoundingClientRect().top <= 79) {
-					tab.classList.add('fixed-cont');
-					perch.style.display = "block";
-				} else {
-					perch.style.display = "none";
-					tab.classList.remove('fixed-cont');
-				}
-			});
-			setTimeout(function() {
-				mui.hideLoading();
-			}, 10000);
-		})
-
-		function slideReady() {
-			mui.ajax({
-				url: $ajaxUrl + 'carousel',
-				data: {
-					position: 2
-				},
-				//async: true || false, // 异步 || 同步
-				async: true,
-				dataType: 'json',
-				type: 'post',
-				timeout: 10000,
-				success: function(data) {
-					// logs(data);
-					if (data.errno == '0') {
-						var str = '';
-						if (data.data == '') {
-							str +=
-								'<div class="mui-slider-group"><div class="mui-slider-item"><a href="javascript: void(0);"><img src="../image/bj.jpg" alt=""><p class="mui-slider-title">只是精神不滑坡，办法总比困难多</p></a></div></div>';
-						} else if (data.data.length == 1) {
-							str += '<div class="mui-slider-group"><div class="mui-slider-item"><a href="javascript: void(0);"><img src="' +
-								data.data[0].pic + '" alt="">';
-							if (data.data[0].show_title == 1 && data.data[0].title.length > 0) {
-								str += '<p class="mui-slider-title">' + data.data[0].title + '</p>';
-							}
-							str += '</a></div></div>';
-						} else if (data.data.length > 1) {
-							str += '<div class="mui-slider-group mui-slider-loop">';
-							var k = data.data.length - 1;
-							str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' +
-								data.data[k].pic + '" alt="">';
-							if (data.data[k].show_title == 1 && data.data[k].title.length > 0) {
-								str += '<p class="mui-slider-title">' + data.data[k].title + '</p>';
-							}
-							str += '</a></div>';
-							var i = 0;
-							for (i in data.data) {
-								str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' +
-									data.data[i].pic + '" alt="">';
-								if (data.data[i].show_title == 1 && data.data[i].title.length > 0) {
-									str += '<p class="mui-slider-title">' + data.data[i].title + '</p>';
-								}
-								str += '</a></div>';
-							}
-							str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="javascript: void(0);"><img src="' +
-								data.data[0].pic + '" alt="">';
-							if (data.data[0].show_title == 1 && data.data[0].title.length > 0) {
-								str += '<p class="mui-slider-title">' + data.data[0].title + '</p>';
-							}
-							str += '</a></div>';
-							str += '</div>';
-							str += '<div class="mui-slider-indicator mui-text-right">';
-							var j = 0;
-							for (j in data.data) {
-								if (j == 0) {
-									str += '<div class="mui-indicator mui-active"></div>';
-								} else {
-									str += '<div class="mui-indicator"></div>';
-								}
-							}
-							str += '</div>';
-						}
-					}
-					//console.log(str);
-					//console.log(JSON.stringify(data));
-					document.getElementById('slider').innerHTML = str;
-					setTimeout(function() {
-						slider_play();
-					}, 1000)
-				},
-				error: function(xhr, type, errorThrown) {
-					// 请求失败
-				}
-			});
-		}
-
-		function slider_play() {
-			mui('.mui-slider').slider({
-				interval: 2500 //自动轮播周期，若为0则不自动播放，默认为0；
-			});
-		}
-
-		function class_list() {
-			var str = '';
-			var url = $ajaxUrl + 'article';
-			mui.post(url, {
-				token: 'eaa3242cd05ca923b66b60cbb10d01ad',
-				action: 'class_list'
-			}, function(data) {
-				// logs(data);
-				str +=
-					'<a class="mui-control-item mui-active" data-id="-1">推荐</a><a class="mui-control-item" data-id="-2">热点</a>';
-				if (data.errno == '0') {
-					for (i in data.data) {
-						str += '<a class="mui-control-item" data-id="' + data.data[i].id + '">' + data.data[i].name + '</a>';
-					}
-				}
-				document.getElementById('classification').innerHTML = str;
-				setTimeout(function() {
-					mui.hideLoading();
-				}, 500);
-			}, 'json');
-		}
-
-
-		function pullfresh_function(up, down) {
-			var userInfo = getUserInfo();
-			var str = '';
-			var url = $ajaxUrl + 'article';
-			mui.post(url, {
-				token: userInfo.token,
-				action: 'article_list',
-				recommend: recommend,
-				hot: hot,
-				cid: cid,
-				skip: skip,
-				limit: limit
-			}, function(data) {
-				console.log(JSON.stringify(data));
-				if (data.errno == '0') {
-					var str = '';
-					for (i in data.data) {
-						str += '<div class="list1" data-id="' + data.data[i].id + '"><div class="list1L"><img src="' + data.data[i].thumb +
-							'" ></div><div class="list1R"><p class="mui-ellipsis-2">' + data.data[i].title +
-							'</p><div class="list1Rl"><span>' + data.data[i].author +
-							'</span><span style="margin-left: 10px;">' + data.data[i].add_time +
-							'</span></div><div class="list1Rr"><span><img src="../image//eye.png" ></span><span>' + data.data[i].click +
-							'</span></div><div class="clearfix"></div></div><div class="clearfix"></div></div>';
-					}
-					if (skip == 1) {
-						document.getElementById('article_list').innerHTML = str;
-					} else {
-						document.getElementById('article_list').innerHTML += str;
-					}
-					skip++;
-				} else {
-					loadding = 1;
-				}
-				if (loadding == 0 && up) {
-					mui('#article_bottom').pullRefresh().endPullupToRefresh(false);
-					// this.endPullupToRefresh(false);
-				} else if (loadding == 1 && up) {
-					mui('#article_bottom').pullRefresh().endPullupToRefresh(true);
-					// this.endPullupToRefresh(true);
-				} else if (down) {
-					mui('#article_bottom').pullRefresh().endPulldownToRefresh();
-					// this.pullRefresh().endPulldownToRefresh();
-				}
-			}, 'json');
-		}
-
-		function update_class(id) {
-			if (id == '-1') {
-				recommend = 1;
-				hot = 0;
-				cid = 0;
-			} else if (id == '-2') {
-				recommend = 0;
-				hot = 1;
-				cid = 0;
-			} else {
-				recommend = 0;
-				hot = 0;
-				cid = id;
 			}
-			skip = 1;
-			limit = 8;
-			loadding = 0;
-			article_list();
-			mui('#article_bottom').pullRefresh().refresh(true);
-			mui('#article_bottom').pullRefresh().enablePullupToRefresh();
-		}
+			// 监听发布新动态
+			window.addEventListener('doit', function() {
+				getDiscoverData();
+			}, false);
+			// 监听封面修改
+			window.addEventListener('reloadCover', function() {
+				location.reload();
+				// discoverInfo();
+			}, false);
+		</script>
+	</body>
 
-		function article_list() {
-			var str = '';
-			var url = $ajaxUrl + 'article';
-			mui.post(url, {
-				token: 'eaa3242cd05ca923b66b60cbb10d01ad',
-				action: 'article_list',
-				recommend: recommend,
-				hot: hot,
-				cid: cid,
-				skip: skip,
-				limit: limit
-			}, function(data) {
-				// console.log(JSON.stringify(data));
-				if (data.errno == '0') {
-					var str = '';
-					for (i in data.data) {
-						str += '<div class="list1" data-id="' + data.data[i].id + '"><div class="list1L"><img src="' + data.data[i].thumb +
-							'" ></div><div class="list1R"><p>' + data.data[i].title + '</p><div class="list1Rl"><span>' + data.data[i].author +
-							'</span><span style="margin-left: 10px;">' + data.data[i].add_time +
-							'</span></div><div class="list1Rr"><span><img src="../image//eye.png" ></span><span>' + data.data[i].click +
-							'</span></div><div class="clearfix"></div></div><div class="clearfix"></div></div>';
-					}
-					document.getElementById('article_list').innerHTML = str;
-					skip++;
-				} else {
-					document.getElementById('article_list').innerHTML = '';
-					//mui('#article_bottom').endPullupToRefresh(true);
-					mui('#article_bottom').pullRefresh().disablePullupToRefresh();
-				}
-			}, 'json');
-		}
-		// 打开写作页面
-		mui(".mui-content").on("tap", ".operation-btn", function() {
-			mui.openWindow({
-				url: "article_operation.html",
-				id: "article_operation",
-				styles: {
-					bounce: 'none',
-					scrollsToTop: true,
-					popGesture: 'close',
-					background: '#ffffff',
-					// background: 'transparent',
-					statusbar: {
-						background: "#ffffff"
-					}
-				},
-				extras: '',
-				createNew: false,
-				show: {
-					autoShow: true,
-					aniShow: 'slide-in-bottom',
-					duration: 150,
-					event: 'titleUpdate',
-					extras: {
-						acceleration: 'auto',
-						capture: '',
-						otherCapture: ''
-					}
-				},
-				waiting: {
-					autoShow: false
-				}
-			})
-		})
-	</script>
 </html>

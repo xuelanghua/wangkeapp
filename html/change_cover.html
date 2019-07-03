@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.main-container {
+				background-color: #FFFFFF;
+				padding: 0.2rem 0.26rem 1.1rem;
+			}
+
+			.main-container h2 {
+				font-size: 0.3rem;
+				color: #323333;
+				font-weight: normal;
+				margin: 0.3rem 0 0.4rem;
+			}
+
+			.img-items {
+				width: 2rem;
+				height: 1.52rem;
+				position: relative;
+				margin-left: 0.3rem;
+			}
+
+			.img-items:first-of-type {
+				margin-left: 0;
+			}
+
+			.img-items img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.img-items .mui-icon {
+				position: absolute;
+				right: -12px;
+				top: -12px;
+				z-index: 9;
+				color: #FF0000;
+			}
+
+			.image-cont {
+				display: flex;
+				flex-wrap: wrap;
+			}
+
+			.save-btn {
+				width: 7rem;
+				height: 1rem;
+				border-radius: 0.1rem;
+				background-color: #2289FF;
+				color: #FFFFFF;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0.87rem auto 0;
+			}
+
+			.add-img {
+				width: 2rem;
+				height: 1.52rem;
+				position: relative;
+				margin-left: 0.3rem;
+			}
+
+			.add-img img {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">更换封面图片</h1>
+		</header>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<div class="main-container">
+				<h2>封面图片最多可上传三张</h2>
+				<div class="image-cont">
+					<div class="img-items" v-for="(img,idx) in cover" :key="idx">
+						<span class="mui-icon mui-icon-close" @tap="del(idx)"></span>
+						<img class="items" :data-idx="idx" :src="img">
+					</div>
+					<div v-if="cover.length<3" id="add_img" class="add-img img-items">
+						<img src="../image/add-cover-img.png">
+					</div>
+				</div>
+			</div>
+			<div id="save" class="save-btn">保存</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.zoom.js"></script>
+		<script src="../js/mui.previewimage.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					cover: [],
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					del: function(idx) {
+						app.cover.splice(idx, 1);
+					}
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var _self_webview = plus.webview.currentWebview();
+						plus.navigator.setStatusBarStyle("dark");
+						if (_self_webview.cover) {
+							app.cover = _self_webview.cover;
+						}
+						// 预览图片
+						var urls = app.cover;
+						mui('.mui-content').on('tap', '.items', function() {
+							var index = this.dataset.idx;
+							plus.nativeUI.previewImage(urls, {
+								current: index,
+								loop: true,
+								indicator: 'number'
+							});
+						});
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+				}
+			})
+			// 设置封面图
+			mui(".mui-content").on("tap", "#save", function() {
+				// logs(app.cover.join(","));
+				mui.post($ajaxUrl + 'discover&action=timeline_cover_setting', {
+					token: userInfo.token,
+					timeline_cover: app.cover.join(","),
+				}, function(res) {
+					if (res.errno == 0) {
+						message("保存成功！");
+						mui.fire(plus.webview.getWebviewById('dynamic_space'), 'reloadCover');
+						mui.fire(plus.webview.getWebviewById('media'), 'reloadCover');
+						setTimeout(function() {
+							mui.back();
+						}, 200);
+					} else {
+						// app.dynamic = [];
+					}
+				}, 'json');
+			})
+			// 添加图片
+			var ratio = 1000 / 666;
+			mui(".mui-content").on("tap", "#add_img", function() {
+				plus.nativeUI.actionSheet({
+					cancel: "取消",
+					buttons: [{
+						title: "拍照上传"
+					}, {
+						title: "从相册选择"
+					}]
+				}, function(e) {
+					var index = e.index;
+					switch (index) {
+						case 0:
+							// text += "取消";
+							break;
+						case 1:
+							getImage(ratio);
+							// message("拍照");
+							break;
+						case 2:
+							galleryImage(ratio);
+							// message("相册");
+							break;
+					}
+				});
+			})
+			// 拍照获取图片
+			function getImage() {
+				var camera = plus.camera.getCamera();
+				camera.captureImage(function(e) {
+					plus.io.resolveLocalFileSystemURL(e, function(entry) {
+						cropperImg(entry.toLocalURL(), 'change_cover', ratio);
+						// imageResize(entry.toLocalURL());
+						// 其他操作,比如预览展示
+					}, function(e) {
+						console.log("读取拍照文件错误：" + e.message);
+					});
+				}, function(s) {
+					console.log("error" + s);
+				}, {
+					filename: "_doc/camera/"
+				})
+			}
+			// 从相册中选择图片 
+			function galleryImage(cb) {
+				// 从相册中选择图片
+				plus.gallery.pick(function(e) {
+					cropperImg(e, 'change_cover', ratio);
+				}, function(e) {
+					console.log("取消选择图片");
+				}, {
+					filter: "image",
+					multiple: false,
+					maximum: 5,
+					system: false,
+					onmaxed: function() {
+						plus.nativeUI.alert('最多只能选择1张图片');
+					}
+				});
+			}
+			window.addEventListener('cropperSuccess', function(event) {
+				showload();
+				app.cover.push(event.detail.image);
+				setTimeout(function() {
+					showload(true);
+				}, Math.floor(Math.random() * 1000 + 1000));
+			})
+		</script>
+	</body>
+
+</html>
