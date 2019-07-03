@@ -86,6 +86,19 @@
 			background: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); 
 			  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 			}
+			.swiper-pagination.activer{
+				opacity: 0;
+			}
+			.operation-btn {
+				width: 45px;
+				height: 45px;
+				position: fixed;
+				left: 50%;
+				margin-left: -22.5px;
+				bottom: 50px;
+				opacity: 0.96;
+				z-index: 9999;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -100,13 +113,14 @@
 
 	<body>
 		<div id="mui-content" class="mui-content discover-container" v-cloak>
+			<img class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
 					<div class="swiper-slide" v-for="(banner,index) in slider" :key="index">
 						<img :src="banner">
 					</div>
 				</div>
-				<div class="swiper-pagination"></div>
+				<div class="swiper-pagination" :class="slider.length==1?'activer':''"></div>
 			</div>
 			<!-- <div id="welcome" style="width: 750px;height: 300px;">
 			</div> -->
@@ -183,7 +197,6 @@
 								</div>
 							</li>
 						</div>
-
 						<div v-show="typeler==3">
 							<!-- 课程列表列表 -->
 							<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
@@ -422,6 +435,10 @@
 				},
 				mounted: function() {
 					mui.init({
+						keyEventBind: {
+							backbutton: false, //Boolean(默认true)关闭back按键监听  
+							menubutton: false //Boolean(默认true)关闭menu按键监听  
+						},
 						pullRefresh: {
 							container: "#mui-content",
 							up: {
@@ -457,15 +474,15 @@
 						var conts = document.getElementById("discover-container");
 						var distance = statusbarHeight + 100;
 						window.addEventListener('scroll', function() {
-							// if (conts.getBoundingClientRect().top < distance) {
-							// 	document.getElementById("zhanwei").style.display = "block";
-							// 	menuBar.classList.add("fixed");
-							// 	menuBar.style.top = 44 + statusbarHeight + 'px';
-							// } else {
-							// 	menuBar.style.top = '0';
-							// 	document.getElementById("zhanwei").style.display = "none";
-							// 	menuBar.classList.remove("fixed");
-							// }
+							if (conts.getBoundingClientRect().top < distance) {
+								document.getElementById("zhanwei").style.display = "block";
+								menuBar.classList.add("fixed");
+								menuBar.style.top = 44 + statusbarHeight + 'px';
+							} else {
+								menuBar.style.top = '0';
+								document.getElementById("zhanwei").style.display = "none";
+								menuBar.classList.remove("fixed");
+							}
 							if (conts.getBoundingClientRect().top < 280) {
 								plus.navigator.setStatusBarStyle("dark");
 							} else {
@@ -484,11 +501,11 @@
 					// 初始化字体大小结束
 				}
 			})
-
 			function initSlider() {
 				// 初始化轮播
 				var mySwiper = new Swiper('.swiper-container', {
 					//可选选项，自动滑动
+					// autoplay:true,
 					autoplay: {
 						delay: 3000,
 						// 用户操作之后不会停止轮播
@@ -575,19 +592,15 @@
 							app.slider = [];
 							app.slider = res.data.timeline_cover;
 							setTimeout(function() {
-								initSlider();
+								if(res.data.timeline_cover.length>1){
+									initSlider(true);
+								}
 							}, 200);
 						} else {
 							app.slider = ["../image/discover-default-cover.png"]
-							setTimeout(function() {
-								initSlider();
-							}, 200);
 						}
 					} else {
 						app.slider = ["../image/discover-default-cover.png"];
-						setTimeout(function() {
-							initSlider();
-						}, 200);
 					}
 				}, 'json');
 			}
@@ -640,6 +653,39 @@
 				location.reload();
 				// discoverInfo();
 			}, false);
+			// 打开写作页面
+			mui(".mui-content").on("tap", ".operation-btn", function() {
+				mui.openWindow({
+					url: "article_operation.html",
+					id: "article_operation",
+					styles: {
+						bounce: 'none',
+						scrollsToTop: true,
+						popGesture: 'close',
+						background: '#ffffff',
+						// background: 'transparent',
+						statusbar: {
+							background: "#ffffff"
+						}
+					},
+					extras: '',
+					createNew: false,
+					show: {
+						autoShow: true,
+						aniShow: 'slide-in-bottom',
+						duration: 150,
+						event: 'titleUpdate',
+						extras: {
+							acceleration: 'auto',
+							capture: '',
+							otherCapture: ''
+						}
+					},
+					waiting: {
+						autoShow: false
+					}
+				})
+			})
 		</script>
 	</body>
 
