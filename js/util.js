@@ -1046,13 +1046,9 @@ function getcache(key) {
 	var _cache = plus.storage.getItem(key);
 	return JSON.parse(_cache);
 }
-<<<<<<< HEAD
+
 // 等待框
 function showload(status, delay, msg, bgc) {
-=======
-function showload(status, delay) {
-// 等待框
->>>>>>> 8c7e9adfdc8342f2e606de5788918d456b2e8b5c
 	if (status) {
 		if (delay) {
 			setTimeout(function() {
