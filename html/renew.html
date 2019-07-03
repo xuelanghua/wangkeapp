@@ -267,7 +267,7 @@
 				// 	message('请选择地区!', 'center');
 				// 	return;
 				// }
-				plus.nativeUI.showWaiting('数据处理中...');
+				showload(0, 0, '数据处理中...', "rgba(0,0,0,0.5)");
 				mui.post($ajaxUrl + 'member', {
 					action: 'agent_apply',
 					token: userInfo.token,
@@ -284,7 +284,7 @@
 					} else {
 						message(res.message);
 					}
-					plus.nativeUI.closeWaiting();
+					showload(1);
 				}, 'json');
 			}
 

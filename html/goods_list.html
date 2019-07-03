@@ -552,7 +552,7 @@
 						}
 					}, 'miniProgram');
 				}, function(e) {
-					plus.nativeUI.showWaiting("图片处理中…");
+					showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
 					var imgpath = '';
 					var imgDtask = plus.downloader.createDownload(img, {
 						method: 'GET'
@@ -574,7 +574,7 @@
 								function(e) {
 									imgpath = e.target;
 									if (imgpath) {
-										plus.nativeUI.closeWaiting();
+										showload(1);
 										shareToMiniprogram({
 											title: cont,
 											content: cont,
@@ -648,7 +648,7 @@
 	}
 	//获取商品列表
 	function getGoodsList(refresh) {
-		plus.nativeUI.showWaiting();
+		showload(0);
 		mui.post($ajaxUrl + 'goods', {
 			action: 'goods_list',
 			token: userInfo.token,
@@ -800,7 +800,7 @@
 			if (refresh) {
 				mui('#goods_container').pullRefresh().endPulldownToRefresh();
 			}
-			plus.nativeUI.closeWaiting();
+			showload(1);
 		}, 'json');
 	}
 	//改变商品状态

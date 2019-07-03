@@ -236,11 +236,13 @@
 						});
 					}
 					window.addEventListener('cropperSuccess', function(event) {
-						plus.nativeUI.showWaiting("图片加载中…");
+						// showload(0, 0, '图片加载中…', "rgba(0,0,0,0.5)");
+						showload(0, 0, "图片加载中…", "rgba(0,0,0,0.5)")
 						app.image = event.detail.image;
 						app.uperimg = event.detail.filename;
 						setTimeout(function() {
-							plus.nativeUI.closeWaiting();
+							// showload(1);
+							showload(1);
 						}, Math.floor(Math.random() * 1000 + 1000));
 					})
 				}

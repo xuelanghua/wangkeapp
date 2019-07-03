@@ -988,10 +988,10 @@
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell" v-for="(c,idx) in teamCourse" :key="idx">
 						<div class="goods-img">
-							<img :src="c.cover_url" @tap="streaming(false)">
+							<img :src="c.cover_url" @tap="streaming(c.state, c.id,  c.title)">
 						</div>
 						<div class="goods-right-cont">
-							<p class="mui-ellipsis-2" @tap="streaming(false)">
+							<p class="mui-ellipsis-2" @tap="streaming(c.state, c.id, c.title)">
 								{{c.title}}
 							</p>
 							<div class="streaming-status">
@@ -1158,11 +1158,13 @@
 					}
 				},
 				//直播详情
-				streaming: function(i) {
+				streaming: function(state, courseId, title) {
 					// 直播页面
-					if (i) {
+					if (state) {
 						openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-							id: i
+							tid: app.tid,
+							courseId: courseId,
+							courseTitle: title
 						});
 					} else {
 						// 未开播提示

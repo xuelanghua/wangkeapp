@@ -364,7 +364,8 @@
 				var persons=app.person.join(",");
 				// var persons="、,陈全,胡尚,刘与华,李浩铭,杨荣";
 				console.log(JSON.stringify(persons));
-				plus.nativeUI.showWaiting("正在发送…");
+				// plus.nativeUI.showWaiting("正在发送…");
+				showload(0, 0, '正在发送...', "rgba(0,0,0,0.5)");
 				mui.ajax($ajaxUrl + 'groupmessage&action=create_message', {
 					data: {
 						token: userInfo.token,
@@ -384,7 +385,7 @@
 					success: function(res) {
 						logs(res);
 						if (res.errno == 0) {
-							plus.nativeUI.closeWaiting();
+							showload(1);
 							message("群发成功");
 							app.uids = [];
 							app.message='';
@@ -395,12 +396,12 @@
 								openPage('mass_list.html', 'mass_list', '#f7f7f7');
 							}, 100);
 						} else {
-							plus.nativeUI.closeWaiting();
+							showload(1);
 							message("群发失败，稍后重试");
 						}
 					},
 					error: function(xhr, type, errorThrown) {
-						// plus.nativeUI.closeWaiting();
+						// showload(1);
 						//异常处理；
 						console.log(xhr);
 						console.log(type);

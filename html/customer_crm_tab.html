@@ -235,14 +235,15 @@
 			})
 			// 双击刷新crm
 			mui('.void-data-tips')[0].addEventListener('doubletap', function() {
-				plus.nativeUI.showWaiting('加载中…', {
-					background: "rgba(0,0,0,0.7)",
-					modal: true,
-					back: "close"
-				})
+				// plus.nativeUI.showWaiting('加载中…', {
+				// 	background: "rgba(0,0,0,0.7)",
+				// 	modal: true,
+				// 	back: "close"
+				// })
+				showload(0, 0, '加载中...', "rgba(0,0,0,0.5)");
 				setTimeout(function() {
 					getCustomerList();
-					plus.nativeUI.closeWaiting();
+					showload(1);
 				}, 1500);
 			})
 

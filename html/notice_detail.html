@@ -52,7 +52,8 @@
 		
 		var noticeId = 0;
 		mui.plusReady(function() {
-			waiting = plus.nativeUI.showWaiting();
+			// waiting = showload(0);
+			showload(0);
 			var self = plus.webview.currentWebview();
 			document.getElementsByClassName('mui-title')[0].innerHTML = self.notice.title;
 			noticeId = self.notice.id;
@@ -68,7 +69,8 @@
 				} else {
 					console.log(res.message);
 				}
-				waiting.close();
+				// waiting.close();
+				showload(1);
 			}, 'json')
 		}
 	</script>

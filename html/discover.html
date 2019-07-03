@@ -166,12 +166,12 @@
 							<!-- 课程列表列表 -->
 							<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
 								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-								<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state)">
+								<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state, c.team_id, c.title)">
 									<img :src="c.cover_url">
 								</div>
 								<div class="curriculum-list-right">
 									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state)">
+									<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state, c.team_id, c.title)">
 										{{c.title}}
 									</p>
 									<div class="status-cont mui-clearfix">
@@ -394,10 +394,12 @@
 						});
 					},
 					//打开课程详情
-					curriculumDetail: function(id, status) {
+					curriculumDetail: function(id, status, tid, title) {
 						if (status == 1 || status == 2) {
 							openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-								id: id
+								tid: tid,
+								courseId: id,
+								courseTitle: title
 							});
 						} else {
 							// 未开播提示

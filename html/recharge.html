@@ -178,14 +178,16 @@
 					message("请输入充值金额!", 'center');
 					return;
 				}
-				var waiting = plus.nativeUI.showWaiting();
+				// var waiting = showload(0);
+				showload(0);
 				mui.post(PAYSERVER, {
 					fee: fee,
 					pay_type: payType,
 					token: userInfo.token
 				}, function(res) {
 					console.log(JSON.stringify(res));
-					waiting.close();
+					// waiting.close();
+					showload(1);
 					if (res.errno == 0) {
 						var data = res.data;
 						var param = {

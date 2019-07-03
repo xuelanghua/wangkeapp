@@ -635,7 +635,8 @@
 
 			//获取订单列表
 			function getOrderList(refresh) {
-				plus.nativeUI.showWaiting();
+				// showload(0);
+				showload(0);
 				mui.post($ajaxUrl + 'order', {
 					action: 'list',
 					token: userInfo.token,
@@ -891,7 +892,8 @@
 					} else {
 						orderEvent();
 					}
-					plus.nativeUI.closeWaiting();
+					// showload(1);
+					showload(1);
 				}, 'json');
 			}
 

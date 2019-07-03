@@ -224,7 +224,7 @@
 		})
 
 		function settingInit() {
-			plus.nativeUI.showWaiting();
+			showload(0);
 			mui.post($ajaxUrl + 'userqrcode', {
 				action: 'setting_info',
 				token: userInfo.token
@@ -241,7 +241,7 @@
 						document.querySelector('input[name=redpacket_num]').value = setting.redpacket_number;
 					}
 				}
-				plus.nativeUI.closeWaiting();
+				showload(1);
 			}, 'json')
 		}
 		mui('.mui-bar').on('tap', '.asset-center', function() {

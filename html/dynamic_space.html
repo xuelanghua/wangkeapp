@@ -456,7 +456,7 @@
 						}
 					}, 'miniProgram');
 				}, function(e) {
-					plus.nativeUI.showWaiting("图片处理中…");
+					showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
 					var imgpath = '';
 					var imgDtask = plus.downloader.createDownload(img, {
 						method: 'GET'
@@ -474,7 +474,7 @@
 								function(e) {
 									imgpath = e.target;
 									if (imgpath) {
-										plus.nativeUI.closeWaiting();
+										showload(1);
 										shareToMiniprogram({
 											title: cont,
 											content: cont,

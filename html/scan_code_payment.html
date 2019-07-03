@@ -213,7 +213,8 @@
 				return;
 			}
 
-			var waiting = plus.nativeUI.showWaiting();
+			// var waiting = showload(0);
+			showload(0);
 			mui.post(PAYSERVER, {
 				fee: vm.fee,
 				pay_type: payType,
@@ -221,7 +222,8 @@
 				to_uid: vm.user_id
 			}, function(res) {
 				// console.log(JSON.stringify(res));
-				waiting.close();
+				// waiting.close();
+				showload(1);
 				if (res.errno == 0) {
 					var data = res.data;
 					var param = {

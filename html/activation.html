@@ -540,7 +540,7 @@
 								} else {
 									plus.nativeUI.alert(res.message);
 								}
-								plus.nativeUI.closeWaiting();
+								showload(1);
 							}, 'json');
 						})
 
@@ -606,7 +606,7 @@
 					return;
 				}
 
-				var waiting = plus.nativeUI.showWaiting();
+				var waiting = showload(0);
 				mui.post(PAYSERVER, {
 					group_id: groupId,
 					price: activationFee,
@@ -665,7 +665,7 @@
 
 			//获取会员等级信息
 			function getGroupInfo() {
-				plus.nativeUI.showWaiting();
+				showload(0);
 				mui.post($ajaxUrl + 'member', {
 					action: 'group_info'
 				}, function(res) {
@@ -675,7 +675,7 @@
 					activationFee = data[0].activation_fee;
 					vm.group = data;
 					logs(vm.group);
-					plus.nativeUI.closeWaiting();
+					showload(1);
 				}, 'json');
 			}
 		</script>

@@ -282,7 +282,7 @@
 			})
 
 			function getCustomerInfo() {
-				plus.nativeUI.showWaiting();
+				showload(0);
 				mui.post($ajaxUrl + 'customer', {
 					action: 'info',
 					token: userInfo.token,
@@ -299,7 +299,7 @@
 							plus.webview.close('customer_edit');
 						}, 2000)
 					}
-					plus.nativeUI.closeWaiting();
+					showload(1);
 				}, 'json')
 			}
 
@@ -367,7 +367,7 @@
 						message(res.message);
 						submitFlag = true;
 					}
-					// plus.nativeUI.closeWaiting();
+					// showload(1);
 				}, 'json')
 			}
 		</script>

@@ -563,7 +563,7 @@
 
 								}
 								// setTimeout(function() {
-								// 	plus.nativeUI.closeWaiting();
+								// 	showload(1);
 								// }, 1000)
 							}, 'json');
 						}
@@ -650,11 +650,13 @@
 							});
 						}
 						window.addEventListener('cropperSuccess', function(event) {
-							plus.nativeUI.showWaiting("图片加载中…");
+							// showload(0, 0, '图片加载中…', "rgba(0,0,0,0.5)");
+							showload(0, 0, "图片加载中...", "rgba(0,0,0,0.5)");
 							app.resultData['background_image_' + app.imgtyp + '_url'] = event.detail.image;
 							app['uperimg' + app.imgtyp] = event.detail.filename;
 							setTimeout(function() {
-								plus.nativeUI.closeWaiting();
+								// showload(1);
+								showload(1);
 							}, Math.floor(Math.random() * 1000 + 1000));
 						})
 					})

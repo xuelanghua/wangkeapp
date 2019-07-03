@@ -397,7 +397,7 @@ doctype html>
 				})
 				// 生成二维码图片
 				function generateImg(tips) {
-					plus.nativeUI.showWaiting();
+					showload(0);
 					html2canvas(document.getElementById("code-body"), {
 						useCORS: true
 					}).then(function(canvas) {
@@ -409,7 +409,7 @@ doctype html>
 							} else {
 								shareQrImg()
 							}
-							plus.nativeUI.closeWaiting();
+							showload(1);
 						})
 					});
 				}
@@ -443,11 +443,12 @@ doctype html>
 				}
 				//获取二维码图片
 				function getQrcodePic() {
-					plus.nativeUI.showWaiting('', {
-						width: 60,
-						height: 60,
-						background: 'rgba(0, 0, 0, 0.9)'
-					});
+					// plus.nativeUI.showWaiting('', {
+					// 	width: 60,
+					// 	height: 60,
+					// 	background: 'rgba(0, 0, 0, 0.9)'
+					// });
+					showload(0);
 					mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
 						token: userInfo.token,
 						to_uid: toUid
@@ -469,7 +470,7 @@ doctype html>
 								app.description = '扫二维码看美图';
 							}
 							setTimeout(function() {
-								plus.nativeUI.closeWaiting();
+								showload(1);
 							}, 500)
 						} else {
 							// message(res.message);

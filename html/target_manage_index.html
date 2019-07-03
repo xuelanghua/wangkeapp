@@ -364,7 +364,8 @@
 	 */
 	function voiceUpload(file) {
 		console.log('开始上传');
-		plus.nativeUI.showWaiting();
+		// showload(0);
+		showload(0);
 		//创建文件上传对象
 		var task = plus.uploader.createUpload($voiceUrl, {
 			method: "POST",
@@ -374,7 +375,8 @@
 			if (status == 200) {
 				var res = JSON.parse(t.responseText);
 				if (res.error) {
-					plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+					// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+					plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
 				} else {
 					//设置相关的input 将上传成功的音频的地址赋值给value
 					document.querySelector('input[name=voice]').value = res.data.path;
@@ -382,11 +384,13 @@
 				}
 			} else {
 				console.log("上传失败：" + status);
-				plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
+				// plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
+				plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
 			}
 		});
 		//关闭等待框
-		plus.nativeUI.closeWaiting();
+		// showload(1);
+		showload(1)
 		// 页面中要上传的 图片路径
 		task.addFile(file, {
 			key: 'upfile'

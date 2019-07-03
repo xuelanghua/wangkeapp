@@ -153,7 +153,7 @@
 						var self = plus.webview.currentWebview();
 						var orderId = self.orderId;
 						var userInfo = getUserInfo();
-						plus.nativeUI.showWaiting();
+						showload(0);
 						mui.get($ajaxUrl + 'order', {
 							token: userInfo.token,
 							action: 'get_express_info',
@@ -173,7 +173,7 @@
 								}, 2000)
 							}
 							setTimeout(function() {
-								plus.nativeUI.closeWaiting();
+								showload(1);
 							}, 1000)
 						}, 'json');
 					});

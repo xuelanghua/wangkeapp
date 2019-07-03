@@ -169,7 +169,8 @@
 					return;
 				}
 			
-				var waiting = plus.nativeUI.showWaiting();
+				// var waiting = showload(0);
+				showload(0);
 				mui.post(PAYSERVER, {
 					group_id: app.groupId,
 					price: app.fee,
@@ -179,7 +180,8 @@
 					activation_type: app.type,
 				}, function(res) {
 					// console.log(JSON.stringify(res));
-					waiting.close();
+					// waiting.close();
+					showload(1);
 					if (res.errno == 0) {
 						var data = res.data;
 						var param = {

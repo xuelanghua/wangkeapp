@@ -70,7 +70,8 @@ function galleryImg(cb) {
 
 // 上传的方法
 function upload(file, cb) {
-	var waiting = plus.nativeUI.showWaiting('图片上传中...');
+	// var waiting = plus.nativeUI.showWaiting('图片上传中...');
+	showload(false, false, '图片上传中...', "rgba(0,0,0,0.5)");
 	var task = plus.uploader.createUpload($uploadUrl, {
 			method: "POST",
 			blocksize: 614400,
@@ -80,14 +81,17 @@ function upload(file, cb) {
 			if (status == 200) {
 				var res = JSON.parse(t.responseText);
 				if (res.error) {
-					plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+					// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
+					plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
 				} else {
 					cb(res);
-					waiting.close();
+					// waiting.close();
+					showload(1);
 				}
 			} else {
 				console.log("上传失败：" + status);
-				plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
+				// plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
+				plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
 			}
 		}
 	);
@@ -114,3 +118,4 @@ function imageResize(src, cb) {
 		plus.nativeUI.alert('处理出错!', '', '提示', 'OK');
 	})
 }
+

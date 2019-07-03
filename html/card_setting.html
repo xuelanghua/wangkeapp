@@ -899,7 +899,7 @@
 					fnCloseWin('card_setting');
 				}, 2000);
 			}
-			plus.nativeUI.showWaiting();
+			showload(0);
 			mui.get($ajaxUrl + 'staff&action=card&token=' + userInfo.token, function(res) {
 				if (res.errno == 0) {
 					loadInfo(res.data);
@@ -911,7 +911,7 @@
 				// 	}, 2000);
 				// }
 				setTimeout(function() {
-					plus.nativeUI.closeWaiting();
+					showload(1);
 				}, 1000)
 			}, 'json')
 		}
@@ -1086,7 +1086,8 @@
 				message('录音小于2秒,请重新录制');
 				return;
 			}
-			plus.nativeUI.showWaiting('上传录音，请稍后……');
+			showload(0, 0, '上传录音，请稍后……', "rgba(0,0,0,0.5)");
+			// plus.nativeUI.showWaiting('上传录音，请稍后……');
 			mask.show();
 			var task = plus.uploader.createUpload($voiceUrl, {
 					method: "POST",
@@ -1099,16 +1100,17 @@
 						logs(res);
 						if (res.errno == 1) {
 							message(res.message);
-							plus.nativeUI.closeWaiting();
+							showload(1);
 							// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 						} else {
-							plus.nativeUI.closeWaiting();
+							showload(1);
 							mask.close();
 							document.querySelector('input[name=voice]').value = res.data.path;
 							message("上传成功");
 						}
 					} else {
 						console.log("上传失败：" + status);
+						showload(1);
 						// plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
 					}
 				}
@@ -1124,7 +1126,7 @@
 		function doSumbit(data) {
 			if (!submitFlag) return;
 			submitFlag = false;
-			plus.nativeUI.showWaiting('数据处理中...');
+			showload(0, 0, '数据处理中...', "rgba(0,0,0,0.5)");
 			mui.post($ajaxUrl + 'staff&action=cardEdit', data, function(res) {
 				logs(res);
 				if (res.errno == 0) {
@@ -1138,7 +1140,7 @@
 					message('修改失败!');
 					submitFlag = true;
 				}
-				plus.nativeUI.closeWaiting();
+				showload(1);
 			}, 'json')
 		}
 
