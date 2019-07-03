@@ -66,29 +66,32 @@
 				padding-top: 0;
 				padding-left: 5px;
 			}
+
 			/* test */
 			@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
-			
+
 			canvas {
-			  position: absolute;
-			  top: 0px;
-			  left: 0px;
-			  z-index: 0;
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				z-index: 0;
 			}
-			
+
 			#welcome {
-			  position: relative;
-			  z-index: 1;
-			  margin: auto 0;
-			  margin-left: 0;
-			 background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); 
-			  /* Chrome 10-25, Safari 5.1-6 */
-			background: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); 
-			  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+				position: relative;
+				z-index: 1;
+				margin: auto 0;
+				margin-left: 0;
+				background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);
+				/* Chrome 10-25, Safari 5.1-6 */
+				background: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);
+				/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 			}
-			.swiper-pagination.activer{
+
+			.swiper-pagination.activer {
 				opacity: 0;
 			}
+
 			.operation-btn {
 				width: 45px;
 				height: 45px;
@@ -98,6 +101,19 @@
 				bottom: 50px;
 				opacity: 0.96;
 				z-index: 9999;
+			}
+			.vip0 {
+				padding: 0 0.16rem;
+				height: 0.3rem;
+				overflow: hidden;
+				display: inline-flex;
+				line-height: 0.3rem;
+				font-size: 0.2rem;
+				color: #FFFFFF;
+				margin-left: 0.2rem;
+				border-bottom-left-radius: 0.2rem;
+				border-top-right-radius: 0.2rem;
+				background: linear-gradient(to right, #c4c4c4, #6f6f6f);
 			}
 		</style>
 		<script type="text/javascript">
@@ -279,6 +295,7 @@
 				el: "#mui-content",
 				data: {
 					// 个人消息
+					is_self:false,
 					discover_info: {
 						id: "",
 						name: "",
@@ -501,6 +518,7 @@
 					// 初始化字体大小结束
 				}
 			})
+
 			function initSlider() {
 				// 初始化轮播
 				var mySwiper = new Swiper('.swiper-container', {
@@ -587,12 +605,17 @@
 					if (res.errno == 0) {
 						app.discover_info = res.data;
 						user_id = res.data.id;
+						if (user_id == userInfo.id) {
+							app.is_self = true;
+						} else {
+							app.is_self = false;
+						}
 						// 初始化轮播
-						if (res.data.timeline_cover.length>0) {
+						if (res.data.timeline_cover.length > 0) {
 							app.slider = [];
 							app.slider = res.data.timeline_cover;
 							setTimeout(function() {
-								if(res.data.timeline_cover.length>1){
+								if (res.data.timeline_cover.length > 1) {
 									initSlider(true);
 								}
 							}, 200);
@@ -648,6 +671,30 @@
 			window.addEventListener('doit', function() {
 				getDiscoverData();
 			}, false);
+			// 更换封面
+			mui(".mui-content").on("tap", ".swiper-slide", function() {
+				if (app.is_self) {
+					plus.nativeUI.actionSheet({
+						// title: "更换封面照片",
+						cancel: "取消",
+						buttons: [{
+							title: "更换封面照片"
+						}]
+					}, function(e) {
+						var index = e.index;
+						switch (index) {
+							case 0:
+								// text += "取消";
+								break;
+							case 1:
+								openPage('change_cover.html', 'change_cover', '#f7f7f7', {
+									cover: app.slider
+								});
+								break;
+						}
+					});
+				}
+			})
 			// 监听封面修改
 			window.addEventListener('reloadCover', function() {
 				location.reload();
