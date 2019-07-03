@@ -65,7 +65,7 @@
 					<template v-for="(list, index) in createList" :key="index">
 						<li class="team-list" v-if="list.is_captain==1">
 							<img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-							<div class="inside" @tap="groupsChat('12')">
+							<div class="inside" @tap="groupsChat(list.team_id, list.name)">
 								<i class="adorn"></i>
 								<div class="team-title">
 									{{list.name}}
@@ -92,7 +92,7 @@
 					<template v-for="(list, index) in joinList" :key="index">
 						<li class="team-list">
 							<img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-							<div class="inside" @tap="groupsChat('12')">
+							<div class="inside" @tap="groupsChat(list.team_id, list.name)">
 								<i class="adorn"></i>
 								<div class="team-title">
 									{{list.name}}
@@ -188,9 +188,10 @@
 						}
 					},
 					// 群聊
-					groupsChat: function(id) {
+					groupsChat: function(id, name) {
 						openPage('team_chat.html','team_chat','#f7f7f7',{
-							tid:id
+							tid:id,
+							teamName: name
 						});
 					}
 				}
@@ -216,7 +217,6 @@
 						})
 						app.createList = createList;
 						app.joinList = joinList;
-						logs(app.joinList);
 						if (createList.length > 0) {
 							app.createFlag = true;
 						} else {
