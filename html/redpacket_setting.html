@@ -186,7 +186,7 @@
 					return;
 				}
 
-				if (redpacket_fee < 0.5 || redpacket_fee > 200) {
+				if (redpacket_fee < 0.3 || redpacket_fee > 200) {
 					plus.nativeUI.toast('红包金额输入错误!');
 					return;
 				}
@@ -203,7 +203,7 @@
 					redpacket_wish: redpacket_wish,
 					token: userInfo.token,
 					redpacket_number: redpacket_num,
-					data_status:red_status
+					share_status: red_status
 				}, function(res) {
 					if (res.errno == 0) {
 						plus.nativeUI.toast(res.message);
@@ -239,6 +239,10 @@
 					}
 					if (setting.redpacket_number.length > 0) {
 						document.querySelector('input[name=redpacket_num]').value = setting.redpacket_number;
+					}
+					if (setting.share_status == 1) {
+						red_status = 1;
+						document.querySelector('.mui-switch').classList.add("mui-active");
 					}
 				}
 				showload(1);
