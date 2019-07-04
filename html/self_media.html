@@ -124,8 +124,28 @@
 				text-align: center;
 				color: #999999;
 			}
-			.dy-container{
+
+			.dy-container {
 				padding-left: 40px;
+			}
+			.to-top{
+				width: 45px;
+				height: 45px;
+				background-color: #0062CC;
+				position: fixed;
+				z-index: 1045;
+				right: 10px;
+				bottom: 10px;
+				opacity: 0.5;
+				border-radius: 50%;
+				color:#FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				display: none;
+			}
+			.to-top .mui-icon{
+				font-size: 36px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -141,6 +161,10 @@
 
 	<body>
 		<div id="mui-content" class="mui-content discover-container" v-cloak>
+			<div class="to-top">
+				<!-- 回到顶部 -->
+				<span class="mui-icon mui-icon-arrowthinup"></span>
+			</div>
 			<img class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
@@ -246,9 +270,10 @@
 										</div>
 									</div>
 									<div>
-										<div v-if="c.state==0" class="cretae-timer"  @tap="curriculumDetail(c.id,c.state)">开播：2018-05-18 18:50</div>
-										<div v-else-if="c.state==1" class="train-ing"  @tap="curriculumDetail(c.id,c.state)"><img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
-										<div v-else class="cretae-timer"  @tap="curriculumDetail(c.id,c.state)">结束：2018-05-18 20:50</div>
+										<div v-if="c.state==0" class="cretae-timer" @tap="curriculumDetail(c.id,c.state)">开播：2018-05-18 18:50</div>
+										<div v-else-if="c.state==1" class="train-ing" @tap="curriculumDetail(c.id,c.state)"><img style="width: 0.38rem;"
+											 src="../image/discover/loading.gif">培训中</div>
+										<div v-else class="cretae-timer" @tap="curriculumDetail(c.id,c.state)">结束：2018-05-18 20:50</div>
 										<div class="team-name mui-pull-right" @tap="teamDetail(c.team_id)">
 											<img class="team-icon" src="../image/discover/team-icon.png">
 											<span class="mui-ellipsis">{{c.team_name}}</span>
@@ -761,6 +786,11 @@
 					}
 				})
 			})
+			// 会到顶部
+			// document.querySelector('.to-top').addEventListener('tap', function() {
+			// 	window.scroll(0, 0);
+			// 	// mui.scrollTo(0,80);
+			// });
 		</script>
 	</body>
 
