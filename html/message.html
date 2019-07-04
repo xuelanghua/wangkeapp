@@ -530,9 +530,16 @@
 			// 跳转目标助理
 			mui(".mui-content").on("tap", ".target-assistant", function() {
 				var genre = this.dataset.genre;
-				openPage('target_assistant.html', 'target_assistant', '#f7f7f7', {
-					genre: genre
-				});
+				if (genre == 1) {
+					openPage('target_assistant.html', 'target_assistant', '#f7f7f7', {
+						genre: genre
+					});
+				} else if (genre == 2) {
+					openPage('team_aid_detail.html', 'team_aid_detail.html', '#f7f7f7', {
+						genre: genre
+					});
+				}
+
 			})
 			// 确认删除聊天
 			mui('.join-team-verify').on("tap", ".send-verify", function() {

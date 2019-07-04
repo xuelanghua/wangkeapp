@@ -353,7 +353,7 @@
 
 			.team-master .swiper-slide {
 				width: 5.06rem;
-				height: 3.46rem;
+				min-height: 3.8rem;
 				background-color: #0062CC;
 				overflow: hidden;
 				box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -419,6 +419,7 @@
 			.swiper-slide .master-bottom p {
 				font-size: 0.26rem;
 				color: #333333;
+				margin-bottom: 0;
 			}
 
 			.swiper-slide h4 img {
@@ -795,7 +796,7 @@
 				background-color: #2289ff;
 				color: #FFFFFF;
 				font-size: 0.3rem;
-				display: none;
+				display: flex;
 				align-items: center;
 				justify-content: center;
 				bottom: 0;
@@ -860,15 +861,21 @@
 				<div class="team-grade-cont">
 					<div class="team-grade-items">
 						<p>团队排名</p>
-						<span>第3名</span>
+						<span v-if="rla.rank!=0">第{{rla.rank}}名</span>
+						<span v-else>暂无排名</span>
 					</div>
 					<div class="team-grade-items">
 						<p>团队活跃度</p>
-						<span>99分</span>
+						<span>{{rla.active}}</span>
 					</div>
 					<div class="team-grade-items">
 						<p>团队总收入</p>
-						<span>百万级</span>
+						<span v-if="rla.level==0">百级</span>
+						<span v-if="rla.level==1">千级</span>
+						<span v-if="rla.level==2">万级</span>
+						<span v-if="rla.level==3">十万级</span>
+						<span v-if="rla.level==4">百万级</span>
+						<span v-if="rla.level==5">千万级</span>
 					</div>
 				</div>
 			</div>
@@ -927,7 +934,7 @@
 								<div class="master-bottom" @tap="checkBusinessCard(i)">
 									<p class="mui-ellipsis-3">{{h.introduce}}</p>
 								</div>
-								<img class="card-sign-cont" src="../image/business-card-sign.png">
+								<img class="card-sign-cont" :data-ids="h.uid" src="../image/business-card-sign.png">
 							</div>
 						</div>
 					</div>
@@ -1099,7 +1106,8 @@
 				person: [],
 				honorList: [],
 				serial: 0,
-				modeldata: {}
+				modeldata: {},
+				rla: {}
 			},
 			methods: {
 				examine: function(status, userId) {
@@ -1131,9 +1139,10 @@
 									message('退出成功!');
 									mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
 									setTimeout(function() {
-										plus.webview.close('team_tetail');
-										plus.webview.close('webUrl');
-									}, 2000)
+										plus.webview.close('weburl');
+										plus.webview.close('webview');
+										plus.webview.close('team_detail');
+									}, 200);
 								} else {
 									message(res.message);
 								}
@@ -1143,7 +1152,7 @@
 				},
 				checkBusinessCard: function(i) {
 					app.serial = i;
-					app.modeldata=app.person[i];
+					app.modeldata = app.person[i];
 					mui("#master_model").popover("show", mui(".master-top")[0]);
 				},
 				// 显示编辑菜单
@@ -1222,7 +1231,7 @@
 					plus.navigator.setStatusBarStyle("dark");
 					var self = plus.webview.currentWebview();
 					app.tid = self.teamid;
-					// alert(app.tid);
+					logs(app.tid);
 					getInfo();
 					getMember();
 					getApplyList();
@@ -1258,7 +1267,10 @@
 		})
 		// 点击名片标志
 		mui(".mui-content").on("tap", ".card-sign-cont", function() {
-			// mui.toast("准备打开个人详情");
+			var jk = this.dataset.ids;
+			openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+				fid: jk
+			});
 			// modeldata
 		})
 		// 关闭卡片
@@ -1273,10 +1285,14 @@
 		})
 		// 创建课程
 		mui(".mui-content").on("tap", ".create-course-btn", function() {
-			openPage('create_course.html', 'create_course', '#f7f7f7', {
-				tid: app.tid,
-				title: '创建课程'
-			});
+			if (app.role) {
+				openPage('create_course.html', 'create_course', '#f7f7f7', {
+					tid: app.tid,
+					title: '创建课程'
+				});
+			} else {
+				alert("您不是本团队的创建者，无创建课程权限，请悉知。")
+			}
 		})
 		//团队设置
 		mui(".more-menu").on("tap", ".team-settings", function() {
@@ -1350,6 +1366,7 @@
 					app.captain_uid = res.data.captain_uid;
 					app.teamImg = res.data.cover_url || "https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg";
 					app.uperImg = res.data.cover;
+					app.rla = res.data;
 					var captainId = res.data.captain_uid;
 					if (userInfo.id == captainId) {
 						app.role = 1;
@@ -1364,10 +1381,8 @@
 					// 更多操作
 					if (res.data.captain_uid == userInfo.id) {
 						document.querySelector(".team-setting").style.display = "flex";
-						document.querySelector(".create-course-btn").style.display = "flex";
 					} else {
 						document.querySelector(".team-setting").style.display = "none";
-						document.querySelector(".create-course-btn").style.display = "none";
 					}
 				}
 			}, 'json');
@@ -1420,16 +1435,15 @@
 		}
 		// 添加成员
 		window.addEventListener('doit', function(e) {
-			getInfo();
-			getMember();
 			var checkedValues = e.detail.idGroup;
 			mui.post($ajaxUrl + 'team&action=add_member', {
 				token: userInfo.token,
 				team_id: app.tid,
 				uids: checkedValues.join(',')
 			}, function(res) {
-				// logs(res);
 				if (res.errno == 0) {
+					getInfo();
+					getMember();
 					message("添加成功");
 				} else {
 					message("添加失败，请稍后重试");

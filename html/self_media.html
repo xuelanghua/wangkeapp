@@ -102,6 +102,7 @@
 				opacity: 0.96;
 				z-index: 9999;
 			}
+
 			.vip0 {
 				padding: 0 0.16rem;
 				height: 0.3rem;
@@ -114,6 +115,17 @@
 				border-bottom-left-radius: 0.2rem;
 				border-top-right-radius: 0.2rem;
 				background: linear-gradient(to right, #c4c4c4, #6f6f6f);
+			}
+
+			.void-team-course {
+				width: 100%;
+				height: auto;
+				padding: 20px;
+				text-align: center;
+				color: #999999;
+			}
+			.dy-container{
+				padding-left: 40px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -176,20 +188,23 @@
 										<span v-if="i.is_mine==1" class="delete-list" @tap="deleteDynamics(i.id,m)">删除</span>
 									</div>
 									<div class="mui-pull-right click-heart" @tap="likeThis(i.id,i.user_id,m)">
-										<i class="heart-icon animated" :class="i.is_thumbs==1?'heartBeat':'tada'"></i>
+										<!-- <i class="heart-icon animated" :class="i.is_thumbs==1?'heartBeat':'tada'"></i> -->
+										<i class="heart-icon animated" :class="i.is_thumbs==1?'heart-icon'+i.id+' active':'heart-icon'+i.id"></i>
 										<span>{{i.thumbs_number}}</span>
 									</div>
 								</div>
 								<!-- 带图片的两行 -->
 								<!-- 没图片的三行 mui-ellipsis-3-->
-								<p class="dynamic-desc" :class="i.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.id)">
-									{{i.title}}
-								</p>
-								<ul class="illustrating-picture" @tap="dynamicDetail(i.id)">
-									<li v-for="img in i.cover">
-										<img class="illustrating" :src="img">
-									</li>
-								</ul>
+								<div class="dy-container">
+									<p class="dynamic-desc" :class="i.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.id)">
+										{{i.title}}
+									</p>
+									<ul v-if="i.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.id)">
+										<li v-for="img in i.cover">
+											<img class="illustrating" :src="img">
+										</li>
+									</ul>
+								</div>
 							</li>
 						</div>
 						<div v-show="typeler==2">
@@ -200,7 +215,7 @@
 								</div>
 								<div class="article-right">
 									<p class="mui-ellipsis-2">
-										{{a.title}}
+										{{a.title}}{{a.is_top}}
 									</p>
 									<div v-if="a.is_top" class="stick-sign">
 										<img src="../image/discover/stick-sign.png">
@@ -241,6 +256,9 @@
 									</div>
 								</div>
 							</li>
+							<div class="void-team-course" v-show="team_course==''||team_course.length<1">
+								亲 暂无团队课程哟~
+							</div>
 						</div>
 
 						<div v-show="typeler==4">
@@ -295,7 +313,7 @@
 				el: "#mui-content",
 				data: {
 					// 个人消息
-					is_self:false,
+					is_self: false,
 					discover_info: {
 						id: "",
 						name: "",
@@ -409,7 +427,11 @@
 						// 发布动态人的id
 						to_uid = pid;
 						_idx = idx;
-						adoreIt();
+						document.querySelector('.heart-icon' + timeline_id).classList.add('heartBeat');
+						setTimeout(function() {
+							document.querySelector('.heart-icon' + timeline_id).classList.remove('heartBeat');
+							adoreIt();
+						}, 500);
 					},
 					// 打开动态详情
 					dynamicDetail: function(id) {
@@ -477,6 +499,7 @@
 									mui('#mui-content').pullRefresh().refresh(true);
 									skip = 1;
 									getDiscoverData();
+									discoverInfo();
 								}
 							}
 						}
@@ -595,6 +618,10 @@
 						showload(true, Math.floor(Math.random() * 1000 + 1000));
 					}
 				}, 'json');
+				setTimeout(function() {
+					mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+					mui('#mui-content').pullRefresh().endPulldownToRefresh();
+				}, 10000)
 			}
 			// 获取用户信息
 			function discoverInfo() {
@@ -669,6 +696,7 @@
 			}
 			// 监听发布新动态
 			window.addEventListener('doit', function() {
+				location.reload();
 				getDiscoverData();
 			}, false);
 			// 更换封面
