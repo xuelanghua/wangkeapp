@@ -220,8 +220,9 @@
 						var self = plus.webview.currentWebview();
 						document.querySelector(".mui-title").innerText = self.title;
 						tid = self.tid;
+						app.tid=self.tid;
 						if (self.edit) {
-							app.tid=self.course.team_id;
+							app.tid = self.course.team_id;
 							app.isedit = true;
 							app.courseId = self.course.id;
 							app.courseName = self.course.title;
@@ -238,7 +239,6 @@
 
 					// 选择主讲人
 					mui(".mui-content").on('tap', '.select-speaker', function() {
-						logs(tid);
 						openPage('speaker_list.html', 'speaker_list', '#f7f7f7', {
 							tid: tid,
 							title: "选择主讲人"
@@ -358,12 +358,45 @@
 					mui(".mui-content").on('tap', '.create-course-btn', function() {
 						logs(app.uplodImg);
 						logs(app.courseId);
+						logs(tid);
+						if (!app.tid) {
+							message("请确认团队");
+							return;
+						}
+						if (!app.courseName) {
+							message("请填写课程名称");
+							return;
+						}
+						if (!app.courseMessage) {
+							message("请填写课程公告");
+							return;
+						}
+						if (!app.lecturerName) {
+							message("请填写主讲人");
+							return;
+						}
+						if (!app.lecturerAvatar) {
+							message("请选择主讲人");
+							return;
+						}
+						if (!app.startCourse) {
+							message("请选择开课时间");
+							return;
+						}
+						if (!app.endCourse) {
+							message("请选择课程结束时间");
+							return;
+						}
+						if (!app.uplodImg) {
+							message("请选择课程封面");
+							return;
+						}
 						mui(".course-name")[0].blur();
 						mui(".course-message")[0].blur();
 						mui.post($ajaxUrl + 'team&action=add_course', {
 							token: userInfo.token,
 							course_id: app.courseId,
-							team_id: app.tid,
+							team_id: tid,
 							title: app.courseName,
 							notice: app.courseMessage,
 							cover: app.uplodImg,

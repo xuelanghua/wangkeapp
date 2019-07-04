@@ -228,7 +228,7 @@
 		</header>
 
 		<div id="create-team" class="mui-content create-team-container" v-cloak>
-			<input class="team-name" type="text" v-model="teamName" placeholder="填写团队名称（2~10个字）" />
+			<input class="team-name" type="text" v-model="teamName" maxlength="10" placeholder="填写团队名称（2~10个字）" />
 			<textarea class="team-notice" rows="6" cols="3" v-model="notice" maxlength="150" placeholder="填写团队公告"></textarea>
 			<div class="invite-team-members">
 				<ul class="mui-table-view">
@@ -372,6 +372,9 @@
 			if(!app.teamName){
 				message("团队名称不能为空");
 				return;
+			}else if(app.teamName.length>10){
+				message("团队名称不能超过十个字");
+				return;
 			}
 			mui.post($ajaxUrl + 'team&action=create', {
 				token: userInfo.token,
@@ -382,7 +385,7 @@
 				uids: app.uids.join(","),
 				data_status: app.data_status,
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					message("创建成功！");
 					mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');

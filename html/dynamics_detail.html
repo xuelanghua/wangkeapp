@@ -92,7 +92,8 @@
 							<div class="item" @tap="shareBtn(all_datas.id,all_datas.title,all_datas.cover[0])">
 								<span class="iconfont icon-share">&#xe604;</span>分享
 							</div>
-							<div class="item" @tap="likeThis(all_datas.id)" :class="all_datas.is_thumbs==1?'heartBeat':'tada'">
+							<!-- <div class="item" @tap="likeThis(all_datas.id)" :class="all_datas.is_thumbs==1?'heartBeat':'tada'"> -->
+							<div class="item" :class="'item'+all_datas.id" @tap="likeThis(all_datas.id)">
 								<span class="iconfont icon-like">&#xe601;</span>{{all_datas.is_thumbs==1?'取消':'点赞'}}
 							</div>
 							<div class="item" @tap="commentDynamic(all_datas.id)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
@@ -165,7 +166,7 @@
 					},
 					// 点赞
 					likeThis: function(_t_id) {
-						logs(muiCont.all_datas);
+						var _self = this;
 						mui.post($ajaxUrl + 'timeline&action=thumbs', {
 							token: userInfo.token,
 							timeline_id: _t_id,
@@ -180,9 +181,11 @@
 									muiCont.$set(muiCont.all_datas, "is_thumbs", "1");
 									muiCont.all_datas.thumbs_user.unshift(userInfo.nickName);
 								}
+								document.querySelector('.item' + _t_id).classList.add('heartBeat');
 								setTimeout(function() {
 									muiCont.menuStatus = false;
 									mask.close();
+									document.querySelector('.item' + _t_id).classList.remove('heartBeat');
 								}, 500)
 							} else {
 
