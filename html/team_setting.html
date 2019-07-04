@@ -163,6 +163,7 @@
 					})
 					// 保存修改
 					mui(".mui-bar").on("tap", ".save-setting", function() {
+						document.activeElement.blur();
 						mui.post($ajaxUrl + 'team&action=team_setting', {
 							token: userInfo.token,
 							team_id: app.teamId,
@@ -170,8 +171,10 @@
 							cover: app.uperimg,
 							notice: app.desc
 						}, function(res) {
+							logs(res);
 							if (res.errno == 0) {
 								mui.fire(plus.webview.getWebviewById('team_detail'), 'editTeamInfo');
+								mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
 								mui.back();
 							} else {}
 						}, 'json');

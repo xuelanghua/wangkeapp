@@ -1,4 +1,4 @@
-doctype html>
+<!doctype html>
 <html>
 
 	<head>
@@ -24,12 +24,13 @@ doctype html>
 				box-sizing: border-box;
 				background-color: #2889FF;
 			}
+
 			.qr-code-body {
 				width: 6.8rem;
 				height: auto;
 				position: relative;
 				border-radius: 0.1rem;
-				margin: 0.5rem auto;
+				margin: 1rem auto 0.5rem;
 				background-size: contain;
 				overflow: hidden;
 				display: flex;
@@ -316,7 +317,7 @@ doctype html>
 					<button type="button" id="shareImg" class="mui-btn">分享二维码</button>
 				</div>
 			</div>
-			<img src="" id="#down1">
+			<!-- <img src="" id="#down1"> -->
 		</div>
 	</body>
 	<script src="../js/mui.js"></script>
@@ -359,7 +360,7 @@ doctype html>
 					// message(app.serial);
 					// this.innerText = app.changetext[app.serial];
 					this.innerText = "点击切换";
-					app.bgimg=app['bgimg'+app.serial];
+					app.bgimg = app['bgimg' + app.serial];
 				})
 				mui.init({
 					swipeBack: true,
@@ -515,28 +516,40 @@ doctype html>
 					document.querySelector('.change').innerText = app.changetext[app.serial];
 					app.card_text = res.data['card_text_' + res.data.card_type];
 					app.bgimg = res.data['background_image_' + res.data.card_type + '_url'];
-					app.bgimg=app['bgimg'+app.serial];
+					// app['bgimg'+app.serial]=app['bgimg'+app.serial];
+
+					if (res.data.background_image_1_url != '') {
+						app.bgimg1 = res.data.background_image_1_url;
+					}
+					if (res.data.background_image_2_url != '') {
+						app.bgimg2 = res.data.background_image_2_url;
+					}
+					if (res.data.background_image_3_url != '') {
+						app.bgimg3 = res.data.background_image_3_url;
+					}
+					if (res.data.background_image_4_url != '') {
+						app.bgimg4 = res.data.background_image_4_url;
+					}
 				}
 			}, 'json');
 		}
-		
+
 		function getToUserInfo() {
 			mui.get($ajaxUrl + 'member', {
-					action: 'get_userinfo_by_id',
-					token: userInfo.token,
-					to_uid: toUid
-				}, function(res){
-					logs(res);
-					if (res.errno == 0) {
-						app.userhead = res.data.avatar;
-						app.username = res.data.name;
-					} else {
-						plus.nativeUI.alert('用户不存在', function() {
-							mui.back();
-						})
-					}
-				},'json'
-			);
+				action: 'get_userinfo_by_id',
+				token: userInfo.token,
+				to_uid: toUid
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					app.userhead = res.data.avatar;
+					app.username = res.data.name;
+				} else {
+					plus.nativeUI.alert('用户不存在', function() {
+						mui.back();
+					})
+				}
+			}, 'json');
 		}
 	</script>
 </html>

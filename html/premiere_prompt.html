@@ -14,7 +14,6 @@
 			.mui-content {
 				background-color: #FFFFFF;
 				height: 100vh;
-				text-align: center;
 			}
 
 			.mui-content h3 {
@@ -24,27 +23,34 @@
 				margin: 0.3rem 0;
 			}
 
-			.mui-content p {
+			/* .mui-content p {
 				font-size: 0.3rem;
-				color: #999999;
+				padding: 0 0.35rem;
+				color: #040404;
+				text-align: left;
+			} */
+
+			.mui-content .title {
+				padding: 0.5rem 0.35rem 0.1rem;
+				font-size: 0.36rem;
+				line-height: 1.4;
+				text-align: justify;
+				color: #333333;
 			}
 
 			.mui-content img {
-				width: 60%;
+				width: 100%;
 				height: auto;
-				margin: 20% auto 0;
+				margin: 0;
 			}
-
-			.start-btn {
-				width: 7.08rem;
-				height: 1rem;
-				border-radius: 0.1rem;
-				margin: 0.72rem auto 0;
-				background-color: #2289ff;
-				color: #FFFFFF;
-				font-size: 0.32rem;
-				text-align: center;
-				line-height: 1rem;
+			ul{
+				padding:0 0.6rem 0;
+				margin: 0;
+			}
+			.items-li{
+				margin: 0.1rem 0;
+				text-align: left;
+				color: #999999;
 			}
 		</style>
 		<script>
@@ -61,15 +67,17 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">设置</h1>
+			<h1 class="mui-title">课程提示</h1>
 		</header>
 		<div id="mui-content" class="mui-content" v-cloak>
-			<img src="../image/premiere_prompt-tips-img.png">
-			<h3>课程暂未开播</h3>
-			<p>开播时间：2018-05-21 12:30</p>
-			<div class="start-btn">
-				开播
-			</div>
+			<img src="../image/premiere_prompt_default.png">
+			<!-- <h3>课程暂未开播，敬请期待。</h3> -->
+			<p class="title">{{title}}</p>
+			<ul>
+				<li class="items-li">主讲人：{{person}}</li>
+				<li class="items-li">直播时间：{{s_time}}</li>
+				<li class="items-li">结束时间：{{e_time}}</li>
+			</ul>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -78,7 +86,10 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					title: '',
+					s_time: '',
+					e_time: '',
+					person: ''
 				},
 				methods: {
 
@@ -89,7 +100,14 @@
 							plus.navigator.setStatusBarStyle("light");
 						}
 					})
-					mui.plusReady(function() {})
+					mui.plusReady(function() {
+						plus.navigator.setStatusBarStyle("dark");
+						var self = plus.webview.currentWebview();
+						app.title = self.title;
+						app.s_time = self.s_time;
+						app.e_time = self.e_time;
+						app.person = self.person;
+					})
 				}
 			})
 		</script>
