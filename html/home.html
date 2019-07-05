@@ -545,7 +545,8 @@
 				font-size: 20px;
 				color: #333333;
 			}
-			.mui-backdrop{
+
+			.mui-backdrop {
 				z-index: 9;
 			}
 		</style>
@@ -559,7 +560,7 @@
 						<span class="mui-badge mui-badge-danger" style="display: none;z-index: 14;" id="unread_message">0</span>
 					</div>
 					<div class="mui-title">
-						<span id="team_name">团队切换</span>
+						<span id="team_name">旺客</span>
 						<span class="mui-icon mui-icon-arrowup mui-icon-arrowdown"></span>
 						<div class="team-list">
 							<ul class="mui-table-view" id="team-list"></ul>
@@ -727,7 +728,7 @@
 	<script src="../js/swiper.min.js"></script>
 	<script src="../js/Zepto.min.js"></script>
 	<script>
-		var mask = mui.createMask(function(){
+		var mask = mui.createMask(function() {
 			$(".mui-title .mui-icon").removeClass("mui-icon-arrowdown");
 			$(".team-list").slideUp();
 		});
@@ -747,7 +748,7 @@
 						getNotice();
 						weatherInit(); //天气初始化
 						slideInit(true); //幻灯片初始化 
-						getTeamList();
+						getTeamList();//获取团队
 					}
 				}
 			}
@@ -898,11 +899,16 @@
 			// 	mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
 			// 	mui.fire(plus.webview.getWebviewById('chat'), 'newCustomer');
 			// })
+
 			//跳转团队详情
 			document.getElementById('new_customer').addEventListener('tap', function() {
-				openPage('team_detail.html','team_detail','#f7f7f7',{
-					teamid: default_team_id
-				});
+				if (default_team_id) {
+					openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+						teamid: default_team_id
+					});
+				}else{
+					openPage('join_team.html', 'join_team.html', '#f7f7f7');
+				}
 			})
 			//查看公告
 			mui('.mui-content').on('tap', '.Notice', function() {
@@ -1221,10 +1227,13 @@
 			hideQrcode();
 		}
 		//获取团队信息
+		var teamchange = true;
+
 		function getTeamList() {
 			mui.post($ajaxUrl + 'team&action=personal_team_list', {
 				token: userInfo.token,
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					logs(res.data);
 					var data = res.data;
@@ -1242,18 +1251,24 @@
 						default_team_id = data[0].team_id;
 						document.getElementById("team_name").innerText = data[0].name;
 						mui(".mui-title .mui-icon")[0].style.display = "none";
+						teamchange = false;
 					} else {
 						document.getElementById("team_name").innerText = "旺客"
 						mui(".mui-title .mui-icon")[0].style.display = "none";
+						teamchange = false;
+						default_team_id=0;
 					}
 				} else {}
 			}, 'json');
 		}
 		//切换团队
 		mui('.mui-bar').on('tap', '.mui-title', function() {
-			mask.show();
-			$(".mui-title .mui-icon").toggleClass("mui-icon-arrowdown");
-			$(".team-list").slideToggle();
+			if (teamchange) {
+				mask.show();
+				$(".mui-title .mui-icon").toggleClass("mui-icon-arrowdown");
+				$(".team-list").slideToggle();
+			}
+
 		})
 		// 切换团队名称
 		mui('.mui-bar').on('tap', '.mui-table-view-cell', function() {

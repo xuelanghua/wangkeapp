@@ -98,6 +98,11 @@
 				color: #2289ff;
 				margin-right: -10px;
 			}
+
+			.mui-table-view {
+				padding-top: 20px;
+				background-color: #FFFFFF;
+			}
 		</style>
 	</head>
 
@@ -117,6 +122,12 @@
 				<img class="banner" :src="image">
 			</div>
 			<ul class="mui-table-view">
+				<li class="mui-table-view-cell check-data">
+					<span>数据查看</span>
+					<div class="mui-switch mui-switch-blue" :class="data_status==1?'mui-active':''">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
 				<li class="mui-table-view-cell">
 					<span>团队名称：</span>
 					<div class="row-conts">
@@ -146,7 +157,8 @@
 					teamName: '',
 					desc: '',
 					image: '',
-					uperimg: 'images/6/2019/05/team_bg.jpg'
+					uperimg: 'images/6/2019/05/team_bg.jpg',
+					data_status: 0
 				},
 				methods: {
 
@@ -159,7 +171,8 @@
 						app.teamName = self.teamName;
 						app.desc = self.desc;
 						app.image = self.img;
-						app.uperimg=self.uperImg;
+						app.uperimg = self.uperImg;
+						app.data_status = self.data_status;
 					})
 					// 保存修改
 					mui(".mui-bar").on("tap", ".save-setting", function() {
@@ -249,6 +262,28 @@
 						}, Math.floor(Math.random() * 1000 + 1000));
 					})
 				}
+			})
+			// 查看数据权限
+			mui('.mui-content').on('toggle', '.mui-switch', function(event) {
+				if (event.detail.isActive) {
+					app.data_status = 1;
+				} else {
+					app.data_status = 0;
+				}
+				mui.post($ajaxUrl + 'team&action=edit_data_status', {
+					token: userInfo.token,
+					team_id: app.teamId,
+					status: app.data_status
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						setTimeout(function(){
+							mui.fire(plus.webview.getWebviewById('team_detail'), 'editTeamInfo');
+							mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
+						},200);
+					}
+					// logs(res);
+				}, 'json');
 			})
 		</script>
 	</body>

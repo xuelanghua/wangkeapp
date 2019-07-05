@@ -905,7 +905,7 @@
 					<h2 class="headline team-member-more">团队成员<p class="more-member mui-pull-right">共{{teamNum}}人<span class="mui-icon mui-icon-arrowright"></span></p>
 					</h2>
 					<ul>
-						<li v-for="(items,index) in teamMember" :key="index">
+						<li v-for="(items,index) in teamMember" :key="index" v-if="index<6">
 							<div class="user-head-img">
 								<img :src="items.avatar||items.avatarUrl" />
 							</div>
@@ -1111,7 +1111,8 @@
 				honorList: [],
 				serial: 0,
 				modeldata: {},
-				rla: {}
+				rla: {},
+				data_status:0
 			},
 			methods: {
 				examine: function(status, userId) {
@@ -1231,10 +1232,10 @@
 			mounted: function() {
 				mui.init({
 					beforeback: function() {
-						var myDynamics = plus.webview.currentWebview().opener();
-						if (myDynamics.id = "discover") {
-							plus.navigator.setStatusBarStyle("light");
-						}
+						// var myDynamics = plus.webview.currentWebview().opener();
+						// if (myDynamics.id = "discover") {
+						// 	plus.navigator.setStatusBarStyle("light");
+						// }
 					}
 				})
 				mui.plusReady(function() {
@@ -1313,7 +1314,8 @@
 				teamName: app.teamName,
 				desc: app.desc,
 				img: app.teamImg,
-				uperImg: app.uperImg
+				uperImg: app.uperImg,
+				data_status:app.data_status
 			});
 		})
 		//解散团队
@@ -1371,7 +1373,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(res);
+				logs(res); 
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
@@ -1379,6 +1381,7 @@
 					app.captain_uid = res.data.captain_uid;
 					app.teamImg = res.data.cover_url || "https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg";
 					app.uperImg = res.data.cover;
+					app.data_status=res.data.data_status;
 					app.rla = res.data;
 					var captainId = res.data.captain_uid;
 					if (userInfo.id == captainId) {
@@ -1437,7 +1440,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				// logs(res);
+				logs(res);
 				if (res.errno == 0) {
 					app.teamMember = res.data;
 				} else {
@@ -1453,6 +1456,7 @@
 				team_id: app.tid,
 				uids: checkedValues.join(',')
 			}, function(res) {
+				// logs(res);
 				if (res.errno == 0) {
 					getInfo();
 					getMember();

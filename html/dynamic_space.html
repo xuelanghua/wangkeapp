@@ -43,6 +43,10 @@
 				border-top-right-radius: 0.2rem;
 				background: linear-gradient(to right, #f4dec6, #e3a472);
 			}
+
+			.menu-list.active {
+				width: 100%;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -109,23 +113,24 @@
 										<li v-for="(img,m) in d.cover" class="img-cont"><img :src="img"></li>
 									</ul>
 									<p class="mui-ellipsis-2 dynamic-character">
-										{{d.title}}
+										{{d.content}}
 									</p>
 								</div>
 								<div class="operation-menu">
-									<span class="check-detail" :class="'check-detail'+d.id" @tap="dynamicDetail(d.id)">查看详情</span>
-									<div class="menu-list" :class="'menu-list'+d.id">
-										<div class="menu-body">
+									<div class="menu-list">
+										<span class="check-detail" @tap="dynamicDetail(d.id)">查看详情</span>
+										<div class="menu-body" :class="'menu-body'+d.id">
 											<div class="menu-arrow"></div>
 											<div v-if="is_self" class="item" @tap="delList(d.id,l,i)">
 												<span class="iconfont icon-delete">&#xe603;</span>删除
 											</div>
 											<div class="item" @tap="shareBtn(d.id,d.title,d.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
-											<div class="item" @tap="likeThis(d.id,l,i)" :class="d.is_thumbs==1?'heartBeat':'tada'">
-												<span class="iconfont icon-like">&#xe601;</span>{{d.is_thumbs==1?'取消':'点赞'}}</div>
+											<div class="item" @tap="likeThis(d.id,l,i)" :class="'icon-like'+d.id">
+												<span class="iconfont icon-like">&#xe601;</span>{{d.is_thumbs==1?'取消':'点赞'}}
+											</div>
 											<div class="item" @tap="commentDynamic(d.id,i,l)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
 										</div>
-										<div class="comment-icon-cont" @tap="showMenu(d.id)">
+										<div class="comment-icon-cont" :class="'comment-icon-cont'+d.id" @tap="showMenu(d.id)">
 											<span class="iconfont comment-icon">&#xe504;</span>
 										</div>
 									</div>
@@ -163,20 +168,19 @@
 				// 评论项的index
 				_idx = null,
 				_com_id = null,
-				pullDirection='',
+				pullDirection = '',
 				limit = 20;
 			var mask = mui.createMask(function() {
 				app.menuStatus = false;
 				app.isComment = false;
-				document.querySelector(".menu-list" + _com_id).classList.remove("active");
-				document.querySelector(".check-detail" + _com_id).style.display = "block";
+				document.querySelector(".menu-body" + _com_id).classList.remove("active");
+				document.querySelector(".comment-icon-cont" + _com_id).classList.remove("active");
 				mui('.mui-bar-footer')[0].style.display = "none";
 				plus.key.hideSoftKeybord();
 			});
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					// slider: ["../image/share/bg-img02.jpg","../image/share/bg-img03.jpg","../image/bj.jpg"],
 					slider: [],
 					likeDesc: '点赞',
 					menuStatus: false,
@@ -202,15 +206,14 @@
 					// 显示菜单
 					showMenu: function(_idd) {
 						_com_id = _idd;
-						document.querySelector(".menu-list" + _idd).classList.add("active");
+						document.querySelector(".menu-body" + _idd).classList.add("active");
+						document.querySelector(".comment-icon-cont" + _idd).classList.add("active");
 						if (this.menuStatus) {
 							mask.close();
 							app.menuStatus = false;
-							document.querySelector(".check-detail" + _idd).style.display = "block";
 						} else {
 							app.menuStatus = true;
 							mask.show();
-							document.querySelector(".check-detail" + _idd).style.display = "none";
 						}
 					},
 					// 点赞
@@ -221,6 +224,11 @@
 							to_uid: user_id
 						}, function(res) {
 							if (res.errno == 0) {
+								document.querySelector('.icon-like' + _t_id).classList.add('heartBeat');
+								setTimeout(function() {
+									document.querySelector('.icon-like' + _t_id).classList.remove('heartBeat');
+									adoreIt();
+								}, 500);
 								if (app.spaceList[l].list[i].is_thumbs == 1) {
 									app.$set(app.spaceList[l].list[i], "is_thumbs", "0");
 									var index = app.spaceList[l].list[i].thumbs_user.indexOf(userInfo.nickName);
@@ -229,7 +237,6 @@
 									app.$set(app.spaceList[l].list[i], "is_thumbs", "1");
 									app.spaceList[l].list[i].thumbs_user = new Array();
 									app.spaceList[l].list[i].thumbs_user.unshift(userInfo.nickName);
-									// logs(app.spaceList[l]);
 								}
 							} else {
 
@@ -252,8 +259,7 @@
 					// 评论
 					commentDynamic: function(t_id, i_idx, l_idx) {
 						this.isComment = true;
-						document.querySelector(".check-detail" + _com_id).style.display = "block";
-						document.querySelector(".menu-list" + _com_id).classList.remove("active");
+						document.querySelector(".menu-body" + _com_id).classList.remove("active");
 						mui('.mui-bar-footer')[0].style.display = "block";
 						var _self = this;
 						setTimeout(function() {
@@ -424,23 +430,23 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						app.discover_info = res.data;
-						if (res.data.timeline_cover.length>0) {
+						if (res.data.timeline_cover.length > 0) {
 							app.slider = [];
 							app.slider = res.data.timeline_cover;
-							setTimeout(function(){
-							initSlider();
-							},200);
+							setTimeout(function() {
+								initSlider();
+							}, 200);
 						} else {
 							app.slider = ["../image/share/bg-img02.jpg", "../image/share/bg-img03.jpg", "../image/bj.jpg"]
-							setTimeout(function(){
-							initSlider();
-							},200);
+							setTimeout(function() {
+								initSlider();
+							}, 200);
 						}
 					} else {
 						app.slider = ["../image/share/bg-img02.jpg", "../image/share/bg-img03.jpg", "../image/bj.jpg"]
-						setTimeout(function(){
-						initSlider();
-						},200);
+						setTimeout(function() {
+							initSlider();
+						}, 200);
 					}
 				}, 'json');
 				// 获取当前年份
@@ -475,8 +481,7 @@
 			// 删除单条动态
 			function delList(_thisId, l, i) {
 				app.isComment = true;
-				document.querySelector(".check-detail" + _com_id).style.display = "block";
-				document.querySelector(".menu-list" + _com_id).classList.remove("active");
+				document.querySelector(".menu-body" + _com_id).classList.remove("active");
 				mask.close();
 				plus.nativeUI.confirm("确认删除该动态吗？", function(e) {
 					if (e.index) {
@@ -500,8 +505,7 @@
 			// 分享
 			function shareBtn(id, cont, img) {
 				app.isComment = true;
-				document.querySelector(".check-detail" + _com_id).style.display = "block";
-				document.querySelector(".menu-list" + _com_id).classList.remove("active");
+				document.querySelector(".menu-body" + _com_id).classList.remove("active");
 				mask.close();
 				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;
@@ -561,7 +565,6 @@
 			}
 			// 监听发布新动态
 			window.addEventListener('doit', function() {
-				location.reload();
 				getSpaceList();
 			}, false);
 			// app.is_self
@@ -593,6 +596,12 @@
 			window.addEventListener('reloadCover', function(event) {
 				location.reload();
 				discoverInfo();
+			})
+			window.addEventListener("swipeup", function(event) {
+				mask.close();
+			})
+			window.addEventListener("swipedown", function(event) {
+				mask.close();
 			})
 		</script>
 	</body>
