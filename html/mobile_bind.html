@@ -187,12 +187,11 @@
 	        }
 	        
 	        mui.post($ajaxUrl + 'member&action=bind', {mobile: vmobile, code: vcode, token: userInfo.token}, function(res) {
-	        	console.log(JSON.stringify(res));
 	        	if (res.errno == 0) {
 	        		mui.toast(res.message);
-					var userInfo = getUserInfo();
-					userInfo.mobile = vmobile;
-					localStorage.setItem('user', JSON.stringify(userInfo));
+					// var userInfo = getUserInfo();
+					// userInfo.mobile = vmobile;
+					// localStorage.setItem('user', JSON.stringify(userInfo));
 					updateUserInfo();
 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'bindMobileSuccess');
 					setTimeout(function() {

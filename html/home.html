@@ -747,7 +747,7 @@
 						getNotice();
 						weatherInit(); //天气初始化
 						slideInit(true); //幻灯片初始化 
-						 getTeamList();
+						getTeamList();
 					}
 				}
 			}
@@ -901,7 +901,7 @@
 			//跳转团队详情
 			document.getElementById('new_customer').addEventListener('tap', function() {
 				openPage('team_detail.html','team_detail','#f7f7f7',{
-					teamid:default_team_id
+					teamid: default_team_id
 				});
 			})
 			//查看公告
@@ -1226,6 +1226,7 @@
 				token: userInfo.token,
 			}, function(res) {
 				if (res.errno == 0) {
+					logs(res.data);
 					var data = res.data;
 					if (data.length > 1) {
 						var html = "";
@@ -1238,7 +1239,9 @@
 						}
 						document.getElementById("team-list").innerHTML = html;
 					} else if (data.length == 1 && data != "") {
+						default_team_id = data[0].team_id;
 						document.getElementById("team_name").innerText = data[0].name;
+						mui(".mui-title .mui-icon")[0].style.display = "none";
 					} else {
 						document.getElementById("team_name").innerText = "旺客"
 						mui(".mui-title .mui-icon")[0].style.display = "none";
