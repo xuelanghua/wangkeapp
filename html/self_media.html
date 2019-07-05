@@ -128,7 +128,8 @@
 			.dy-container {
 				padding-left: 40px;
 			}
-			.to-top{
+
+			.to-top {
 				width: 45px;
 				height: 45px;
 				background-color: #0062CC;
@@ -138,13 +139,14 @@
 				bottom: 10px;
 				opacity: 0.5;
 				border-radius: 50%;
-				color:#FFFFFF;
+				color: #FFFFFF;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				display: none;
 			}
-			.to-top .mui-icon{
+
+			.to-top .mui-icon {
 				font-size: 36px;
 			}
 		</style>
@@ -161,11 +163,18 @@
 
 	<body>
 		<div id="mui-content" class="mui-content discover-container" v-cloak>
+			<footer class="footer mui-bar mui-bar-footer">
+				<!-- 评论 -->
+				<div class="comment-container">
+					<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
+					<span class="send-comment">评论</span>
+				</div>
+			</footer>
 			<div class="to-top">
 				<!-- 回到顶部 -->
 				<span class="mui-icon mui-icon-arrowthinup"></span>
 			</div>
-			<img class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
+			<img v-show="!menuStatus" class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
 					<div class="swiper-slide" v-for="(banner,index) in slider" :key="index">
@@ -221,13 +230,42 @@
 								<!-- 没图片的三行 mui-ellipsis-3-->
 								<div class="dy-container">
 									<p class="dynamic-desc" :class="i.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.id)">
-										{{i.title}}
+										{{i.content}}
 									</p>
 									<ul v-if="i.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.id)">
 										<li v-for="img in i.cover">
 											<img class="illustrating" :src="img">
 										</li>
 									</ul>
+									<!-- 评论部分 -->
+									<div class="operation-menu">
+										<div class="menu-list" :class="'menu-list'+i.id">
+											<span class="check-detail" @tap="dynamicDetail(i.id)">查看详情</span>
+											<div class="menu-body" :class="'menu-body'+i.id">
+												<div class="menu-arrow"></div>
+												<!-- <div v-if="is_self" class="item"> 
+													<span class="iconfont icon-delete">&#xe603;</span>删除
+												</div> -->
+												<div class="item" @tap="shareBtn(i.id,i.content,i.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
+												<div class="item" @tap="pinglun(i.id,m)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
+											</div>
+											<div class="comment-icon-cont" :class="'comment-icon-cont'+i.id" @tap="showMenu(i.id,m)">
+												<span class="iconfont comment-icon">&#xe504;</span>
+											</div>
+										</div>
+									</div>
+									<div class="dynamic-lists-issue" v-if="i.comment.length>0||i.is_thumbs>0">
+										<div class="lan-arrows"></div>
+										<p>
+											<span class="iconfont icon-like">&#xe601;</span>
+											<template v-for="(c,idx) in i.thumbs_user" :key="idx">
+												{{c}}<template v-if="idx<i.thumbs_user.length-1">、</template>
+											</template>
+										</p>
+										<p class="comment-inside" v-for="(p,idx) in i.comment">
+											<span class="user-name">{{p.nickName}}：</span>{{p.content}}
+										</p>
+									</div>
 								</div>
 							</li>
 						</div>
@@ -324,16 +362,24 @@
 		<!-- <script src="../js/indexs.js"></script> -->
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo = getUserInfo();
-			var skip = 1;
-			var limit = 5;
-			var pullDirection = "";
-			// 点赞的是第几条
-			var _idx = 0;
-			// 动态id
-			var timeline_id = '';
-			// 发布动态人的id
-			var to_uid = '';
+			var userInfo = getUserInfo(),
+				skip = 1,
+				limit = 8,
+				pullDirection = "",
+				mask = mui.createMask(function() {
+					app.menuStatus = false;
+					document.querySelector(".menu-body" + timeline_id).classList.remove("active");
+					document.querySelector(".menu-list" + timeline_id).classList.remove("active");
+					document.querySelector(".comment-icon-cont" + timeline_id).classList.remove("active");
+					mui('.mui-bar-footer')[0].style.display = "none";
+					plus.key.hideSoftKeybord();
+				}),
+				// 点赞的是第几条
+				_idx = 0,
+				// 动态id
+				timeline_id = '',
+				// 发布动态人的id
+				to_uid = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -380,7 +426,9 @@
 						// 	selected: false
 						// }
 					],
-					like: false
+					like: false,
+					// 评论部分
+					menuStatus: false
 				},
 				created: function() {
 					// 初始化字体大小
@@ -411,7 +459,7 @@
 							}
 						} else if (this.typeler == 2) {
 							if (app.essay.length > 0) {
-								logs("不请求");
+								// logs("不请求");
 								//不请求
 							} else {
 								getDiscoverData(true);
@@ -495,7 +543,57 @@
 							});
 						}
 						// mui.toast("打开课程详情" + status);
-					}
+					},
+					// 评论
+					pinglun: function(t_id, i_idx) {
+						document.querySelector(".menu-list" + timeline_id).classList.remove("active");
+						document.querySelector(".menu-body" + timeline_id).classList.remove("active");
+						mui('.mui-bar-footer')[0].style.display = "block";
+						setTimeout(function() {
+							_self.initNativeObjects();
+							_self.showSoftInput();
+						}, 100);
+					},
+					// 弹出键盘
+					initNativeObjects: function() {
+						if (mui.os.android) {
+							var main = plus.android.runtimeMainActivity();
+							var Context = plus.android.importClass("android.content.Context");
+							InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
+							imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
+						} else {
+							nativeWebview = plus.webview.currentWebview().nativeInstanceObject();
+						}
+					},
+					showSoftInput: function() {
+						if (mui.os.android) {
+							imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+						} else {
+							nativeWebview.plusCallMethod({
+								"setKeyboardDisplayRequiresUserAction": false
+							});
+						}
+						setTimeout(function() {
+							var inputElem = document.getElementById("comment_matter"); //需要获得焦点的input  
+							inputElem.focus();
+							// inputElem.parentNode.classList.add('mui-active'); //第一个是search，加上激活样式  
+						}, 200);
+					},
+					// 显示菜单
+					showMenu: function(_idd, idx) {
+						_idx = idx;
+						timeline_id = _idd;
+						document.querySelector(".menu-body" + _idd).classList.add("active");
+						document.querySelector(".menu-list" + _idd).classList.add("active");
+						document.querySelector(".comment-icon-cont" + _idd).classList.add("active");
+						if (this.menuStatus) {
+							this.menuStatus = false;
+							mask.close();
+						} else {
+							this.menuStatus = true;
+							mask.show();
+						}
+					},
 				},
 				mounted: function() {
 					mui.init({
@@ -600,6 +698,7 @@
 					limit: limit,
 					skip: skip
 				}, function(res) {
+					// logs(res);
 					if (res.errno == 0) {
 						if (app.typeler == 1) {
 							if (skip == 1) {
@@ -786,11 +885,107 @@
 					}
 				})
 			})
-			// 会到顶部
+			// 回到顶部
 			// document.querySelector('.to-top').addEventListener('tap', function() {
 			// 	window.scroll(0, 0);
 			// 	// mui.scrollTo(0,80);
 			// });
+			// window.addEventListener("swipeup", function(event) {
+			// 	mask.close();
+			// })
+			// window.addEventListener("swipedown", function(event) {
+			// 	mask.close();
+			// })
+			// mui(".mui-content").on("tap",".pinglunlo",function(){
+			// 	alert("asdfasdf");
+			// })
+			// 分享
+			function shareBtn(id, cont, img) {
+				app.isComment = true;
+				document.querySelector(".menu-body" + timeline_id).classList.remove("active");
+				mask.close();
+				var imgs = img.substring(img.lastIndexOf("/"));
+				var sd_path = "_downloads" + imgs;
+				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+					shareToMiniprogram({
+						title: cont,
+						content: cont,
+						thumbs: [sd_path],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				}, function(e) {
+					showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
+					var imgpath = '';
+					var imgDtask = plus.downloader.createDownload(img, {
+						method: 'GET'
+					}, function(d, status) {
+						if (status == 200) {
+							//图片压缩
+							plus.zip.compressImage({
+									src: d.filename,
+									dst: d.filename,
+									overwrite: true,
+									width: '500px',
+									format: 'jpg',
+									quality: 90
+								},
+								function(e) {
+									imgpath = e.target;
+									if (imgpath) {
+										showload(1);
+										shareToMiniprogram({
+											title: cont,
+											content: cont,
+											thumbs: [imgpath],
+											miniProgram: {
+												id: 'gh_9fa5f42ab939',
+												// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+												path: '/longbing_card/pages/index/index?currentTabBar=toNews&to_uid=' + userInfo.id,
+												webUrl: 'https://app.wangkeapp.cn/'
+											}
+										}, 'miniProgram');
+									}
+								},
+								function(error) {
+									message("Compress error!");
+								});
+						} else {
+							mui.toast('保存失败')
+						}
+					});
+					imgDtask.start()
+				});
+			}
+			// 评论
+			mui(".mui-bar-footer").on("tap", ".send-comment", function() {
+				var conts = document.getElementById("comment_matter").value;
+				if (conts == " " || conts.length < 1) {
+					message("评论内容不能为空!");
+					return;
+				}
+				mui.post($ajaxUrl + 'timeline&action=comment', {
+					token: userInfo.token,
+					timeline_id: timeline_id,
+					content: conts
+				}, function(res) {
+					if (res.errno == 0) {
+						var self_comment = {
+							user_id: userInfo.id,
+							content: conts,
+							nickName: userInfo.nickName
+						}
+						app.dynamic[_idx].comment.unshift(self_comment)
+						document.getElementById("comment_matter").value = "";
+						document.activeElement.blur();
+						mask.close();
+						mui('.mui-bar-footer')[0].style.display = "none";
+					} else {}
+				}, 'json');
+			})
 		</script>
 	</body>
 

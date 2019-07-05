@@ -37,8 +37,63 @@
 				width: 0.27rem;
 				margin-right: 5px;
 			}
-			.mui-content.team-list-container{
+
+			.mui-content.team-list-container {
 				padding-bottom: 100px;
+			}
+
+			.opction-cont {
+				position: relative;
+				display: flex;
+				justify-content: space-between;
+				height: 0.85rem;
+				margin-top: 0.1rem;
+			}
+
+			.opction-cont:before {
+				content: "";
+				display: block;
+				width: 100%;
+				height: 1px;
+				background-color: #DDDDDD;
+				top: 0;
+				left: 0;
+				position: absolute;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+
+			.opction-btn {
+				height: 100%;
+				flex-grow: 1;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.24rem;
+				position: relative;
+			}
+
+			.opction-btn:nth-of-type(2):after,
+			.opction-btn:last-of-type:after {
+				content: "";
+				display: inline-block;
+				width: 1px;
+				height: 40%;
+				background-color: #DDDDDD;
+				top: 30%;
+				left: 0;
+				position: absolute;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+
+			.opction-cont img {
+				height: 0.29rem;
+				margin-right: 0.13rem;
+			}
+
+			.inside-top {
+				padding: 0.2rem 0.3rem 0;
 			}
 		</style>
 		<script>
@@ -62,12 +117,13 @@
 			<div class="my-team" v-if="createFlag">
 				<h2><i></i>数据团队</h2>
 				<ul>
-					<template v-for="(list, index) in createList" :key="index">
-						<!-- <li class="team-list" v-if="list.is_captain==1"> -->
-						<li class="team-list">
-							<img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-							<div class="inside" @tap="groupsChat(list.team_id, list.name)">
-								<i class="adorn"></i>
+					<li class="team-list" v-for="(list, index) in createList" :key="index">
+						<!-- <img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'"
+						 @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
+
+						<div class="inside">
+							<i class="adorn"></i>
+							<div class="inside-top">
 								<div class="team-title">
 									{{list.name}}
 									<span class="mui-badge mui-badge-primary">
@@ -80,8 +136,16 @@
 									<span class="create-time">创建人：{{list.captain_name.name||list.captain_name.nickName}}</span>
 								</div>
 							</div>
-						</li>
-					</template>
+							<div class="opction-cont">
+								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name)">
+									<img src="../image/icon/team-list-opction02.png">群聊
+								</div>
+								<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
+									<img src="../image/icon/team-list-opction01.png">数据
+								</div>
+							</div>
+						</div>
+					</li>
 				</ul>
 				<div v-else>
 					暂未创建团队
@@ -90,11 +154,11 @@
 			<div class="my-join-team" v-if="joinFlag">
 				<h2><i></i>正式团队</h2>
 				<ul>
-					<template v-for="(list, index) in joinList" :key="index">
-						<li class="team-list">
-							<img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-							<div class="inside" @tap="groupsChat(list.team_id, list.name)">
-								<i class="adorn"></i>
+					<li class="team-list" v-for="(list, index) in joinList" :key="index">
+						<!-- <img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
+						<div class="inside">
+							<i class="adorn"></i>
+							<div class="inside-top">
 								<div class="team-title">
 									{{list.name}}
 									<span class="mui-badge mui-badge-primary">
@@ -103,13 +167,33 @@
 									</span>
 								</div>
 								<div class="time-person">
-									<span v-if="list.grade"  class="rank-num"><img class="rank-sign" :src="'../image/icon/rank'+list.grade+'.png'">千级别收入</span>
-									<span v-if="list.ranking" class="rank-num">排名：{{list.ranking}}</span>
+									<span  class="rank-num">
+										<img class="rank-sign" :src="'../image/icon/rank'+list.level+'.png'">
+										<span v-if="list.level==0">佰级别收入</span>
+										<span v-if="list.level==1">仟级别收入</span>
+										<span v-if="list.level==2">萬级别收入</span>
+										<span v-if="list.level==3">拾萬级别收入</span>
+										<span v-if="list.level==4">佰萬级别收入</span>
+										<span v-if="list.level==5">仟萬级别收入</span>
+									</span>
+									<span v-if="list.rank>0" class="rank-num">排名：{{list.rank}}</span>
+									<span v-else class="rank-num">暂无排名</span>
 									<span class="create-person">创建人：{{list.captain_name.name || list.captain_name.nickName}}</span>
 								</div>
 							</div>
-						</li>
-					</template>
+							<div class="opction-cont">
+								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name)">
+									<img src="../image/icon/team-list-opction02.png">群聊
+								</div>
+								<div class="opction-btn" @tap="creatCourse(list.team_id,list.is_captain)">
+									<img src="../image/icon/team-list-opction03.png">创建培训
+								</div>
+								<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
+									<img src="../image/icon/team-list-opction01.png">数据
+								</div>
+							</div>
+						</div>
+					</li>
 				</ul>
 			</div>
 			<div class="operation-section">
@@ -158,7 +242,7 @@
 					})
 				},
 				methods: {
-					teamDetail: function(team_id,data_status,is_captain) {
+					teamDetail: function(team_id, data_status, is_captain) {
 						if (data_status == 1 || is_captain == 1) {
 							fnOpenWin('webview.html', 'webview', {
 								statusbar: {
@@ -179,8 +263,8 @@
 					},
 					// 群聊
 					groupsChat: function(id, name) {
-						openPage('team_chat.html','team_chat','#f7f7f7',{
-							tid:id,
+						openPage('team_chat.html', 'team_chat', '#f7f7f7', {
+							tid: id,
 							teamName: name
 						});
 					}
@@ -225,6 +309,17 @@
 			window.addEventListener('refreshTeamList', function() {
 				getTeamList();
 			});
+			// 创建课程
+			function creatCourse(tid, role) {
+				if (role == 1) {
+					openPage('create_course.html', 'create_course', '#f7f7f7', {
+						tid: tid,
+						title: '创建课程'
+					});
+				} else {
+					alert("您不是本团队的创建者，无创建课程权限，请悉知。")
+				}
+			}
 		</script>
 	</body>
 

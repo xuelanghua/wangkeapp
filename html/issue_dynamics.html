@@ -28,7 +28,7 @@
 		</header>
 		<div class="mui-content issue-dynamics-container">
 			<div class="section-issue">
-				<input class="issue-title" id="issue-title" type="text" name="title" placeholder="动态名称" />
+				<!-- <input class="issue-title" id="issue-title" type="text" name="title" placeholder="动态名称" /> -->
 				<textarea class="issue-desc" id="issue-desc" rows="3" name="desc" placeholder="填写信息内容"></textarea>
 			</div>
 			<div class="picture_display">
@@ -86,16 +86,12 @@
 
 			mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
 				e.preventDefault();
-				var titles = document.querySelector('input[name=title]').value;
 				var contents = document.querySelector('textarea[name=desc]').value
-				if (!titles) {
-					message("标题不能为空！");
-				} else if (!contents) {
+				if (!contents) {
 					message("内容不能为空！");
 				} else {
 					mui.post($ajaxUrl + 'timeline&action=add', {
 						token: userInfo.token,
-						title: titles,
 						content: contents,
 						cover: images.filter(function(e) {
 							return e != null

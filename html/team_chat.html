@@ -34,6 +34,12 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">旺客群聊</h1>
+			<div class="mui-pull-right team-chat-more">
+				<span class="setting-btn">
+					<img src="../image/team-chat-setting-icon.png">
+				</span>
+				<span class="detail-btn">详情</span>
+			</div>
 		</header>
 		<pre id="h"></pre>
 		<div class="mui-content">
@@ -65,17 +71,17 @@
 		</div>
 		<footer>
 			<div class="footer-left">
-				<i id='msg-image' class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
+				<i id="msg-image" class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
 			</div>
 			<div class="footer-center">
-				<textarea id='msg-text' type="text" class='input-text'></textarea>
-				<button id='msg-sound' type="button" class='input-sound' style="display: none;">按住说话</button>
+				<textarea id="msg-text" type="text" class="input-text"></textarea>
+				<button id="msg-sound" type="button" class="input-sound" style="display: none;">按住说话</button>
 			</div>
 			<label for="" class="footer-right">
-				<i id='msg-type' class="mui-icon mui-icon-mic"></i>
+				<i id="msg-type" class="mui-icon mui-icon-mic"></i>
 			</label>
 		</footer>
-		<div id='sound-alert' class="rprogress">
+		<div id="sound-alert" class="rprogress">
 			<div class="rschedule"></div>
 			<div class="r-sigh">!</div>
 			<div id="audio_tips" class="rsalert">手指上滑，取消发送</div>
@@ -99,7 +105,7 @@
 					release: true //默认为false，不监听
 				}
 			})
-			
+
 			if (mui.os.ios) {
 				// 解决在ios上fixed元素focusin时位置出现错误的问题 
 				document.addEventListener('DOMContentLoaded', function() {
@@ -112,7 +118,7 @@
 					});
 				});
 			}
-			
+
 			var ws = null;
 			var chatData = null;
 			var userInfo = getUserInfo();
@@ -120,7 +126,7 @@
 			var skip = 1;
 			var intervalTime = 0;
 			var limit = 20;
-			
+
 			var vm = new Vue({
 				el: '.mui-content',
 				data: {
@@ -129,10 +135,10 @@
 					tid: 0,
 				},
 				created: function() {
-					
+
 				},
-				mounted: function(){
-					mui.plusReady(function () {
+				mounted: function() {
+					mui.plusReady(function() {
 						var wv = plus.webview.currentWebview();
 						var tid = wv.tid;
 						vm.tid = tid;
@@ -141,7 +147,7 @@
 						chatData = {
 							team_id: tid,
 							course_id: 0,
-							user_id: userInfo.id, 
+							user_id: userInfo.id,
 							uniacid: userInfo.uniacid,
 							type: 1,
 							content: '',
@@ -150,11 +156,11 @@
 						plus.webview.currentWebview().setStyle({
 							softinputMode: "adjustResize"
 						});
-						
+
 						getChatList();
-						
+
 						WebSocketInit();
-					
+
 						var showKeyboard = function() {
 							if ($.os.ios) {
 								var webView = plus.webview.currentWebview().nativeInstanceObject();
@@ -174,7 +180,7 @@
 								}, 200);
 							}
 						};
-						
+
 						document.getElementById('msg-list').addEventListener('scroll', function(e) {
 							var top = this.scrollTop;
 							if (top < 100 && intervalTime > 2) {
@@ -182,7 +188,7 @@
 								getChatList();
 							}
 						}, false);
-						
+
 						// showKeyboard();
 						var ui = {
 							body: document.querySelector('body'),
@@ -198,7 +204,7 @@
 							h: document.querySelector('#h'),
 							content: document.querySelector('.mui-content')
 						};
-						
+
 						ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
 						//alert(ui.boxMsgText.offsetWidth );
 						var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
@@ -221,7 +227,7 @@
 						var imageViewer = new mui.ImageViewer('.msg-content-image', {
 							dbl: false
 						});
-						
+
 						var bindMsgList = function() {
 							var areaMsgList = document.querySelector('#msg-list');
 							var msgItems = areaMsgList.querySelectorAll('.msg-item');
@@ -236,12 +242,12 @@
 							areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
 							// areaMsgList.scrollTop = areaMsgList.offsetHeight + 200;
 						};
-						
+
 						// bindMsgList();
 						window.addEventListener('resize', function() {
 							ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 						}, false);
-						
+
 						var send = function(msg) {
 							if (vm.chatList[msg.time]) {
 								vm.chatList[msg.time].push(msg);
@@ -254,14 +260,14 @@
 								bindMsgList();
 							}, 1000);
 						};
-					
+
 						function msgTextFocus() {
 							ui.boxMsgText.focus();
 							setTimeout(function() {
 								ui.boxMsgText.focus();
 							}, 150);
 						}
-						
+
 						//解决长按“发送”按钮，导致键盘关闭的问题；
 						ui.footerRight.addEventListener('touchstart', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -269,7 +275,7 @@
 								event.preventDefault();
 							}
 						});
-						
+
 						//解决长按“发送”按钮，导致键盘关闭的问题；
 						ui.footerRight.addEventListener('touchmove', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -277,7 +283,7 @@
 								event.preventDefault();
 							}
 						});
-						
+
 						// ui.footerRight.addEventListener('touchcancel', function(event) {
 						// 	if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 						// 		msgTextFocus();
@@ -290,7 +296,7 @@
 						// 		event.preventDefault();
 						// 	}
 						// });
-						
+
 						ui.footerRight.addEventListener('release', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 								//showKeyboard();
@@ -330,7 +336,7 @@
 								}, 150);
 							}
 						}, false);
-						
+
 						ui.footerLeft.addEventListener('tap', function(event) {
 							imageUpload(function(res) {
 								chatData.message_type = 'image';
@@ -373,7 +379,7 @@
 							// 	}
 							// });
 						}, false);
-						
+
 						var setSoundAlertVisable = function(show) {
 							if (show) {
 								ui.boxSoundAlert.style.display = 'block';
@@ -386,14 +392,14 @@
 								}, 200);
 							}
 						};
-						
+
 						var recordCancel = false;
 						var recorder = null;
 						var audio_tips = document.getElementById("audio_tips");
 						var startTimestamp = null;
 						var stopTimestamp = null;
 						var stopTimer = null;
-						
+
 						ui.boxMsgSound.addEventListener('hold', function(event) {
 							recordCancel = false;
 							if (stopTimer) clearTimeout(stopTimer);
@@ -421,7 +427,7 @@
 								plus.nativeUI.toast("录音时出现异常: " + e.message);
 							});
 						}, false);
-						
+
 						ui.body.addEventListener('drag', function(event) {
 							//console.log('drag');
 							if (Math.abs(event.detail.deltaY) > 50) {
@@ -442,7 +448,7 @@
 								}
 							}
 						}, false);
-						
+
 						ui.boxMsgSound.addEventListener('release', function(event) {
 							//console.log('release');
 							if (audio_tips.classList.contains("cancel")) {
@@ -463,12 +469,12 @@
 							}
 							recorder.stop();
 						}, false);
-						
+
 						ui.boxMsgSound.addEventListener("touchstart", function(e) {
 							//console.log("start....");
 							e.preventDefault();
 						});
-						
+
 						ui.boxMsgText.addEventListener('input', function(event) {
 							ui.btnMsgType.classList[ui.boxMsgText.value == '' ? 'remove' : 'add']('mui-icon-paperplane');
 							ui.btnMsgType.setAttribute("for", ui.boxMsgText.value == '' ? '' : 'msg-text');
@@ -476,7 +482,7 @@
 							ui.footer.style.height = (ui.h.offsetHeight + footerPadding) + 'px';
 							ui.content.style.paddingBottom = ui.footer.style.height;
 						});
-						
+
 						// var focus = false;
 						// ui.boxMsgText.addEventListener('tap', function(event) {
 						// 	ui.boxMsgText.focus();
@@ -489,14 +495,14 @@
 						// 	}, 1000);
 						// 	event.detail.gesture.preventDefault();
 						// }, false);
-						
+
 						//点击消息列表，关闭键盘
 						// ui.areaMsgList.addEventListener('click', function(event) {
 						// 	if (!focus) {
 						// 		ui.boxMsgText.blur();
 						// 	}
 						// })
-						
+
 						var timer = 0
 						//websocket 心跳检测
 						var heartCheck = {
@@ -521,9 +527,9 @@
 									ws.send(JSON.stringify(t));
 								}, this.timeout);
 							},
-						
+
 						};
-						
+
 						//socket初始化
 						function WebSocketInit() {
 							if ("WebSocket" in window) {
@@ -586,38 +592,37 @@
 								message("您的手机不支持 WebSocket!");
 							}
 						}
-						
+
 						//获取聊天列表
 						function getChatList() {
 							intervalTime = 0;
 							mui.get($ajaxUrl + 'team', {
-									action: 'message_list',
-									token: userInfo.token,
-									team_id: vm.tid,
-									type: 1,
-									skip: skip,
-									limit: limit
-								}, function(res){
-									if (res.errno == 0) {
-										if (skip == 1) {
-											vm.chatList = res.data;
-											setTimeout(function() {
-												bindMsgList();
-											}, 500);
-										} else {
-											vm.chatList = Object.assign(res.data, vm.chatList);
-										}
+								action: 'message_list',
+								token: userInfo.token,
+								team_id: vm.tid,
+								type: 1,
+								skip: skip,
+								limit: limit
+							}, function(res) {
+								if (res.errno == 0) {
+									if (skip == 1) {
+										vm.chatList = res.data;
+										setTimeout(function() {
+											bindMsgList();
+										}, 500);
+									} else {
+										vm.chatList = Object.assign(res.data, vm.chatList);
 									}
-									setInterval(function() {
-										intervalTime++;
-									}, 1000)
-								},'json'
-							);
+								}
+								setInterval(function() {
+									intervalTime++;
+								}, 1000)
+							}, 'json');
 						}
 					})
 				}
 			})
-			
+
 			//文件上传
 			function voiceUpload(file) {
 				var task = plus.uploader.createUpload($voiceUrl, {
@@ -647,6 +652,18 @@
 				});
 				task.start();
 			}
+			// 打开设置页面
+			mui(".mui-bar").on("tap", ".setting-btn", function() {
+				openPage('team_chat_setting.html', 'team_chat_setting', '#f7f7f7', {
+					teamid: vm.tid
+				})
+			})
+			// 打开详情页面
+			mui(".mui-bar").on("tap", ".detail-btn", function() {
+				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+					teamid: vm.tid
+				})
+			})
 		</script>
 	</body>
 

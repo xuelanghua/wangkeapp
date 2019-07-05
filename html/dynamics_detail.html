@@ -229,6 +229,7 @@
 					}
 				},
 				mounted: function() {
+
 					mui.init({
 						beforeback: function() {
 							var view = plus.webview.currentWebview().opener();
@@ -237,7 +238,9 @@
 							}
 						}
 					});
+
 					mui.plusReady(function() {
+						showload();
 						var self = plus.webview.currentWebview();
 						plus.navigator.setStatusBarStyle("dark");
 						if (mui.os.ios) {
@@ -247,45 +250,43 @@
 						}
 						tid = self.aid;
 						user_id = self.user_id;
-
-
-						// 获取数据
-						function getDynamicsDetail() {
-							mui.post($ajaxUrl + 'timeline&action=detail', {
-								token: userInfo.token,
-								tid: tid
-							}, function(res) {
-								logs(res);
-								if (res.errno == 0) {
-									var data = res.data;
-									muiCont.all_datas = res.data;
-									muiCont.title = data.title;
-									muiCont.cover = data.cover;
-									muiCont.content = data.content;
-									muiCont.create_time = data.create_time;
-									muiCont.comment = data.comment.data;
-									muiCont.likes = data.thumbs_user;
-									muiCont.author = data.author;
-									var urls = data.cover;
-									mui('.mui-content').on('tap', 'img', function() {
-										var index = this.dataset.idx;
-										plus.nativeUI.previewImage(urls, {
-											current: index,
-											loop: true,
-											indicator: 'number'
-										});
-									});
-								} else {
-									message(res.message)
-								}
-							}, 'json')
-						}
 						getDynamicsDetail();
 					});
 				}
 			});
 
-
+			// 获取数据
+			function getDynamicsDetail() {
+				mui.post($ajaxUrl + 'timeline&action=detail', {
+					token: userInfo.token,
+					tid: tid
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						var data = res.data;
+						muiCont.all_datas = res.data;
+						muiCont.title = data.title;
+						muiCont.cover = data.cover;
+						muiCont.content = data.content;
+						muiCont.create_time = data.create_time;
+						muiCont.comment = data.comment.data;
+						muiCont.likes = data.thumbs_user;
+						muiCont.author = data.author;
+						var urls = data.cover;
+						mui('.mui-content').on('tap', 'img', function() {
+							var index = this.dataset.idx;
+							plus.nativeUI.previewImage(urls, {
+								current: index,
+								loop: true,
+								indicator: 'number'
+							});
+						});
+						showload(true, 1000);
+					} else {
+						message(res.message)
+					}
+				}, 'json')
+			}
 			// 分享
 			function shareBtn(id, cont, img) {
 				muiCont.isComment = true;

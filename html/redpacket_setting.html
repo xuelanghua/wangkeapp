@@ -5,6 +5,7 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
 		<style>
 			.clearfix{
 				clear: both;
@@ -46,7 +47,7 @@
 				height: auto;
 			}
 			
-			button{
+			.save{
 				width: 100%;
 				font-size: 0.9375rem;
 				margin: 2.1875rem 0;
@@ -73,7 +74,6 @@
 			}
 			ul li{
 				padding: 10px 0;
-				/* background-color: #0062CC; */
 			}
 			.input-money-cont{
 				padding: 5px 10px;
@@ -106,7 +106,18 @@
 				transform: scaleY(.5);
 				background-color: #c8c7cc;
 			}
-			/* share_status 0 开启1*/
+			.active-end{
+				padding-right: 0;
+				padding-left: 0;
+				padding-right: 24px;
+			}
+			.mui-navigate-right:after{
+				right: 0;
+				font-size: 18px;
+			}
+			.mui-table-view-cell:after{
+				height: 1px;
+			}
 		</style>
 	</head>
 	<body>
@@ -131,6 +142,13 @@
 						<input type="number" name="redpacket_num" placeholder="1~500" /><span>个</span>
 					</div>
 				</li>
+				<li class="mui-clearfix mui-table-view-cell active-end">
+					<div class="mui-pull-left">活动结束时间</div>
+					<div class="mui-pull-right mui-clearfix">
+						<span id="active_end" class="mui-navigate-right mui-pull-right">请选择</span>
+						<!-- <input type="number" name="active_end" placeholder="1~500" /><span>个</span> -->
+					</div>
+				</li>
 				<li class="mui-table-view-cell mutual-red">
 					<span>双向红包</span>
 					<div class="mui-switch mui-switch-blue">
@@ -142,13 +160,15 @@
 				<div class="redpacket-wish-title">输入红包祝福语(必填)</div>
 				<textarea class="redpacket-wish" name="redpacket_wish" rows="3" cols="" placeholder="恭喜发财"></textarea>
 			</div>
-			<button id="submit">确 定</button>
+			<button class="save" id="submit">确 定</button>
 		</div>
 	</body>
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
 	<script type="text/javascript">
 		var red_status = 0;
+		var timer = "";
 		mui.init({
 			swipeBack: true,
 		});
@@ -203,7 +223,8 @@
 					redpacket_wish: redpacket_wish,
 					token: userInfo.token,
 					redpacket_number: redpacket_num,
-					share_status: red_status
+					share_status: red_status,
+					redpacket_expire_time: timer
 				}, function(res) {
 					if (res.errno == 0) {
 						plus.nativeUI.toast(res.message);
@@ -229,6 +250,7 @@
 				action: 'setting_info',
 				token: userInfo.token
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					var setting = res.data;
 					if (setting.redpacket_fee > 0) {
@@ -243,6 +265,9 @@
 					if (setting.share_status == 1) {
 						red_status = 1;
 						document.querySelector('.mui-switch').classList.add("mui-active");
+					}
+					if (setting.redpacket_expire_time != 0) {
+						document.querySelector('#active_end').innerText = setting.redpacket_expire_time;
 					}
 				}
 				showload(1);
@@ -263,6 +288,21 @@
 				red_status = 0;
 			}
 			// message("状态"+red_status);
+		})
+		// 选择活动结束时间
+		var choice = document.getElementById("active_end");
+		mui(".mui-content").on('tap', '.active-end', function() {
+			var options = {
+				type: "datetime",
+				beginYear: 2019,
+				endYear: 2029,
+				value: timer
+			}
+			var timePicker = new mui.DtPicker(options);
+			timePicker.show(function(rs) {
+				timer = rs.text;
+				choice.innerText = rs.text;
+			})
 		})
 	</script>
 </html>

@@ -39,7 +39,7 @@
 				font-size: 0.28rem;
 				line-height: 1.2;
 				text-align: justify;
-				text-shadow: 1px  1px  rgba(0,0,0,0.6);
+				text-shadow: 1px 1px rgba(0, 0, 0, 0.6);
 			}
 
 			.target-head {
@@ -98,8 +98,8 @@
 				position: relative;
 				color: #999999;
 				text-align: right;
-				font-size:16px;
-				text-shadow: 1px 1px 2px rgba(121,121,121,0.2);
+				font-size: 16px;
+				text-shadow: 1px 1px 2px rgba(121, 121, 121, 0.2);
 			}
 
 			.mui-navigate-right:after {
@@ -110,10 +110,12 @@
 			.desc-cont .level-status {
 				color: #666666;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
-			.opction-cont{
+
+			.opction-cont {
 				width: 100%;
 				position: relative;
 				height: 56px;
@@ -121,7 +123,8 @@
 				justify-content: space-between;
 				overflow: hidden;
 			}
-			.opction-cont:before{
+
+			.opction-cont:before {
 				content: "";
 				display: block;
 				height: 1px;
@@ -134,7 +137,8 @@
 				transform: scaleY(0.5);
 				z-index: 3;
 			}
-			.opction-cont span{
+
+			.opction-cont span {
 				display: inline-flex;
 				height: 100%;
 				width: 50%;
@@ -144,10 +148,12 @@
 				font-size: 15px;
 				color: #2289FF;
 			}
-			.opction-cont span:first-of-type{
+
+			.opction-cont span:first-of-type {
 				color: #999999;
 			}
-			.opction-cont span:first-of-type:before{
+
+			.opction-cont span:first-of-type:before {
 				content: "";
 				display: block;
 				width: 1px;
@@ -159,6 +165,7 @@
 				-webkit-transform: scaleX(0.5);
 				transform: scaleX(0.5);
 			}
+
 			.desc-cont .mui-table-view-cell {
 				display: flex;
 				align-items: center;
@@ -167,11 +174,13 @@
 				position: relative;
 				font-size: 13px;
 			}
-			.mui-table-view-cell:after{
+
+			.mui-table-view-cell:after {
 				left: 0;
 				background-color: #F2F2F2;
 			}
-			.mui-table-view-cell.mui-active{
+
+			.mui-table-view-cell.mui-active {
 				background-color: #FFFFFF;
 			}
 		</style>
@@ -211,12 +220,12 @@
 							<div class="desc-cont">
 								{{list.content}}
 							</div>
-							<ul class="mui-table-view desc-cont" v-if="list.target_info!=''" >
+							<ul class="mui-table-view desc-cont" v-if="list.target_info!=''">
 								<li class="mui-table-view-cell">
 									<span>团队排名</span>
 									<p>
 										<span v-if="list.target_info.rank==0">暂无排名</span>
-										<span v-else >{{list.target_info.rank}}</span>
+										<span v-else>{{list.target_info.rank}}</span>
 									</p>
 								</li>
 								<li class="mui-table-view-cell">
@@ -229,16 +238,16 @@
 									<span>团队收入级别</span>
 									<p>
 										<span v-if="list.target_info.active==0">百级</span>
-										<span v-else >{{list.target_info.level}}</span>
+										<span v-else>{{list.target_info.level}}</span>
 									</p>
 								</li>
 							</ul>
-							<!-- <div class="check-detail">已同意</div> -->
-							<!-- <div class="check-detail">已拒绝</div> -->
-							<!-- <div class="check-detail">该团队已解散</div> -->
-							<div class="opction-cont">
-								<span>拒绝</span>
-								<span>同意</span>
+							<div v-if="list.status==1" class="check-detail">已同意</div>
+							<div v-else-if="list.target_info!=''&&list.status==-1" class="check-detail">已拒绝</div>
+							<div v-if="list.target_info==''" class="check-detail">该团队已解散</div>
+							<div v-if="list.target_info!=''&&list.status!=1&&list.status!=-1" class="opction-cont">
+								<span @tap="addIdea(list.target,'-1',index)">拒绝</span>
+								<span @tap="addIdea(list.target,'1',index)">同意</span>
 							</div>
 						</div>
 					</div>
@@ -370,6 +379,19 @@
 						} else {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
+					}
+				}, 'json')
+			}
+			// 同意添加
+			function addIdea(x, y, i) {
+				mui.post($ajaxUrl + 'team&action=agree_join_team', {
+					token: userInfo.token,
+					target: x,
+					status: y,
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						app.msgList[i].status = y;
 					}
 				}, 'json')
 			}
