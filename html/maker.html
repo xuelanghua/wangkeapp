@@ -152,6 +152,9 @@
 			}
 			.fans{
 				background-color: #FFFFFF;
+				position: relative;
+				overflow: hidden;
+				padding-bottom: 50px;
 			}
 			.fans .title{
 				height: 1.14rem;
@@ -159,10 +162,28 @@
 				display: flex;
 				align-items: center;
 				position: relative;
-				justify-content: space-between;
+				justify-content: flex-start;
 				padding: 0 0.4rem 0 0.2rem;
 				font-size:0.3rem;
-				border-bottom: 1px solid #DDDDDD;
+				position: relative;
+			}
+			.fans .title:after{
+				content: '';
+				height: 1px;
+				display: block;
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				background-color: #DDDDDD;
+				left: 0;
+			}
+			.fans .title:before{
+				content: '';
+				display: inline-block;
+				width: 4px;
+				height: 15px;
+				background-color: #2289ff;
+				margin-right: 5px;
 			}
 			.fans .title span:last-of-type{
 				color: #999999;
@@ -229,6 +250,70 @@
 				line-height: 1;
 				margin-left: 5px;
 			}
+			.fans-classify{
+				margin: 15px;
+				width: 94%;
+				margin-left: 3%;
+				box-shadow: 0 0 6px 0 rgba(0,0,0,0.1);
+				height: 75px;
+				border-radius:10px;
+				background-color: #FFFFFF;
+				padding: 10px;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				position: relative;
+			}
+			.fans-num-title,.fans-total,.my-fans-total{
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+				font-size: 15px;
+			}
+			.fans-classify p{
+				margin-bottom: 0;
+				font-size: 13px;
+			}
+			.fans-num-title{
+				width:25%;
+				/* background-color: #007AFF; */
+				justify-content: flex-start;
+			}
+			.fans-num-title img{
+				height:100%;
+				position:absolute;
+				right: 0;
+			}
+			.fans-total{
+				width:40%;
+				/* background-color: #00BCD4; */
+			}
+			.my-fans-total{
+				width:35%;
+				/* background-color: #00CCFF; */
+			}
+			.my-fans-total:before{
+				position: absolute;
+				content: '';
+				display: block;
+				width: 1px;
+				height:50%;
+				top: 25%;
+				left: 10px;
+				background-color: #DDDDDD;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+			.inside{
+				text-align: center;
+			}
+			.inside.mui-navigate-right:after{
+				right: -10px;
+				font-size: 26px;
+				color: #DDDDDD;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -274,26 +359,96 @@
 				</div>
 			</div>
 			<div class="fans">
-				<div class="title"><span>我的粉丝（{{memberInfo.fans_number||0}}）</span><span class="mui-navigate-right accumulated">更多</span></div>
-				<ul v-if="fansLists.length>0" class="mui-table-view">
-					<li class="mui-table-view-cell" v-for="(list,index) in fansLists" :key="index">
-						<img class="user-head-img" :data-fid="list.id" :src="list.avatarUrl">
-						<div class="flex-right" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
-							<div class="mui-clearfix">
-								<span class="user-name">{{list.nickName}}</span>
-								<span v-if="list.group_name" :class="[list.group_name=='创客'?'vip1':'vip']">{{list.group_name}}</span>
-								<span class="mui-pull-right" v-if="list.activation_type==1&&list.recommend_award>0">+{{list.recommend_award}}</span>
-							</div>
-							<div>
-								<span class="create-time">加入时间：{{list.activation_time}}</span>
-								<span class="mui-pull-right person" v-if="list.direct==0">推荐人：{{list.recommend_user}}</span>
-							</div>
+				<div class="title">我的粉丝</div>
+				<div class="fans-classify" data-gid="1">
+					<div class="fans-num-title">
+						VIP
+						<img src="../image/fans-title-border.png">
+					</div>
+					<div class="fans-total">
+						<div class="inside">
+							<p>粉丝总数</p>
+							<span>{{fans_info.vip.total}}</span>
 						</div>
-					</li>
-				</ul>
-				<div v-else style="padding: 36px 0;">
-					<img style="width: 50%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/void-data.png">
-					<p style="text-align: center;">您还没有粉丝</p>
+					</div>
+					<div class="my-fans-total">
+						<div class="inside mui-navigate-right">
+							<p>我的粉丝</p>
+							<span>{{fans_info.vip.mine}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="fans-classify" data-gid="2">
+					<div class="fans-num-title">
+						创客
+						<img src="../image/fans-title-border.png">
+					</div>
+					<div class="fans-total">
+						<div class="inside">
+							<p>粉丝总数</p>
+							<span>{{fans_info.maker.total}}</span>
+						</div>
+					</div>
+					<div class="my-fans-total">
+						<div class="inside mui-navigate-right">
+							<p>我的粉丝</p>
+							<span>{{fans_info.maker.mine}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="fans-classify" data-gid="3">
+					<div class="fans-num-title">
+						服务站
+						<img src="../image/fans-title-border.png">
+					</div>
+					<div class="fans-total">
+						<div class="inside">
+							<p>粉丝总数</p>
+							<span>{{fans_info.service_station.total}}</span>
+						</div>
+					</div>
+					<div class="my-fans-total">
+						<div class="inside mui-navigate-right">
+							<p>我的粉丝</p>
+							<span>{{fans_info.service_station.mine}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="fans-classify" data-gid="4">
+					<div class="fans-num-title">
+						服务中心
+						<img src="../image/fans-title-border.png">
+					</div>
+					<div class="fans-total">
+						<div class="inside">
+							<p>粉丝总数</p>
+							<span>{{fans_info.service_center.total}}</span>
+						</div>
+					</div>
+					<div class="my-fans-total">
+						<div class="inside mui-navigate-right">
+							<p>我的粉丝</p>
+							<span>{{fans_info.service_center.mine}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="fans-classify" data-gid="5">
+					<div class="fans-num-title">
+						分公司
+						<img src="../image/fans-title-border.png">
+					</div>
+					<div class="fans-total">
+						<div class="inside">
+							<p>粉丝总数</p>
+							<span>{{fans_info.filiale.total}}</span>
+						</div>
+					</div>
+					<div class="my-fans-total">
+						<div class="inside mui-navigate-right">
+							<p>我的粉丝</p>
+							<span>{{fans_info.filiale.mine}}</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -310,23 +465,48 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
+					group_id: '',
+					fans_info: {
+						vip: {
+							mine: 0,
+							total: 0
+						},
+						maker: {
+							mine: 0,
+							total: 0
+						},
+						service_station: {
+							mine: 0,
+							total: 0
+						},
+						service_center: {
+							mine: 0,
+							total: 0
+						},
+						filiale: {
+							mine: 0,
+							total: 0
+						}
+					},
 					memberInfo: {
-						group_name: '创客',
-						position: '大区经理',
-						expire_time: '2019-06-19',
-						group_annual_fee: '199',
-						activation_code: '0/0',
+						group_name: '',
+						position: '',
+						expire_time: '',
+						group_annual_fee: '',
+						activation_code: '',
 						service_award: 0,
 						recommended_award: 0,
 						wang: '0'
 					},
 					fansLists: []
 				},
+				created: function() {
+					getFans();
+					this.group_id = userInfo.group_id;
+				},
 				mounted: function() {
 					mui.plusReady(function() {
-						document.querySelector(".mui-content").classList.remove('mui-hidden');
 						getMemberInfo();
-						getFans();
 						window.addEventListener('activateSuccess', function() {
 							setTimeout(function() {
 								getMemberInfo();
@@ -351,8 +531,11 @@
 							openPage('service_award.html', 'service_award', '#f7f7f7', '');
 						})
 						// 粉丝
-						mui('.mui-content').on('tap', '.accumulated', function() {
-							openPage('my_fans.html', 'my_fans', '#f7f7f7', '');
+						mui('.mui-content').on('tap', '.fans-classify', function() {
+							var gid = this.dataset.gid;
+							openPage('my_fans.html', 'my_fans', '#f7f7f7', {
+								group_id: gid
+							});
 						})
 						// 推荐奖
 						mui('.mui-content').on('tap', '.award-reward', function() {
@@ -406,17 +589,14 @@
 			}
 
 			function getFans() {
-				pageNum += 1;
-				mui.post($ajaxUrl + 'member&action=fans', {
+				mui.post($ajaxUrl + 'member&action=fans_statistics', {
 					token: userInfo.token,
-					skip: pageNum,
-					limit: 30
 				}, function(res) {
-					if (res.errno) {
-						logs(res.message);
+					if (res.errno == 0) {
+						logs(res);
+						app.fans_info = res.data;
 					} else {
 						// 请求成功
-						app.fansLists = res.data;
 					}
 				}, 'json');
 			}

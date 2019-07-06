@@ -204,154 +204,151 @@
 				<div id="zhanwei" style="width: 100%;height:58px;position: relative;display: none;">
 					<!-- 占位 -->
 				</div>
-				<ul id="screen-menu" class="screen-menu">
-					<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)"><span>{{menu.title}}</span></li>
+				<ul id="screen-menu" class="screen-menu mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+					<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</li>
 				</ul>
 				<div id="discover-container" class="discover-list-container">
-					<ul>
-						<div v-show="typeler==1">
-							<!-- 自己发布的动态 -->
-							<li v-for="(i,m) in dynamic" :key="m" class="mui-table-view-cell my-dynamic-list">
-								<div class="dynamic-list-head">
-									<div class="dynamic-list-left">
-										<img class="user-head-image" :src="i.owner.avatar" @tap="openDynamically(i.user_id)">
-										<span class="user-names mui-ellipsis" @tap="openDynamically(i.user_id)">{{i.owner.name}}</span>
-										<span class="cretae-timer" @tap="openDynamically(i.user_id)">{{i.create_time}}</span>
-										<!-- 如果是自己的动态则显示删除 -->
-										<span v-if="i.is_mine==1" class="delete-list" @tap="deleteDynamics(i.id,m)">删除</span>
-									</div>
-									<div class="mui-pull-right click-heart" @tap="likeThis(i.id,i.user_id,m)">
-										<!-- <i class="heart-icon animated" :class="i.is_thumbs==1?'heartBeat':'tada'"></i> -->
-										<i class="heart-icon animated" :class="i.is_thumbs==1?'heart-icon'+i.id+' active':'heart-icon'+i.id"></i>
-										<span>{{i.thumbs_number}}</span>
-									</div>
+					<div v-show="typeler==1">
+						<!-- 自己发布的动态 -->
+						<li v-for="(i,m) in dynamic" :key="m" class="mui-table-view-cell my-dynamic-list">
+							<div class="dynamic-list-head">
+								<div class="dynamic-list-left">
+									<img class="user-head-image" :src="i.owner.avatar" @tap="openDynamically(i.user_id)">
+									<span class="user-names mui-ellipsis" @tap="openDynamically(i.user_id)">{{i.owner.name}}</span>
+									<span class="cretae-timer" @tap="openDynamically(i.user_id)">{{i.create_time}}</span>
+									<!-- 如果是自己的动态则显示删除 -->
+									<span v-if="i.is_mine==1" class="delete-list" @tap="deleteDynamics(i.id,m)">删除</span>
 								</div>
-								<!-- 带图片的两行 -->
-								<!-- 没图片的三行 mui-ellipsis-3-->
-								<div class="dy-container">
-									<p class="dynamic-desc" :class="i.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.id)">
-										{{i.content}}
-									</p>
-									<ul v-if="i.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.id)">
-										<li v-for="img in i.cover">
-											<img class="illustrating" :src="img">
-										</li>
-									</ul>
-									<!-- 评论部分 -->
-									<div class="operation-menu">
-										<div class="menu-list" :class="'menu-list'+i.id">
-											<span class="check-detail" @tap="dynamicDetail(i.id)">查看详情</span>
-											<div class="menu-body" :class="'menu-body'+i.id">
-												<div class="menu-arrow"></div>
-												<!-- <div v-if="is_self" class="item"> 
+								<div class="mui-pull-right click-heart" @tap="likeThis(i.id,i.user_id,m)">
+									<!-- <i class="heart-icon animated" :class="i.is_thumbs==1?'heartBeat':'tada'"></i> -->
+									<i class="heart-icon animated" :class="i.is_thumbs==1?'heart-icon'+i.id+' active':'heart-icon'+i.id"></i>
+									<span>{{i.thumbs_number}}</span>
+								</div>
+							</div>
+							<!-- 带图片的两行 -->
+							<!-- 没图片的三行 mui-ellipsis-3-->
+							<div class="dy-container">
+								<p class="dynamic-desc" :class="i.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.id)">
+									{{i.content}}
+								</p>
+								<ul v-if="i.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.id)">
+									<li v-for="img in i.cover">
+										<img class="illustrating" :src="img">
+									</li>
+								</ul>
+								<!-- 评论部分 -->
+								<div class="operation-menu">
+									<div class="menu-list" :class="'menu-list'+i.id">
+										<span class="check-detail" @tap="dynamicDetail(i.id)">查看详情</span>
+										<div class="menu-body" :class="'menu-body'+i.id">
+											<div class="menu-arrow"></div>
+											<!-- <div v-if="is_self" class="item"> 
 													<span class="iconfont icon-delete">&#xe603;</span>删除
 												</div> -->
-												<div class="item" @tap="shareBtn(i.id,i.content,i.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
-												<div class="item" @tap="pinglun(i.id,m)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
-											</div>
-											<div class="comment-icon-cont" :class="'comment-icon-cont'+i.id" @tap="showMenu(i.id,m)">
-												<span class="iconfont comment-icon">&#xe504;</span>
-											</div>
+											<div class="item" @tap="shareBtn(i.id,i.content,i.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
+											<div class="item" @tap="pinglun(i.id,m)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
+										</div>
+										<div class="comment-icon-cont" :class="'comment-icon-cont'+i.id" @tap="showMenu(i.id,m)">
+											<span class="iconfont comment-icon">&#xe504;</span>
 										</div>
 									</div>
-									<div class="dynamic-lists-issue" v-if="i.comment.length>0||i.is_thumbs>0">
-										<div class="lan-arrows"></div>
-										<p>
-											<span class="iconfont icon-like">&#xe601;</span>
-											<template v-for="(c,idx) in i.thumbs_user" :key="idx">
-												{{c}}<template v-if="idx<i.thumbs_user.length-1">、</template>
-											</template>
-										</p>
-										<p class="comment-inside" v-for="(p,idx) in i.comment">
-											<span class="user-name">{{p.nickName}}：</span>{{p.content}}
-										</p>
-									</div>
 								</div>
-							</li>
-						</div>
-						<div v-show="typeler==2">
-							<!-- 官方文章 -->
-							<li class="mui-table-view-cell official-article" v-for="(a,idx) in essay" :key="idx" @tap="articleDetail(a.id)">
-								<div class="article-img">
-									<img :src="a.thumb">
-								</div>
-								<div class="article-right">
-									<p class="mui-ellipsis-2">
-										{{a.title}}{{a.is_top}}
+								<div class="dynamic-lists-issue" v-if="i.comment.length>0||i.is_thumbs>0">
+									<div class="lan-arrows"></div>
+									<p v-if="i.is_thumbs>0">
+										<span class="iconfont icon-like">&#xe601;</span>
+										<template v-for="(c,idx) in i.thumbs_user" :key="idx">
+											{{c}}<template v-if="idx<i.thumbs_user.length-1">、</template>
+										</template>
 									</p>
-									<div v-if="a.is_top" class="stick-sign">
-										<img src="../image/discover/stick-sign.png">
-									</div>
-									<div class="official-article-status">
-										<span>{{a.add_time}}</span>
-										<span><img src="../image/eye.png">{{a.click}}</span>
-										<img src="../image/discover/official-sign.png">
-									</div>
-								</div>
-							</li>
-						</div>
-						<div v-show="typeler==3">
-							<!-- 课程列表列表 -->
-							<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
-								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-								<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state)">
-									<img :src="c.cover_url">
-								</div>
-								<div class="curriculum-list-right">
-									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state)">
-										{{c.title}}
+									<p class="comment-inside" v-for="(p,idx) in i.comment">
+										<span class="user-name">{{p.nickName}}：</span>{{p.content}}
 									</p>
-									<div class="status-cont mui-clearfix" @tap="curriculumDetail(c.id,c.state)">
-										<div class="mui-pull-left">
-											<span class="ting-ke">主讲人：{{c.teacher_name}}</span>
-										</div>
-									</div>
-									<div>
-										<div v-if="c.state==0" class="cretae-timer" @tap="curriculumDetail(c.id,c.state)">开播：2018-05-18 18:50</div>
-										<div v-else-if="c.state==1" class="train-ing" @tap="curriculumDetail(c.id,c.state)"><img style="width: 0.38rem;"
-											 src="../image/discover/loading.gif">培训中</div>
-										<div v-else class="cretae-timer" @tap="curriculumDetail(c.id,c.state)">结束：2018-05-18 20:50</div>
-										<div class="team-name mui-pull-right" @tap="teamDetail(c.team_id)">
-											<img class="team-icon" src="../image/discover/team-icon.png">
-											<span class="mui-ellipsis">{{c.team_name}}</span>
-										</div>
-									</div>
 								</div>
-							</li>
-							<div class="void-team-course" v-show="team_course==''||team_course.length<1">
-								亲 暂无团队课程哟~
 							</div>
-						</div>
-
-						<div v-show="typeler==4">
-							<!-- 产品列表 -->
-							<li class=" mui-table-view-cell goods-list">
-								<div class="goods-img" @tap="goodsDetail('369')">
-									<img src="../image/5E0eH.png">
+						</li>
+					</div>
+					<div v-show="typeler==2">
+						<!-- 官方文章 -->
+						<li class="mui-table-view-cell official-article" v-for="(a,idx) in essay" :key="idx" @tap="articleDetail(a.id)">
+							<div class="article-img">
+								<img :src="a.thumb">
+							</div>
+							<div class="article-right">
+								<p class="mui-ellipsis-2">
+									{{a.title}}{{a.is_top}}
+								</p>
+								<div v-if="a.is_top" class="stick-sign">
+									<img src="../image/discover/stick-sign.png">
 								</div>
-								<div class="goods-list-right">
-									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail('369')">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
-									<div class="goods-nature" @tap="goodsDetail('369')">
-										<span>供货价：￥250.00</span>
-										<span>销量： 520件</span>
+								<div class="official-article-status">
+									<span>{{a.add_time}}</span>
+									<span><img src="../image/eye.png">{{a.click}}</span>
+									<img src="../image/discover/official-sign.png">
+								</div>
+							</div>
+						</li>
+					</div>
+					<div v-show="typeler==3">
+						<!-- 课程列表列表 -->
+						<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
+							<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
+							<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state)">
+								<img :src="c.cover_url">
+							</div>
+							<div class="curriculum-list-right">
+								<!-- 官方加stick-sign -->
+								<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state)">
+									{{c.title}}
+								</p>
+								<div class="status-cont mui-clearfix" @tap="curriculumDetail(c.id,c.state)">
+									<div class="mui-pull-left">
+										<span class="ting-ke">主讲人：{{c.teacher_name}}</span>
 									</div>
-									<div class="goods-earnings" @tap="teamDetail('369')">
-										<span>利润：￥50</span>
-										<!-- 团队 -->
-										<!-- <div class="team-name">
+								</div>
+								<div>
+									<div v-if="c.state==0" class="cretae-timer" @tap="curriculumDetail(c.id,c.state)">开播：2018-05-18 18:50</div>
+									<div v-else-if="c.state==1" class="train-ing" @tap="curriculumDetail(c.id,c.state)"><img style="width: 0.38rem;"
+										 src="../image/discover/loading.gif">培训中</div>
+									<div v-else class="cretae-timer" @tap="curriculumDetail(c.id,c.state)">结束：2018-05-18 20:50</div>
+									<div class="team-name mui-pull-right" @tap="teamDetail(c.team_id)">
+										<img class="team-icon" src="../image/discover/team-icon.png">
+										<span class="mui-ellipsis">{{c.team_name}}</span>
+									</div>
+								</div>
+							</div>
+						</li>
+						<div class="void-team-course" v-show="team_course==''||team_course.length<1">
+							亲 暂无团队课程哟~
+						</div>
+					</div>
+					<div v-show="typeler==4">
+						<!-- 产品列表 -->
+						<li class=" mui-table-view-cell goods-list">
+							<div class="goods-img" @tap="goodsDetail('369')">
+								<img src="../image/5E0eH.png">
+							</div>
+							<div class="goods-list-right">
+								<!-- 官方加stick-sign -->
+								<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail('369')">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
+								<div class="goods-nature" @tap="goodsDetail('369')">
+									<span>供货价：￥250.00</span>
+									<span>销量： 520件</span>
+								</div>
+								<div class="goods-earnings" @tap="teamDetail('369')">
+									<span>利润：￥50</span>
+									<!-- 团队 -->
+									<!-- <div class="team-name">
 											<img class="team-icon" src="../image/discover/team-icon.png">
 											<span class="mui-ellipsis">房东的猫猫猫猫猫</span>
 										</div> -->
-										<!-- <div class="team-name mui-ellipsis">房东的,猫猫猫猫猫猫猫猫猫猫猫猫猫猫猫</div> -->
-										<!-- 官方 -->
-										<img src="../image/discover/official-sign.png">
-									</div>
+									<!-- <div class="team-name mui-ellipsis">房东的,猫猫猫猫猫猫猫猫猫猫猫猫猫猫猫</div> -->
+									<!-- 官方 -->
+									<img src="../image/discover/official-sign.png">
 								</div>
-							</li>
-						</div>
-					</ul>
+							</div>
+						</li>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -500,10 +497,10 @@
 						// 发布动态人的id
 						to_uid = pid;
 						_idx = idx;
+						adoreIt();
 						document.querySelector('.heart-icon' + timeline_id).classList.add('heartBeat');
 						setTimeout(function() {
 							document.querySelector('.heart-icon' + timeline_id).classList.remove('heartBeat');
-							adoreIt();
 						}, 500);
 					},
 					// 打开动态详情
@@ -548,7 +545,9 @@
 					pinglun: function(t_id, i_idx) {
 						document.querySelector(".menu-list" + timeline_id).classList.remove("active");
 						document.querySelector(".menu-body" + timeline_id).classList.remove("active");
-						mui('.mui-bar-footer')[0].style.display = "block";
+						document.querySelector(".mui-bar-footer").style.display = "block";
+						// mui('.mui-bar-footer')[0].style.display = "block";
+						var _self = this;
 						setTimeout(function() {
 							_self.initNativeObjects();
 							_self.showSoftInput();
@@ -698,7 +697,7 @@
 					limit: limit,
 					skip: skip
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						if (app.typeler == 1) {
 							if (skip == 1) {
@@ -789,7 +788,10 @@
 						if (app.dynamic[_idx].is_thumbs == 1) {
 							app.$set(app.dynamic[_idx], "is_thumbs", "0");
 							app.$set(app.dynamic[_idx], "thumbs_number", parseInt(app.dynamic[_idx].thumbs_number) - 1);
+							var idx = app.dynamic[_idx].thumbs_user.indexOf(userInfo.nickName);
+							app.dynamic[_idx].thumbs_user.splice(idx, 1);
 						} else {
+							app.dynamic[_idx].thumbs_user.unshift(userInfo.nickName);
 							app.$set(app.dynamic[_idx], "is_thumbs", "1");
 							app.$set(app.dynamic[_idx], "thumbs_number", parseInt(app.dynamic[_idx].thumbs_number) + 1);
 						}
