@@ -103,6 +103,9 @@
 					drag: true, //默认为true
 					hold: true, //默认为false，不监听
 					release: true //默认为false，不监听
+				},
+				beforeback: function() {
+					// ws.close();
 				}
 			})
 
@@ -158,6 +161,7 @@
 						});
 
 						getChatList();
+						readMessage();
 
 						WebSocketInit();
 
@@ -237,10 +241,9 @@
 								}, false);
 							});
 							imageViewer.findAllImage();
-							console.log(areaMsgList.scrollHeigh);
-							console.log(areaMsgList.offsetHeight);
+							// console.log(areaMsgList.scrollHeigh);
+							// console.log(areaMsgList.offsetHeight);
 							areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
-							// areaMsgList.scrollTop = areaMsgList.offsetHeight + 200;
 						};
 
 						// bindMsgList();
@@ -619,6 +622,20 @@
 								}, 1000)
 							}, 'json');
 						}
+						
+						//阅读消息
+						function readMessage() {
+							mui.post($ajaxUrl + 'team',{
+									action: 'read_message',
+									token: userInfo.token,
+									team_id: vm.tid,
+									course_id: 0,
+									type: 1,
+								}, function(res){
+									logs(res);
+								},'json'
+							);
+						}
 					})
 				}
 			})
@@ -660,6 +677,7 @@
 			})
 			// 打开详情页面
 			mui(".mui-bar").on("tap", ".detail-btn", function() {
+				ws.close();
 				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
 					teamid: vm.tid
 				})

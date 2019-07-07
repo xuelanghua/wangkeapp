@@ -65,17 +65,17 @@
 		</div>
 		<footer>
 			<div class="footer-left">
-				<i id='msg-image' class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
+				<i id="msg-image" class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
 			</div>
 			<div class="footer-center">
-				<textarea id='msg-text' type="text" class='input-text'></textarea>
-				<button id='msg-sound' type="button" class='input-sound' style="display: none;">按住说话</button>
+				<textarea id="msg-text" type="text" class="input-text"></textarea>
+				<button id="msg-sound" type="button" class="input-sound" style="display: none;">按住说话</button>
 			</div>
 			<label for="" class="footer-right">
-				<i id='msg-type' class="mui-icon mui-icon-mic"></i>
+				<i id="msg-type" class="mui-icon mui-icon-mic"></i>
 			</label>
 		</footer>
-		<div id='sound-alert' class="rprogress">
+		<div id="sound-alert" class="rprogress">
 			<div class="rschedule"></div>
 			<div class="r-sigh">!</div>
 			<div id="audio_tips" class="rsalert">手指上滑，取消发送</div>
@@ -144,7 +144,6 @@
 						chatData = {
 							team_id: tid,
 							course_id: vm.courseId,
-							course_id: 0,
 							user_id: userInfo.id, 
 							uniacid: userInfo.uniacid,
 							type: 2,
@@ -156,7 +155,7 @@
 						});
 						
 						getChatList();
-						
+						readMessage();
 						WebSocketInit();
 					
 						var showKeyboard = function() {
@@ -235,10 +234,9 @@
 								}, false);
 							});
 							imageViewer.findAllImage();
-							console.log(areaMsgList.scrollHeigh);
-							console.log(areaMsgList.offsetHeight);
+							// console.log(areaMsgList.scrollHeigh);
+							// console.log(areaMsgList.offsetHeight);
 							areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
-							// areaMsgList.scrollTop = areaMsgList.offsetHeight + 200;
 						};
 						
 						// bindMsgList();
@@ -248,8 +246,10 @@
 						
 						var send = function(msg) {
 							if (vm.chatList[msg.time]) {
+								console.log(1111);
 								vm.chatList[msg.time].push(msg);
 							} else {
+								console.log(2222);
 								var msgArray = new Array();
 								msgArray.push(msg);
 								vm.$set(vm.chatList, msg.time, msgArray);
@@ -310,7 +310,7 @@
 								// });
 								chatData['message_type'] = 'text';
 								chatData['content'] = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
-								// logs(chatData);
+								logs(chatData);
 								ws.send(JSON.stringify(chatData)); //向服务器发送消息
 								ui.boxMsgText.value = '';
 								mui.trigger(ui.boxMsgText, 'input', null);
@@ -520,7 +520,7 @@
 										ping: !0,
 										user_id: userInfo.id,
 										uniacid: userInfo.uniacid,
-										type: 1
+										type: 2
 									};
 									ws.send(JSON.stringify(t));
 								}, this.timeout);
@@ -535,7 +535,7 @@
 								ws = new WebSocket("wss://app.wangkeapp.cn/wss");
 								ws.onopen = function() {
 									if (ws.readyState == WebSocket.OPEN) {
-										// console.log("连接已打开...");
+										console.log("连接已打开...");
 										heartCheck.reset();
 										heartCheck.start();
 									}
@@ -550,8 +550,8 @@
 										data = JSON.parse(data);
 										msgData = data.data;
 										msgData['read_status'] = 1;
-										// logs(msgData);
-										send(msgData);
+										logs(msgData);
+										send(msgData); 
 										// data['read_status'] = 1;
 										// logs(data);
 										// if (data.data2) {
@@ -617,6 +617,20 @@
 									setInterval(function() {
 										intervalTime++;
 									}, 1000)
+								},'json'
+							);
+						}
+						
+						//阅读消息
+						function readMessage() {
+							mui.post($ajaxUrl + 'team',{
+									action: 'read_message',
+									token: userInfo.token,
+									team_id: vm.tid,
+									course_id: vm.courseId,
+									type: 2,
+								}, function(res){
+									logs(res);
 								},'json'
 							);
 						}
