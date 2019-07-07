@@ -63,8 +63,11 @@
 				</li>
 			</ul>
 			<ul class="mui-table-view" style="margin: 10px 0;">
-				<li class="mui-table-view-cell mui-text-center quit-team">
+				<li v-if="is_captain==0" class="mui-table-view-cell mui-text-center quit-team">
 					<span>退出团队</span>
+				</li>
+				<li v-else class="mui-table-view-cell mui-text-center delete-team">
+					<span>解散团队</span>
 				</li>
 			</ul>
 		</div>
@@ -72,13 +75,14 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo=getUserInfo();
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					is_top: null,
 					is_shield: null,
-					tid:null
+					tid: null,
+					is_captain: 0
 				},
 				methods: {
 
@@ -86,8 +90,9 @@
 				mounted: function() {
 					mui.init();
 					mui.plusReady(function() {
-						var self= plus.webview.currentWebview();
-						app.tid=self.teamid;
+						var self = plus.webview.currentWebview();
+						app.tid = self.teamid;
+						getsetting();
 						// 清空聊天记录
 						mui(".mui-content").on("tap", ".clear-record", function() {
 							plus.nativeUI.confirm('确认清空聊天记录吗？该操作无法撤销。', function(e) {
@@ -126,7 +131,37 @@
 								}
 							})
 						});
+						// 解散团队
+						mui(".mui-content").on("tap", ".delete-team", function() {
+							plus.nativeUI.confirm('确认解散团队吗？该操作不可撤销。', function(e) {
+								if (e.index == 1) {
+									// mui.toast("取消");
+								} else {
+									// alert(app.tid);
+									// var webview = plus.webview.all();
+									mui.post($ajaxUrl + 'team&action=delete', {
+										token: userInfo.token,
+										team_id: app.tid
+									}, function(res) {
+										// logs(res);
+										if (res.errno == 0) {
+											mui.toast("团队已经解散");
+											mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
+											setTimeout(function() {
+												plus.webview.close('team_chat_setting');
+												plus.webview.close('team_chat');
+											}, 200);
+										} else {
+											mui.toast("操作失败");
+											// mui.toast(res.message);
+										}
+									}, 'json');
+								}
+							})
+						});
 					})
+
+
 					// 监听是否置顶
 					mui(".mui-content").on("toggle", ".sticks", function(event) {
 						if (event.detail.isActive) {
@@ -134,24 +169,31 @@
 						} else {
 							app.is_top = 0;
 						}
-						mui.post($ajaxUrl + 'team&action=team_info', {
+						mui.post($ajaxUrl + 'team&action=personal_setting', {
 							token: userInfo.token,
-							team_id:app.tid,
-							key:"is_top",
-							value:app.is_top
+							team_id: app.tid,
+							key: "is_top",
+							value: app.is_top
 						}, function(res) {
+							logs(res);
 							if (res.errno == 0) {
-								if(app.is_top == 1){
+								if (app.is_top == 1) {
 									message("已置顶");
-								}else{
+								} else {
 									message("取消置顶");
 								}
 							} else {
-								
+								if (app.is_top == 1) {
+									message("置顶失败");
+									app.is_top == 0;
+								} else {
+									message("取消置顶失败");
+									app.is_top == 0;
+								}
 							}
 						}, 'json');
 					});
-					
+
 					// 监听消息免打扰
 					mui(".mui-content").on("toggle", ".disturbing", function(event) {
 						if (event.detail.isActive) {
@@ -159,25 +201,47 @@
 						} else {
 							app.is_shield = 0;
 						}
-						mui.post($ajaxUrl + 'team&action=team_info', {
+						mui.post($ajaxUrl + 'team&action=personal_setting', {
 							token: userInfo.token,
-							team_id:app.tid,
-							key:"is_shield",
-							value:app.is_shield
+							team_id: app.tid,
+							key: "is_shield",
+							value: app.is_shield
 						}, function(res) {
 							if (res.errno == 0) {
-								if(app.is_shield == 1){
+								if (app.is_shield == 1) {
 									message("消息免打扰");
-								}else{
+								} else {
 									message("取消免打扰");
 								}
 							} else {
-								
+								if (app.is_shield == 1) {
+									message("设置消息免打扰失败");
+									app.is_shield = 0;
+								} else {
+									message("取消免打扰失败");
+									app.is_shield = 0;
+								}
 							}
 						}, 'json');
 					});
 				}
 			})
+			// 获取设置
+			function getsetting() {
+				mui.post($ajaxUrl + 'team&action=personal_team_info', {
+					token: userInfo.token,
+					team_id: app.tid,
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.is_captain = res.data.is_captain;
+						app.is_top = res.data.is_top;
+						app.is_shield = res.data.is_shield;
+					} else {
+
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 

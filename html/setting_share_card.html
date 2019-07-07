@@ -650,6 +650,7 @@
 							});
 						}
 						window.addEventListener('cropperSuccess', function(event) {
+							logs(app.resultData);
 							showload(0, 0, "图片加载中...", "rgba(0,0,0,0.5)");
 							app.resultData['background_image_' + app.imgtyp + '_url'] = event.detail.image;
 							app['uperimg' + app.imgtyp] = event.detail.filename;
@@ -686,7 +687,7 @@
 							var data = res.data;
 							if (res.errno == 0) {
 								app.resultData = res.data;
-								app.card_type = res.data.card_type==0?1:res.data.card_type;
+								app.card_type = res.data.card_type == 0 ? 1 : res.data.card_type;
 								app.uperimg1 = data.background_image_1 || app.uperimg1;
 								app.uperimg2 = data.background_image_2 || app.uperimg2;
 								app.uperimg3 = data.background_image_3 || app.uperimg3;

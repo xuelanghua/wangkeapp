@@ -117,18 +117,13 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">
-				<a id="action-btn" class="action-btn" href="#Popover">
-					<span id="fans-title">我的粉丝</span>
-					<span id="fans-number">（0）</span>
-					<span class="arrows">▼</span>
-				</a>
+				我的粉丝
 			</h1>
-			<!-- <h1 class="mui-title"><a id="action-btn" class="action-btn" href="#middlePopover">我的粉丝</a></h1> -->
 		</header>
 		<div id="mui-content" v-cloak>
 			<div class="mui-content service-award-container" v-if="fansFlag">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
+					<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key="index">
 						<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
 						<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
 							<div class="top mui-clearfix">
@@ -145,17 +140,9 @@
 					</li>
 				</ul>
 			</div>
-			<div v-if="emptyFlag" style="font-size: 0.28rem;color: #999999;">
-				<img style="width: 45%;display: block;margin: 10% auto 0;" class="no-friends" src="../image/icon/void-data.png">
-				<!-- <p style="text-align: center;">暂无粉丝</p> -->
-			</div>
-			<div id="Popover" class="mui-popover first-popover">
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell fans-option" :class="[item.active?' active':'']" v-for="(item,index) in fansoption"
-					 :key="index" @tap="screenfn(index,item.gid,item.title,item.cls)">
-						<span>{{item.title}}<span :class="item.cls"></span><span v-show="item.active" class="mui-icon mui-icon-checkmarkempty"></span></span>
-					</li>
-				</ul>
+			<div v-if="emptyFlag" style="font-size: 0.28rem;color: #999999;margin-top: 50%;">
+				<img style="width: 50%;display: block;margin: 10% auto 0;" class="no-friends" src="../image/icon/void-data.png">
+				<p class="mui-text-center">空空如也~</p>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
@@ -176,60 +163,16 @@
 					fansList: [],
 					fansFlag: false,
 					emptyFlag: false,
-					fansoption: [{
-						title: '全部',
-						cls: 'total',
-						active: true,
-						gid: '0'
-					}, {
-						title: '分公司',
-						cls: 'company',
-						active: false,
-						gid: '5'
-					}, {
-						title: '服务中心',
-						cls: 'service_center',
-						active: false,
-						gid: '4'
-					}, {
-						title: '服务站',
-						cls: 'service_station',
-						active: false,
-						gid: '3'
-					}, {
-						title: '创客',
-						cls: 'maker',
-						active: false,
-						gid: '2'
-					}, {
-						title: 'VIP',
-						cls: 'vip',
-						active: false,
-						gid: '1'
-					}],
 					fansnumber: {}
 				},
 				methods: {
-					screenfn: function(idx, gid, title, cls) {
-						for (var i = 0; i < this.fansoption.length; i++) {
-							this.fansoption[i].active = false;
-						}
-						this.fansoption[idx].active = true;
-						document.querySelector('.arrows').classList.remove('active');
-						this.fansList = [];
-						skip = 1;
-						group_id = gid;
-						getFansList();
-						document.getElementById('fans-title').innerText = title;
-						document.getElementById('fans-number').innerText = '（' + app.fansnumber[cls] + '）';
-						mui('#Popover').popover('hide');
-					}
+
 				},
 				mounted: function() {
 					mui.init({
 						swipeBack: false,
 						pullRefresh: {
-							container: "#mui-content",
+							container: ".service-award-container",
 							up: {
 								height: 50,
 								auto: false,
@@ -252,11 +195,12 @@
 							}
 						}
 					});
-					// 获取列表
-					getFansList();
-					// 获取数量
-					getFansNum();
 					mui.plusReady(function() {
+						showload();
+						var self = plus.webview.currentWebview();
+						group_id = self.group_id;
+						// 获取列表
+						getFansList();
 						mui(".mui-content").on('tap', '.header-img', function() {
 							var fid = this.dataset.fid;
 							openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
@@ -277,25 +221,14 @@
 					})
 				}
 			})
-			mui('.mui-bar-nav').on('tap', 'a', function() {
-				document.querySelector('.arrows').classList.toggle('active');
-			})
-			// 监听遮罩是否显示 为了让顶部的箭头处于正常位置
-			window.addEventListener('tap', function(e) {
-				if (e.target.className == 'mui-backdrop mui-active') {
-					var btn = mui(".arrows");
-					btn[0].classList.remove('active');
-				} else {}
-			}, true)
 
+			// 获取粉丝列表
 			function getFansList() {
-				mui.post($ajaxUrl + 'member&action=fans', {
+				mui.post($ajaxUrl + 'member&action=fans_list', {
 					token: userInfo.token,
-					skip: skip,
-					limit: limit,
 					group_id: group_id
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0 && skip == 1) {
 						app.emptyFlag = false;
 						app.fansList = res.data;
@@ -321,22 +254,7 @@
 							app.emptyFlag = true;
 						}
 					}
-				}, 'json');
-			}
-			// 获取粉丝数量
-			function getFansNum() {
-				mui.post($ajaxUrl + 'member&action=fans_count', {
-					token: userInfo.token
-				}, function(res) {
-					var data = res.data;
-					logs(data);
-					if (res.errno == 0) {
-						app.fansnumber = data;
-						document.getElementById('fans-number').innerText = '（' + data.total + '）';
-						for (var i in data) {
-							document.querySelector('.' + i).innerHTML = '(' + data[i] + ')';
-						}
-					}
+					showload(1,1200);
 				}, 'json');
 			}
 		</script>

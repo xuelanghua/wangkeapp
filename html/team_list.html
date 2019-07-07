@@ -120,10 +120,9 @@
 					<li class="team-list" v-for="(list, index) in createList" :key="index">
 						<!-- <img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'"
 						 @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
-
 						<div class="inside">
 							<i class="adorn"></i>
-							<div class="inside-top">
+							<div class="inside-top"  @tap="detail(list.team_id)">
 								<div class="team-title">
 									{{list.name}}
 									<span class="mui-badge mui-badge-primary">
@@ -158,7 +157,7 @@
 						<!-- <img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
 						<div class="inside">
 							<i class="adorn"></i>
-							<div class="inside-top">
+							<div class="inside-top"  @tap="detail(list.team_id)">
 								<div class="team-title">
 									{{list.name}}
 									<span class="mui-badge mui-badge-primary">
@@ -167,7 +166,7 @@
 									</span>
 								</div>
 								<div class="time-person">
-									<span  class="rank-num">
+									<span class="rank-num">
 										<img class="rank-sign" :src="'../image/icon/rank'+list.level+'.png'">
 										<span v-if="list.level==0">佰级别收入</span>
 										<span v-if="list.level==1">仟级别收入</span>
@@ -242,6 +241,11 @@
 					})
 				},
 				methods: {
+					detail:function(team_id){
+						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+							teamid: team_id
+						});
+					},
 					teamDetail: function(team_id, data_status, is_captain) {
 						if (data_status == 1 || is_captain == 1) {
 							fnOpenWin('webview.html', 'webview', {
