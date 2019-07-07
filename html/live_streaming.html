@@ -190,7 +190,6 @@
 						chatData = {
 							team_id: tid,
 							course_id: vm.courseId,
-							course_id: 0,
 							user_id: userInfo.id,
 							uniacid: userInfo.uniacid,
 							type: 2,
@@ -566,7 +565,7 @@
 										ping: !0,
 										user_id: userInfo.id,
 										uniacid: userInfo.uniacid,
-										type: 1
+										type: 2
 									};
 									ws.send(JSON.stringify(t));
 								}, this.timeout);
@@ -594,10 +593,15 @@
 										heartCheck.start();
 									} else {
 										data = JSON.parse(data);
-										msgData = data.data;
-										msgData['read_status'] = 1;
-										// logs(msgData);
-										send(msgData);
+										logs(data);
+										if (data.error == 0) {
+											msgData = data.data;
+											msgData['read_status'] = 1;
+											// logs(msgData);
+											send(msgData);
+										} else if (data.error == -2) {
+											message(data.message);
+										}
 										// data['read_status'] = 1;
 										// logs(data);
 										// if (data.data2) {
