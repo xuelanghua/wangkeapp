@@ -144,16 +144,15 @@
 				position: relative;
 			}
 
-			.theme-body1 h2::after {
-				content: '';
-				width: 40px;
-				height: 2px;
-				display: block;
-				position: absolute;
-				left: 50%;
-				margin-left: -20px;
-				bottom: 0;
-				background-color: #2289FF;
+			.theme-body1 h2::after content: '';
+			width: 40px;
+			height: 2px;
+			display: block;
+			position: absolute;
+			left: 50%;
+			margin-left: -20px;
+			bottom: 0;
+			background-color: #2289FF;
 			}
 
 			.input-section {
@@ -220,6 +219,7 @@
 				padding: 10px 0;
 				position: relative;
 				color: #FFFFFF;
+				text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 			}
 
 			.theme-body2 .user-head-img {
@@ -288,6 +288,7 @@
 				padding: 10px 0;
 				position: relative;
 				color: #FFFFFF;
+				text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 			}
 
 			.theme-body3 .qr-cont {
@@ -371,16 +372,24 @@
 				width: 1.5rem;
 			}
 
-			.replace-img {
+			.option-btn {
+				border-radius: 5px;
 				position: absolute;
-				right: 0.3rem;
-				top: 0.3rem;
+				right: 0.15rem;
+				top: 1.2rem;
 				z-index: 9;
 				border: 1px dashed #FFFFFF;
 				color: #FFFFFF;
 				font-size: 0.28rem;
 				padding: 0 4px;
 				line-height: 1.4;
+				text-shadow: 1px 1px 2px #001D5A;
+				/* box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1) inset, 0 0 2px 1px rgba(0, 0, 0, 0.1); */
+				box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1) inset;
+			}
+
+			.restore-default {
+				top: 0.3rem;
 			}
 		</style>
 		<script type="text/javascript">
@@ -411,14 +420,17 @@
 			</nav>
 			<div id="theme1" class="theme1 mui-control-content" :class="card_type==1?'mui-active':''">
 				<img class="bgimg" :src="resultData.background_image_1_url||background_image_1">
-				<div class="replace-img">
+				<div class="option-btn replace-img ">
 					点击替换图片
+				</div>
+				<div class="option-btn restore-default">
+					恢复默认风格
 				</div>
 				<div class="theme-body theme-body1">
 					<img class="user-head-img" :src="userhead">
 					<h2>{{username}}</h2>
 					<div class="input-section">
-						<textarea v-model="signature1" maxlength="26" rows="2" placeholder="输入文字内容输入文字内容"></textarea>
+						<textarea v-model="signature1" maxlength="26" rows="2" placeholder="添加自定义文字"></textarea>
 					</div>
 					<img class="qrimg" :src="qrpath">
 					<p class="type_desc">{{type_desc}}</p>
@@ -426,8 +438,11 @@
 				</div>
 			</div>
 			<div id="theme2" class="theme2 mui-control-content" :class="card_type==2?'mui-active':''">
-				<div class="replace-img">
+				<div class="option-btn replace-img ">
 					点击替换图片
+				</div>
+				<div class="option-btn restore-default">
+					恢复默认风格
 				</div>
 				<div class="head-img-cont">
 					<img class="bgimg" :src="resultData.background_image_2_url||background_image_2">
@@ -438,7 +453,7 @@
 					<img class="user-head-img" :src="userhead">
 					<h2>{{username}}</h2>
 					<div class="input-section">
-						<textarea v-model="signature2" maxlength="26" rows="2" placeholder="这里是添加自定义文字"></textarea>
+						<textarea v-model="signature2" maxlength="26" rows="2" placeholder="添加自定义文字"></textarea>
 					</div>
 					<img class="qrimg" :src="qrpath">
 					<p class="type_desc">{{type_desc}}</p>
@@ -446,22 +461,30 @@
 				</div>
 			</div>
 			<div id="theme3" class="theme4 mui-control-content" :class="card_type==3?'mui-active':''">
-				<div class="replace-img">
+				<div class="option-btn replace-img">
 					点击替换图片
 				</div>
-				<img class="bgimg" :src="resultData.background_image_3_url||background_image_3">
+				<div class="option-btn restore-default">
+					恢复默认风格
+				</div>
+				<div style="min-height: 200px;">
+					<img class="bgimg" :src="resultData.background_image_3_url||background_image_3">
+				</div>
 				<img class="user-head-img" :src="userhead">
 				<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 				<h2>{{username}}</h2>
 				<div class="input-section">
-					<textarea v-model="signature3" maxlength="26" rows="2" placeholder="输入文字内容输入文字内容"></textarea>
+					<textarea v-model="signature3" maxlength="26" rows="2" placeholder="添加自定义文字"></textarea>
 				</div>
 				<img class="qrimg" :src="qrpath">
 				<p class="type_desc">{{type_desc}}</p>
 			</div>
 			<div id="theme4" class="theme3 mui-control-content" :class="card_type==4?'mui-active':''">
-				<div class="replace-img">
+				<div class="option-btn replace-img">
 					点击替换图片
+				</div>
+				<div class="option-btn restore-default">
+					恢复默认风格
 				</div>
 				<img class="bgimg" :src="resultData.background_image_4_url||background_image_4">
 				<div class="theme-body theme-body3">
@@ -660,10 +683,30 @@
 							}, Math.floor(Math.random() * 1000 + 1000));
 						})
 					})
+					// 恢复默认
+					mui(".mui-content").on("tap", ".restore-default", function() {
+						var pview = plus.webview.currentWebview().opener();
+						message(app.imgtyp);
+						app.resultData['background_image_' + app.imgtyp + '_url'] = '../image/share/bg-img0' + app.imgtyp + '.jpg';
+						app['background_image_' + app.imgtyp] = '../image/share/bg-img0' + app.imgtyp + '.jpg';
+						app['uperimg' + app.imgtyp]='images/6/2019/05/bg-img0'+app.imgtyp+'.jpg';
+						// app['background_image_' + app.imgtyp]='../image/share/bg-img0'+app.imgtyp+'.jpg';
+						mui.post($ajaxUrl + 'userqrcode&action=poster_setting', {
+							token: userInfo.token,
+							card_type: app.imgtyp,
+							background_image: app['uperimg' + app.imgtyp],
+							card_text: app['signature' + app.imgtyp]
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								message("已恢复默认设置");
+								mui.fire(pview, 'changeCard');
+								mui.back();
+							}
+						}, 'json');
+					})
 					// 保存设置
 					mui(".mui-bar").on("tap", ".save-edit", function() {
-						// message( app['signature' + app.imgtyp]);
-						// message(app['signature' + app.imgtyp]);
 						var pview = plus.webview.currentWebview().opener();
 						mui.post($ajaxUrl + 'userqrcode&action=poster_setting', {
 							token: userInfo.token,
@@ -687,6 +730,7 @@
 							var data = res.data;
 							if (res.errno == 0) {
 								app.resultData = res.data;
+								app.imgtyp = res.data.card_type == 0 ? 1 : res.data.card_type;
 								app.card_type = res.data.card_type == 0 ? 1 : res.data.card_type;
 								app.uperimg1 = data.background_image_1 || app.uperimg1;
 								app.uperimg2 = data.background_image_2 || app.uperimg2;

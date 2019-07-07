@@ -293,24 +293,24 @@
 						<!-- 课程列表列表 -->
 						<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
 							<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-							<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state)">
+							<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id)">
 								<img :src="c.cover_url">
 							</div>
 							<div class="curriculum-list-right">
 								<!-- 官方加stick-sign -->
-								<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state)">
+								<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id)">
 									{{c.title}}
 								</p>
-								<div class="status-cont mui-clearfix" @tap="curriculumDetail(c.id,c.state)">
+								<div class="status-cont mui-clearfix" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id)">
 									<div class="mui-pull-left">
 										<span class="ting-ke">主讲人：{{c.teacher_name}}</span>
 									</div>
 								</div>
 								<div>
-									<div v-if="c.state==0" class="cretae-timer" @tap="curriculumDetail(c.id,c.state)">开播：2018-05-18 18:50</div>
-									<div v-else-if="c.state==1" class="train-ing" @tap="curriculumDetail(c.id,c.state)"><img style="width: 0.38rem;"
+									<div v-if="c.state==0" class="cretae-timer" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id)">开播：2018-05-18 18:50</div>
+									<div v-else-if="c.state==1" class="train-ing" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id)"><img style="width: 0.38rem;"
 										 src="../image/discover/loading.gif">培训中</div>
-									<div v-else class="cretae-timer" @tap="curriculumDetail(c.id,c.state)">结束：2018-05-18 20:50</div>
+									<div v-else class="cretae-timer" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id)">结束：2018-05-18 20:50</div>
 									<div class="team-name mui-pull-right" @tap="teamDetail(c.team_id)">
 										<img class="team-icon" src="../image/discover/team-icon.png">
 										<span class="mui-ellipsis">{{c.team_name}}</span>
@@ -528,10 +528,13 @@
 						});
 					},
 					//打开课程详情
-					curriculumDetail: function(id, status) {
+					curriculumDetail: function(cid, status,tid,title,teid) {
 						if (status == 1 || status == 2) {
 							openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-								id: id
+								tid: tid,
+								courseId: cid,
+								courseTitle: title,
+								teacher_id:teid
 							});
 						} else {
 							// 未开播提示
@@ -684,7 +687,7 @@
 			// 点击自定义图标
 			function shareHref() {
 				openPage('issue_dynamics.html', 'issue_dynamics', '#f7f7f7');
-				// plus.navigator.setStatusBarStyle("dark");
+				plus.navigator.setStatusBarStyle("dark");
 			}
 			// 数据请求
 			function getDiscoverData(lpk) {
