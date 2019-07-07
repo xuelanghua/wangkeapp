@@ -182,8 +182,13 @@
 						var wv = plus.webview.currentWebview();
 						var tid = wv.tid;
 						vm.tid = tid;
-						vm.teacher_id = wv.teacher_id;
+						vm.teacher_id = wv.teacherId;
 						vm.courseId = wv.courseId;
+						if (wv.isSilent == 1) {
+							vm.say = true;
+						} else {
+							vm.say = false;
+						}
 						plus.navigator.setStatusBarStyle("dark");
 						var courseTitle = wv.courseTitle;
 						document.querySelector('.mui-title').innerHTML = courseTitle;
@@ -201,7 +206,7 @@
 						});
 
 						getChatList();
-
+						readMessage();
 						WebSocketInit();
 
 						var showKeyboard = function() {
@@ -668,6 +673,20 @@
 									intervalTime++;
 								}, 1000)
 							}, 'json');
+						}
+						
+						//阅读消息
+						function readMessage() {
+							mui.post($ajaxUrl + 'team',{
+									action: 'read_message',
+									token: userInfo.token,
+									team_id: vm.tid,
+									course_id: vm.courseId,
+									type: 2,
+								}, function(res){
+									logs(res);
+								},'json'
+							);
 						}
 						
 						// 只看讲师

@@ -245,34 +245,39 @@
 				<div class="bd">
 					<div class="current tab-container chat-cont" id="chat_message" data-type="chat">
 						<ul class="mui-table-view">
-							<li v-for="(lists,idx) in msgList" :key="idx" class="Record_list mui-table-view-cell mui-transitioning"
-							 :data-avatar="lists.user.avatarUrl" :data-cid="lists.user.id" :data-name="lists.user.nickName">
-								<div class="mui-slider-right mui-disabled">
-									<span class="mui-btn mui-btn-red" :data-chatid="lists.id">删除</span>
-								</div>
-								<div class="mui-slider-handle mui-clearfix">
-									<div class="Record_listL mui-pull-left">
-										<img :src="lists.user.avatarUrl">
+							<template v-for="(lists,idx) in msgList" :key="idx">
+								<li class="Record_list mui-table-view-cell mui-transitioning" @tap="goChat(lists)">
+									<div class="mui-slider-right mui-disabled">
+										<span class="mui-btn mui-btn-red" :data-chatid="lists.id" :data-type="lists.type">删除</span>
 									</div>
-									<div class="Record_listR mui-pull-right">
-										<div class="mui-clearfix">
-											<span class="mui-pull-left user-name  mui-ellipsis">
-												<span class="Label">
-													<img v-if="lists.type=='newbie'" src="../image/newsb1.png">
-													<img v-else-if="lists.type=='customer'" src="../image/newsb2.png">
-													<img v-else src="../image/newsb3.png">
+									<div class="mui-slider-handle mui-clearfix">
+										<div class="Record_listL mui-pull-left">
+											<img v-if="lists.type=='newbie'||lists.type=='customer'||lists.type=='friend'" :src="lists.user.avatarUrl">
+											<img v-else-if="lists.type=='team_chat'" :src="lists.team_info.cover || 'https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg'">
+											<img v-else-if="lists.type=='course_train'" :src="lists.course_info.cover || 'https://cdn.wangkeapp.cn/images/6/2019/05/course_bg.png'">
+										</div>
+										<div class="Record_listR mui-pull-right">
+											<div class="mui-clearfix">
+												<span class="mui-pull-left user-name  mui-ellipsis">
+													<span class="Label">
+														<img v-if="lists.type=='newbie'" src="../image/newsb1.png">
+														<img v-else-if="lists.type=='customer'" src="../image/newsb2.png">
+														<img v-else-if="lists.type=='friend'" src="../image/newsb3.png">
+													</span>
+													<span v-if="lists.type=='newbie'||lists.type=='customer'||lists.type=='friend'" style="font-size: 15px;">{{lists.user.nickName}}</span>
+													<span v-else-if="lists.type=='team_chat'" style="font-size: 15px;">{{lists.team_info.name}}</span>
+													<span v-else-if="lists.type=='course_train'" style="font-size: 15px;">{{lists.course_info.title}}</span>
 												</span>
-												<span style="font-size: 15px;">{{lists.user.nickName}}</span>
-											</span>
-											<span class="mui-pull-right date">{{lists.time}}</span>
-										</div>
-										<div class="tishi mui-clearfix">
-											<span class="mui-pull-left mui-ellipsis last-message">{{lists.message.content}}</span>
-											<p v-show="lists.message.count>0" class="mui-badge mui-pull-right">{{lists.message.count}}</p>
+												<span class="mui-pull-right date">{{lists.time}}</span>
+											</div>
+											<div class="tishi mui-clearfix">
+												<span class="mui-pull-left mui-ellipsis last-message">{{lists.message.content}}</span>
+												<p v-show="lists.message.count>0" class="mui-badge mui-pull-right">{{lists.message.count}}</p>
+											</div>
 										</div>
 									</div>
-								</div>
-							</li>
+								</li>
+							</template>
 						</ul>
 					</div>
 					<div class="tab-container system-cont" id="system_message" data-type="system">
@@ -413,6 +418,7 @@
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
 			var chatId = '';
+			var chatType = '';
 			var refresh = false;
 			var app = new Vue({
 				el: "#mui-content",
@@ -445,27 +451,28 @@
 							getSystemMsg();
 						})
 						getChatList();
-						mui('#chat_message').on('tap', '.Record_list', function() {
-							var cid = this.dataset.cid;
-							var chatName = this.dataset.name;
-							var avatar = this.dataset.avatar;
-							var swipemenu = mui('.mui-selected')[0];
-							// 关闭左滑菜单才能跳转
-							if (swipemenu) {
-								mui.swipeoutClose(swipemenu);
-							} else {
-								fnOpenWin('dialog.html', 'dialog', {
-									statusbar: {
-										background: '#F7F7F7'
-									}
-								}, {
-									cid: cid,
-									chatName: chatName,
-									barStyle: 'dark',
-									avatar: avatar
-								}, 'slide-in-right');
-							}
-						})
+						
+						// mui('#chat_message').on('tap', '.Record_list', function() {
+						// 	var cid = this.dataset.cid;
+						// 	var chatName = this.dataset.name;
+						// 	var avatar = this.dataset.avatar;
+						// 	var swipemenu = mui('.mui-selected')[0];
+						// 	// 关闭左滑菜单才能跳转
+						// 	if (swipemenu) {
+						// 		mui.swipeoutClose(swipemenu);
+						// 	} else {
+						// 		fnOpenWin('dialog.html', 'dialog', {
+						// 			statusbar: {
+						// 				background: '#F7F7F7'
+						// 			}
+						// 		}, {
+						// 			cid: cid,
+						// 			chatName: chatName,
+						// 			barStyle: 'dark',
+						// 			avatar: avatar
+						// 		}, 'slide-in-right');
+						// 	}
+						// })
 
 						mui('header').on('tap', 'li', function() {
 							var type = this.dataset.type;
@@ -482,6 +489,43 @@
 						})
 						getSystemMsg();
 					})
+				},
+				methods: {
+					goChat: function(item) {
+						logs(item);
+						var swipemenu = mui('.mui-selected')[0];
+						// 关闭左滑菜单才能跳转
+						if (swipemenu) {
+							mui.swipeoutClose(swipemenu);
+						} else {
+							if (item.type == 'team_chat') {
+								logs(item);
+								openPage('team_chat.html', 'team_chat', '#f7f7f7', {
+									tid: item.team_id,
+									teamName: item.team_info.name
+								});
+							} else if (item.type == 'course_train') {
+								openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+									tid: item.team_id,
+									courseId: item.course_id,
+									courseTitle: item.course_info.title,
+									teacherId: item.course_info.teacher_id,
+									isSilent: item.course_info.is_silent
+								});
+							} else {
+								fnOpenWin('dialog.html', 'dialog', {
+									statusbar: {
+										background: '#F7F7F7'
+									}
+								}, {
+									cid: item.user.id,
+									chatName: item.user.nickName,
+									barStyle: 'dark',
+									avatar: item.user.avatarUrl
+								}, 'slide-in-right');
+							}
+						}
+					}
 				}
 			})
 
@@ -507,6 +551,7 @@
 					}
 				}, 'json')
 			}
+			
 			// 获取消息列表
 			function getChatList() {
 				mui.post($ajaxUrl + 'chat', {
@@ -516,6 +561,11 @@
 					if (res.errno == 0) {
 						document.getElementById('chat_total').innerText = '(' + res.data.length + ')';
 						app.msgList = res.data;
+						if (res.message) {
+							document.querySelector('.chat-red-tips').style.display = "inline-block";
+						} else {
+							document.querySelector('.chat-red-tips').style.display = "none";
+						}
 						cacheData('msglist', res.data);
 					}
 				}, 'json')
@@ -525,6 +575,7 @@
 			mui(".mui-content").on("tap", ".mui-btn-red", function() {
 				mui('.join-team-verify')[0].style.display = "flex";
 				chatId = this.dataset.chatid;
+				chatType = this.dataset.type;
 				listel = this.parentNode.parentNode;
 			})
 			// 跳转目标助理
@@ -539,27 +590,46 @@
 						genre: genre
 					});
 				}
-
 			})
+			
 			// 确认删除聊天
 			mui('.join-team-verify').on("tap", ".send-verify", function() {
 				var swipemenu = mui('.mui-selected')[0];
-				mui.post($ajaxUrl + 'chat&action=delete_chat', {
-					token: userInfo.token,
-					chat_id: chatId
-				}, function(res) {
-					mui('.join-team-verify')[0].style.display = "none";
-					if (res.errno == 0) {
-						if (swipemenu) {
-							mui.swipeoutClose(swipemenu);
+				if (chatType == 'team_chat' || chatType == 'course_train') {
+					mui.post($ajaxUrl + 'team&action=delete_chat', {
+						token: userInfo.token,
+						chat_id: chatId
+					}, function(res) {
+						mui('.join-team-verify')[0].style.display = "none";
+						if (res.errno == 0) {
+							if (swipemenu) {
+								mui.swipeoutClose(swipemenu);
+							}
+							getChatList();
+							message('已删除');
+						} else {
+							message('删除失败，请稍后重试');
 						}
-						getChatList();
-						message('已删除');
-					} else {
-						message('删除失败，请稍后重试');
-					}
-				}, 'json');
+					}, 'json');
+				} else {
+					mui.post($ajaxUrl + 'chat&action=delete_chat', {
+						token: userInfo.token,
+						chat_id: chatId
+					}, function(res) {
+						mui('.join-team-verify')[0].style.display = "none";
+						if (res.errno == 0) {
+							if (swipemenu) {
+								mui.swipeoutClose(swipemenu);
+							}
+							getChatList();
+							message('已删除');
+						} else {
+							message('删除失败，请稍后重试');
+						}
+					}, 'json');
+				}
 			})
+			
 			// 取消删除聊天记录
 			mui('.join-team-verify').on("tap", ".close-verify-window", function() {
 				mui('.join-team-verify')[0].style.display = "none";
