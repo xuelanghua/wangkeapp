@@ -122,7 +122,7 @@
 						 @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
 						<div class="inside">
 							<i class="adorn"></i>
-							<div class="inside-top"  @tap="detail(list.team_id)">
+							<div class="inside-top" @tap="detail(list.team_id)">
 								<div class="team-title">
 									{{list.name}}
 									<span class="mui-badge mui-badge-primary">
@@ -137,10 +137,12 @@
 							</div>
 							<div class="opction-cont">
 								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name)">
-									<img src="../image/icon/team-list-opction02.png">群聊
+									<img src="../image/icon/team-list-opction02.png">
+									<span>群聊</span>
 								</div>
 								<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-									<img src="../image/icon/team-list-opction01.png">数据
+									<img src="../image/icon/team-list-opction01.png">
+									<span>数据</span>
 								</div>
 							</div>
 						</div>
@@ -157,7 +159,7 @@
 						<!-- <img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
 						<div class="inside">
 							<i class="adorn"></i>
-							<div class="inside-top"  @tap="detail(list.team_id)">
+							<div class="inside-top" @tap="detail(list.team_id)">
 								<div class="team-title">
 									{{list.name}}
 									<span class="mui-badge mui-badge-primary">
@@ -182,13 +184,16 @@
 							</div>
 							<div class="opction-cont">
 								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name)">
-									<img src="../image/icon/team-list-opction02.png">群聊
+									<img src="../image/icon/team-list-opction02.png">
+									<span>群聊</span>
 								</div>
-								<div class="opction-btn" @tap="creatCourse(list.team_id,list.is_captain)">
-									<img src="../image/icon/team-list-opction03.png">创建培训
+								<div class="opction-btn" @tap="courseList(list.team_id,list.is_captain)">
+									<img src="../image/icon/team-list-opction03.png">
+									<span>团队课程</span>
 								</div>
 								<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-									<img src="../image/icon/team-list-opction01.png">数据
+									<img src="../image/icon/team-list-opction01.png">
+									<span>数据</span>
 								</div>
 							</div>
 						</div>
@@ -241,7 +246,7 @@
 					})
 				},
 				methods: {
-					detail:function(team_id){
+					detail: function(team_id) {
 						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
 							teamid: team_id
 						});
@@ -314,15 +319,23 @@
 				getTeamList();
 			});
 			// 创建课程
-			function creatCourse(tid, role) {
-				if (role == 1) {
-					openPage('create_course.html', 'create_course', '#f7f7f7', {
-						tid: tid,
-						title: '创建课程'
-					});
-				} else {
-					alert("您不是本团队的创建者，无创建课程权限，请悉知。")
-				}
+			// function creatCourse(tid, role) {
+			// 	if (role == 1) {
+			// 		openPage('create_course.html', 'create_course', '#f7f7f7', {
+			// 			tid: tid,
+			// 			title: '创建课程'
+			// 		});
+			// 	} else {
+			// 		alert("您不是本团队的创建者，无创建课程权限，请悉知。")
+			// 	}
+			// }
+			
+			// 课程列表
+			function courseList(tid, role) {
+				openPage('team_course_list.html', 'team_course_list', '#f7f7f7', {
+					tid: tid,
+					role: role
+				});
 			}
 		</script>
 	</body>

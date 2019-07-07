@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.mui-table-view {
+				margin: 0;
+				padding: 0;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0;
+			}
+
+			.mui-table-view-cell {
+				/* height: 93px; */
+				background-color: #FFFFFF;
+				position: relative;
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.list-left,
+			.list-right {
+				height: 100%;
+			}
+
+			.list-left p {
+				margin: 0;
+				font-size: 0.28rem;
+				color: #323333;
+				line-height: 1.4;
+				min-height: 42px;
+			}
+
+			.list-left {
+				flex-grow: 1;
+				padding-right: 10px;
+				box-sizing: border-box;
+			}
+
+			.list-left .desc {
+				font-size: 12px;
+				color: #999999;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding-top: 8px;
+				line-height: 1;
+			}
+
+			.list-right {
+				flex-shrink: 0;
+				width: 80px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">学习进度</h1>
+		</header>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<ul class="mui-table-view">
+				<!-- 自己添加slef-ranking -->
+				<li class="mui-table-view-cell slef-ranking">
+					<div class="list-left">
+						<p class="mui-ellipsis-2">这里是课程名称，我是买包的小行家 天不怕，地不怕啦啦啦德玛西亚地不怕啦啦啦德玛西亚地不怕啦啦啦德玛西亚地不怕啦啦啦德玛西亚</p>
+						<div class="desc"><span>主讲人：小粉粉</span><span>2018-02-25 12:30</span></div>
+					</div>
+					<div class="list-right">
+						<div class="circleChart" id="circle1"></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/Zepto.min.js"></script>
+		<script src="../js/circleChart.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var _self_webview = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+					// 初始化园形进度条
+					$(".circleChart").circleChart({
+						color:"#2289ff",
+						// 大小
+						size: 60,
+						// 当前值
+						value: 50,
+						// 进度条下方显示文字
+						text: 0,
+						// 开始角度
+						startAngle:50,
+						lineCap:'butt',
+						textSize:"14px",
+						counterclockwise:true,
+						onDraw: function(el, circle) {
+						    circle.text(Math.round(circle.value) + "%");
+						}
+					});
+				}
+			})
+		</script>
+	</body>
+
+</html>

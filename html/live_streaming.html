@@ -11,6 +11,7 @@
 		<style>
 			.msg-item .msg-content{
 				margin-top: 16px;
+				position: relative;
 			}
 			.msg-item{
 				position: relative;
@@ -51,6 +52,20 @@
 				width: 100%;
 				height: 100%;
 			}
+			.red-dot{
+				position: absolute;
+				top: 1px;
+				right: 1px;
+				display: inline-block;
+				border-radius: 50%;
+				background-color: #FF0000;
+				width: 6px;
+				height: 6px;
+			}
+			.msg-item-self .red-dot{
+				left: 1px;
+				right: auto;
+			}
 		</style>
 	</head>
 
@@ -69,13 +84,14 @@
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
 							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" alt="" />
 							<div class="msg-content">
+								<i v-if="list.read_status==0" class="red-dot"></i>
 								<div v-if="list.message_type=='text'" class="msg-content-inner" v-html="list.content">
 									{{ list.content|| '&nbsp;&nbsp;' }}
 								</div>
 								<div v-else-if="list.message_type=='image'" class="msg-content-inner">
 									<img class="msg-content-image" :src="list.content" style="max-width: 100px;" />
 								</div>
-								<div v-else class="msg-content-inner">
+								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
 									<span class="play-state">点击播放</span>
 								</div>
@@ -88,8 +104,8 @@
 			</div>
 			<div class="option-menu">
 				<div class="menu banned-say">
-					<img v-show="!say" src="../image/icon/live-streaming-03.png">
-					<img v-show="say" src="../image/icon/live-streaming-04.png">
+					<img v-show="say" src="../image/icon/live-streaming-03.png">
+					<img v-show="!say" src="../image/icon/live-streaming-04.png">
 				</div>
 				<div class="menu alone-teacher">
 					<img v-show="checkType==2" src="../image/icon/live-streaming-01.png">
@@ -262,6 +278,7 @@
 							// logs(msgType);
 							// logs(msgContent);
 							if (msgType == 'audio') {
+								// readAudio();
 								player = plus.audio.createPlayer(msgContent);
 								var playState = msgItem.querySelector('.play-state');
 								playState.innerText = '正在播放...';
@@ -601,11 +618,12 @@
 										logs(data);
 										if (data.error == 0) {
 											msgData = data.data;
-											msgData['read_status'] = 1;
-											// logs(msgData);
+											// msgData['read_status'] = 1;
+											logs(msgData);
 											send(msgData);
 										} else if (data.error == -2) {
 											message(data.message);
+											vm.say = true;
 										}
 										// data['read_status'] = 1;
 										// logs(data);
@@ -659,6 +677,7 @@
 								skip: skip,
 								limit: limit
 							}, function(res) {
+								// logs(res);
 								if (res.errno == 0) {
 									if (skip == 1) {
 										vm.chatList = res.data;
@@ -674,6 +693,7 @@
 								}, 1000)
 							}, 'json');
 						}
+<<<<<<< HEAD
 						
 						//阅读消息
 						function readMessage() {
@@ -689,6 +709,9 @@
 							);
 						}
 						
+=======
+
+>>>>>>> c2a74c5c912007266e2db694d40af2c960c3d1d8
 						// 只看讲师
 						mui(".mui-content").on("tap", ".alone-teacher", function() {
 							if (vm.checkType == 1) {
@@ -742,7 +765,7 @@
 						token: userInfo.token,
 						course_id: vm.courseId
 					}, function(res) {
-						logs(res);
+						// logs(res);
 						if (res.errno == 0) {
 							vm.say = !vm.say;
 							if (vm.say) {
@@ -758,6 +781,24 @@
 					message("学员无法禁言");
 				}
 			})
+			// 标记语音已读
+			function readAudio(aid,idx, i) {
+				// logs(aid);
+				// logs(vm.tid);
+				// logs(vm.courseId);
+				mui.get($ajaxUrl + 'team&action=play_audio', {
+					token: userInfo.token,
+					team_id: vm.tid,
+					type: 2,
+					course_id: vm.courseId,
+					audio_id: aid
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						vm.$set(vm.chatList[idx][i],"read_status",1);
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 </html>
