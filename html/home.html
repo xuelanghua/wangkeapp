@@ -1233,9 +1233,8 @@
 			mui.post($ajaxUrl + 'team&action=personal_team_list', {
 				token: userInfo.token,
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
-					logs(res.data);
 					var data = res.data;
 					if (data.length > 1) {
 						var html = "";
@@ -1248,8 +1247,8 @@
 						}
 						document.getElementById("team-list").innerHTML = html;
 					} else if (data.length == 1 && data != "") {
-						default_team_id = data[0].team_id;
 						document.getElementById("team_name").innerText = data[0].name;
+						default_team_id = data[0].team_id;
 						mui(".mui-title .mui-icon")[0].style.display = "none";
 						teamchange = false;
 					} else {
