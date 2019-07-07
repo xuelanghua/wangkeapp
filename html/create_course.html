@@ -220,7 +220,7 @@
 						var self = plus.webview.currentWebview();
 						document.querySelector(".mui-title").innerText = self.title;
 						tid = self.tid;
-						app.tid=self.tid;
+						app.tid = self.tid;
 						if (self.edit) {
 							app.tid = self.course.team_id;
 							app.isedit = true;
@@ -239,10 +239,13 @@
 
 					// 选择主讲人
 					mui(".mui-content").on('tap', '.select-speaker', function() {
-						openPage('speaker_list.html', 'speaker_list', '#f7f7f7', {
-							tid: tid,
-							title: "选择主讲人"
-						});
+						document.activeElement.blur();
+						setTimeout(function() {
+							openPage('speaker_list.html', 'speaker_list', '#f7f7f7', {
+								tid: tid,
+								title: "选择主讲人"
+							});
+						}, 200);
 					})
 					// 接收主讲人
 					window.addEventListener('doit', function(e) {

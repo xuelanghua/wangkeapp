@@ -27,13 +27,37 @@
 			.other-name{
 				left:54px;
 			}
+			#msg-list{
+				padding-bottom: 50px;
+				position: relative;
+			}
+			.option-menu{
+				width: 96px;
+				position: fixed;
+				right: 15px;
+				bottom: 60px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			.menu{
+				width: 35px;
+				height: 35px;
+				overflow: hidden;
+				border-radius: 50%;
+				opacity: 0.8;
+			}
+			.menu img{
+				width: 100%;
+				height: 100%;
+			}
 		</style>
 	</head>
 
 	<body contextmenu="return false;">
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">旺客群聊</h1>
+			<h1 class="mui-title"></h1>
 		</header>
 		<pre id="h"></pre>
 		<div class="mui-content">
@@ -62,6 +86,16 @@
 					</template>
 				</template>
 			</div>
+			<div class="option-menu">
+				<div class="menu banned-say">
+					<img v-show="!say" src="../image/icon/live-streaming-03.png">
+					<img v-show="say" src="../image/icon/live-streaming-04.png">
+				</div>
+				<div class="menu alone-teacher">
+					<img v-show="checkType==2" src="../image/icon/live-streaming-01.png">
+					<img v-show="checkType==1" src="../image/icon/live-streaming-02.png">
+				</div>
+			</div>
 		</div>
 		<footer>
 			<div class="footer-left">
@@ -75,6 +109,10 @@
 				<i id="msg-type" class="mui-icon mui-icon-mic"></i>
 			</label>
 		</footer>
+		<div class="option-menu">
+			<div class="option-btn"></div>
+			<div class="option-btn"></div>
+		</div>
 		<div id="sound-alert" class="rprogress">
 			<div class="rschedule"></div>
 			<div class="r-sigh">!</div>
@@ -96,10 +134,10 @@
 					swipe: true, //默认为true
 					drag: true, //默认为true
 					hold: true, //默认为false，不监听
-					release: true //默认为false，不监听
+					release: true, //默认为false，不监听
 				}
 			})
-			
+
 			if (mui.os.ios) {
 				// 解决在ios上fixed元素focusin时位置出现错误的问题 
 				document.addEventListener('DOMContentLoaded', function() {
@@ -112,7 +150,7 @@
 					});
 				});
 			}
-			
+
 			var ws = null;
 			var chatData = null;
 			var userInfo = getUserInfo();
@@ -120,31 +158,40 @@
 			var skip = 1;
 			var intervalTime = 0;
 			var limit = 20;
-			
+
 			var vm = new Vue({
 				el: '.mui-content',
 				data: {
+					// 禁言
+					say: false,
+					// 只看讲师
+					alone: false,
 					chatList: [],
 					uid: userInfo.id,
 					tid: 0,
 					courseId: 0,
 					checkType: 1,
+					// 讲师id
+					teacher_id: 0
 				},
 				created: function() {
-					
+
 				},
-				mounted: function(){
-					mui.plusReady(function () {
+				mounted: function() {
+					mui.plusReady(function() {
 						var wv = plus.webview.currentWebview();
 						var tid = wv.tid;
 						vm.tid = tid;
+						vm.teacher_id = wv.teacher_id;
 						vm.courseId = wv.courseId;
+						plus.navigator.setStatusBarStyle("dark");
 						var courseTitle = wv.courseTitle;
 						document.querySelector('.mui-title').innerHTML = courseTitle;
 						chatData = {
 							team_id: tid,
 							course_id: vm.courseId,
-							user_id: userInfo.id, 
+							course_id: 0,
+							user_id: userInfo.id,
 							uniacid: userInfo.uniacid,
 							type: 2,
 							content: '',
@@ -153,11 +200,11 @@
 						plus.webview.currentWebview().setStyle({
 							softinputMode: "adjustResize"
 						});
-						
+
 						getChatList();
-						readMessage();
+
 						WebSocketInit();
-					
+
 						var showKeyboard = function() {
 							if ($.os.ios) {
 								var webView = plus.webview.currentWebview().nativeInstanceObject();
@@ -177,7 +224,7 @@
 								}, 200);
 							}
 						};
-						
+
 						document.getElementById('msg-list').addEventListener('scroll', function(e) {
 							var top = this.scrollTop;
 							if (top < 100 && intervalTime > 2) {
@@ -185,7 +232,7 @@
 								getChatList();
 							}
 						}, false);
-						
+
 						// showKeyboard();
 						var ui = {
 							body: document.querySelector('body'),
@@ -201,7 +248,7 @@
 							h: document.querySelector('#h'),
 							content: document.querySelector('.mui-content')
 						};
-						
+
 						ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
 						//alert(ui.boxMsgText.offsetWidth );
 						var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
@@ -224,7 +271,7 @@
 						var imageViewer = new mui.ImageViewer('.msg-content-image', {
 							dbl: false
 						});
-						
+
 						var bindMsgList = function() {
 							var areaMsgList = document.querySelector('#msg-list');
 							var msgItems = areaMsgList.querySelectorAll('.msg-item');
@@ -237,19 +284,18 @@
 							// console.log(areaMsgList.scrollHeigh);
 							// console.log(areaMsgList.offsetHeight);
 							areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
+							// areaMsgList.scrollTop = areaMsgList.offsetHeight + 1000;
 						};
-						
+
 						// bindMsgList();
 						window.addEventListener('resize', function() {
 							ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 						}, false);
-						
+
 						var send = function(msg) {
 							if (vm.chatList[msg.time]) {
-								console.log(1111);
 								vm.chatList[msg.time].push(msg);
 							} else {
-								console.log(2222);
 								var msgArray = new Array();
 								msgArray.push(msg);
 								vm.$set(vm.chatList, msg.time, msgArray);
@@ -258,14 +304,14 @@
 								bindMsgList();
 							}, 1000);
 						};
-					
+
 						function msgTextFocus() {
 							ui.boxMsgText.focus();
 							setTimeout(function() {
 								ui.boxMsgText.focus();
 							}, 150);
 						}
-						
+
 						//解决长按“发送”按钮，导致键盘关闭的问题；
 						ui.footerRight.addEventListener('touchstart', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -273,7 +319,7 @@
 								event.preventDefault();
 							}
 						});
-						
+
 						//解决长按“发送”按钮，导致键盘关闭的问题；
 						ui.footerRight.addEventListener('touchmove', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -281,7 +327,7 @@
 								event.preventDefault();
 							}
 						});
-						
+
 						// ui.footerRight.addEventListener('touchcancel', function(event) {
 						// 	if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 						// 		msgTextFocus();
@@ -294,7 +340,7 @@
 						// 		event.preventDefault();
 						// 	}
 						// });
-						
+
 						ui.footerRight.addEventListener('release', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 								//showKeyboard();
@@ -310,7 +356,7 @@
 								// });
 								chatData['message_type'] = 'text';
 								chatData['content'] = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
-								logs(chatData);
+								// logs(chatData);
 								ws.send(JSON.stringify(chatData)); //向服务器发送消息
 								ui.boxMsgText.value = '';
 								mui.trigger(ui.boxMsgText, 'input', null);
@@ -334,7 +380,7 @@
 								}, 150);
 							}
 						}, false);
-						
+
 						ui.footerLeft.addEventListener('tap', function(event) {
 							imageUpload(function(res) {
 								chatData.message_type = 'image';
@@ -377,7 +423,7 @@
 							// 	}
 							// });
 						}, false);
-						
+
 						var setSoundAlertVisable = function(show) {
 							if (show) {
 								ui.boxSoundAlert.style.display = 'block';
@@ -390,14 +436,14 @@
 								}, 200);
 							}
 						};
-						
+
 						var recordCancel = false;
 						var recorder = null;
 						var audio_tips = document.getElementById("audio_tips");
 						var startTimestamp = null;
 						var stopTimestamp = null;
 						var stopTimer = null;
-						
+
 						ui.boxMsgSound.addEventListener('hold', function(event) {
 							recordCancel = false;
 							if (stopTimer) clearTimeout(stopTimer);
@@ -425,7 +471,7 @@
 								plus.nativeUI.toast("录音时出现异常: " + e.message);
 							});
 						}, false);
-						
+
 						ui.body.addEventListener('drag', function(event) {
 							//console.log('drag');
 							if (Math.abs(event.detail.deltaY) > 50) {
@@ -446,7 +492,7 @@
 								}
 							}
 						}, false);
-						
+
 						ui.boxMsgSound.addEventListener('release', function(event) {
 							//console.log('release');
 							if (audio_tips.classList.contains("cancel")) {
@@ -467,12 +513,12 @@
 							}
 							recorder.stop();
 						}, false);
-						
+
 						ui.boxMsgSound.addEventListener("touchstart", function(e) {
 							//console.log("start....");
 							e.preventDefault();
 						});
-						
+
 						ui.boxMsgText.addEventListener('input', function(event) {
 							ui.btnMsgType.classList[ui.boxMsgText.value == '' ? 'remove' : 'add']('mui-icon-paperplane');
 							ui.btnMsgType.setAttribute("for", ui.boxMsgText.value == '' ? '' : 'msg-text');
@@ -480,7 +526,7 @@
 							ui.footer.style.height = (ui.h.offsetHeight + footerPadding) + 'px';
 							ui.content.style.paddingBottom = ui.footer.style.height;
 						});
-						
+
 						// var focus = false;
 						// ui.boxMsgText.addEventListener('tap', function(event) {
 						// 	ui.boxMsgText.focus();
@@ -493,14 +539,14 @@
 						// 	}, 1000);
 						// 	event.detail.gesture.preventDefault();
 						// }, false);
-						
+
 						//点击消息列表，关闭键盘
 						// ui.areaMsgList.addEventListener('click', function(event) {
 						// 	if (!focus) {
 						// 		ui.boxMsgText.blur();
 						// 	}
 						// })
-						
+
 						var timer = 0
 						//websocket 心跳检测
 						var heartCheck = {
@@ -520,14 +566,14 @@
 										ping: !0,
 										user_id: userInfo.id,
 										uniacid: userInfo.uniacid,
-										type: 2
+										type: 1
 									};
 									ws.send(JSON.stringify(t));
 								}, this.timeout);
 							},
-						
+
 						};
-						
+
 						//socket初始化
 						function WebSocketInit() {
 							if ("WebSocket" in window) {
@@ -535,7 +581,7 @@
 								ws = new WebSocket("wss://app.wangkeapp.cn/wss");
 								ws.onopen = function() {
 									if (ws.readyState == WebSocket.OPEN) {
-										console.log("连接已打开...");
+										// console.log("连接已打开...");
 										heartCheck.reset();
 										heartCheck.start();
 									}
@@ -550,8 +596,8 @@
 										data = JSON.parse(data);
 										msgData = data.data;
 										msgData['read_status'] = 1;
-										logs(msgData);
-										send(msgData); 
+										// logs(msgData);
+										send(msgData);
 										// data['read_status'] = 1;
 										// logs(data);
 										// if (data.data2) {
@@ -590,54 +636,50 @@
 								message("您的手机不支持 WebSocket!");
 							}
 						}
-						
+
 						//获取聊天列表
 						function getChatList() {
 							intervalTime = 0;
 							mui.get($ajaxUrl + 'team', {
-									action: 'message_list',
-									token: userInfo.token,
-									team_id: vm.tid,
-									course_id: vm.courseId,
-									check_type: vm.checkType,
-									type: 2,
-									skip: skip,
-									limit: limit
-								}, function(res){
-									if (res.errno == 0) {
-										if (skip == 1) {
-											vm.chatList = res.data;
-											setTimeout(function() {
-												bindMsgList();
-											}, 500);
-										} else {
-											vm.chatList = Object.assign(res.data, vm.chatList);
-										}
+								action: 'message_list',
+								token: userInfo.token,
+								team_id: vm.tid,
+								course_id: vm.courseId,
+								check_type: vm.checkType,
+								type: 2,
+								skip: skip,
+								limit: limit
+							}, function(res) {
+								if (res.errno == 0) {
+									if (skip == 1) {
+										vm.chatList = res.data;
+										setTimeout(function() {
+											bindMsgList();
+										}, 500);
+									} else {
+										vm.chatList = Object.assign(res.data, vm.chatList);
 									}
-									setInterval(function() {
-										intervalTime++;
-									}, 1000)
-								},'json'
-							);
+								}
+								setInterval(function() {
+									intervalTime++;
+								}, 1000)
+							}, 'json');
 						}
-						
-						//阅读消息
-						function readMessage() {
-							mui.post($ajaxUrl + 'team',{
-									action: 'read_message',
-									token: userInfo.token,
-									team_id: vm.tid,
-									course_id: vm.courseId,
-									type: 2,
-								}, function(res){
-									logs(res);
-								},'json'
-							);
-						}
+						// 只看讲师
+						mui(".mui-content").on("tap", ".alone-teacher", function() {
+							if (vm.checkType == 1) {
+								vm.checkType = 2;
+								message("只看讲师");
+							} else {
+								vm.checkType = 1;
+								message("查看全部");
+							}
+							getChatList();
+						})
 					})
 				}
 			})
-			
+
 			//文件上传
 			function voiceUpload(file) {
 				var task = plus.uploader.createUpload($voiceUrl, {
@@ -667,7 +709,30 @@
 				});
 				task.start();
 			}
+			// 禁言
+			mui(".option-menu").on("tap", ".banned-say", function() {
+				if (vm.teacher_id == userInfo.id) {
+					// if (12 == userInfo.id) {
+					mui.post($ajaxUrl + 'team&action=set_course_silent', {
+						token: userInfo.token,
+						course_id: vm.courseId
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) {
+							vm.say = !vm.say;
+							if (vm.say) {
+								message("已禁言");
+							} else {
+								message("取消禁言");
+							}
+						} else {
+							message("禁言失败");
+						}
+					}, 'json');
+				} else {
+					message("学员无法禁言");
+				}
+			})
 		</script>
 	</body>
-
 </html>
