@@ -408,14 +408,13 @@
 							start_time: app.startCourse,
 							end_time: app.endCourse,
 						}, function(res) {
-							logs(res);
 							if (res.errno == 0) {
 								if (app.isedit) {
 									message("修改成功");
 								} else {
 									message("课程创建成功");
 								}
-								mui.fire(plus.webview.getWebviewById('team_detail'), 'addCourse');
+								mui.fire(plus.webview.currentWebview().opener(), 'addCourse');
 								setTimeout(function() {
 									mui.back();
 								}, 500);
