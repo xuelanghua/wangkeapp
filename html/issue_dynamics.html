@@ -8,6 +8,22 @@
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
 		<style type="text/css">
+			.picture_display_chear img {
+				object-fit: cover;
+			}
+
+			.issue-dynamics-container .section-issue .issue-desc {
+				font-size: 0.36rem;
+			}
+
+			textarea::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.3rem;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -26,17 +42,22 @@
 			<h1 class="mui-title">发布动态</h1>
 			<span class="mui-pull-right issue-dynamics">发布</span>
 		</header>
-		<div class="mui-content issue-dynamics-container">
+		<div class="mui-content issue-dynamics-container" id="mui-content" v-cloak>
 			<div class="section-issue">
 				<!-- <input class="issue-title" id="issue-title" type="text" name="title" placeholder="动态名称" /> -->
-				<textarea class="issue-desc" id="issue-desc" rows="3" name="desc" placeholder="填写信息内容"></textarea>
+				<textarea class="issue-desc" v-model="issue_desc" id="issue-desc" rows="5" maxlength="120" name="desc" placeholder="填写动态内容"></textarea>
 			</div>
 			<div class="picture_display">
 				<div id="pic-container">
+					<div v-if="images" class="picture_display_chear" v-for="(img,i) in images" :key="i">
+						<img :src="img" data-preview-src="" data-preview-group="1" />
+						<span class="mui-close" @tap="delImg(i)">
+							<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
+						</span>
+					</div>
 					<div class="picture_display_chear" id="add_pic">
 						<img src="../image/icon/upload-img-icon.jpg">
 					</div>
-					<input type="hidden" name="images" />
 				</div>
 			</div>
 			<!-- <div class="issue-dynamics">发布动态</div> -->
@@ -45,70 +66,85 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/upload.js"></script>
-		<script type="text/javascript" src="../js/Zepto.min.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init({
-				beforeback: function() {
-					var myDynamics = plus.webview.currentWebview().opener();
-					plus.navigator.setStatusBarStyle("light");
-					mui.fire(myDynamics, 'refresh');
-					return true;
-				}
-			});
-			userInfo = getUserInfo();
-			var imageId = 0;
-			var images = new Array();
-			mui.plusReady(function() {
-				plus.navigator.setStatusBarStyle("dark");
-			})
-			//上传图片
-			document.getElementById('add_pic').addEventListener('tap', function() {
-				imageUpload(function(res) {
-					images[imageId] = res.url;
-					imageId++;
-					var newImgDiv = document.createElement('div');
-					newImgDiv.setAttribute('data-id', imageId);
-					newImgDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + res.url +
-						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-					newImgDiv.innerHTML = html;
-					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-				});
-			})
-
-			//删除图片
-			mui('#pic-container').on('tap', '.mui-close', function() {
-				var parentDiv = this.parentElement;
-				var imgId = parentDiv.dataset.id;
-				parentDiv.remove();
-				delete images[imgId];
-			})
-
-			mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
-				e.preventDefault();
-				var contents = document.querySelector('textarea[name=desc]').value
-				if (!contents) {
-					message("内容不能为空！");
-				} else {
-					mui.post($ajaxUrl + 'timeline&action=add', {
-						token: userInfo.token,
-						content: contents,
-						cover: images.filter(function(e) {
-							return e != null
-						}).join(',')
-					}, function(res) {
-						if (res.errno == 0) {
-							plus.key.hideSoftKeybord();
-							var view = plus.webview.currentWebview().opener();
-							mui.fire(view, 'doit');
-							message("发布成功");
-							setTimeout(function(){
-								mui.back();
-							},200)
-						} else {
-							message("发布失败，请稍后重试。");
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					images: [],
+					issue_desc: ''
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					delImg: function(idx) {
+						this.images.splice(idx, 1);
+					}
+				},
+				mounted: function() {
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+					mui.init({
+						beforeback: function() {
+							var per = plus.webview.currentWebview().opener();
+							plus.navigator.setStatusBarStyle("light");
+							mui.fire(per, 'refresh');
+							return true;
 						}
-					}, 'json')
+					});
+					mui.plusReady(function() {
+						plus.navigator.setStatusBarStyle("dark");
+						//上传图片
+						document.getElementById('add_pic').addEventListener('tap', function() {
+							imageUpload(function(res) {
+								app.images.push(res.url);
+							});
+						})
+					})
+					// 发布
+					mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
+						e.preventDefault();
+						if (!app.issue_desc) {
+							message("内容不能为空！");
+							return;
+						}
+						if (app.issue_desc.length > 120) {
+							message("动态长度不能大于120个字符");
+							return;
+						}
+						mui.post($ajaxUrl + 'timeline&action=add', {
+							token: userInfo.token,
+							content: app.issue_desc,
+							cover: app.images.filter(function(e) {
+								return e != null
+							}).join(',')
+						}, function(res) {
+							if (res.errno == 0) {
+								plus.key.hideSoftKeybord();
+								var view = plus.webview.currentWebview().opener();
+								mui.fire(view, 'doit');
+								message("发布成功");
+								setTimeout(function() {
+									mui.back();
+								}, 200)
+							} else {
+								message("发布失败，请稍后重试。");
+							}
+						}, 'json')
+					})
 				}
 			})
 		</script>

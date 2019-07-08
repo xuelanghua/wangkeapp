@@ -14,7 +14,7 @@ var getUserInfo = function() {
 function checkMember() {
 	var userInfo = getUserInfo();
 	var statusBarStyle = plus.navigator.getStatusBarStyle();
-	if (userInfo.is_activation == 0) {
+	if (userInfo.is_activation == 0) { 
 		// plus.nativeUI.confirm('此功能需要开通VIP会员才可使用,前往开通?', function(e) {
 		// 	if (e.index == 0) {
 		// 		fnOpenWin('activation.html', 'activation', '', {
