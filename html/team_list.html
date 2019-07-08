@@ -122,7 +122,7 @@
 						 @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
 						<div class="inside">
 							<i class="adorn"></i>
-							<div class="inside-top" @tap="detail(list.team_id)">
+							<div class="inside-top" @tap="detail(list.team_id,list.type)">
 								<div class="team-title">
 									{{list.name}}
 									<span class="mui-badge mui-badge-primary">
@@ -159,7 +159,7 @@
 						<!-- <img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
 						<div class="inside">
 							<i class="adorn"></i>
-							<div class="inside-top" @tap="detail(list.team_id)">
+							<div class="inside-top" @tap="detail(list.team_id,list.type)">
 								<div class="team-title">
 									{{list.name}}
 									<span class="mui-badge mui-badge-primary">
@@ -246,10 +246,18 @@
 					})
 				},
 				methods: {
-					detail: function(team_id) {
-						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
-							teamid: team_id
-						});
+					// 团队详情
+					detail: function(team_id, type) {
+						// 1正式团队 2数据团队
+						if (type == 1) {
+							openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+								teamid: team_id
+							});
+						} else {
+							openPage('other_team_detail.html', 'other_team_detail', '#f7f7f7', {
+								teamid: team_id
+							});
+						}
 					},
 					teamDetail: function(team_id, data_status, is_captain) {
 						if (data_status == 1 || is_captain == 1) {
@@ -284,7 +292,7 @@
 				mui.post($ajaxUrl + 'team&action=team_list', {
 					token: userInfo.token
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						var teamList = res.data;
 						var createList = new Array();
@@ -329,7 +337,7 @@
 			// 		alert("您不是本团队的创建者，无创建课程权限，请悉知。")
 			// 	}
 			// }
-			
+
 			// 课程列表
 			function courseList(tid, role) {
 				openPage('team_course_list.html', 'team_course_list', '#f7f7f7', {

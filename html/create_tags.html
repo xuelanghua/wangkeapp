@@ -179,12 +179,12 @@
 					</div>
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<template v-for="(val,key,idx) in lists" :key='idx'>
+						<template v-for="(val,key,idx) in lists" :key="idx">
 							<li v-show="lists[key].length>0" :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
 							<li :data-value="list.initial" :data-tags="list.pinyin" class="mui-table-view-cell mui-indexed-list-item" v-for="(list,index) in val"
 							 :key="index">
 								<div class="mui-slider-right mui-disabled">
-									<a class="mui-btn mui-btn-red" :data-uid="list.id" :data-idx='index' :data-parent="key">删除</a>
+									<a class="mui-btn mui-btn-red" :data-uid="list.id" :data-idx="index" :data-parent="key">删除</a>
 								</div>
 								<div class="mui-slider-handle member-lists">
 									<div class="user-head-img"><img :src="list.avatarUrl"></div>
@@ -258,6 +258,10 @@
 									message("创建成功");
 									mui.fire(plus.webview.getWebviewById('tags_setting'), 'refreshList');
 									plus.webview.currentWebview().close();
+								} else {
+									if (res.message == "标签已存在!") {
+										message("标签已存在,不能重复创建!");
+									}
 								}
 							}, 'json');
 						})

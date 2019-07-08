@@ -173,6 +173,7 @@
 						app.image = self.img;
 						app.uperimg = self.uperImg;
 						app.data_status = self.data_status;
+						logs(app.data_status);
 					})
 					// 保存修改
 					mui(".mui-bar").on("tap", ".save-setting", function() {
@@ -185,8 +186,9 @@
 							notice: app.desc
 						}, function(res) {
 							logs(res);
+							var per = plus.webview.currentWebview().opener();
 							if (res.errno == 0) {
-								mui.fire(plus.webview.getWebviewById('team_detail'), 'editTeamInfo');
+								mui.fire(per, 'editTeamInfo');
 								mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
 								mui.back();
 							} else {}
@@ -277,10 +279,11 @@
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						setTimeout(function(){
-							mui.fire(plus.webview.getWebviewById('team_detail'), 'editTeamInfo');
+						var per = plus.webview.currentWebview().opener();
+						setTimeout(function() {
+							mui.fire(per, 'editTeamInfo');
 							mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
-						},200);
+						}, 200);
 					}
 					// logs(res);
 				}, 'json');

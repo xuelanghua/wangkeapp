@@ -634,18 +634,22 @@
 				align-items: center;
 				font-size: 0.3rem;
 			}
-			.study-right{
+
+			.study-right {
 				color: #999999;
 			}
-			.rank-sign{
+
+			.rank-sign {
 				width: 22px;
 				height: 22px;
 				margin-left: 25px;
 				object-fit: cover;
 			}
-			.mui-table-view-cell.slef-ranking span{
+
+			.mui-table-view-cell.slef-ranking span {
 				color: #2289FF;
 			}
+
 			.void-tips-cont {
 				height: 1.2rem;
 				padding-left: 0.2rem;
@@ -708,182 +712,63 @@
 					</div>
 				</div>
 			</div>
-			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item mui-active" href="#item1">
-					基本信息
-				</a>
-				<a class="mui-control-item mui-hidden" href="#item2">
-					主力商品
-				</a>
-				<a class="mui-control-item" href="#item3">
-					学习进度
-				</a>
+			<div class=" notice-cont">
+				<h2 class="headline">
+					团队公告
+				</h2>
+				<p>{{desc}}</p>
 			</div>
-			<div id="item1" class="mui-control-content mui-active">
-				<div class=" notice-cont">
-					<h2 class="headline">
-						团队公告
-					</h2>
-					<p>{{desc}}</p>
-				</div>
-				<div class="team-members">
-					<h2 class="headline team-member-more">团队成员<p class="more-member mui-pull-right">共{{teamNum}}人<span class="mui-icon mui-icon-arrowright"></span></p>
-					</h2>
-					<ul>
-						<li v-for="(items,index) in teamMember" :key="index" v-if="index<6">
-							<div class="user-head-img">
-								<img :src="items.avatar||items.avatarUrl" />
-							</div>
-						</li>
-						<li>
-							<div class="user-head-img member-selection">
-								<img type="image" src="../image/team-detail-img05.png" />
-							</div>
-						</li>
-					</ul>
-				</div>
-				<!-- 团队大咖 -->
-				<div class="team-master">
-					<h2 class="headline team-master-more">
-						<span>团队大咖</span>
-						<p class="more-master mui-pull-right">更多<span class="mui-icon mui-icon-arrowright"></span></p>
-					</h2>
-					<div v-if="person!=''" class="swiper-container">
-						<div class="swiper-wrapper">
-							<div class="swiper-slide" v-for="(h,i) in person" :key="i">
-								<div class="master-top" @tap="checkBusinessCard(i)">
-									<img class="master-headimg" :src="h.avatar">
-									<div class="data-bank">
-										<h4 class="mui-ellipsis"><img src="../image/master-sign.png"><span>{{h.name}}</span></h4>
-										<p class="mui-ellipsis">职业：{{h.job}}</p>
-										<p>行业：{{h.industry}}</p>
-										<p>职位：{{h.position}}</p>
-									</div>
-								</div>
-								<div class="master-bottom" @tap="checkBusinessCard(i)">
-									<p class="mui-ellipsis-3">{{h.introduce}}</p>
-								</div>
-								<img class="card-sign-cont" :data-ids="h.uid" src="../image/business-card-sign.png">
-							</div>
-						</div>
-					</div>
-					<div class="void-tips-cont" v-else>
-						暂无团队大咖~
-					</div>
-				</div>
-				<!-- 团队荣誉 -->
-				<div class="team-honor">
-					<!-- team_honor_edit.html -->
-					<h2 class="headline team-honor-edit">
-						<span>团队荣誉</span>
-						<!-- v-if="role" -->
-						<p v-if="role" class="more-member mui-pull-right">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
-					</h2>
-					<div v-if="honorList!=''" class="team-honor-sign">
-						<div class="sign-items" v-for="(j,i) in honorList" :key="i">
-							<span>{{j.name}}</span>
-						</div>
-					</div>
-					<div class="void-tips-cont" v-else>
-						暂无团队荣誉~
-					</div>
-				</div>
-				<div class="validation-messages" v-if="role">
-					<h2 class="headline">验证消息</h2>
-					<ul v-if="applyList.length>0" class="mui-table-view">
-						<li class="mui-table-view-cell" v-for="(list,index) in applyList" :key="index">
-							<div class="member-left">
-								<img :src="list.avatar!=null?list.avatar:list.avatarUrl" alt="">
-								<div>
-									<p class="name">{{list.name!=null?list.name:list.nickName}}</p>
-									<p>{{list.remark}}</p>
-								</div>
-							</div>
-							<div class="member-right">
-								<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
-								<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button>
-								<span v-else-if="list.status==1">已添加</span>
-								<span v-else>已拒绝</span>
-							</div>
-						</li>
-					</ul>
-					<div v-else style="width: 100%;margin: 0.6rem 0;text-align: center;color: #999999;">
-						暂无验证消息
-					</div>
-				</div>
-				<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
-			</div>
-			<!-- 主力商品 -->
-			<div id="item2" class="mui-control-content primary-goods  mui-hidden">
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell">主力商品</li>
-				</ul>
-			</div>
-			<!-- 学习进度 -->
-			<div id="item3" class="mui-control-content study-container">
-				<h4>当前排名：<span>第3名</span></h4>
-				<ul class="mui-table-view">
-
-					<!-- 自己添加slef-ranking -->
-					<li class="mui-table-view-cell slef-ranking" >
-						<div class="study-left">
-							<img class="head-img" src="../image/5E0eH.png">
-							<span>王花花</span>
-						</div>
-						<div class="study-right">
-							<span>第1名</span>
-							<img class="rank-sign" src="../image/icon/rank-sign1.png">
+			<div class="team-members">
+				<h2 class="headline team-member-more">团队成员<p class="more-member mui-pull-right">共{{teamNum}}人<span class="mui-icon mui-icon-arrowright"></span></p>
+				</h2>
+				<ul>
+					<li v-for="(items,index) in teamMember" :key="index" v-if="index<6">
+						<div class="user-head-img">
+							<img :src="items.avatar||items.avatarUrl" />
 						</div>
 					</li>
-					<li class="mui-table-view-cell">
-						<div class="study-left">
-							<img class="head-img" src="../image/5E0eH.png">
-							<span>刘备备</span>
-						</div>
-						<div class="study-right">
-							<span>第2名</span>
-							<img class="rank-sign" src="../image/icon/rank-sign2.png">
-						</div>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="study-left">
-							<img class="head-img" src="../image/5E0eH.png">
-							<span>李栓但</span>
-						</div>
-						<div class="study-right">
-							<span>第3名</span>
-							<img class="rank-sign" src="../image/icon/rank-sign3.png">
+					<li>
+						<div class="user-head-img member-selection">
+							<img type="image" src="../image/team-detail-img05.png" />
 						</div>
 					</li>
 				</ul>
 			</div>
-			<!-- 弹窗 -->
-			<div id="menu" class="mui-popover more-menu">
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell delete-team">解散团队</li>
-					<li class="mui-table-view-cell team-settings">团队设置</li>
+			<div class="validation-messages" v-if="role">
+				<h2 class="headline">验证消息</h2>
+				<ul v-if="applyList.length>0" class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(list,index) in applyList" :key="index">
+						<div class="member-left">
+							<img :src="list.avatar!=null?list.avatar:list.avatarUrl" alt="">
+							<div>
+								<p class="name">{{list.name!=null?list.name:list.nickName}}</p>
+								<p>{{list.remark}}</p>
+							</div>
+						</div>
+						<div class="member-right">
+							<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
+							<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button>
+							<span v-else-if="list.status==1">已添加</span>
+							<span v-else>已拒绝</span>
+						</div>
+					</li>
 				</ul>
-			</div>
-			<div id="master_model" class="mui-popover master-card">
-				<div class="master-card-body">
-					<img class="user-head-cont" :src="modeldata.avatar">
-					<h4 class=""><img src="../image/master-sign.png"><span>{{modeldata.name}}</span></h4>
-					<div class="master-inside">
-						<p class="mui-ellipsis">职业：<span>{{modeldata.job}}</span></p>
-						<p>行业：<span>{{modeldata.industry}}</span></p>
-						<p>职位：<span>{{modeldata.position}}</span></p>
-						<p class="desc">
-							{{modeldata.introduce}}
-						</p>
-					</div>
+				<div v-else style="width: 100%;margin: 0.6rem 0;text-align: center;color: #999999;">
+					暂无验证消息
 				</div>
-				<img class="close-btn" src="../image/Close.png">
 			</div>
+			<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
+		</div>
+		<!-- 弹窗 -->
+		<div id="menu" class="mui-popover more-menu">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell delete-team">解散团队</li>
+				<li class="mui-table-view-cell team-settings">团队设置</li>
+			</ul>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/util.js"></script>
-	<script src="../js/swiper.min.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		var menuidx = 0;
@@ -948,7 +833,7 @@
 									setTimeout(function() {
 										plus.webview.close('weburl');
 										plus.webview.close('webview');
-										plus.webview.close('team_detail');
+										plus.webview.close('other_team_detail');
 									}, 200);
 								} else {
 									message(res.message);
@@ -980,50 +865,14 @@
 					getInfo();
 					getMember();
 					getApplyList();
-					// 获取团队大咖
-					getPerson();
-					getlists();
 				})
 			}
 		})
-		// 轮播初始化
-		function initSlider() {
-			// 初始化轮播
-			var mySwiper = new Swiper('.swiper-container', {
-				//可选选项，自动滑动
-				slidesPerView: 'auto',
-				spaceBetween: 20,
-				// autoplay: {
-				// 	delay: 0,
-				// 	// 用户操作之后不会停止轮播
-				// 	disableOnInteraction: false,
-				// },
-				loop: false
-			})
-		}
 		// 团队二维码
 		mui(".mui-content").on("tap", ".team-qrCode", function() {
 			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', {
 				teamId: app.tid,
 				teamName: app.teamName
-			});
-		})
-		// 点击名片标志
-		mui(".mui-content").on("tap", ".card-sign-cont", function() {
-			var jk = this.dataset.ids;
-			openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-				fid: jk
-			});
-			// modeldata
-		})
-		// 关闭卡片
-		mui(".master-card").on("tap", ".close-btn", function() {
-			mui("#master_model").popover("hide", mui(".master-top")[0]);
-		})
-		// 更多大咖
-		mui(".mui-content").on("tap", ".team-master-more", function() {
-			openPage('more_master.html', 'more_master', '#f7f7f7', {
-				tid: app.tid
 			});
 		})
 		//团队设置
@@ -1081,13 +930,6 @@
 				captainUid: app.captain_uid
 			});
 		})
-		// 编辑团队荣誉
-		mui(".mui-content").on("tap", ".team-honor-edit", function() {
-			openPage('team_honor_edit.html', 'team_honor_edit', '#f7f7f7', {
-				tid: app.tid
-			});
-		})
-
 		// 获取团队信息
 		function getInfo() {
 			mui.post($ajaxUrl + 'team&action=team_info', {
@@ -1181,44 +1023,5 @@
 		window.addEventListener('editTeamInfo', function(e) {
 			getInfo();
 		});
-		// 删除团队大咖
-		window.addEventListener('reloadList', function(e) {
-			getPerson();
-		});
-		// 添加或者删除团队荣誉
-		window.addEventListener('reloadHonor', function(e) {
-			getlists();
-		});
-		// 获取大咖列表
-		function getPerson() {
-			mui.post($ajaxUrl + 'team&action=star_list', {
-				token: userInfo.token,
-				team_id: app.tid,
-			}, function(res) {
-				// logs(res);
-				if (res.errno == 0) {
-					app.modeldata = res.data[0];
-					app.person = res.data;
-					setTimeout(function() {
-						initSlider();
-					}, 100);
-				} else {
-					app.person = [];
-				}
-				// logs(app.person); 
-			}, 'json');
-		}
-		// 获取荣誉列表
-		function getlists() {
-			mui.post($ajaxUrl + 'team&action=title_list', {
-				token: userInfo.token,
-				team_id: app.tid,
-			}, function(res) {
-				// logs(res);
-				if (res.errno == 0) {
-					app.honorList = res.data;
-				} else {}
-			}, 'json');
-		}
 	</script>
 </html>

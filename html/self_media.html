@@ -307,10 +307,12 @@
 									</div>
 								</div>
 								<div>
-									<div v-if="c.state==0" class="cretae-timer" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">开播：2018-05-18 18:50</div>
-									<div v-else-if="c.state==1" class="train-ing" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)"><img style="width: 0.38rem;"
-										 src="../image/discover/loading.gif">培训中</div>
-									<div v-else class="cretae-timer" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">结束：2018-05-18 20:50</div>
+									<div v-if="c.state==0" class="cretae-timer" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">开播：2018-05-18
+										18:50</div>
+									<div v-else-if="c.state==1" class="train-ing" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)"><img
+										 style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
+									<div v-else class="cretae-timer" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">结束：2018-05-18
+										20:50</div>
 									<div class="team-name mui-pull-right" @tap="teamDetail(c.team_id)">
 										<img class="team-icon" src="../image/discover/team-icon.png">
 										<span class="mui-ellipsis">{{c.team_name}}</span>
@@ -528,13 +530,13 @@
 						});
 					},
 					//打开课程详情
-					curriculumDetail: function(cid, status,tid,title,teid, silent) {
+					curriculumDetail: function(cid, status, tid, title, teid, silent) {
 						if (status == 1 || status == 2) {
 							openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
 								tid: tid,
 								courseId: cid,
 								courseTitle: title,
-								teacher_id:teid,
+								teacher_id: teid,
 								isSilent: silent
 							});
 						} else {
@@ -689,6 +691,10 @@
 			function shareHref() {
 				openPage('issue_dynamics.html', 'issue_dynamics', '#f7f7f7');
 				plus.navigator.setStatusBarStyle("dark");
+				// mui.openWindow({
+				// 	url: 'activation.html',
+				// 	id: 'activation'
+				// });
 			}
 			// 数据请求
 			function getDiscoverData(lpk) {
@@ -826,7 +832,6 @@
 			}
 			// 监听发布新动态
 			window.addEventListener('doit', function() {
-				location.reload();
 				getDiscoverData();
 			}, false);
 			// 更换封面

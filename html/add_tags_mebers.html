@@ -163,7 +163,7 @@
 
 			.nex-page {
 				padding: 0.2rem;
-				margin-left: 0.5rem;
+				/* margin-left: 0.5rem; */
 				color: #2289FF;
 			}
 		</style>
@@ -238,7 +238,7 @@
 						</template>
 					</ul>
 					<div class="page-number">
-						<span class="current-page">当前页{{skip}}</span>
+						<!-- <span class="current-page">当前页{{skip}}</span> -->
 						<span class="nex-page">下一页</span>
 					</div>
 				</div>
@@ -374,7 +374,7 @@
 						if (types == this.dataset.types) {
 							return;
 						}
-						app.skip = 0;
+						app.skip = 1;
 						app.isNext = true;
 						types = this.dataset.types;
 						// var list = document.getElementById('list');
@@ -425,8 +425,7 @@
 							getstr = ''
 						}
 						mui.post($ajaxUrl + 'label&action=member_list', {
-							// token: userInfo.token,
-							token: 'f0cd140a588aefa885ea316c4bb16945',
+							token: userInfo.token,
 							type: types,
 							exist_uids: getstr,
 							skip: app.skip,
@@ -450,7 +449,7 @@
 								app.skip += 1;
 							} else {
 								showload(true, 1000);
-								if (app.skip != 0) {
+								if (app.skip != 1) {
 									app.isNext = false;
 									alert("没有下一页啦");
 								}
