@@ -17,11 +17,13 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 			<h1 class="mui-title">课程统计</h1>
 		</header>
 		<div id="mui-content" class="mui-content " v-cloak>
 			课程id：{{course_id}}
+			<br />
+			团队id：{{tid}}
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -31,7 +33,9 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					course_id: ''
+					course_id: '',
+					tid: '',
+					lProgress:[]
 				},
 				created: function() {
 					// 初始化字体大小
@@ -52,9 +56,10 @@
 						}
 					});
 					mui.plusReady(function() {
-						var self= plus.webview.currentWebview();
+						var self = plus.webview.currentWebview();
 						//plus.navigator.setStatusBarStyle("dark");
-						app.course_id=self.course_id;
+						app.course_id = self.course_id;
+						app.tid = self.tid;
 					})
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -65,6 +70,21 @@
 					// 初始化字体大小结束
 				}
 			})
+			// 获去统计数据
+			function getLearningProgress() {
+				mui.post($ajaxUrl + 'team&action=course_study_rank', {
+					token: userInfo.token,
+					team_id: app.tid,
+					course_id: app.course_id
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.lProgress = res.data;
+					} else {
+
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 

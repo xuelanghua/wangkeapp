@@ -101,7 +101,19 @@
 									mui.toast("取消");
 								} else {
 									// 删除
-									mui.toast("已清空");
+									mui.post($ajaxUrl + 'team&action=empty_message', {
+										token: userInfo.token,
+										team_id: app.tid,
+									}, function(res) {
+										var per = plus.webview.currentWebview().opener();
+										if (res.errno == 0) {
+											mui.toast("已清空");
+											mui.fire(per, 'doit');
+											mui.back();
+										} else {
+
+										}
+									}, 'json');
 								}
 							})
 						});

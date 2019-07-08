@@ -622,19 +622,21 @@
 								}, 1000)
 							}, 'json');
 						}
-						
+						// 清空群聊
+						window.addEventListener('doit', function() {
+							getChatList();
+						}, false);
 						//阅读消息
 						function readMessage() {
-							mui.post($ajaxUrl + 'team',{
-									action: 'read_message',
-									token: userInfo.token,
-									team_id: vm.tid,
-									course_id: 0,
-									type: 1,
-								}, function(res){
-									logs(res);
-								},'json'
-							);
+							mui.post($ajaxUrl + 'team', {
+								action: 'read_message',
+								token: userInfo.token,
+								team_id: vm.tid,
+								course_id: 0,
+								type: 1,
+							}, function(res) {
+								logs(res);
+							}, 'json');
 						}
 					})
 				}

@@ -394,7 +394,7 @@
 						timeline_cover: ""
 					},
 					// 类型
-					typeler: '1',
+					typeler: [],
 					// 动态
 					dynamic: [],
 					// 官方文章
@@ -405,7 +405,7 @@
 					screen: [{
 							title: '好友动态',
 							id: '1',
-							selected: true
+							selected: false
 						}, {
 							title: '旺客头条',
 							id: '2',
@@ -441,12 +441,16 @@
 				methods: {
 					// 选择标签
 					selectedTj: function(id, idx) {
-						for (i in this.screen) {
-							this.screen[i].selected = false;
+						this.screen[idx].selected = !this.screen[idx].selected;
+						var stype = this.screen[idx].id;
+						var _index=app.typeler.indexOf(stype);
+						if(_index==-1){
+							app.typeler.push(stype);
+						}else{
+							app.typeler.splice(idx,1);
 						}
-						skip = 1;
-						this.screen[idx].selected = true;
-						this.typeler = idx + 1;
+						logs(app.typeler);
+						
 						if (pullDirection == 'up') {
 							mui('#mui-content').pullRefresh().refresh(true);
 						}

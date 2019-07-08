@@ -634,18 +634,22 @@
 				align-items: center;
 				font-size: 0.3rem;
 			}
-			.study-right{
+
+			.study-right {
 				color: #999999;
 			}
-			.rank-sign{
+
+			.rank-sign {
 				width: 22px;
 				height: 22px;
 				margin-left: 25px;
 				object-fit: cover;
 			}
-			.mui-table-view-cell.slef-ranking span{
+
+			.mui-table-view-cell.slef-ranking span {
 				color: #2289FF;
 			}
+
 			.void-tips-cont {
 				height: 1.2rem;
 				padding-left: 0.2rem;
@@ -821,38 +825,17 @@
 			</div>
 			<!-- 学习进度 -->
 			<div id="item3" class="mui-control-content study-container">
-				<h4>当前排名：<span>第3名</span></h4>
+				<h4>当前排名：<span>第{{selfrank}}名</span></h4>
 				<ul class="mui-table-view">
-
 					<!-- 自己添加slef-ranking -->
-					<li class="mui-table-view-cell slef-ranking" >
+					<li class="mui-table-view-cell" :class="l.uid==slef_id?'slef-ranking':''" v-for="(l,i) in lProgress" :key="i">
 						<div class="study-left">
-							<img class="head-img" src="../image/5E0eH.png">
-							<span>王花花</span>
+							<img class="head-img" :src="l.avatar">
+							<span>{{l.name}}</span>
 						</div>
 						<div class="study-right">
-							<span>第1名</span>
-							<img class="rank-sign" src="../image/icon/rank-sign1.png">
-						</div>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="study-left">
-							<img class="head-img" src="../image/5E0eH.png">
-							<span>刘备备</span>
-						</div>
-						<div class="study-right">
-							<span>第2名</span>
-							<img class="rank-sign" src="../image/icon/rank-sign2.png">
-						</div>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="study-left">
-							<img class="head-img" src="../image/5E0eH.png">
-							<span>李栓但</span>
-						</div>
-						<div class="study-right">
-							<span>第3名</span>
-							<img class="rank-sign" src="../image/icon/rank-sign3.png">
+							<span>第{{l.rank}}名</span>
+							<img v-if="l.rank<4" class="rank-sign" :src="'../image/icon/rank-sign'+l.rank+'.png'">
 						</div>
 					</li>
 				</ul>
@@ -914,7 +897,21 @@
 				serial: 0,
 				modeldata: {},
 				rla: {},
-				data_status: 0
+				data_status: 0,
+				lProgress: [],
+				slef_id: userInfo.id
+			},
+			computed: {
+				selfrank: function() {
+					var ranks = '';
+					var _self = this;
+					for (var i in _self.lProgress) {
+						if (_self.lProgress[i].uid == _self.slef_id) {
+							ranks = _self.lProgress[i].rank;
+							return ranks;
+						}
+					}
+				}
 			},
 			methods: {
 				examine: function(status, userId) {
@@ -976,13 +973,15 @@
 					plus.navigator.setStatusBarStyle("dark");
 					var self = plus.webview.currentWebview();
 					app.tid = self.teamid;
-					logs(app.tid);
+					// logs(app.tid);
 					getInfo();
 					getMember();
 					getApplyList();
 					// 获取团队大咖
 					getPerson();
 					getlists();
+					// 获取学习进度
+					getLearningProgress();
 				})
 			}
 		})
@@ -1094,7 +1093,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
@@ -1146,7 +1145,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.teamMember = res.data;
 				} else {
@@ -1218,6 +1217,21 @@
 				if (res.errno == 0) {
 					app.honorList = res.data;
 				} else {}
+			}, 'json');
+		}
+		// 获取学习进度
+		function getLearningProgress() {
+			mui.post($ajaxUrl + 'team&action=course_study_rank', {
+				token: userInfo.token,
+				team_id: app.tid,
+				course_id: ''
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					app.lProgress = res.data;
+				} else {
+
+				}
 			}, 'json');
 		}
 	</script>

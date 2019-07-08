@@ -424,8 +424,8 @@
 				<img src="../image/icon/clear-chatting-records-icon.png">
 			</div>
 		</header>
-		<pre id='h'></pre>
-		<script id='msg-template' type="text/template">
+		<pre id="h"></pre>
+		<script id="msg-template" type="text/template">
 			<div class="msg-container" id="msg-container">
 				<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
@@ -457,7 +457,7 @@
 			</div>
 		</script>
 		<div class="mui-content">
-			<div id='msg-list'>
+			<div id="msg-list">
 			</div>
 		</div>
 		<!-- 清除聊天记录确认弹窗 -->
@@ -955,6 +955,7 @@
 							window.location.reload();
 							getRecordList();
 							message('已清除');
+							document.querySelector('.clear-chatting-records').style.display = "none";
 						} else {
 							message('清除失败，请稍后重试');
 						}
@@ -989,7 +990,7 @@
 						skip: skip,
 						limit: limit
 					}, function(res) {
-						// logs(res);
+						logs(res);
 						cacheData('recorddata' + chatId, res.data);
 						if (res.errno == 0) {
 							if (loadMore) {
@@ -1008,6 +1009,7 @@
 								bindMsgList();
 								// scrollInit();
 							}
+							document.querySelector('.clear-chatting-records').style.display = "inline-flex";
 						} else {
 							document.querySelector('.clear-chatting-records').style.display = "none";
 							if (!loadMore) {
@@ -1017,9 +1019,6 @@
 									lastIndex = index;
 								}
 							}
-						}
-						if(recordData){
-							document.querySelector('.clear-chatting-records').style.display = "inline-flex";
 						}
 					}, 'json');
 				}

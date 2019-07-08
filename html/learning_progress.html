@@ -75,20 +75,20 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 			<h1 class="mui-title">学习进度</h1>
 		</header>
 		<div id="mui-content" class="mui-content " v-cloak>
 			<ul class="mui-table-view">
 				<!-- 自己添加slef-ranking -->
-				<li class="mui-table-view-cell slef-ranking" v-for="(l,i) in course_list" :key="i">
+				<li class="mui-table-view-cell slef-ranking" v-for="(l,i) in course_list" :key="i" @tap="goChat(l.team_id,l.id,l.title,l.teacher_id,l.is_silent)">
 					<div class="list-left">
 						<p class="mui-ellipsis-2">
 							{{l.title}}
 						</p>
 						<div class="desc">
-							<span>主讲：{{filterFun(l.lecturer)}}</span>
-							<span>结束时间：{{l.timer}}</span>
+							<span>主讲：{{filterFun(l.name)}}</span>
+							<span>结束时间：{{l.end_time}}</span>
 						</div>
 					</div>
 					<div class="list-right">
@@ -107,31 +107,7 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					course_list: [{
-						title: '这里是课程名称，我是买包的小行家 天不怕，地不怕啦啦啦德玛西亚地不怕啦啦啦德玛西亚地不怕啦啦啦德玛西',
-						timer: '2018-02-25 12:30',
-						id: '125',
-						progress: 50,
-						lecturer: '刘备备刘备备刘备备刘备备'
-					}, {
-						title: '这里是课程名称，我是买包的小行家 天不怕。',
-						timer: '2018-03-25 11:30',
-						id: '156',
-						progress: 20,
-						lecturer: '貂蝉'
-					}, {
-						title: '你好阿斯顿发撒地方看见爱上对方拉设计费',
-						timer: '2019-07-07 19:22',
-						id: '112',
-						progress: 30,
-						lecturer: '明日之子'
-					}, {
-						title: 'PNChart 的使用技巧和适用规则解析',
-						timer: '2019-07-07 19:22',
-						id: '10',
-						progress: 100,
-						lecturer: '兰某某'
-					}]
+					course_list: []
 				},
 				created: function() {
 					// 初始化字体大小
@@ -148,9 +124,19 @@
 							value = value.substring(0, 4) + '…';
 						}
 						return value;
+					},
+					goChat:function(tid,cid,title,teid,silent){
+						openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+							tid: tid,
+							courseId: cid,
+							courseTitle: title,
+							teacherId: teid,
+							isSilent: silent
+						});
 					}
 				},
 				mounted: function() {
+					var _self = this;
 					mui.init({
 						beforeback: function() {
 							//plus.navigator.setStatusBarStyle("light");
@@ -167,26 +153,43 @@
 					}
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
-					// 初始化园形进度条
-					for (var i in this.course_list) {
-						$(".circleChart" + i).circleChart({
-							color: "#2289ff",
-							// 大小
-							size: 55,
-							// 当前值
-							value: this.course_list[i].progress,
-							// 进度条下方显示文字
-							text: 0,
-							// 开始角度
-							startAngle: 50,
-							widthRatio: 0.15,
-							lineCap: 'butt',
-							textSize: "14px",
-							counterclockwise: true,
-							onDraw: function(el, circle) {
-								circle.text(Math.round(circle.value) + "%");
-							}
-						});
+					// 获取课程列表
+					mui.post($ajaxUrl + 'team&action=course_study_progress', {
+						token: userInfo.token
+					}, function(res) {
+						logs(res);
+						if (res.errno == 0) { 
+							app.course_list = res.data;
+							setTimeout(function() {
+								initpro();
+							}, 500);
+						} else {
+
+						}
+					}, 'json');
+
+					function initpro() {
+						// 初始化园形进度条
+						for (var i in _self.course_list) {
+							$(".circleChart" + i).circleChart({
+								color: "#2289ff",
+								// 大小
+								size: 55,
+								// 当前值
+								value: _self.course_list[i].progress,
+								// 进度条下方显示文字
+								text: 0,
+								// 开始角度
+								startAngle: 50,
+								widthRatio: 0.15,
+								lineCap: 'butt',
+								textSize: "14px",
+								counterclockwise: true,
+								onDraw: function(el, circle) {
+									circle.text(Math.round(circle.value) + "%");
+								}
+							});
+						}
 					}
 				}
 			})
