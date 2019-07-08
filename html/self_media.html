@@ -217,7 +217,7 @@
 									<span class="user-names mui-ellipsis" @tap="openDynamically(i.user_id)">{{i.owner.name}}</span>
 									<span class="cretae-timer" @tap="openDynamically(i.user_id)">{{i.create_time}}</span>
 									<!-- 如果是自己的动态则显示删除 -->
-									<span v-if="i.is_mine==1" class="delete-list" @tap="deleteDynamics(i.id,m)">删除</span>
+									<!-- <span v-if="i.is_mine==1" class="delete-list" @tap="deleteDynamics(i.id,m)">删除</span> -->
 								</div>
 								<div class="mui-pull-right click-heart" @tap="likeThis(i.id,i.user_id,m)">
 									<!-- <i class="heart-icon animated" :class="i.is_thumbs==1?'heartBeat':'tada'"></i> -->
@@ -242,9 +242,9 @@
 										<span class="check-detail" @tap="dynamicDetail(i.id)">查看详情</span>
 										<div class="menu-body" :class="'menu-body'+i.id">
 											<div class="menu-arrow"></div>
-											<!-- <div v-if="is_self" class="item"> 
-													<span class="iconfont icon-delete">&#xe603;</span>删除
-												</div> -->
+											<div v-if="i.is_mine==1" class="item" @tap="deleteDynamics(i.id,m)">
+												<span class="iconfont icon-delete">&#xe603;</span>删除
+											</div>
 											<div class="item" @tap="shareBtn(i.id,i.content,i.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
 											<div class="item" @tap="pinglun(i.id,m)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
 										</div>
@@ -812,6 +812,10 @@
 			}
 			// 删除动态
 			function deleteDynamics(tid, ii) {
+				mask.close();
+				document.querySelector(".menu-body" + timeline_id).classList.remove("active");
+				document.querySelector(".menu-list" + timeline_id).classList.remove("active");
+				document.querySelector(".comment-icon-cont" + timeline_id).classList.remove("active");
 				plus.nativeUI.confirm("确认删除该动态吗？", function(e) {
 					if (e.index) {
 						// 取消

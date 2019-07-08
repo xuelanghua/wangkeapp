@@ -66,6 +66,22 @@
 				left: 1px;
 				right: auto;
 			}
+			.nav-right-btn{
+				height: 44px;
+				width: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 16;
+				font-size: 14px;
+				color: #333333;
+				margin-right:-5px;
+			}
+			.nav-right-btn img{
+				width:20px;
+				height: auto;
+			}
 		</style>
 	</head>
 
@@ -73,6 +89,9 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title"></h1>
+			<div class="nav-right-btn mui-pull-right">
+				<img src="../image/icon/team-list-opction01.png" >
+			</div>
 		</header>
 		<pre id="h"></pre>
 		<div class="mui-content">
@@ -210,7 +229,13 @@
 						}
 						plus.navigator.setStatusBarStyle("dark");
 						var courseTitle = wv.courseTitle;
-						document.querySelector('.mui-title').innerHTML = courseTitle;
+						var title = function(value) {
+							if (value && value.length > 8) {
+								value = value.substring(0, 8) + '…';
+							}
+							return value;
+						};
+						document.querySelector('.mui-title').innerHTML = title(courseTitle);
 						chatData = {
 							team_id: tid,
 							course_id: vm.courseId,
@@ -696,19 +721,18 @@
 								}, 1000)
 							}, 'json');
 						}
-						
+
 						//阅读消息
 						function readMessage() {
-							mui.post($ajaxUrl + 'team',{
-									action: 'read_message',
-									token: userInfo.token,
-									team_id: vm.tid,
-									course_id: vm.courseId,
-									type: 2,
-								}, function(res){
-									logs(res);
-								},'json'
-							);
+							mui.post($ajaxUrl + 'team', {
+								action: 'read_message',
+								token: userInfo.token,
+								team_id: vm.tid,
+								course_id: vm.courseId,
+								type: 2,
+							}, function(res) {
+								logs(res);
+							}, 'json');
 						}
 
 						// 只看讲师
@@ -781,7 +805,7 @@
 				}
 			})
 			// 标记语音已读
-			function readAudio(aid,idx, i) {
+			function readAudio(aid, idx, i) {
 				// logs(aid);
 				// logs(vm.tid);
 				// logs(vm.courseId);
@@ -794,10 +818,16 @@
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						vm.$set(vm.chatList[idx][i],"read_status",1);
+						vm.$set(vm.chatList[idx][i], "read_status", 1);
 					}
 				}, 'json');
 			}
+			// 打开团队统计
+			mui(".mui-bar").on("tap", ".nav-right-btn", function() {
+				openPage('course_statistics.html','course_statistics','#f7f7f7',{
+					course_id:vm.courseId
+				});
+			})
 		</script>
 	</body>
 </html>

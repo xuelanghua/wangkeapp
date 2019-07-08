@@ -76,6 +76,13 @@
 				max-width: 100%;
 				height: auto;
 			}
+			.void-mass-tips{
+				padding: 20% 0 80%;
+				font-size: 18px;
+				text-align: center;
+				color: #DDDDDD;
+				background-color: #FFFFFF;
+			}
 		</style>
 	</head>
 
@@ -85,7 +92,7 @@
 			<h1 class="mui-title">群发记录</h1>
 		</header>
 		<div id="mui-content" class="mui-content setting-container" v-cloak>
-			<ul class="mui-table-view">
+			<ul v-if="lists" class="mui-table-view">
 				<li class="mui-table-view-cell" v-for="(d,i) in lists" :key="i" :data-title="d.create_time" :data-mass_id="d.id">
 					<h5>{{d.create_time}}</h5>
 					<p v-if="d.message_type=='text'" class="mui-ellipsis-2 mass-desc">
@@ -95,6 +102,10 @@
 					<p class="desc-footer">群发人数：{{d.total}}<span class="mass-status">发送失败：{{d.fail}}</span></p>
 				</li>
 			</ul>
+			<div v-if="iSvoid" class="void-mass-tips">
+			<!-- <div class="void-mass-tips"> -->
+				暂无群发记录~
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -106,7 +117,7 @@
 				data: {
 					names: '',
 					lists: [],
-					voidData: false
+					iSvoid:false
 				},
 				methods: {
 
@@ -137,9 +148,9 @@
 					logs(res);
 					if (res.errno == 0) {
 						app.lists = res.data;
-						app.voidData = false;
+						app.iSvoid = false;
 					} else {
-						app.voidData = true;
+						app.iSvoid = true;
 					}
 				}, 'json');
 			}
