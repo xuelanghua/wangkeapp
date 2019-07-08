@@ -1,10 +1,10 @@
-$ajaxUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
-$uploadUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
-$voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
-// 
-// $ajaxUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
-// $uploadUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
-// $voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
+// $ajaxUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
+// $uploadUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
+// $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
+
+$ajaxUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
+$uploadUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
+$voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
 //获取用户信息
 var getUserInfo = function() {
 	return JSON.parse(localStorage.getItem('user'));
@@ -878,11 +878,11 @@ function baseImgFile(uid, base64, quality, callback) {
 function fnLogout() {
 	plus.nativeUI.alert('您的账号在其他设备登录,本设备被强制退出!', function() {
 		localStorage.removeItem("user");
-		var login = plus.webview.create("login.html", "login", {
-			statusbar: {
-				background: '#122c9a'
-			}
-		}, '');
+		// var login = plus.webview.create("login.html", "login", {
+		// 	statusbar: {
+		// 		background: '#122c9a'
+		// 	}
+		// }, '');
 
 		// 获取所有Webview窗口
 		var curr = plus.webview.currentWebview();
@@ -905,8 +905,8 @@ function fnLogout() {
 								background: '#2289FF'
 							}
 						}, '', 'slide-in-bottom');
-						curr.hide();
-						curr.close();
+						// curr.hide();
+						// curr.close();
 					} else {
 						for (var i = 0; i < wvs.length; i++) {
 							if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
@@ -920,15 +920,15 @@ function fnLogout() {
 								background: '#122c9a'
 							}
 						}, '', 'slide-in-bottom');
-						curr.hide();
-						curr.close();
+						// curr.hide();
+						// curr.close();
 					}
 				})
 			}, 'json');
 		} else {
 			// plus.runtime.restart();
 			for (var i = 0; i < wvs.length; i++) {
-				if (wvs[i].getURL() == curr.getURL()) {
+				if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
 					continue;
 				} else {
 					plus.webview.close(wvs[i]);
@@ -939,8 +939,9 @@ function fnLogout() {
 					background: '#122c9a'
 				}
 			}, '', 'slide-in-bottom');
-			curr.hide();
-			curr.close();
+			// curr.hide();
+			// curr.close();
+			// logs(plus.webview.all());
 		}
 	})
 }
