@@ -728,6 +728,7 @@
 	<script src="../js/swiper.min.js"></script>
 	<script src="../js/Zepto.min.js"></script>
 	<script>
+		var team_type="";
 		var mask = mui.createMask(function() {
 			$(".mui-title .mui-icon").removeClass("mui-icon-arrowdown");
 			$(".team-list").slideUp();
@@ -908,9 +909,17 @@
 			//跳转团队详情
 			document.getElementById('new_customer').addEventListener('tap', function() {
 				if (default_team_id) {
-					openPage('team_detail.html', 'team_detail', '#f7f7f7', {
-						teamid: default_team_id
-					});
+					// 正式
+					if(team_type==1){
+						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+							teamid: default_team_id
+						});
+					}else{
+						// 数据
+						openPage('other_team_detail.html', 'other_team_detail', '#f7f7f7', {
+							teamid: default_team_id
+						});
+					}
 				}else{
 					openPage('join_team.html', 'join_team.html', '#f7f7f7');
 				}
@@ -1233,22 +1242,22 @@
 		}
 		//获取团队信息
 		var teamchange = true;
-
 		function getTeamList() {
 			mui.post($ajaxUrl + 'team&action=personal_team_list', {
 				token: userInfo.token,
 			}, function(res) {
-				// logs(res);
+				logs(res);
 				if (res.errno == 0) {
 					var data = res.data;
-					if (data.length > 1) {
+					if (data.length > 1) { 
 						var html = "";
 						for (var i in data) {
-							if (data[i].is_default == 1) {
+							if (data[i].is_default == 1) { 
 								document.getElementById("team_name").innerText = data[i].name;
 								default_team_id = data[i].team_id;
+								team_type= data[i].type;
 							}
-							html += '<li class="mui-table-view-cell" data-tid=' + data[i].team_id + '>' + data[i].name + '</li>';
+							html += '<li class="mui-table-view-cell" data-typer=' + data[i].type + ' data-tid=' + data[i].team_id + '>' + data[i].name + '</li>';
 						}
 						document.getElementById("team-list").innerHTML = html;
 					} else if (data.length == 1 && data != "") {
@@ -1277,6 +1286,7 @@
 		// 切换团队名称
 		mui('.mui-bar').on('tap', '.mui-table-view-cell', function() {
 			default_team_id = this.dataset.tid;
+			team_type=this.dataset.typer;
 			var _self = this;
 			mui.post($ajaxUrl + 'team&action=set_default_team', {
 				token: userInfo.token,
