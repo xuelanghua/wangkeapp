@@ -149,6 +149,73 @@
 			.to-top .mui-icon {
 				font-size: 36px;
 			}
+
+			/* 第二个菜单 */
+			.subMenu {
+				position: relative;
+				overflow: hidden;
+				width: 100%;
+				touch-action: pan-y;
+				/* background-color: #0062CC; */
+				height: 48px;
+			}
+
+			.subMenu:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 1px;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.mui-segmented-control.mui-scroll-wrapper {
+				height: 48px;
+			}
+
+			.mui-segmented-control.mui-scroll-wrapper .mui-scroll {
+				height: 48px;
+			}
+
+			.subMenu .mui-scroll .mui-control-item {
+				margin-top: 11.5px;
+				font-size: 15px;
+				color: #333333;
+				line-height: 1;
+				display: inline-flex;
+				align-items: center;
+				padding: 0 10px;
+				overflow: visible;
+			}
+
+			.subMenu .mui-scroll {
+				position: absolute;
+				touch-action: pan-y;
+			}
+
+			.mui-segmented-control .mui-control-item {
+				background-color: #FFFFFF;
+				position: relative;
+			}
+
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active:after {
+				height: 1px;
+				display: block;
+				width: 50%;
+				position: absolute;
+				bottom: -5px;
+				left: 25%;
+				content: '';
+				background-color: #2289FF;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -183,8 +250,6 @@
 				</div>
 				<div class="swiper-pagination" :class="slider.length==1?'activer':''"></div>
 			</div>
-			<!-- <div id="welcome" style="width: 750px;height: 300px;">
-			</div> -->
 			<div class="discover-body">
 				<div class="user-part1">
 					<div class="user-head-cont" @tap="openDynamically(discover_info.id)">
@@ -207,8 +272,18 @@
 				<ul id="screen-menu" class="screen-menu mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
 					<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</li>
 				</ul>
+				<!-- 第二组菜单 -->
+				<div v-show="isArticleClassify" id="subMenu" class="subMenu">
+					<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+						<div class="mui-scroll" id="classification">
+							<span class="mui-control-item mui-active" @tap="changeArticleClassify('-1')">推荐</span>
+							<span class="mui-control-item" @tap="changeArticleClassify('-2')">热点</span>
+							<span class="mui-control-item" data-id="-1" v-for="(cls,i) in ArticleClassify" @tap="changeArticleClassify(cls.id)">推荐{{cls.name}}</span>
+						</div>
+					</div>
+				</div>
 				<div id="discover-container" class="discover-list-container">
-					<span v-for="p in typeler">{{p}}</span>
+					<!-- <span v-for="p in typeler">{{p}}</span> -->
 					<template v-for="(i,m) in dynamic" :key="m">
 						<!-- 自己发布的动态 -->
 						<template v-if="i.type==1">
@@ -265,59 +340,61 @@
 							</li>
 						</template>
 						<!-- 官方文章 -->
-						<!-- <li class="mui-table-view-cell official-article" v-if="i.type==2" @tap="articleDetail(a.id)">
+						<li class="mui-table-view-cell official-article" v-if="i.type==2" @tap="articleDetail(i.info.id)">
 							<div class="article-img">
-								<img :src="i.thumb">
+								<img :src="i.info.thumb">
 							</div>
 							<div class="article-right">
 								<p class="mui-ellipsis-2">
-									{{i.title}}{{i.is_top}}
+									{{i.info.title}}
 								</p>
-								<div v-if="i.is_top" class="stick-sign">
+								<div v-if="i.info.is_top==1" class="stick-sign">
 									<img src="../image/discover/stick-sign.png">
 								</div>
 								<div class="official-article-status">
-									<span>{{i.add_time}}</span>
-									<span><img src="../image/eye.png">{{i.click}}</span>
+									<span>{{i.info.add_time}}</span>
+									<span><img src="../image/eye.png">{{i.info.click}}</span>
 									<img src="../image/discover/official-sign.png">
 								</div>
 							</div>
-						</li> -->
+						</li>
 						<!-- 课程列表列表 -->
-						<!-- <li class="mui-table-view-cell curriculum-list" v-if="i.type==3"> -->
-						<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-						<!-- <div class="curriculum-img" @tap="curriculumDetail(1.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">
-								<img :src="i.cover_url">
+						<li class="mui-table-view-cell curriculum-list" v-if="i.type==3">
+							<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
+							<div class="curriculum-img" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+								<img :src="i.info.cover_url">
 							</div>
-							<div class="curriculum-list-right"> -->
-						<!-- 官方加stick-sign -->
-						<!-- <p class="mui-ellipsis-2" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">
-									{{i.title}}
+							<div class="curriculum-list-right">
+								<!-- 官方加stick-sign -->
+								<p class="mui-ellipsis-2" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+									{{i.info.title}}
 								</p>
-								<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">
+								<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
 									<div class="mui-pull-left">
-										<span class="ting-ke">主讲人：{{i.teacher_name}}</span>
+										<span class="ting-ke">主讲人：{{i.info.teacher_name}}</span>
 									</div>
 								</div>
 								<div>
-									<div v-if="i.state==0" class="cretae-timer" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">开播：2018-05-18
-										18:50</div>
-									<div v-else-if="i.state==1" class="train-ing" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)"><img
-										 style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
-									<div v-else class="cretae-timer" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">结束：2018-05-18
-										20:50</div>
-									<div class="team-name mui-pull-right" @tap="teamDetail(i.team_id)">
+									<div v-if="i.info.state==0" class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+										开播：{{i.info.start_time}}
+									</div>
+									<div v-else-if="i.info.state==1" class="train-ing" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+										<img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
+									<div v-else class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+										结束：{{i.info.end_time}}
+									</div>
+									<div class="team-name mui-pull-right" @tap="teamDetail(i.info.team_id)">
 										<img class="team-icon" src="../image/discover/team-icon.png">
-										<span class="mui-ellipsis">{{i.team_name}}</span>
+										<span class="mui-ellipsis">{{i.info.team_name}}</span>
 									</div>
 								</div>
 							</div>
-						</li> -->
+						</li>
 					</template>
 				</div>
 			</div>
 		</div>
-		<script src="../js/mui.js"></script>
+		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/swiper.min.js"></script>
 		<script src="../js/vue.min.js"></script>
@@ -350,9 +427,6 @@
 					typeler: [],
 					// 动态
 					dynamic: [],
-					// 官方文章
-					essay: [],
-					// 团队课程
 					team_course: [],
 					slider: [],
 					screen: [{
@@ -380,7 +454,10 @@
 					],
 					like: false,
 					// 评论部分
-					menuStatus: false
+					menuStatus: false,
+					cid: "-1",
+					ArticleClassify: [],
+					isArticleClassify:false
 				},
 				created: function() {
 					// 初始化字体大小
@@ -394,6 +471,8 @@
 				methods: {
 					// 选择标签
 					selectedTj: function(id, idx) {
+						skip = 1;
+						limit = 10;
 						var stype = this.screen[idx].id;
 						var _index = app.typeler.indexOf(stype);
 						if (_index == -1) {
@@ -405,7 +484,14 @@
 						if (pullDirection == 'up') {
 							mui('#mui-content').pullRefresh().refresh(true);
 						}
-						// getDiscoverData();
+						// logs(app.typeler[0]);
+						if(app.typeler.length==1&&app.typeler[0]=='2'){
+							app.isArticleClassify=true;
+						}else{
+							app.isArticleClassify=false;
+						}
+						// logs(app.isArticleClassify);
+						getDiscoverData();
 					},
 					// 跳转好友动态
 					openDynamically: function(id) {
@@ -466,7 +552,7 @@
 						});
 					},
 					//打开课程详情
-					curriculumDetail: function(cid, status, tid, title, teid, silent) {
+					curriculumDetail: function(cid, status, tid, title, teid, silent, idx) {
 						if (status == 1 || status == 2) {
 							openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
 								tid: tid,
@@ -478,7 +564,8 @@
 						} else {
 							// 未开播提示
 							openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
-								id: id
+								course: app.dynamic[idx].info,
+								kaola: true
 							});
 						}
 						// mui.toast("打开课程详情" + status);
@@ -564,6 +651,7 @@
 									skip = 1;
 									getDiscoverData();
 									discoverInfo();
+									getArticleClassify();
 								}
 							}
 						}
@@ -594,6 +682,19 @@
 						});
 						getDiscoverData();
 						discoverInfo();
+						getArticleClassify();
+						// 初始化滚动
+						mui('.mui-scroll-wrapper').scroll({
+							scrollY: false,
+							scrollX: true,
+							startX: 0,
+							startY: 0,
+							indicators: false,
+							deceleration: 0.0006,
+							bounce: true
+						});
+						// 滚动到最左边
+						mui('.mui-scroll-wrapper').scroll().scrollTo(0, 0, 100);
 					})
 					// 初始化两次防止页面乱
 					// 初始化字体大小
@@ -636,12 +737,12 @@
 			function getDiscoverData() {
 				mui.post($ajaxUrl + 'discover&action=discover_list', {
 					token: userInfo.token,
-					type: app.typeler,
+					type: app.typeler.join(","),
 					skip: skip,
 					limit: limit,
-					article_cid: ''
+					article_cid: app.cid,
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						if (skip == 1) {
 							app.dynamic = res.data;
@@ -654,6 +755,9 @@
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
 					} else {
+						if (skip == 1) {
+							app.dynamic = [];
+						}
 						if (pullDirection == "up") {
 							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 						} else if (pullDirection == "down") {
@@ -661,10 +765,10 @@
 						}
 					}
 				}, 'json');
-				setTimeout(function() {
-					mui('#mui-content').pullRefresh().endPullupToRefresh(true);
-					mui('#mui-content').pullRefresh().endPulldownToRefresh();
-				}, 10000)
+				// setTimeout(function() {
+				// 	mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+				// 	mui('#mui-content').pullRefresh().endPulldownToRefresh();
+				// }, 10000)
 			}
 			// 获取用户信息
 			function discoverInfo() {
@@ -705,15 +809,16 @@
 					to_uid: to_uid
 				}, function(res) {
 					if (res.errno == 0) {
-						if (app.dynamic[_idx].is_thumbs == 1) {
-							app.$set(app.dynamic[_idx], "is_thumbs", "0");
-							app.$set(app.dynamic[_idx], "thumbs_number", parseInt(app.dynamic[_idx].thumbs_number) - 1);
-							var idx = app.dynamic[_idx].thumbs_user.indexOf(userInfo.nickName);
-							app.dynamic[_idx].thumbs_user.splice(idx, 1);
+						// alert(userInfo.nickName);
+						if (app.dynamic[_idx].info.is_thumbs == 1) {
+							app.$set(app.dynamic[_idx].info, "is_thumbs", "0");
+							app.$set(app.dynamic[_idx].info, "thumbs_number", parseInt(app.dynamic[_idx].info.thumbs_number) - 1);
+							var idx = app.dynamic[_idx].info.thumbs_user.indexOf(userInfo.nickName);
+							app.dynamic[_idx].info.thumbs_user.splice(idx, 1);
 						} else {
-							app.dynamic[_idx].thumbs_user.unshift(userInfo.nickName);
-							app.$set(app.dynamic[_idx], "is_thumbs", "1");
-							app.$set(app.dynamic[_idx], "thumbs_number", parseInt(app.dynamic[_idx].thumbs_number) + 1);
+							app.$set(app.dynamic[_idx].info, "is_thumbs", "1");
+							app.$set(app.dynamic[_idx].info, "thumbs_number", parseInt(app.dynamic[_idx].info.thumbs_number) + 1);
+							app.dynamic[_idx].info.thumbs_user.unshift(userInfo.nickName);
 						}
 					} else {
 						// app.dynamic = [];
@@ -882,7 +987,7 @@
 							mui.toast('保存失败')
 						}
 					});
-					imgDtask.start()
+					imgDtask.start();
 				});
 			}
 			// 评论
@@ -903,7 +1008,7 @@
 							content: conts,
 							nickName: userInfo.nickName
 						}
-						app.dynamic[_idx].comment.unshift(self_comment)
+						app.dynamic[_idx].info.comment.unshift(self_comment)
 						document.getElementById("comment_matter").value = "";
 						document.activeElement.blur();
 						mask.close();
@@ -911,6 +1016,27 @@
 					} else {}
 				}, 'json');
 			})
+			// 获取文章分类
+			function getArticleClassify() {
+				mui.post($ajaxUrl + 'article', {
+					action: "class_list"
+				}, function(res) {
+					if (res.errno == 0) {
+						app.ArticleClassify = res.data;
+					} else {
+
+					}
+				}, 'json');
+			}
+
+			function changeArticleClassify(cls_id) {
+				app.cid = cls_id;
+				skip=1;
+				if (pullDirection == 'up') {
+					mui('#mui-content').pullRefresh().refresh(true);
+				}
+				getDiscoverData();
+			}
 		</script>
 	</body>
 
