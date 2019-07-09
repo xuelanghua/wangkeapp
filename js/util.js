@@ -1000,34 +1000,36 @@ function getContactsInit() {
 
 // 下载wgt文件  
 function downWgt() {
-	var wgtUrl = "https://wangkeapp.oss-cn-shenzhen.aliyuncs.com/wangke.wgt";
-	plus.nativeUI.showWaiting("文件下载中...");
+	var wgtUrl = "https://cdn.wangkeapp.cn/wangke.wgt";
+	plus.nativeUI.showWaiting("升级中...");
+	// showload(0, 0, "升级中...", "rgba(0,0,0,0.5)");
 	plus.downloader.createDownload(wgtUrl, {
 		filename: "_doc/update/"
 	}, function(d, status) {
 		if (status == 200) {
 			console.log("下载文件成功：" + d.filename);
-			plus.nativeUI.closeWaiting();
 			installWgt(d.filename); // 安装wgt包  
 		} else {
 			console.log("下载文件失败！");
 			plus.nativeUI.alert("下载文件失败！");
-			plus.nativeUI.closeWaiting();
+			// plus.nativeUI.closeWaiting();
+			showload(1, 1000);
 		}
 	}).start();
 }
 
 // 更新应用资源  
 function installWgt(path) {
-	plus.nativeUI.showWaiting("文件安装中...");
+	// showload(0, 0, "文件安装中...", "rgba(0,0,0,0.5)");
 	plus.runtime.install(path, {}, function() {
-		plus.nativeUI.closeWaiting();
+		// plus.nativeUI.closeWaiting();
+		showload(1, 1000);
 		console.log("安装文件成功！");
 		plus.nativeUI.alert("应用资源更新完成！", function() {
 			plus.runtime.restart();
 		});
 	}, function(e) {
-		plus.nativeUI.closeWaiting();
+		showload(1, 1000);
 		console.log("安装文件失败[" + e.code + "]：" + e.message);
 		plus.nativeUI.alert("安装文件失败[" + e.code + "]：" + e.message);
 	});
@@ -1073,4 +1075,20 @@ function showload(status, delay, msg, bgc) {
 			interval: 25
 		}
 	});
+}
+
+//获取支付错误信息
+function wxpayErrorMessage(errcode) {
+	var messageList = {
+		"-1": "一般错误",
+		"-2": "用户取消",
+		"-3": "发送失败",
+		"-4": "认证被否决",
+		"-5": "不支持错误",
+	};
+	if (messageList[errcode]) {
+		return messageList[errcode];
+	} else {
+		return "请求错误";
+	}
 }
