@@ -43,11 +43,13 @@
 				height: auto;
 				margin: 0;
 			}
-			ul{
-				padding:0 0.6rem 0;
+
+			ul {
+				padding: 0 0.6rem 0;
 				margin: 0;
 			}
-			.items-li{
+
+			.items-li {
 				margin: 0.1rem 0;
 				text-align: left;
 				color: #999999;
@@ -103,10 +105,19 @@
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("dark");
 						var self = plus.webview.currentWebview();
-						app.title = self.title;
-						app.s_time = self.s_time;
-						app.e_time = self.e_time;
-						app.person = self.person;
+						if (self.kaola) {
+							logs(self.course);
+							app.title = self.course.title;
+							app.s_time = self.course.start_time;
+							app.e_time = self.course.end_time;
+							app.person = self.course.teacher_name;
+						} else {
+							app.title = self.title;
+							app.s_time = self.s_time;
+							app.e_time = self.e_time;
+							app.person = self.person;
+						}
+
 					})
 				}
 			})
