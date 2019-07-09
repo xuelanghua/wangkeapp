@@ -1107,6 +1107,43 @@
 						message("您的手机不支持 WebSocket!");
 					}
 				}
+				
+				//文件上传
+				function voiceUpload(file) {
+					var task = plus.uploader.createUpload($voiceUrl, {
+							method: "POST",
+							blocksize: 614400,
+							priority: 100
+						},
+						function(t, status) { //上传完成
+							if (status == 200) {
+								var res = JSON.parse(t.responseText);
+								if (res.errno == 1) {
+									message(res.message);
+								} else {
+									var imgMsg = {
+										sender: "self",
+										content: res.data.path,
+										type: "audio"
+									}
+									send(imgMsg);
+									chatData.type = 'audio';
+									chatData.content = res.data.path;
+									ws.send(JSON.stringify(chatData));
+									// message("上传成功");
+								}
+							} else {
+								message('发送失败!');
+								// console.log("上传失败：" + status);
+							}
+						}
+					);
+					// 页面中要上传的 图片路径
+					task.addFile(file, {
+						key: 'upfile'
+					});
+					task.start();
+				}
 
 
 				//修改当前聊天消息状态
@@ -1269,43 +1306,6 @@
 			mui('.join-team-verify').on("tap", ".close-verify-window", function() {
 				mui('.join-team-verify')[0].style.display = "none";
 			})
-			
-			//文件上传
-			function voiceUpload(file) {
-				var task = plus.uploader.createUpload($voiceUrl, {
-						method: "POST",
-						blocksize: 614400,
-						priority: 100
-					},
-					function(t, status) { //上传完成
-						if (status == 200) {
-							var res = JSON.parse(t.responseText);
-							if (res.errno == 1) {
-								message(res.message);
-							} else {
-								var imgMsg = {
-									sender: "self",
-									content: res.data.path,
-									type: "audio"
-								}
-								send(imgMsg);
-								chatData.type = 'audio';
-								chatData.content = res.data.path;
-								ws.send(JSON.stringify(chatData));
-								// message("上传成功");
-							}
-						} else {
-							message('发送失败!');
-							// console.log("上传失败：" + status);
-						}
-					}
-				);
-				// 页面中要上传的 图片路径
-				task.addFile(file, {
-					key: 'upfile'
-				});
-				task.start();
-			}
 		</script>
 	</body>
 </html>
