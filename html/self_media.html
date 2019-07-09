@@ -208,162 +208,123 @@
 					<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</li>
 				</ul>
 				<div id="discover-container" class="discover-list-container">
-					<div v-show="typeler==1">
+					<span v-for="p in typeler">{{p}}</span>
+					<template v-for="(i,m) in dynamic" :key="m">
 						<!-- 自己发布的动态 -->
-						<li v-for="(i,m) in dynamic" :key="m" class="mui-table-view-cell my-dynamic-list">
-							<div class="dynamic-list-head">
-								<div class="dynamic-list-left">
-									<img class="user-head-image" :src="i.owner.avatar" @tap="openDynamically(i.user_id)">
-									<span class="user-names mui-ellipsis" @tap="openDynamically(i.user_id)">{{i.owner.name}}</span>
-									<span class="cretae-timer" @tap="openDynamically(i.user_id)">{{i.create_time}}</span>
-									<!-- 如果是自己的动态则显示删除 -->
-									<!-- <span v-if="i.is_mine==1" class="delete-list" @tap="deleteDynamics(i.id,m)">删除</span> -->
-								</div>
-								<div class="mui-pull-right click-heart" @tap="likeThis(i.id,i.user_id,m)">
-									<!-- <i class="heart-icon animated" :class="i.is_thumbs==1?'heartBeat':'tada'"></i> -->
-									<i class="heart-icon animated" :class="i.is_thumbs==1?'heart-icon'+i.id+' active':'heart-icon'+i.id"></i>
-									<span>{{i.thumbs_number}}</span>
-								</div>
-							</div>
-							<!-- 带图片的两行 -->
-							<!-- 没图片的三行 mui-ellipsis-3-->
-							<div class="dy-container">
-								<p class="dynamic-desc" :class="i.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.id)">
-									{{i.content}}
-								</p>
-								<ul v-if="i.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.id)">
-									<li v-for="img in i.cover">
-										<img class="illustrating" :src="img">
-									</li>
-								</ul>
-								<!-- 评论部分 -->
-								<div class="operation-menu">
-									<div class="menu-list" :class="'menu-list'+i.id">
-										<span class="check-detail" @tap="dynamicDetail(i.id)">查看详情</span>
-										<div class="menu-body" :class="'menu-body'+i.id">
-											<div class="menu-arrow"></div>
-											<div v-if="i.is_mine==1" class="item" @tap="deleteDynamics(i.id,m)">
-												<span class="iconfont icon-delete">&#xe603;</span>删除
-											</div>
-											<div class="item" @tap="shareBtn(i.id,i.content,i.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
-											<div class="item" @tap="pinglun(i.id,m)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
-										</div>
-										<div class="comment-icon-cont" :class="'comment-icon-cont'+i.id" @tap="showMenu(i.id,m)">
-											<span class="iconfont comment-icon">&#xe504;</span>
-										</div>
+						<template v-if="i.type==1">
+							<li class="mui-table-view-cell my-dynamic-list">
+								<div class="dynamic-list-head">
+									<div class="dynamic-list-left">
+										<img class="user-head-image" :src="i.info.owner.avatar" @tap="openDynamically(i.info.user_id)">
+										<span class="user-names mui-ellipsis" @tap="openDynamically(i.info.user_id)">{{i.info.owner.name}}</span>
+										<span class="cretae-timer" @tap="openDynamically(i.info.user_id)">{{i.info.create_time}}</span>
+									</div>
+									<div class="mui-pull-right click-heart" @tap="likeThis(i.info.id,i.info.user_id,m)">
+										<i class="heart-icon animated" :class="i.info.is_thumbs==1?'heart-icon'+i.info.id+' active':'heart-icon'+i.info.id"></i>
+										<span>{{i.info.thumbs_number}}</span>
 									</div>
 								</div>
-								<div class="dynamic-lists-issue" v-if="i.comment.length>0||i.is_thumbs>0">
-									<div class="lan-arrows"></div>
-									<p v-if="i.is_thumbs>0">
-										<span class="iconfont icon-like">&#xe601;</span>
-										<template v-for="(c,idx) in i.thumbs_user" :key="idx">
-											{{c}}<template v-if="idx<i.thumbs_user.length-1">、</template>
-										</template>
+								<div class="dy-container">
+									<p class="dynamic-desc" :class="i.info.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.info.id)">
+										{{i.info.content}}
 									</p>
-									<p class="comment-inside" v-for="(p,idx) in i.comment">
-										<span class="user-name">{{p.nickName}}：</span>{{p.content}}
-									</p>
+									<ul v-if="i.info.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.info.id)">
+										<li v-for="img in i.info.cover">
+											<img class="illustrating" :src="img">
+										</li>
+									</ul>
+									<div class="operation-menu">
+										<div class="menu-list" :class="'menu-list'+i.info.id">
+											<span class="check-detail" @tap="dynamicDetail(i.info.id)">查看详情</span>
+											<div class="menu-body" :class="'menu-body'+i.info.id">
+												<div class="menu-arrow"></div>
+												<div v-if="i.info.is_mine==1" class="item" @tap="deleteDynamics(i.info.id,m)">
+													<span class="iconfont icon-delete">&#xe603;</span>删除
+												</div>
+												<div class="item" @tap="shareBtn(i.info.id,i.info.content,i.info.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
+												<div class="item" @tap="pinglun(i.info.id,m)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
+											</div>
+											<div class="comment-icon-cont" :class="'comment-icon-cont'+i.info.id" @tap="showMenu(i.info.id,m)">
+												<span class="iconfont comment-icon">&#xe504;</span>
+											</div>
+										</div>
+									</div>
+									<div class="dynamic-lists-issue" v-if="i.info.comment.length>0||i.info.is_thumbs>0">
+										<div class="lan-arrows"></div>
+										<p v-if="i.info.is_thumbs>0">
+											<span class="iconfont icon-like">&#xe601;</span>
+											<template v-for="(c,idx) in i.info.thumbs_user" :key="idx">
+												{{c}}<template v-if="idx<i.info.thumbs_user.length-1">、</template>
+											</template>
+										</p>
+										<p class="comment-inside" v-for="(p,idx) in i.info.comment">
+											<span class="user-name">{{p.nickName}}：</span>{{p.content}}
+										</p>
+									</div>
 								</div>
-							</div>
-						</li>
-					</div>
-					<div v-show="typeler==2">
+							</li>
+						</template>
 						<!-- 官方文章 -->
-						<li class="mui-table-view-cell official-article" v-for="(a,idx) in essay" :key="idx" @tap="articleDetail(a.id)">
+						<!-- <li class="mui-table-view-cell official-article" v-if="i.type==2" @tap="articleDetail(a.id)">
 							<div class="article-img">
-								<img :src="a.thumb">
+								<img :src="i.thumb">
 							</div>
 							<div class="article-right">
 								<p class="mui-ellipsis-2">
-									{{a.title}}{{a.is_top}}
+									{{i.title}}{{i.is_top}}
 								</p>
-								<div v-if="a.is_top" class="stick-sign">
+								<div v-if="i.is_top" class="stick-sign">
 									<img src="../image/discover/stick-sign.png">
 								</div>
 								<div class="official-article-status">
-									<span>{{a.add_time}}</span>
-									<span><img src="../image/eye.png">{{a.click}}</span>
+									<span>{{i.add_time}}</span>
+									<span><img src="../image/eye.png">{{i.click}}</span>
 									<img src="../image/discover/official-sign.png">
 								</div>
 							</div>
-						</li>
-					</div>
-					<div v-show="typeler==3">
+						</li> -->
 						<!-- 课程列表列表 -->
-						<li class="mui-table-view-cell curriculum-list" v-for="(c,u) in team_course" :key="u">
-							<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-							<div class="curriculum-img" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">
-								<img :src="c.cover_url">
+						<!-- <li class="mui-table-view-cell curriculum-list" v-if="i.type==3"> -->
+						<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
+						<!-- <div class="curriculum-img" @tap="curriculumDetail(1.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">
+								<img :src="i.cover_url">
 							</div>
-							<div class="curriculum-list-right">
-								<!-- 官方加stick-sign -->
-								<p class="mui-ellipsis-2" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">
-									{{c.title}}
+							<div class="curriculum-list-right"> -->
+						<!-- 官方加stick-sign -->
+						<!-- <p class="mui-ellipsis-2" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">
+									{{i.title}}
 								</p>
-								<div class="status-cont mui-clearfix" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">
+								<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">
 									<div class="mui-pull-left">
-										<span class="ting-ke">主讲人：{{c.teacher_name}}</span>
+										<span class="ting-ke">主讲人：{{i.teacher_name}}</span>
 									</div>
 								</div>
 								<div>
-									<div v-if="c.state==0" class="cretae-timer" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">开播：2018-05-18
+									<div v-if="i.state==0" class="cretae-timer" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">开播：2018-05-18
 										18:50</div>
-									<div v-else-if="c.state==1" class="train-ing" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)"><img
+									<div v-else-if="i.state==1" class="train-ing" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)"><img
 										 style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
-									<div v-else class="cretae-timer" @tap="curriculumDetail(c.id,c.state,c.team_id,c.title,c.teacher_id, c.is_silent)">结束：2018-05-18
+									<div v-else class="cretae-timer" @tap="curriculumDetail(i.id,i.state,i.team_id,i.title,i.teacher_id, i.is_silent)">结束：2018-05-18
 										20:50</div>
-									<div class="team-name mui-pull-right" @tap="teamDetail(c.team_id)">
+									<div class="team-name mui-pull-right" @tap="teamDetail(i.team_id)">
 										<img class="team-icon" src="../image/discover/team-icon.png">
-										<span class="mui-ellipsis">{{c.team_name}}</span>
+										<span class="mui-ellipsis">{{i.team_name}}</span>
 									</div>
 								</div>
 							</div>
-						</li>
-						<div class="void-team-course" v-show="team_course==''||team_course.length<1">
-							亲 暂无团队课程哟~
-						</div>
-					</div>
-					<div v-show="typeler==4">
-						<!-- 产品列表 -->
-						<li class=" mui-table-view-cell goods-list">
-							<div class="goods-img" @tap="goodsDetail('369')">
-								<img src="../image/5E0eH.png">
-							</div>
-							<div class="goods-list-right">
-								<!-- 官方加stick-sign -->
-								<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail('369')">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
-								<div class="goods-nature" @tap="goodsDetail('369')">
-									<span>供货价：￥250.00</span>
-									<span>销量： 520件</span>
-								</div>
-								<div class="goods-earnings" @tap="teamDetail('369')">
-									<span>利润：￥50</span>
-									<!-- 团队 -->
-									<!-- <div class="team-name">
-											<img class="team-icon" src="../image/discover/team-icon.png">
-											<span class="mui-ellipsis">房东的猫猫猫猫猫</span>
-										</div> -->
-									<!-- <div class="team-name mui-ellipsis">房东的,猫猫猫猫猫猫猫猫猫猫猫猫猫猫猫</div> -->
-									<!-- 官方 -->
-									<img src="../image/discover/official-sign.png">
-								</div>
-							</div>
-						</li>
-					</div>
+						</li> -->
+					</template>
 				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/swiper.min.js"></script>
-		<!-- <script src="../js/three.min.js"></script> -->
-		<!-- <script src="../js/indexs.js"></script> -->
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo(),
 				skip = 1,
-				limit = 8,
+				limit = 10,
 				pullDirection = "",
 				mask = mui.createMask(function() {
 					app.menuStatus = false;
@@ -384,15 +345,7 @@
 				data: {
 					// 个人消息
 					is_self: false,
-					discover_info: {
-						id: "",
-						name: "",
-						avatar: "",
-						personalized_signature: "",
-						group_id: "",
-						group_name: "",
-						timeline_cover: ""
-					},
+					discover_info: {},
 					// 类型
 					typeler: [],
 					// 动态
@@ -441,39 +394,18 @@
 				methods: {
 					// 选择标签
 					selectedTj: function(id, idx) {
-						this.screen[idx].selected = !this.screen[idx].selected;
 						var stype = this.screen[idx].id;
-						var _index=app.typeler.indexOf(stype);
-						if(_index==-1){
+						var _index = app.typeler.indexOf(stype);
+						if (_index == -1) {
 							app.typeler.push(stype);
-						}else{
-							app.typeler.splice(idx,1);
+						} else {
+							app.typeler.splice(_index, 1);
 						}
-						logs(app.typeler);
-						
+						this.screen[idx].selected = !this.screen[idx].selected;
 						if (pullDirection == 'up') {
 							mui('#mui-content').pullRefresh().refresh(true);
 						}
-						if (this.typeler == 1) {
-							if (app.dynamic.length > 0) {
-								//不请求
-							} else {
-								getDiscoverData(true);
-							}
-						} else if (this.typeler == 2) {
-							if (app.essay.length > 0) {
-								// logs("不请求");
-								//不请求
-							} else {
-								getDiscoverData(true);
-							}
-						} else if (this.typeler == 3) {
-							if (app.team_course.length > 0) {
-								//不请求
-							} else {
-								getDiscoverData(true);
-							}
-						}
+						// getDiscoverData();
 					},
 					// 跳转好友动态
 					openDynamically: function(id) {
@@ -636,7 +568,6 @@
 							}
 						}
 					});
-					discoverInfo();
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("light");
 						var ws = plus.webview.currentWebview();
@@ -662,6 +593,7 @@
 							}
 						});
 						getDiscoverData();
+						discoverInfo();
 					})
 					// 初始化两次防止页面乱
 					// 初始化字体大小
@@ -701,36 +633,20 @@
 				// });
 			}
 			// 数据请求
-			function getDiscoverData(lpk) {
-				if (lpk) {
-					showload();
-				}
-				mui.post($ajaxUrl + 'discover&action=list', {
+			function getDiscoverData() {
+				mui.post($ajaxUrl + 'discover&action=discover_list', {
 					token: userInfo.token,
 					type: app.typeler,
+					skip: skip,
 					limit: limit,
-					skip: skip
+					article_cid: ''
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						if (app.typeler == 1) {
-							if (skip == 1) {
-								app.dynamic = res.data;
-							} else {
-								app.dynamic = app.dynamic.concat(res.data);
-							}
-						} else if (app.typeler == 2) {
-							if (skip == 1) {
-								app.essay = res.data;
-							} else {
-								app.essay = app.essay.concat(res.data);
-							}
-						} else if (app.typeler == 3) {
-							if (skip == 1) {
-								app.team_course = res.data;
-							} else {
-								app.team_course = app.team_course.concat(res.data);
-							}
+						if (skip == 1) {
+							app.dynamic = res.data;
+						} else {
+							app.dynamic = app.dynamic.concat(res.data);
 						}
 						if (pullDirection == "up") {
 							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
@@ -738,21 +654,11 @@
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
 					} else {
-						if (app.typeler == 1 && skip == 1) {
-							app.dynamic = [];
-						} else if (app.typeler == 2 && skip == 1) {
-							app.essay = [];
-						} else if (app.typeler == 3 && skip == 1) {
-							app.team_course = [];
-						}
 						if (pullDirection == "up") {
 							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 						} else if (pullDirection == "down") {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
-					}
-					if (lpk) {
-						showload(true, Math.floor(Math.random() * 1000 + 1000));
 					}
 				}, 'json');
 				setTimeout(function() {
@@ -868,8 +774,8 @@
 			})
 			// 监听封面修改
 			window.addEventListener('reloadCover', function() {
-				location.reload();
-				// discoverInfo();
+				// location.reload();
+				discoverInfo();
 			}, false);
 			// 打开写作页面
 			mui(".mui-content").on("tap", ".operation-btn", function() {
