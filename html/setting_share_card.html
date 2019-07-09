@@ -750,7 +750,7 @@
 							});
 						}
 						window.addEventListener('cropperSuccess', function(event) {
-							logs(app.resultData);
+							// logs(app.resultData);
 							showload(0, 0, "图片加载中...", "rgba(0,0,0,0.5)");
 							app.resultData['background_image_' + app.imgtyp + '_url'] = event.detail.image;
 							app['uperimg' + app.imgtyp] = event.detail.filename;
@@ -776,7 +776,7 @@
 							background_image: app['uperimg' + app.imgtyp],
 							card_text: app['signature' + app.imgtyp]
 						}, function(res) {
-							logs(res);
+							// logs(res);
 							if (res.errno == 0) {
 								message("已恢复默认设置");
 								mui.fire(pview, 'changeCard');
@@ -805,7 +805,7 @@
 						mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
 							token: userInfo.token
 						}, function(res) {
-							logs(res);
+							// logs(res);
 							var data = res.data;
 							if (res.errno == 0) {
 								app.resultData = res.data;
