@@ -364,7 +364,6 @@
 	 */
 	function voiceUpload(file) {
 		console.log('开始上传');
-		// showload(0);
 		showload(0);
 		//创建文件上传对象
 		var task = plus.uploader.createUpload($voiceUrl, {
@@ -375,7 +374,6 @@
 			if (status == 200) {
 				var res = JSON.parse(t.responseText);
 				if (res.error) {
-					// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 					plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
 				} else {
 					//设置相关的input 将上传成功的音频的地址赋值给value
@@ -384,7 +382,6 @@
 				}
 			} else {
 				console.log("上传失败：" + status);
-				// plus.nativeUI.alert('上传失败!', waiting.close(), '提示', 'OK');
 				plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
 			}
 		});

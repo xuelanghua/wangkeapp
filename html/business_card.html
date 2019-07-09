@@ -453,17 +453,11 @@
 				}
 				//获取二维码图片
 				function getQrcodePic() {
-					// plus.nativeUI.showWaiting('', {
-					// 	width: 60,
-					// 	height: 60,
-					// 	background: 'rgba(0, 0, 0, 0.9)'
-					// });
 					showload(0);
 					mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
 						token: userInfo.token,
 						to_uid: toUid
 					}, function(res) {
-						// logs(res);
 						if (res.errno == 0) {
 							var type = res.data.type;
 							qrurl = res.data.url;

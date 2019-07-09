@@ -251,7 +251,7 @@
 					PAYSERVER = WXPAYSERVER;
 					channel = wxChannel;
 				} else if (id == 'offline') {
-					var waiting = showload(0);
+					showload(0);
 					logs(payType);
 					logs(app.codeList);
 					logs(app.fee);
@@ -269,7 +269,7 @@
 							document.querySelector('.pop-button').innerHTML = '返回!';
 							mui('.mui-popover').popover('show', document.getElementById("openPopover"));
 						}
-						waiting.close();
+						showload(1);
 					}, 'json')
 					return;
 				} else {
@@ -277,7 +277,7 @@
 					return;
 				}
 
-				var waiting = showload(0);
+				showload(0);
 				mui.post(PAYSERVER, {
 					code_list: app.codeList,
 					total_wang: app.totalWang,
@@ -286,7 +286,7 @@
 					token: userInfo.token
 				}, function(res) {
 					console.log(JSON.stringify(res));
-					waiting.close();
+					showload(1);
 					if (res.errno == 0) {
 						var data = res.data;
 						var param = {
