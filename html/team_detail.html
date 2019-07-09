@@ -658,6 +658,26 @@
 				background-color: rgb(250, 250, 250);
 				color: #DDDDDD;
 			}
+			/* 没有学习进度的时候 */
+			.void-tips-conts {
+				width: 100%;
+				padding-top: 10%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			
+			.void-tips-conts img {
+				width: 60%;
+				height: auto;
+				margin-bottom: 10px;
+			}
+			
+			.void-tips-conts p {
+				font-size: 16px;
+				color: #999999;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -825,20 +845,26 @@
 			</div>
 			<!-- 学习进度 -->
 			<div id="item3" class="mui-control-content study-container">
-				<h4>当前排名：<span>第{{selfrank}}名</span></h4>
-				<ul class="mui-table-view">
-					<!-- 自己添加slef-ranking -->
-					<li class="mui-table-view-cell" :class="l.uid==slef_id?'slef-ranking':''" v-for="(l,i) in lProgress" :key="i">
-						<div class="study-left">
-							<img class="head-img" :src="l.avatar">
-							<span>{{l.name}}</span>
-						</div>
-						<div class="study-right">
-							<span>第{{l.rank}}名</span>
-							<img v-if="l.rank<4" class="rank-sign" :src="'../image/icon/rank-sign'+l.rank+'.png'">
-						</div>
-					</li>
-				</ul>
+				<div v-if="lProgress!=''">
+					<h4>当前排名：<span>第{{selfrank}}名</span></h4>
+					<ul class="mui-table-view">
+						<!-- 自己添加slef-ranking -->
+						<li class="mui-table-view-cell" :class="l.uid==slef_id?'slef-ranking':''" v-for="(l,i) in lProgress" :key="i">
+							<div class="study-left">
+								<img class="head-img" :src="l.avatar">
+								<span>{{l.name}}</span>
+							</div>
+							<div class="study-right">
+								<span>第{{l.rank}}名</span>
+								<img v-if="l.rank<4" class="rank-sign" :src="'../image/icon/rank-sign'+l.rank+'.png'">
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div v-else class="void-tips-conts">
+					<img src="../image/self_media_tips01.png">
+					<p>空空如也~</p>
+				</div>
 			</div>
 			<!-- 弹窗 -->
 			<div id="menu" class="mui-popover more-menu">

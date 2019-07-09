@@ -27,7 +27,7 @@
 
 			.qr-code-body {
 				width: 6.8rem;
-				height: auto;
+				height: auto; 
 				position: relative;
 				border-radius: 0.1rem;
 				margin: 1rem auto 0.5rem;
@@ -208,6 +208,73 @@
 			.default-theme-container .qr-img {
 				margin: 0.8rem 0 0.5rem;
 			}
+			/* 第五个样式 */
+			.theme5 {
+				width: 100%;
+				overflow: hidden;
+				position: relative;
+				font-size: 0;
+				line-height: 0;
+				background-color: #0062CC;
+			}
+			
+			.theme5 .bg-img {
+				width: 100%;
+				height: auto;
+				z-index: 1;
+			}
+			
+			.theme5-container {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				z-index: 2;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding-top: 0.8rem;
+			}
+			
+			.theme5-logo {
+				width: 60%;
+				height: auto;
+				margin-bottom: 2.4rem;
+			}
+			
+			.theme5 .theme5-area {
+				width: 70%;
+				background: transparent;
+				border: none;
+				text-align: center;
+				color: #FFFFFF;
+			}
+			
+			.theme5 .theme5-area::-webkit-input-placeholder {
+				text-align: center;
+				color: #FFFFFF;
+				font-size: 0.36rem;
+			}
+			
+			.theme5 .qrimg {
+				width: 1.8rem;
+				bottom: 0.8rem;
+				right: 0.6rem;
+				position: absolute;
+			}
+			
+			.theme5 span {
+				position: absolute;
+				bottom: 1rem;
+				left: 0.6rem;
+				color: #FFFFFF;
+				font-size: 0.42rem;
+			}
+			.theme5 .input-section p{
+				font-size:0.32rem;
+				color:#FFFFFF;
+				line-height: 1.6;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -230,7 +297,7 @@
 		</header>
 		<div class="mui-content" id="mui-content" v-cloak>
 			<div class="change" style="position: absolute;top: 60px;left: 44%;color: #FFFFFF;">
-				默认样式
+				点击切换
 			</div>
 			<div class="team-qr-code">
 				<div id="code-body" class="qr-code-body">
@@ -313,6 +380,18 @@
 							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 						</div>
 					</div>
+					<!-- 主题五 -->
+					<div v-if="serial==5" id="theme5" class="theme5">
+						<img class="bg-img" :src="bgimg">
+						<div class="theme5-container">
+							<img class="theme5-logo" src="../image/share/setting_share_card_dzui.png">
+							<div class="input-section mui-text-center">
+								<p>{{card_text}}</p>
+							</div>
+							<span class="theme5-timer">2019-07</span>
+							<img class="qrimg" :src="qrpath">
+						</div>
+					</div>
 				</div>
 				<div class="operation-section mui-clearfix">
 					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
@@ -348,12 +427,12 @@
 				bgimg2: '../image/share/bg-img02.jpg',
 				bgimg3: '../image/share/bg-img03.jpg',
 				bgimg4: '../image/share/bg-img04.jpg',
+				bgimg5: '../image/share/bg-img05.jpg',
 				resultStyle: {},
-				changetext: ["点击切换", "点击切换", "点击切换", "点击切换", "点击切换"]
 			},
 			mounted: function() {
 				mui('.mui-content').on('tap', '.change', function() {
-					if (app.serial < 4) {
+					if (app.serial < 5) {
 						app.serial += 1;
 						app.card_text = app.resultStyle['card_text_' + app.serial];
 						app.bgimg = app.resultStyle['background_image_' + app.serial + '_url'];
@@ -362,7 +441,6 @@
 					}
 					// message(app.serial);
 					// this.innerText = app.changetext[app.serial];
-					this.innerText = "点击切换";
 					app.bgimg = app['bgimg' + app.serial];
 				})
 				mui.init({
@@ -516,8 +594,6 @@
 				if (res.errno == 0) {
 					app.resultStyle = res.data;
 					app.serial = parseInt(res.data.card_type, 10);
-					// message(app.serial);
-					document.querySelector('.change').innerText = app.changetext[app.serial];
 					app.card_text = res.data['card_text_' + res.data.card_type];
 					app.bgimg = res.data['background_image_' + res.data.card_type + '_url'];
 					// app['bgimg'+app.serial]=app['bgimg'+app.serial];
@@ -532,6 +608,9 @@
 					}
 					if (res.data.background_image_4_url.length > 6) {
 						app.bgimg4 = res.data.background_image_4_url;
+					}
+					if (res.data.background_image_5_url.length > 6) {
+						app.bgimg5 = res.data.background_image_5_url;
 					}
 				}
 			}, 'json');
