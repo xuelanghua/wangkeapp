@@ -392,6 +392,19 @@
 					// message('请求的id:' + app.teamId);
 					mui(".join-team-verify")[0].style.display = "none";
 				})
+				mui('.mui-content').on('tap', '#open-scan', function() {
+					//打开扫一扫
+					var paymentPage = plus.webview.create('scan.html', 'scan', {
+						top: '0',
+						bottom: '0',
+						scrollIndicator: 'none',
+						statusbar: {
+							background: '#000'
+						}
+					});
+					paymentPage.show('slide-in-right');
+					setStatusBar('#2289FF', 'light');
+				})
 			}
 		})
 	</script>

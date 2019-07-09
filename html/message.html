@@ -4,6 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
+		<meta name="referrer" content="no-referrer">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.css" rel="stylesheet" />
 		<style>
@@ -447,10 +448,10 @@
 						}
 						window.addEventListener('refreshNotice', function(e) {
 							refresh = true;
-							getChatList();
+							getChatList(false);
 							getSystemMsg();
 						})
-						getChatList();
+						getChatList(true);
 						
 						// mui('#chat_message').on('tap', '.Record_list', function() {
 						// 	var cid = this.dataset.cid;
@@ -553,7 +554,10 @@
 			}
 			
 			// 获取消息列表
-			function getChatList() {
+			function getChatList(first) {
+				if (first) {
+					showload(0);
+				}
 				mui.post($ajaxUrl + 'chat', {
 					action: 'list',
 					token: userInfo.token
@@ -567,6 +571,11 @@
 							document.querySelector('.chat-red-tips').style.display = "none";
 						}
 						cacheData('msglist', res.data);
+					}
+					if (first) {
+						setTimeout(function() {
+							showload(1);
+						}, 100);
 					}
 				}, 'json')
 			}
@@ -605,7 +614,7 @@
 							if (swipemenu) {
 								mui.swipeoutClose(swipemenu);
 							}
-							getChatList();
+							getChatList(false);
 							message('已删除');
 						} else {
 							message('删除失败，请稍后重试');
@@ -621,7 +630,7 @@
 							if (swipemenu) {
 								mui.swipeoutClose(swipemenu);
 							}
-							getChatList();
+							getChatList(false);
 							message('已删除');
 						} else {
 							message('删除失败，请稍后重试');

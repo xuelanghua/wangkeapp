@@ -298,7 +298,16 @@
 						});
 					}, function(error) {
 						console.log(JSON.stringify(error));
-						plus.nativeUI.alert("支付失败：" + error.code);
+						// plus.nativeUI.alert("支付失败：" + error.code);
+						var message = error.message;
+						var regexp = /(\-)?\d+/;
+						var code = message.match(regexp);
+						if (code.length > 0) {
+							code = code[0];
+						} else {
+							code = "-9";
+						}
+						plus.nativeUI.alert("支付失败：" + wxpayErrorMessage(code));
 					});
 				} else {
 					plus.nativeUI.alert(res.message, null, '提示');
