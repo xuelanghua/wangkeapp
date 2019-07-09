@@ -1054,6 +1054,7 @@
 						// logs(res);
 						if (res.errno == 0) {
 							mui.toast("团队已经解散");
+							mui.fire(plus.webview.getWebviewById('home'), 'refreshTeamList');
 							mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
 							plus.webview.close('weburl');
 							plus.webview.close('webview');
@@ -1226,7 +1227,7 @@
 				team_id: app.tid,
 				course_id: ''
 			}, function(res) {
-				logs(res);
+				logs(res); 
 				if (res.errno == 0) {
 					app.lProgress = res.data;
 				} else {

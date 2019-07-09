@@ -348,8 +348,11 @@
 			var userInfo = getUserInfo();
 			var menuidx = '';
 			var mask = mui.createMask(function() {
-				var target = document.querySelector('.menu-cont' + menuidx);
-				target.classList.remove("active");
+				if (menuidx !== '') {
+					var target = document.querySelector('.menu-cont' + menuidx);
+					target.classList.remove("active");
+					// menuidx = '';
+				}
 			});
 			var app = new Vue({
 				el: "#mui-content",
@@ -372,12 +375,12 @@
 					showEdit: function(i) {
 						menuidx = i;
 						var target = document.querySelector('.menu-cont' + i);
-						target.classList.toggle("active");
-						if (target.classList.contains("active")) {
+						target.classList.add("active");
+						// if (target.classList.contains("active")) {
 							mask.show();
-						} else {
-							mask.close();
-						}
+						// } else {
+							// mask.close();
+						// }
 					},
 					//直播详情
 					streaming: function(state, courseId, title, p, s, e, teid) {
@@ -403,10 +406,12 @@
 						}
 					},
 					// 删除课程
-					delCourse: function(course_id) {
-						var target = document.querySelector('.menu-cont' + menuidx);
-						target.classList.remove("active");
-						plus.nativeUI.confirm("确认删除可吗？", function(e) {
+					delCourse: function(course_id, idx) {
+						if (menuidx != '') {
+							var target = document.querySelector('.menu-cont' + idx);
+							target.classList.remove("active");
+						}
+						plus.nativeUI.confirm("确认删除课程吗？", function(e) {
 							mask.close();
 							if (e.index == 1) {
 								// 取消
