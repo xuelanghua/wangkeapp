@@ -41,7 +41,7 @@
 				height: 90px;
 				position: relative;
 				overflow: hidden;
-				width: 25%;
+				width: 20%;
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
@@ -124,7 +124,7 @@
 				width: 6.5rem;
 				left: 50%;
 				margin-left: -3.25rem;
-				background: url("../image/share/bg-img05.png")center top no-repeat;
+				background: url("../image/share/bg-img06.png")center top no-repeat;
 				background-size: contain;
 				display: flex;
 				align-items: center;
@@ -391,6 +391,69 @@
 			.restore-default {
 				top: 0.3rem;
 			}
+
+			/* 第五个样式 */
+			.theme5 {
+				width: 100%;
+				overflow: hidden;
+				position: relative;
+				font-size: 0;
+				line-height: 0;
+				background-color: #0062CC;
+			}
+
+			.theme5 .bg-img {
+				width: 100%;
+				height: auto;
+				z-index: 1;
+			}
+
+			.theme5-container {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				z-index: 2;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding-top: 0.8rem;
+			}
+
+			.theme5-logo {
+				width: 60%;
+				height: auto;
+				margin-bottom: 2.4rem;
+			}
+
+			.theme5 .theme5-area {
+				width: 70%;
+				background: transparent;
+				border: none;
+				text-align: center;
+				color: #FFFFFF;
+			}
+
+			.theme5 .theme5-area::-webkit-input-placeholder {
+				text-align: center;
+				color: #FFFFFF;
+				font-size: 0.36rem;
+			}
+
+			.theme5 .qrimg {
+				width: 1.8rem;
+				bottom: 1rem;
+				right: 0.6rem;
+				position: absolute;
+			}
+
+			.theme5 span {
+				position: absolute;
+				bottom: 1rem;
+				left: 0.6rem;
+				color: #FFFFFF;
+				font-size: 0.42rem;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -417,6 +480,7 @@
 				<a href="#theme2" data-imgtype="2" class="mui-tab-item" :class="card_type==2?'mui-active':''"><img src="../image/share/styles-icon02.png"></a>
 				<a href="#theme3" data-imgtype="3" class="mui-tab-item" :class="card_type==3?'mui-active':''"><img src="../image/share/styles-icon03.png"></a>
 				<a href="#theme4" data-imgtype="4" class="mui-tab-item" :class="card_type==4?'mui-active':''"><img src="../image/share/styles-icon04.png"></a>
+				<a href="#theme5" data-imgtype="5" class="mui-tab-item" :class="card_type==5?'mui-active':''"><img src="../image/share/styles-icon05.png"></a>
 			</nav>
 			<div id="theme1" class="theme1 mui-control-content" :class="card_type==1?'mui-active':''">
 				<img class="bgimg" :src="resultData.background_image_1_url||background_image_1">
@@ -500,12 +564,28 @@
 					<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 				</div>
 			</div>
+			<div id="theme5" class="theme5 mui-control-content" :class="card_type==5?'mui-active':''">
+				<img class="bg-img" :src="resultData.background_image_5_url||background_image_5">
+				<div class="theme5-container">
+					<img class="theme5-logo" src="../image/share/setting_share_card_dzui.png">
+					<textarea class="theme5-area" v-model="signature5" maxlength="26" rows="2" placeholder="添加自定义文字"></textarea>
+					<span class="theme5-timer"></span>
+					<img class="qrimg" :src="qrpath">
+				</div>
+				<div class="option-btn replace-img">
+					点击替换图片
+				</div>
+				<div class="option-btn restore-default">
+					恢复默认风格
+				</div>
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var card_type = 1;
+			var ratio = 900 / 1440;
 			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
@@ -519,16 +599,19 @@
 					background_image_2: '../image/share/bg-img02.jpg',
 					background_image_3: '../image/share/bg-img03.jpg',
 					background_image_4: '../image/share/bg-img04.jpg',
+					background_image_5: '../image/share/bg-img05.jpg',
 					uperimg1: 'images/6/2019/05/bg-img01.jpg',
 					uperimg2: 'images/6/2019/05/bg-img02.jpg',
 					uperimg3: 'images/6/2019/05/bg-img03.jpg',
 					uperimg4: 'images/6/2019/05/bg-img04.jpg',
+					uperimg5: 'images/6/2019/05/bg-img05.jpg',
 					type_desc: '',
 					// 个性签名
 					signature1: '',
 					signature2: '',
 					signature3: '',
 					signature4: '',
+					signature5: '',
 					// 全部资料
 					resultData: {}
 				},
@@ -537,7 +620,6 @@
 				},
 				mounted: function() {
 					// 上传图片的比例
-					var ratio = 900 / 1440;
 					mui.init({
 						beforeback: function() {
 							// plus.navigator.setStatusBarStyle("dark");
@@ -581,34 +663,33 @@
 								} else {
 
 								}
-								// setTimeout(function() {
-								// 	showload(1);
-								// }, 1000)
+								setTimeout(function() {
+									showload(1);
+								}, 1000)
 							}, 'json');
 						}
 						getQrcodePic();
-
-						// mui(".mui-content").on('tap', '.replace-img', function() {
-						// 	app.imgtyp = this.dataset.imgtype;
-						// 	message(app.imgtyp);
-						// })
 						// 点击底部样式切换
 						mui(".theme-change").on('tap', '.mui-tab-item', function() {
 							app.imgtyp = this.dataset.imgtype;
 							// message(app.imgtyp);
 							if (app.imgtyp == '2' || app.imgtyp == '3') {
 								ratio = 900 / 599;
-							} else {
+							} else if(app.imgtyp == '5'){
+								ratio = 1000 / 1452;
+							}else{
 								ratio = 900 / 1440;
 							}
 						})
 						// 上传背景图片
 						mui('.mui-content').on('tap', '.replace-img', function() {
-							if (app.imgtyp == '2' || app.imgtyp == '3') {
-								ratio = 900 / 599;
-							} else {
-								ratio = 900 / 1440;
-							}
+							// if (app.imgtyp == '2' || app.imgtyp == '3') {
+							// 	ratio = 900 / 599;
+							// } else if(app.imgtyp == '5'){
+							// 	ratio = 1000 / 1452;
+							// }else{
+							// 	ratio = 900 / 1440;
+							// }
 							var editButtons = new Array();
 							editButtons.push({
 								title: "拍照上传",
@@ -669,7 +750,7 @@
 							});
 						}
 						window.addEventListener('cropperSuccess', function(event) {
-							logs(app.resultData);
+							// logs(app.resultData);
 							showload(0, 0, "图片加载中...", "rgba(0,0,0,0.5)");
 							app.resultData['background_image_' + app.imgtyp + '_url'] = event.detail.image;
 							app['uperimg' + app.imgtyp] = event.detail.filename;
@@ -678,6 +759,8 @@
 								showload(1);
 							}, Math.floor(Math.random() * 1000 + 1000));
 						})
+						// 获取当前时间给样式五
+						document.querySelector(".theme5-timer").innerText = formatDate('y', '') + " - " + formatDate('m', '');
 					})
 					// 恢复默认
 					mui(".mui-content").on("tap", ".restore-default", function() {
@@ -685,7 +768,7 @@
 						// message(app.imgtyp);
 						app.resultData['background_image_' + app.imgtyp + '_url'] = '../image/share/bg-img0' + app.imgtyp + '.jpg';
 						app['background_image_' + app.imgtyp] = '../image/share/bg-img0' + app.imgtyp + '.jpg';
-						app['uperimg' + app.imgtyp]='images/6/2019/05/bg-img0'+app.imgtyp+'.jpg';
+						app['uperimg' + app.imgtyp] = 'images/6/2019/05/bg-img0' + app.imgtyp + '.jpg';
 						// app['background_image_' + app.imgtyp]='../image/share/bg-img0'+app.imgtyp+'.jpg';
 						mui.post($ajaxUrl + 'userqrcode&action=poster_setting', {
 							token: userInfo.token,
@@ -693,7 +776,7 @@
 							background_image: app['uperimg' + app.imgtyp],
 							card_text: app['signature' + app.imgtyp]
 						}, function(res) {
-							logs(res);
+							// logs(res);
 							if (res.errno == 0) {
 								message("已恢复默认设置");
 								mui.fire(pview, 'changeCard');
@@ -722,7 +805,7 @@
 						mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
 							token: userInfo.token
 						}, function(res) {
-							logs(res);
+							// logs(res);
 							var data = res.data;
 							if (res.errno == 0) {
 								app.resultData = res.data;
@@ -732,11 +815,13 @@
 								app.uperimg2 = data.background_image_2 || app.uperimg2;
 								app.uperimg3 = data.background_image_3 || app.uperimg3;
 								app.uperimg4 = data.background_image_4 || app.uperimg4;
+								app.uperimg5 = data.background_image_5 || app.uperimg5;
 								// 个性签名
 								app.signature1 = data.card_text_1;
 								app.signature2 = data.card_text_2;
 								app.signature3 = data.card_text_3;
 								app.signature4 = data.card_text_4;
+								app.signature5 = data.card_text_5;
 							}
 						}, 'json');
 					}
