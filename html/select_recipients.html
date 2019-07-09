@@ -187,7 +187,7 @@
 		</header>
 
 		<div class="mui-content setting-container">
-			<div id='list' class="mui-indexed-list" v-cloak>
+			<div id="list" class="mui-indexed-list" v-cloak>
 				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
 				</div>
@@ -251,6 +251,7 @@
 		var userInfo = getUserInfo();
 		var tid = '';
 		var count = 0;
+		var allselect = false;
 		var app = new Vue({
 			el: "#list",
 			data: {
@@ -319,20 +320,21 @@
 						if (index > -1) {
 							app.uids.splice(index, 1);
 						} else {
-							if(app.uids.length<200){
+							if(app.uids.length <= 200){
 								app.uids.push(this.value);
 							}else{
-								alert("群发人数不能超过200人")
+								message("群发人数不能超过200人");
 							}
 						}
+						
 						// 添加删除用户名
 						if (idx > -1) {
 							app.userName.splice(index, 1);
 						} else {
-							if(app.uids.length<200){
+							if(app.uids.length <= 200){
 								app.userName.push(this.dataset.names);
-							}else{
-								logs("群发人数不能超过200人")
+							} else {
+								message("群发人数不能超过200人");
 							}
 						}
 						count = app.uids.length;
@@ -347,7 +349,22 @@
 								next.classList.add("next-disabled");
 							}
 						}
+						
+						var flag = true;
+						mui("input[type='checkbox']").each(function() {
+							if (this.checked == false && flag == true) {
+								flag = false;
+							}
+						});
+						if (flag) {
+							allselect = true;
+							document.querySelector('.create-team-btn').innerText = "取消";
+						} else {
+							allselect = false;
+							document.querySelector('.create-team-btn').innerText = "全选";
+						}
 					});
+					
 					//next event
 					next.addEventListener('tap', function() {
 						var index = app.tags.indexOf(app.tagsname);
@@ -356,6 +373,10 @@
 							// app.uids.splice(index, 1);
 						} else {
 							app.tags.push(app.tagsname);
+						}
+						if (count > 200) {
+							message("群发人数不能超过200人");
+							return;
 						}
 						if (count > 0) {
 							mui.fire(plus.webview.getWebviewById('mass_message'), 'reloadMyself', {
@@ -370,15 +391,20 @@
 					}, false);
 
 					// 全选操作
-					var allselect = false;
 					mui('.mui-bar').on('tap', '.create-team-btn', function() {
 						if (!allselect) {
-							app.uids = [];
-							app.userName = [];
+							// app.uids = [];
+							// app.userName = [];
 							mui("input[type='checkbox']").each(function() {
 								this.checked = true;
-								app.uids.push(this.value);
-								app.userName.push(this.dataset.names);
+								var idIndex = app.uids.indexOf(this.value);
+								var nameIndex = app.userName.indexOf(this.dataset.names);
+								if (idIndex == -1) {
+									app.uids.push(this.value);
+								}
+								if (nameIndex == -1) {
+									app.userName.push(this.dataset.names);
+								}
 							});
 							next.classList.remove("next-disabled");
 							document.querySelector('.create-team-btn').innerText = "取消";
@@ -389,18 +415,61 @@
 						} else {
 							mui("input[type='checkbox']").each(function() {
 								this.checked = false;
-								app.uids = [];
-								app.userName = [];
+								var idIndex = app.uids.indexOf(this.value);
+								var nameIndex = app.userName.indexOf(this.dataset.names);
+								if (idIndex != -1) {
+									app.uids.splice(idIndex, 1);
+								}
+								if (nameIndex != -1) {
+									app.userName.splice(nameIndex, 1);
+								}
+								// app.uids = [];
+								// app.userName = [];
 							});
-							count = 0;
-							next.classList.add("next-disabled");
-							document.querySelector('.create-team-btn').innerText = "全选";
 							count = app.uids.length;
+							if (count == 0) {
+								next.classList.add("next-disabled");
+							}
+							document.querySelector('.create-team-btn').innerText = "全选";
 							var context = count ? "下一步(" + count + ")" : "下一步";
 							next.innerHTML = context;
 							allselect = false;
 						}
 					});
+					// // 全选操作
+					// var allselect = false;
+					// mui('.mui-bar').on('tap', '.create-team-btn', function() {
+					// 	if (!allselect) {
+					// 		// app.uids = [];
+					// 		// app.userName = [];
+					// 		mui("input[type='checkbox']").each(function() {
+					// 			this.checked = true;
+					// 			var idIndex = app.uids.indexOf(this.value);
+					// 			var nameIndex = app.userName.indexOf(this.dataset.names);
+					// 			app.uids.push(this.value);
+					// 			app.userName.push(this.dataset.names);
+					// 		});
+					// 		next.classList.remove("next-disabled");
+					// 		document.querySelector('.create-team-btn').innerText = "取消";
+					// 		count = app.uids.length;
+					// 		var context = count ? "下一步(" + count + ")" : "下一步";
+					// 		next.innerHTML = context;
+					// 		allselect = true;
+					// 	} else {
+					// 		mui("input[type='checkbox']").each(function() {
+					// 			this.checked = false;
+					// 			app.uids = [];
+					// 			app.userName = [];
+					// 		});
+					// 		count = 0;
+					// 		next.classList.add("next-disabled");
+					// 		document.querySelector('.create-team-btn').innerText = "全选";
+					// 		count = app.uids.length;
+					// 		var context = count ? "下一步(" + count + ")" : "下一步";
+					// 		next.innerHTML = context;
+					// 		allselect = false;
+					// 	}
+					// });
 				})
 			}
 		})

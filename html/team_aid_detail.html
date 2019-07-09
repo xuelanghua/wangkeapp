@@ -392,6 +392,9 @@
 					// logs(res);
 					if (res.errno == 0) {
 						app.msgList[i].status = y;
+						if (y == 1) {
+							mui.fire(plus.webview.getWebviewById('home'), 'refreshTeamList');
+						}
 					}
 				}, 'json')
 			}
