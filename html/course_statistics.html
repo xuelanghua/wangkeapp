@@ -68,13 +68,14 @@
 
 			.study-right span {
 				display: inline-flex;
-				margin: 0 30px 0 10px;
+				margin: 0 20px 0 10px;
 			}
 
 			.rank-sign {
 				width: auto;
 				height: 24px;
 				object-fit: cover;
+				margin-right: 30px;
 			}
 
 			.mui-table-view-cell.slef-ranking span {
@@ -116,7 +117,7 @@
 						</div>
 						<div class="study-right">
 							<img v-if="l.rank<4" class="rank-sign" :src="'../image/icon/rank-sign'+l.rank+'.png'">
-							<span>第{{l.rank}}名</span>
+							<span v-if="l.rank>3">第{{l.rank}}名</span>
 							<div class="circleChart-cont">
 								<div class="circleChart" :class="'circleChart'+i"></div>
 							</div>

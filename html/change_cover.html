@@ -164,6 +164,10 @@
 			// 设置封面图
 			mui(".mui-content").on("tap", "#save", function() {
 				// logs(app.cover.join(","));
+				if(timeline_cover=''){
+					message("请选择图片！");
+					return;
+				}
 				mui.post($ajaxUrl + 'discover&action=timeline_cover_setting', {
 					token: userInfo.token,
 					timeline_cover: app.cover.join(","),
@@ -176,7 +180,7 @@
 							mui.back();
 						}, 200);
 					} else {
-						// app.dynamic = [];
+						message(res.message);
 					}
 				}, 'json');
 			})

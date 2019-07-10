@@ -236,6 +236,17 @@
 				font-size: 16px;
 				color: #999999;
 			}
+
+			.dmask {
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				background-color: rgba(0, 0, 0, 0.6);
+				z-index: 12;
+				display: none;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -250,6 +261,9 @@
 
 	<body>
 		<div id="mui-content" class="mui-content discover-container" v-cloak>
+			<div class="dmask">
+
+			</div>
 			<footer class="footer mui-bar mui-bar-footer">
 				<!-- 评论 -->
 				<div class="comment-container">
@@ -282,7 +296,7 @@
 					<div class="user-info">
 						<div class="user-info-top">
 							<div class="user-name mui-ellipsis">{{discover_info.name}}</div>
-							<span :class="'vip'+group_id">{{discover_info.group_name}}</span>
+							<!-- <span :class="'vip'+group_id">{{discover_info.group_name}}</span> -->
 						</div>
 						<p class="signature mui-ellipsis-2">{{discover_info.personalized_signature||'暂无签名'}}</p>
 					</div>
@@ -643,10 +657,14 @@
 						document.querySelector(".comment-icon-cont" + _idd).classList.add("active");
 						if (this.menuStatus) {
 							this.menuStatus = false;
-							mask.close();
+							if (!mui.os.ios) {
+								mask.close();
+							}
 						} else {
 							this.menuStatus = true;
-							mask.show();
+							if (!mui.os.ios) {
+								mask.show();
+							}
 						}
 					},
 				},
@@ -773,7 +791,7 @@
 					logs(res);
 					if (res.errno == 0) {
 						if (skip == 1) {
-							app.dynamic=[];
+							app.dynamic = [];
 							app.dynamic = res.data;
 						} else {
 							app.dynamic = app.dynamic.concat(res.data);
