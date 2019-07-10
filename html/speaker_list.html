@@ -204,7 +204,7 @@
 			</header>
 
 			<div class="mui-content setting-container">
-				<div id='list' class="mui-indexed-list">
+				<div id="list" class="mui-indexed-list">
 					<div class="mui-indexed-list-search mui-input-row mui-search ">
 						<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="好友名称">
 					</div>
@@ -244,7 +244,7 @@
 							<template v-for="(items,key,index) in userList" :key="index">
 								<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
 								<li :data-value="list.initial" :data-tags="list.pinyin" v-for="(list,i) in items" :key="i" class="mui-input-row mui-radio mui-left">
-									<input name="radio1" type="radio" :value="list.uid" />
+									<input name="radio1" type="radio" :value="list.uid" :data-names="list.name||list.nickName" :data-avatar="list.avatar||list.avatarUrl" />
 									<label class="chosen-one" :data-names="list.name||list.nickName" :data-ids="list.uid" :data-avatar="list.avatar||list.avatarUrl">
 										<img :src="list.avatar||list.avatarUrl" alt="">
 										<span class="user-name">{{list.name||list.nickName}}</span>
@@ -301,8 +301,15 @@
 					mui('.mui-content').on('tap', '.chosen-one', function() {
 						ids = this.dataset.ids;
 						avatar = this.dataset.avatar;
-						names=this.dataset.names;
+						names = this.dataset.names;
 					})
+					
+					mui('.mui-indexed-list-inner').on('change', 'input', function() {
+						ids = this.value;
+						avatar = this.dataset.avatar;
+						names = this.dataset.names;
+					})
+					
 					done.addEventListener('tap', function() {
 						if (!ids) {
 							message("请选择一个人");
