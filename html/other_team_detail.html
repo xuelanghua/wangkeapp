@@ -862,7 +862,7 @@
 					plus.navigator.setStatusBarStyle("dark");
 					var self = plus.webview.currentWebview();
 					app.tid = self.teamid;
-					logs(app.tid);
+					console.log(app.tid);
 					getInfo();
 					getMember();
 					getApplyList();
@@ -937,7 +937,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
@@ -964,6 +964,9 @@
 					} else {
 						document.querySelector(".team-setting").style.display = "none";
 					}
+				} else {
+					message(res.message);
+					mui.back();
 				}
 			}, 'json');
 		}

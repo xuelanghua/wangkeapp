@@ -136,7 +136,7 @@
 								</div>
 							</div>
 							<div class="opction-cont">
-								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name)">
+								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name,list.type)">
 									<img src="../image/icon/team-list-opction02.png">
 									<span>群聊</span>
 								</div>
@@ -183,7 +183,7 @@
 								</div>
 							</div>
 							<div class="opction-cont">
-								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name)">
+								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name,list.type)">
 									<img src="../image/icon/team-list-opction02.png">
 									<span>群聊</span>
 								</div>
@@ -279,10 +279,11 @@
 						}
 					},
 					// 群聊
-					groupsChat: function(id, name) {
+					groupsChat: function(id, name, type) {
 						openPage('team_chat.html', 'team_chat', '#f7f7f7', {
 							tid: id,
-							teamName: name
+							teamName: name,
+							teamType: type
 						});
 					}
 				}
@@ -292,7 +293,7 @@
 				mui.post($ajaxUrl + 'team&action=team_list', {
 					token: userInfo.token
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						var teamList = res.data;
 						var createList = new Array();

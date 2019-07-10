@@ -148,6 +148,7 @@
 			var limit = 20;
 			var player = null;
 			var playStatus = false;
+			var teamType = 1;
 
 			var vm = new Vue({
 				el: '.mui-content',
@@ -164,6 +165,7 @@
 						var wv = plus.webview.currentWebview();
 						var tid = wv.tid;
 						vm.tid = tid;
+						teamType = wv.teamType;
 						var teamName = wv.teamName;
 						document.querySelector('.mui-title').innerHTML = teamName;
 						chatData = {
@@ -690,12 +692,20 @@
 					teamid: vm.tid
 				})
 			})
+			
 			// 打开详情页面
 			mui(".mui-bar").on("tap", ".detail-btn", function() {
 				ws.close();
-				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
-					teamid: vm.tid
-				})
+				console.log(teamType);
+				if (teamType == 1) {
+					openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+						teamid: vm.tid
+					})
+				} else {
+					openPage('other_team_detail.html', 'other_team_detail', '#f7f7f7', {
+						teamid: vm.tid
+					});
+				}
 			})
 		</script>
 	</body>

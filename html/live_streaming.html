@@ -103,7 +103,7 @@
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
 							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" alt="" />
 							<div class="msg-content">
-								<i v-if="list.read_status==0" class="red-dot"></i>
+								<i v-if="list.read_status==0&&list.message_type=='audio'" class="red-dot"></i>
 								<div v-if="list.message_type=='text'" class="msg-content-inner" v-html="list.content">
 									{{ list.content|| '&nbsp;&nbsp;' }}
 								</div>
