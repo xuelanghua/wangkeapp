@@ -247,7 +247,22 @@
 	<script src="../js/mui.indexedlist.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
-		mui.init();
+		mui.init({
+			pullRefresh: {
+				container: ".mui-indexed-list",
+				up: {
+					height: 50,
+					auto: false,
+					contentrefresh: "正在加载...",
+					contentnomore: '没有更多数据了',
+					callback: function() {
+						// skip += 1;
+						// refresh = 'up';
+						// getFansList();
+					}
+				}
+			} 
+		});
 		var userInfo = getUserInfo();
 		var tid = '';
 		var count = 0;
@@ -313,6 +328,7 @@
 					list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
 					//create
 					window.indexedList = new mui.IndexedList(list);
+					
 					mui('.mui-indexed-list-inner').on('change', 'input', function() {
 						var index = app.uids.indexOf(this.value);
 						var idx = app.userName.indexOf(this.dataset.names);
@@ -475,14 +491,13 @@
 		})
 
 		function getUserList() {
-			// console.log(tid);
 			mui.post($ajaxUrl + 'groupmessage&action=member_list', {
 				token: userInfo.token,
 				label_id: app.grId,
 				type: app.types,
 				exist_uids: app.uids.join(","),
 				skip: app.skip,
-				limit: 200
+				limit: 20
 			}, function(res) {
 				// logs(res);
 				if (res.errno == 0) {

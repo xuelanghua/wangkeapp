@@ -538,6 +538,9 @@
 			var msgHeight = 0;
 			var message_id = '';
 			var sender = "1";
+			var player = null;
+			var playStatus = false;
+			
 			mui.plusReady(function() {
 				//模板配置
 				template.config('escape', false);
@@ -656,14 +659,31 @@
 					var msgType = msgItem.getAttribute('msg-type');
 					var msgContent = msgItem.getAttribute('msg-content')
 					if (msgType == 'audio') {
-						player = plus.audio.createPlayer(msgContent);
-						var playState = msgItem.querySelector('.play-state');
-						playState.innerText = '正在播放...';
-						player.play(function() {
-							playState.innerText = '点击播放';
-						}, function(e) {
-							playState.innerText = '点击播放';
-						});
+						if (msgType == 'audio') {
+							var playState = msgItem.querySelector('.play-state');
+							if (playStatus) {
+								playStatus = false;
+								playState.innerText = '点击播放';
+								player.stop();
+							} else {
+								playStatus = true;
+								player = plus.audio.createPlayer(msgContent);
+								playState.innerText = '正在播放...';
+								player.play(function() {
+									playState.innerText = '点击播放';
+								}, function(e) {
+									playState.innerText = '点击播放';
+								});
+							}
+						}
+						// player = plus.audio.createPlayer(msgContent);
+						// var playState = msgItem.querySelector('.play-state');
+						// playState.innerText = '正在播放...';
+						// player.play(function() {
+						// 	playState.innerText = '点击播放';
+						// }, function(e) {
+						// 	playState.innerText = '点击播放';
+						// });
 					}
 				};
 

@@ -196,6 +196,8 @@
 			var skip = 1;
 			var intervalTime = 0;
 			var limit = 20;
+			var player = null;
+			var playStatus = false;
 
 			var vm = new Vue({
 				el: '.mui-content',
@@ -306,15 +308,30 @@
 							// logs(msgType);
 							// logs(msgContent);
 							if (msgType == 'audio') {
-								// readAudio();
-								player = plus.audio.createPlayer(msgContent);
 								var playState = msgItem.querySelector('.play-state');
-								playState.innerText = '正在播放...';
-								player.play(function() {
+								if (playStatus) {
+									playStatus = false;
 									playState.innerText = '点击播放';
-								}, function(e) {
-									playState.innerText = '点击播放';
-								});
+									player.stop();
+								} else {
+									playStatus = true;
+									player = plus.audio.createPlayer(msgContent);
+									playState.innerText = '正在播放...';
+									player.play(function() {
+										playState.innerText = '点击播放';
+									}, function(e) {
+										playState.innerText = '点击播放';
+									});
+								}
+								// readAudio();
+								// player = plus.audio.createPlayer(msgContent);
+								// var playState = msgItem.querySelector('.play-state');
+								// playState.innerText = '正在播放...';
+								// player.play(function() {
+								// 	playState.innerText = '点击播放';
+								// }, function(e) {
+								// 	playState.innerText = '点击播放';
+								// });
 							}
 						};
 						var imageViewer = new mui.ImageViewer('.msg-content-image', {

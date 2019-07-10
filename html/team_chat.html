@@ -27,6 +27,22 @@
 			.other-name{
 				left:54px;
 			}
+			
+			.red-dot{
+				position: absolute;
+				top: 1px;
+				right: 1px;
+				display: inline-block;
+				border-radius: 50%;
+				background-color: #FF0000;
+				width: 6px;
+				height: 6px;
+			}
+			
+			.msg-item-self .red-dot{
+				left: 1px;
+				right: auto;
+			}
 		</style>
 	</head>
 
@@ -51,13 +67,14 @@
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
 							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" alt="" />
 							<div class="msg-content">
+								<i v-if="list.message_type=='audio' && list.read_status==0" class="red-dot"></i>
 								<div v-if="list.message_type=='text'" class="msg-content-inner" v-html="list.content">
 									{{ list.content|| '&nbsp;&nbsp;' }}
 								</div>
 								<div v-else-if="list.message_type=='image'" class="msg-content-inner">
 									<img class="msg-content-image" :src="list.content" style="max-width: 100px;" />
 								</div>
-								<div v-else class="msg-content-inner">
+								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
 									<span class="play-state">点击播放</span>
 								</div>
@@ -129,6 +146,8 @@
 			var skip = 1;
 			var intervalTime = 0;
 			var limit = 20;
+			var player = null;
+			var playStatus = false;
 
 			var vm = new Vue({
 				el: '.mui-content',
@@ -210,22 +229,26 @@
 						};
 
 						ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
-						//alert(ui.boxMsgText.offsetWidth );
 						var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
 						var msgItemTap = function(msgItem, event) {
 							var msgType = msgItem.getAttribute('msg-type');
 							var msgContent = msgItem.getAttribute('msg-content');
-							// logs(msgType);
-							// logs(msgContent);
 							if (msgType == 'audio') {
-								player = plus.audio.createPlayer(msgContent);
 								var playState = msgItem.querySelector('.play-state');
-								playState.innerText = '正在播放...';
-								player.play(function() {
+								if (playStatus) {
+									playStatus = false;
 									playState.innerText = '点击播放';
-								}, function(e) {
-									playState.innerText = '点击播放';
-								});
+									player.stop();
+								} else {
+									playStatus = true;
+									player = plus.audio.createPlayer(msgContent);
+									playState.innerText = '正在播放...';
+									player.play(function() {
+										playState.innerText = '点击播放';
+									}, function(e) {
+										playState.innerText = '点击播放';
+									});
+								}
 							}
 						};
 						var imageViewer = new mui.ImageViewer('.msg-content-image', {
@@ -246,7 +269,6 @@
 							areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
 						};
 
-						// bindMsgList();
 						window.addEventListener('resize', function() {
 							ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 						}, false);
@@ -315,7 +337,6 @@
 								// });
 								chatData['message_type'] = 'text';
 								chatData['content'] = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
-								// logs(chatData);
 								ws.send(JSON.stringify(chatData)); //向服务器发送消息
 								ui.boxMsgText.value = '';
 								mui.trigger(ui.boxMsgText, 'input', null);
@@ -331,7 +352,7 @@
 								ui.btnMsgType.classList.remove('mui-icon-compose');
 								ui.boxMsgSound.style.display = 'none';
 								ui.boxMsgText.style.display = 'block';
-								//--
+								
 								//showKeyboard();
 								ui.boxMsgText.focus();
 								setTimeout(function() {
@@ -555,33 +576,7 @@
 										data = JSON.parse(data);
 										msgData = data.data;
 										msgData['read_status'] = 1;
-										// logs(msgData);
 										send(msgData);
-										// data['read_status'] = 1;
-										// logs(data);
-										// if (data.data2) {
-										// 	if (data.data2.user_id == chatId) {
-										// 		var message = {
-										// 			sender: chatId,
-										// 			type: data.data2.message_type,
-										// 			content: data.data2.content,
-										// 			message_id: data.message_id
-										// 		}
-										// 		send(message);
-										// 	} else {
-										// 		mui.post($ajaxUrl + 'chat&action=unread_message', {
-										// 			token: userInfo.token,
-										// 			message_id: data.data2.id
-										// 		}, function(res) {
-										// 			if (res.errno == 0) {
-										// 				// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-										// 				// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-										// 				// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
-										// 				// mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-										// 			}
-										// 		}, 'json')
-										// 	}
-										// }
 									}
 								};
 								ws.onclose = function(e) {
@@ -607,6 +602,7 @@
 								skip: skip,
 								limit: limit
 							}, function(res) {
+								logs(res);
 								if (res.errno == 0) {
 									if (skip == 1) {
 										vm.chatList = res.data;
@@ -635,12 +631,28 @@
 								course_id: 0,
 								type: 1,
 							}, function(res) {
-								logs(res);
+								// logs(res);
 							}, 'json');
 						}
 					})
 				}
 			})
+			
+			// 标记语音已读
+			function readAudio(aid, idx, i) {
+				mui.get($ajaxUrl + 'team&action=play_audio', {
+					token: userInfo.token,
+					team_id: vm.tid,
+					type: 1,
+					course_id: 0,
+					audio_id: aid
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						vm.$set(vm.chatList[idx][i], "read_status", 1);
+					}
+				}, 'json');
+			}
 
 			//文件上传
 			function voiceUpload(file) {

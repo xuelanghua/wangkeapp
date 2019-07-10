@@ -493,7 +493,7 @@
 				},
 				methods: {
 					goChat: function(item) {
-						logs(item);
+						// logs(item);
 						var swipemenu = mui('.mui-selected')[0];
 						// 关闭左滑菜单才能跳转
 						if (swipemenu) {
@@ -535,16 +535,20 @@
 				mui.post($ajaxUrl + 'chat&action=notice_list', {
 					token: userInfo.token
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						app.systemMsg = res.data;
 						cacheData('systemMsg', res.data);
+						var flag = false;
 						for (var i = 0; i < res.data.length; i++) {
 							if (res.data[i].count > 0) {
-								document.querySelector('.system-red-tips').style.display = "inline-block";
-							} else {
-								document.querySelector('.system-red-tips').style.display = "none";
+								flag = true;
 							}
+						}
+						if (flag) {
+							document.querySelector('.system-red-tips').style.display = "inline-block";
+						} else {
+							document.querySelector('.system-red-tips').style.display = "none";
 						}
 						document.getElementById("systemMsg_total").innerText = '(' + res.data.length + ')';
 					} else {
