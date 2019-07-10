@@ -460,6 +460,7 @@
 
 			.titlecontentR .weather-info {
 				margin-top: -10px;
+				margin-right: 10px;
 			}
 
 			.titlecontentR .weather-info p {
@@ -728,7 +729,7 @@
 	<script src="../js/swiper.min.js"></script>
 	<script src="../js/Zepto.min.js"></script>
 	<script>
-		var team_type="";
+		var team_type = "";
 		var mask = mui.createMask(function() {
 			$(".mui-title .mui-icon").removeClass("mui-icon-arrowdown");
 			$(".team-list").slideUp();
@@ -749,7 +750,7 @@
 						getNotice();
 						weatherInit(); //天气初始化
 						slideInit(true); //幻灯片初始化 
-						getTeamList();//获取团队
+						getTeamList(); //获取团队
 					}
 				}
 			}
@@ -784,7 +785,7 @@
 				}
 				// alert(e.detail.number);
 			})
-			
+
 			//自定义事件监听-首页新增客户点击
 			window.addEventListener('refreshTeamList', function() {
 				getTeamList();
@@ -908,19 +909,20 @@
 
 			//跳转团队详情
 			document.getElementById('new_customer').addEventListener('tap', function() {
+				logs(team_type);
 				if (default_team_id) {
 					// 正式
-					if(team_type==1){
+					if (team_type == 1) {
 						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
 							teamid: default_team_id
 						});
-					}else{
+					} else {
 						// 数据
 						openPage('other_team_detail.html', 'other_team_detail', '#f7f7f7', {
 							teamid: default_team_id
 						});
 					}
-				}else{
+				} else {
 					openPage('join_team.html', 'join_team.html', '#f7f7f7');
 				}
 			})
@@ -1242,6 +1244,7 @@
 		}
 		//获取团队信息
 		var teamchange = true;
+
 		function getTeamList() {
 			mui.post($ajaxUrl + 'team&action=personal_team_list', {
 				token: userInfo.token,
@@ -1249,18 +1252,20 @@
 				logs(res);
 				if (res.errno == 0) {
 					var data = res.data;
-					if (data.length > 1) { 
+					if (data.length > 1) {
 						var html = "";
 						for (var i in data) {
-							if (data[i].is_default == 1) { 
+							if (data[i].is_default == 1) {
 								document.getElementById("team_name").innerText = data[i].name;
 								default_team_id = data[i].team_id;
-								team_type= data[i].type;
+								team_type = data[i].type;
 							}
-							html += '<li class="mui-table-view-cell" data-typer=' + data[i].type + ' data-tid=' + data[i].team_id + '>' + data[i].name + '</li>';
+							html += '<li class="mui-table-view-cell" data-typer=' + data[i].type + ' data-tid=' + data[i].team_id + '>' +
+								data[i].name + '</li>';
 						}
 						document.getElementById("team-list").innerHTML = html;
 					} else if (data.length == 1 && data != "") {
+						team_type = data[0].type;
 						document.getElementById("team_name").innerText = data[0].name;
 						default_team_id = data[0].team_id;
 						mui(".mui-title .mui-icon")[0].style.display = "none";
@@ -1269,7 +1274,7 @@
 						document.getElementById("team_name").innerText = "旺客"
 						mui(".mui-title .mui-icon")[0].style.display = "none";
 						teamchange = false;
-						default_team_id=0;
+						default_team_id = 0;
 					}
 				} else {}
 			}, 'json');
@@ -1286,7 +1291,7 @@
 		// 切换团队名称
 		mui('.mui-bar').on('tap', '.mui-table-view-cell', function() {
 			default_team_id = this.dataset.tid;
-			team_type=this.dataset.typer;
+			team_type = this.dataset.typer;
 			var _self = this;
 			mui.post($ajaxUrl + 'team&action=set_default_team', {
 				token: userInfo.token,

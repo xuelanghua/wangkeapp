@@ -15,22 +15,12 @@
 			}
 
 			.menu-list,
-			.dynamic-lists-issue,
-			.menu-list.active {
+			.dynamic-lists-issue {
 				width: 100%;
 			}
 
 			.menu-body .item {
 				min-width: 1.4rem;
-			}
-
-			.menu-body {
-				flex-grow: 0;
-				right: -100%;
-			}
-
-			.menu-list.active .menu-body {
-				right: 0;
 			}
 
 			.mui-backdropp {
@@ -60,43 +50,36 @@
 			</div>
 		</footer>
 		<div id="mui-content" class="mui-content dynamics-detail-container" v-cloak>
-			<div class="dynamics-title-cont">
-				<div class="dynamics-title-left">
-					<h2>{{title}}</h2>
-					<p><span class="user-name">{{author}}</span><span class="release-time">{{create_time.substring(0,10)}}</span></p>
-				</div>
-			</div>
 			<div class="dynamics-content">
 				<p>{{content}}</p>
-				<ul class="dynamics-img-group" :class="[cover.length==2||cover.length==5||cover.length==9?'active':'']" v-if="cover.length>0&&cover[0]!=''">
+				<ul class="dynamics-img-group" v-if="cover.length>0&&cover[0]!=''">
 					<li v-for="(img,idx) in cover" :key="idx"><img :data-idx="idx" :src="img"></li>
 				</ul>
 			</div>
-			<div class="comment-cont">
-				<!-- <div class="thumbs-cont">
-					<img src="../image/icon/give-the-thumbs-up.png">
-					<span v-for="lists in likes">{{lists.nickName}}</span>
+			<div class="dynamics-title-cont">
+				<div class="dynamics-title-left">
+					<!-- <h2>{{title}}</h2> -->
+					<p><span class="user-name">{{author}}</span><span class="release-time">{{create_time.substring(0,10)}}</span></p>
 				</div>
-				<div v-if="comment.length>0" class="comment-list">
-					<ul>
-						<li v-for="lists in comment">
-							<p><span>{{lists.nickName}}：</span>{{lists.content}}</p>
-						</li>
-					</ul>
-				</div> -->
+			</div>
+			<div class="comment-cont">
 				<div class="operation-menu">
-					<div class="menu-list" :class="menuStatus?'active':''">
-						<div class="menu-body">
+					<div class="menu-list">
+						<div class="menu-body" :class="menuStatus?'active':''">
 							<!-- 箭头 -->
 							<div class="menu-arrow"></div>
-							<div class="item" @tap="shareBtn(all_datas.id,all_datas.title,all_datas.cover[0])">
-								<span class="iconfont icon-share">&#xe604;</span>分享
+							<div class="item" @tap="shareBtn(all_datas.id,all_datas.content,all_datas.cover[0],all_datas.user_id)">
+								<span class="iconfont icon-share">&#xe604;</span>
+								<span>分享</span>
 							</div>
-							<!-- <div class="item" @tap="likeThis(all_datas.id)" :class="all_datas.is_thumbs==1?'heartBeat':'tada'"> -->
 							<div class="item" :class="'item'+all_datas.id" @tap="likeThis(all_datas.id)">
-								<span class="iconfont icon-like">&#xe601;</span>{{all_datas.is_thumbs==1?'取消':'点赞'}}
+								<span class="iconfont icon-like">&#xe601;</span>
+								<span>{{all_datas.is_thumbs==1?'取消':'点赞'}}</span>
 							</div>
-							<div class="item" @tap="commentDynamic(all_datas.id)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
+							<div class="item" @tap="commentDynamic(all_datas.id)">
+								<span class="iconfont icon-comment">&#xe602;</span>
+								<span>评论</span>
+							</div>
 						</div>
 						<span v-show="!menuStatus">&nbsp;</span>
 						<div class="comment-icon-cont" @tap="showMenu(all_datas.id)">
@@ -128,9 +111,8 @@
 			var nativeWebview, imm, InputMethodManager;
 			var mask = mui.createMask(function() {
 				muiCont.menuStatus = false;
-				muiCont.isComment = false;
-				mui('.mui-bar-footer')[0].style.display = "none";
 				plus.key.hideSoftKeybord();
+				mui('.mui-bar-footer')[0].style.display = "none";
 			});
 			var muiCont = new Vue({
 				el: '#mui-content',
@@ -229,7 +211,6 @@
 					}
 				},
 				mounted: function() {
-
 					mui.init({
 						beforeback: function() {
 							var view = plus.webview.currentWebview().opener();
@@ -261,7 +242,7 @@
 					token: userInfo.token,
 					tid: tid
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						var data = res.data;
 						muiCont.all_datas = res.data;
@@ -288,8 +269,7 @@
 				}, 'json')
 			}
 			// 分享
-			function shareBtn(id, cont, img) {
-				muiCont.isComment = true;
+			function shareBtn(id, cont, img,touid) {
 				mask.close();
 				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;
@@ -300,7 +280,7 @@
 						thumbs: [sd_path],
 						miniProgram: {
 							id: 'gh_9fa5f42ab939',
-							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid='+touid+'&from_id='+ userInfo.id,
 							webUrl: 'https://app.wangkeapp.cn/'
 						}
 					}, 'miniProgram');

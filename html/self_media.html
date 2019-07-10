@@ -280,7 +280,7 @@
 					</div>
 					<div class="user-info">
 						<div class="user-info-top">
-							<div class="user-name mui-ellipsis">{{discover_info.name}}</div> 
+							<div class="user-name mui-ellipsis">{{discover_info.name}}</div>
 							<span :class="'vip'+group_id">{{discover_info.group_name}}</span>
 						</div>
 						<p class="signature mui-ellipsis-2">{{discover_info.personalized_signature||'暂无签名'}}</p>
@@ -484,7 +484,7 @@
 					isArticleClassify: false,
 					void_timeline: false,
 					void_course: false,
-					group_id:userInfo.group_id
+					group_id: userInfo.group_id
 				},
 				created: function() {
 					// 初始化字体大小
@@ -675,8 +675,8 @@
 									pullDirection = "down";
 									mui('#mui-content').pullRefresh().refresh(true);
 									skip = 1;
-									getDiscoverData();
 									discoverInfo();
+									getDiscoverData();
 									getArticleClassify();
 								}
 							}
@@ -761,6 +761,7 @@
 			}
 			// 数据请求
 			function getDiscoverData() {
+				logs(skip);
 				mui.post($ajaxUrl + 'discover&action=discover_list', {
 					token: userInfo.token,
 					type: app.typeler.join(","),
@@ -768,9 +769,10 @@
 					limit: limit,
 					article_cid: app.cid,
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						if (skip == 1) {
+							app.dynamic=[];
 							app.dynamic = res.data;
 						} else {
 							app.dynamic = app.dynamic.concat(res.data);
@@ -895,6 +897,8 @@
 			}
 			// 监听发布新动态
 			window.addEventListener('doit', function() {
+				app.typeler = [];
+				skip = 1;
 				getDiscoverData();
 			}, false);
 			// 更换封面

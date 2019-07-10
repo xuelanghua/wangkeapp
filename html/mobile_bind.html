@@ -76,7 +76,7 @@
 	<body>
 		<div class="mui-content">
 			<div class="number">
-				<img src="../image/number.png" >
+				<img src="../image/number.png">
 			</div>
 			<div class="sk">
 				<div class="phone">
@@ -85,12 +85,12 @@
 					</div>
 					<div class="phone-content">
 						<div class="phone1">
-							<input class="mui-pull-left" name="mobile" type="number" placeholder="手机号"/>
+							<input class="mui-pull-left" name="mobile" type="number" placeholder="手机号" />
 							<img class="mui-pull-right" src="../image/shouji.png" />
 							<div class="clearfix"></div>
 						</div>
 						<div class="phone1">
-							<input class="mui-pull-left" name="code" type="number" placeholder="验证码"/>
+							<input class="mui-pull-left" name="code" type="number" placeholder="验证码" />
 							<img class="mui-pull-right" src="../image/Formacopy.png" />
 							<div class="clearfix"></div>
 						</div>
@@ -100,6 +100,9 @@
 				</div>
 				<button class="Opening">立即绑定</button>
 			</div>
+		</div>
+		<div id="bind_again" style="position: absolute;bottom: 0;left: 0;width: 100%;">
+			<p style="text-align: center;color: #999999;">重新登录</p>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -111,84 +114,96 @@
 				return false;
 			}
 		})
-	
+
 		var flag = false;
 		var phoneNumber = /^[1][\d]{10}$/;
 		var userInfo = null;
 		var timer = null;
 		var num = 60;
-		mui.plusReady(function(){
+		mui.plusReady(function() {
 			userInfo = getUserInfo();
 			mui('.sk').on('tap', '.Obtain', function() {
 				getVerifyCode();
 			})
-			
+
 			mui('.sk').on('tap', '.Opening', function() {
 				document.activeElement.blur();
 				mobileBind();
 			})
+			// 重新绑定
+			document.getElementById("bind_again").addEventListener('tap', function() {
+				localStorage.removeItem("user");
+				plus.runtime.restart();
+			})
 		})
-		
+
 		function getVerifyCode() {
 			//获取短信验证
-	        if (flag) {
-	            return;
-	        }
-	        var mobile = mui('input[name=mobile]')[0].value;
-	        if (mobile.length == 0) {
-	            mui.toast('请输入手机号码!');
-	            return;
-	        } else if (!phoneNumber.test(mobile)) {
-	            mui.toast('手机号码格式错误!');
-	            return;
-	        }
-			
-			mui.post($ajaxUrl + 'verifycode', {receiver: mobile, token: userInfo.token}, function(res) {
+			if (flag) {
+				return;
+			}
+			var mobile = mui('input[name=mobile]')[0].value;
+			if (mobile.length == 0) {
+				mui.toast('请输入手机号码!');
+				return;
+			} else if (!phoneNumber.test(mobile)) {
+				mui.toast('手机号码格式错误!');
+				return;
+			}
+
+			mui.post($ajaxUrl + 'verifycode', {
+				receiver: mobile,
+				token: userInfo.token
+			}, function(res) {
 				if (res.errno == 1) {
 					mui.toast(res.message);
 					return;
 				} else {
 					mui.toast(res.message);
 					clearInterval(timer);
-                    timer = setInterval(function() {
-                        flag = true;
-		                if (num > 0) {
-		                    num--;
-		                    mui('.Obtain')[0].innerHTML = num + '重新获取';
-		                    mui('.Obtain')[0].style.color = '#999';
-		                } else if (num <= 1) {
-		                    clearInterval(timer);
-		                    mui('.Obtain')[0].innerHTML = '重新获取';
-		                    mui('.Obtain')[0].style.color = '#6E83EB';
-		                    num = 60;
-		                    flag = false;
-		                }
-                    }, 1000);
+					timer = setInterval(function() {
+						flag = true;
+						if (num > 0) {
+							num--;
+							mui('.Obtain')[0].innerHTML = num + '重新获取';
+							mui('.Obtain')[0].style.color = '#999';
+						} else if (num <= 1) {
+							clearInterval(timer);
+							mui('.Obtain')[0].innerHTML = '重新获取';
+							mui('.Obtain')[0].style.color = '#6E83EB';
+							num = 60;
+							flag = false;
+						}
+					}, 1000);
 				}
 			}, 'json');
 		}
-		
+
 		function mobileBind() {
 			var vmobile = mui('input[name=mobile]')[0].value;
 			var vcode = mui('input[name=code]')[0].value;
 			if (vmobile.length == 0) {
-	            mui.toast('请输入手机号码!');
-	            return;
-	        } else if (!phoneNumber.test(vmobile)) {
-	            mui.toast('手机号码格式错误!');
-	            return;
-	        }
-	        if (vcode.length == 0) {
-	        	mui.toast('请输入验证码!');
-	        	return;
-	        } else if (vcode.length != 6) {
-	        	mui.toast('验证码位数输入错误!');
-	        	return;
-	        }
-	        
-	        mui.post($ajaxUrl + 'member&action=bind', {mobile: vmobile, code: vcode, token: userInfo.token}, function(res) {
-	        	if (res.errno == 0) {
-	        		mui.toast(res.message);
+				mui.toast('请输入手机号码!');
+				return;
+			} else if (!phoneNumber.test(vmobile)) {
+				mui.toast('手机号码格式错误!');
+				return;
+			}
+			if (vcode.length == 0) {
+				mui.toast('请输入验证码!');
+				return;
+			} else if (vcode.length != 6) {
+				mui.toast('验证码位数输入错误!');
+				return;
+			}
+
+			mui.post($ajaxUrl + 'member&action=bind', {
+				mobile: vmobile,
+				code: vcode,
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					mui.toast(res.message);
 					var userInfo = getUserInfo();
 					userInfo.mobile = vmobile;
 					localStorage.setItem('user', JSON.stringify(userInfo));
@@ -198,11 +213,11 @@
 						plus.webview.close('login');
 						plus.webview.close('mobile_bind');
 					}, 2000)
-	        	} else {
-	        		mui.toast(res.message);
-	        		return;
-	        	}
-	        }, 'json');
+				} else {
+					mui.toast(res.message);
+					return;
+				}
+			}, 'json');
 		}
 	</script>
 </html>
