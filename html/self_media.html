@@ -341,7 +341,7 @@
 												<div v-if="i.info.is_mine==1" class="item" @tap="deleteDynamics(i.info.id,m)">
 													<span class="iconfont icon-delete">&#xe603;</span>删除
 												</div>
-												<div class="item" @tap="shareBtn(i.info.id,i.info.content,i.info.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
+												<div class="item" @tap="shareBtn(i.info.id,i.info.content,i.info.cover[0],i.info.user_id)"><span class="iconfont icon-share">&#xe604;</span>分享</div>
 												<div class="item" @tap="pinglun(i.info.id,m)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
 											</div>
 											<div class="comment-icon-cont" :class="'comment-icon-cont'+i.info.id" @tap="showMenu(i.info.id,m)">
@@ -762,7 +762,7 @@
 			}
 			// 数据请求
 			function getDiscoverData() {
-				logs(skip);
+				// logs(skip);
 				mui.post($ajaxUrl + 'discover&action=discover_list', {
 					token: userInfo.token,
 					type: app.typeler.join(","),
@@ -770,7 +770,7 @@
 					limit: limit,
 					article_cid: app.cid,
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						if (skip == 1) {
 							app.dynamic=[];
@@ -979,7 +979,7 @@
 			// 	alert("asdfasdf");
 			// })
 			// 分享
-			function shareBtn(id, cont, img) {
+			function shareBtn(id, cont, img, toUid) {
 				app.isComment = true;
 				document.querySelector(".menu-body" + timeline_id).classList.remove("active");
 				mask.close();
@@ -992,7 +992,7 @@
 						thumbs: [sd_path],
 						miniProgram: {
 							id: 'gh_9fa5f42ab939',
-							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + toUid + '&from_id=' + userInfo.id,
 							webUrl: 'https://app.wangkeapp.cn/'
 						}
 					}, 'miniProgram');
