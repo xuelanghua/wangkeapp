@@ -95,7 +95,8 @@
 
 			.mui-segmented-control .mui-control-item {
 				position: relative;
-				width: 33.3333%;
+				/* width: 33.3333%; */
+				width: 50%;
 			}
 
 			.mui-segmented-control::before,
@@ -122,7 +123,7 @@
 				font-weight: normal;
 			}
 
-			.next-btn {
+			.footer-btn {
 				position: fixed;
 				bottom: 0;
 				width: 100%;
@@ -132,14 +133,21 @@
 				align-items: center;
 				justify-content: center;
 				font-size: 15px;
+			}
+
+			.footer-btn .next-disabled {
+				color: gray;
+			}
+			
+			.footer-btn p {
+				width: 33.33%;
+				height: 50px;
+				line-height: 60px;
+				text-align: center;
 				color: #2289ff;
 			}
 
-			.next-btn.next-disabled {
-				color: gray;
-			}
-
-			.next-btn::before {
+			.footer-btn::before {
 				content: '';
 				display: block;
 				width: 100%;
@@ -225,8 +233,7 @@
 					<div class="mui-indexed-list-empty-alert mui-hidden">没有数据</div>
 					<ul v-if="!voidData" class="mui-table-view">
 						<template v-for="(vel,key,i) in lists" :key="i">
-							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group">{{key}}</li>
-							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
 								<input class="checkeds" type="checkbox" :data-names="items.nickName" :value="items.id" :data-avatar="items.avatarUrl"
 								 :disabled="items.join_status==1" />
 								<img :src="items.avatarUrl" alt=" ">
@@ -239,7 +246,12 @@
 					</div>
 				</div>
 			</div>
-			<div id="next_btn" class="next-btn next-disabled">下一步</div>
+			<!-- <div id="next_btn" class="next-btn">下一步</div> -->
+			<div class="footer-btn">
+				<!-- <p class="next-disabled" id="pre_page">上一页</p> -->
+				<p class="next-disabled" id="next_btn">下一步</p>
+				<p class="next-disabled" id="next_page">下一页</p>
+			</div>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -255,7 +267,7 @@
 					auto: false,
 					contentrefresh: "正在加载...",
 					contentnomore: '没有更多数据了',
-					callback: function() {
+					callback: function() { 
 						// skip += 1;
 						// refresh = 'up';
 						// getFansList();
@@ -282,8 +294,12 @@
 				types: '',
 				// 页码
 				skip: 1,
+				//条数
+				limit: 50,
 				// 没有数据
-				voidData:false
+				voidData:false,
+				nextStatus: false,
+				preStatus: false
 			},
 			mounted: function() {
 				var checkedValues = [];
@@ -330,16 +346,21 @@
 					window.indexedList = new mui.IndexedList(list);
 					
 					mui('.mui-indexed-list-inner').on('change', 'input', function() {
+						if (app.uids.length >= 100) {
+							this.checked = false;
+							message("群发人数不能超过100人");
+							return;
+						}
 						var index = app.uids.indexOf(this.value);
 						var idx = app.userName.indexOf(this.dataset.names);
 						// 添加选择的id
 						if (index > -1) {
 							app.uids.splice(index, 1);
 						} else {
-							if(app.uids.length <= 200){
+							if(app.uids.length <= 100){
 								app.uids.push(this.value);
 							}else{
-								message("群发人数不能超过200人");
+								message("群发人数不能超过100人");
 							}
 						}
 						
@@ -347,10 +368,10 @@
 						if (idx > -1) {
 							app.userName.splice(index, 1);
 						} else {
-							if(app.uids.length <= 200){
+							if(app.uids.length <= 100){
 								app.userName.push(this.dataset.names);
 							} else {
-								message("群发人数不能超过200人");
+								message("群发人数不能超过100人");
 							}
 						}
 						count = app.uids.length;
@@ -390,8 +411,8 @@
 						} else {
 							app.tags.push(app.tagsname);
 						}
-						if (count > 200) {
-							message("群发人数不能超过200人");
+						if (count > 100) {
+							message("群发人数不能超过100人");
 							return;
 						}
 						if (count > 0) {
@@ -408,6 +429,10 @@
 
 					// 全选操作
 					mui('.mui-bar').on('tap', '.create-team-btn', function() {
+						if (app.uids.length >= 100) {
+							message("群发人数不能超过100人");
+							return;
+						}
 						if (!allselect) {
 							// app.uids = [];
 							// app.userName = [];
@@ -452,6 +477,24 @@
 							allselect = false;
 						}
 					});
+					
+					mui('.mui-content').on('tap', '#next_page', function() {
+						if (!app.nextStatus) {
+							return;
+						}
+						allselect = false;
+						document.querySelector('.create-team-btn').innerText = "全选";
+						app.skip++;
+						getUserList();
+					})
+					
+					mui('.mui-content').on('tap', '#pre_page', function() {
+						if (!app.preStatus) {
+							return;
+						}
+						app.skip--;
+						getUserList();
+					})
 					// // 全选操作
 					// var allselect = false;
 					// mui('.mui-bar').on('tap', '.create-team-btn', function() {
@@ -497,15 +540,50 @@
 				type: app.types,
 				exist_uids: app.uids.join(","),
 				skip: app.skip,
-				limit: 20
+				limit: app.limit
 			}, function(res) {
 				// logs(res);
 				if (res.errno == 0) {
 					app.lists = res.data;
 					app.voidData = false;
+					var nextPage = document.getElementById('next_page');
+					if (res.extra < app.limit) {
+						if (!nextPage.classList.contains("next-disabled")) {
+							nextPage.classList.add("next-disabled");
+						}
+						app.nextStatus = false;
+					} else {
+						if (nextPage.classList.contains("next-disabled")) {
+							nextPage.classList.remove("next-disabled");
+						}
+						app.nextStatus = true;
+					}
+					setTimeout(function() {
+						mui("input[type='checkbox']").each(function() {
+							this.checked = false;
+							// this.checked = false;
+							// var isExist = app.uids.indexOf(this.value);
+							// if (isExist == -1) {
+							// 	this.checked = false;
+							// }
+						});
+					}, 200)
 				} else {
 					app.voidData = true;
 				}
+				// 
+				// var prePage = document.getElementById('pre_page');
+				// if (app.skip != 1) {
+				// 	app.preStatus = true;
+				// 	if (prePage.classList.contains("next-disabled")) {
+				// 		prePage.classList.remove("next-disabled");
+				// 	}
+				// } else {
+				// 	app.preStatus = false;
+				// 	if (!prePage.classList.contains("next-disabled")) {
+				// 		prePage.classList.add("next-disabled");
+				// 	}
+				// }
 			}, 'json');
 		}
 	</script>

@@ -132,7 +132,7 @@
 						<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
 						<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
 							<div class="top mui-clearfix">
-								<span>{{list.nickName}}</span>
+								<span>{{list.name || list.nickName}}</span>
 								<!-- .vip,.vip1,.vip2,.vip3四种class -->
 								<span :class="'vip'+list.group_id">{{list.group_name}}</span>
 								<span v-if="list.recommend_award>0" class="mui-pull-right">+{{list.recommend_award}}</span>
@@ -154,9 +154,6 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init({
-				double: false
-			});
 			var userInfo = getUserInfo(),
 				skip = 1,
 				limit = 15,
@@ -231,19 +228,22 @@
 			function getFansList() {
 				mui.post($ajaxUrl + 'member&action=fans_list', {
 					token: userInfo.token,
-					group_id: group_id
+					group_id: group_id,
+					skip: skip,
+					limit: limit
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						app.emptyFlag = false;
 						app.fansFlag = true;
 						if (skip == 1) {
 							app.fansList = res.data;
 						} else {
+							logs(res.data);
+							app.fansList = app.fansList.concat(res.data);
 							if (refresh == 'up') {
 								mui('#mui-content').pullRefresh().endPullupToRefresh();
 							}
-							// app.fansList = app.fansList.concat(res.data);
 						}
 						if (refresh == 'down') {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
