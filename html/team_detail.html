@@ -642,8 +642,9 @@
 			.rank-sign {
 				width: auto;
 				height: 26px;
-				margin-left: 20px;
+				/* margin-left: 20px; */
 				object-fit: cover;
+				margin-right: 10px;
 			}
 
 			.mui-table-view-cell.slef-ranking span {
@@ -770,7 +771,7 @@
 				<div class="team-master">
 					<h2 class="headline team-master-more">
 						<span>团队大咖</span>
-						<p class="more-master mui-pull-right">更多<span class="mui-icon mui-icon-arrowright"></span></p>
+						<p v-if="role" class="more-master mui-pull-right team-master-more-btn">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
 					</h2>
 					<div v-if="person!=''" class="swiper-container">
 						<div class="swiper-wrapper">
@@ -800,8 +801,7 @@
 					<!-- team_honor_edit.html -->
 					<h2 class="headline team-honor-edit">
 						<span>团队荣誉</span>
-						<!-- v-if="role" -->
-						<p v-if="role" class="more-member mui-pull-right">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
+						<p v-if="role" class="more-member mui-pull-right honor-edit-btn">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
 					</h2>
 					<div v-if="honorList!=''" class="team-honor-sign">
 						<div class="sign-items" v-for="(j,i) in honorList" :key="i">
@@ -855,7 +855,7 @@
 								<span>{{l.name}}</span>
 							</div>
 							<div class="study-right">
-								<span>第{{l.rank}}名</span>
+								<span v-if="i>2">第{{l.rank}}名</span>
 								<img v-if="l.rank<4" class="rank-sign" :src="'../image/icon/rank-sign'+l.rank+'.png'">
 							</div>
 						</li>
@@ -1047,7 +1047,7 @@
 			mui("#master_model").popover("hide", mui(".master-top")[0]);
 		})
 		// 更多大咖
-		mui(".mui-content").on("tap", ".team-master-more", function() {
+		mui(".mui-content").on("tap", ".team-master-more-btn", function() {
 			openPage('more_master.html', 'more_master', '#f7f7f7', {
 				tid: app.tid
 			});
@@ -1109,7 +1109,7 @@
 			});
 		})
 		// 编辑团队荣誉
-		mui(".mui-content").on("tap", ".team-honor-edit", function() {
+		mui(".mui-content").on("tap", ".honor-edit-btn", function() {
 			openPage('team_honor_edit.html', 'team_honor_edit', '#f7f7f7', {
 				tid: app.tid
 			});

@@ -259,7 +259,6 @@
 			.nav-right-btn {
 				height: 44px;
 				position: relative;
-				display: inline-flex;
 				align-items: center;
 				justify-content: center;
 				padding: 0 10px;
@@ -268,6 +267,7 @@
 				color: #333333;
 				/* background-color: #007AFF; */
 				margin-right: -10px;
+				display: none;
 			}
 		</style>
 	</head>
@@ -304,13 +304,13 @@
 										<div class="item" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-w-icon.png">删除</div>
 									</div>
 								</div>
-								<div v-if="role" class="more-option" @tap="showEdit(idx)">
+								<div v-if="role==1" class="more-option" @tap="showEdit(idx)">
 									<span class="mui-icon mui-icon-more-filled"></span>
 								</div>
 							</div>
 							<div v-else-if="c.state==1" class="hear-cont">
 								<div class="loading-cont"><img src="../image/discover/loading.gif">培训中</div>
-								<div v-if="role" class="delete-course" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-icon.png">删除</div>
+								<div v-if="role==1" class="delete-course" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-icon.png">删除</div>
 							</div>
 							<div v-else class="hear-cont">
 								<p>结束：{{c.end_time}}</p>
@@ -424,6 +424,7 @@
 										message("已删除");
 										teamCourse();
 										if (app.teamCourse.length == 0) {
+											document.querySelector(".nav-right-btn").style.display = "none";
 											document.querySelector(".void-course-tips").style.display = "flex";
 										}
 									} else {}
@@ -476,6 +477,7 @@
 					if (res.errno == 0) {
 						app.teamCourse = res.data;
 						document.querySelector(".void-course-tips").style.display = "none";
+						document.querySelector(".nav-right-btn").style.display = "inline-flex";
 					} else {
 						app.teamCourse = [];
 						document.querySelector(".void-course-tips").style.display = "flex";
@@ -484,13 +486,13 @@
 			}
 			// 创建课程
 			mui(".mui-content").on("tap", ".create-course-btn", function() {
-				if (app.role) {
+				if (app.role==1) {
 					openPage('create_course.html', 'create_course', '#f7f7f7', {
 						tid: app.tid,
 						title: '创建课程'
 					});
 				} else {
-					alert("您不是本团队的创建者，无创建课程权限，请悉知。")
+					plus.nativeUI.alert("您不是本团队的创建者，无创建课程权限，请悉知。");
 				}
 			})
 			// 添加课程

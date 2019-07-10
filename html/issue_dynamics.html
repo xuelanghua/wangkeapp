@@ -55,7 +55,7 @@
 							<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
 						</span>
 					</div>
-					<div class="picture_display_chear" id="add_pic">
+					<div v-show="images.length<9" class="picture_display_chear" id="add_pic">
 						<img src="../image/icon/upload-img-icon.jpg">
 					</div>
 				</div>
@@ -134,9 +134,9 @@
 						}, function(res) {
 							if (res.errno == 0) {
 								plus.key.hideSoftKeybord();
-								var view = plus.webview.currentWebview().opener();
-								mui.fire(view, 'doit');
 								message("发布成功");
+								var per = plus.webview.currentWebview().opener();
+								mui.fire(per, 'doit');
 								setTimeout(function() {
 									mui.back();
 								}, 200)

@@ -177,7 +177,7 @@
 					mui.init({
 						swipeBack: false,
 						pullRefresh: {
-							container: ".service-award-container",
+							container: "#mui-content",
 							up: {
 								height: 50,
 								auto: false,
@@ -234,19 +234,20 @@
 					group_id: group_id
 				}, function(res) {
 					logs(res);
-					if (res.errno == 0 && skip == 1) {
+					if (res.errno == 0) {
 						app.emptyFlag = false;
-						app.fansList = res.data;
 						app.fansFlag = true;
+						if (skip == 1) {
+							app.fansList = res.data;
+						} else {
+							if (refresh == 'up') {
+								mui('#mui-content').pullRefresh().endPullupToRefresh();
+							}
+							// app.fansList = app.fansList.concat(res.data);
+						}
 						if (refresh == 'down') {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 							mui('#mui-content').pullRefresh().refresh(true);
-						}
-					} else if (res.errno == 0 && skip > 1) {
-						app.emptyFlag = false;
-						app.fansList = app.fansList.concat(res.data);
-						if (refresh == 'up') {
-							mui('#mui-content').pullRefresh().endPullupToRefresh();
 						}
 					} else {
 						if (refresh == 'up') {
