@@ -29,13 +29,18 @@
 
 			.mui-bar-tab.theme-change {
 				height: 90px;
-				top: 100vh;
-				bottom: auto;
-				margin-top: -90px;
+				/* top: 100vh; */
+				/* bottom: auto; */
+				/* margin-top: -90px; */
+				position: fixed;
+				z-index: 12;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				overflow: hidden;
+				width: 100%;
 				-webkit-box-shadow: 0 0 1px rgba(0, 0, 0, .1);
 				box-shadow: 0 0 1px rgba(0, 0, 0, .1);
-				z-index: 12;
-				position: absolute;
 			}
 
 			.mui-bar-tab .mui-tab-item {
@@ -418,7 +423,8 @@
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				padding-top: 0.8rem;
+				padding: 0.8rem 0.43rem;
+				/* background-color: #0062CC; */
 			}
 
 			.theme5-logo {
@@ -428,17 +434,19 @@
 			}
 
 			.theme5 .theme5-area {
-				width: 70%;
+				width: 100%;
 				background: transparent;
 				border: none;
-				text-align: center;
+				text-align: left;
 				color: #FFFFFF;
+				padding: 0;
+				font-size: 0.3rem;
 			}
 
 			.theme5 .theme5-area::-webkit-input-placeholder {
-				text-align: center;
+				text-align: left;
 				color: #FFFFFF;
-				font-size: 0.36rem;
+				font-size: 0.3rem;
 			}
 
 			.theme5 .qrimg {
@@ -448,12 +456,57 @@
 				position: absolute;
 			}
 
-			.theme5 span {
+			.theme5 .theme5-timer {
 				position: absolute;
-				bottom: 1rem;
+				top: 1rem;
 				left: 0.6rem;
 				color: #FFFFFF;
 				font-size: 0.42rem;
+				width: 1.94rem;
+				color: #ffffff;
+				text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+			}
+
+			.theme5 .theme5-timer img {
+				width: 100%;
+				height: auto;
+			}
+
+			.timer-cont {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 0.1rem;
+				margin-left: -0.1rem;
+			}
+
+			.timer-cont span {
+				font-size: 0.92rem;
+			}
+
+			.timer-cont h4 {
+				font-weight: normal;
+				font-size: 0.42rem;
+				margin-bottom: 6px;
+			}
+
+			.timer-cont p {
+				font-size: 0.25rem;
+				color: #FFFFFF;
+			}
+
+			.theme5 .left-bottom-cont {
+				position: absolute;
+				left: 0.4rem;
+				bottom: 0.8rem;
+				width: 4.2rem;
+			}
+
+			.theme5 .left-bottom-cont img {
+				width: 1.47rem;
+				height: auto;
+				display: block;
+				margin-bottom: 0.4rem;
 			}
 		</style>
 		<script type="text/javascript">
@@ -476,13 +529,6 @@
 			</div>
 		</header>
 		<div id="mui-content" class="mui-content setting-container" v-cloak>
-			<nav id="theme-change" class="mui-bar mui-bar-tab theme-change">
-				<a href="#theme1" data-imgtype="1" class="mui-tab-item" :class="card_type==1?'mui-active':''"><img src="../image/share/styles-icon01.png"></a>
-				<a href="#theme2" data-imgtype="2" class="mui-tab-item" :class="card_type==2?'mui-active':''"><img src="../image/share/styles-icon02.png"></a>
-				<a href="#theme3" data-imgtype="3" class="mui-tab-item" :class="card_type==3?'mui-active':''"><img src="../image/share/styles-icon03.png"></a>
-				<a href="#theme4" data-imgtype="4" class="mui-tab-item" :class="card_type==4?'mui-active':''"><img src="../image/share/styles-icon04.png"></a>
-				<a href="#theme5" data-imgtype="5" class="mui-tab-item" :class="card_type==5?'mui-active':''"><img src="../image/share/styles-icon05.png"></a>
-			</nav>
 			<div id="theme1" class="theme1 mui-control-content" :class="card_type==1?'mui-active':''">
 				<img class="bgimg" :src="resultData.background_image_1_url||background_image_1">
 				<div class="option-btn replace-img ">
@@ -568,10 +614,22 @@
 			<div id="theme5" class="theme5 mui-control-content" :class="card_type==5?'mui-active':''">
 				<img class="bg-img" :src="resultData.background_image_5_url||background_image_5">
 				<div class="theme5-container">
-					<img class="theme5-logo" src="../image/share/setting_share_card_dzui.png">
-					<textarea class="theme5-area" v-model="signature5" maxlength="26" rows="2" placeholder="添加自定义文字"></textarea>
-					<span class="theme5-timer"></span>
+					<!-- <img class="theme5-logo" src="../image/share/setting_share_card_dzui.png"> -->
+					<div class="theme5-timer">
+						<div class="timer-cont">
+							<span>{{days}}</span>
+							<div style="margin-left: 10px;">
+								<h4>{{months}}</h4>
+								<p>{{years}}</p>
+							</div>
+						</div>
+						<img src="../image/share/theme5-slimg.png">
+					</div>
 					<img class="qrimg" :src="qrpath">
+					<div class="left-bottom-cont">
+						<img src="../image/share/theme5-logo.png">
+						<textarea class="theme5-area" v-model="signature5" maxlength="26" rows="3" placeholder="添加自定义文字"></textarea>
+					</div>
 				</div>
 				<div class="option-btn replace-img">
 					点击替换图片
@@ -579,6 +637,13 @@
 				<div class="option-btn restore-default">
 					恢复默认风格
 				</div>
+			</div>
+			<div id="theme-change" class="mui-bar mui-bar-tab theme-change">
+				<a href="#theme1" data-imgtype="1" class="mui-tab-item" :class="card_type==1?'mui-active':''"><img src="../image/share/styles-icon01.png"></a>
+				<a href="#theme2" data-imgtype="2" class="mui-tab-item" :class="card_type==2?'mui-active':''"><img src="../image/share/styles-icon02.png"></a>
+				<a href="#theme3" data-imgtype="3" class="mui-tab-item" :class="card_type==3?'mui-active':''"><img src="../image/share/styles-icon03.png"></a>
+				<a href="#theme4" data-imgtype="4" class="mui-tab-item" :class="card_type==4?'mui-active':''"><img src="../image/share/styles-icon04.png"></a>
+				<a href="#theme5" data-imgtype="5" class="mui-tab-item" :class="card_type==5?'mui-active':''"><img src="../image/share/styles-icon05.png"></a>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -614,7 +679,24 @@
 					signature4: '',
 					signature5: '',
 					// 全部资料
-					resultData: {}
+					resultData: {},
+					month: [
+						"January",
+						"February",
+						"March",
+						"April",
+						"May",
+						"June",
+						"July",
+						"August",
+						"September",
+						"October",
+						"November",
+						"December",
+					],
+					days: '',
+					months: '',
+					years: ''
 				},
 				methods: {
 
@@ -623,10 +705,22 @@
 					// 上传图片的比例
 					mui.init({
 						beforeback: function() {
-							// plus.navigator.setStatusBarStyle("dark");
+							if (mui.os.ios) {
+								cacheData("share", "2");
+							}
 						}
 					})
 					mui.plusReady(function() {
+						// 判断是否刷新
+						if (mui.os.ios) {
+							var refresh = getcache("share");
+							if (refresh != 1) {
+								setTimeout(function() {
+									location.reload();
+									cacheData("share", "1");
+								}, 500)
+							}
+						}
 						app.userhead = userInfo.avatarUrl;
 						app.username = userInfo.nickName;
 						var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -676,21 +770,14 @@
 							// message(app.imgtyp);
 							if (app.imgtyp == '2' || app.imgtyp == '3') {
 								ratio = 900 / 599;
-							} else if(app.imgtyp == '5'){
-								ratio = 1000 / 1452;
-							}else{
+							} else if (app.imgtyp == '5') {
+								ratio = 1496 / 2664;
+							} else {
 								ratio = 900 / 1440;
 							}
 						})
 						// 上传背景图片
 						mui('.mui-content').on('tap', '.replace-img', function() {
-							// if (app.imgtyp == '2' || app.imgtyp == '3') {
-							// 	ratio = 900 / 599;
-							// } else if(app.imgtyp == '5'){
-							// 	ratio = 1000 / 1452;
-							// }else{
-							// 	ratio = 900 / 1440;
-							// }
 							var editButtons = new Array();
 							editButtons.push({
 								title: "拍照上传",
@@ -761,7 +848,11 @@
 							}, Math.floor(Math.random() * 1000 + 1000));
 						})
 						// 获取当前时间给样式五
-						document.querySelector(".theme5-timer").innerText = formatDate('y', '') + " - " + formatDate('m', '');
+						app.days = formatDate('d', '');
+						app.years = formatDate('y', '');
+						var idx = formatDate('m', '');
+						idx = idx.replace(0, '');
+						app.months = app.month[idx];
 					})
 					// 恢复默认
 					mui(".mui-content").on("tap", ".restore-default", function() {
