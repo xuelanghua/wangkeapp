@@ -26,6 +26,13 @@
 			.mui-backdropp {
 				background-color: rgba(0, 0, 0, .3);
 			}
+			.comment-bar-footer{
+				position: fixed;
+				z-index:1045;
+				width: 100%;
+				bottom: 0;
+				display: none;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -42,13 +49,6 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">动态详情</h1>
 		</header>
-		<footer class="footer mui-bar mui-bar-footer">
-			<!-- 评论 -->
-			<div class="comment-container">
-				<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
-				<span class="send-comment">发送</span>
-			</div>
-		</footer>
 		<div id="mui-content" class="mui-content dynamics-detail-container" v-cloak>
 			<div class="dynamics-content">
 				<p>{{content}}</p>
@@ -97,6 +97,13 @@
 					<p v-if="comment.length>0" class="comment-inside" v-for="(com,index) in comment"><span class="user-name">{{com.nickName}}：</span>{{com.content}}</p>
 				</div>
 			</div>
+			<div class="comment-bar-footer">
+				<!-- 评论 -->
+				<div class="comment-container">
+					<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
+					<span class="send-comment">发送</span>
+				</div>
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -112,7 +119,7 @@
 			var mask = mui.createMask(function() {
 				muiCont.menuStatus = false;
 				plus.key.hideSoftKeybord();
-				mui('.mui-bar-footer')[0].style.display = "none";
+				mui('.comment-bar-footer')[0].style.display = "none";
 			});
 			var muiCont = new Vue({
 				el: '#mui-content',
@@ -177,7 +184,7 @@
 					// 评论
 					commentDynamic: function() {
 						this.menuStatus = false;
-						mui('.mui-bar-footer')[0].style.display = "block";
+						mui('.comment-bar-footer')[0].style.display = "block";
 						var _self = this;
 						setTimeout(function() {
 							_self.initNativeObjects();
@@ -271,6 +278,9 @@
 			// 分享
 			function shareBtn(id, cont, img,touid) {
 				mask.close();
+				if (typeof(img) == "undefined" || img.length < 6) {
+					img="https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/miniprogram_share.jpg"
+				}
 				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;
 				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
@@ -328,7 +338,7 @@
 				});
 			}
 			// 发送评论
-			mui(".mui-bar-footer").on("tap", ".send-comment", function() {
+			mui(".comment-bar-footer").on("tap", ".send-comment", function() {
 				var conts = document.getElementById("comment_matter").value;
 				if (conts == " " || conts.length < 1) {
 					message("评论内容不能为空!");
@@ -350,7 +360,7 @@
 						document.activeElement.blur();
 						muiCont.comment.unshift(self_comment);
 						mask.close();
-						mui('.mui-bar-footer')[0].style.display = "none";
+						mui('.comment-bar-footer')[0].style.display = "none";
 						message("评论成功");
 					} else {}
 				}, 'json');

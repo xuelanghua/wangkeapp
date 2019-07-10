@@ -7,7 +7,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<link rel="stylesheet" href="../css/mui.min.css">
+		<!-- <link rel="stylesheet" href="../css/mui.min.css"> -->
+		<link rel="stylesheet" href="../css/mui.css">
 		<link rel="stylesheet" href="../css/animate.min.css">
 		<link rel="stylesheet" href="../css/swiper.min.css">
 		<link rel="stylesheet" href="../css/discover.css">
@@ -127,28 +128,9 @@
 
 			.dy-container {
 				padding-left: 40px;
+				position: relative;
 			}
 
-			.to-top {
-				width: 45px;
-				height: 45px;
-				background-color: #0062CC;
-				position: fixed;
-				z-index: 1045;
-				right: 10px;
-				bottom: 10px;
-				opacity: 0.5;
-				border-radius: 50%;
-				color: #FFFFFF;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				display: none;
-			}
-
-			.to-top .mui-icon {
-				font-size: 36px;
-			}
 
 			/* 第二个菜单 */
 			.subMenu {
@@ -237,14 +219,11 @@
 				color: #999999;
 			}
 
-			.dmask {
+			.comment-bar-footer {
 				position: fixed;
-				top: 0;
+				z-index: 1045;
+				width: 100%;
 				bottom: 0;
-				left: 0;
-				right: 0;
-				background-color: rgba(0, 0, 0, 0.6);
-				z-index: 12;
 				display: none;
 			}
 		</style>
@@ -261,20 +240,6 @@
 
 	<body>
 		<div id="mui-content" class="mui-content discover-container" v-cloak>
-			<div class="dmask">
-
-			</div>
-			<footer class="footer mui-bar mui-bar-footer">
-				<!-- 评论 -->
-				<div class="comment-container">
-					<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
-					<span class="send-comment">评论</span>
-				</div>
-			</footer>
-			<div class="to-top">
-				<!-- 回到顶部 -->
-				<span class="mui-icon mui-icon-arrowthinup"></span>
-			</div>
 			<img v-show="!menuStatus" class="operation-btn" src="../image/icon/plus-sign.svg" alt="">
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
@@ -323,113 +288,128 @@
 						<p>空空如也~</p>
 					</div>
 					<!-- <span v-for="p in typeler">{{p}}</span> -->
-					<template v-for="(i,m) in dynamic" :key="m">
-						<!-- 自己发布的动态 -->
-						<template v-if="i.type==1">
-							<li class="mui-table-view-cell my-dynamic-list">
-								<div class="dynamic-list-head">
-									<div class="dynamic-list-left">
-										<img class="user-head-image" :src="i.info.owner.avatar" @tap="openDynamically(i.info.user_id)">
-										<span class="user-names mui-ellipsis" @tap="openDynamically(i.info.user_id)">{{i.info.owner.name}}</span>
-										<span class="cretae-timer" @tap="openDynamically(i.info.user_id)">{{i.info.create_time}}</span>
-									</div>
-									<div class="mui-pull-right click-heart" @tap="likeThis(i.info.id,i.info.user_id,m)">
-										<i class="heart-icon animated" :class="i.info.is_thumbs==1?'heart-icon'+i.info.id+' active':'heart-icon'+i.info.id"></i>
-										<span>{{i.info.thumbs_number}}</span>
-									</div>
-								</div>
-								<div class="dy-container">
-									<p class="dynamic-desc" :class="i.info.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.info.id)">
-										{{i.info.content}}
-									</p>
-									<ul v-if="i.info.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.info.id)">
-										<li v-for="img in i.info.cover">
-											<img class="illustrating" :src="img">
-										</li>
-									</ul>
-									<div class="operation-menu">
-										<div class="menu-list" :class="'menu-list'+i.info.id">
-											<span class="check-detail" @tap="dynamicDetail(i.info.id)">查看详情</span>
-											<div class="menu-body" :class="'menu-body'+i.info.id">
-												<div class="menu-arrow"></div>
-												<div v-if="i.info.is_mine==1" class="item" @tap="deleteDynamics(i.info.id,m)">
-													<span class="iconfont icon-delete">&#xe603;</span>删除
-												</div>
-												<div class="item" @tap="shareBtn(i.info.id,i.info.content,i.info.cover[0],i.info.user_id)"><span class="iconfont icon-share">&#xe604;</span>分享</div>
-												<div class="item" @tap="pinglun(i.info.id,m)"><span class="iconfont icon-comment">&#xe602;</span>评论</div>
-											</div>
-											<div class="comment-icon-cont" :class="'comment-icon-cont'+i.info.id" @tap="showMenu(i.info.id,m)">
-												<span class="iconfont comment-icon">&#xe504;</span>
-											</div>
+					<ul class="mui-table-view">
+						<template v-for="(i,m) in dynamic" :key="m">
+							<!-- 自己发布的动态 -->
+							<template v-if="i.type==1">
+								<li class="my-dynamic-list">
+									<div class="dynamic-list-head">
+										<div class="dynamic-list-left">
+											<img class="user-head-image" :src="i.info.owner.avatar" @tap="openDynamically(i.info.user_id)">
+											<span class="user-names mui-ellipsis" @tap="openDynamically(i.info.user_id)">{{i.info.owner.name}}</span>
+											<span class="cretae-timer" @tap="openDynamically(i.info.user_id)">{{i.info.create_time}}</span>
+										</div>
+										<div class="mui-pull-right click-heart" @tap="likeThis(i.info.id,i.info.user_id,m)">
+											<i class="heart-icon animated" :class="i.info.is_thumbs==1?'heart-icon'+i.info.id+' active':'heart-icon'+i.info.id"></i>
+											<span>{{i.info.thumbs_number}}</span>
 										</div>
 									</div>
-									<div class="dynamic-lists-issue" v-if="i.info.comment.length>0||i.info.is_thumbs>0">
-										<div class="lan-arrows"></div>
-										<p v-if="i.info.is_thumbs>0">
-											<span class="iconfont icon-like">&#xe601;</span>
-											<template v-for="(c,idx) in i.info.thumbs_user" :key="idx">
-												{{c}}<template v-if="idx<i.info.thumbs_user.length-1">、</template>
-											</template>
+									<div class="dy-container">
+										<p class="dynamic-desc" :class="i.info.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.info.id)">
+											{{i.info.content}}
 										</p>
-										<p class="comment-inside" v-for="(p,idx) in i.info.comment">
-											<span class="user-name">{{p.nickName}}：</span>{{p.content}}
-										</p>
+										<ul v-if="i.info.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.info.id)">
+											<li v-for="img in i.info.cover">
+												<img class="illustrating" :src="img">
+											</li>
+										</ul>
+										<div class="operation-menu">
+											<div class="menu-list" :class="'menu-list'+i.info.id">
+												<span class="check-detail" @tap="dynamicDetail(i.info.id)">查看详情</span>
+												<div class="menu-body" :class="'menu-body'+i.info.id">
+													<div class="menu-arrow"></div>
+													<div v-if="i.info.is_mine==1" class="item" @tap="deleteDynamics(i.info.id,m)">
+														<span class="iconfont icon-delete">&#xe603;</span>
+														<span>删除</span>
+													</div>
+													<div class="item" @tap="shareBtn(i.info.id,i.info.content,i.info.cover[0],i.info.user_id)">
+														<span class="iconfont icon-share">&#xe604;</span>
+														<span>分享</span>
+													</div>
+													<div class="item discuss-btn" @tap="pinglun(i.info.id,m)"><span class="iconfont icon-comment">&#xe602;</span>
+														<span>评论</span>
+													</div>
+												</div>
+												<div class="comment-icon-cont" :class="'comment-icon-cont'+i.info.id" @tap="showMenu(i.info.id,m)">
+													<span class="iconfont comment-icon">&#xe504;</span>
+												</div>
+											</div>
+										</div>
+										<div class="dynamic-lists-issue" v-if="i.info.comment.length>0||i.info.is_thumbs>0">
+											<div class="lan-arrows"></div>
+											<p v-if="i.info.is_thumbs>0">
+												<span class="iconfont icon-like">&#xe601;</span>
+												<template v-for="(c,idx) in i.info.thumbs_user" :key="idx">
+													{{c}}<template v-if="idx<i.info.thumbs_user.length-1">、</template>
+												</template>
+											</p>
+											<p class="comment-inside" v-for="(p,idx) in i.info.comment">
+												<span class="user-name">{{p.nickName}}：</span>{{p.content}}
+											</p>
+										</div>
+									</div>
+								</li>
+							</template>
+							<!-- 官方文章 -->
+							<li class="mui-table-view-cell official-article" v-if="i.type==2" @tap="articleDetail(i.info.id)">
+								<div class="article-img">
+									<img :src="i.info.thumb">
+								</div>
+								<div class="article-right">
+									<p class="mui-ellipsis-2">
+										{{i.info.title}}
+									</p>
+									<div v-if="i.info.is_top==1" class="stick-sign">
+										<img src="../image/discover/stick-sign.png">
+									</div>
+									<div class="official-article-status">
+										<span>{{i.info.add_time}}</span>
+										<span><img src="../image/eye.png">{{i.info.click}}</span>
+										<img src="../image/discover/official-sign.png">
+									</div>
+								</div>
+							</li>
+							<!-- 课程列表列表 -->
+							<li class="mui-table-view-cell curriculum-list" v-if="i.type==3">
+								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
+								<div class="curriculum-img" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+									<img :src="i.info.cover_url">
+								</div>
+								<div class="curriculum-list-right">
+									<!-- 官方加stick-sign -->
+									<p class="mui-ellipsis-2" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+										{{i.info.title}}
+									</p>
+									<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+										<div class="mui-pull-left">
+											<span class="ting-ke">主讲人：{{i.info.teacher_name}}</span>
+										</div>
+									</div>
+									<div>
+										<div v-if="i.info.state==0" class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+											开播：{{i.info.start_time}}
+										</div>
+										<div v-else-if="i.info.state==1" class="train-ing" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+											<img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
+										<div v-else class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+											结束：{{i.info.end_time}}
+										</div>
+										<div class="team-name mui-pull-right" @tap="teamDetail(i.info.team_id)">
+											<img class="team-icon" src="../image/discover/team-icon.png">
+											<span class="mui-ellipsis">{{i.info.team_name}}</span>
+										</div>
 									</div>
 								</div>
 							</li>
 						</template>
-						<!-- 官方文章 -->
-						<li class="mui-table-view-cell official-article" v-if="i.type==2" @tap="articleDetail(i.info.id)">
-							<div class="article-img">
-								<img :src="i.info.thumb">
-							</div>
-							<div class="article-right">
-								<p class="mui-ellipsis-2">
-									{{i.info.title}}
-								</p>
-								<div v-if="i.info.is_top==1" class="stick-sign">
-									<img src="../image/discover/stick-sign.png">
-								</div>
-								<div class="official-article-status">
-									<span>{{i.info.add_time}}</span>
-									<span><img src="../image/eye.png">{{i.info.click}}</span>
-									<img src="../image/discover/official-sign.png">
-								</div>
-							</div>
-						</li>
-						<!-- 课程列表列表 -->
-						<li class="mui-table-view-cell curriculum-list" v-if="i.type==3">
-							<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-							<div class="curriculum-img" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
-								<img :src="i.info.cover_url">
-							</div>
-							<div class="curriculum-list-right">
-								<!-- 官方加stick-sign -->
-								<p class="mui-ellipsis-2" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
-									{{i.info.title}}
-								</p>
-								<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
-									<div class="mui-pull-left">
-										<span class="ting-ke">主讲人：{{i.info.teacher_name}}</span>
-									</div>
-								</div>
-								<div>
-									<div v-if="i.info.state==0" class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
-										开播：{{i.info.start_time}}
-									</div>
-									<div v-else-if="i.info.state==1" class="train-ing" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
-										<img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
-									<div v-else class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
-										结束：{{i.info.end_time}}
-									</div>
-									<div class="team-name mui-pull-right" @tap="teamDetail(i.info.team_id)">
-										<img class="team-icon" src="../image/discover/team-icon.png">
-										<span class="mui-ellipsis">{{i.info.team_name}}</span>
-									</div>
-								</div>
-							</div>
-						</li>
-					</template>
+					</ul>
+				</div>
+			</div>
+			<div class="comment-bar-footer">
+				<!-- 评论 -->
+				<div class="comment-container">
+					<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
+					<span class="send-comment">评论</span>
 				</div>
 			</div>
 		</div>
@@ -447,7 +427,7 @@
 					document.querySelector(".menu-body" + timeline_id).classList.remove("active");
 					document.querySelector(".menu-list" + timeline_id).classList.remove("active");
 					document.querySelector(".comment-icon-cont" + timeline_id).classList.remove("active");
-					mui('.mui-bar-footer')[0].style.display = "none";
+					mui('.comment-bar-footer')[0].style.display = "none";
 					plus.key.hideSoftKeybord();
 				}),
 				// 点赞的是第几条
@@ -615,8 +595,8 @@
 					pinglun: function(t_id, i_idx) {
 						document.querySelector(".menu-list" + timeline_id).classList.remove("active");
 						document.querySelector(".menu-body" + timeline_id).classList.remove("active");
-						document.querySelector(".mui-bar-footer").style.display = "block";
-						// mui('.mui-bar-footer')[0].style.display = "block";
+						document.querySelector(".comment-bar-footer").style.display = "block";
+						// mui('.comment-bar-footer')[0].style.display = "block";
 						var _self = this;
 						setTimeout(function() {
 							_self.initNativeObjects();
@@ -635,18 +615,20 @@
 						}
 					},
 					showSoftInput: function() {
+						var inputElem = document.getElementById("comment_matter");
 						if (mui.os.android) {
 							imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+							setTimeout(function() {
+								inputElem.focus();
+							}, 200);
 						} else {
 							nativeWebview.plusCallMethod({
 								"setKeyboardDisplayRequiresUserAction": false
 							});
+							setTimeout(function() {
+								inputElem.focus();
+							}, 200);
 						}
-						setTimeout(function() {
-							var inputElem = document.getElementById("comment_matter"); //需要获得焦点的input  
-							inputElem.focus();
-							// inputElem.parentNode.classList.add('mui-active'); //第一个是search，加上激活样式  
-						}, 200);
 					},
 					// 显示菜单
 					showMenu: function(_idd, idx) {
@@ -655,24 +637,30 @@
 						document.querySelector(".menu-body" + _idd).classList.add("active");
 						document.querySelector(".menu-list" + _idd).classList.add("active");
 						document.querySelector(".comment-icon-cont" + _idd).classList.add("active");
+						// 判断ios不支持评论
+						if (mui.os.ios) {
+							document.querySelector(".discuss-btn").style.display = "none";
+						}
 						if (this.menuStatus) {
 							this.menuStatus = false;
-							if (!mui.os.ios) {
-								mask.close();
-							}
+							mask.close();
+							// if (!mui.os.ios) {
+							// 	mask.close();
+							// }
 						} else {
 							this.menuStatus = true;
-							if (!mui.os.ios) {
-								mask.show();
-							}
+							mask.show();
+							// if (!mui.os.ios) {
+							// 	mask.show();
+							// }
 						}
 					},
 				},
 				mounted: function() {
 					mui.init({
 						keyEventBind: {
-							backbutton: false, //Boolean(默认true)关闭back按键监听  
-							menubutton: false //Boolean(默认true)关闭menu按键监听  
+							backbutton: false,
+							menubutton: false,
 						},
 						pullRefresh: {
 							container: "#mui-content",
@@ -982,39 +970,13 @@
 					}
 				})
 			})
-			// 回到顶部
-			// document.querySelector('.to-top').addEventListener('tap', function() {
-			// 	window.scroll(0, 0);
-			// 	// mui.scrollTo(0,80);
-			// });
-			// window.addEventListener("swipeup", function(event) {
-			// 	mask.close();
-			// })
-			// window.addEventListener("swipedown", function(event) {
-			// 	mask.close();
-			// })
-			// mui(".mui-content").on("tap",".pinglunlo",function(){
-			// 	alert("asdfasdf");
-			// })
 			// 分享
 			function shareBtn(id, cont, img, toUid) {
 				app.isComment = true;
 				document.querySelector(".menu-body" + timeline_id).classList.remove("active");
 				mask.close();
 				if (typeof(img) == "undefined" || img.length < 6) {
-					shareToMiniprogram({
-						title: cont,
-						content: cont,
-						thumbs: ["../image/user_default.png"],
-						miniProgram: {
-							id: 'gh_9fa5f42ab939',
-							// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
-							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + toUid + '&from_id=' +
-								userInfo.id,
-							webUrl: 'https://app.wangkeapp.cn/'
-						}
-					}, 'miniProgram');
-					return;
+					img = "https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/miniprogram_share.jpg"
 				}
 				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;
@@ -1057,8 +1019,9 @@
 											miniProgram: {
 												id: 'gh_9fa5f42ab939',
 												// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
-												path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + toUid + '&from_id=' +
-								userInfo.id,
+												path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + toUid +
+													'&from_id=' +
+													userInfo.id,
 												webUrl: 'https://app.wangkeapp.cn/'
 											}
 										}, 'miniProgram');
@@ -1075,7 +1038,7 @@
 				});
 			}
 			// 评论
-			mui(".mui-bar-footer").on("tap", ".send-comment", function() {
+			mui(".comment-bar-footer").on("tap", ".send-comment", function() {
 				var conts = document.getElementById("comment_matter").value;
 				if (conts == " " || conts.length < 1) {
 					message("评论内容不能为空!");
@@ -1096,7 +1059,7 @@
 						document.getElementById("comment_matter").value = "";
 						document.activeElement.blur();
 						mask.close();
-						mui('.mui-bar-footer')[0].style.display = "none";
+						mui('.comment-bar-footer')[0].style.display = "none";
 					} else {}
 				}, 'json');
 			})
