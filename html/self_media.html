@@ -1001,6 +1001,21 @@
 				app.isComment = true;
 				document.querySelector(".menu-body" + timeline_id).classList.remove("active");
 				mask.close();
+				if (typeof(img) == "undefined" || img.length < 6) {
+					shareToMiniprogram({
+						title: cont,
+						content: cont,
+						thumbs: ["../image/user_default.png"],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + toUid + '&from_id=' +
+								userInfo.id,
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+					return;
+				}
 				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;
 				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
@@ -1010,7 +1025,8 @@
 						thumbs: [sd_path],
 						miniProgram: {
 							id: 'gh_9fa5f42ab939',
-							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + toUid + '&from_id=' + userInfo.id,
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + toUid + '&from_id=' +
+								userInfo.id,
 							webUrl: 'https://app.wangkeapp.cn/'
 						}
 					}, 'miniProgram');
@@ -1041,7 +1057,8 @@
 											miniProgram: {
 												id: 'gh_9fa5f42ab939',
 												// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
-												path: '/longbing_card/pages/index/index?currentTabBar=toNews&to_uid=' + userInfo.id,
+												path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + toUid + '&from_id=' +
+								userInfo.id,
 												webUrl: 'https://app.wangkeapp.cn/'
 											}
 										}, 'miniProgram');
