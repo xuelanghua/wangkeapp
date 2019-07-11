@@ -308,9 +308,9 @@
 										<p class="dynamic-desc" :class="i.info.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.info.id)">
 											{{i.info.content}}
 										</p>
-										<ul v-if="i.info.cover!=''" class="illustrating-picture" @tap="dynamicDetail(i.info.id)">
-											<li v-for="img in i.info.cover">
-												<img class="illustrating" :src="img">
+										<ul v-if="i.info.cover!=''" class="illustrating-picture">
+											<li v-for="(img,pridx) in i.info.cover">
+												<img @tap="previewImage(m,pridx)" class="illustrating" :src="img">
 											</li>
 										</ul>
 										<div class="operation-menu">
@@ -326,7 +326,7 @@
 														<span class="iconfont icon-share">&#xe604;</span>
 														<span>分享</span>
 													</div>
-													<div v-if="iSdiscuss" class="item"  @tap="pinglun(i.info.id,m)"><span class="iconfont icon-comment">&#xe602;</span>
+													<div v-if="iSdiscuss" class="item" @tap="pinglun(i.info.id,m)"><span class="iconfont icon-comment">&#xe602;</span>
 														<span>评论</span>
 													</div>
 												</div>
@@ -481,7 +481,7 @@
 					void_course: false,
 					group_id: userInfo.group_id,
 					// 是否显示评论
-					iSdiscuss:true
+					iSdiscuss: true
 				},
 				created: function() {
 					// 初始化字体大小
@@ -641,7 +641,7 @@
 						document.querySelector(".comment-icon-cont" + _idd).classList.add("active");
 						// 判断ios不支持评论
 						if (mui.os.ios) {
-							app.iSdiscuss=false;
+							app.iSdiscuss = false;
 						}
 						if (this.menuStatus) {
 							this.menuStatus = false;
@@ -839,9 +839,9 @@
 							app.slider = res.data.timeline_cover;
 							setTimeout(function() {
 								if (res.data.timeline_cover.length > 1) {
-									initSlider(true);
+									initSlider();
 								}
-							}, 200);
+							}, 500);
 						} else {
 							app.slider = ["../image/discover-default-cover.png"];
 						}
@@ -1079,6 +1079,31 @@
 					mui('#mui-content').pullRefresh().refresh(true);
 				}
 				getDiscoverData();
+			}
+			// 预览图片
+			function previewImage(parentIdx, selfIdx) {
+				var urls = app.dynamic[parentIdx].info.cover;
+				plus.nativeUI.previewImage(urls, {
+					current: selfIdx,
+					loop: true,
+					indicator: 'number',
+					onLongPress: function(event){
+						plus.nativeUI.confirm("保存图片到系统相册",function(e){
+							if(e.index==0){
+								showload('','','保存中···','rgba(0,0,0,0.5)');
+								plus.gallery.save(event.url, function(){
+									showload(1);
+									plus.nativeUI.toast("保存成功!");
+								}, function(){
+									showload(1);
+									plus.nativeUI.toast("保存失败!");
+								} );
+							}else{
+								// plus.nativeUI.toast("取消");
+							}
+						});
+					}
+				});
 			}
 		</script>
 	</body>
