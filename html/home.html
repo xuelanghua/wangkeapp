@@ -361,26 +361,44 @@
 
 			/* 快捷弹窗 */
 			.mui-popover .mui-popover-arrow:after {
-				width: 0;
+				background-color: #4c4c4c;
 			}
 
 			.mui-popover {
-				margin-left: 60%;
-				margin-top: 40px;
+				background-color: #0062CC;
+				width: 128px;
 			}
 
 			.Pop-up-menu {
 				width: 128px;
-				float: right;
-				margin-right: 22px;
 				border-radius: 5px;
 				background-color: #4c4c4c;
+				overflow: hidden;
 			}
 
 			.Pop-up-menu li {
 				padding: 15px 0 10px 0;
-				margin-left: 10px;
-				border-bottom: 1px solid #6a6a6a;
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding-left: 20px;
+			}
+
+			.Pop-up-menu li:after {
+				content: '';
+				display: block;
+				height: 1px;
+				background-color: #6a6a6a;
+				width: 100%;
+				bottom: 0;
+				left: 15px;
+				position: absolute;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+
+			.Pop-up-menu li:last-of-type:after {
+				display: none;
 			}
 
 			.Pop-up-menu li img {
@@ -396,17 +414,13 @@
 				float: left;
 			}
 
-			.mui-backdrop {
-				background-color: transparent !important;
-			}
-
 			.add-btn {
 				display: inline-block;
 				position: absolute;
 				/* background-color: #007AFF; */
 				width: 60px;
 				height: 44px;
-				margin-right: -10px;
+				margin-right: -5px;
 				padding-right: 5px;
 				z-index: 16;
 				right: 0;
@@ -512,7 +526,7 @@
 			}
 
 			.mui-bar .mui-title {
-				display: inline-flex;
+				display:flex;
 				font-size: 16px;
 				color: #333333;
 				position: relative;
@@ -549,7 +563,8 @@
 			}
 
 			.mui-backdrop {
-				z-index: 9;
+				z-index: 190;
+				background-color: transparent;
 			}
 		</style>
 	</head>
@@ -568,7 +583,7 @@
 							<ul class="mui-table-view" id="team-list"></ul>
 						</div>
 					</div>
-					<a href="#popover" class="add-btn" id="openPopover">
+					<a href="#topPopover" class="add-btn" id="openPopover">
 						<img src="../image/index-add-icon.png" style="width: 20px;height: 20px;">
 					</a>
 				</div>
@@ -705,7 +720,8 @@
 				<div class="clearfix"></div>
 			</div>
 		</div>
-		<div id="popover" class="mui-popover">
+		<div id="topPopover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
 			<div class="Pop-up-menu">
 				<li id="quik_sharing">
 					<img src="../image/share.png">
