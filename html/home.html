@@ -526,7 +526,7 @@
 			}
 
 			.mui-bar .mui-title {
-				display:flex;
+				display: flex;
 				font-size: 16px;
 				color: #333333;
 				position: relative;
@@ -536,6 +536,10 @@
 				left: 0;
 				right: 0;
 				overflow: visible;
+			}
+
+			.mui-bar.active {
+				z-index: 999;
 			}
 
 			.team-list {
@@ -563,7 +567,7 @@
 			}
 
 			.mui-backdrop {
-				z-index: 190;
+				z-index: 90;
 				background-color: transparent;
 			}
 		</style>
@@ -1298,6 +1302,8 @@
 		}
 		//切换团队
 		mui('.mui-bar').on('tap', '.mui-title', function() {
+			// alert(":asdf");
+			mui(".mui-bar")[0].classList.add("active");
 			if (teamchange) {
 				mask.show();
 				$(".mui-title .mui-icon").toggleClass("mui-icon-arrowdown");
@@ -1306,7 +1312,9 @@
 
 		})
 		// 切换团队名称
-		mui('.mui-bar').on('tap', '.mui-table-view-cell', function() {
+		mui('.mui-bar').on('tap', '.mui-table-view-cell', function(event) {
+			mask.close();
+			mui(".mui-bar")[0].classList.remove("active");
 			default_team_id = this.dataset.tid;
 			team_type = this.dataset.typer;
 			var _self = this;
@@ -1320,6 +1328,7 @@
 					message("切换失败，请稍后重试");
 				}
 			}, 'json');
+			event.stopPropagation();
 		})
 	</script>
 </html>

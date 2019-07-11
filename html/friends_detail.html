@@ -161,7 +161,9 @@
 			<h5 class="personality-desc">图片展示</h5>
 			<div class="img-show" id="img-show">
 				<ul v-if="friendData.images">
-					<li v-for="(img,idx) in friendData.images" :key="idx"><img :data-idx="idx" class="image-fit" :src="img"></li>
+					<li v-for="(img,idx) in friendData.images" :key="idx">
+						<img :data-idx="idx" class="image-fit preview-img" :src="img">
+					</li>
 				</ul>
 				<p v-else style="margin: 10px 0;text-align: left;">暂无图片</p>
 			</div>
@@ -284,13 +286,28 @@
 						var self = plus.webview.currentWebview();
 						tid = self.aid;
 						var urls = muiCont.friendData.images;
-						mui('.img-show').on('tap', 'img', function() {
-							var index=this.dataset.idx;
-							plus.navigator.setStatusBarBackground("#000000")
+						mui('.mui-content').on('tap', '.preview-img', function() {
+							var index = this.dataset.idx;
 							plus.nativeUI.previewImage(urls, {
 								current: index,
 								loop: true,
 								indicator: 'number',
+								onLongPress: function(event){
+									plus.nativeUI.confirm("保存图片到系统相册",function(e){
+										if(e.index==0){
+											showload('','','保存中···','rgba(0,0,0,0.5)');
+											plus.gallery.save(event.url, function(){
+												showload(1);
+												plus.nativeUI.toast("保存成功!");
+											}, function(){
+												showload(1);
+												plus.nativeUI.toast("保存失败!");
+											} );
+										}else{
+											// plus.nativeUI.toast("取消");
+										}
+									});
+								}
 							});
 						});
 					} else {

@@ -26,14 +26,16 @@
 			.mui-backdropp {
 				background-color: rgba(0, 0, 0, .3);
 			}
-			.comment-bar-footer{
+
+			.comment-bar-footer {
 				position: fixed;
-				z-index:1045;
+				z-index: 1045;
 				width: 100%;
 				bottom: 0;
 				display: none;
 			}
-			.dynamics-detail-container .comment-cont{
+
+			.dynamics-detail-container .comment-cont {
 				padding-top: 0;
 			}
 		</style>
@@ -56,7 +58,9 @@
 			<div class="dynamics-content">
 				<p>{{content}}</p>
 				<ul class="dynamics-img-group" v-if="cover.length>0&&cover[0]!=''">
-					<li v-for="(img,idx) in cover" :key="idx"><img :data-idx="idx" :src="img"></li>
+					<li v-for="(img,idx) in cover" :key="idx">
+						<img class="preview-img" :data-idx="idx" :src="img">
+					</li>
 				</ul>
 			</div>
 			<div class="dynamics-title-cont">
@@ -262,13 +266,31 @@
 						muiCont.comment = data.comment.data;
 						muiCont.likes = data.thumbs_user;
 						muiCont.author = data.author;
+						
+						// 长按保存到系统相册
 						var urls = data.cover;
-						mui('.mui-content').on('tap', 'img', function() {
+						mui('.mui-content').on('tap', '.preview-img', function() {
 							var index = this.dataset.idx;
 							plus.nativeUI.previewImage(urls, {
 								current: index,
 								loop: true,
-								indicator: 'number'
+								indicator: 'number',
+								onLongPress: function(event){
+									plus.nativeUI.confirm("保存图片到系统相册",function(e){
+										if(e.index==0){
+											showload('','','保存中···','rgba(0,0,0,0.5)');
+											plus.gallery.save(event.url, function(){
+												showload(1);
+												plus.nativeUI.toast("保存成功!");
+											}, function(){
+												showload(1);
+												plus.nativeUI.toast("保存失败!");
+											} );
+										}else{
+											// plus.nativeUI.toast("取消");
+										}
+									});
+								}
 							});
 						});
 						showload(true, 1000);
@@ -278,10 +300,10 @@
 				}, 'json')
 			}
 			// 分享
-			function shareBtn(id, cont, img,touid) {
+			function shareBtn(id, cont, img, touid) {
 				mask.close();
 				if (typeof(img) == "undefined" || img.length < 6) {
-					img="https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/miniprogram_share.jpg"
+					img = "https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/miniprogram_share.jpg"
 				}
 				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;
@@ -292,7 +314,8 @@
 						thumbs: [sd_path],
 						miniProgram: {
 							id: 'gh_9fa5f42ab939',
-							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid='+touid+'&from_id='+ userInfo.id,
+							path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true&to_uid=' + touid + '&from_id=' +
+								userInfo.id,
 							webUrl: 'https://app.wangkeapp.cn/'
 						}
 					}, 'miniProgram');
