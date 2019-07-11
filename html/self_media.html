@@ -326,7 +326,7 @@
 														<span class="iconfont icon-share">&#xe604;</span>
 														<span>分享</span>
 													</div>
-													<div class="item discuss-btn" @tap="pinglun(i.info.id,m)"><span class="iconfont icon-comment">&#xe602;</span>
+													<div v-if="iSdiscuss" class="item"  @tap="pinglun(i.info.id,m)"><span class="iconfont icon-comment">&#xe602;</span>
 														<span>评论</span>
 													</div>
 												</div>
@@ -479,7 +479,9 @@
 					isArticleClassify: false,
 					void_timeline: false,
 					void_course: false,
-					group_id: userInfo.group_id
+					group_id: userInfo.group_id,
+					// 是否显示评论
+					iSdiscuss:true
 				},
 				created: function() {
 					// 初始化字体大小
@@ -639,7 +641,7 @@
 						document.querySelector(".comment-icon-cont" + _idd).classList.add("active");
 						// 判断ios不支持评论
 						if (mui.os.ios) {
-							document.querySelector(".discuss-btn").style.display = "none";
+							app.iSdiscuss=false;
 						}
 						if (this.menuStatus) {
 							this.menuStatus = false;
