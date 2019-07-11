@@ -129,8 +129,8 @@
 			<div class="mui-content service-award-container" v-if="fansFlag">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key="index">
-						<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
-						<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
+						<img class="header-img" @tap="toDetail(list.id)" :src="list.avatarUrl" alt="">
+						<div class="right-cont" @tap="toChat(list.id,list.nickName,list.avatarUrl)">
 							<div class="top mui-clearfix">
 								<span>{{list.name || list.nickName}}</span>
 								<!-- .vip,.vip1,.vip2,.vip3四种class -->
@@ -203,23 +203,6 @@
 						group_id = self.group_id;
 						// 获取列表
 						getFansList();
-						mui(".mui-content").on('tap', '.header-img', function() {
-							var fid = this.dataset.fid;
-							openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-								fid: fid
-							});
-						})
-						mui(".mui-content").on('tap', '.right-cont', function() {
-							var cid = this.dataset.cid,
-								chatName = this.dataset.chatname,
-								avatar = this.dataset.avatar;
-							openPage('dialog.html', 'dialog', '#f7f7f7', {
-								cid: cid,
-								chatName: chatName,
-								avatar: avatar,
-								barStyle: 'dark'
-							});
-						})
 					})
 				}
 			})
@@ -232,7 +215,9 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					// logs(res);
+					logs(res);
+					logs(skip);
+					logs(limit);
 					if (res.errno == 0) {
 						app.emptyFlag = false;
 						app.fansFlag = true;
@@ -262,6 +247,21 @@
 					}
 				}, 'json');
 				showload(1, 1200);
+			}
+			// 点击头像跳转详情
+			function toDetail(fid) {
+				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+					fid: fid
+				});
+			}
+			// 点击列表跳转聊天
+			function toChat(cid,chatName,avatar) {
+				openPage('dialog.html', 'dialog', '#f7f7f7', {
+					cid: cid,
+					chatName: chatName,
+					avatar: avatar,
+					barStyle: 'dark'
+				});
 			}
 		</script>
 	</body>

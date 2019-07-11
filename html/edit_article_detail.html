@@ -119,7 +119,7 @@
 				'editText',
 				'insertImage',
 				'insertLink',
-				'insertHr',
+				// 'insertHr',
 				'delete',
 				'undo',
 				'cancel'
@@ -129,7 +129,8 @@
 		
 		mui.plusReady(function() {
 			var self = plus.webview.currentWebview();
-			if (self.content.length != 0) {
+			logs(self.content); 
+			if (self.content.length != 0&&self.content!="<p class=\"Eleditor-placeholder Eleditor-active\">点击此处编辑内容</p>") {
 				document.getElementById('contentEditor').innerHTML = self.content;
 			}
 			document.getElementById('confirm').addEventListener('tap', function() {

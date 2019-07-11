@@ -29,11 +29,13 @@
 				overflow: hidden;
 				flex-shrink: 0;
 				margin-right: 0.2rem;
+				
 			}
 
 			.article-img {
 				width: 100%;
-				height: auto;
+				height: 100%;
+				object-fit: cover;
 			}
 
 			.left-desc {
@@ -176,7 +178,14 @@
 			}
 
 			.mui-backdrop {
-				background-color: rgba(0, 0, 0, 0);
+				background-color: rgba(0, 0, 0, 0.6);
+			}
+
+			.mui-icon {
+				font-size: 16px;
+			}
+			.last-arrowright{
+				margin-left: -14px;
 			}
 			[v-cloak] {
 				display: none;
@@ -226,7 +235,11 @@
 			<div v-if="!articleStatus" style="padding-top: 50%;">
 				<img style="width: 60%;display: block;margin: 0 auto;" class="no-friends" src="../image/icon/article-void.png">
 				<p style="text-align: center;">暂时还没有文章~</p>
-				<p style="text-align: center;color: #2289FF;" class="write-article">去创作 >></p>
+				<p style="text-align: center;color: #2289FF;" class="write-article">
+					<span>去创作</span>
+					<span class="mui-icon mui-icon-arrowright"></span>
+					<span class="mui-icon mui-icon-arrowright last-arrowright"></span>
+				</p>
 			</div>
 			<div id="verift-body" class="join-team-verify" style="display: none;">
 				<div class="verift-body">
@@ -270,6 +283,7 @@
 			var articleIndex = 0;
 			var cancelId = '';
 			var mask = mui.createMask(function() {
+				mui.swipeoutClose(mui('#article' + articleId)[0]);
 				document.getElementById("verift-body").style.display = "none";
 			});
 
@@ -314,16 +328,20 @@
 
 						// 确认删除
 						mui(".mui-content").on('tap', '.send-verify', function() {
-							mask.close();
 							mui.post($ajaxUrl + 'article', {
 								action: 'article_delete',
 								token: userInfo.token,
 								article_id: articleId
 							}, function(res) {
 								if (res.errno == 0) {
-									var article = document.getElementById('article' + articleId);
-									article.parentNode.removeChild(article);
-									getArticleList(false, true);
+									mask.close();
+									mui.swipeoutClose(mui('#article' + articleId)[0]);
+									setTimeout(function() {
+										app.articles.splice(articleIndex, 1);
+										if (app.articles.length < 1) {
+											app.articleStatus = false;
+										}
+									}, 200)
 								} else {
 									message('删除失败!', 'center')
 								}
@@ -332,7 +350,7 @@
 						getArticleList(false, false);
 						plus.webview.hide('publish_article', 'none');
 						plus.webview.close('publish_article', 'none');
-						
+
 						// 如果需要从写文章的页面刷新
 						window.addEventListener('refreshArticle', function(event) {
 							getArticleList(false, true);
@@ -380,10 +398,10 @@
 						} else {
 							app.articles = res.data;
 						}
-						if(app.articles==''||app.articles.length<=0){
-							app.articleStatus=false;
-						}else{
-							app.articleStatus=true;
+						if (app.articles == '' || app.articles.length <= 0) {
+							app.articleStatus = false;
+						} else {
+							app.articleStatus = true;
 						}
 					} else {
 						app.articleStatus = false;
