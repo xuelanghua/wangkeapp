@@ -604,7 +604,7 @@
 								skip: skip,
 								limit: limit
 							}, function(res) {
-								logs(res);
+								// logs(res);
 								if (res.errno == 0) {
 									if (skip == 1) {
 										vm.chatList = res.data;
@@ -614,6 +614,10 @@
 									} else {
 										vm.chatList = Object.assign(res.data, vm.chatList);
 									}
+								} else if (res.errno == 1) {
+									plus.nativeUI.alert(res.message, function() {
+										mui.back();
+									})
 								}
 								setInterval(function() {
 									intervalTime++;

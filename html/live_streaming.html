@@ -732,6 +732,10 @@
 									} else {
 										vm.chatList = Object.assign(res.data, vm.chatList);
 									}
+								} else if (res.errno == 1) {
+									plus.nativeUI.alert(res.message, function() {
+										mui.back();
+									})
 								}
 								setInterval(function() {
 									intervalTime++;
