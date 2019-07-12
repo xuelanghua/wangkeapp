@@ -109,6 +109,7 @@
 				position: relative;
 				z-index: 13;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -181,20 +182,7 @@
 					getUserUpgradeInfo();
 				},
 				mounted: function() {
-
 					mui.plusReady(function() {
-						setTimeout(function() {
-							mySwiper = new Swiper('.swiper-container', {
-								watchSlidesProgress: true,
-								slidesPerView: 'auto',
-								centeredSlides: true,
-								loop: false,
-								autoplay: false,
-								pagination: {
-									el: '.swiper-pagination'
-								}
-							})
-						}, 90);
 						// 取消预约
 						mui("#verift-body").on('tap', '.close-verify-window', function() {
 							mask.close();
@@ -210,11 +198,12 @@
 						mui(".mui-content").on('tap', '.equity-cont', function() {
 							openPage('equities_page.html', 'equities_page', '#f7f7f7', '');
 						})
-						
+
 						// 激活码升级
-						mui('.mui-bar-nav').on('tap','.keyCode-upgrade',function(){
-							openPage('activation_code_upgrade.html','activation_code_upgradev','#f7f7f7','');
+						mui('.mui-bar-nav').on('tap', '.keyCode-upgrade', function() {
+							openPage('activation_code_upgrade.html', 'activation_code_upgradev', '#f7f7f7', '');
 						})
+						initSwiper();
 					})
 				},
 				methods: {
@@ -254,7 +243,6 @@
 					token: userInfo.token
 				}, function(res) {
 					app.severlist = res.data;
-					initSwiper();
 				}, 'json');
 			}
 
@@ -289,16 +277,18 @@
 			}
 
 			function initSwiper() {
-				// mySwiper = new Swiper('.swiper-container', {
-				// 	watchSlidesProgress: true,
-				// 	slidesPerView: 'auto',
-				// 	centeredSlides: true,
-				// 	loop: false,
-				// 	autoplay: false,
-				// 	pagination: {
-				// 		el: '.swiper-pagination'
-				// 	}
-				// })
+				setTimeout(function() {
+					mySwiper = new Swiper('.swiper-container', {
+						watchSlidesProgress: true,
+						slidesPerView: 'auto',
+						centeredSlides: true,
+						loop: false,
+						autoplay: false,
+						pagination: {
+							el: '.swiper-pagination'
+						}
+					})
+				}, 200)
 			}
 		</script>
 	</body>

@@ -205,6 +205,17 @@
 				padding: 0.58rem 0;
 			}
 
+			.validation-messages .mui-table-view-cell {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.3rem 0;
+			}
+
+			.validation-messages .mui-table-view-cell:after {
+				left: 0;
+			}
+
 			.member-left img {
 				width: 0.78rem;
 				height: 0.78rem;
@@ -214,6 +225,7 @@
 			.member-left {
 				display: flex;
 				align-items: center;
+				flex-shrink: 0;
 			}
 
 			.member-left p {
@@ -226,9 +238,14 @@
 				font-size: 0.3rem;
 			}
 
+			.member-right {
+				display: flex;
+				flex-shrink: 0;
+			}
+
 			.member-right .mui-btn {
 				width: 0.88rem;
-				height: 0.59rem;
+				height: 0.48rem;
 				padding: 0;
 				font-size: 0.24rem;
 			}
@@ -659,6 +676,7 @@
 				background-color: rgb(250, 250, 250);
 				color: #DDDDDD;
 			}
+
 			/* 没有学习进度的时候 */
 			.void-tips-conts {
 				width: 100%;
@@ -668,16 +686,20 @@
 				justify-content: center;
 				flex-direction: column;
 			}
-			
+
 			.void-tips-conts img {
 				width: 60%;
 				height: auto;
 				margin-bottom: 10px;
 			}
-			
+
 			.void-tips-conts p {
 				font-size: 16px;
 				color: #999999;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
 			}
 		</style>
 		<script>
@@ -814,19 +836,21 @@
 				</div>
 				<div class="validation-messages" v-if="role">
 					<h2 class="headline">验证消息</h2>
-					<ul v-if="applyList.length>0" class="mui-table-view">
+					<ul v-if="applyList!=''&&applyList.length>0" class="mui-table-view">
 						<li class="mui-table-view-cell" v-for="(list,index) in applyList" :key="index">
 							<div class="member-left">
-								<img :src="list.avatar!=null?list.avatar:list.avatarUrl" alt="">
+								<img :src="list.avatar!=null&&list.avatar!=''?list.avatar:list.avatarUrl" alt="">
 								<div>
-									<p class="name">{{list.name!=null?list.name:list.nickName}}</p>
-									<p>{{list.remark}}</p>
+									<p class="name">{{list.name!=null&&list.name!=''?list.name:list.nickName}}</p>
+									<p style="max-width: 4rem;" class="mui-ellipsis">
+										{{list.remark}}
+									</p>
 								</div>
 							</div>
 							<div class="member-right">
-								<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
-								<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button>
-								<span v-else-if="list.status==1">已添加</span>
+								<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button> 
+								<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button> 
+								<span v-else-if="list.status==1">已添加</span> 
 								<span v-else>已拒绝</span>
 							</div>
 						</li>
@@ -851,7 +875,7 @@
 						<!-- 自己添加slef-ranking -->
 						<li class="mui-table-view-cell" :class="l.uid==slef_id?'slef-ranking':''" v-for="(l,i) in lProgress" :key="i">
 							<div class="study-left">
-								<img class="head-img" :src="l.avatar">
+								<img class="head-img" :src="l.avatar||l.avatarUrl">
 								<span>{{l.name}}</span>
 							</div>
 							<div class="study-right">
@@ -1196,9 +1220,9 @@
 				if (res.errno == 0) {
 					getInfo();
 					getMember();
-					message("添加成功");
+					message("邀请信息已发送！");
 				} else {
-					message("添加失败，请稍后重试");
+					message("邀请信息发送失败，请稍后重试");
 				}
 			}, 'json');
 		});
@@ -1225,7 +1249,7 @@
 				token: userInfo.token,
 				team_id: app.tid,
 			}, function(res) {
-				// logs(res);
+				logs(res);
 				if (res.errno == 0) {
 					app.modeldata = res.data[0];
 					app.person = res.data;
@@ -1257,7 +1281,7 @@
 				team_id: app.tid,
 				course_id: ''
 			}, function(res) {
-				logs(res); 
+				// logs(res); 
 				if (res.errno == 0) {
 					app.lProgress = res.data;
 				} else {

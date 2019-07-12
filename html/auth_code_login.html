@@ -95,7 +95,7 @@
 			<div class="sk">
 				<div class="phone">
 					<div class="phone-title">
-						手机号绑定
+						手机号登录
 					</div>
 					<div class="phone-content">
 						<div class="phone1">
@@ -112,11 +112,8 @@
 						<div class="clearfix"></div>
 					</div>
 				</div>
-				<button class="Opening">立即绑定</button>
+				<button class="Opening">登录</button>
 			</div>
-		</div>
-		<div id="bind_again" class="bind-again">
-			<p>重新登录</p>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -125,23 +122,15 @@
 		mui.init({
 			swipeBack: false,
 			beforeback: function() {
-				return false;
+				// return false;
 			}
 		})
 
 		var flag = false;
 		var phoneNumber = /^[1][\d]{10}$/;
-		var userInfo = null;
 		var timer = null;
 		var num = 60;
-		var auths = null;
 		mui.plusReady(function() {
-			userInfo = getUserInfo();
-			plus.oauth.getServices(function(services) {
-				auths = services;
-			}, function(e) {
-				console.log("获取分享服务列表失败：" + e.message + " - " + e.code);
-			});
 			mui('.sk').on('tap', '.Obtain', function() {
 				getVerifyCode();
 			})
@@ -150,43 +139,7 @@
 				document.activeElement.blur();
 				mobileBind();
 			})
-			// 重新绑定
-			document.getElementById("bind_again").addEventListener('tap', function() {
-				localStorage.removeItem("user");
-				authLogout();
-				plus.runtime.restart();
-			})
-			
-			// 显示隐藏重新登录按钮
-			var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-			window.onresize = function() {
-				//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-				var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-				if (resizeHeight * 1 < originalHeight * 1) {
-					//resizeHeight<originalHeight证明窗口被挤压了
-					document.getElementById('bind_again').style.zIndex = '-1';
-					document.getElementById('bind_again').style.display = 'none';
-				} else {
-					document.getElementById('bind_again').style.zIndex = '1';
-					document.getElementById('bind_again').style.display = 'block';
-				}
-			}
-			
 		})
-
-		//注销所有登录授权认证服务
-		function authLogout() {
-			for (var i in auths) {
-				var s = auths[i];
-				if (s.authResult) {
-					s.logout(function(e) {
-						console.log("注销登录认证成功");
-					}, function(e) {
-						console.log("注销登录认证失败");
-					});
-				}
-			}
-		}
 
 		function getVerifyCode() {
 			//获取短信验证
@@ -204,7 +157,7 @@
 
 			mui.post($ajaxUrl + 'verifycode', {
 				receiver: mobile,
-				token: userInfo.token
+				action: "login"
 			}, function(res) {
 				if (res.errno == 1) {
 					mui.toast(res.message);
@@ -229,7 +182,8 @@
 				}
 			}, 'json');
 		}
-
+		
+		// 登录写这儿
 		function mobileBind() {
 			var vmobile = mui('input[name=mobile]')[0].value;
 			var vcode = mui('input[name=code]')[0].value;
@@ -247,25 +201,27 @@
 				mui.toast('验证码位数输入错误!');
 				return;
 			}
-
-			mui.post($ajaxUrl + 'member&action=bind', {
+			mui.post($ajaxUrl + 'member&action=code_login', {
 				mobile: vmobile,
 				code: vcode,
-				token: userInfo.token
+				client:plus.device.client,
+				device_id:plus.device.uuid
 			}, function(res) {
 				if (res.errno == 0) {
-					mui.toast(res.message);
-					var userInfo = getUserInfo();
-					userInfo.mobile = vmobile;
-					localStorage.setItem('user', JSON.stringify(userInfo));
-					updateUserInfo();
-					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'bindMobileSuccess');
+					// 登录成功
+					mui.toast('登录成功!');
+					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'loginSuccess');
+					localStorage.setItem('user', JSON.stringify(res.data));
+					localStorage.setItem('lastLoginTime', new Date().getTime());
+					var curr = plus.webview.currentWebview();
+					plus.navigator.setStatusBarStyle('dark');
+					plus.webview.close("login");
 					setTimeout(function() {
-						plus.webview.close('login');
-						plus.webview.close('mobile_bind');
-					}, 2000)
+						curr.hide();
+						curr.close();
+					}, 1200);
 				} else {
-					mui.toast(res.message);
+					// mui.toast(res.message);
 					return;
 				}
 			}, 'json');

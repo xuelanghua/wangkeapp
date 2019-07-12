@@ -68,6 +68,37 @@
 				position: fixed;
 				bottom: 0;
 			}
+			.phone-login{
+				width: auto;
+				text-align: center;
+				display: block;
+				position: absolute;
+				right: 12%;
+				margin-top: 10px;
+				border: none;
+				background: transparent;
+				/* background-color: forestgreen; */
+				padding:5px 15px;
+				font-size: 14px;
+				color: #c2c2e1;
+			}
+			.phone-login span{
+				position: relative;
+			}
+			.phone-login span:after{
+				content: '';
+				width: 100%;
+				display: block;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				background-color:#c2c2e1;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+			button:active,button:focus{
+				outline: none;
+			}
 		</style>
 	</head>
 
@@ -83,7 +114,9 @@
 				<img src="../image/longew.png">
 				<span id="wx_title">微信登录</span>
 			</button>
-
+			<button id="phone_login" class="phone-login">
+				<span>手机号登录</span>
+			</button>
 			<div class="banben">
 				<span id="app_version">版本v2.0.0</span>
 			</div>
@@ -112,7 +145,7 @@
 			plus.navigator.setStatusBarStyle('light');
 			//获取和设置APP的版本
 			getAppInfo(function(e) {
-				mui('#app_version')[0].innerHTML = '版本' +  e.version;
+				mui('#app_version')[0].innerHTML = '版本' + e.version;
 			})
 
 			//判断是否安装微信
@@ -224,8 +257,14 @@
 						return SinaAPI.isWeiboAppInstalled()
 					default:
 						break;
-				}
+				} 
 			}
 		}
+		mui(".login").on("tap", "#phone_login", function() {
+			mui.openWindow({
+				url:'auth_code_login.html',
+				id:'auth_code_login'
+			});
+		})
 	</script>
 </html>
