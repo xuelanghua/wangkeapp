@@ -216,6 +216,17 @@
 			[v-cloak] {
 				display: none;
 			}
+			.void-data-tips {
+			  font-size: 16px;
+			  color: #d6d6d6;
+			  padding-top: 40px;
+			  text-align: center;
+			  padding-bottom: 30px;
+			}
+			.void-data-tips img {
+			  max-width: 140px;
+			  margin: 0 auto;
+			}
 		</style>
 	</head>
 
@@ -247,6 +258,9 @@
 				<div class="bd">
 					<div class="current tab-container chat-cont" id="chat_message" data-type="chat">
 						<ul class="mui-table-view">
+							<div v-if="voidmsg" class="void-data-tips">
+								<img src="../image/icon/void-data.png">
+							</div>
 							<template v-for="(lists,idx) in msgList" :key="idx">
 								<li class="Record_list mui-table-view-cell mui-transitioning" @tap="goChat(lists)">
 									<div class="mui-slider-right mui-disabled">
@@ -428,7 +442,8 @@
 				el: "#mui-content",
 				data: {
 					systemMsg: [],
-					msgList: []
+					msgList: [],
+					voidmsg: false
 				},
 				mounted: function() {
 					mui.init({
@@ -455,7 +470,7 @@
 							getSystemMsg();
 						})
 						getChatList(true);
-						
+
 						// mui('#chat_message').on('tap', '.Record_list', function() {
 						// 	var cid = this.dataset.cid;
 						// 	var chatName = this.dataset.name;
@@ -559,7 +574,7 @@
 					}
 				}, 'json')
 			}
-			
+
 			// 获取消息列表
 			function getChatList(first) {
 				if (first) {
@@ -569,6 +584,7 @@
 					action: 'list',
 					token: userInfo.token
 				}, function(res) {
+					logs(res);
 					if (res.errno == 0) {
 						document.getElementById('chat_total').innerText = '(' + res.data.length + ')';
 						app.msgList = res.data;
@@ -578,11 +594,11 @@
 							document.querySelector('.chat-red-tips').style.display = "none";
 						}
 						cacheData('msglist', res.data);
+					} else {
+						app.voidmsg = true;
 					}
 					if (first) {
-						setTimeout(function() {
-							showload(1);
-						}, 100);
+						showload(1, 1000);
 					}
 				}, 'json')
 			}
@@ -607,7 +623,7 @@
 					});
 				}
 			})
-			
+
 			// 确认删除聊天
 			mui('.join-team-verify').on("tap", ".send-verify", function() {
 				var swipemenu = mui('.mui-selected')[0];
@@ -645,7 +661,7 @@
 					}, 'json');
 				}
 			})
-			
+
 			// 取消删除聊天记录
 			mui('.join-team-verify').on("tap", ".close-verify-window", function() {
 				mui('.join-team-verify')[0].style.display = "none";

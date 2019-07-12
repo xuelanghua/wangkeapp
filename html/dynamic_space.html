@@ -47,6 +47,17 @@
 			.menu-list.active {
 				width: 100%;
 			}
+			.void-list-tips{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 20% 0;
+			}
+			.void-list-tips img{
+				max-width: 140px;
+				height: auto;
+			}
+			
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -96,6 +107,9 @@
 				<div v-if="is_self" class="issue-dynamics">
 					<span>发动态</span>
 					<div @tap="issueDynamics" class="camera-cont"><span class="iconfont camera-icon">&#xe60b;</span></div>
+				</div>
+				<div class="void-list-tips" v-if="void_list">
+					<img src="../image/icon/void-data.png">
 				</div>
 				<!-- 每天的组 -->
 				<div class="everyday-group mui-clearfix" v-for="(u,l) in spaceList" :key="l">
@@ -203,7 +217,8 @@
 					spaceList: [],
 					current_year: '',
 					// 是否自己
-					is_self: false
+					is_self: false,
+					void_list: false
 				},
 				methods: {
 					// 显示菜单
@@ -474,6 +489,10 @@
 							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 						} else if (pullDirection == "down") {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+							app.void_list = true;
+						}
+						if (skip == 1) {
+							app.void_list = true;
 						}
 					}
 				}, 'json');
