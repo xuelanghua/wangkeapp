@@ -20,7 +20,7 @@
 				z-index: 999999;
 				color: #fff;
 			}
-			
+
 			.mask {
 				height: 85%;
 				width: 100%;
@@ -28,7 +28,7 @@
 				top: 40px;
 				background: #000000;
 			}
-			
+
 			.mask2 {
 				height: 55px;
 				width: 100%;
@@ -36,12 +36,12 @@
 				bottom: 10px;
 				background: #000000;
 			}
-			
+
 			body {
 				margin: 0;
 				background: #000000;
 			}
-			
+
 			.scan {
 				width: 50%;
 				height: 55px;
@@ -49,12 +49,12 @@
 				float: left;
 				text-align: center;
 			}
-			
+
 			.scan img {
 				width: 30px;
 				height: 30px;
 			}
-			
+
 			.scan span {
 				display: block;
 				color: #fff;
@@ -86,23 +86,27 @@
 			mui.init({
 				swipeBack: true,
 			});
-			
+
 			var scan = null;
-			if(window.plus) {
+			if (window.plus) {
 				plusready();
 			} else {
 				document.addEventListener('plusready', plusready, false);
 			}
 
 			function onmarked(type, result) { //回调
-				if(result) {
+				if (result) {
 					scan.close();
 					if (result.indexOf('http') != -1) {
 						console.log(result);
 						var param = parseUrl(result);
 						var Sparam = JSON.stringify(param);
 						if (Sparam.indexOf('currentTabBar') != -1) {
-							fnOpenWin('friends_detail.html', 'friends_detail', {statusbar: {background: '#f7f7f7'}}, {
+							fnOpenWin('friends_detail.html', 'friends_detail', {
+								statusbar: {
+									background: '#f7f7f7'
+								}
+							}, {
 								fid: param.to_uid
 							}, 'slide-in-right');
 							plus.webview.close('scan', 'none');
@@ -110,33 +114,49 @@
 						} else if (Sparam.indexOf('type') != -1) {
 							var type = param.type;
 							if (type == 'receipt') {
-								fnOpenWin('scan_code_payment.html', 'scan_code_payment', {statusbar: {background: '#f7f7f7'}}, {
+								fnOpenWin('scan_code_payment.html', 'scan_code_payment', {
+									statusbar: {
+										background: '#f7f7f7'
+									}
+								}, {
 									uid: param.uid,
 									fee: param.fee
 								}, 'slide-in-right');
 								plus.webview.close('scan', 'none');
 								setStatusBar('', 'dark');
 							} else if (type == 'team') {
-								fnOpenWin('join_team.html', 'join_team', {statusbar: {background: '#f7f7f7'}}, {
+								fnOpenWin('join_team.html', 'join_team', {
+									statusbar: {
+										background: '#f7f7f7'
+									}
+								}, {
 									team_id: param.team_id,
 								}, 'slide-in-right');
 								plus.webview.close('scan', 'none');
 								setStatusBar('', 'dark');
+							} else {
+								plus.nativeUI.alert('扫码失败！', function() {
+									mui.back();
+								})
 							}
 						} else {
 							mui.get($ajaxUrl + 'util', {
-									action: 'url_title',
+								action: 'url_title',
+								url: result
+							}, function(res) {
+								logs(res);
+								plus.webview.close('scan', 'none');
+								fnOpenWin('webview.html', 'webview', {
+									statusbar: {
+										background: '#FFF'
+									}
+								}, {
+									title: res.data,
+									statusBarStyle: 'light',
 									url: result
-								}, function(res){
-									plus.webview.close('scan', 'none');
-									fnOpenWin('webview.html', 'webview', {
-										statusbar: {
-											background: '#FFF'
-										}
-									}, {title: res.data, statusBarStyle: 'light', url: result}, 'slide-in-right');
-									setStatusBar('', 'dark');
-								},'json'
-							);
+								}, 'slide-in-right');
+								setStatusBar('', 'dark');
+							}, 'json');
 						}
 					} else {
 						message('扫描失败!', 'center');
@@ -145,26 +165,29 @@
 						}, 1000)
 					}
 				} else {
-					
+
 				}
 			}
 
 			function plusready() {
 				setTimeout(function() {
-					scan = new plus.barcode.Barcode('mask', '', {frameColor: '#2289FF', scanbarColor: '#2289FF'});
+					scan = new plus.barcode.Barcode('mask', '', {
+						frameColor: '#2289FF',
+						scanbarColor: '#2289FF'
+					});
 					scan.onmarked = onmarked;
 					scan.start();
 				}, 200);
-				
+
 				//处理返回事件
 				plus.key.addEventListener('backbutton', function() {
 					plus.webview.currentWebview().close();
 				})
 			}
-			
+
 			//闪光灯
 			document.querySelector('#scan2 img').addEventListener('tap', function() {
-				if(/scan_off.png/.test(this.src)) {
+				if (/scan_off.png/.test(this.src)) {
 					this.src = "../image/scan_on.png";
 					scan.setFlash(true);
 				} else {
@@ -172,7 +195,7 @@
 					scan.setFlash(false);
 				}
 			})
-			
+
 			//添加本地图片
 			document.querySelector('#scan1 img').addEventListener('tap', function() {
 				plus.gallery.pick(function(path) {
@@ -187,7 +210,7 @@
 					message("扫描失败");
 				});
 			})
-			
+
 			var close = document.getElementById('colse');
 			close.addEventListener('tap', function() {
 				setStatusBar('#FFF', 'dark');
