@@ -5,6 +5,8 @@ $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&
 // $ajaxUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
 // $uploadUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
 // $voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
+
+$debug = true;
 //获取用户信息
 var getUserInfo = function() {
 	return JSON.parse(localStorage.getItem('user'));
@@ -170,7 +172,9 @@ function isEqual(a, b) {
 
 //打印日志
 function logs(data) {
-	console.log(JSON.stringify(data));
+	if ($debug) {
+		console.log(JSON.stringify(data));
+	}
 }
 
 
@@ -677,10 +681,6 @@ function pushInit() {
 
 	plus.push.addEventListener('click', function(msg) {
 		console.log(JSON.stringify(msg));
-		// try {
-		// if (plus.os.name == 'iOS') {
-		// 	plus.push.clear();
-		// }
 		if (!msg.payload) {
 			return;
 		}
@@ -688,9 +688,6 @@ function pushInit() {
 			msg.payload = JSON.parse(msg.payload);
 		}
 		pushCallback(msg.payload, 'click');
-		// } catch (e) {
-		// 	console.log(e.message);
-		// }
 	})
 }
 
@@ -702,7 +699,6 @@ function pushInit() {
  * chat:crm, customer, friend
  */
 function pushCallback(data, event) {
-	// try {
 	var type = data.type;
 	var url = data.url;
 	var extra = data.extra;
@@ -721,10 +717,6 @@ function pushCallback(data, event) {
 					mui.fire(plus.webview.getWebviewById("crm"), 'refreshCrm');
 				}
 			} else if (url == 'dialog') {
-				// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-				// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-				// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
-				// console.log(33333);
 				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 				// fnOpenWin('html/' + url + '.html', url, {
@@ -732,6 +724,9 @@ function pushCallback(data, event) {
 				// 		background: '#F7F7F7'
 				// 	}
 				// }, extra, '');
+			} else if (url == 'team_chat') {
+				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
+				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 			} else if (url == 'message') {
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 				fnOpenWin('html/' + url + '.html', url, {
@@ -760,8 +755,6 @@ function pushCallback(data, event) {
 		}
 	} else if (event == 'receive') {
 		if (url == 'dialog') {
-			// plus.device.beep();
-			// plus.device.vibrate();
 			if (type == 'cancel') {
 				mui.fire(plus.webview.getWebviewById('dialog'), 'sendCancel');
 			} else {
@@ -803,9 +796,6 @@ function pushCallback(data, event) {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}
 	}
-	// } catch (e) {
-	// 	console.log(e.message);
-	// }
 	return;
 }
 
@@ -1001,7 +991,7 @@ function getContactsInit() {
 // 下载wgt文件  
 function downWgt() {
 	var wgtUrl = "https://cdn.wangkeapp.cn/wangke.wgt";
-	plus.nativeUI.showWaiting("升级中...");
+	plus.nativeUI.showWaiting("应用资源更新中...");
 	// showload(0, 0, "升级中...", "rgba(0,0,0,0.5)");
 	plus.downloader.createDownload(wgtUrl, {
 		filename: "_doc/update/"
@@ -1011,7 +1001,7 @@ function downWgt() {
 			installWgt(d.filename); // 安装wgt包  
 		} else {
 			console.log("下载文件失败！");
-			plus.nativeUI.alert("下载文件失败！");
+			plus.nativeUI.alert("应用资源更新失败！");
 			// plus.nativeUI.closeWaiting();
 			showload(1, 1000);
 		}
@@ -1025,13 +1015,13 @@ function installWgt(path) {
 		// plus.nativeUI.closeWaiting();
 		showload(1, 1000);
 		console.log("安装文件成功！");
-		plus.nativeUI.alert("应用资源更新完成！", function() {
+		plus.nativeUI.alert("应用资源更新成功！", function() {
 			plus.runtime.restart();
 		});
 	}, function(e) {
 		showload(1, 1000);
 		console.log("安装文件失败[" + e.code + "]：" + e.message);
-		plus.nativeUI.alert("安装文件失败[" + e.code + "]：" + e.message);
+		plus.nativeUI.alert("应用资源更新失败!!");
 	});
 }
 
