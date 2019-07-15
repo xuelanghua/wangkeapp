@@ -1,0 +1,364 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			li {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.mui-row.mui-fullscreen>[class*="mui-col-"] {
+				height: 100%;
+			}
+
+			.mui-col-xs-3,
+			.mui-control-content {
+				overflow-y: auto;
+				height: 100%;
+			}
+
+			.mui-segmented-control .mui-control-item {
+				line-height: 50px;
+				width: 100%;
+			}
+
+			.mui-col-xs-9 {
+				background-color: #FFFFFF;
+			}
+
+			.mui-segmented-control {
+				padding: 0;
+				border: none;
+			}
+
+			.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item {
+				background-color: #F2F2F2;
+				border-bottom: none;
+				width: 100%;
+			}
+
+			.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item.mui-active {
+				border-bottom: none;
+			}
+
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				background-color: #ffffff;
+			}
+
+			.mui-col-xs-9::-webkit-scrollbar,
+			.mui-control-content::-webkit-scrollbar,
+			.mui-segmented-control::-webkit-scrollbar,
+			.mui-col-xs-3::-webkit-scrollbar {
+				display: none;
+			}
+
+			.mui-bar-nav~.mui-content {
+				padding-top: 86px;
+			}
+
+			.mui-bar.mui-bar-nav {
+				padding-left: 0;
+				padding-right: 0;
+				box-shadow: none;
+				background-color: #FFFFFF;
+			}
+
+			.screen-bar {
+				height: 40px;
+				display: flex;
+				background-color: #FFFFFF;
+				margin-top: 44px;
+				z-index: 10;
+				box-shadow: 0 3px 3px 1px rgba(225, 225, 225, 0.6);
+				position: relative;
+				overflow: visible;
+			}
+
+			.menu-cont {
+				padding: 0 10px;
+				width: 100%;
+				display: flex;
+				overflow: hidden;
+			}
+
+			.menu-cont.active .search-input {
+				border-radius: 14px;
+				width: 100%;
+			}
+
+			.search-cont {
+				margin-right: 5%;
+				width: 40px;
+			}
+
+			.menu-cont.active .search-cont {
+				position: relative;
+				width: 100%;
+			}
+
+			.menu-cont .mui-icon-search {
+				position: absolute;
+				left: 5px;
+				font-size: 22px;
+				z-index: 9;
+			}
+
+			.menu-cont .search-input {
+				border-radius: 14px;
+				text-align: left;
+				width: 20px;
+				position: relative;
+				height: 28px;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+				flex-shrink: 0;
+				margin-right: 5%;
+			}
+
+			.menu-cont.active .search-input {
+				width: 100%;
+				padding-left: 40px;
+				padding-right: 30px;
+				background-color: #F2F2F2;
+				flex-shrink: 0;
+				border-radius: 14px;
+			}
+
+			.menu-cont.active .search-cont:after {
+				content: '';
+				background-color: rgba(0, 0, 0, .1);
+				width: 1px;
+				height: 40%;
+				top: 30%;
+				left: 32px;
+				position: absolute;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+
+			.search-cont input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.24rem;
+			}
+
+			.mui-action-back.mui-icon.mui-icon-left-nav {
+				margin-left: 0;
+			}
+
+			.screen-cont {
+				display: flex;
+				height: 100%;
+				align-items: center;
+				width: 90%;
+				margin: 0;
+				opacity: 1;
+				-webkit-transform: scale(1);
+				transform: scale(1);
+				transform-origin: right center;
+				-webkit-transform-origin: right center;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+				justify-content: space-between;
+			}
+
+			.menu-cont.active .screen-cont {
+				margin-right: -100%;
+				opacity: 0;
+				-webkit-transform: scale(0);
+				transform: scale(0);
+				transform-origin: right center;
+				-webkit-transform-origin: right center;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+			}
+
+			.screen-item {
+				margin: 0;
+				width: 1.16rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: #F2F2F2;
+				padding: 3px 0;
+				border-radius: 30px;
+				font-size: 13px;
+				color: #555555;
+				position: relative;
+				overflow: visible;
+			}
+
+			.mui-bar-nav.mui-bar .mui-icon.mui-icon-arrowdown {
+				padding: 0;
+				padding-left: 10px;
+				font-size: 18px;
+			}
+
+			.menu-cont .screen-item.active {
+				color: #F5CA3A;
+			}
+
+			.menu-cont .screen-item.active:after {
+				content: '';
+				display: block;
+				position: absolute;
+				width: 200%;
+				height: 200%;
+				border: 1px solid #F5CA3A;
+				left: 0;
+				top: 0;
+				border-radius: 60px;
+				transform-origin: 0 0;
+				-webkit-transform-origin: 0 0;
+				transform: scale(0.5, 0.5);
+				-webkit-transform: scale(0.5, 0.5);
+				box-sizing: border-box;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">拣货</h1>
+			<div class="screen-bar">
+				<div class="menu-cont">
+					<!-- active -->
+					<div class="mui-input-row search-cont">
+						<form action="" onsumit="return false">
+							<span class="mui-icon mui-icon-search"></span>
+							<input class="search-input mui-input-clear" type="search" id="search" name="cont" placeholder="输入商品名称">
+						</form>
+					</div>
+					<div class="screen-cont">
+						<div class="screen-item">销量</div>
+						<div class="screen-item">价格</div>
+						<div class="screen-item">好评度</div>
+						<div class="screen-item" data-team="team">团队<span class="mui-icon mui-icon-arrowdown"></span></div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<div id="mui-content" class="mui-content mui-row mui-fullscreen" v-cloak>
+			<div class="mui-col-xs-3">
+				<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+					<a class="mui-control-item" :class="index==0?'mui-active':''" :href="'#content'+index" v-for="(list,index) in 60"
+					 :key="index">选项{{index}}</a>
+				</div>
+			</div>
+			<div id="segmentedControlContents" class="mui-col-xs-9">
+				<div :id="'content'+idx" class="mui-control-content" :class="idx==0?'mui-active':''" v-for="(list,idx) in 60">
+					{{idx}}
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					classified: [{
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}, {
+						title: "分类",
+						id: 1
+					}],
+					isinput: false
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						plus.navigator.setStatusBarStyle("dark");
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+				}
+			})
+			// 点击搜索按钮
+			mui(".mui-bar").on('tap', ".mui-icon-search", function() {
+				mui(".menu-cont")[0].classList.toggle("active");
+				mui(".search-cont input")[0].blur();
+			})
+			// 点击筛选项
+			mui(".mui-bar").on('tap', ".screen-item", function() {
+				this.classList.toggle("active");
+				if(this.dataset.team){
+					alert("asdf");
+				}
+			})
+		</script>
+	</body>
+
+</html>

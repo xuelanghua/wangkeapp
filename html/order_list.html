@@ -179,7 +179,7 @@
 			/* 弹出框 */
 			#cover{
 			    position: fixed;
-				z-index: 30;
+				z-index: 199;
 				top: 0;
 				left: 0;
 				display: none;
@@ -192,7 +192,7 @@
 				border-radius: 5px;
 				background-color: #FFFFFF;
 				position: fixed;
-				z-index: 1045;
+				z-index: 120;
 				width: 92%;
 				top: 25%;
 				left: 4%;
@@ -236,15 +236,21 @@
 				padding: 24px 0;
 			}
 			.tanchu_button button{
-				color: #000000;
 				background-color: #F5CA3A;
 				border: none;
 				padding: 12px 0;
 				width: 50%;
 				font-size: 14px;
+				color: #FFFFFF;
 			}
 			.mui-bar-nav~.mui-content{
 				padding-top: 135px;
+			}
+			.mui-backdrop{
+				background-color: rgba(0,0,0,0.2);
+			}
+			.mui-poppicker.mui-active{
+				z-index: 9999;
 			}
 		</style>
 	</head>
@@ -255,12 +261,11 @@
 			<h1 class="mui-title">订单管理</h1>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content" id="mui-content">
 			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
 				<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
 					<input type="search" class="mui-input-clear" name="goods_name" placeholder="搜索商品名称">
 				</div>
-
 				<div class="hd">
 					<li class="current" data-status="1">待付款</li>
 					<li id="wait-send" data-status="2">待发货</li>
@@ -480,7 +485,7 @@
 						物流公司<span id="select_company" style=""></span>
 					</div>
 					<div class="tanchu_express" style="margin-top: 16px;">
-						单号<input type="text" name="courier_number" style="margin-left: 10%;" />
+						单号<input type="number" name="courier_number" style="margin-left: 10%;" />
 					</div>
 				</div>
 				<div class="tanchu_button">
@@ -488,7 +493,7 @@
 				</div>
 			</div>
 		</div>
-		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.js"></script>
 		<script src="../js/mui.picker.js"></script>
 		<script src="../js/mui.poppicker.js"></script>
 		<script src="../js/util.js"></script>
@@ -564,8 +569,8 @@
 				mui('.mui-content').on('tap', '.tanchu_button', function() {
 					// var expressCompany = document.querySelector('input[name=express_company]').value;
 					var courierNumber = document.querySelector('input[name=courier_number]').value;
-					if (express_id.length == 0) {
-						message('请填写物流公司!');
+					if (express_id== '') {
+						message('请选择物流公司!');
 						return;
 					}
 					if (courierNumber.length == 0) {
@@ -913,7 +918,6 @@
 			}
 			// 选择物流公司
 			mui(".mui-content").on('tap', '#express_company', function() {
-				// logisticsCompany();
 				document.querySelector('input[name=courier_number]').blur();
 				var userPicker = new mui.PopPicker();
 				mui.post($ajaxUrl + 'util&action=express_list', {}, function(res) {
@@ -928,13 +932,20 @@
 						userPicker.setData(data);
 						userPicker.show(function(items) {
 							mui("#select_company")[0].innerText = JSON.stringify(items[0].text).replace(/"/g, "");
-							express_id=items[0].value;
+							express_id = items[0].value;
 						});
 					} else {
 
 					}
 				}, 'json');
 			})
+			// 重新开启滚动
+			// mui("body").on('tap', '.mui-btn', function() {
+			// 	mui('.mui-content').pullRefresh().setStopped(false);
+			// })
+			// mui('body').on('tap', '.mui-backdrop', function() {
+			// 	mui('.mui-content').pullRefresh().setStopped(false);
+			// })
 			//发货
 			function fnExpress(express_id, courierNumber, orderId) {
 				mui.post($ajaxUrl + 'order', {
