@@ -27,7 +27,7 @@
 
 			.qr-code-body {
 				width: 6.8rem;
-				height: auto; 
+				height: auto;
 				position: relative;
 				border-radius: 0.1rem;
 				margin: 1rem auto 0.5rem;
@@ -208,6 +208,7 @@
 			.default-theme-container .qr-img {
 				margin: 0.8rem 0 0.5rem;
 			}
+
 			/* 第五个样式 */
 			.theme5 {
 				width: 100%;
@@ -217,13 +218,13 @@
 				line-height: 0;
 				background-color: #0062CC;
 			}
-			
+
 			.theme5 .bg-img {
 				width: 100%;
 				height: auto;
 				z-index: 1;
 			}
-			
+
 			.theme5-container {
 				position: absolute;
 				top: 0;
@@ -235,14 +236,15 @@
 				align-items: center;
 				padding: 0.8rem 0.43rem;
 				/* background-color: #0062CC; */
+				min-height: 10.88rem;
 			}
-			
+
 			.theme5-logo {
 				width: 60%;
 				height: auto;
 				margin-bottom: 2.4rem;
 			}
-			
+
 			.theme5 .theme5-area {
 				width: 100%;
 				background: transparent;
@@ -252,20 +254,20 @@
 				padding: 0;
 				font-size: 0.3rem;
 			}
-			
+
 			.theme5 .theme5-area::-webkit-input-placeholder {
 				text-align: left;
 				color: #FFFFFF;
 				font-size: 0.3rem;
 			}
-			
+
 			.theme5 .qrimg {
 				width: 1.8rem;
 				bottom: 1rem;
 				right: 0.4rem;
 				position: absolute;
 			}
-			
+
 			.theme5 .theme5-timer {
 				position: absolute;
 				top: 1rem;
@@ -276,12 +278,12 @@
 				color: #ffffff;
 				text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 			}
-			
+
 			.theme5 .theme5-timer img {
 				width: 100%;
 				height: auto;
 			}
-			
+
 			.timer-cont {
 				display: flex;
 				justify-content: space-between;
@@ -289,36 +291,37 @@
 				margin-bottom: 0.1rem;
 				margin-left: -0.1rem;
 			}
-			
+
 			.timer-cont span {
 				font-size: 0.92rem;
 			}
-			
+
 			.timer-cont h4 {
 				font-weight: normal;
 				font-size: 0.42rem;
 				margin-bottom: 6px;
 			}
-			
+
 			.timer-cont p {
 				font-size: 0.25rem;
 				color: #FFFFFF;
 			}
-			
+
 			.theme5 .left-bottom-cont {
 				position: absolute;
 				left: 0.4rem;
 				bottom: 0.8rem;
 				width: 4.2rem;
 			}
-			
+
 			.theme5 .left-bottom-cont img {
 				width: 1.47rem;
 				height: auto;
 				display: block;
 				margin-bottom: 0.4rem;
 			}
-			.theme5 .left-bottom-cont p{
+
+			.theme5 .left-bottom-cont p {
 				font-size: 0.24rem;
 				line-height: 1.6;
 				width: 3.4rem;
@@ -351,7 +354,7 @@
 			<div class="team-qr-code">
 				<div id="code-body" class="qr-code-body">
 					<!-- 默认主题 -->
-					<div v-if="serial==0" class="default-theme-container">
+					<div v-show="serial==0" class="default-theme-container">
 						<div class="qrcode-section">
 							<img class="default-user-head-img" :src="userhead||'../image/user_default.jpg'">
 							<div>
@@ -368,7 +371,7 @@
 						<img class="logo-img" src="../image/wangkelogo.png">
 					</div>
 					<!-- 主题一 -->
-					<div v-if="serial==1" id="theme1" class="theme1">
+					<div v-show="serial==1" id="theme1" class="theme1">
 						<img class="bgimg" :src="bgimg">
 						<div class="theme-body theme-body1">
 							<img class="user-head-img" :src="userhead">
@@ -376,13 +379,15 @@
 							<div class="input-section mui-text-center">
 								<p>{{card_text}}</p>
 							</div>
-							<img class="qrimg" :src="qrpath">
+							<div class="theme1-qrimg-cont">
+								<img class="qrimg" :src="qrpath">
+							</div>
 							<p class="type_desc">{{description}}</p>
 							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 						</div>
 					</div>
 					<!-- 主题二 -->
-					<div v-if="serial==2" id="theme2" class="theme2">
+					<div v-show="serial==2" id="theme2" class="theme2">
 						<div class="head-img-cont">
 							<img class="bgimg" :src="bgimg">
 							<img class="circular-bead" src="../image/share/circular-bead-bg.png">
@@ -394,13 +399,15 @@
 							<div class="input-section mui-text-center">
 								<p>{{card_text}}</p>
 							</div>
-							<img class="qrimg" :src="qrpath">
+							<div class="qrimg-container">
+								<img class="qrimg" :src="qrpath">
+							</div>
 							<p class="type_desc">{{description}}</p>
 							<img class="bottom-logo" src="../image/share/box-shadow-logo.png">
 						</div>
 					</div>
 					<!-- 主题三 -->
-					<div v-if="serial==3" id="theme4" class="theme4 mui-clearfix">
+					<div v-show="serial==3" id="theme4" class="theme4 mui-clearfix">
 						<img class="bgimg" :src="bgimg">
 						<img class="user-head-img" :src="userhead">
 						<h2>{{username}}</h2>
@@ -408,11 +415,13 @@
 						<div class="input-section mui-text-center">
 							<p>{{card_text}}</p>
 						</div>
-						<img class="qrimg" :src="qrpath">
+						<div class="theme4-qrimg-cont">
+							<img class="qrimg" :src="qrpath">
+						</div>
 						<p class="type_desc">{{description}}</p>
 					</div>
 					<!-- 主题四 -->
-					<div v-if="serial==4" id="theme3" class="theme3">
+					<div v-show="serial==4" id="theme3" class="theme3">
 						<div style="min-height: 200px;">
 							<img class="bgimg" :src="bgimg">
 						</div>
@@ -430,7 +439,7 @@
 						</div>
 					</div>
 					<!-- 主题五 -->
-					<div v-if="serial==5" id="theme5" class="theme5">
+					<div v-show="serial==5" id="theme5" class="theme5">
 						<img class="bg-img" :src="bgimg">
 						<div class="theme5-container">
 							<div class="theme5-timer">
@@ -531,8 +540,8 @@
 				var numbers = Date.parse(new Date());
 				mui.plusReady(function() {
 					var ws = plus.webview.currentWebview();
-					if (!ws.toUid||ws.toUid == userInfo.id) {
-						document.querySelector(".setting-card").style.display = "flex";	
+					if (!ws.toUid || ws.toUid == userInfo.id) {
+						document.querySelector(".setting-card").style.display = "flex";
 					}
 					if (ws.toUid) {
 						toUid = ws.toUid;
@@ -661,7 +670,7 @@
 				this.days = formatDate('d', '');
 				this.years = formatDate('y', '');
 				var idx = formatDate('m', '');
-				idx = idx.replace(0,'')-1;
+				idx = idx.replace(0, '') - 1;
 				this.months = this.month[idx];
 			}
 		})

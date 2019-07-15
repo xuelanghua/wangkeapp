@@ -600,6 +600,83 @@
 				padding-bottom: 1.1rem;
 			}
 
+			.primary-goods .goods-list {
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding: 0.36rem 0.2rem;
+				overflow: hidden;
+			}
+			
+			.primary-goods .goods-list:after {
+				left: 2.3rem;
+				background-color: #DDDDDD;
+			}
+			.primary-goods .goods-list:last-of-type:after{
+				height: 1px;
+			}
+			.goods-list .goods-right{
+				flex-grow: 1;
+			}
+			.goods-img {
+				width: 2rem;
+				height: 2rem;
+				display: flex;
+				overflow: hidden;
+				flex-shrink: 0;
+				margin-right: 0.28rem;
+			}
+
+			.goods-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.goods-list .goods-title {
+				color: #333333;
+				font-size: 0.3rem;
+				margin-bottom: 0.4rem;
+				min-height: 0.66rem;
+			}
+
+			.goods-list .goods-info {
+				font-size: 0.24rem;
+				color: #F52E20;
+				padding-bottom: 0.1rem;
+			}
+
+			.price-text {
+				color: #333333;
+				margin-left: 0.44rem;
+			}
+
+			.goods-right-bottom {
+				display: flex;
+				align-items: center;
+				position: relative;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.goods-right-bottom span:first-of-type {
+				margin-right: 0.32rem;
+			}
+
+			.hot-sign {
+				height: 0.3rem;
+				width: auto;
+				margin-right: 0.2rem;
+			}
+
+			.goods-list .add-entrepot {
+				width: 0.38rem;
+				height: 0.38rem;
+				position: absolute;
+				right: 0.1rem;
+				z-index: 6;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -756,17 +833,17 @@
 				</div>
 			</div>
 			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item mui-active" href="#item1">
+				<a class="mui-control-item" href="#item1">
 					基本信息
 				</a>
-				<a class="mui-control-item mui-hidden" href="#item2">
+				<a class="mui-control-item mui-active" href="#item2">
 					主力商品
 				</a>
 				<a class="mui-control-item" href="#item3">
 					学习进度
 				</a>
 			</div>
-			<div id="item1" class="mui-control-content mui-active">
+			<div id="item1" class="mui-control-content">
 				<div class=" notice-cont">
 					<h2 class="headline">
 						团队公告
@@ -848,9 +925,9 @@
 								</div>
 							</div>
 							<div class="member-right">
-								<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button> 
-								<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button> 
-								<span v-else-if="list.status==1">已添加</span> 
+								<button @tap="examine(-1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue mui-btn-outlined">拒接</button>
+								<button @tap="examine(1,list.uid)" v-if="list.status==0" type="button" class="mui-btn mui-btn-blue">同意</button>
+								<span v-else-if="list.status==1">已添加</span>
 								<span v-else>已拒绝</span>
 							</div>
 						</li>
@@ -862,9 +939,48 @@
 				<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
 			</div>
 			<!-- 主力商品 -->
-			<div id="item2" class="mui-control-content primary-goods  mui-hidden">
+			<div id="item2" class="mui-control-content primary-goods mui-active">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell">主力商品</li>
+					<li class="mui-table-view-cell goods-list">
+						<div class="goods-img">
+							<img src="../image/5E0eH.png">
+						</div>
+						<div class="goods-right">
+							<p class="goods-title mui-ellipsis-2">
+								四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用双人春夏季床上用双人春夏季床上用
+							</p>
+							<div class="goods-info">
+								<span class="wage-text">提成：&yen;50.00</span>
+								<span class="price-text">供货价：&yen;500.00</span>
+							</div>
+							<div class="goods-right-bottom">
+								<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+								<span>销量&nbsp;950</span>
+								<span>95%&nbsp;好评</span>
+								<img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png">
+							</div>
+						</div>
+					</li>
+					<li class="mui-table-view-cell goods-list">
+						<div class="goods-img">
+							<img src="../image/5E0eH.png">
+						</div>
+						<div class="goods-right">
+							<p class="goods-title mui-ellipsis-2">
+								四件套全棉纯棉田园风
+							</p>
+							<div class="goods-info">
+								<span class="wage-text">提成：&yen;50.00</span>
+								<span class="price-text">供货价：&yen;500.00</span>
+							</div>
+							<div class="goods-right-bottom">
+								<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+								<span>销量&nbsp;950</span>
+								<span>95%&nbsp;好评</span>
+								<img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png">
+							</div>
+						</div>
+					</li>
 				</ul>
 			</div>
 			<!-- 学习进度 -->
