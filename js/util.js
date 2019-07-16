@@ -854,7 +854,6 @@ function baseImgFile(uid, base64, quality, callback) {
 			quality: quality
 		}, function(i) {
 			callback(i);
-			plus.gallery.save(i.target);
 			bitmap.clear();
 		}, function(e) {
 			message("保存失败！");
