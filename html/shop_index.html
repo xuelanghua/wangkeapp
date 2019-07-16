@@ -310,7 +310,7 @@
 						</div>
 						<div class="menu-items">
 							<img src="../image/icon/store-management-icon-06.png">
-							<span>添加商品</span>
+							<span>添加分销商品</span>
 						</div>
 					</div>
 				</div>
@@ -319,7 +319,7 @@
 						个人商城
 					</div>
 					<div class="menu-body">
-						<div class="menu-items">
+						<div class="menu-items" id="goods_manage">
 							<img src="../image/icon/store-management-icon-07.png">
 							<span>商品管理</span>
 						</div>
@@ -436,14 +436,18 @@
 			// 查看公告详情
 			mui(".mui-content").on("tap", ".swiper-slide", function() {
 				var idx = this.dataset.idx;
-				fnOpenWin('notice_detail.html', 'notice_detail', {
-					statusbar: {
-						background: '#ffffff'
-					}
-				}, {
+				openPage('notice_detail.html', 'notice_detail','#ffffff',{
 					notice: app.notice[idx],
 					page: 'shop_index'
-				}, 'slide-in-right');
+				});
+				// fnOpenWin('notice_detail.html', 'notice_detail', {
+				// 	statusbar: {
+				// 		background: '#ffffff'
+				// 	}
+				// }, {
+				// 	notice: app.notice[idx],
+				// 	page: 'shop_index'
+				// }, 'slide-in-right');
 			})
 			// 资产中心
 			mui(".mui-content").on("tap", ".asset-center", function() {
@@ -472,27 +476,25 @@
 			mui(".mui-content").on("tap", "#stock_goods", function() {
 				openPage('choose_goods.html', 'choose_goods', '#ffffff');
 			});
-
 			//添加商品
 			document.getElementById('goods_add').addEventListener('tap', function() {
-				document.querySelector(".tips-cont").classList.remove("mui-hidden");
-				mask.show();
-				// mui.get($ajaxUrl + 'member', {
-				// 	action: 'check_goods_number',
-				// 	token: userInfo.token
-				// }, function(res) {
-				// 	if (res.errno == 0) {
-				// 		openPage('goods_add.html', 'goods_add', '#ffffff', '');
-				// 	} else {
-				// 		document.querySelector(".tips-cont").classList.remove("mui-hidden");
-				// 		mask.show();
-				// 	}
-				// }, 'json');
+				mui.get($ajaxUrl + 'member', {
+					action: 'check_goods_number',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						openPage('goods_add.html', 'goods_add', '#ffffff', '');
+					} else {
+						document.querySelector(".tips-cont").classList.remove("mui-hidden");
+						mask.show();
+					}
+				}, 'json');
 			});
 			// 关闭提示弹窗
 			mui(".mui-content").on("tap", ".hide_qrcode", function() {
 				mask.close();
 			})
+			// 防止弹窗滑动穿透
 			document.querySelector(".tips-cont").addEventListener("touchmove", mui.preventDefault);
 		</script>
 	</body>
