@@ -225,6 +225,165 @@
 				-webkit-transform: scale(0.5, 0.5);
 				box-sizing: border-box;
 			}
+
+			.team-select {
+				position: absolute;
+				top: 40px;
+				left: 0;
+				width: 100%;
+				background-color: #F2F2F2;
+				height: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+
+			.team-select.active {
+				height: auto;
+				padding-bottom: 20px;
+			}
+
+			.team-select .mui-table-view {
+				background: transparent;
+			}
+
+			.mui-table-view:before,
+			.team-select .mui-table-view:after {
+				height: 0;
+			}
+
+			.team-select .mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.team-select .mui-table-view-cell {
+				text-align: center;
+			}
+
+			.team-select .mui-table-view-cell:after {
+				left: 10px;
+				right: 10px;
+				background-color: #DDDDDD;
+			}
+
+			.mui-backdrop {
+				z-index: 9;
+			}
+			.team-list {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.3rem;
+				position: relative;
+			}
+			.team-list.active{
+				color: #F5CA3A;
+			}
+			.team-list img{
+				display: none;
+			}
+			.team-list.active span{
+				display: inline-flex;
+				position: relative;
+			}
+			.team-list.active span:after{
+				content: '';
+				display: inline-block;
+				width: 19px;
+				height: 20px;
+				position: absolute;
+				background: url('../image/icon/draw-icono.png')center  center no-repeat;
+				background-size: contain;
+				right: -25px;
+			}
+			/* 主力商品 */
+			.primary-goods {
+				padding-bottom: 1.1rem;
+			}
+			
+			.primary-goods .goods-list {
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding: 0.32rem 0.2rem;
+				overflow: hidden;
+			}
+			
+			.primary-goods .goods-list:after {
+				left: 2.3rem;
+				background-color: #DDDDDD;
+			}
+			.primary-goods .goods-list:last-of-type:after{
+				height: 1px;
+			}
+			.goods-list .goods-right{
+				flex-grow: 1;
+			}
+			.goods-img {
+				width: 1.9rem;
+				height: 1.9rem;
+				display: flex;
+				overflow: hidden;
+				flex-shrink: 0;
+				margin-right: 0.2rem;
+			}
+			
+			.goods-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			
+			.goods-list .goods-title {
+				color: #333333;
+				font-size: 0.28rem;
+				margin-bottom: 0.16rem;
+				min-height: 0.66rem;
+				text-align: justify;
+			}
+			
+			.goods-list .goods-info {
+				font-size: 0.24rem;
+				color: #F52E20;
+				/* padding-bottom: 0.1rem; */
+				display: inline-flex;
+				flex-direction: column;
+			}
+			
+			.price-text {
+				color: #333333;
+			}
+			
+			.goods-right-bottom {
+				display: flex;
+				align-items: center;
+				position: relative;
+				font-size: 0.22rem;
+				color: #999999;
+			}
+			
+			.goods-right-bottom span:first-of-type {
+				margin-right: 0.3rem;
+			}
+			
+			.hot-sign {
+				height: 0.24rem;
+				width: auto;
+				margin-right: 0.2rem;
+			}
+			
+			.goods-list .add-entrepot {
+				width: 0.38rem;
+				height: 0.38rem;
+				position: absolute;
+				right: 0.1rem;
+				z-index: 6;
+			}
+			.primary-goods .mui-table-view:after{
+				height: 0;
+			}
+			.primary-goods .mui-table-view-cell.mui-active{
+				background-color: #FFFFFF;
+			}
 		</style>
 
 	</head>
@@ -249,6 +408,23 @@
 						<div class="screen-item" data-team="team">团队<span class="mui-icon mui-icon-arrowdown"></span></div>
 					</div>
 				</div>
+				<!-- 下拉团队选择 -->
+				<div class="team-select">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell team-list" data-tid="1">
+							<img src="../image/icon/draw-icono.png" alt="">
+							<span>团队团队团队团队团队</span>
+						</li>
+						<li class="mui-table-view-cell team-list" data-tid="2">
+							<img src="../image/icon/draw-icono.png" alt="">
+							<span>团队团2</span>
+						</li>
+						<li class="mui-table-view-cell team-list" data-tid="3">
+							<img src="../image/icon/draw-icono.png" alt="">
+							<span>团队3</span>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</header>
 		<div id="mui-content" class="mui-content mui-row mui-fullscreen" v-cloak>
@@ -261,14 +437,62 @@
 			<div id="segmentedControlContents" class="mui-col-xs-9">
 				<div :id="'content'+idx" class="mui-control-content" :class="idx==0?'mui-active':''" v-for="(list,idx) in 60">
 					{{idx}}
+					<div class="primary-goods">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell goods-list">
+								<div class="goods-img">
+									<img src="../image/5E0eH.png">
+								</div>
+								<div class="goods-right">
+									<p class="goods-title mui-ellipsis-2">
+										四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用双人春夏季床上用双人春夏季床上用
+									</p>
+									<div class="goods-info">
+										<span class="wage-text">提成：&yen;50.00</span>
+										<span class="price-text">供货价：&yen;500.00</span>
+									</div>
+									<div class="goods-right-bottom">
+										<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+										<span>销量&nbsp;950</span>
+										<span>95%&nbsp;好评</span>
+										<!-- <img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png"> -->
+									</div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell goods-list">
+								<div class="goods-img">
+									<img src="../image/5E0eH.png">
+								</div>
+								<div class="goods-right">
+									<p class="goods-title mui-ellipsis-2">
+										四件套全棉纯棉田园风
+									</p>
+									<div class="goods-info">
+										<span class="wage-text">提成：&yen;50.00</span>
+										<span class="price-text">供货价：&yen;500.00</span>
+									</div>
+									<div class="goods-right-bottom">
+										<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+										<span>销量&nbsp;950</span>
+										<span>95%&nbsp;好评</span>
+										<!-- <img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png"> -->
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/Zepto.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var mask = mui.createMask(function() {
+				$('.team-select').removeClass("active");
+			});
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -350,13 +574,26 @@
 			mui(".mui-bar").on('tap', ".mui-icon-search", function() {
 				mui(".menu-cont")[0].classList.toggle("active");
 				mui(".search-cont input")[0].blur();
+				mask.close();
 			})
 			// 点击筛选项
-			mui(".mui-bar").on('tap', ".screen-item", function() {
-				this.classList.toggle("active");
-				if(this.dataset.team){
-					alert("asdf");
+			mui(".mui-bar").on('tap', ".screen-item", function(e) {
+				var box = $(".screen-cont").children();
+				for (var i = 0; i < box.length; i++) {
+					box[i].classList.remove("active");
 				}
+				$(this).addClass("active");
+				if (this.dataset.team) {
+					mask.show();
+					$('.team-select').addClass("active");
+				} else {
+					mask.close();
+				}
+			})
+			// 点击团队
+			mui(".mui-bar").on('tap', ".team-list", function(e) {
+				var tid=this.dataset.tid;
+				this.classList.toggle("active");
 			})
 		</script>
 	</body>
