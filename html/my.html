@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<title>我的</title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
 		<style type="text/css">
 			.clearfix {
 				clear: both;
@@ -103,17 +103,19 @@
 				font-size: 12px;
 				background-color: #f2f2f2;
 				overflow: hidden;
+				display: flex;
+				align-items: center;
+				padding-right: 30px;
 			}
 
 			.Notice-title {
-				float: left;
 				margin-right: 15px;
 			}
 
 			.Notice .notice-more {
 				position: absolute;
 				right: 15px;
-				top: 10px;
+				top: 12px;
 				opacity: 0.3;
 			}
 
@@ -351,6 +353,23 @@
 			#setting-btn {
 				padding: 0 15px;
 			}
+
+			.Notice .swiper-container {
+				height: 40px;
+				/* background-color: #0062CC; */
+				flex-grow: 1;
+			}
+
+			.Notice .swiper-container .swiper-slide {
+				height: 40px;
+				display: flex;
+				align-items: center;
+				font-size: 12px;
+			}
+
+			.notice-cont {
+				width: 100%;
+			}
 		</style>
 	</head>
 	<body>
@@ -427,16 +446,20 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
-
 				<div class="Notice">
-					<div class="Notice-title"><img src="../image/notice4.png" style="width:18px" alt=""></div>
-					<div id="notice_container">
-						<div class="swiper-container"></div>
+					<div class="Notice-title">
+						<img src="../image/notice4.png" style="width:18px" alt="">
+					</div>
+					<div id="notice_container" class="notice-cont">
+						<div class="swiper-container">
+							<div class="swiper-wrapper">
+								
+							</div>
+						</div>
 					</div>
 					<div class="notice-more">
 						<img src="../image/iconrighth.png">
 					</div>
-					<div class="clearfix"></div>
 				</div>
 				<ul class="mui-table-view menu">
 					<!-- <li class="mui-table-view-cell" id="team-detail">
@@ -490,7 +513,7 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+		<script src="../js/swiper.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init({
 				keyEventBind: {
@@ -543,7 +566,7 @@
 				// };
 				eventInit();
 				getMemberInfo();
-				getNotice();
+				getNotice(); 
 			})
 
 			//事件初始化
@@ -689,8 +712,9 @@
 				})
 
 				//查看公告
-				mui('.mui-content').on('tap', '.Notice', function() {
-					noticeDeail();
+				mui('.mui-content').on('tap', '.swiper-slide', function() {
+					var idx = this.dataset.idx;
+					noticeDeail(idx);
 				})
 
 				// 雷达页面
@@ -812,17 +836,14 @@
 					if (res.errno == 0) {
 						notice = res.data;
 						noticeLen = notice.length;
-						var str = '<div class="swiper-container"><div class="swiper-wrapper">';
+						var str = '';
 						for (var i = 0; i < noticeLen; i++) {
-							str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '" style="height: 8px;">' +
-								notice[i].title + '</div>';
+							str += '<div class="swiper-slide" data-idx=' + i + '>' + notice[i].title + '</div>';
 						}
-						str += '</div></div>';
-						document.getElementById('notice_container').innerHTML = str;
-						document.getElementsByClassName('Notice')[0].style.display = 'block';
-						// if (noticeLen > 1) {
-						scrollInit();
-						// }
+						document.querySelector(".swiper-wrapper").innerHTML = str;
+						if (noticeLen > 1) {
+							scrollInit();
+						}
 					} else {
 						console.log(res.message);
 					}
@@ -831,28 +852,20 @@
 
 			//公告滚动初始化
 			function scrollInit() {
+				logs("已经进入方法");
 				var mySwiper = new Swiper('.swiper-container', {
-					autoplay: true, //可选选项，自动滑动
-					loop: true,
 					direction: 'vertical',
-					speed: 5000,
-					autoHeight: true,
-					watchOverflow: true,
-					on: {
-						slideChange: function() {
-							var index = this.activeIndex;
-							if (index <= noticeLen) {
-								noticeIndex = index - 1;
-							} else {
-								noticeIndex = 0;
-							}
-						},
-					}
+					loop: true,
+					autoplay: {
+						delay: 5000,
+						stopOnLastSlide: false,
+						disableOnInteraction: true,
+					},
 				})
 			}
 
 			//查看公告详情
-			function noticeDeail() {
+			function noticeDeail(idx) {
 				var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {
 					top: '0',
 					bottom: '0',
@@ -861,7 +874,7 @@
 						background: '#FFF'
 					}
 				}, {
-					notice: notice[noticeIndex],
+					notice: notice[idx],
 					page: 'my'
 				});
 				detailPage.show('slide-in-right');
