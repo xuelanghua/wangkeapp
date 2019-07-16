@@ -16,7 +16,7 @@ var getUserInfo = function() {
 function checkMember() {
 	var userInfo = getUserInfo();
 	var statusBarStyle = plus.navigator.getStatusBarStyle();
-	if (userInfo.is_activation == 0) { 
+	if (userInfo.is_activation == 0) {
 		// plus.nativeUI.confirm('此功能需要开通VIP会员才可使用,前往开通?', function(e) {
 		// 	if (e.index == 0) {
 		// 		fnOpenWin('activation.html', 'activation', '', {
@@ -92,8 +92,13 @@ function setStatusBar(color, style) {
 
 //打开窗口
 function fnOpenWin(url, id, style, extra, aniShow) {
-	var page = plus.webview.create(url, id, style, extra);
-	page.show(aniShow);
+	var page = plus.webview.getWebviewById(id);
+	if (page) {
+		page.show(aniShow);
+	} else {
+		page = plus.webview.create(url, id, style, extra);
+		page.show(aniShow);
+	}
 }
 
 //关闭指定窗口
@@ -229,35 +234,21 @@ function formatDate(format, date) {
 }
 
 // 打开窗口
-function openPage(url, id, color, extras) {
-	mui.openWindow({
-		url: url,
-		id: id,
-		styles: {
+function openPage(url, id, color, extras,aniShow,callback) {
+	var page = plus.webview.getWebviewById(id);
+	if (page) {
+		plus.webview.show( id, aniShow||'slide-in-right', 200, callback, extras );
+	} else {
+		page = plus.webview.create(url, id, {
 			bounce: 'none',
 			scrollsToTop: true,
 			popGesture: 'close',
 			statusbar: {
 				background: color
 			}
-		},
-		extras: extras,
-		createNew: false,
-		show: {
-			autoShow: true,
-			aniShow: 'slide-in-right',
-			duration: 300,
-			event: 'titleUpdate',
-			extras: {
-				acceleration: 'auto',
-				capture: '',
-				otherCapture: ''
-			}
-		},
-		waiting: {
-			autoShow: false
-		}
-	})
+		}, extras);
+		plus.webview.show( id, aniShow||'slide-in-right', 200, callback, extras );
+	}
 }
 
 // 分享操作
@@ -772,7 +763,7 @@ function pushCallback(data, event) {
 				mui.fire(plus.webview.getWebviewById('crm'), 'refreshCrm');
 			}
 			playNoticeAudio();
-		}  else if (url == 'team_chat') {
+		} else if (url == 'team_chat') {
 			mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 			mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
 			playNoticeAudio();
