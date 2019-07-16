@@ -843,13 +843,13 @@ function clearBadge() {
 }
 
 //将BASE 64保存为文件
-function baseImgFile(uid, base64, quality, callback) {
+function baseImgFile(imgname, base64, quality, callback) {
 	quality = quality || 100;
 	callback = callback || $.noop;
 	var bitmap = new plus.nativeObj.Bitmap();
 	// 从本地加载Bitmap图片
 	bitmap.loadBase64Data(base64, function() {
-		bitmap.save("_doc/" + uid + ".jpg", {
+		bitmap.save("_doc/" + imgname + ".jpg", {
 			overwrite: true,
 			quality: quality
 		}, function(i) {
