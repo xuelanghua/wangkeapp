@@ -185,6 +185,14 @@
 					</li>
 				</ul>
 			</div>
+			<div class="btn-section">
+				<div class="putaway-btn">
+					上架出售
+				</div>
+				<div class="the-warehouse">
+					放入仓库
+				</div>
+			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -227,10 +235,25 @@
 					}
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+					window.onresize = function() {
+						var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						var paddeds = document.querySelector(".btn-section");
+						if (resizeHeight * 1 < originalHeight * 1) {
+							//resizeHeight<originalHeight证明窗口被挤压了
+							paddeds.style.zIndex = '-1';
+							paddeds.style.display = 'none';
+						} else {
+							paddeds.style.zIndex = '1045';
+							paddeds.style.display = 'flex';
+						}
+					}
 				}
 			})
 			// 选择团队
 			mui(".mui-content").on("tap", ".team-list", function() {
+				document.activeElement.blur();
 				this.classList.toggle("active");
 			})
 		</script>
