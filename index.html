@@ -118,7 +118,6 @@
 					ids: "chat",
 					statusBg: "#2289FF",
 					style: "light",
-					// style: "dark",
 					styles: {
 						top: "0px",
 						bottom: "51px",
@@ -219,8 +218,6 @@
 						// plus.navigator.closeSplashscreen();	//主动关闭启动页
 						pushInit();
 						eventInit();
-						plus.navigator.setStatusBarStyle("dark");
-						plus.navigator.setStatusBarBackground('#FFFFFF');
 						var lastLoginTime = localStorage.getItem('lastLoginTime');
 						var currentTime = new Date().getTime();
 						var loginTime = parseInt((currentTime - lastLoginTime) / 1000);
@@ -241,6 +238,8 @@
 							initIndexPage();
 							bindClientId();
 						}
+						plus.navigator.setStatusBarStyle("dark");
+						plus.navigator.setStatusBarBackground('#FFFFFF');
 					});
 				}
 			})
@@ -494,10 +493,10 @@
 						if (currentVersion != newVersion) {
 							if (systemSetting.forced_updating == 1) {
 								// plus.nativeUI.alert('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content +
-									// '.此版本为有重要升级或向下不兼容,必须升级!',
-									// function(e) {
-										downWgt();
-									// })
+								// '.此版本为有重要升级或向下不兼容,必须升级!',
+								// function(e) {
+								downWgt();
+								// })
 							} else {
 								plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?',
 									function(e) {
