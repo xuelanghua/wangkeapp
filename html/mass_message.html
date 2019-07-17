@@ -190,7 +190,7 @@
 			<div class="mass-person">
 				<div class="mass-title mui-clearfix">
 					<div class="mui-pull-left">
-						群发人数：{{person.length}}
+						群发人数：{{uids.length}}
 					</div>
 					<div v-show="person.length>0" class="mui-pull-right clear-selcet">
 						<span class="mui-icon mui-icon-closeempty"></span><span>清除</span>
@@ -205,10 +205,10 @@
 			</div>
 			<footer>
 				<div class="footer-left">
-					<i id='msg-image' class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
+					<i id="msg-image" class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
 				</div>
 				<div class="footer-center">
-					<textarea v-model="message" id='msg-text' type="text" class='input-text'></textarea>
+					<textarea v-model="message" id="msg-text" type="text" class="input-text"></textarea>
 				</div>
 				<label id="msg-type" class="footer-right">
 					发送
@@ -399,7 +399,8 @@
 						}
 					},
 					error: function(xhr, type, errorThrown) {
-						// showload(1);
+						showload(1);
+						message("群发失败");
 						//异常处理；
 						console.log(xhr);
 						console.log(type);

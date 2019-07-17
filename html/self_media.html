@@ -688,7 +688,6 @@
 						}
 					});
 					mui.plusReady(function() {
-						plus.navigator.setStatusBarStyle("light");
 						var ws = plus.webview.currentWebview();
 						// 滚动的时候动态修改状态栏颜色
 						var statusbarHeight = plus.navigator.getStatusbarHeight();
@@ -696,6 +695,8 @@
 						var conts = document.getElementById("discover-container");
 						var distance = statusbarHeight + 100;
 						window.addEventListener('scroll', function() {
+							var isInvisible = plus.webview.currentWebview().isVisible();
+							if (!isInvisible) return;
 							if (conts.getBoundingClientRect().top < distance) {
 								document.getElementById("zhanwei").style.display = "block";
 								menuBar.classList.add("fixed");
@@ -705,7 +706,7 @@
 								document.getElementById("zhanwei").style.display = "none";
 								menuBar.classList.remove("fixed");
 							}
-							if (conts.getBoundingClientRect().top < 280) {
+							if (conts.getBoundingClientRect().top < 240) {
 								plus.navigator.setStatusBarStyle("dark");
 							} else {
 								plus.navigator.setStatusBarStyle("light");

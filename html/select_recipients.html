@@ -346,11 +346,6 @@
 					window.indexedList = new mui.IndexedList(list);
 					
 					mui('.mui-indexed-list-inner').on('change', 'input', function() {
-						if (app.uids.length >= 100) {
-							this.checked = false;
-							message("群发人数不能超过100人");
-							return;
-						}
 						var index = app.uids.indexOf(this.value);
 						var idx = app.userName.indexOf(this.dataset.names);
 						// 添加选择的id
@@ -360,7 +355,9 @@
 							if(app.uids.length <= 100){
 								app.uids.push(this.value);
 							}else{
+								this.checked = false;
 								message("群发人数不能超过100人");
+								return;
 							}
 						}
 						
@@ -429,13 +426,13 @@
 
 					// 全选操作
 					mui('.mui-bar').on('tap', '.create-team-btn', function() {
-						if (app.uids.length >= 100) {
-							message("群发人数不能超过100人");
-							return;
-						}
 						if (!allselect) {
 							// app.uids = [];
 							// app.userName = [];
+							if (app.uids.length >= 100) {
+								message("群发人数不能超过100人");
+								return;
+							}
 							mui("input[type='checkbox']").each(function() {
 								this.checked = true;
 								var idIndex = app.uids.indexOf(this.value);

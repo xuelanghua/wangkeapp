@@ -1,6 +1,6 @@
 (function($, window) {
 
-	var template = '<div id="{{id}}" class="mui-slider mui-preview-image mui-fullscreen"><div class="mui-preview-header">{{header}}</div><div class="mui-slider-group"></div><div class="mui-preview-footer">1231321232</div><div class="mui-preview-loading"><span class="mui-spinner mui-spinner-white"></span></div></div>';
+	var template = '<div id="{{id}}" class="mui-slider mui-preview-image mui-fullscreen"><div class="mui-preview-header">{{header}}</div><div class="mui-slider-group"></div><div class="mui-preview-footer"></div><div class="mui-preview-loading"><span class="mui-spinner mui-spinner-white"></span></div></div>';
 	var itemTemplate = '<div class="mui-slider-item mui-zoom-wrapper {{className}}"><div class="mui-zoom-scroller"><img src="{{src}}" data-preview-lazyload="{{lazyload}}" style="{{style}}" class="mui-zoom"></div></div>';
 	var defaultGroupName = '__DEFAULT';
 	var div = document.createElement('div');
