@@ -5,137 +5,173 @@
 		<meta charset="utf-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<link href="../css/mui.css" rel="stylesheet" />
-		<link href="../icomoon/style.css" rel="stylesheet" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
-		<link rel="stylesheet" type="text/css" href="../css/vip-page.css" />
-
-		<style>
-			.clearfix {
-				clear: both;
-			}
-
-			.Notice {
-				position: relative;
-				height: 40px;
-				line-height: 40px;
-				font-size: 12px;
-				padding: 5px;
-				color: #CC9C2D;
-				background-color: rgba(255, 255, 255, 0.8);
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			[v-cloak] {
 				display: none;
 			}
 
-			.Notice-title {
-				position: absolute;
-				left: 5px;
+			.notice-container {
+				height: 39px;
+				width: 100%;
+				background-color: #FFFFFF;
+				position: relative;
+				overflow: hidden;
 			}
 
-			.Notice .notice-more {
+			.mui-icon-arrowright {
 				position: absolute;
 				right: 5px;
-				top: 2px;
-			}
-
-			.Notice .notice-more img {
-				width: 8px;
-			}
-
-			.title {
-				width: 100%;
-				padding-top: 90px;
-				background:#FFFFFF url(../image/store_management_header.png) no-repeat;
-				background-size: 100% 260px;
-			}
-
-			.sum_of_money {
-				width: 80%;
-				padding: 0 41px 31px 41px;
-				margin: 0 auto 1.25rem;
-				text-align: center;
-				border-radius: 0.3125rem;
-				background-color: #FFFFFF;
-			}
-
-			.money {
-				padding-top: 23px;
-				font-size: 12px;
-			}
-
-			.number {
-				color: #CC9C2D;
-				font-size: 25px;
-				margin-top: 15px;
-			}
-
-			.receivables {
-				margin-top: 30px;
-				color: #333333;
-				display: flex;
-				justify-content: space-between;
-				position: relative;
-			}
-
-			.numbers {
-				color: #CC9C2D;
-				font-size: 15px;
-				margin-top: 0.3rem;
-			}
-
-			.money button {
-				width: 100%;
-				border: none;
-				padding: 15px 0;
-				border-radius: 25px;
-				font-size: 0.3rem;
-				background-color: #F5CA3A;
-				margin-top: 27px;
-				color: #ffffff;
-			}
-
-			.bj {
-				height: 170px;
-				margin-top: -185px;
-				background-color: #FFFFFF;
-			}
-
-			.shue {
-				font-size: 14px;
-				color: #000000;
-			}
-
-			.administration {
-				padding: 28px 0 16px 0;
-				margin-top: 10px;
-				font-size: 13px;
-				background-color: #FFFFFF;
-			}
-
-			.administration_content {
-				width: 25%;
-				float: left;
-				text-align: center;
-			}
-
-			.administration_content img {
-				height: 27px;
-			}
-
-			.mui-bar-tab .mui-tab-item.mui-active {
-				color: #F5CA3A;
-			}
-
-			#notice_container {
-				margin: 0;
-				padding: 0;
-				padding-left: 25px;
-				height: 40px;
-				line-height: 40px;
+				top: 50%;
+				margin-top: -10px;
+				font-size: 20px;
 			}
 
 			.swiper-slide {
+				height: 39px;
+				display: flex;
+				align-items: center;
+				padding-left: 10px;
+				color: #CC9C2D;
+				font-size: 0.24rem;
+			}
+
+			.top-container {
+				width: 100%;
+				height: 5.56rem;
+				background: #FFFFFF url("../image/icon/store-management-icon-01.png") center top no-repeat;
+				background-size: 100%;
+				overflow: hidden;
 				position: relative;
-				top: -5px;
+			}
+
+			.top-cont {
+				position: absolute;
+				width: 6.9rem;
+				left: 0.3rem;
+				background-color: #FFFFFF;
+				height: 4.58rem;
+				bottom: 0.2rem;
+				border-radius: 0.1rem;
+				padding: 0 0.1rem;
+			}
+
+			.header-cont {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.42rem 0;
+			}
+
+			.last-header-cont:after {
+				content: '';
+				position: absolute;
+				display: block;
+				top: 0;
+				left: 2%;
+				width: 96%;
+				height: 1px;
+				background-color: #DDDDDD;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+
+			.header-cont .header-items {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				color: #333333;
+				font-size: 0.24rem;
+				position: relative;
+				width: 33.3333%;
+				/* background-color: #0062CC; */
+			}
+
+			.header-cont .header-items span:last-of-type {
+				color: #CC9C2D;
+				font-size: 0.3rem;
+				margin-top: 5px;
+			}
+
+			.asset-center {
+				width: 4.37rem;
+				height: 0.9rem;
+				background-color: #F5CA3A;
+				border-radius: 0.45rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0 auto;
+				color: #FFFFFF;
+				font-size: 0.3rem;
+			}
+
+			.header-cont .header-items:nth-of-type(2):after,
+			.header-cont .header-items:nth-of-type(2):before {
+				content: '';
+				width: 1px;
+				height: 50%;
+				top: 25%;
+				background-color: #DDDDDD;
+				position: absolute;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+
+			.header-cont .header-items:nth-of-type(2):after {
+				right: 0;
+			}
+
+			.header-cont .header-items:nth-of-type(2):before {
+				left: 0;
+			}
+
+			.menu-card {
+				border-radius: 0.3rem;
+				position: relative;
+				overflow: hidden;
+				width: 92%;
+				margin: 0.2rem auto;
+				height: auto;
+				background-color: #FFFFFF;
+				padding: 0.2rem 0 0.3rem;
+				box-sizing: border-box;
+			}
+
+			.headline {
+				font-size: 0.3rem;
+				color: #333333;
+				margin-bottom: 0.3rem;
+				padding-left: 0.2rem;
+			}
+
+			.menu-body {
+				display: flex;
+				align-items: center;
+			}
+
+			.menu-items {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				width: 33.33333%;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.menu-items img {
+				height: 0.5rem;
+				width: auto;
+				margin-bottom: 0.15rem;
+			}
+
+			.menu-card-container {
+				padding-bottom: 50px;
 			}
 
 			/* 弹窗样式 */
@@ -154,11 +190,15 @@
 			}
 
 			.tips-cont {
+				position: fixed;
 				width: 6.26rem;
 				height: 7.9rem;
+				top: 20%;
+				left: 0.62rem;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
+				z-index: 1045;
 			}
 
 			.tips-cont .tips-body {
@@ -189,289 +229,279 @@
 				text-align: center;
 				border-radius: 0.45rem;
 			}
-			.browse-number:before{
-				content: "";
-				display: block;
-				width: 1px;
-				height: 80%;
-				background-color: #DDDDDD;
-				position: absolute;
-				left: 50%;
-				top: 10%;
-				transform: scaleX(0.5);
-				-webkit-transform: scaleX(0.5);
-			}
 		</style>
-		<script type="text/javascript">
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
-		</script>
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 			<h1 class="mui-title">店铺管理</h1>
 		</header>
-		<div class="mui-content">
-			<div class="Notice">
-				<div class="Notice-title"><img src="../image/notice4.png" style="width:18px" alt=""></div>
-				<div id="notice_container">
-					<div class="swiper-container"></div>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<div id="notice_container" class="notice-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide" :data-idx="index" v-for="(n,index) in notice">{{n.title}}</div>
 				</div>
-				<div class="notice-more">
-					<img src="../image/iconrighth.png">
-				</div>
-				<div class="clearfix"></div>
+				<span class="mui-icon mui-icon-arrowright"></span>
 			</div>
-			<div class="title">
-				<div class="sum_of_money">
-					<div class="money">
-						<div>
-							<div>今日收款金额</div>
-							<div class="number" id="today_receipt">0</div>
+			<div class="top-container">
+				<div class="top-cont">
+					<div class="header-cont">
+						<div class="header-items">
+							<span>累计收款</span>
+							<span>10.00</span>
 						</div>
-						<div class="receivables">
-							<div class="receivables-items">
-								<div>店铺收款</div>
-								<div class="numbers" id="shop_receipt">0</div>
-							</div>
-							<div class="receivables-items">
-								<div>收款码</div>
-								<div class="numbers" id="qr_receipt">0</div>
-							</div>
+						<div class="header-items">
+							<span>累计提成</span>
+							<span>10.0000000</span>
 						</div>
-						<button id="asset-center">资产中心</button>
-						<div class="receivables browse-number">
-							<div class="receivables-items wait-send">
-								<div class="shue" id="wait_send">0</div>
-								<div>待发货</div>
-							</div>
-							<div class="receivables-items">
-								<div class="shue" id="view">0</div>
-								<div>浏览量</div>
-							</div>
+						<div class="header-items">
+							<span>今日收款</span>
+							<span>10.00</span>
+						</div>
+					</div>
+					<div class="header-cont last-header-cont">
+						<div class="header-items">
+							<span>收款码收款</span>
+							<span>10.00</span>
+						</div>
+						<div class="header-items">
+							<span>待发货</span>
+							<span>10.00</span>
+						</div>
+						<div class="header-items">
+							<span>浏览量</span>
+							<span>100000000</span>
+						</div>
+					</div>
+					<div class="asset-center">
+						资产中心
+					</div>
+				</div>
+			</div>
+			<div class="menu-card-container">
+				<div class="menu-card">
+					<div class="headline">
+						通用
+					</div>
+					<div class="menu-body">
+						<div class="menu-items" id="shop_manage">
+							<img src="../image/icon/store-management-icon-02.png">
+							<span>店铺管理</span>
+						</div>
+						<div class="menu-items" id="order_manage">
+							<img src="../image/icon/store-management-icon-03.png">
+							<span>订单管理</span>
 						</div>
 					</div>
 				</div>
-				<div class="bj"></div>
-			</div>
-			<div class="administration mui-clearfix">
-				<div class="administration_content" id="shop_manage">
-					<img src="../image/administration.png">
-					<div>店铺管理</div>
-				</div>
-				<div class="administration_content" id="goods_manage">
-					<img src="../image/administration1.png">
-					<div>商品管理</div>
-				</div>
-				<div class="administration_content" id="order_manage">
-					<img src="../image/administration2.png">
-					<div>订单管理</div>
-				</div>
-				<div class="administration_content" id="goods_add">
-					<img src="../image/administration3.png">
-					<div>商品添加</div>
-				</div>
-			</div>
-			<!-- <ul class="mui-table-view">
-				<li class="mui-table-view-cell choose-goods">
-					<span class="mui-navigate-right">
-						拣货分销
-					</span>
-				</li>
-			</ul> -->
-			<div class="mask-cont mui-hidden">
-				<div class="tips-cont">
-					<div class="tips-body">
-						<p>您的商品位已达上限，请购买更多商品位</p>
-						<span class="immediately">立即购买</span>
+				<div class="menu-card">
+					<div class="headline">
+						企业仓库
 					</div>
-					<img class="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
+					<div class="menu-body">
+						<div class="menu-items">
+							<img src="../image/icon/store-management-icon-04.png">
+							<span>企业仓管理</span>
+						</div>
+						<div class="menu-items" id="stock_goods">
+							<img src="../image/icon/store-management-icon-05.png">
+							<span>拣货分销</span>
+						</div>
+						<div class="menu-items" id="add_distribution_goods">
+							<img src="../image/icon/store-management-icon-06.png">
+							<span>添加分销商品</span>
+						</div>
+					</div>
 				</div>
+				<div class="menu-card">
+					<div class="headline">
+						个人商城
+					</div>
+					<div class="menu-body">
+						<div class="menu-items" id="goods_manage">
+							<img src="../image/icon/store-management-icon-07.png">
+							<span>商品管理</span>
+						</div>
+						<div class="menu-items" id="goods_add">
+							<img src="../image/icon/store-management-icon-08.png">
+							<span>商品添加</span>
+						</div>
+					</div>
+				</div>
+				<div class="menu-card">
+					<div class="headline">
+						营销活动
+					</div>
+					<div class="menu-body">
+						<div class="menu-items">
+							<img src="../image/icon/store-management-icon-09.png">
+							<span>拼团</span>
+						</div>
+						<div class="menu-items">
+							<img src="../image/icon/store-management-icon-10.png">
+							<span>砍价</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tips-cont mui-hidden">
+				<div class="tips-body">
+					<p>您的商品位已达上限，请购买更多商品位</p>
+					<span class="immediately">立即购买</span>
+				</div>
+				<img class="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
 			</div>
 		</div>
-	</body>
-</html>
-<script src="../js/mui.min.js"></script>
-<script src="../js/util.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
-<script>
-	var postType = 1;
-	var pgNum = 1;
-	mui.init({
-		swipeBack: true,
-		beforeback: function() {
-			if (plus.webview.currentWebview().page == 'my') {
-				setStatusBar('', 'light');
-			}
-		}
-	});
-
-	var userInfo = getUserInfo();
-	mui.plusReady(function() {
-		eventInit();
-		getStatistics();
-		getNotice();
-	})
-
-	//事件初始化
-	function eventInit() {
-		window.addEventListener('scrollTop', function(event) {
-			window.scrollTo(0, 0);
-		});
-
-		//商品管理
-		document.getElementById('shop_manage').addEventListener('tap', function() {
-			fnOpenWin('shop_setting.html', 'shop_setting', {
-				statusbar: {
-					background: '#FFF'
-				}
-			}, '', 'slide-in-right');
-		});
-
-		//商品管理
-		document.getElementById('goods_manage').addEventListener('tap', function() {
-			fnOpenWin('goods_list.html', 'goods_list', {
-				statusbar: {
-					background: '#FFF'
-				}
-			}, '', 'slide-in-right');
-		});
-
-		//商品管理
-		document.getElementById('order_manage').addEventListener('tap', function() {
-			fnOpenWin('order_list.html', 'order_list', {
-				statusbar: {
-					background: '#FFF'
-				}
-			}, '', 'slide-in-right');
-		});
-
-		//添加商品
-		document.getElementById('goods_add').addEventListener('tap', function() {
-			mui.get($ajaxUrl + 'member', {
-				action: 'check_goods_number',
-				token: userInfo.token
-			}, function(res) {
-				logs(res);
-				if (res.errno == 0) {
-					openPage('goods_add.html', 'goods_add', '#ffffff', '');
-				} else {
-					document.querySelector(".mask-cont").classList.remove('mui-hidden');
-				}
-			}, 'json');
-		});
-
-		//查看公告
-		mui('.mui-content').on('tap', '.Notice', function() {
-			noticeDeail();
-		})
-		//待发货跳转
-		mui('.mui-content').on('tap', '.wait-send', function() {
-			openPage('order_list.html', 'order_list','#ffffff',{
-				change:2
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var mask = mui.createMask(function() {
+				document.querySelector(".tips-cont").classList.add("mui-hidden");
 			});
-		})
-	}
-
-	// 立即购买商品位
-	mui(".mui-content").on("tap", ".immediately", function() {
-		document.querySelector(".mask-cont").classList.add('mui-hidden');
-		openPage("buy_goods_booth.html", 'buy_goods_booth', '#f7f7f7', '');
-	})
-
-	// 关闭提示弹窗
-	mui(".mui-content").on("tap", ".hide_qrcode", function() {
-		document.querySelector(".mask-cont").classList.add('mui-hidden');
-	})
-
-	//获取公告
-	function getNotice() {
-		mui.post($ajaxUrl + 'notice', {
-			action: 'list'
-		}, function(res) {
-			if (res.errno == 0) {
-				notice = res.data;
-				noticeLen = notice.length;
-				var str = '<div class="swiper-container"><div class="swiper-wrapper">';
-				for (var i = 0; i < noticeLen; i++) {
-					str += '<div class="swiper-slide notice_' + i + '" data-id="' + notice[i].id + '" style="height: 8px;">' +
-						notice[i].title + '</div>';
-				}
-				str += '</div></div>';
-				document.getElementById('notice_container').innerHTML = str;
-				document.getElementsByClassName('Notice')[0].style.display = 'block';
-				// if (noticeLen > 1) {
-					scrollInit();
-				// }
-			} else {
-				console.log(res.message);
-			}
-		}, 'json')
-	}
-
-	//获取统计数据
-	function getStatistics() {
-		mui.post($ajaxUrl + 'shop', {
-			action: 'index',
-			token: userInfo.token
-		}, function(res) {
-			var data = res.data;
-			for (var index in data) {
-				document.getElementById(index).innerText = data[index];
-			}
-		}, 'json');
-	}
-
-	//公告滚动初始化
-	function scrollInit() {
-		var mySwiper = new Swiper('.swiper-container', {
-			autoplay: true, //可选选项，自动滑动
-			loop: true,
-			direction: 'vertical',
-			speed: 5000,
-			autoHeight: true,
-			watchOverflow: true,
-			on: {
-				slideChange: function() {
-					var index = this.activeIndex;
-					if (index <= noticeLen) {
-						noticeIndex = index - 1;
-					} else {
-						noticeIndex = 0;
-					}
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					// 公告
+					notice: []
 				},
-			}
-		})
-	}
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
 
-	//查看公告详情
-	function noticeDeail() {
-		var detailPage = plus.webview.create('notice_detail.html', 'notice_detail', {
-			top: '0',
-			bottom: '0',
-			scrollIndicator: 'none',
-			statusbar: {
-				background: '#FFF'
+				},
+				mounted: function() {
+					getNotice();
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						// 去掉滚动条
+						self.setStyle({
+							scrollIndicator: 'none',
+						});
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+				}
+			})
+			//公告滚动初始化
+			function scrollInit() {
+				var mySwiper = new Swiper('#notice_container', {
+					direction: 'vertical',
+					loop: true,
+					autoplay: {
+						delay: 3000,
+						stopOnLastSlide: false,
+						disableOnInteraction: false,
+					},
+				})
 			}
-		}, {
-			notice: notice[noticeIndex],
-			page: 'shop_index'
-		});
-		detailPage.show('slide-in-right');
-	}
-	document.getElementById('asset-center').addEventListener('tap', function() {
-		openPage('shop_asset_management.html', 'shop_asset_management', '#2289ff', '');
-	})
-	// 20190715
-	//拣货分销
-	mui('.mui-content').on('tap', '.choose-goods', function() {
-		openPage('choose_goods.html', 'choose_goods', '#ffffff', '');
-	})
-</script>
+			//获取公告
+			function getNotice() {
+				mui.post($ajaxUrl + 'notice', {
+					action: 'list'
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.notice = res.data;
+						if (app.notice.length > 1) {
+							setTimeout(function() {
+								scrollInit();
+							}, 500);
+						}
+					} else {
+						console.log(res.message);
+					}
+				}, 'json')
+			}
+			// 查看公告详情
+			mui(".mui-content").on("tap", ".swiper-slide", function() {
+				var idx = this.dataset.idx;
+				openPage('notice_detail.html', 'notice_detail','#ffffff',{
+					notice: app.notice[idx],
+					page: 'shop_index'
+				});
+				// fnOpenWin('notice_detail.html', 'notice_detail', {
+				// 	statusbar: {
+				// 		background: '#ffffff'
+				// 	}
+				// }, {
+				// 	notice: app.notice[idx],
+				// 	page: 'shop_index'
+				// }, 'slide-in-right');
+			})
+			// 资产中心
+			mui(".mui-content").on("tap", ".asset-center", function() {
+				fnOpenWin('shop_asset_management.html', 'shop_asset_management', {
+					statusbar: {
+						background: '#2289ff'
+					}
+				}, '', 'slide-in-right');
+			})
+			//店铺管理
+			mui(".mui-content").on("tap", "#shop_manage", function() {
+				openPage('shop_setting.html', 'shop_setting', '#ffffff');
+			});
+
+			//商品管理
+			mui(".mui-content").on("tap", "#goods_manage", function() {
+				openPage('goods_list.html', 'goods_list', '#ffffff');
+			});
+
+			//订单管理
+			mui(".mui-content").on("tap", "#order_manage", function() {
+				openPage('order_list.html', 'order_list', '#ffffff');
+			});
+
+			//拣货分销
+			mui(".mui-content").on("tap", "#stock_goods", function() {
+				openPage('choose_goods.html', 'choose_goods', '#ffffff');
+			});
+			
+			//添加分销商品
+			mui(".mui-content").on("tap", "#add_distribution_goods", function() {
+				openPage('add_distribution_goods.html', 'add_distribution_goods', '#f7f7f7');
+			});
+			//添加商品
+			document.getElementById('goods_add').addEventListener('tap', function() {
+				mui.get($ajaxUrl + 'member', {
+					action: 'check_goods_number',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						openPage('goods_add.html', 'goods_add', '#ffffff', '');
+					} else {
+						document.querySelector(".tips-cont").classList.remove("mui-hidden");
+						mask.show();
+					}
+				}, 'json');
+			});
+			// 关闭提示弹窗
+			mui(".mui-content").on("tap", ".hide_qrcode", function() {
+				mask.close();
+			})
+			// 防止弹窗滑动穿透
+			document.querySelector(".tips-cont").addEventListener("touchmove", mui.preventDefault);
+		</script>
+	</body>
+
+</html>
