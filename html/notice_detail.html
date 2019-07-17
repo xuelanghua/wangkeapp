@@ -27,14 +27,14 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav"style="background-color: #FFFFFF;">
+		<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">公告标题</h1>
 		</header>
-		
+
 		<div class="mui-content">
 			<div class="article">
-				
+
 			</div>
 		</div>
 	</body>
@@ -49,27 +49,13 @@
 				}
 			}
 		})
-		
+
 		var noticeId = 0;
 		mui.plusReady(function() {
-			showload(0);
 			var self = plus.webview.currentWebview();
+			logs(self.notice)
 			document.getElementsByClassName('mui-title')[0].innerHTML = self.notice.title;
-			noticeId = self.notice.id;
-			
-			noticeDetail();
+			document.getElementsByClassName('article')[0].innerHTML = self.notice.content;
 		})
-		
-		function noticeDetail() {
-			mui.post($ajaxUrl + 'notice', {action: 'detail', id: noticeId}, function(res) {
-				if (res.errno == 0) {
-					var detail = res.data;
-					document.getElementsByClassName('article')[0].innerHTML = detail.content;
-				} else {
-					console.log(res.message);
-				}
-				showload(1);
-			}, 'json')
-		}
 	</script>
 </html>
