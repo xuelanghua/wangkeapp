@@ -1,0 +1,664 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/showLoading.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			p{
+				color: #333333;
+			}
+			.mui-bar{
+				background-color: #FFFFFF;
+			}
+			.more{
+				margin-top: 0.625rem;
+				font-size: 0.9375rem;
+				color: #333333;
+			}
+			.mui-popover{
+				height: 0;
+			}
+			.mui-popover .mui-popover-arrow{
+				top: -18px;
+			}
+			.mui-popover .mui-popover-arrow:after{
+				background-color: #333333;
+			}
+			.mui-backdrop{
+				background: none;
+			}
+			.nr{
+				background: #333333;
+				color: #FFFFFF;
+			}
+			
+			.mui-content{
+				padding: 0;
+			}
+			.search{
+				margin: 0.625rem;
+				padding: 0 10px;
+				border-radius: 0.3125rem;
+				border: 1px solid #DDDDDD;
+				background-color: #FFFFFF;
+			}
+			.mui-icon{
+				font-size: 20px;
+			}
+			.search input{
+				width: 90%;
+				margin: 0;
+				border: none;
+				padding: 3px;
+				font-size: 0.875rem;
+			}
+			
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+			.mui-control-content {
+				
+			}
+			.mui-segmented-control{
+				border: none;
+				background-color: #FFFFFF;
+				border-radius: 0;
+			}
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: #FFFFFF;
+				color: #F4CA3A;
+				border-bottom: 2px solid #F4CA3A;
+			}
+			.mui-segmented-control .mui-control-item{
+				border-left: none;
+				font-size: 15px;
+				color: #000000;
+			}
+			.newly_added{
+				border-bottom: 1px solid #F2F2F2;
+			}
+			
+			.chart{
+				width: 80px;
+				height: 80px;
+			}
+			.chart img{
+				width: 100%;
+				height: 100%;
+			}
+			.customer_information{
+				font-size: 14px;
+			}
+			
+			
+			.customer-content{
+				width: 70%;
+			}
+			.customer-content h4{
+				font-size: 16px;
+				color: #FE4F4F;
+				margin-top: 20px;
+			}
+			.genduo{
+				background-color: #EAEBED;
+				font-size: 20px;
+				color: #8F8F8F;
+				line-height: 5px;
+				padding: 0 8px 10px 8px;
+				border-radius: 10px;
+			}
+			.playb{
+				width: 50%;
+				position: absolute;
+				padding: 10px 0 5px 0;
+				top: 45px;
+				right: 16%;
+				border-radius: 5px;
+				background-color: rgba(51,51,51,0.85);
+				display: none;
+			}
+			.jiao{
+				width: 0;
+				height: 0;
+				border-top: 10px solid transparent;
+				border-bottom: 7px solid transparent;
+				border-left: 10px solid #515151;
+				float: right;
+				margin-top: 10px;
+				margin-right: -9px;
+			}
+			.play{
+				width: 21%;
+				color: #FFFFFF;
+				font-size: 12px;
+				float: left;
+				margin-left: 5px;
+				text-align: center;
+			}
+			.play img{
+				width: 16px;
+			}
+			
+			
+			.add_merchandise{
+				width: 100%;
+				position: fixed;
+				bottom: 0;
+				padding: 15px 0;
+				border: none;
+				border-radius: 0;
+				font-size: 16px;
+				background-color: #F4CA3A;
+				color: #ffffff;
+			}
+			.mui-table-view-cell.mui-active{
+				background: #FFFFFF;
+			}
+			
+			.mui-search input {
+				background-color: #fff;
+				border-radius: 0.3125rem;
+				border: 1px solid #DDD;
+			}
+			
+			/* 弹窗样式 */
+			
+			.mask-cont {
+				position: fixed;
+				width: 100%;
+				top: 0;
+				bottom: 0;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				justify-content: center;
+				background: rgba(0, 0, 0, .5);
+				z-index: 9;
+			}
+			
+			.tips-cont {
+				width: 6.26rem;
+				height: 7.9rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			
+			.tips-cont .tips-body {
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				width: 6.26rem;
+				height: 6.6rem;
+				background: #ffffff url("../image/tips-top-bg.jpg")center top no-repeat;
+				background-size: 100% auto;
+				padding-top: 3.6rem;
+				border-radius: 0.1rem;
+			}
+			
+			.tips-cont .tips-body p {
+				color: #333333;
+				font-size: 0.3rem;
+				margin-bottom: 0.9rem;
+			}
+			
+			.tips-cont .tips-body .immediately {
+				width: 3.86rem;
+				height: 0.88rem;
+				background-color: #f5ca3a;
+				color: #FFFFFF;
+				font-size: 0.36rem;
+				line-height: 0.88rem;
+				text-align: center;
+				border-radius: 0.45rem;
+			}
+			.mui-table-view::before,.mui-table-view::after{
+				height: 0;
+			}
+			.mui-table-view{
+				background: transparent;
+			}
+			.mui-table-view-cell{
+				background-color: #FFFFFF;
+			}
+			.mui-bar-nav~.mui-content{
+				padding-top: 135px;
+				padding-bottom: 55px;
+			}
+		</style>
+		<script type="text/javascript">
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		</script>
+	</head>
+	<body id="body_tap">
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">商品管理</h1>
+		</header>
+		<div class="mui-content">
+			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
+				<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
+					<input type="search" class="mui-input-clear" name="goods_name" placeholder="搜索商品名称">
+				</div>
+				<div class="newly_added">
+					<div id="segmentedControl" class="mui-segmented-control">
+						<a class="mui-control-item mui-active" href="#item1">出售中(<span id="on_sale">0</span>)</a>
+						<a class="mui-control-item" href="#item2">售罄的(<span id="sale_out">0</span>)</a>
+						<a class="mui-control-item" href="#item3">仓库中(<span id="off_sale">0</span>)</a>
+					</div>
+				</div>
+			</div>
+			<div id="goods_container">
+				<div id="item1" class="mui-control-content mui-active">
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view" id="item1_list" style="margin_botton: 25px;">
+								<li class="mui-table-view-cell">
+									<div class="chart mui-pull-left">
+										<img src="../image/bj.jpg">
+									</div>
+									<div class="mui-pull-right customer-content">
+										<div class="customer_information">
+											内蒙古风干牛肉干 蒙亮手撕牛肉248g
+										</div>
+										<h4>￥58.00</h4>
+										<div style="font-size: 12px;">
+											<span class="mui-pull-left">库存：283</span>
+											<span class="mui-pull-right genduo">...</span>
+										</div>
+										<div class="playb">
+											<div class="jiao"></div>
+											<div class="play" data-type="edit">
+												<img src="../image/edit.png" />
+												<div>编辑</div>
+											</div>
+											<div class="play" data-type="off">
+												<img src="../image/lower_shelf.png" />
+												<div>下架</div>
+											</div>
+											<div class="play" data-type="del">
+												<img src="../image/delete.png" />
+												<div style="margin-top: -1px;">删除</div>
+											</div>
+											<div class="play" data-type="share">
+												<img src="../image/extension.png" />
+												<div>推广</div>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="item2" class="mui-control-content">
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view" id="item2_list">
+								<li class="mui-table-view-cell">
+									<div class="chart mui-pull-left">
+										<img src="../image/bj.jpg">
+									</div>
+									<div class="mui-pull-right customer-content">
+										<div class="customer_information">
+											内蒙古风干牛肉干 蒙亮手撕牛肉248g
+										</div>
+										<h4>￥58.00</h4>
+										<div style="font-size: 12px;">
+											<span class="mui-pull-left">库存：283</span>
+											<span class="mui-pull-right genduo">...</span>
+										</div>
+										<div class="playb">
+											<div class="jiao"></div>
+											<div class="play">
+												<img src="../image/edit.png" />
+												<div>编辑</div>
+											</div>
+											<div class="play">
+												<img src="../image/lower_shelf.png" />
+												<div>下架</div>
+											</div>
+											<div class="play">
+												<img src="../image/delete.png" />
+												<div style="margin-top: -1px;">删除</div>
+											</div>
+											<div class="play">
+												<img src="../image/extension.png" />
+												<div>推广</div>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="item3" class="mui-control-content">
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view" id="item3_list">
+								<li class="mui-table-view-cell">
+									<div class="chart mui-pull-left">
+										<img src="../image/bj.jpg">
+									</div>
+									<div class="mui-pull-right customer-content">
+										<div class="customer_information">
+											内蒙古风干牛肉干 蒙亮手撕牛肉248g
+										</div>
+										<h4>￥58.00</h4>
+										<div style="font-size: 12px;">
+											<span class="mui-pull-left">库存：283</span>
+											<span class="mui-pull-right genduo">...</span>
+										</div>
+										<div class="playb">
+											<div class="jiao"></div>
+											<div class="play">
+												<img src="../image/edit.png" />
+												<div>编辑</div>
+											</div>
+											<div class="play">
+												<img src="../image/lower_shelf.png" />
+												<div>下架</div>
+											</div>
+											<div class="play">
+												<img src="../image/delete.png" />
+												<div style="margin-top: -1px;">删除</div>
+											</div>
+											<div class="play">
+												<img src="../image/extension.png" />
+												<div>推广</div>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="add_merchandise" id="add_goods">添加商品</button>
+		</div>
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell nr">
+							<a href="#">分组管理</a>
+						</li>
+						<li class="mui-table-view-cell nr">
+							<a href="#">批量管理</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="mask-cont mui-hidden">
+			<div class="tips-cont">
+				<div class="tips-body">
+					<p>您的商品位已达上限，请购买更多商品位</p>
+					<span class="immediately">立即购买</span>
+				</div>
+				<img class="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
+			</div>
+		</div>
+	</body>
+</html>
+<script src="../js/mui.js"></script>
+<script src="../js/util.js"></script>
+<script type="text/javascript">
+	if (mui.os.ios) {
+		mui.init({
+			swipeBack: true,
+			pullRefresh: {
+				container: "#goods_container",
+				down: {
+					style: 'circle',
+					color: '#2289FF',
+					height: '50px',
+					range: '100px',
+					offset: '0px',
+					auto: false,
+					callback: function() {
+						getGoodsList(true);
+					}
+				}
+			}
+		});
+	} else {
+		mui.init({
+			swipeBack: false,
+			pullRefresh: {
+				container: "#goods_container",
+				down: {
+					style: 'circle',
+					color: '#2289FF',
+					height: '50px',
+					range: '100px',
+					offset: '0px',
+					auto: false,
+					callback: function() {
+						getGoodsList(true);
+					}
+				}
+			}
+		});
+	}
+	var goodsName = '';
+	var userInfo = getUserInfo();
+	mui.plusReady(function() {
+		window.addEventListener('goodsAddSuccess', function() {
+			getGoodsList(false);
+		})
+		getGoodsList(false);
+		eventInit();
+		var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+		window.onresize = function() {
+			//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+			var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+			var paddeds = document.getElementById("add_goods");
+			if (resizeHeight * 1 < originalHeight * 1) {
+				paddeds.style.zIndex = '-1';
+				paddeds.style.display = 'none';
+			} else {
+				paddeds.style.zIndex = '999';
+				paddeds.style.display = 'block';
+			}
+		}
+	})
+
+	function eventInit() {
+		document.onkeydown = function(event) {
+			var e = event || window.event || arguments.callee.caller.arguments[0];
+			if (e && e.keyCode == 13) { // enter 键
+				goodsName = document.querySelector('input[name=goods_name]').value;
+				getGoodsList();
+			}
+		};
+		//展示商品弹窗
+		mui(".mui-table-view").on('tap', '.genduo', function(e) {
+			document.querySelector(".playb").style.display = 'block';
+			e.stopPropagation();
+		})
+		//点击窗口关闭商品操作弹窗
+		document.addEventListener('tap', function() {
+			mui('.playb').each(function() {
+				this.style.display = 'none';
+			})
+		})
+		mui('.mui-content').on('tap', '.play', function(e) {
+			var type = this.dataset.type;
+			var id = this.dataset.id;
+			if (type == 'off') {
+				//下架按钮
+				changeGoodsStatus(0, id);
+			} else if (type == 'on') {
+				//上架按钮
+				changeGoodsStatus(1, id);
+			} else if (type == 'del') {
+				//删除框
+				plus.nativeUI.confirm('确认删除该商品?', function(e) {
+					if (e.index == 0) {
+						changeGoodsStatus(-1, id);
+					}
+				})
+			} else if (type == 'share') {
+				//弹出底部标签
+				var cont = this.dataset.name;
+				var img = this.dataset.cover;
+				var imgs = img.substring(img.lastIndexOf("/"));
+				var sd_path = "_downloads" + imgs;
+				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+					shareToMiniprogram({
+						title: cont,
+						content: cont,
+						thumbs: [sd_path],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/shop/detail/detail?id=' + id + '&to_uid=' + userInfo.id,
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				}, function(e) {
+					showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
+					var imgpath = '';
+					var imgDtask = plus.downloader.createDownload(img, {
+						method: 'GET'
+					}, function(d, status) {
+						if (status == 200) {
+							plus.zip.compressImage({
+									src: d.filename,
+									dst: d.filename,
+									overwrite: true,
+									width: '500px',
+									height: 'auto',
+									format: 'jpg',
+									quality: 90,
+									clip: {
+										width: "500px",
+										height: "400px"
+									}
+								},
+								function(e) {
+									imgpath = e.target;
+									if (imgpath) {
+										showload(1);
+										shareToMiniprogram({
+											title: cont,
+											content: cont,
+											thumbs: [imgpath],
+											miniProgram: {
+												id: 'gh_9fa5f42ab939',
+												path: '/longbing_card/pages/shop/detail/detail?id=' + id + '&to_uid=' + userInfo.id,
+												webUrl: 'https://app.wangkeapp.cn/'
+											}
+										}, 'miniProgram');
+									}
+								},
+								function(error) {
+									message("Compress error!");
+								});
+						} else {
+							mui.toast('保存失败')
+						}
+					});
+					imgDtask.start()
+				});
+			} else if (type == 'edit') {
+				//打开编辑页面
+				mui.openWindow({
+					id: 'goods_edit',
+					url: 'goods_edit.html',
+					show: {
+						aniShow: 'slide-in-right'
+					},
+					extras: { //extras里面的就是参数了
+						goods_id: id
+					},
+					styles: {
+						statusbar: {
+							background: '#FFF',
+						},
+					}
+				});
+			}
+		})
+		//添加商品
+		document.getElementById('add_goods').addEventListener('tap', function() {
+			mui.get($ajaxUrl + 'member', {
+				action: 'check_goods_number',
+				token: userInfo.token
+			}, function(res) {
+				// logs(res); 
+				if (res.errno == 0) {
+					fnOpenWin('goods_add.html', 'goods_add', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, '', 'slide-in-right');
+				} else {
+					document.querySelector(".mask-cont").classList.remove('mui-hidden');
+				}
+			}, 'json');
+
+		})
+		// 立即购买商品位
+		mui(".mask-cont").on("tap", ".immediately", function() {
+			document.querySelector(".mask-cont").classList.add('mui-hidden');
+			openPage("buy_goods_booth.html", 'buy_goods_booth', '#f7f7f7', '');
+		})
+		// 关闭提示弹窗
+		mui(".mask-cont").on("tap", ".hide_qrcode", function() {
+			document.querySelector(".mask-cont").classList.add('mui-hidden');
+		})
+	}
+	//获取商品列表
+	function getGoodsList(refresh) {
+		showload(0);
+		mui.post($ajaxUrl + 'goods', {
+			action: 'goods_list',
+			token: userInfo.token,
+			goods_name: goodsName
+		}, function(res) {
+			logs(res);
+			if (refresh) {
+				mui('#goods_container').pullRefresh().endPulldownToRefresh();
+			}
+			showload(1);
+		}, 'json');
+	}
+	//改变商品状态
+	function changeGoodsStatus(status, goods_id) {
+		mui.post($ajaxUrl + 'goods', {
+			action: 'change_status',
+			token: userInfo.token,
+			status: status,
+			goods_id: goods_id
+		}, function(res) {
+			// logs(res);
+			if (res.errno == 0) {
+				message('操作成功!');
+				setTimeout(function() {
+					getGoodsList();
+				}, 2000);
+			} else {
+				message('操作失败!');
+			}
+		}, 'json');
+	}
+</script>

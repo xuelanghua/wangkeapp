@@ -8,6 +8,8 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mui.picker.css">
+		<link rel="stylesheet" href="../css/mui.poppicker.css" />
 		<link rel="stylesheet" href="../css/add_distribution_goods.css">
 		<style type="text/css">
 			[v-cloak] {
@@ -23,10 +25,17 @@
 		</header>
 		<div id="mui-content" class="mui-content " v-cloak>
 			<div class="goods-title">
-				<textarea maxlength="120" placeholder="输入商品名称"></textarea>
+				<textarea maxlength="120" v-model="name" placeholder="输入商品名称"></textarea>
+				<span class="mui-icon mui-icon-clear" v-show="name" @tap="name=''"></span>
 			</div>
 			<div class="goods-img-contianer">
-				<div class="add-goods-img">
+				<div v-show="images" class="picture_display_chear" v-for="(img,i) in images" :key="i">
+					<img class="goods-img" @tap="previewImage(i)" :src="img" />
+					<span class="mui-close" @tap="delImg(i)">
+						<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
+					</span>
+				</div>
+				<div v-show="images.length<4" class="add-goods-img">
 					<span>添加</span>
 					<span>主图</span>
 				</div>
@@ -39,7 +48,7 @@
 					<li class="mui-table-view-cell">
 						<div class="flex-center">
 							<span>设为团队首页推荐</span>
-							<div class="mui-switch mui-active">
+							<div class="set_recommend" :class="team_recommend==1?'mui-switch mui-active':'mui-switch'">
 								<div class="mui-switch-handle"></div>
 							</div>
 						</div>
@@ -47,7 +56,7 @@
 					<li class="mui-table-view-cell">
 						<div class="flex-center">
 							<span>设为爆品推荐</span>
-							<div class="mui-switch mui-active">
+							<div class="set-hot" :class="team_hot==1?'mui-switch mui-active':'mui-switch'">
 								<div class="mui-switch-handle"></div>
 							</div>
 						</div>
@@ -55,16 +64,17 @@
 							设为爆品则在商城首页下方推荐（每个团队最多可设置3个）
 						</p>
 					</li>
-					<li class="mui-table-view-cell">
+					<li class="mui-table-view-cell goods-type">
 						<span>商品类型<span class="sign">*</span></span>
 						<span class="mui-navigate-right cont-text mui-pull-right">
-							请选择
+							{{goods_type_text}}
 						</span>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>排序值</label>
-							<input type="number" placeholder="倒序，值越大排名越靠前">
+							<input type="number" v-model="top" placeholder="倒序，值越大排名越靠前">
+							<span class="mui-icon mui-icon-clear" v-show="top" @tap="top=''"></span>
 						</div>
 					</li>
 				</ul>
@@ -75,65 +85,74 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>供货价<span class="sign">*</span></label>
-							<input type="number" placeholder="给商品定个好价格">
+							<input type="number" v-model="settlement_price" placeholder="给商品定个好价格">
+							<span class="mui-icon mui-icon-clear" v-show="settlement_price" @tap="settlement_price=''"></span>
 						</div>
 						<p>结算价格是给分销商的供货价，分销商可以在此价格灵活设置活动 价格</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>零售价格<span class="sign">*</span></label>
-							<input type="number" placeholder="设置合理零售价">
+							<input type="number" v-model="price" placeholder="设置合理零售价">
+							<span class="mui-icon mui-icon-clear" v-show="price" @tap="price=''"></span>
 						</div>
 						<p>市场参考零售价格</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
-							<label>保护价格<span class="sign">*</span></label>
-							<input type="number" placeholder="设置保护价避免滥价">
+							<label>保护价格</label>
+							<input type="number" v-model="protect_price" placeholder="设置保护价避免滥价">
+							<span class="mui-icon mui-icon-clear" v-show="protect_price" @tap="protect_price=''"></span>
 						</div>
 						<p>分销商不能低于此价格销售，不填则与结算价统一</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>库存<span class="sign">*</span></label>
-							<input type="number" placeholder="设置合理的库存避免超货">
+							<input type="number" v-model="stock" placeholder="设置合理的库存避免超货">
+							<span class="mui-icon mui-icon-clear" v-show="stock" @tap="stock=''"></span>
 						</div>
 					</li>
-					<li class="mui-table-view-cell option-group-list">
+					<li class="mui-table-view-cell option-group-list" v-for="(ls,index) in spec" :key="index">
 						<div class="option-group">
 							<ul class="mui-table-view">
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>规格<span class="sign">*</span></label>
-										<input type="text" placeholder="尺寸、大小、颜色等">
+										<input type="text" v-model="ls.name" placeholder="尺寸、大小、颜色等">
+										<span class="mui-icon mui-icon-clear" v-show="ls.name" @tap="ls.name=''"></span>
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>供货价格<span class="sign">*</span></label>
-										<input type="number" placeholder="给商品定个好价格">
+										<input type="number" v-model="ls.settlement_price" placeholder="给商品定个好价格">
+										<span class="mui-icon mui-icon-clear" v-show="ls.settlement_price" @tap="ls.settlement_price=''"></span>
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>零售价格<span class="sign">*</span></label>
-										<input type="number" placeholder="设置合理零售价">
+										<input type="number" v-model="ls.price" placeholder="设置合理零售价">
+										<span class="mui-icon mui-icon-clear" v-show="ls.price" @tap="ls.price=''"></span>
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
-										<label>保护价格<span class="sign">*</span></label>
-										<input type="number" placeholder="设置保护价避免滥价">
+										<label>保护价格</label>
+										<input type="number" v-model="ls.protect_price" placeholder="设置保护价避免滥价">
+										<span class="mui-icon mui-icon-clear" v-show="ls.protect_price" @tap="ls.protect_price=''"></span>
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>库存<span class="sign">*</span></label>
-										<input type="number" placeholder="设置合理的库存避免超货">
+										<input type="number" v-model="ls.stock" placeholder="设置合理的库存避免超货">
+										<span class="mui-icon mui-icon-clear" v-show="ls.stock" @tap="ls.stock=''"></span>
 									</div>
 								</li>
 							</ul>
-							<div class="del-container">
+							<div class="del-container" @tap="del_spec(index)">
 								<div class="del-btn">
 									<i></i>
 								</div>
@@ -146,25 +165,26 @@
 							<span>添加商品规格</span>
 						</div>
 					</li>
-					<li class="mui-table-view-cell">
+					<li class="mui-table-view-cell choice-express">
 						<span>快递<span class="sign">*</span></span>
 						<span class="mui-navigate-right cont-text mui-pull-right">
-							请选择
+							{{express_text}}
 						</span>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>邮费</label>
-							<input type="number" placeholder="0.00">
+							<input type="number" v-model="freight" placeholder="0.00">
+							<span class="mui-icon mui-icon-clear" v-show="freight!=0" @tap="freight=''"></span>
 						</div>
 					</li>
 				</ul>
 			</div>
 			<div class="option-container">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell">
+					<li class="mui-table-view-cell edit-goods-detail">
 						<span>图文描述</span>
-						<span class="mui-navigate-right cont-text mui-pull-right">未添加</span>
+						<span class="mui-navigate-right cont-text mui-pull-right">{{edit_status}}</span>
 					</li>
 				</ul>
 			</div>
@@ -174,14 +194,8 @@
 					选择可售团队
 				</div>
 				<ul class="mui-table-view choice-team-content">
-					<li class="mui-table-view-cell team-list " data-tid="1">
-						<span>团队团队团队团队团队</span>
-					</li>
-					<li class="mui-table-view-cell team-list" data-tid="2">
-						<span>团队团2</span>
-					</li>
-					<li class="mui-table-view-cell team-list" data-tid="3">
-						<span>团队3</span>
+					<li class="mui-table-view-cell team-list" :data-ids="t.id" v-for="(t,i) in team_list">
+						<span>{{t.name}}</span>
 					</li>
 				</ul>
 			</div>
@@ -195,19 +209,57 @@
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/Zepto.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					name: '',
+					// 主图
+					images: [],
+					// 设为推荐
+					team_recommend: 0,
+					// 设为爆品
+					team_hot: 0,
+					// 产品类型名称
+					goods_type_text: '请选择',
+					goods_type_group: [],
+					// 产品类型
+					type_p: '',
+					// 快递类型名称
+					express_text: '请选择',
+					// 快递类型
+					default_express: '',
+					express_group: [],
+					// 邮费
+					freight: '',
+					// 排序值
+					top: '',
+					// 供货价格
+					settlement_price: '',
+					// 零售价
+					price: '',
+					// 保护价格
+					protect_price: '',
+					// 库存
+					stock: '',
+					// 新增规格
+					spec: [],
+					// 团队id
+					team_ids: [],
+					team_list: [],
+					description: '',
+					edit_status: '未添加',
+					status: ''
 				},
 				created: function() {
 					// 初始化字体大小
 					var viewport = document.documentElement.clientWidth;
-					console.log("created页面宽度：" + viewport);
+					// console.log("created页面宽度：" + viewport);
 					if (viewport > 750) {
 						viewport = 750
 					}
@@ -215,7 +267,10 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-
+					delImg: function(idx) {
+						this.images.splice(idx, 1);
+						logs(this.images);
+					}
 				},
 				mounted: function() {
 					mui.init({
@@ -224,17 +279,106 @@
 						}
 					});
 					mui.plusReady(function() {
+						// 获取团队列表
+						getTeamList();
+						getGoodsType();
+						// 获取快递列表
+						getExpressList();
 						var self = plus.webview.currentWebview();
+						var ratio = 1 / 1;
 						//plus.navigator.setStatusBarStyle("dark");
+						// 添加主图
+						mui(".mui-content").on("tap", ".add-goods-img", function() {
+							document.activeElement.blur();
+							var editButtons = new Array();
+							editButtons.push({
+								title: "拍照上传",
+								style: "default"
+							});
+							editButtons.push({
+								title: "从相册选择",
+								style: "default"
+							});
+							plus.nativeUI.actionSheet({
+								cancel: "取消",
+								buttons: editButtons
+							}, function(e) {
+								var index = e.index;
+								switch (index) {
+									case 1:
+										getImage(ratio); //拍照
+										break;
+									case 2:
+										galleryImage(ratio); //相册选择
+										break;
+								}
+							});
+						})
+						// 拍照获取图片
+						function getImage() {
+							var camera = plus.camera.getCamera();
+							camera.captureImage(function(e) {
+								plus.io.resolveLocalFileSystemURL(e, function(entry) {
+									cropperImg(entry.toLocalURL(), 'add_distribution_goods', ratio);
+									// imageResize(entry.toLocalURL());
+									// 其他操作,比如预览展示
+								}, function(e) {
+									console.log("读取拍照文件错误：" + e.message);
+								});
+							}, function(s) {
+								console.log("error" + s);
+							}, {
+								filename: "_doc/camera/"
+							})
+						}
+						// 从相册中选择图片 
+						function galleryImage(cb) {
+							// 从相册中选择图片
+							plus.gallery.pick(function(e) {
+								cropperImg(e, 'add_distribution_goods', ratio);
+							}, function(e) {
+								console.log("取消选择图片");
+							}, {
+								filter: "image",
+								multiple: false,
+								maximum: 5,
+								system: false,
+								onmaxed: function() {
+									plus.nativeUI.alert('最多只能选择1张图片');
+								}
+							});
+						}
+						window.addEventListener('cropperSuccess', function(event) {
+							app.images.push(event.detail.image);
+						})
+						// 团队
+						function getTeamList() {
+							mui.post($ajaxUrl + 'team&action=my_team_list', {
+								token: userInfo.token
+							}, function(res) {
+								if (res.errno == 0) {
+									app.team_list = res.data;
+								} else {
+									plus.nativeUI.alert("添加商品前，请创建正式团队！", function() {
+										mui.back();
+									})
+								}
+							}, 'json');
+						}
+						// 获取上次选择快递
+						var courier = getcache('courier');
+						if (courier.value != 0) {
+							app.default_express = courier.value;
+							app.express_text = courier.text;
+						}
+						// 初始化两次防止页面乱
+						var viewport = document.documentElement.clientWidth;
+						if (viewport > 750) {
+							viewport = 750
+						}
+						document.documentElement.style.fontSize = viewport / 7.5 + "px";
+						// 初始化字体大小结束
 					})
-					// 初始化两次防止页面乱
-					var viewport = document.documentElement.clientWidth;
-					console.log("mounted页面宽度：" + viewport);
-					if (viewport > 750) {
-						viewport = 750
-					}
-					document.documentElement.style.fontSize = viewport / 7.5 + "px";
-					// 初始化字体大小结束
 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 					var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 					window.onresize = function() {
@@ -244,18 +388,280 @@
 							//resizeHeight<originalHeight证明窗口被挤压了
 							paddeds.style.zIndex = '-1';
 							paddeds.style.display = 'none';
+							document.querySelector(".mui-content").style.paddingBottom = 0;
 						} else {
-							paddeds.style.zIndex = '1045';
+							paddeds.style.zIndex = '199';
 							paddeds.style.display = 'flex';
+							document.querySelector(".mui-content").style.paddingBottom = '1.2rem';
 						}
 					}
 				}
 			})
+			// 预览主图
+			function previewImage(idx) {
+				var urls = app.images;
+				plus.nativeUI.previewImage(urls, {
+					current: idx,
+					loop: true,
+					indicator: 'number',
+					onLongPress: function(event) {
+						plus.nativeUI.confirm("保存图片到系统相册", function(e) {
+							if (e.index == 0) {
+								showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
+								plus.gallery.save(event.url, function() {
+									showload(1);
+									plus.nativeUI.toast("保存成功!");
+								}, function() {
+									showload(1);
+									plus.nativeUI.toast("保存失败!");
+								});
+							} else {
+								// plus.nativeUI.toast("取消");
+							}
+						});
+					}
+				});
+			}
+			// 上架出售
+			mui(".mui-content").on("tap", ".putaway-btn", function() {
+				document.activeElement.blur();
+				app.status = 1;
+				editDone();
+			})
+			// 放入仓库
+			mui(".mui-content").on("tap", ".the-warehouse", function() {
+				document.activeElement.blur();
+				app.status = 0;
+				editDone();
+			})
 			// 选择团队
 			mui(".mui-content").on("tap", ".team-list", function() {
 				document.activeElement.blur();
-				this.classList.toggle("active");
+				var ids = this.dataset.ids;
+				var index = app.team_ids.indexOf(ids)
+				if (index > -1) {
+					app.team_ids.splice(index, 1);
+					this.classList.remove("active");
+				} else {
+					this.classList.add("active");
+					app.team_ids.push(ids);
+				}
+				// console.log(app.team_ids);
 			})
+			// 监听是否设为推荐
+			mui(".set_recommend")[0].addEventListener('toggle', function(event) {
+				if (event.detail.isActive) {
+					app.team_recommend = 1;
+				} else {
+					app.team_recommend = 0;
+				}
+			});
+			// 监听是否设为爆品
+			mui(".set-hot")[0].addEventListener('toggle', function(event) {
+				if (event.detail.isActive) {
+					app.team_hot = 1;
+				} else {
+					app.team_hot = 0;
+				}
+			});
+			// 商品类型选择
+			mui(".mui-content").on("tap", ".goods-type", function() {
+				document.activeElement.blur();
+				var goods_type = new mui.PopPicker();
+				goods_type.setData(app.goods_type_group);
+				if (app.type_p != 0) {
+					goods_type.pickers[0].setSelectedValue(app.type_p, 1000);
+				}
+				goods_type.show(function(items) {
+					app.type_p = items[0].value;
+					app.goods_type_text = items[0].text;
+					// console.log(app.type_p);
+				});
+			})
+			// 规格 供货价格 零售价格 保护价格 库存
+			function creatSpec() {
+				var _spec = new Object();
+				_spec.name = '';
+				_spec.price = '';
+				_spec.protect_price = '';
+				_spec.settlement_price = '';
+				_spec.stock = '';
+				return _spec;
+			}
+			// 添加商品规格
+			mui(".mui-content").on("tap", ".add-specification-title", function() {
+				document.activeElement.blur();
+				app.spec.push(creatSpec());
+			})
+			// 删除商品规格
+			function del_spec(idx) {
+				app.spec.splice(idx, 1);
+			}
+			// 选择快递
+			mui(".mui-content").on("tap", ".choice-express", function() {
+				document.activeElement.blur();
+				var express = new mui.PopPicker();
+				express.setData(app.express_group);
+				if (app.default_express != 0) {
+					express.pickers[0].setSelectedValue(app.default_express, 1000);
+				}
+				express.show(function(items) {
+					app.default_express = items[0].value;
+					app.express_text = items[0].text;
+					cacheData("courier", {
+						text: items[0].text,
+						value: items[0].value
+					})
+				});
+			})
+			// 图文描述
+			mui(".mui-content").on("tap", ".edit-goods-detail", function() {
+				fnOpenWin('goods_detail.html', 'goods_detail', {
+					statusbar: {
+						background: '#f7f7f7'
+					}
+				}, {
+					content: app.description
+				}, 'slide-in-right');
+			})
+			// 获取
+			// 商品类型
+			function getGoodsType() {
+				mui.post($ajaxUrl + 'goods', {
+					action: 'goods_category',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						app.goods_type_group = res.data;
+						// app.goods_type_text = app.goods_type_group[0].text;
+						// app.type_p = app.goods_type_group[0].value;
+					}
+				}, 'json');
+			}
+			// 快递
+			function getExpressList() {
+				mui.post($ajaxUrl + 'util', {
+					action: 'express_list'
+				}, function(res) {
+					if (res.errno == 0) {
+						data = res.data;
+						data.forEach(function(item) {
+							item.value = item.id;
+							item.text = item.e_name;
+							delete item.id;
+							delete item.e_name;
+						})
+						app.express_group = data;
+					} else {
+
+					}
+				}, 'json');
+			}
+			//详情添加完毕监听
+			window.addEventListener('detailAdd', function(event) {
+				app.description = event.detail.content;
+				if (app.description.length != 0) {
+					app.edit_status = '点击编辑';
+				} else {
+					app.edit_status = '未添加';
+				}
+			})
+			// 提交编辑
+			function editDone() {
+				if (app.name.length < 1) {
+					message("商品名称不能为空！");
+					return false;
+				}
+				if (app.images.length < 1) {
+					message("商品主图不能为空！");
+					return false;
+				}
+				if (app.settlement_price <= 0) {
+					message("供货价需大于0");
+					return false;
+				}
+				if (app.price <= 0) {
+					message("零售价格需大于0");
+					return false;
+				}
+				if (app.stock < 1) {
+					message("请添加库存");
+					return false;
+				}
+				if (app.protect_price <= 0) {
+					app.protect_price = app.settlement_price;
+				}
+				if (app.spec.length > 0) {
+					for (var i = 0; i < app.spec.length; i++) {
+						if (app.spec[i].name.length < 1) {
+							message("商品规格不能为空");
+							return false;
+						}
+						if (app.spec[i].settlement_price <= 0) {
+							message("供货价格需大于0");
+							return false;
+						}
+						if (app.spec[i].price <= 0) {
+							message("零售价格需大于0");
+							return false;
+						}
+
+						if (app.spec[i].stock < 1) {
+							message("商品库存需大于0");
+							return false;
+						}
+						if (app.spec[i].protect_price <= 0) {
+							app.spec[i].protect_price = app.spec[i].settlement_price;
+							return false;
+						}
+					}
+				}
+				if (app.default_express < 1) {
+					message("请选择快递");
+					return false;
+				}
+				if (app.freight.length <= 0) {
+					app.freight = 0;
+					return false;
+				}
+
+				if (app.team_ids.length < 1) {
+					message("请选择可售团队");
+					return false;
+				}
+				var datas = {
+					name: app.name,
+					images: app.images,
+					team_recommend: app.team_recommend,
+					team_hot: app.team_hot,
+					type_p: app.type_p,
+					top: app.top,
+					settlement_price: app.settlement_price,
+					price: app.price,
+					protect_price: app.protect_price,
+					stock: app.stock,
+					spec: app.spec,
+					default_express: app.default_express,
+					freight: app.freight,
+					content: app.description,
+					team_ids: app.team_ids.join(','),
+					status: app.status,
+				}
+				logs(datas);
+				mui.post($ajaxUrl + 'goods', {
+					action: 'add_team_goods',
+					token: userInfo.token,
+					data: datas,
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						message('添加成功！');
+						mui.back();
+					} else {
+						message(res.massage);
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 
