@@ -50,7 +50,8 @@
 			.top-cont {
 				position: absolute;
 				width: 6.9rem;
-				left: 0.3rem;
+				left: 50%;
+				margin-left: -3.45rem;
 				background-color: #FFFFFF;
 				height: 4.58rem;
 				bottom: 0.2rem;
@@ -147,6 +148,7 @@
 				color: #333333;
 				margin-bottom: 0.3rem;
 				padding-left: 0.2rem;
+				padding-right: 0.2rem;
 			}
 
 			.menu-body {
@@ -228,6 +230,106 @@
 				line-height: 0.88rem;
 				text-align: center;
 				border-radius: 0.45rem;
+			}
+
+			/* 主力商品 */
+			.primary-goods {}
+
+			.primary-goods .mui-table-view:before,
+			.primary-goods .mui-table-view:after {
+				height: 0;
+			}
+
+			.primary-goods .goods-list {
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding: 0.36rem 0.2rem 0.2rem;
+				overflow: hidden;
+			}
+
+			.primary-goods .goods-list:after {
+				left: 2.3rem;
+				background-color: #DDDDDD;
+			}
+
+			.primary-goods .goods-list:last-of-type:after {
+				height: 1px;
+			}
+
+			.goods-list .goods-right {
+				flex-grow: 1;
+			}
+
+			.goods-img {
+				width: 2rem;
+				height: 2rem;
+				display: flex;
+				overflow: hidden;
+				flex-shrink: 0;
+				margin-right: 0.28rem;
+			}
+
+			.goods-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.goods-list .goods-title {
+				color: #333333;
+				font-size: 0.3rem;
+				margin-bottom: 0.4rem;
+				min-height: 0.66rem;
+			}
+
+			.goods-list .goods-info {
+				font-size: 0.24rem;
+				color: #F52E20;
+				padding-bottom: 0.1rem;
+			}
+
+			.price-text {
+				color: #333333;
+				margin-left: 0.44rem;
+			}
+
+			.goods-right-bottom {
+				display: flex;
+				align-items: center;
+				position: relative;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.goods-right-bottom span:first-of-type {
+				margin-right: 0.32rem;
+			}
+
+			.goods-list .add-entrepot {
+				width: 0.38rem;
+				height: 0.38rem;
+				position: absolute;
+				right: 0.1rem;
+				z-index: 6;
+			}
+			.team-name{
+				display: flex;
+				position: relative;
+				align-items: center;
+				font-size: 0.24rem;
+				color: #999999;
+				margin-top: 10px;
+				/* background-color: #007AFF; */
+				line-height: 1;
+			}
+			.team-name .mui-icon.mui-icon-arrowright{
+				font-size: 16px;
+				position: relative;
+				margin-top: 0;
+				margin-left: 10px;
+				right: 0;
+				/* background-color: #00BCD4; */
 			}
 		</style>
 	</head>
@@ -344,6 +446,40 @@
 						</div>
 					</div>
 				</div>
+				<!-- 爆款推荐 -->
+				<div class="menu-card">
+					<div class="headline">
+						<span>爆款热荐</span>
+						<span class="mui-pull-right">换一批</span>
+					</div>
+					<div class="primary-goods">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell goods-list" v-for="i in 4">
+								<div class="goods-img">
+									<img src="../image/5E0eH.png">
+								</div>
+								<div class="goods-right">
+									<p class="goods-title mui-ellipsis-2">
+										四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用双人春夏季床上用双人春夏季床上用
+									</p>
+									<div class="goods-info">
+										<span class="wage-text">提成：&yen;50.00</span>
+										<span class="price-text">供货价：&yen;500.00</span>
+									</div>
+									<div class="goods-right-bottom">
+										<span>销量&nbsp;950</span>
+										<span>95%&nbsp;好评</span>
+										<img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png">
+									</div>
+									<div class="team-name">
+										<span>云南最大的土特产团队</span>
+										<span class="mui-icon mui-icon-arrowright"></span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 			<div class="tips-cont mui-hidden">
 				<div class="tips-body">
@@ -436,7 +572,7 @@
 			// 查看公告详情
 			mui(".mui-content").on("tap", ".swiper-slide", function() {
 				var idx = this.dataset.idx;
-				openPage('notice_detail.html', 'notice_detail','#ffffff',{
+				openPage('notice_detail.html', 'notice_detail', '#ffffff', {
 					notice: app.notice[idx],
 					page: 'shop_index'
 				});
@@ -476,7 +612,7 @@
 			mui(".mui-content").on("tap", "#stock_goods", function() {
 				openPage('choose_goods.html', 'choose_goods', '#ffffff');
 			});
-			
+
 			//添加分销商品
 			mui(".mui-content").on("tap", "#add_distribution_goods", function() {
 				openPage('add_distribution_goods.html', 'add_distribution_goods', '#f7f7f7');
