@@ -114,7 +114,7 @@
 				border-radius: 10px;
 			}
 			.playb{
-				width: 50%;
+				width: auto;
 				position: absolute;
 				padding: 10px 0 5px 0;
 				top: 45px;
@@ -134,18 +134,36 @@
 				margin-right: -9px;
 			}
 			.play{
-				width: 21%;
+				width: auto;
 				color: #FFFFFF;
 				font-size: 12px;
 				float: left;
 				margin-left: 5px;
 				text-align: center;
+				padding: 0 0.2rem;
+				/* background-color: #0062CC; */
+				line-height: 1.6;
+				position: relative;
+			}
+			.play:after{
+				content: '';
+				position: absolute;
+				width: 1px;
+				height: 50%;
+				top: 25%;
+				right: 0;
+				background-color: #DDDDDD;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+				opacity: 0.2;
+			}
+			.play:last-of-type:after{
+				width: 0;
 			}
 			.play img{
 				width: 16px;
+				margin: 0;
 			}
-			
-			
 			.add_merchandise{
 				width: 100%;
 				position: fixed;
@@ -243,7 +261,7 @@
 	<body id="body_tap">
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">商品管理</h1>
+			<h1 class="mui-title">企业仓管理</h1>
 		</header>
 		<div class="mui-content" id="mui-content">
 			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
@@ -287,7 +305,7 @@
 												<div>下架</div>
 											</div>
 											<div class="play" data-type="jh">
-												<img src="../image/qyecjh-icon.png" />
+												<img src="../image/icon/qyecjh-icon.png" />
 												<div>拣货</div>
 											</div>
 											<div class="play" data-type="del">
@@ -415,79 +433,81 @@
 	var app = new Vue({
 		el: "#mui-content",
 		data: {
-			created: function() {
-				// 初始化字体大小
-				var viewport = document.documentElement.clientWidth;
-				if (viewport > 750) {
-					viewport = 750
-				}
-				document.documentElement.style.fontSize = viewport / 7.5 + "px";
-				// 初始化字体大小结束	
-			},
-			methods: {
 
-			},
-			mounted: function() {
-				if (mui.os.ios) {
-					mui.init({
-						swipeBack: true,
-						pullRefresh: {
-							container: "#goods_container",
-							down: {
-								style: 'circle',
-								color: '#2289FF',
-								height: '50px',
-								range: '100px',
-								offset: '0px',
-								auto: false,
-								callback: function() {
-									getGoodsList(true);
-								}
+		},
+		created: function() {
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束	
+		},
+		methods: {
+
+		},
+		mounted: function() {
+			if (mui.os.ios) {
+				mui.init({
+					swipeBack: true,
+					pullRefresh: {
+						container: "#goods_container",
+						down: {
+							style: 'circle',
+							color: '#2289FF',
+							height: '50px',
+							range: '100px',
+							offset: '0px',
+							auto: false,
+							callback: function() {
+								getGoodsList(true);
 							}
-						}
-					});
-				} else {
-					mui.init({
-						swipeBack: false,
-						pullRefresh: {
-							container: "#goods_container",
-							down: {
-								style: 'circle',
-								color: '#2289FF',
-								height: '50px',
-								range: '100px',
-								offset: '0px',
-								auto: false,
-								callback: function() {
-									getGoodsList(true);
-								}
-							}
-						}
-					});
-				}
-				mui.plusReady(function() {
-					window.addEventListener('goodsAddSuccess', function() {
-						getGoodsList(false);
-					})
-					getGoodsList(false);
-					eventInit();
-					var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-					window.onresize = function() {
-						//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-						var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-						var paddeds = document.getElementById("add_goods");
-						if (resizeHeight * 1 < originalHeight * 1) {
-							paddeds.style.zIndex = '-1';
-							paddeds.style.display = 'none';
-						} else {
-							paddeds.style.zIndex = '999';
-							paddeds.style.display = 'block';
 						}
 					}
-				})
+				});
+			} else {
+				mui.init({
+					swipeBack: false,
+					pullRefresh: {
+						container: "#goods_container",
+						down: {
+							style: 'circle',
+							color: '#2289FF',
+							height: '50px',
+							range: '100px',
+							offset: '0px',
+							auto: false,
+							callback: function() {
+								getGoodsList(true);
+							}
+						}
+					}
+				});
 			}
+			eventInit();
+			mui.plusReady(function() {
+				window.addEventListener('goodsAddSuccess', function() {
+					getGoodsList(false);
+				})
+				getGoodsList(false);
+				var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+				window.onresize = function() {
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+					var paddeds = document.getElementById("add_goods");
+					if (resizeHeight * 1 < originalHeight * 1) {
+						paddeds.style.zIndex = '-1';
+						paddeds.style.display = 'none';
+					} else {
+						paddeds.style.zIndex = '999';
+						paddeds.style.display = 'block';
+					}
+				}
+			})
 		}
 	})
+
 	function eventInit() {
 		// 搜索
 		document.onkeydown = function(event) {
@@ -524,7 +544,7 @@
 						changeGoodsStatus(-1, id);
 					}
 				})
-			}  else if (type == 'edit') {
+			} else if (type == 'edit') {
 				//打开编辑页面
 				mui.openWindow({
 					id: 'goods_edit',
