@@ -299,7 +299,7 @@
 			}
 			/* 主力商品 */
 			.primary-goods {
-				padding-bottom: 1.1rem;
+				padding-bottom: 0.5rem;
 			}
 			
 			.primary-goods .goods-list {
@@ -349,6 +349,8 @@
 				/* padding-bottom: 0.1rem; */
 				display: inline-flex;
 				flex-direction: column;
+				position: relative;
+				width: 100%;
 			}
 			
 			.price-text {
@@ -374,10 +376,12 @@
 			}
 			
 			.goods-list .add-entrepot {
-				width: 0.38rem;
-				height: 0.38rem;
+				width: 0.4rem;
+				height: 0.4rem;
 				position: absolute;
-				right: 0.1rem;
+				right: 5px;
+				top: 50%;
+				margin-top: -0.3rem;
 				z-index: 6;
 			}
 			.primary-goods .mui-table-view:after{
@@ -385,6 +389,31 @@
 			}
 			.primary-goods .mui-table-view-cell.mui-active{
 				background-color: #FFFFFF;
+			}
+			.team-name{
+				display: flex;
+				position: relative;
+				align-items: center;
+				font-size: 0.24rem;
+				color: #999999;
+				margin-top: 5px;
+				line-height: 1;
+			}
+			.team-name .mui-icon.mui-icon-arrowright{
+				font-size: 14px;
+				position: relative;
+				margin-top: 0;
+				right: 0;
+			}
+			.mui-table-view-cell.mui-active{
+				background-color: #FFFFFF;
+			}
+			.goods-list:first-of-type{
+				padding-top: 0;
+			}
+			.change-list{
+				font-size: 0.3rem;
+				color: #CC9C2D;
 			}
 		</style>
 
@@ -441,7 +470,7 @@
 					{{idx}}
 					<div class="primary-goods">
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell goods-list">
+							<li class="mui-table-view-cell goods-list" v-for="i in 6">
 								<div class="goods-img">
 									<img src="../image/5E0eH.png">
 								</div>
@@ -452,32 +481,16 @@
 									<div class="goods-info">
 										<span class="wage-text">提成：&yen;50.00</span>
 										<span class="price-text">供货价：&yen;500.00</span>
+										<img class="add-entrepot" src="../image/icon/jianhuo-active.png">
 									</div>
 									<div class="goods-right-bottom">
 										<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
 										<span>销量&nbsp;950</span>
 										<span>95%&nbsp;好评</span>
-										<!-- <img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png"> -->
 									</div>
-								</div>
-							</li>
-							<li class="mui-table-view-cell goods-list">
-								<div class="goods-img">
-									<img src="../image/5E0eH.png">
-								</div>
-								<div class="goods-right">
-									<p class="goods-title mui-ellipsis-2">
-										四件套全棉纯棉田园风
-									</p>
-									<div class="goods-info">
-										<span class="wage-text">提成：&yen;50.00</span>
-										<span class="price-text">供货价：&yen;500.00</span>
-									</div>
-									<div class="goods-right-bottom">
-										<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
-										<span>销量&nbsp;950</span>
-										<span>95%&nbsp;好评</span>
-										<!-- <img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png"> -->
+									<div class="team-name">
+										<span>云南最大的土特产团队</span>
+										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
 								</div>
 							</li>
