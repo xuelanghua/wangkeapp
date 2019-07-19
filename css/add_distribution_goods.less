@@ -8,6 +8,17 @@ ul,li{
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+	margin-bottom: 0.05rem;
+}
+.mui-bar-nav~.mui-content {
+    padding-top: 44px;
+	padding-bottom: 1.2rem;
+}
+// 清除按钮
+.mui-input-row .mui-icon.mui-icon-clear{
+	color:#DDDDDD;
+	font-size: 22px;
+	z-index: 6;
 }
 input,textarea{
 		border: none;
@@ -23,10 +34,25 @@ input,textarea{
 	margin-top: 0.2rem;
 	margin-bottom: 1px;
 	background-color: #ffffff;
+	position: relative;
+	padding-right: 30px;
+	.mui-icon-clear{
+		position: absolute;
+		right: 5px;
+		top: 50%;
+		margin-top:-12px;
+		color: #DDDDDD;
+	}
+	textarea{
+		text-align: justify;
+		font-size: 0.3rem;
+	}
 }
 .goods-img-contianer{
 	background-color: #ffffff;
 	padding: 0.3rem 0.15rem;
+	display: flex;
+	align-items: center;
 	.add-goods-img{
 		position: relative;
 		padding: 10px;
@@ -41,7 +67,37 @@ input,textarea{
 		color: #999999;
 		line-height: 1.2;
 	}
+	.picture_display_chear {
+		width: 1.6rem;
+		height: 1.6rem;
+		position: relative;
+		overflow: visible;
+		margin-right: 0.2rem;
+		.mui-close {
+		  position: absolute!important;
+		  top: -8px;
+		  right: -8px;
+		  display: block;
+		  width: 20px;
+		  height: 20px;
+		  line-height: 18px;
+		  background-color: #F00;
+		  border-radius: 50%;
+		  color: #FFF;
+		  text-align: center;
+		  z-index: 9;
+		}
+	}
+	.picture_display_chear::nth-of-type(4){
+		margin-right: 0;
+	}
+	.picture_display_chear img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 }
+
 .goods-img-desc{
 	height: 0.5rem;
 	background-color: #F2F2F2;
@@ -100,7 +156,6 @@ input,textarea{
 }
 .option-container .option-group-list{
 	padding: 0;
-	background-color: #F2F2F2;
 	.mui-table-view-cell{
 		padding: 0.15rem 0;
 		&::after{
@@ -111,6 +166,14 @@ input,textarea{
 	.mui-input-row{
 		display: flex;
 		align-items: center;
+		padding: 0.12rem 0;
+		padding-right: 0.8rem;
+		position: relative;
+		max-width: 100%;
+		.mui-icon.mui-icon-clear{
+			position: absolute;
+			right: 0.4rem;
+		}
 	}
 	.option-group{
 		padding-left: 15px;
@@ -129,22 +192,35 @@ input,textarea{
 		flex-shrink: 0;
 	}
 	.del-container{
-		width: 0.7rem;
-		height: 0.7rem;
+		width: 0.6rem;
+		height: 0.6rem;
 		background-color: #ffffff;
 		display: inline-flex;
 		position: absolute;
 		align-items: center;
 		justify-content: center;
 		top: 50%;
-		margin-top:-0.25rem;
-		right: -0.25rem;
 		z-index: 6;
+		margin-top:-0.5rem;
+		right: -0.3rem;
 		border-radius: 50%;
 	}
+	.del-container::after{
+		content: '';
+		position: absolute;
+		z-index: 2;
+		width: 0.3rem;
+		height: 0.6rem;
+		background-color: #ffffff;
+		border: 1px solid #DDDDDD;
+		border-right: 0;
+		border-radius: 0.8rem 0 0 0.8rem;
+		left: 0;
+	}
 	.del-btn{
-		width: 0.5rem;
-		height: 0.5rem;
+		z-index: 6;
+		width: 0.44rem;
+		height: 0.44rem;
 		border-radius: 50%;
 		background-color: #E80D0D;
 		display: inline-flex;
@@ -152,7 +228,7 @@ input,textarea{
 		justify-content: center;
 		i{
 			display: inline-block;
-			width: 0.3rem;
+			width: 0.26rem;
 			height: 0.03rem;
 			background-color: #ffffff;
 			border-radius:10px; 
@@ -188,7 +264,7 @@ input,textarea{
 .mui-table-view-cell .mui-input-row{
 	display: flex;
 	align-items: center;
-	padding: 0.1rem 0;
+	padding: 0;
 	label{
 		padding: 0;
 		padding-right: 15px;
@@ -244,5 +320,37 @@ input,textarea{
 		right:15px;
 		top: 50%;
 		margin-top: -10px;
+	}
+}
+.btn-section{
+	position: fixed;
+	display: flex;
+	align-items: center;
+	z-index: 199;
+	background-color: #F5CA3A;
+	height: 1.09rem;
+	bottom: 0;
+	width: 100%;
+	div{
+		color: #FFFFFF;
+		width: 50%;
+		height: 100%;
+		display: inline-flex;
+		align-items: center;
+		justify-content:center;
+		position: relative;
+	}
+	.putaway-btn::after{
+		content: '';
+		position: absolute;
+		display: block;
+		background-color: #FFFFFF;
+		top: 50%;
+		margin-top: -0.185rem;
+		height: 0.37rem;
+		right: 0;
+		width: 1px;
+		-webkit-transform: scaleX(0.5);
+		transform: scaleX(0.5);
 	}
 }

@@ -9,6 +9,16 @@ li {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-bottom: 0.05rem;
+}
+.mui-bar-nav ~ .mui-content {
+  padding-top: 44px;
+  padding-bottom: 1.2rem;
+}
+.mui-input-row .mui-icon.mui-icon-clear {
+  color: #DDDDDD;
+  font-size: 22px;
+  z-index: 6;
 }
 input,
 textarea {
@@ -26,10 +36,25 @@ textarea::-webkit-input-placeholder {
   margin-top: 0.2rem;
   margin-bottom: 1px;
   background-color: #ffffff;
+  position: relative;
+  padding-right: 30px;
+}
+.goods-title .mui-icon-clear {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  margin-top: -12px;
+  color: #DDDDDD;
+}
+.goods-title textarea {
+  text-align: justify;
+  font-size: 0.3rem;
 }
 .goods-img-contianer {
   background-color: #ffffff;
   padding: 0.3rem 0.15rem;
+  display: flex;
+  align-items: center;
 }
 .goods-img-contianer .add-goods-img {
   position: relative;
@@ -44,6 +69,35 @@ textarea::-webkit-input-placeholder {
   font-size: 0.3rem;
   color: #999999;
   line-height: 1.2;
+}
+.goods-img-contianer .picture_display_chear {
+  width: 1.6rem;
+  height: 1.6rem;
+  position: relative;
+  overflow: visible;
+  margin-right: 0.2rem;
+}
+.goods-img-contianer .picture_display_chear .mui-close {
+  position: absolute!important;
+  top: -8px;
+  right: -8px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  line-height: 18px;
+  background-color: #F00;
+  border-radius: 50%;
+  color: #FFF;
+  text-align: center;
+  z-index: 9;
+}
+.goods-img-contianer .picture_display_chear::nth-of-type(4) {
+  margin-right: 0;
+}
+.goods-img-contianer .picture_display_chear img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .goods-img-desc {
   height: 0.5rem;
@@ -102,7 +156,6 @@ textarea::-webkit-input-placeholder {
 }
 .option-container .option-group-list {
   padding: 0;
-  background-color: #F2F2F2;
 }
 .option-container .option-group-list .mui-table-view-cell {
   padding: 0.15rem 0;
@@ -114,6 +167,14 @@ textarea::-webkit-input-placeholder {
 .option-container .option-group-list .mui-input-row {
   display: flex;
   align-items: center;
+  padding: 0.12rem 0;
+  padding-right: 0.8rem;
+  position: relative;
+  max-width: 100%;
+}
+.option-container .option-group-list .mui-input-row .mui-icon.mui-icon-clear {
+  position: absolute;
+  right: 0.4rem;
 }
 .option-container .option-group-list .option-group {
   padding-left: 15px;
@@ -132,22 +193,35 @@ textarea::-webkit-input-placeholder {
   flex-shrink: 0;
 }
 .option-container .option-group-list .del-container {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.6rem;
+  height: 0.6rem;
   background-color: #ffffff;
   display: inline-flex;
   position: absolute;
   align-items: center;
   justify-content: center;
   top: 50%;
-  margin-top: -0.25rem;
-  right: -0.25rem;
   z-index: 6;
+  margin-top: -0.5rem;
+  right: -0.3rem;
   border-radius: 50%;
 }
+.option-container .option-group-list .del-container::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: 0.3rem;
+  height: 0.6rem;
+  background-color: #ffffff;
+  border: 1px solid #DDDDDD;
+  border-right: 0;
+  border-radius: 0.8rem 0 0 0.8rem;
+  left: 0;
+}
 .option-container .option-group-list .del-btn {
-  width: 0.5rem;
-  height: 0.5rem;
+  z-index: 6;
+  width: 0.44rem;
+  height: 0.44rem;
   border-radius: 50%;
   background-color: #E80D0D;
   display: inline-flex;
@@ -156,7 +230,7 @@ textarea::-webkit-input-placeholder {
 }
 .option-container .option-group-list .del-btn i {
   display: inline-block;
-  width: 0.3rem;
+  width: 0.26rem;
   height: 0.03rem;
   background-color: #ffffff;
   border-radius: 10px;
@@ -189,7 +263,7 @@ textarea::-webkit-input-placeholder {
 .mui-table-view-cell .mui-input-row {
   display: flex;
   align-items: center;
-  padding: 0.1rem 0;
+  padding: 0;
 }
 .mui-table-view-cell .mui-input-row label {
   padding: 0;
@@ -246,4 +320,36 @@ textarea::-webkit-input-placeholder {
   right: 15px;
   top: 50%;
   margin-top: -10px;
+}
+.btn-section {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  z-index: 199;
+  background-color: #F5CA3A;
+  height: 1.09rem;
+  bottom: 0;
+  width: 100%;
+}
+.btn-section div {
+  color: #FFFFFF;
+  width: 50%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.btn-section .putaway-btn::after {
+  content: '';
+  position: absolute;
+  display: block;
+  background-color: #FFFFFF;
+  top: 50%;
+  margin-top: -0.185rem;
+  height: 0.37rem;
+  right: 0;
+  width: 1px;
+  -webkit-transform: scaleX(0.5);
+  transform: scaleX(0.5);
 }
