@@ -379,24 +379,26 @@
 						document.documentElement.style.fontSize = viewport / 7.5 + "px";
 						// 初始化字体大小结束
 					})
-					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-					var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-					window.onresize = function() {
-						var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-						var paddeds = document.querySelector(".btn-section");
-						if (resizeHeight * 1 < originalHeight * 1) {
-							//resizeHeight<originalHeight证明窗口被挤压了
-							paddeds.style.zIndex = '-1';
-							paddeds.style.display = 'none';
-							document.querySelector(".mui-content").style.paddingBottom = 0;
-						} else {
-							paddeds.style.zIndex = '199';
-							paddeds.style.display = 'flex';
-							document.querySelector(".mui-content").style.paddingBottom = '1.2rem';
-						}
-					}
 				}
 			})
+			
+			//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+			var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+			window.onresize = function() {
+				var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+				var paddeds = document.querySelector(".btn-section");
+				if (resizeHeight * 1 < originalHeight * 1) {
+					//resizeHeight<originalHeight证明窗口被挤压了
+					paddeds.style.zIndex = '-1';
+					paddeds.style.display = 'none';
+					document.querySelector(".mui-content").style.paddingBottom = 0;
+				} else {
+					paddeds.style.zIndex = '199';
+					paddeds.style.display = 'flex';
+					document.querySelector(".mui-content").style.paddingBottom = '1.2rem';
+				}
+			}
+			
 			// 预览主图
 			function previewImage(idx) {
 				var urls = app.images;
@@ -654,7 +656,9 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						message('添加成功！');
-						mui.back();
+						setTimeout(function() {
+							mui.back();
+						}, 1000);
 					} else {
 						message(res.message);
 					}
