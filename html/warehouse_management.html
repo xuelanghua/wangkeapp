@@ -85,8 +85,9 @@
 			}
 			
 			.chart{
-				width: 80px;
-				height: 80px;
+				width: 1.6rem;
+				height: 1.6rem;
+				flex-shrink: 0;
 			}
 			.chart img{
 				width: 100%;
@@ -98,13 +99,14 @@
 			
 			
 			.customer-content{
-				width: 70%;
+				flex-grow: 1;
+				padding-left: 0.2rem;
 			}
-			.customer-content h4{
+			/* .customer-content h4{
 				font-size: 16px;
 				color: #FE4F4F;
 				margin-top: 20px;
-			}
+			} */
 			.genduo{
 				background-color: #EAEBED;
 				font-size: 20px;
@@ -112,16 +114,21 @@
 				line-height: 5px;
 				padding: 0 8px 10px 8px;
 				border-radius: 10px;
+				position: absolute;
+				right: 0;
+			}
+			.mui-table-view-cell{
+				padding: 15px;
 			}
 			.playb{
 				width: auto;
 				position: absolute;
 				padding: 10px 0 5px 0;
-				top: 45px;
 				right: 16%;
 				border-radius: 5px;
 				background-color: rgba(51,51,51,0.85);
 				display: none;
+				bottom: 2px;
 			}
 			.jiao{
 				width: 0;
@@ -141,7 +148,6 @@
 				margin-left: 5px;
 				text-align: center;
 				padding: 0 0.2rem;
-				/* background-color: #0062CC; */
 				line-height: 1.6;
 				position: relative;
 			}
@@ -149,8 +155,8 @@
 				content: '';
 				position: absolute;
 				width: 1px;
-				height: 50%;
-				top: 25%;
+				height: 30%;
+				top: 35%;
 				right: 0;
 				background-color: #DDDDDD;
 				-webkit-transform: scaleX(0.5);
@@ -158,7 +164,7 @@
 				opacity: 0.2;
 			}
 			.play:last-of-type:after{
-				width: 0;
+				display: none;
 			}
 			.play img{
 				width: 16px;
@@ -186,7 +192,6 @@
 			}
 			
 			/* 弹窗样式 */
-			
 			.mask-cont {
 				position: fixed;
 				width: 100%;
@@ -244,10 +249,38 @@
 			}
 			.mui-table-view-cell{
 				background-color: #FFFFFF;
+				display: flex;
+				align-items: center;
 			}
 			.mui-bar-nav~.mui-content{
 				padding-top: 135px;
-				padding-bottom: 55px;
+				padding-bottom: 60px;
+			}
+			.mui-scroll{
+				padding-bottom: 60px;
+			}
+			.hot-sign {
+				height: 0.24rem;
+				width: auto;
+				margin-right: 0.2rem;
+			}
+			.right-bottom-cont{
+				display: flex;
+				align-items: center;
+				position: relative;
+				color: #999999;
+				font-size: 0.24rem;
+			}
+			.price-container{
+				font-size: 0.24rem;
+				padding: 0.1rem 0;
+			}
+			.right-bottom-cont span:first-of-type,
+			.price-container span:first-of-type{
+				margin-right: 0.44rem;
+			}
+			.price-container span:first-of-type{
+				color: #F52E20;
 			}
 		</style>
 		<script type="text/javascript">
@@ -281,20 +314,25 @@
 					<div class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<ul class="mui-table-view" id="item1_list" style="margin_botton: 25px;">
-								<li class="mui-table-view-cell">
-									<div class="chart mui-pull-left">
+								<li class="mui-table-view-cell" v-for="i in 6">
+									<div class="chart">
 										<img src="../image/bj.jpg">
 									</div>
-									<div class="mui-pull-right customer-content">
-										<div class="customer_information">
-											内蒙古风干牛肉干 蒙亮手撕牛肉248g
+									<div class="customer-content">
+										<div class="customer_information mui-ellipsis-2">
+											内蒙古风干牛肉干 蒙亮手撕牛肉248g蒙亮手撕牛肉248g蒙亮手撕牛肉248g蒙亮手撕牛肉248g蒙亮手撕牛肉248g
 										</div>
-										<h4>￥58.00</h4>
-										<div style="font-size: 12px;">
-											<span class="mui-pull-left">库存：283</span>
-											<span class="mui-pull-right genduo">...</span>
+										<div class="price-container">
+											<span>提成：&yen;50.00</span>
+											<span>供货价：&yen;500.00</span>
 										</div>
-										<div class="playb">
+										<div class="right-bottom-cont">
+											<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+											<span>销量：83</span>
+											<span>库存：283</span>
+											<span class="genduo">...</span>
+										</div>
+										<div class="playb mui-clearfix">
 											<div class="jiao"></div>
 											<div class="play" data-type="edit">
 												<img src="../image/edit.png" />
@@ -303,6 +341,10 @@
 											<div class="play" data-type="off">
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
+											</div>
+											<div class="play" data-type="off">
+												<img src="../image/on_sale.png" />
+												<div>上架</div>
 											</div>
 											<div class="play" data-type="jh">
 												<img src="../image/icon/qyecjh-icon.png" />
@@ -316,7 +358,6 @@
 												<img src="../image/extension.png" />
 												<div>推广</div>
 											</div>
-											<div class="clearfix"></div>
 										</div>
 									</div>
 								</li>
@@ -626,4 +667,12 @@
 			}
 		}, 'json');
 	}
+	// 取消搜索
+	mui('.mui-content').on('tap', '.mui-icon-clear', function() {
+		var e = event || window.event || arguments.callee.caller.arguments[0];
+		if (e && e.keyCode == 13) { // enter 键
+			goodsName = '';
+			getGoodsList();
+		}
+	})
 </script>
