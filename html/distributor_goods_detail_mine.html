@@ -1,0 +1,442 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.goods-images {
+				width: 7.5rem;
+				height: 7.5rem;
+				background-color: #FFFFFF;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.swiper-pagination {
+				position: absolute;
+				left: auto;
+				right: 10px;
+				bottom: 10px;
+				background-color: rgba(0, 0, 0, 0.5);
+				width: auto;
+				display: inline-flex;
+				align-items: baseline;
+				justify-content: center;
+				border-radius: 0.6rem;
+				padding: 0 8px;
+				color: #DDDDDD;
+				z-index: 9;
+				line-height: 1.2;
+				font-size: 12px;
+			}
+
+			.swiper-pagination-current {
+				font-size: 16px;
+			}
+
+			.goods-images img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.goods-title {
+				padding-top: 0.2rem;
+				overflow: hidden;
+			}
+
+			.goods-title p {
+				margin-bottom: 0.2rem;
+				font-size: 0.32rem;
+				color: #333333;
+				line-height: 1.4;
+				text-align: justify;
+			}
+
+			.main-container {
+				padding: 0.2rem;
+				margin-bottom: 0.2rem;
+				background-color: #FFFFFF;
+			}
+
+			.hot-sign {
+				height: 0.32rem;
+				width: auto;
+			}
+
+			.profit-cont {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				color: #F52E20;
+				font-size: 0.3rem;
+			}
+
+			.price-cont {
+				font-size: 0.24rem;
+				color: #333333;
+				padding: 0.2rem 0;
+			}
+
+			.price-cont span:last-of-type {
+				color: #F4CA3A;
+				margin-left: 1.03rem;
+			}
+
+			.top-info-cont {
+				padding-top: 0.2rem;
+				font-size: 0.24rem;
+				color: #999999;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				position: relative;
+			}
+
+			.top-info-cont:after {
+				content: '';
+				position: absolute;
+				display: block;
+				top: 0;
+				width: 100%;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.parameter-cont .mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.parameter-cont .mui-table-view:after,
+			.parameter-cont .mui-table-view:before {
+				height: 0;
+			}
+
+			.parameter-cont a {
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.parameter-cont a:before {
+				position: absolute;
+				right: 15px;
+				bottom: 0;
+				left: 15px;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #DDDDDD;
+			}
+
+			.parameter-list {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.1rem 0;
+			}
+
+			.mui-table-view-cell.mui-collapse .mui-collapse-content {
+				padding: 0;
+			}
+
+			.parameter-list:nth-of-type(even) {
+				background-color: #f9f9f9;
+			}
+
+			.parameter-items {
+				width: 17.5%;
+				font-size: 0.24rem;
+				color: #333333;
+				text-align: center;
+			}
+
+			.parameter-items:first-of-type {
+				width: 30%;
+			}
+
+			.team-name-cont {
+				background-color: #FFFFFF;
+				padding: 0.2rem;
+				display: flex;
+				align-items: center;
+				margin: 0.2rem 0;
+			}
+
+			.team-name-cont img {
+				width: 0.88rem;
+				height: 0.88rem;
+				border-radius: 0.1rem;
+				object-fit: cover;
+				margin-right: 0.4rem;
+			}
+
+			.team-name-cont .mui-icon {
+				position: absolute;
+				right: 0.2rem;
+				color: #999999;
+			}
+
+			.goods-detail-container {
+				background-color: #FFFFFF;
+			}
+
+			.goods-detail-container h4.title {
+				font-size: 0.32rem;
+				color: #333333;
+				padding: 0.4rem 0.2rem 0.28rem;
+				font-weight: normal;
+				position: relative;
+			}
+
+			.goods-detail-container h4.title:after {
+				content: '';
+				position: absolute;
+				bottom: 5px;
+				left: 0.2rem;
+				height: 2px;
+				width: 1.4rem;
+				background-color: #999999;
+			}
+
+			.goods-detail-container img {
+				max-width: 100% !important;
+				height: auto;
+			}
+
+			.bottom-section {
+				position: fixed;
+				display: flex;
+				align-items: center;
+				z-index: 199;
+				background-color: #FFFFFF;
+				height: 1.09rem;
+				bottom: 0;
+				width: 100%;
+				box-shadow: 1px 0 2px 0 rgba(220, 220, 220, .5);
+			}
+
+			.bottom-section .option-btn {
+				color: #333333;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				position: relative;
+				flex-grow: 1;
+				font-size: 0.3rem;
+				justify-content: center;
+			}
+
+			.bottom-section .option-btn img {
+				height: 0.36rem;
+				margin-right: 0.1rem;
+				width: auto;
+			}
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 0.2rem;
+				z-index: 16;
+				font-size: 14px;
+				color: #999999;
+				margin-right: -10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">商品详情</h1>
+			<div class="mui-pull-right nav-right-btn">
+				分享
+			</div>
+		</header>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<div class="swiper-container goods-images">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<img src="../image/share/bg-img02.jpg">
+					</div>
+					<div class="swiper-slide">
+						<img src="../image/share/bg-img03.jpg">
+					</div>
+					<div class="swiper-slide">
+						<img src="../image/share/bg-img05.jpg">
+					</div>
+					<div class="swiper-slide">
+						<img src="../image/share/bg-img04.jpg">
+					</div>
+				</div>
+				<!-- Add Pagination -->
+				<div class="swiper-pagination"></div>
+			</div>
+			<div class="top-container main-container">
+				<div class="goods-title">
+					<p>四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用品</p>
+				</div>
+				<div class="profit-cont">
+					<span>提成：&yen;15.00-20.00</span>
+					<img class="hot-sign" src="../image/icon/distributor_goods_detail_mine_sign.png">
+				</div>
+				<div class="price-cont">
+					<span>供货价：&yen;15.00-20.00</span>
+					<span>售价：&yen;15.00-20.00</span>
+				</div>
+				<div class="top-info-cont">
+					<span>快递：顺丰速运&yen;10.00</span>
+					<span>销量：900</span>
+					<span>浏览：1000</span>
+				</div>
+			</div>
+			<div class="parameter-cont">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">查看规格</a>
+						<div class="mui-collapse-content">
+							<div class="parameter-list">
+								<div class="parameter-items">规格</div>
+								<div class="parameter-items">库存</div>
+								<div class="parameter-items">供货价</div>
+								<div class="parameter-items">售价</div>
+								<div class="parameter-items">提成</div>
+							</div>
+							<div class="parameter-list">
+								<div class="parameter-items">红色</div>
+								<div class="parameter-items">136</div>
+								<div class="parameter-items">299</div>
+								<div class="parameter-items">360</div>
+								<div class="parameter-items">60</div>
+							</div>
+							<div class="parameter-list">
+								<div class="parameter-items">蓝色</div>
+								<div class="parameter-items">236</div>
+								<div class="parameter-items">329</div>
+								<div class="parameter-items">330</div>
+								<div class="parameter-items">80</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="team-name-cont">
+				<img src="../image/5E0eH.png">
+				<span>阿里巴巴团队</span>
+				<span class="mui-icon mui-icon-arrowright"></span>
+			</div>
+			<div class="goods-detail-container">
+				<h4 class="title">商品详情</h4>
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17614/41/1066658677/201711/28869e0/5ab9e251Neb5e8e1c.jpg!q70.dpg.webp">
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t1/26930/26/7060/99982/5c665fe3E33a28553/6a7b517d9b805255.jpg!q70.dpg.webp">
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17902/351/1069557559/144738/5a18345e/5ab9e261N8e01fd9c.jpg!q70.dpg.webp">
+			</div>
+			<div class="bottom-section">
+				<div class="option-btn" data-type="edit">
+					<img src="../image/icon/bottom-section-01.png" />
+					<span>编辑</span>
+				</div>
+				<div class="option-btn" data-type="up">
+					<img src="../image/icon/bottom-section-02.png" />
+					<span>上架</span>
+				</div>
+				<div class="option-btn mui-hidden" data-type="off">
+					<img src="../image/icon/bottom-section-03.png" />
+					<span>下架</span>
+				</div>
+				<div class="option-btn" data-type="del">
+					<img src="../image/icon/bottom-section-04.png" />
+					<span>删除</span>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+					swiperInint();
+				}
+			})
+
+			function swiperInint() {
+				var swiper = new Swiper('.swiper-container', {
+					loop: true,
+					autoplay: {
+						delay: 3000,
+						stopOnLastSlide: false,
+						disableOnInteraction: false,
+					},
+					pagination: {
+						el: '.swiper-pagination',
+						type: 'fraction',
+					}
+				});
+			}
+			// 底部操作
+			mui(".mui-content").on("tap", ".option-btn", function() {
+				var opt = this.dataset.type;
+				if (opt == 'edit') {
+					mui.toast('编辑');
+				} else if (opt == 'up') {
+					mui.toast('上架');
+				} else if (opt == 'off') {
+					mui.toast('下架');
+				} else {
+					mui.toast('删除');
+				}
+			})
+		</script>
+	</body>
+
+</html>
