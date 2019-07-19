@@ -192,7 +192,7 @@
 			.goods-detail-container h4.title{
 				font-size: 0.32rem;
 				color: #333333;
-				padding: 0.2rem;
+				padding:0.4rem 0.2rem 0.28rem;
 				font-weight: normal;
 				position: relative;
 			}
@@ -200,10 +200,50 @@
 				content: '';
 				position: absolute;
 				bottom: 5px;
-				left: 15px;
+				left: 0.2rem;
 				height: 2px;
-				width: 0.8rem;
+				width: 1.4rem;
 				background-color: #999999;
+			}
+			.goods-detail-container img{
+				max-width: 100% !important;
+				height: auto;
+			}
+			.btn-section {
+			  position: fixed;
+			  display: flex;
+			  align-items: center;
+			  z-index: 199;
+			  background-color: #FFFFFF;
+			  height: 1.09rem;
+			  bottom: 0;
+			  width: 100%;
+			  box-shadow: 1px 0 2px 0 rgba(220,220,220,.5);
+			}
+			.btn-section div {
+			  color: #333333;
+			  width: 50%;
+			  height: 100%;
+			  display: inline-flex;
+			  align-items: center;
+			  justify-content: center;
+			  position: relative;
+			}
+			.btn-section .the-warehouse{
+				color:#CC9C2D;
+			}
+			.btn-section .the-warehouse::after {
+			  content: '';
+			  position: absolute;
+			  display: block;
+			  background-color: #DDDDDD;
+			  top: 50%;
+			  margin-top: -0.185rem;
+			  height: 0.37rem;
+			  left: 0;
+			  width: 1px;
+			  -webkit-transform: scaleX(0.5);
+			  transform: scaleX(0.5);
 			}
 		</style>
 	</head>
@@ -220,13 +260,13 @@
 						<img src="../image/share/bg-img02.jpg">
 					</div>
 					<div class="swiper-slide">
-						<img src="../image/store_management_header.png">
-					</div>
-					<div class="swiper-slide">
 						<img src="../image/share/bg-img03.jpg">
 					</div>
 					<div class="swiper-slide">
-						<img src="../image/share/bg-img03.jpg">
+						<img src="../image/share/bg-img05.jpg">
+					</div>
+					<div class="swiper-slide">
+						<img src="../image/share/bg-img04.jpg">
 					</div>
 				</div>
 				<!-- Add Pagination -->
@@ -287,6 +327,17 @@
 			</div>
 			<div class="goods-detail-container">
 				<h4 class="title">商品详情</h4>
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17614/41/1066658677/201711/28869e0/5ab9e251Neb5e8e1c.jpg!q70.dpg.webp" >
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t1/26930/26/7060/99982/5c665fe3E33a28553/6a7b517d9b805255.jpg!q70.dpg.webp" >
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17902/351/1069557559/144738/5a18345e/5ab9e261N8e01fd9c.jpg!q70.dpg.webp" >
+			</div>
+			<div class="btn-section">
+				<div class="putaway-btn">
+					添加到仓库
+				</div>
+				<div class="the-warehouse">
+					上架到商城
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -347,6 +398,14 @@
 					}
 				});
 			}
+			// 添加到仓库
+			mui(".mui-content").on("tap", ".putaway-btn", function() {
+				mui.toast('添加到仓库');
+			})
+			// 上架到商城
+			mui(".mui-content").on("tap", ".the-warehouse", function() {
+				mui.toast('上架到商城');
+			})
 		</script>
 	</body>
 

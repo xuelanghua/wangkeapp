@@ -463,23 +463,23 @@
 					<div class="primary-goods">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell goods-list" v-for="i in 4">
-								<div class="goods-img">
+								<div class="goods-img" @tap="openGoodsDetail(125)">
 									<img src="../image/5E0eH.png">
 								</div>
 								<div class="goods-right">
-									<p class="goods-title mui-ellipsis-2">
+									<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(125)">
 										四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用双人春夏季床上用双人春夏季床上用
 									</p>
-									<div class="goods-info">
+									<div class="goods-info" @tap="openGoodsDetail(125)">
 										<span class="wage-text">提成：&yen;50.00</span>
 										<span class="price-text">供货价：&yen;500.00</span>
 									</div>
 									<div class="goods-right-bottom">
-										<span>销量&nbsp;950</span>
-										<span>95%&nbsp;好评</span>
+										<span @tap="openGoodsDetail(125)">销量&nbsp;950</span>
+										<span @tap="openGoodsDetail(125)">95%&nbsp;好评</span>
 										<img class="add-entrepot" src="../image/icon/jianhuo-active.png">
 									</div>
-									<div class="team-name">
+									<div class="team-name" @tap="openGoodsDetail(125)">
 										<span>云南最大的土特产团队</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
@@ -522,7 +522,11 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-
+					openGoodsDetail:function(gid){
+						openPage('distributor_goods_detail.html','distributor_goods_detail','#f7f7f7',{
+							gid:gid
+						})
+					}
 				},
 				mounted: function() {
 					getNotice();
