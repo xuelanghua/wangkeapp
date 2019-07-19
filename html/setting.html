@@ -234,11 +234,16 @@
 										plus.webview.close(wvs[i]);
 									}
 								}
-								fnOpenWin('login.html', 'login', {
-									statusbar: {
-										background: '#122c9a'
-									}
-								}, '', 'slide-in-bottom');
+								var loginPage = plus.webview.getWebviewById('login');
+								if (!loginPage) {
+									loginPage.show();
+								} else {
+									fnOpenWin('login.html', 'login', {
+										statusbar: {
+											background: '#122c9a'
+										}
+									}, '', 'slide-in-bottom');
+								}
 								curr.hide();
 								curr.close();
 							}

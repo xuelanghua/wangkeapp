@@ -431,31 +431,9 @@
 					}
 				},
 				mounted: function() {
-					if (mui.os.ios) {
-						mui.init({
-							swipeBack: true,
-							beforeback: function() {
-								var view = plus.webview.currentWebview().opener();
-								// logs(view);
-								// var grandfather=view.currentWebview().opener();
-								// if (grandfather.id == 'activation') {
-								// 	setStatusBar('', 'light');
-								// }
-							}
-						})
-					} else {
-						mui.init({
-							swipeBack: false,
-							beforeback: function() {
-								var view = plus.webview.currentWebview().opener();
-								var grandfather=view.currentWebview().opener();
-								// logs(grandfather);
-								if (grandfather.id == 'user') {
-									setStatusBar('', 'light');
-								}
-							}
-						})
-					}
+					mui.init({
+						swipeBack: true,
+					})
 					mui.plusReady(function() {
 						eventInit();
 						getGroupInfo();

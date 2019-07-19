@@ -100,6 +100,9 @@ function upload(file, cb) {
 		key: 'file'
 	});
 	task.start();
+	setTimeout(function() {
+		showload(1);
+	}, 10000);
 }
 
 //压缩（需要获取本地文件权限）  

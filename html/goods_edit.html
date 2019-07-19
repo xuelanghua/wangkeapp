@@ -365,7 +365,7 @@
 		</header>
 		<div class="mui-content">
 			<p id="cause_conts" class="cause-conts">
-				<span style="font-weight: 700;">未通过原因：</span><span id="cause_info"> 巴拉巴拉了巴拉巴拉霸来了吧拔萝卜阿拉伯巴拉巴拉巴拉了巴拉巴拉霸来了吧拔萝卜阿拉伯巴拉</span>
+				<span style="font-weight: 700;">未通过原因：</span><span id="cause_info"></span>
 			</p>
 			<!-- 商品id -->
 			<input type="hidden" id="goods_id" value="" />
@@ -506,22 +506,23 @@
 			})
 			var flag = true;
 			var imageId = 0;
-			//存储图片的数组
-			var images = new Array();
+			var images = new Array();	//存储图片的数组
 			var specId = 0;
 			var spec = new Array();
 			var content = '';
 			var recommend = 0;
-			var type = 0; //二级分类
-			var type_p = 0; //一级分类
+			var type = 0;
+			var type_p = 0;
 			var status = 0;
 			var goodsTypeTitle = '';
 			var userInfo = getUserInfo();
-			//2019-3-27 新增 分类数组容器
-			var good_type_container = '';
-			//2019-3-27 新增 商品规格容器
-			var good_spec_container = '';
+			var good_type_container = '';	//分类数组容器
+			var good_spec_container = ''; //商品规格容器
+			var goodsId = 0;
+			
 			mui.plusReady(function() {
+				var wv = plus.webview.currentWebview();
+				goodsId = wv.goods_id;
 				//获取商品规格
 				getGoodSpec();
 				//获取商品类型
@@ -546,12 +547,10 @@
 			})
 			//获取商品的信息
 			function getGoodInfo() {
-				var wv = plus.webview.currentWebview();
-				var goodid = wv.goods_id;
 				var ajax_url = $ajaxUrl + 'goods';
 				mui.ajax(ajax_url, {
 					data: {
-						good_id: goodid,
+						goods_id: goodsId,
 						action: 'get_goods_by_id',
 						token: userInfo.token
 					},
@@ -559,9 +558,6 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(ret) {
-						// console.log(JSON.stringify(ret));
-						// console.log(JSON.stringify(ret.data.name));
-						// logs(ret.data.check_status);
 						if(ret.data.check_status==2){
 							mui("#cause_info")[0].innerText=ret.data.remark;
 							mui("#cause_conts")[0].style.display="block";
@@ -616,8 +612,6 @@
 						//获取图片链接 并读取原图片
 						var img_url_str = ret.data.images;
 						for (var i = 0; i < img_url_str.length; i++) {
-							// alert(img_url_str[i]);
-							// alert(images);
 							//下标量自增
 							imageId++;
 							//往图片数组中追加图片
@@ -670,12 +664,10 @@
 			 * 获取商品规格
 			 */
 			function getGoodSpec() {
-				var wv = plus.webview.currentWebview();
-				var goodid = wv.goods_id;
 				var ajax_url = $ajaxUrl + 'goods';
 				mui.ajax(ajax_url, {
 					data: {
-						good_id: goodid,
+						goods_id: goodsId,
 						action: 'get_good_spec_by_id',
 						token: userInfo.token
 					},
@@ -683,9 +675,10 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(ret) {
-						good_spec_container = ret.data;
-						console.log(JSON.stringify('成功'));
 						console.log(JSON.stringify(ret));
+						if (ret.errno == 0) {
+							good_spec_container = ret.data;
+						}
 					},
 					error: function(xhr, type, errorThrown) {
 						console.log(JSON.stringify('失败'));
@@ -693,6 +686,7 @@
 					}
 				});
 			}
+			
 			//事件初始化
 			function eventInit() {
 				//详情添加完毕监听
@@ -860,7 +854,7 @@
 						spec[sid] = temp;
 					})
 					var submitData = {
-						goodId: goods_id,
+						goods_id: goods_id,
 						name: goods_name,
 						images: images,
 						recommend: recommend,
