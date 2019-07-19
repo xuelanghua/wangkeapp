@@ -647,18 +647,16 @@
 					team_ids: app.team_ids.join(','),
 					status: app.status,
 				}
-				logs(datas);
 				mui.post($ajaxUrl + 'goods', {
 					action: 'add_team_goods',
 					token: userInfo.token,
 					data: datas,
 				}, function(res) {
-					logs(res);
 					if (res.errno == 0) {
 						message('添加成功！');
 						mui.back();
 					} else {
-						message(res.massage);
+						message(res.message);
 					}
 				}, 'json');
 			}

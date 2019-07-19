@@ -245,7 +245,7 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">商品管理</h1>
 		</header>
-		<div class="mui-content">
+		<div class="mui-content" id="mui-content">
 			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
 				<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
 					<input type="search" class="mui-input-clear" name="goods_name" placeholder="搜索商品名称">
@@ -286,6 +286,10 @@
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
+											<div class="play" data-type="jh">
+												<img src="../image/qyecjh-icon.png" />
+												<div>拣货</div>
+											</div>
 											<div class="play" data-type="del">
 												<img src="../image/delete.png" />
 												<div style="margin-top: -1px;">删除</div>
@@ -321,19 +325,19 @@
 										</div>
 										<div class="playb">
 											<div class="jiao"></div>
-											<div class="play">
+											<div class="play" data-type="edit">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
-											<div class="play">
+											<div class="play" data-type="off">
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
-											<div class="play">
+											<div class="play" data-type="del">
 												<img src="../image/delete.png" />
 												<div style="margin-top: -1px;">删除</div>
 											</div>
-											<div class="play">
+											<div class="play" data-type="share">
 												<img src="../image/extension.png" />
 												<div>推广</div>
 											</div>
@@ -364,19 +368,19 @@
 										</div>
 										<div class="playb">
 											<div class="jiao"></div>
-											<div class="play">
+											<div class="play" data-type="edit">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
-											<div class="play">
+											<div class="play" data-type="off">
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
-											<div class="play">
+											<div class="play" data-type="del">
 												<img src="../image/delete.png" />
 												<div style="margin-top: -1px;">删除</div>
 											</div>
-											<div class="play">
+											<div class="play" data-type="share">
 												<img src="../image/extension.png" />
 												<div>推广</div>
 											</div>
@@ -389,25 +393,8 @@
 					</div>
 				</div>
 			</div>
-			<button class="add_merchandise" id="add_goods">添加商品</button>
+			<button class="add_merchandise" id="add_goods">添加分销商品</button>
 		</div>
-		<!--右上角弹出菜单-->
-		<div id="topPopover" class="mui-popover">
-			<div class="mui-popover-arrow"></div>
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell nr">
-							<a href="#">分组管理</a>
-						</li>
-						<li class="mui-table-view-cell nr">
-							<a href="#">批量管理</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-
 		<div class="mask-cont mui-hidden">
 			<div class="tips-cont">
 				<div class="tips-body">
@@ -421,68 +408,88 @@
 </html>
 <script src="../js/mui.js"></script>
 <script src="../js/util.js"></script>
+<script src="../js/vue.min.js"></script>
 <script type="text/javascript">
-	if (mui.os.ios) {
-		mui.init({
-			swipeBack: true,
-			pullRefresh: {
-				container: "#goods_container",
-				down: {
-					style: 'circle',
-					color: '#2289FF',
-					height: '50px',
-					range: '100px',
-					offset: '0px',
-					auto: false,
-					callback: function() {
-						getGoodsList(true);
-					}
-				}
-			}
-		});
-	} else {
-		mui.init({
-			swipeBack: false,
-			pullRefresh: {
-				container: "#goods_container",
-				down: {
-					style: 'circle',
-					color: '#2289FF',
-					height: '50px',
-					range: '100px',
-					offset: '0px',
-					auto: false,
-					callback: function() {
-						getGoodsList(true);
-					}
-				}
-			}
-		});
-	}
-	var goodsName = '';
 	var userInfo = getUserInfo();
-	mui.plusReady(function() {
-		window.addEventListener('goodsAddSuccess', function() {
-			getGoodsList(false);
-		})
-		getGoodsList(false);
-		eventInit();
-		var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-		window.onresize = function() {
-			//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-			var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-			var paddeds = document.getElementById("add_goods");
-			if (resizeHeight * 1 < originalHeight * 1) {
-				paddeds.style.zIndex = '-1';
-				paddeds.style.display = 'none';
-			} else {
-				paddeds.style.zIndex = '999';
-				paddeds.style.display = 'block';
+	var goodsName = '';
+	var app = new Vue({
+		el: "#mui-content",
+		data: {
+			created: function() {
+				// 初始化字体大小
+				var viewport = document.documentElement.clientWidth;
+				if (viewport > 750) {
+					viewport = 750
+				}
+				document.documentElement.style.fontSize = viewport / 7.5 + "px";
+				// 初始化字体大小结束	
+			},
+			methods: {
+
+			},
+			mounted: function() {
+				if (mui.os.ios) {
+					mui.init({
+						swipeBack: true,
+						pullRefresh: {
+							container: "#goods_container",
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								height: '50px',
+								range: '100px',
+								offset: '0px',
+								auto: false,
+								callback: function() {
+									getGoodsList(true);
+								}
+							}
+						}
+					});
+				} else {
+					mui.init({
+						swipeBack: false,
+						pullRefresh: {
+							container: "#goods_container",
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								height: '50px',
+								range: '100px',
+								offset: '0px',
+								auto: false,
+								callback: function() {
+									getGoodsList(true);
+								}
+							}
+						}
+					});
+				}
+				mui.plusReady(function() {
+					window.addEventListener('goodsAddSuccess', function() {
+						getGoodsList(false);
+					})
+					getGoodsList(false);
+					eventInit();
+					var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+					window.onresize = function() {
+						//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+						var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						var paddeds = document.getElementById("add_goods");
+						if (resizeHeight * 1 < originalHeight * 1) {
+							paddeds.style.zIndex = '-1';
+							paddeds.style.display = 'none';
+						} else {
+							paddeds.style.zIndex = '999';
+							paddeds.style.display = 'block';
+						}
+					}
+				})
 			}
 		}
 	})
-
 	function eventInit() {
+		// 搜索
 		document.onkeydown = function(event) {
 			var e = event || window.event || arguments.callee.caller.arguments[0];
 			if (e && e.keyCode == 13) { // enter 键
@@ -517,69 +524,7 @@
 						changeGoodsStatus(-1, id);
 					}
 				})
-			} else if (type == 'share') {
-				//弹出底部标签
-				var cont = this.dataset.name;
-				var img = this.dataset.cover;
-				var imgs = img.substring(img.lastIndexOf("/"));
-				var sd_path = "_downloads" + imgs;
-				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
-					shareToMiniprogram({
-						title: cont,
-						content: cont,
-						thumbs: [sd_path],
-						miniProgram: {
-							id: 'gh_9fa5f42ab939',
-							path: '/longbing_card/pages/shop/detail/detail?id=' + id + '&to_uid=' + userInfo.id,
-							webUrl: 'https://app.wangkeapp.cn/'
-						}
-					}, 'miniProgram');
-				}, function(e) {
-					showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
-					var imgpath = '';
-					var imgDtask = plus.downloader.createDownload(img, {
-						method: 'GET'
-					}, function(d, status) {
-						if (status == 200) {
-							plus.zip.compressImage({
-									src: d.filename,
-									dst: d.filename,
-									overwrite: true,
-									width: '500px',
-									height: 'auto',
-									format: 'jpg',
-									quality: 90,
-									clip: {
-										width: "500px",
-										height: "400px"
-									}
-								},
-								function(e) {
-									imgpath = e.target;
-									if (imgpath) {
-										showload(1);
-										shareToMiniprogram({
-											title: cont,
-											content: cont,
-											thumbs: [imgpath],
-											miniProgram: {
-												id: 'gh_9fa5f42ab939',
-												path: '/longbing_card/pages/shop/detail/detail?id=' + id + '&to_uid=' + userInfo.id,
-												webUrl: 'https://app.wangkeapp.cn/'
-											}
-										}, 'miniProgram');
-									}
-								},
-								function(error) {
-									message("Compress error!");
-								});
-						} else {
-							mui.toast('保存失败')
-						}
-					});
-					imgDtask.start()
-				});
-			} else if (type == 'edit') {
+			}  else if (type == 'edit') {
 				//打开编辑页面
 				mui.openWindow({
 					id: 'goods_edit',
