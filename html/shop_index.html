@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/animate.min.css">
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
 			[v-cloak] {
@@ -314,28 +315,62 @@
 				right: 0.1rem;
 				z-index: 6;
 			}
-			.team-name{
-				display: flex;
+
+			.team-name {
 				position: relative;
-				align-items: center;
 				font-size: 0.24rem;
 				color: #999999;
 				margin-top: 5px;
 				line-height: 1;
+				padding: 0;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				width: 0.9rem;
 			}
-			.team-name .mui-icon.mui-icon-arrowright{
+
+			.mui-backdrop.mui-active {
+				opacity: 0.3;
+			}
+
+			.mui-popover .mui-popover-arrow:after {
+				background: #FFFFFF;
+				/* box-shadow: 0 0 3px 0 rgba(0, 0, 0, .3); */
+				z-index: 1;
+			}
+
+			.mui-popover-bottom .mui-table-view {
+				background: #FFFFFF;
+				color: #666;
+				/* box-shadow: 0 0 3px 0 rgba(0, 0, 0, .3); */
 				font-size: 14px;
-				position: relative;
-				margin-top: 0;
-				right: 0;
+				color: #999;
 			}
-			.mui-table-view-cell.mui-active{
+
+			.mui-popover-bottom .mui-table-view-cell:after {
+				left: 15px;
+				right: 15px;
+				background-color: #DDDDDD;
+			}
+
+			.team-name .mui-icon.mui-icon-arrowright {
+				font-size: 15px;
+				position: relative;
+				top: 0;
+				right: 0;
+				margin-left: 0;
+				margin-top: -1px;
+			}
+
+			.mui-table-view-cell.mui-active {
 				background-color: #FFFFFF;
 			}
-			.goods-list:first-of-type{
+
+			.goods-list:first-of-type {
 				padding-top: 0;
 			}
-			.change-list{
+
+			.change-list {
 				font-size: 0.3rem;
 				color: #CC9C2D;
 			}
@@ -458,29 +493,29 @@
 				<div class="menu-card">
 					<div class="headline">
 						<span>爆款热荐</span>
-						<span class="mui-pull-right change-list">换一批</span>
+						<span class="mui-pull-right change-list animated">换一批</span>
 					</div>
 					<div class="primary-goods">
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell goods-list" v-for="i in 4">
-								<div class="goods-img" @tap="openGoodsDetail(125)">
-									<img src="../image/5E0eH.png">
+							<li class="mui-table-view-cell goods-list" v-for="(goods,index) in hot_goods" :key="index">
+								<div class="goods-img" @tap="openGoodsDetail(goods.id)">
+									<img :src="goods.cover">
 								</div>
 								<div class="goods-right">
-									<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(125)">
-										四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用双人春夏季床上用双人春夏季床上用
+									<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(goods.id)">
+										{{goods.name}}
 									</p>
-									<div class="goods-info" @tap="openGoodsDetail(125)">
-										<span class="wage-text">提成：&yen;50.00</span>
-										<span class="price-text">供货价：&yen;500.00</span>
+									<div class="goods-info" @tap="openGoodsDetail(goods.id)">
+										<span class="wage-text">提成：&yen;{{goods.commission}}</span>
+										<span class="price-text">供货价：&yen;{{goods.settlement_price}}</span>
 									</div>
 									<div class="goods-right-bottom">
-										<span @tap="openGoodsDetail(125)">销量&nbsp;950</span>
-										<span @tap="openGoodsDetail(125)">95%&nbsp;好评</span>
+										<span @tap="openGoodsDetail(goods.id)">销量&nbsp;{{goods.sale_count}}</span>
+										<span @tap="openGoodsDetail(goods.id)">95%&nbsp;好评</span>
 										<img class="add-entrepot" src="../image/icon/jianhuo-active.png">
 									</div>
-									<div class="team-name" @tap="openGoodsDetail(125)">
-										<span>云南最大的土特产团队</span>
+									<div class="team-name" :data-idx="index">
+										<span>货源</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
 								</div>
@@ -496,12 +531,23 @@
 				</div>
 				<img class="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
 			</div>
+			<!-- 团队弹窗 -->
+			<div id="bottomPopover" class="mui-popover mui-popover-bottom">
+				<div class="mui-popover-arrow"></div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(t,i) in team_list" :key="i" @tap="teamdetail(t.id,t.captain_uid)">
+						{{t.name}}
+					</li>
+				</ul>
+			</div>
 		</div>
+
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/swiper.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var skip = 1;
 			var userInfo = getUserInfo();
 			var mask = mui.createMask(function() {
 				document.querySelector(".tips-cont").classList.add("mui-hidden");
@@ -510,7 +556,9 @@
 				el: "#mui-content",
 				data: {
 					// 公告
-					notice: []
+					notice: [],
+					hot_goods: [],
+					team_list: []
 				},
 				created: function() {
 					// 初始化字体大小
@@ -522,20 +570,27 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-					openGoodsDetail:function(gid){
-						openPage('distributor_goods_detail.html','distributor_goods_detail','#f7f7f7',{
-							gid:gid
+					openGoodsDetail: function(gid) {
+						openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+							gid: gid
 						})
+					},
+					// 打开团队详情
+					teamdetail: function(id, cpt) {
+						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+							teamid: id
+						});
 					}
 				},
 				mounted: function() {
-					getNotice();
 					mui.init({
 						beforeback: function() {
 							//plus.navigator.setStatusBarStyle("light");
 						}
 					});
 					mui.plusReady(function() {
+						getNotice();
+						getHotGoodsList();
 						var self = plus.webview.currentWebview();
 						// 去掉滚动条
 						self.setStyle({
@@ -568,7 +623,6 @@
 				mui.post($ajaxUrl + 'notice', {
 					action: 'list'
 				}, function(res) {
-					logs(res);
 					if (res.errno == 0) {
 						app.notice = res.data;
 						if (app.notice.length > 1) {
@@ -647,12 +701,48 @@
 					}
 				}, 'json');
 			});
+			// 防止弹窗滑动穿透
+			document.querySelector(".tips-cont").addEventListener("touchmove", mui.preventDefault);
 			// 关闭提示弹窗
 			mui(".mui-content").on("tap", ".hide_qrcode", function() {
 				mask.close();
 			})
-			// 防止弹窗滑动穿透
-			document.querySelector(".tips-cont").addEventListener("touchmove", mui.preventDefault);
+			// 换一批
+			mui(".mui-content").on("tap", ".change-list", function() {
+				var _self = this;
+				this.classList.add("tada");
+				setTimeout(function() {
+					_self.classList.remove("tada");
+				}, 1000);
+				skip += 1;
+				showload();
+				getHotGoodsList();
+			})
+			// 显示团队
+			mui(".mui-content").on("tap", ".team-name", function() {
+				var idx = this.dataset.idx;
+				app.team_list = app.hot_goods[idx].team_info;
+				mui('#bottomPopover').popover("show", this);
+			})
+			// 获取爆品
+			function getHotGoodsList() {
+				logs(skip);
+				mui.post($ajaxUrl + 'goods&action=team_hot_goods', {
+					token: userInfo.token,
+					skip: skip,
+					limit: 4,
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						app.hot_goods = res.data;
+						app.team_list = res.data[0].team_info;
+						showload(1, 1200);
+					} else {
+						skip = 1;
+						getHotGoodsList();
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 
