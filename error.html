@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link href="icomoon/style.css" rel="stylesheet" />
+		<style>
+			.mui-tab-label{
+				font-size: 0.22rem;
+			}
+			.mui-bar-tab .mui-tab-item{
+				position: relative;
+				line-height: 1.1;
+				padding: 0;
+				width: auto;
+				flex-grow: 1;
+				color: #535353;
+			}
+			 *{ touch-action: pan-y; }
+			 
+			 .mui-tab-item p{
+				margin: 0;
+				padding: 0;
+			  }
+			  .mui-tab-item.self-active span{
+				  color: #2289ff;
+			  } 
+			  .mui-tab-item.mui-active span{
+				  color: #929292;
+			  }
+			  
+			.mui-tab-item .mui-badge {
+				position: absolute;
+				width: auto;
+				height: auto;
+				top: 2px;
+				right: 32%;
+				padding: 2px 3px 1px;
+				background-color: rgba(255, 0, 0, 0.8);
+				color: #FFFFFF !important;
+				font-size: 10px;
+				z-index: 9999;
+			}
+			.mui-bar{
+				box-shadow: none;
+				-webkit-box-shadow: none;
+			}
+			.mui-bar.mui-bar-tab{
+				z-index: 1045;
+				background-color: #FFFFFF; 
+				-webkit-box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
+				box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
+			}
+			body {
+				padding-top: constant(safe-area-inset-top);
+			}
+			.mui-bar.mui-bar-nav {
+			   top: constant(safe-area-inset-top);
+			}
+			[v-cloak] {
+				display: none;
+			}
+			#index{
+				/* display: none; */
+			}
+		</style>
+		<script type="text/javascript">
+			//mui初始化
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		</script>
+	</head>
+
+	<body>
+		<div id="index" v-cloak>
+			<nav class="mui-bar mui-bar-tab">
+				<div :data-idx="index" :id="nav.id" class="mui-tab-item" :class="nav.selected?'self-active':''" v-for="(nav,index) in nav"
+				 :key="index">
+					<p>
+						<span :class="nav.selected?nav.icon+'-s':nav.icon" style="font-size: 18px;margin-top: 2px;"></span>
+						<span v-if="nav.id=='chat'&&numbers!=0" class="mui-badge">{{numbers}}</span>
+					</p>
+					<span class="mui-tab-label">{{nav.title}}</span>
+				</div>
+			</nav>
+		</div>
+		<script src="js/mui.js"></script>
+		<script src="js/util.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			var prevId = "home",
+				currentId = "",
+				tempId = "";
+			var subpages = [{
+					url: "html/home.html",
+					ids: "home",
+					statusBg: "#FFFFFF",
+					style: "dark",
+					styles: {
+						top: "0px",
+						bottom: "51px",
+						scrollIndicator: "none",
+						render: "always",
+						statusbar: {
+							background: "#FFFFFF"
+						}
+					}
+				}, {
+					url: "html/chat.html",
+					ids: "chat",
+					statusBg: "#2289FF",
+					style: "light",
+					styles: {
+						top: "0px",
+						bottom: "51px",
+						scrollIndicator: "none",
+						render: "always",
+						statusbar: {
+							background: "#2289FF"
+						}
+					}
+				},
+				{
+					url: "html/self_media.html",
+					ids: "media",
+					statusBg: "#FFFFFF",
+					style: "dark",
+					styles: {
+						top: "0px",
+						bottom: "51px",
+						render: "always",
+						scrollIndicator: 'none',
+						"titleNView": {
+							backgroundColor: '#FFFFFF', //导航栏背景色
+							titleText: '发现~身边的商业机会',
+							titleColor: '#000000', //文字颜色
+							type: 'transparent', //透明渐变样式
+							// autoBackButton: true, 
+							buttons: [{
+								fontSrc: 'fonts/iconfont.ttf',
+								text: '\ue60b',
+								float: 'right',
+								width: '60px',
+								onclick: "javascript:plus.webview.currentWebview().evalJS('shareHref();')"
+							}]
+						}
+					}
+				},
+				{
+					url: "html/my.html",
+					ids: "user",
+					statusBg: "#2289FF",
+					style: "light",
+					// style: "dark",
+					styles: {
+						top: "0px",
+						bottom: "51px",
+						render: "always",
+						scrollIndicator: "none",
+						statusbar: {
+							background: "#2289FF"
+						}
+					}
+				}
+			];
+			var aniShow = {};
+			//当前激活选项
+			var current = '';
+			var activeTab = subpages[0].ids;
+
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#index",
+				data: {
+					numbers: 0,
+					number: 0,
+					nav: [{
+							title: "cuowuyetishi",
+							id: 'home',
+							icon: 'icon-home-page',
+							selected: 'icon-home-page-s',
+							selected: true
+						}, {
+							title: "人脉",
+							id: 'chat',
+							icon: 'icon-chat',
+							selected: 'icon-chat-s',
+							selected: false
+						},
+						{
+							title: "发现",
+							id: 'media',
+							icon: 'icon-discover',
+							selected: 'icon-discover-s',
+							selected: false
+						}, {
+							title: "我的",
+							id: 'user',
+							icon: 'icon-my',
+							selected: 'icon-my-s',
+							selected: false
+						}
+					]
+				},
+				mounted: function() {
+					mui.init();
+					//创建子页面，首个选项卡页面显示，其它均隐藏；
+					mui.plusReady(function() {
+						checkUpdate();
+						// plus.navigator.closeSplashscreen();	//主动关闭启动页
+						pushInit();
+						eventInit();
+						var lastLoginTime = localStorage.getItem('lastLoginTime');
+						var currentTime = new Date().getTime();
+						var loginTime = parseInt((currentTime - lastLoginTime) / 1000);
+						var isExpire = loginTime > (60 * 60 * 24 * 5) ? true : false;
+						if (lastLoginTime && isExpire) {
+							message('账号登录过期,重新登录');
+						}
+						if (!userInfo || isExpire) {
+							login();
+						} else if (userInfo.mobile.length == 0) {
+							bindMobile();
+						} else {
+							var timer = setInterval(function() {
+								getUnreadMessage();
+							}, 3000)
+							// plus.nativeUI.showWaiting();
+							showload(0);
+							initIndexPage();
+							bindClientId();
+						}
+						plus.navigator.setStatusBarStyle("dark");
+						plus.navigator.setStatusBarBackground('#FFFFFF');
+					});
+				}
+			})
+
+			function initIndexPage() {
+				var self = plus.webview.currentWebview();
+				for (var i = 0; i < 4; i++) {
+					var temp = {};
+					var sub = plus.webview.create(subpages[i].url, subpages[i].ids, subpages[i].styles);
+					if (i == 0) {
+						self.append(sub);
+					}
+					// if (i > 0) {
+					// 	sub.hide();
+					// } else {
+					// 	temp[subpages[i].ids] = "true";
+					// 	mui.extend(aniShow, temp);
+					// }
+					// self.append(sub);
+				}
+			}
+
+			function eventInit() {
+				//选项卡点击事件
+				mui('.mui-bar-tab').on('tap', '.mui-tab-item', function(e) {
+					var targetTab = this.id;
+					var idx = this.dataset.idx;
+					if (targetTab == activeTab) {
+						return;
+					}
+					//显示目标选项卡
+					//若为iOS平台或非首次显示，则直接显示
+					setTimeout(function() {
+						if (subpages[idx] != 'media') {
+							setStatusBar(subpages[idx].statusBg, subpages[idx].style);
+						}
+					}, 200)
+					if (mui.os.ios || aniShow[targetTab]) {
+						// plus.webview.show(targetTab);
+						plus.webview.show(targetTab, "fade-in", 200);
+					} else {
+						//否则，使用fade-in动画，且保存变量
+						/* var temp = {};
+						temp[targetTab] = "true";
+						mui.extend(aniShow, temp); */
+						// plus.webview.show(targetTab);
+						plus.webview.show(targetTab, "fade-in", 200);
+					}
+					//隐藏当前;
+					plus.webview.hide(activeTab);
+					//更改当前活跃的选项卡
+					for (var i = 0; i < 4; i++) {
+						app.nav[i].selected = false;
+					}
+					app.nav[idx].selected = true;
+					activeTab = targetTab;
+				});
+
+				//自定义事件，模拟点击“首页选项卡”
+				document.addEventListener('gohome', function() {
+					var defaultTab = document.getElementById("home");
+					//模拟首页点击
+					mui.trigger(defaultTab, 'tap');
+					//切换选项卡高亮 
+					current = document.querySelector(".mui-bar-tab>.mui-tab-item.self-active");
+					if (defaultTab !== current) {
+						current.classList.remove('self-active');
+						defaultTab.classList.add('self-active');
+					}
+				});
+
+				//自定义事件监听-首页新增客户点击
+				window.addEventListener('newCustomer', function() {
+					mui.trigger(document.getElementById('chat'), 'tap');
+					document.getElementById('home').classList.remove('self-active');
+					document.getElementById('chat').classList.add('self-active');
+				})
+
+				window.addEventListener('changeMy', function() {
+					mui.trigger(document.getElementById('user.html'), 'tap');
+				})
+
+				document.addEventListener('netchange', onNetChange, false);
+
+				//自定义事件-登录成功
+				window.addEventListener('loginSuccess', function() {
+					mui.trigger(document.getElementById('home'), 'tap')
+					userInfo = getUserInfo();
+					bindClientId();
+					initIndexPage();
+					getUnreadMessage();
+					var timer = setInterval(function() {
+						getUnreadMessage();
+					}, 2000);
+				})
+
+				//自定义事件-绑定成功
+				window.addEventListener('bindMobileSuccess', function() {
+					userInfo = getUserInfo();
+					// initIndexPage();
+				})
+
+				window.addEventListener('closeShortcut', function() {
+					// document.getElementById('short_cut').dataset.status = 0;
+					// shortcutWebview.hide();
+					// var restore = document.getElementById(prevId);
+					// //修改选中颜色样式
+					// mui.trigger(restore, 'tap');
+					// document.getElementById('shortcut').classList.remove('mui-active');
+					// restore.classList.add('mui-active');
+					console.log("尝试关闭快捷菜单！");
+				})
+
+				window.addEventListener('showChat', function() {
+					mui.trigger(document.getElementById('chat'), 'tap');
+				})
+
+				window.addEventListener('refreshNotice', function() {
+					getUnreadMessage();
+				})
+
+				var nt = plus.networkinfo.getCurrentType();
+				if (nt == 1) {
+					fnOpenWin('/html/network_outage.html', 'network_outage', {
+						statusbar: {
+							background: '#FFFFFF'
+						}
+					}, '', 'slide-in-bottom');
+				}
+
+				plus.screen.lockOrientation("portrait-primary");
+			}
+
+			function login() {
+				if (plus.os.name == "iOS") {
+					mui.get($ajaxUrl + 'member', {
+						action: 'login_setting',
+					}, function(res) {
+						getAppInfo(function(e) {
+							if (res.data.login_type == 2 && res.data.app_version == e.version) {
+								fnOpenWin('html/mobile_login.html', 'mobile_login', {
+									statusbar: {
+										background: '#2289FF'
+									}
+								}, '', 'slide-in-bottom');
+							} else {
+								fnOpenWin('html/login.html', 'login', {
+									statusbar: {
+										background: '#122c9a'
+									}
+								}, '', 'slide-in-bottom');
+							}
+						})
+					}, 'json');
+				} else {
+					fnOpenWin('html/login.html', 'login', {
+						statusbar: {
+							background: '#122c9a'
+						}
+					}, '', 'slide-in-bottom');
+				}
+			}
+
+			function bindMobile() {
+				fnOpenWin('html/mobile_bind.html', 'mobile_bind', {
+					statusbar: {
+						background: '#2289ff'
+					},
+				}, '', 'slide-in-bottom');
+			}
+
+			//获取未读消息
+			function getUnreadMessage() {
+				if (!userInfo) return;
+				mui.get($ajaxUrl + 'member', {
+					action: 'unread_message',
+					token: userInfo.token
+				}, function(res) {
+					// 获取所有页面
+					var wvs = plus.webview.all();
+					// logs(wvs);
+					if (res.data > 0) {
+						mui.fire(plus.webview.getWebviewById('chat'), 'messgeNumber', {
+							number: res.data
+						});
+						mui.fire(plus.webview.getWebviewById('home'), 'messgeNumber', {
+							number: res.data
+						});
+						mui.fire(plus.webview.getWebviewById('user'), 'messgeNumber', {
+							number: res.data
+						});
+						app.number = res.data;
+						getFriendApply();
+					} else {
+						mui.fire(plus.webview.getWebviewById('chat'), 'messgeNumber', {
+							number: 0
+						});
+						mui.fire(plus.webview.getWebviewById('home'), 'messgeNumber', {
+							number: 0
+						});
+						mui.fire(plus.webview.getWebviewById('user'), 'messgeNumber', {
+							number: 0
+						});
+						app.number = 0;
+						getFriendApply();
+					}
+				}, 'json');
+			}
+
+			//获取好友申请条目
+			function getFriendApply() {
+				if (!userInfo) return;
+				mui.post($ajaxUrl + 'customer', {
+					action: 'friend_apply_count',
+					token: userInfo.token,
+				}, function(res) {
+					var total = parseInt(res.data) + parseInt(app.number);
+					if (total > 0) {
+						app.numbers = total;
+						setBadge(total);
+						mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
+							number: res.data
+						});
+						mui.fire(plus.webview.getWebviewById('friend'), 'friendApplyNumber', {
+							number: res.data
+						});
+					} else {
+						mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
+							number: 0
+						});
+						mui.fire(plus.webview.getWebviewById('friend'), 'friendApplyNumber', {
+							number: 0
+						});
+						app.numbers = 0;
+						clearBadge();
+					}
+				}, 'json')
+			}
+
+			//检查APP更新
+			function checkUpdate() {
+				//获取系统设置
+				mui.get($ajaxUrl + 'util', {
+					action: 'system_setting',
+				}, function(res) {
+					var systemSetting = res.data;
+					getAppInfo(function(e) {
+						logs(e);
+						var currentVersion = e.version;
+						var newVersion = systemSetting.app_version;
+						if (currentVersion != newVersion) {
+							if (systemSetting.forced_updating == 1) {
+								// plus.nativeUI.alert('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content +
+								// '.此版本为有重要升级或向下不兼容,必须升级!',
+								// function(e) {
+								downWgt();
+								// })
+							} else {
+								plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?',
+									function(e) {
+										if (e.index == 0) {
+											downWgt();
+										}
+									})
+							}
+						}
+					})
+				}, 'json');
+			}
+		</script>
+	</body>
+</html>
