@@ -269,9 +269,9 @@
 				color: #F52E20;
 			}
 			/* 半透明效果 */
-			.mui-table-view-cell.lucid-active{
+			/* .mui-table-view-cell.lucid-active{
 				opacity: 0.5;
-			}
+			} */
 			.status-mask{
 				position: absolute;
 				top: 0;
@@ -289,6 +289,9 @@
 			}
 			.mui-control-item{
 				touch-action: pan-y;
+			}
+			.mui-backdrop {
+				 background-color: rgba(0,0,0,0);
 			}
 		</style>
 		<script type="text/javascript">
@@ -496,7 +499,7 @@
 	var app = new Vue({
 		el: "#mui-content",
 		data: {
-			goodsName : '',
+			goodsName: '',
 			on_sale_list: [],
 			sale_out_list: [],
 			off_sale_list: []
@@ -578,7 +581,6 @@
 		};
 		//展示商品弹窗
 		mui(".mui-table-view").on('tap', '.genduo', function(e) {
-			// mask.close();
 			var glist = document.querySelectorAll(".playb");
 			for (i = 0; i < glist.length; i++) {
 				glist[i].style.display = "none";
@@ -596,18 +598,18 @@
 		// })
 		mui('.mui-content').on('tap', '.play', function(e) {
 			var type = this.dataset.type;
-			var id = this.dataset.id;
+			mask.close();
 			if (type == 'off') {
 				//下架按钮
-				changeGoodsStatus(0, id);
+				changeGoodsStatus(0, currentId);
 			} else if (type == 'on') {
 				//上架按钮
-				changeGoodsStatus(1, id);
+				changeGoodsStatus(1, currentId);
 			} else if (type == 'del') {
 				//删除框
 				plus.nativeUI.confirm('确认删除该商品?', function(e) {
 					if (e.index == 0) {
-						changeGoodsStatus(-1, id);
+						changeGoodsStatus(-1, currentId);
 					}
 				})
 			} else if (type == 'edit') {
@@ -619,7 +621,7 @@
 						aniShow: 'slide-in-right'
 					},
 					extras: { //extras里面的就是参数了
-						goods_id: id
+						goods_id: currentId
 					},
 					styles: {
 						statusbar: {
@@ -631,22 +633,11 @@
 		})
 		//添加商品
 		document.getElementById('add_goods').addEventListener('tap', function() {
-			mui.get($ajaxUrl + 'member', {
-				action: 'check_goods_number',
-				token: userInfo.token
-			}, function(res) {
-				// logs(res); 
-				if (res.errno == 0) {
-					fnOpenWin('goods_add.html', 'goods_add', {
-						statusbar: {
-							background: '#FFF'
-						}
-					}, '', 'slide-in-right');
-				} else {
-					document.querySelector(".mask-cont").classList.remove('mui-hidden');
+			fnOpenWin('add_distribution_goods.html', 'add_distribution_goods', {
+				statusbar: {
+					background: '#f7f7f7'
 				}
-			}, 'json');
-
+			}, '', 'slide-in-right');
 		})
 	}
 	//获取商品列表
@@ -705,14 +696,15 @@
 			status: status,
 			goods_id: goods_id
 		}, function(res) {
-			// logs(res);
+			logs(res);
 			if (res.errno == 0) {
 				message('操作成功!');
 				setTimeout(function() {
 					getGoodsList();
 				}, 2000);
 			} else {
-				message('操作失败!');
+				// message('操作失败!');
+				message(res.message);
 			}
 		}, 'json');
 	}

@@ -15,6 +15,10 @@
 			[v-cloak] {
 				display: none;
 			}
+			.btn-section{
+				color: #FFFDEF;
+				justify-content: center;
+			}
 		</style>
 	</head>
 
@@ -194,18 +198,14 @@
 					选择可售团队
 				</div>
 				<ul class="mui-table-view choice-team-content">
-					<li class="mui-table-view-cell team-list" :data-ids="t.id" v-for="(t,i) in team_list">
+					<!-- active -->
+					<li class="mui-table-view-cell team-list" :class="comparison(t.id)?'active':''" :data-ids="t.id" v-for="(t,i) in team_list">
 						<span>{{t.name}}</span>
 					</li>
 				</ul>
 			</div>
 			<div class="btn-section">
-				<div class="putaway-btn">
-					上架出售
-				</div>
-				<div class="the-warehouse">
-					放入仓库
-				</div>
+				保存
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -215,6 +215,7 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var goodsId = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -269,7 +270,7 @@
 				methods: {
 					delImg: function(idx) {
 						this.images.splice(idx, 1);
-						logs(this.images);
+						// logs(this.images);
 					}
 				},
 				mounted: function() {
@@ -279,17 +280,20 @@
 						}
 					});
 					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						goodsId = self.goods_id;
 						// 获取团队列表
 						getTeamList();
 						// 商品类型
 						getGoodsType();
 						// 获取快递列表
 						getExpressList();
-						
+
 						// 编辑----------
 						//获取商品规格
 						getGoodSpec();
-						var self = plus.webview.currentWebview();
+						// 获取商品信息
+						getGoodInfo();
 						var ratio = 1 / 1;
 						//plus.navigator.setStatusBarStyle("dark");
 						// 添加主图
@@ -370,12 +374,6 @@
 								}
 							}, 'json');
 						}
-						// 获取上次选择快递
-						var courier = getcache('courier');
-						if (courier.value != 0) {
-							app.default_express = courier.value;
-							app.express_text = courier.text;
-						}
 						// 初始化两次防止页面乱
 						var viewport = document.documentElement.clientWidth;
 						if (viewport > 750) {
@@ -386,7 +384,7 @@
 					})
 				}
 			})
-			
+
 			//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 			var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 			window.onresize = function() {
@@ -403,7 +401,7 @@
 					document.querySelector(".mui-content").style.paddingBottom = '1.2rem';
 				}
 			}
-			
+
 			// 预览主图
 			function previewImage(idx) {
 				var urls = app.images;
@@ -429,16 +427,9 @@
 					}
 				});
 			}
-			// 上架出售
-			mui(".mui-content").on("tap", ".putaway-btn", function() {
+			// 保存
+			mui(".mui-content").on("tap", ".btn-section", function() {
 				document.activeElement.blur();
-				app.status = 1;
-				editDone();
-			})
-			// 放入仓库
-			mui(".mui-content").on("tap", ".the-warehouse", function() {
-				document.activeElement.blur();
-				app.status = 0;
 				editDone();
 			})
 			// 选择团队
@@ -652,24 +643,29 @@
 					freight: app.freight,
 					content: app.description,
 					team_ids: app.team_ids.join(','),
-					status: app.status,
 				}
-				mui.post($ajaxUrl + 'goods', {
-					action: 'add_team_goods',
-					token: userInfo.token,
-					data: datas,
-				}, function(res) {
-					if (res.errno == 0) {
-						message('添加成功！');
-						setTimeout(function() {
-							mui.back();
-						}, 1000);
-					} else {
-						message(res.message);
-					}
-				}, 'json');
+				logs(datas);
+				// mui.post($ajaxUrl + 'goods', {
+				// 	action: 'edit_team_goods',
+				// 	token: userInfo.token,
+				// 	data: datas,
+				// 	goods_id:goodsId
+				// }, function(res) {
+				// 	// logs(res);
+				// 	if (res.errno == 0) {
+				// 		message('修改成功！');
+				// 		setTimeout(function() {
+				// 			mui.back();
+				// 		}, 500);
+				// 	} else {
+				// 		message(res.message);
+				// 	}
+				// }, 'json');
 			}
 			// 编辑------
+			/**
+			 * 获取商品规格
+			 */
 			function getGoodSpec() {
 				var ajax_url = $ajaxUrl + 'goods';
 				mui.ajax(ajax_url, {
@@ -682,9 +678,9 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(ret) {
-						console.log(JSON.stringify(ret));
+						// console.log(JSON.stringify(ret));
 						if (ret.errno == 0) {
-							good_spec_container = ret.data;
+							app.spec = ret.data;
 						}
 					},
 					error: function(xhr, type, errorThrown) {
@@ -692,6 +688,71 @@
 						console.log(JSON.stringify(errorThrown));
 					}
 				});
+			}
+
+			//获取商品的信息
+			function getGoodInfo() {
+				logs(goodsId);
+				var ajax_url = $ajaxUrl + 'goods';
+				mui.ajax(ajax_url, {
+					data: {
+						goods_id: goodsId,
+						action: 'get_goods_by_id',
+						token: userInfo.token
+					},
+					dataType: 'json',
+					type: 'post',
+					timeout: 10000,
+					success: function(res) {
+						logs(res);
+						var datas = res.data;
+						app.images = datas.images;
+						app.name = datas.name;
+						app.description = datas.content;
+						if (app.description) {
+							app.edit_status = '点击编辑';
+						}
+						app.team_recommend = datas.team_recommend;
+						app.team_recommend = datas.team_recommend;
+						app.team_hot = datas.team_hot;
+						app.top = datas.top;
+						// 为了拿到上次选择的商品类型
+						app.type_p = datas.type_p;
+						for (var i = 0; i < app.goods_type_group.length; i++) {
+							if (app.goods_type_group[i].value == datas.type_p) {
+								app.goods_type_text = app.goods_type_group[i].text;
+							}
+						}
+						app.settlement_price = datas.settlement_price;
+						app.price = datas.price;
+						app.protect_price = datas.protect_price;
+						app.stock = datas.stock;
+						app.freight = datas.freight;
+						app.default_express = datas.default_express;
+						for (var i = 0; i < app.express_group.length; i++) {
+							if (app.express_group[i].value == datas.default_express) {
+								app.express_text = app.express_group[i].text;
+							}
+						}
+						// 处理
+						app.team_ids = datas.team_ids.split(","); //上次选的团队
+						//所有的团队列表app.team_list
+						// for
+						// logs(app.team_list);
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(JSON.stringify('失败'));
+						console.log(JSON.stringify(errorThrown));
+					}
+				});
+			}
+
+			function comparison(id) {
+				var flag = false;
+				if (app.team_ids.indexOf(id) > -1) {
+					flag = true;
+				}
+				return flag;
 			}
 		</script>
 	</body>
