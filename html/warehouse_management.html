@@ -371,6 +371,10 @@
 										</div>
 									</div>
 								</li>
+								<div v-if="on_sale_status">
+									<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png">
+									<p style="text-align: center;color:#717171;">暂无商品</p>
+								</div>
 							</ul>
 						</div>
 					</div>
@@ -414,7 +418,7 @@
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
-											<div class="play" data-type="off">
+											<div class="play" data-type="on">
 												<img src="../image/on_sale.png" />
 												<div>上架</div>
 											</div>
@@ -425,6 +429,10 @@
 										</div>
 									</div>
 								</li>
+								<div v-if="sale_out_status">
+									<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png">
+									<p style="text-align: center;color:#717171;">暂无商品</p>
+								</div>
 							</ul>
 						</div>
 					</div>
@@ -464,7 +472,7 @@
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
-											<div class="play" data-type="off">
+											<div class="play" data-type="on">
 												<img src="../image/on_sale.png" />
 												<div>上架</div>
 											</div>
@@ -475,6 +483,10 @@
 										</div>
 									</div>
 								</li>
+								<div v-if="off_sale_status">
+									<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png">
+									<p style="text-align: center;color:#717171;">暂无商品</p>
+								</div>
 							</ul>
 						</div>
 					</div>
@@ -502,7 +514,10 @@
 			goodsName: '',
 			on_sale_list: [],
 			sale_out_list: [],
-			off_sale_list: []
+			off_sale_list: [],
+			on_sale_status: false,
+			sale_out_status: false,
+			off_sale_status: false,
 		},
 		created: function() {
 			// 初始化字体大小
@@ -555,6 +570,7 @@
 						callback: function() {
 							mui('#goods_container').pullRefresh().refresh(true);
 							skip = 1;
+							getGoodsCount();
 							getGoodsList('down');
 						}
 					}
@@ -610,6 +626,7 @@
 				plus.nativeUI.confirm('确认删除该商品?', function(e) {
 					if (e.index == 0) {
 						changeGoodsStatus(-1, currentId);
+						getGoodsCount();
 					}
 				})
 			} else if (type == 'edit') {
@@ -650,7 +667,7 @@
 			limit: 10,
 			goods_name: app.goodsName
 		}, function(res) {
-			logs(res);
+			// logs(res);
 			if (res.errno == 0) {
 				if (skip == 1) {
 					app[g_type + '_list'] = res.data;
@@ -661,6 +678,7 @@
 					app[g_type + '_list'] = app[g_type + '_list'].concat(res.data);
 					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
 				}
+				app[g_type + '_status'] = false;
 			} else {
 				if (refresh == 'up') {
 					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
@@ -668,6 +686,7 @@
 					mui('#goods_container').pullRefresh().endPulldownToRefresh();
 				} else {
 					app[g_type + '_list'] = [];
+					app[g_type + '_status'] = true;
 				}
 			}
 		}, 'json');
@@ -675,18 +694,9 @@
 	// 切换选项卡
 	mui(".mui-content").on("tap", ".mui-control-item", function() {
 		g_type = this.dataset.type;
-		if (app.goodsName) {
-			skip = 1;
-			getGoodsList();
-		} else {
-			if (app[g_type + '_list'].length > 0) {
-				// 有数据就不请求
-			} else {
-				skip = 1;
-				getGoodsList();
-			}
-		}
-
+		skip = 1;
+		// getGoodsCount();
+		getGoodsList();
 	})
 	//改变商品状态
 	function changeGoodsStatus(status, goods_id) {
@@ -696,14 +706,12 @@
 			status: status,
 			goods_id: goods_id
 		}, function(res) {
-			logs(res);
+			// logs(res);
 			if (res.errno == 0) {
+				getGoodsCount();
+				getGoodsList();
 				message('操作成功!');
-				setTimeout(function() {
-					getGoodsList();
-				}, 2000);
 			} else {
-				// message('操作失败!');
 				message(res.message);
 			}
 		}, 'json');
@@ -729,6 +737,10 @@
 			}
 		}, 'json');
 	}
+	// 监听编辑
+	window.addEventListener('reloadYourself', function() {
+		getGoodsList();
+	})
 	// 判断软键盘是否弹起
 	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 	window.onresize = function() {
