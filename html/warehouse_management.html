@@ -191,20 +191,6 @@
 				border: 1px solid #DDD;
 			}
 			
-			/* 弹窗样式 */
-			.mask-cont {
-				position: fixed;
-				width: 100%;
-				top: 0;
-				bottom: 0;
-				display: flex;
-				align-items: center;
-				flex-direction: column;
-				justify-content: center;
-				background: rgba(0, 0, 0, .5);
-				z-index: 9;
-			}
-			
 			.tips-cont {
 				width: 6.26rem;
 				height: 7.9rem;
@@ -398,32 +384,32 @@
 					<div class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<ul class="mui-table-view" id="item2_list">
-								<li class="mui-table-view-cell" :class="ls.check_status==1?'':'lucid-active'" v-for="(ls,i) in sale_out_list"
-								 :key="i">
+								<li class="mui-table-view-cell" :class="slo.check_status==1?'':'lucid-active'" v-for="(slo,idx) in sale_out_list"
+								 :key="idx">
 									<div class="chart">
-										<div v-if="lst.check_status==0" class="status-mask">
+										<div v-if="slo.check_status==0" class="status-mask">
 											审核中
 										</div>
-										<div v-else-if="lst.check_status==2" class="status-mask defeated">
+										<div v-else-if="slo.check_status==2" class="status-mask defeated">
 											审核失败
 										</div>
-										<img :src="lst.cover">
+										<img :src="slo.cover">
 									</div>
 									<div class="customer-content">
-										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(ls.id)">
-											{{ls.name}}
+										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(slo.id)">
+											{{slo.name}}
 										</div>
 										<div class="price-container">
-											<span>提成：&yen;{{ls.commission}}</span>
-											<span>供货价：&yen;{{ls.settlement_price}}</span>
+											<span>提成：&yen;{{slo.commission}}</span>
+											<span>供货价：&yen;{{slo.settlement_price}}</span>
 										</div>
 										<div class="right-bottom-cont">
 											<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
-											<span>销量：{{ls.sale_count}}</span>
-											<span>库存：{{ls.stock}}</span>
-											<span class="genduo" :data-ids="lst.id">...</span>
+											<span>销量：{{slo.sale_count}}</span>
+											<span>库存：{{slo.stock}}</span>
+											<span class="genduo" :data-ids="slo.id">...</span>
 										</div>
-										<div class="playb mui-clearfix" :class="'playb'+lst.id">
+										<div class="playb mui-clearfix" :class="'playb'+slo.id">
 											<div class="jiao"></div>
 											<div class="play" data-type="edit">
 												<img src="../image/edit.png" />
@@ -460,8 +446,8 @@
 					<div class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<ul class="mui-table-view" id="item3_list">
-								<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,i) in off_sale_list"
-								 :key="i">
+								<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,sign) in off_sale_list"
+								 :key="sign">
 									<div class="chart">
 										<div v-if="lst.check_status==0" class="status-mask">
 											审核中
@@ -472,7 +458,7 @@
 										<img :src="lst.cover">
 									</div>
 									<div class="customer-content">
-										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(ls.id)">
+										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(lst.id)">
 											{{lst.name}}
 										</div>
 										<div class="price-container">
@@ -520,15 +506,6 @@
 				</div>
 			</div>
 			<button class="add_merchandise" id="add_goods">添加分销商品</button>
-		</div>
-		<div class="mask-cont mui-hidden">
-			<div class="tips-cont">
-				<div class="tips-body">
-					<p>您的商品位已达上限，请购买更多商品位</p>
-					<span class="immediately">立即购买</span>
-				</div>
-				<img class="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
-			</div>
 		</div>
 	</body>
 </html>
@@ -608,6 +585,7 @@
 					}
 				}
 			});
+			getGoodsCount();
 			eventInit();
 			mui.plusReady(function() {
 				window.addEventListener('goodsAddSuccess', function() {
@@ -699,15 +677,6 @@
 			}, 'json');
 
 		})
-		// 立即购买商品位
-		mui(".mask-cont").on("tap", ".immediately", function() {
-			document.querySelector(".mask-cont").classList.add('mui-hidden');
-			openPage("buy_goods_booth.html", 'buy_goods_booth', '#f7f7f7', '');
-		})
-		// 关闭提示弹窗
-		mui(".mask-cont").on("tap", ".hide_qrcode", function() {
-			document.querySelector(".mask-cont").classList.add('mui-hidden');
-		})
 	}
 	//获取商品列表
 	function getGoodsList(refresh) {
@@ -770,12 +739,24 @@
 	}
 	// 取消搜索
 	mui('.mui-content').on('tap', '.mui-icon-clear', function() {
-		var e = event || window.event || arguments.callee.caller.arguments[0];
-		if (e && e.keyCode == 13) { // enter 键
-			goodsName = '';
-			getGoodsList();
-		}
+		getGoodsList();
 	})
+	// 数量统计
+	function getGoodsCount() {
+		mui.post($ajaxUrl + 'goods&action=my_team_goods_count', {
+			token: userInfo.token,
+		}, function(res) {
+			if (res.errno == 0) {
+				mui('#on_sale')[0].innerText = res.data.on_sale;
+				mui('#sale_out')[0].innerText = res.data.sale_out;
+				mui('#off_sale')[0].innerText = res.data.off_sale;
+			} else {
+				mui('#on_sale')[0].innerText = 0;
+				mui('#sale_out')[0].innerText = 0;
+				mui('#off_sale')[0].innerText = 0;
+			}
+		}, 'json');
+	}
 	// 判断软键盘是否弹起
 	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 	window.onresize = function() {
