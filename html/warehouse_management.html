@@ -307,7 +307,7 @@
 		<div class="mui-content mui-clearfix" id="mui-content">
 			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
 				<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
-					<input type="search" class="mui-input-clear" name="goods_name" placeholder="搜索商品名称">
+					<input type="search" class="mui-input-clear" v-model="goodsName" name="goods_name" placeholder="搜索商品名称">
 				</div>
 				<div class="newly_added">
 					<div id="segmentedControl" class="mui-segmented-control">
@@ -357,10 +357,6 @@
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
-											<div class="play" data-type="off">
-												<img src="../image/on_sale.png" />
-												<div>上架</div>
-											</div>
 											<div class="play" data-type="jh">
 												<img src="../image/icon/qyecjh-icon.png" />
 												<div>拣货</div>
@@ -368,10 +364,6 @@
 											<div class="play" data-type="del">
 												<img src="../image/delete.png" />
 												<div style="margin-top: -1px;">删除</div>
-											</div>
-											<div class="play" data-type="share">
-												<img src="../image/extension.png" />
-												<div>推广</div>
 											</div>
 										</div>
 									</div>
@@ -423,17 +415,9 @@
 												<img src="../image/on_sale.png" />
 												<div>上架</div>
 											</div>
-											<div class="play" data-type="jh">
-												<img src="../image/icon/qyecjh-icon.png" />
-												<div>拣货</div>
-											</div>
 											<div class="play" data-type="del">
 												<img src="../image/delete.png" />
 												<div style="margin-top: -1px;">删除</div>
-											</div>
-											<div class="play" data-type="share">
-												<img src="../image/extension.png" />
-												<div>推广</div>
 											</div>
 										</div>
 									</div>
@@ -478,24 +462,12 @@
 												<div>编辑</div>
 											</div>
 											<div class="play" data-type="off">
-												<img src="../image/lower_shelf.png" />
-												<div>下架</div>
-											</div>
-											<div class="play" data-type="off">
 												<img src="../image/on_sale.png" />
 												<div>上架</div>
-											</div>
-											<div class="play" data-type="jh">
-												<img src="../image/icon/qyecjh-icon.png" />
-												<div>拣货</div>
 											</div>
 											<div class="play" data-type="del">
 												<img src="../image/delete.png" />
 												<div style="margin-top: -1px;">删除</div>
-											</div>
-											<div class="play" data-type="share">
-												<img src="../image/extension.png" />
-												<div>推广</div>
 											</div>
 										</div>
 									</div>
@@ -521,10 +493,10 @@
 		skip = 1,
 		limit = 8,
 		currentId = '';
-	var goodsName = '';
 	var app = new Vue({
 		el: "#mui-content",
 		data: {
+			goodsName : '',
 			on_sale_list: [],
 			sale_out_list: [],
 			off_sale_list: []
@@ -601,7 +573,6 @@
 		document.onkeydown = function(event) {
 			var e = event || window.event || arguments.callee.caller.arguments[0];
 			if (e && e.keyCode == 13) { // enter 键
-				goodsName = document.querySelector('input[name=goods_name]').value;
 				getGoodsList();
 			}
 		};
@@ -642,8 +613,8 @@
 			} else if (type == 'edit') {
 				//打开编辑页面
 				mui.openWindow({
-					id: 'goods_edit',
-					url: 'goods_edit.html',
+					id: 'edit_distribution_goods',
+					url: 'edit_distribution_goods.html',
 					show: {
 						aniShow: 'slide-in-right'
 					},
@@ -652,7 +623,7 @@
 					},
 					styles: {
 						statusbar: {
-							background: '#FFF',
+							background: '#f7f7f7',
 						},
 					}
 				});
@@ -686,7 +657,7 @@
 			type: g_type,
 			skip: skip,
 			limit: 10,
-			goods_name: goodsName
+			goods_name: app.goodsName
 		}, function(res) {
 			logs(res);
 			if (res.errno == 0) {
@@ -702,8 +673,10 @@
 			} else {
 				if (refresh == 'up') {
 					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
-				} else {
+				} else if (refresh == 'down') {
 					mui('#goods_container').pullRefresh().endPulldownToRefresh();
+				} else {
+					app[g_type + '_list'] = [];
 				}
 			}
 		}, 'json');
@@ -711,12 +684,18 @@
 	// 切换选项卡
 	mui(".mui-content").on("tap", ".mui-control-item", function() {
 		g_type = this.dataset.type;
-		if (app[g_type + '_list'].length > 0) {
-			// 有数据就不请求
-		} else {
+		if (app.goodsName) {
 			skip = 1;
 			getGoodsList();
+		} else {
+			if (app[g_type + '_list'].length > 0) {
+				// 有数据就不请求
+			} else {
+				skip = 1;
+				getGoodsList();
+			}
 		}
+
 	})
 	//改变商品状态
 	function changeGoodsStatus(status, goods_id) {
@@ -739,6 +718,7 @@
 	}
 	// 取消搜索
 	mui('.mui-content').on('tap', '.mui-icon-clear', function() {
+		app.goodsName = '';
 		getGoodsList();
 	})
 	// 数量统计
