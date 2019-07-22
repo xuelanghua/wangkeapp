@@ -70,9 +70,8 @@
 			}
 
 			.hot-sign {
-				height: 0.24rem;
+				height: 0.32rem;
 				width: auto;
-				margin-right: 0.2rem;
 			}
 
 			.profit-cont {
@@ -167,36 +166,42 @@
 			.parameter-items:first-of-type {
 				width: 30%;
 			}
-			.team-name-cont{
+
+			.team-name-cont {
 				background-color: #FFFFFF;
 				padding: 0.2rem;
 				display: flex;
 				align-items: center;
-				margin: 0.2rem  0;
+				margin: 0.2rem 0;
 			}
-			.team-name-cont img{
+
+			.team-name-cont img {
 				width: 0.88rem;
 				height: 0.88rem;
 				border-radius: 0.1rem;
 				object-fit: cover;
 				margin-right: 0.4rem;
 			}
-			.team-name-cont .mui-icon{
+
+			.team-name-cont .mui-icon {
 				position: absolute;
 				right: 0.2rem;
 				color: #999999;
 			}
+
 			.goods-detail-container {
 				background-color: #FFFFFF;
 			}
-			.goods-detail-container h4.title{
+
+			.goods-detail-container h4.title {
 				font-size: 0.32rem;
 				color: #333333;
-				padding:0.4rem 0.2rem 0.28rem;
+				padding: 0.4rem 0.2rem 0.28rem;
 				font-weight: normal;
 				position: relative;
 			}
-			.goods-detail-container h4.title:after{
+
+			.goods-detail-container h4.title:after {
 				content: '';
 				position: absolute;
 				bottom: 5px;
@@ -205,45 +210,52 @@
 				width: 1.4rem;
 				background-color: #999999;
 			}
-			.goods-detail-container img{
+
+			.goods-detail-container img {
 				max-width: 100% !important;
 				height: auto;
 			}
-			.btn-section {
-			  position: fixed;
-			  display: flex;
-			  align-items: center;
-			  z-index: 199;
-			  background-color: #FFFFFF;
-			  height: 1.09rem;
-			  bottom: 0;
-			  width: 100%;
-			  box-shadow: 1px 0 2px 0 rgba(220,220,220,.5);
+
+			.bottom-section {
+				position: fixed;
+				display: flex;
+				align-items: center;
+				z-index: 199;
+				background-color: #FFFFFF;
+				height: 1.09rem;
+				bottom: 0;
+				width: 100%;
+				box-shadow: 1px 0 2px 0 rgba(220, 220, 220, .5);
 			}
-			.btn-section div {
-			  color: #333333;
-			  width: 50%;
-			  height: 100%;
-			  display: inline-flex;
-			  align-items: center;
-			  justify-content: center;
-			  position: relative;
+
+			.bottom-section .option-btn {
+				color: #333333;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				position: relative;
+				flex-grow: 1;
+				font-size: 0.3rem;
+				justify-content: center;
 			}
-			.btn-section .the-warehouse{
-				color:#CC9C2D;
+
+			.bottom-section .option-btn img {
+				height: 0.36rem;
+				margin-right: 0.1rem;
+				width: auto;
 			}
-			.btn-section .the-warehouse::after {
-			  content: '';
-			  position: absolute;
-			  display: block;
-			  background-color: #DDDDDD;
-			  top: 50%;
-			  margin-top: -0.185rem;
-			  height: 0.37rem;
-			  left: 0;
-			  width: 1px;
-			  -webkit-transform: scaleX(0.5);
-			  transform: scaleX(0.5);
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 0.2rem;
+				z-index: 16;
+				font-size: 14px;
+				color: #999999;
+				margin-right: -10px;
 			}
 		</style>
 	</head>
@@ -252,6 +264,9 @@
 		<header class="mui-bar mui-bar-nav">
 			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 			<h1 class="mui-title">商品详情</h1>
+			<div class="mui-pull-right nav-right-btn">
+				分享
+			</div>
 		</header>
 		<div id="mui-content" class="mui-content " v-cloak>
 			<div class="swiper-container goods-images">
@@ -278,7 +293,7 @@
 				</div>
 				<div class="profit-cont">
 					<span>提成：&yen;15.00-20.00</span>
-					<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+					<img class="hot-sign" src="../image/icon/distributor_goods_detail_mine_sign.png">
 				</div>
 				<div class="price-cont">
 					<span>供货价：&yen;15.00-20.00</span>
@@ -287,7 +302,7 @@
 				<div class="top-info-cont">
 					<span>快递：顺丰速运&yen;10.00</span>
 					<span>销量：900</span>
-					<span>库存：1000</span>
+					<span>浏览：1000</span>
 				</div>
 			</div>
 			<div class="parameter-cont">
@@ -321,22 +336,32 @@
 				</ul>
 			</div>
 			<div class="team-name-cont">
-				<img src="../image/5E0eH.png" >
+				<img src="../image/5E0eH.png">
 				<span>阿里巴巴团队</span>
 				<span class="mui-icon mui-icon-arrowright"></span>
 			</div>
 			<div class="goods-detail-container">
 				<h4 class="title">商品详情</h4>
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17614/41/1066658677/201711/28869e0/5ab9e251Neb5e8e1c.jpg!q70.dpg.webp" >
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t1/26930/26/7060/99982/5c665fe3E33a28553/6a7b517d9b805255.jpg!q70.dpg.webp" >
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17902/351/1069557559/144738/5a18345e/5ab9e261N8e01fd9c.jpg!q70.dpg.webp" >
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17614/41/1066658677/201711/28869e0/5ab9e251Neb5e8e1c.jpg!q70.dpg.webp">
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t1/26930/26/7060/99982/5c665fe3E33a28553/6a7b517d9b805255.jpg!q70.dpg.webp">
+				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17902/351/1069557559/144738/5a18345e/5ab9e261N8e01fd9c.jpg!q70.dpg.webp">
 			</div>
-			<div class="btn-section">
-				<div class="putaway-btn">
-					添加到仓库
+			<div class="bottom-section">
+				<div class="option-btn" data-type="edit">
+					<img src="../image/icon/bottom-section-01.png" />
+					<span>编辑</span>
 				</div>
-				<div class="the-warehouse">
-					上架到商城
+				<div class="option-btn" data-type="up">
+					<img src="../image/icon/bottom-section-02.png" />
+					<span>上架</span>
+				</div>
+				<div class="option-btn mui-hidden" data-type="off">
+					<img src="../image/icon/bottom-section-03.png" />
+					<span>下架</span>
+				</div>
+				<div class="option-btn" data-type="del">
+					<img src="../image/icon/bottom-section-04.png" />
+					<span>删除</span>
 				</div>
 			</div>
 		</div>
@@ -398,13 +423,18 @@
 					}
 				});
 			}
-			// 添加到仓库
-			mui(".mui-content").on("tap", ".putaway-btn", function() {
-				mui.toast('添加到仓库');
-			})
-			// 上架到商城
-			mui(".mui-content").on("tap", ".the-warehouse", function() {
-				mui.toast('上架到商城');
+			// 底部操作
+			mui(".mui-content").on("tap", ".option-btn", function() {
+				var opt = this.dataset.type;
+				if (opt == 'edit') {
+					mui.toast('编辑');
+				} else if (opt == 'up') {
+					mui.toast('上架');
+				} else if (opt == 'off') {
+					mui.toast('下架');
+				} else {
+					mui.toast('删除');
+				}
 			})
 		</script>
 	</body>

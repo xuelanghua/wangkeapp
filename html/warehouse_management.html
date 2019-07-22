@@ -31,7 +31,8 @@
 				background-color: #333333;
 			}
 			.mui-backdrop{
-				background: none;
+				/* background: none; */
+				z-index: 12;
 			}
 			.nr{
 				background: #333333;
@@ -88,6 +89,7 @@
 				width: 1.6rem;
 				height: 1.6rem;
 				flex-shrink: 0;
+				position: relative;
 			}
 			.chart img{
 				width: 100%;
@@ -100,13 +102,9 @@
 			
 			.customer-content{
 				flex-grow: 1;
-				padding-left: 0.2rem;
+				padding-left: 0.36rem;
+				line-height: 1.5;
 			}
-			/* .customer-content h4{
-				font-size: 16px;
-				color: #FE4F4F;
-				margin-top: 20px;
-			} */
 			.genduo{
 				background-color: #EAEBED;
 				font-size: 20px;
@@ -116,6 +114,7 @@
 				border-radius: 10px;
 				position: absolute;
 				right: 0;
+				z-index: 16;
 			}
 			.mui-table-view-cell{
 				padding: 15px;
@@ -124,11 +123,12 @@
 				width: auto;
 				position: absolute;
 				padding: 10px 0 5px 0;
-				right: 16%;
+				right: 15%;
 				border-radius: 5px;
 				background-color: rgba(51,51,51,0.85);
 				display: none;
-				bottom: 2px;
+				bottom: 5px;
+				z-index: 16;
 			}
 			.jiao{
 				width: 0;
@@ -191,20 +191,6 @@
 				border: 1px solid #DDD;
 			}
 			
-			/* 弹窗样式 */
-			.mask-cont {
-				position: fixed;
-				width: 100%;
-				top: 0;
-				bottom: 0;
-				display: flex;
-				align-items: center;
-				flex-direction: column;
-				justify-content: center;
-				background: rgba(0, 0, 0, .5);
-				z-index: 9;
-			}
-			
 			.tips-cont {
 				width: 6.26rem;
 				height: 7.9rem;
@@ -256,9 +242,9 @@
 				padding-top: 135px;
 				padding-bottom: 60px;
 			}
-			.mui-scroll{
+			/* .mui-scroll{
 				padding-bottom: 60px;
-			}
+			} */
 			.hot-sign {
 				height: 0.24rem;
 				width: auto;
@@ -282,6 +268,28 @@
 			.price-container span:first-of-type{
 				color: #F52E20;
 			}
+			/* 半透明效果 */
+			.mui-table-view-cell.lucid-active{
+				opacity: 0.5;
+			}
+			.status-mask{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				background-color: rgba(0,0,0,0.6);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #FFFFFF;
+				font-size: 14px;
+			}
+			.status-mask.defeated{
+				color: #FF0000;
+			}
+			.mui-control-item{
+				touch-action: pan-y;
+			}
 		</style>
 		<script type="text/javascript">
 			var viewport = document.documentElement.clientWidth;
@@ -296,43 +304,50 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">企业仓管理</h1>
 		</header>
-		<div class="mui-content" id="mui-content">
+		<div class="mui-content mui-clearfix" id="mui-content">
 			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
 				<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
 					<input type="search" class="mui-input-clear" name="goods_name" placeholder="搜索商品名称">
 				</div>
 				<div class="newly_added">
 					<div id="segmentedControl" class="mui-segmented-control">
-						<a class="mui-control-item mui-active" href="#item1">出售中(<span id="on_sale">0</span>)</a>
-						<a class="mui-control-item" href="#item2">售罄的(<span id="sale_out">0</span>)</a>
-						<a class="mui-control-item" href="#item3">仓库中(<span id="off_sale">0</span>)</a>
+						<a class="mui-control-item mui-active" data-type="on_sale" href="#item1">出售中(<span id="on_sale">0</span>)</a>
+						<a class="mui-control-item" data-type="sale_out" href="#item2">售罄的(<span id="sale_out">0</span>)</a>
+						<a class="mui-control-item" data-type="off_sale" href="#item3">仓库中(<span id="off_sale">0</span>)</a>
 					</div>
 				</div>
 			</div>
-			<div id="goods_container">
+			<div id="goods_container" class="goods-container">
 				<div id="item1" class="mui-control-content mui-active">
 					<div class="mui-scroll-wrapper">
 						<div class="mui-scroll">
-							<ul class="mui-table-view" id="item1_list" style="margin_botton: 25px;">
-								<li class="mui-table-view-cell" v-for="i in 6">
+							<ul class="mui-table-view" id="item1_list">
+								<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,i) in on_sale_list"
+								 :key="i">
 									<div class="chart">
-										<img src="../image/bj.jpg">
+										<div v-if="lst.check_status==0" class="status-mask">
+											审核中
+										</div>
+										<div v-else-if="lst.check_status==2" class="status-mask defeated">
+											审核失败
+										</div>
+										<img :src="lst.cover">
 									</div>
 									<div class="customer-content">
-										<div class="customer_information mui-ellipsis-2">
-											内蒙古风干牛肉干 蒙亮手撕牛肉248g蒙亮手撕牛肉248g蒙亮手撕牛肉248g蒙亮手撕牛肉248g蒙亮手撕牛肉248g
+										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(lst.id)">
+											{{lst.name}}
 										</div>
 										<div class="price-container">
-											<span>提成：&yen;50.00</span>
-											<span>供货价：&yen;500.00</span>
+											<span>提成：&yen;{{lst.commission}}</span>
+											<span>供货价：&yen;{{lst.settlement_price}}</span>
 										</div>
 										<div class="right-bottom-cont">
 											<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
-											<span>销量：83</span>
-											<span>库存：283</span>
-											<span class="genduo">...</span>
+											<span>销量：{{lst.sale_count}}</span>
+											<span>库存：{{lst.stock}}</span>
+											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
-										<div class="playb mui-clearfix">
+										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
 											<div class="play" data-type="edit">
 												<img src="../image/edit.png" />
@@ -369,20 +384,32 @@
 					<div class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<ul class="mui-table-view" id="item2_list">
-								<li class="mui-table-view-cell">
-									<div class="chart mui-pull-left">
-										<img src="../image/bj.jpg">
+								<li class="mui-table-view-cell" :class="slo.check_status==1?'':'lucid-active'" v-for="(slo,idx) in sale_out_list"
+								 :key="idx">
+									<div class="chart">
+										<div v-if="slo.check_status==0" class="status-mask">
+											审核中
+										</div>
+										<div v-else-if="slo.check_status==2" class="status-mask defeated">
+											审核失败
+										</div>
+										<img :src="slo.cover">
 									</div>
-									<div class="mui-pull-right customer-content">
-										<div class="customer_information">
-											内蒙古风干牛肉干 蒙亮手撕牛肉248g
+									<div class="customer-content">
+										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(slo.id)">
+											{{slo.name}}
 										</div>
-										<h4>￥58.00</h4>
-										<div style="font-size: 12px;">
-											<span class="mui-pull-left">库存：283</span>
-											<span class="mui-pull-right genduo">...</span>
+										<div class="price-container">
+											<span>提成：&yen;{{slo.commission}}</span>
+											<span>供货价：&yen;{{slo.settlement_price}}</span>
 										</div>
-										<div class="playb">
+										<div class="right-bottom-cont">
+											<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+											<span>销量：{{slo.sale_count}}</span>
+											<span>库存：{{slo.stock}}</span>
+											<span class="genduo" :data-ids="slo.id">...</span>
+										</div>
+										<div class="playb mui-clearfix" :class="'playb'+slo.id">
 											<div class="jiao"></div>
 											<div class="play" data-type="edit">
 												<img src="../image/edit.png" />
@@ -392,6 +419,14 @@
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
+											<div class="play" data-type="off">
+												<img src="../image/on_sale.png" />
+												<div>上架</div>
+											</div>
+											<div class="play" data-type="jh">
+												<img src="../image/icon/qyecjh-icon.png" />
+												<div>拣货</div>
+											</div>
 											<div class="play" data-type="del">
 												<img src="../image/delete.png" />
 												<div style="margin-top: -1px;">删除</div>
@@ -400,7 +435,6 @@
 												<img src="../image/extension.png" />
 												<div>推广</div>
 											</div>
-											<div class="clearfix"></div>
 										</div>
 									</div>
 								</li>
@@ -412,20 +446,32 @@
 					<div class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<ul class="mui-table-view" id="item3_list">
-								<li class="mui-table-view-cell">
-									<div class="chart mui-pull-left">
-										<img src="../image/bj.jpg">
+								<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,sign) in off_sale_list"
+								 :key="sign">
+									<div class="chart">
+										<div v-if="lst.check_status==0" class="status-mask">
+											审核中
+										</div>
+										<div v-else-if="lst.check_status==2" class="status-mask defeated">
+											审核失败
+										</div>
+										<img :src="lst.cover">
 									</div>
-									<div class="mui-pull-right customer-content">
-										<div class="customer_information">
-											内蒙古风干牛肉干 蒙亮手撕牛肉248g
+									<div class="customer-content">
+										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(lst.id)">
+											{{lst.name}}
 										</div>
-										<h4>￥58.00</h4>
-										<div style="font-size: 12px;">
-											<span class="mui-pull-left">库存：283</span>
-											<span class="mui-pull-right genduo">...</span>
+										<div class="price-container">
+											<span>提成：&yen;{{lst.commission}}</span>
+											<span>供货价：&yen;{{lst.settlement_price}}</span>
 										</div>
-										<div class="playb">
+										<div class="right-bottom-cont">
+											<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+											<span>销量：{{lst.sale_count}}</span>
+											<span>库存：{{lst.stock}}</span>
+											<span class="genduo" :data-ids="lst.id">...</span>
+										</div>
+										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
 											<div class="play" data-type="edit">
 												<img src="../image/edit.png" />
@@ -435,6 +481,14 @@
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
+											<div class="play" data-type="off">
+												<img src="../image/on_sale.png" />
+												<div>上架</div>
+											</div>
+											<div class="play" data-type="jh">
+												<img src="../image/icon/qyecjh-icon.png" />
+												<div>拣货</div>
+											</div>
 											<div class="play" data-type="del">
 												<img src="../image/delete.png" />
 												<div style="margin-top: -1px;">删除</div>
@@ -443,7 +497,6 @@
 												<img src="../image/extension.png" />
 												<div>推广</div>
 											</div>
-											<div class="clearfix"></div>
 										</div>
 									</div>
 								</li>
@@ -454,15 +507,6 @@
 			</div>
 			<button class="add_merchandise" id="add_goods">添加分销商品</button>
 		</div>
-		<div class="mask-cont mui-hidden">
-			<div class="tips-cont">
-				<div class="tips-body">
-					<p>您的商品位已达上限，请购买更多商品位</p>
-					<span class="immediately">立即购买</span>
-				</div>
-				<img class="hide_qrcode" src="../image/Close.png" style="width: 28px;height: 28px;margin-top: 30px;">
-			</div>
-		</div>
 	</body>
 </html>
 <script src="../js/mui.js"></script>
@@ -470,11 +514,20 @@
 <script src="../js/vue.min.js"></script>
 <script type="text/javascript">
 	var userInfo = getUserInfo();
+	var mask = mui.createMask(function() {
+		document.querySelector(".playb" + currentId).style.display = 'none';
+	});
+	var g_type = 'on_sale',
+		skip = 1,
+		limit = 8,
+		currentId = '';
 	var goodsName = '';
 	var app = new Vue({
 		el: "#mui-content",
 		data: {
-
+			on_sale_list: [],
+			sale_out_list: [],
+			off_sale_list: []
 		},
 		created: function() {
 			// 初始化字体大小
@@ -486,65 +539,59 @@
 			// 初始化字体大小结束	
 		},
 		methods: {
-
+			openGoodsDetail: function(gid, type) {
+				// if (type == 1) {
+				// if (type < 2) {
+				// 	openPage('distributor_goods_detail_bio.html', 'distributor_goods_detail_bio', '#f7f7f7', {
+				// 		gid: gid
+				// 	})
+				// } else {
+				// 	openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
+				// 		gid: gid
+				// 	})
+				// }
+				openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
+					gid: gid
+				})
+			}
 		},
 		mounted: function() {
-			if (mui.os.ios) {
-				mui.init({
-					swipeBack: true,
-					pullRefresh: {
-						container: "#goods_container",
-						down: {
-							style: 'circle',
-							color: '#2289FF',
-							height: '50px',
-							range: '100px',
-							offset: '0px',
-							auto: false,
-							callback: function() {
-								getGoodsList(true);
-							}
+			mui.init({
+				swipeBack: true,
+				pullRefresh: {
+					container: "#goods_container",
+					up: {
+						height: 50,
+						auto: false,
+						contentrefresh: "正在加载...",
+						contentnomore: '没有更多数据了',
+						callback: function() {
+							skip += 1;
+							getGoodsList('up');
+						}
+					},
+					down: {
+						style: 'circle',
+						color: '#2289FF',
+						height: '50px',
+						range: '100px',
+						offset: '0px',
+						auto: false,
+						callback: function() {
+							mui('#goods_container').pullRefresh().refresh(true);
+							skip = 1;
+							getGoodsList('down');
 						}
 					}
-				});
-			} else {
-				mui.init({
-					swipeBack: false,
-					pullRefresh: {
-						container: "#goods_container",
-						down: {
-							style: 'circle',
-							color: '#2289FF',
-							height: '50px',
-							range: '100px',
-							offset: '0px',
-							auto: false,
-							callback: function() {
-								getGoodsList(true);
-							}
-						}
-					}
-				});
-			}
+				}
+			});
+			getGoodsCount();
 			eventInit();
 			mui.plusReady(function() {
 				window.addEventListener('goodsAddSuccess', function() {
 					getGoodsList(false);
 				})
 				getGoodsList(false);
-				var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-				window.onresize = function() {
-					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-					var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-					var paddeds = document.getElementById("add_goods");
-					if (resizeHeight * 1 < originalHeight * 1) {
-						paddeds.style.zIndex = '-1';
-						paddeds.style.display = 'none';
-					} else {
-						paddeds.style.zIndex = '999';
-						paddeds.style.display = 'block';
-					}
-				}
 			})
 		}
 	})
@@ -560,15 +607,22 @@
 		};
 		//展示商品弹窗
 		mui(".mui-table-view").on('tap', '.genduo', function(e) {
-			document.querySelector(".playb").style.display = 'block';
+			// mask.close();
+			var glist = document.querySelectorAll(".playb");
+			for (i = 0; i < glist.length; i++) {
+				glist[i].style.display = "none";
+			}
+			currentId = this.dataset.ids;
+			document.querySelector(".playb" + currentId).style.display = 'block';
+			mask.show();
 			e.stopPropagation();
 		})
 		//点击窗口关闭商品操作弹窗
-		document.addEventListener('tap', function() {
-			mui('.playb').each(function() {
-				this.style.display = 'none';
-			})
-		})
+		// document.addEventListener('tap', function() {
+		// 	mui('.playb').each(function() {
+		// 		this.style.display = 'none';
+		// 	})
+		// })
 		mui('.mui-content').on('tap', '.play', function(e) {
 			var type = this.dataset.type;
 			var id = this.dataset.id;
@@ -623,31 +677,47 @@
 			}, 'json');
 
 		})
-		// 立即购买商品位
-		mui(".mask-cont").on("tap", ".immediately", function() {
-			document.querySelector(".mask-cont").classList.add('mui-hidden');
-			openPage("buy_goods_booth.html", 'buy_goods_booth', '#f7f7f7', '');
-		})
-		// 关闭提示弹窗
-		mui(".mask-cont").on("tap", ".hide_qrcode", function() {
-			document.querySelector(".mask-cont").classList.add('mui-hidden');
-		})
 	}
 	//获取商品列表
 	function getGoodsList(refresh) {
-		showload(0);
 		mui.post($ajaxUrl + 'goods', {
-			action: 'goods_list',
+			action: 'my_team_goods_list',
 			token: userInfo.token,
+			type: g_type,
+			skip: skip,
+			limit: 10,
 			goods_name: goodsName
 		}, function(res) {
 			logs(res);
-			if (refresh) {
-				mui('#goods_container').pullRefresh().endPulldownToRefresh();
+			if (res.errno == 0) {
+				if (skip == 1) {
+					app[g_type + '_list'] = res.data;
+					if (refresh == 'down') {
+						mui('#goods_container').pullRefresh().endPulldownToRefresh();
+					}
+				} else {
+					app[g_type + '_list'] = app[g_type + '_list'].concat(res.data);
+					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
+				}
+			} else {
+				if (refresh == 'up') {
+					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
+				} else {
+					mui('#goods_container').pullRefresh().endPulldownToRefresh();
+				}
 			}
-			showload(1);
 		}, 'json');
 	}
+	// 切换选项卡
+	mui(".mui-content").on("tap", ".mui-control-item", function() {
+		g_type = this.dataset.type;
+		if (app[g_type + '_list'].length > 0) {
+			// 有数据就不请求
+		} else {
+			skip = 1;
+			getGoodsList();
+		}
+	})
 	//改变商品状态
 	function changeGoodsStatus(status, goods_id) {
 		mui.post($ajaxUrl + 'goods', {
@@ -669,10 +739,36 @@
 	}
 	// 取消搜索
 	mui('.mui-content').on('tap', '.mui-icon-clear', function() {
-		var e = event || window.event || arguments.callee.caller.arguments[0];
-		if (e && e.keyCode == 13) { // enter 键
-			goodsName = '';
-			getGoodsList();
-		}
+		getGoodsList();
 	})
+	// 数量统计
+	function getGoodsCount() {
+		mui.post($ajaxUrl + 'goods&action=my_team_goods_count', {
+			token: userInfo.token,
+		}, function(res) {
+			if (res.errno == 0) {
+				mui('#on_sale')[0].innerText = res.data.on_sale;
+				mui('#sale_out')[0].innerText = res.data.sale_out;
+				mui('#off_sale')[0].innerText = res.data.off_sale;
+			} else {
+				mui('#on_sale')[0].innerText = 0;
+				mui('#sale_out')[0].innerText = 0;
+				mui('#off_sale')[0].innerText = 0;
+			}
+		}, 'json');
+	}
+	// 判断软键盘是否弹起
+	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+	window.onresize = function() {
+		//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+		var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+		var paddeds = document.getElementById("add_goods");
+		if (resizeHeight * 1 < originalHeight * 1) {
+			paddeds.style.zIndex = '-1';
+			paddeds.style.display = 'none';
+		} else {
+			paddeds.style.zIndex = '999';
+			paddeds.style.display = 'block';
+		}
+	}
 </script>
