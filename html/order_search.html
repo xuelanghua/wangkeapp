@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			.mui-content .search-cont {
+				background-color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				position: relative;
+				padding: 0.3rem 0.15rem 0.2rem 0.1rem;
+				border-bottom-right-radius: 0.4rem;
+				border-bottom-left-radius: 0.4rem;
+				justify-content: space-between;
+			}
+
+			.mui-action-back {
+				position: relative;
+				left: 0;
+				padding: 5px;
+			}
+
+			.search-cont .search-cont-inside input {
+				margin-bottom: 0;
+				background-color: #F5F5F5;
+				border-radius: 0.4rem;
+				padding: 0.1rem 0.6rem;
+				text-align: left;
+				width: 100%;
+			}
+
+			.search-cont .mui-icon-search {
+				position: absolute;
+				left: 0.1rem;
+				font-size: 0.42rem;
+			}
+
+			.search-cont .mui-icon-clear {
+				position: absolute;
+				right: 0.1rem;
+				font-size: 0.42rem;
+				color: #DDDDDD;
+			}
+
+			.search-cont-inside {
+				position: relative;
+				display: flex;
+				align-items: center;
+			}
+
+			.search-btn {
+				display: inline-flex;
+				height: 32px;
+				padding: 0 5px;
+				align-items: center;
+				justify-content: center;
+				border-radius: 0.2rem;
+				font-size: 0.32rem;
+				color: #555555;
+			}
+
+			input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.26rem;
+			}
+
+			h5 {
+				padding: 0.2rem 0.2rem 0;
+			}
+
+			.search-record .mui-table-view {
+				background-color: transparent;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.search-record .mui-table-view.mui-active {
+				background-color: #DDDDDD;
+			}
+
+			.search-record .mui-table-view:after,
+			.mui-table-view:before {
+				display: none;
+			}
+
+			.search-record .mui-table-view-cell {
+				padding: 0.2rem;
+			}
+
+			.search-record .mui-table-view-cell:after {
+				background-color: #DDDDDD;
+				left: 0.2rem;
+			}
+
+			.search-record .mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.search-record .clear-record {
+				width: 70%;
+				height: 0.7rem;
+				background-color: #FFFFFF;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 0.4rem;
+				margin: 0.6rem auto 0;
+				font-size: 0.3rem;
+			}
+
+			.search-record .clear-record::after {
+				content: '';
+				display: block;
+				position: absolute;
+				width: 200%;
+				height: 200%;
+				border: 1px solid #dddddd;
+				left: 0;
+				top: 0;
+				border-radius: 0.8rem;
+				transform-origin: 0 0;
+				-webkit-transform-origin: 0 0;
+				transform: scale(0.5, 0.5);
+				-webkit-transform: scale(0.5, 0.5);
+				box-sizing: border-box;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<div class="mui-content">
+				<form action="" onsumit="return false">
+					<div class="mui-input-row search-cont">
+						<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+						<div class="search-cont-inside">
+							<span class="mui-icon mui-icon-search"></span>
+							<input type="search" id="search" @input="skey" v-model="keyword" name="keyword" placeholder="产品名字/搜索订单">
+							<span v-show="keyword" class="mui-icon mui-icon-clear" @tap="cancelSearch"></span>
+						</div>
+						<span class="search-btn">搜索</span>
+					</div>
+				</form>
+				<div class="search-record" v-show="isRecord">
+					<h5>最近搜索</h5>
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell keywords-item" :data-keyword="r" v-for="(r,i) in search_record">{{r}}</li>
+					</ul>
+					<div class="clear-record">
+						清空历史记录
+					</div>
+				</div>
+				<div v-show="voidRecord">
+					<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png">
+					<p style="text-align: center;color:#717171;">您还没有相关订单</p>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					keyword: '',
+					search_record: [],
+					isRecord: true,
+					voidRecord: false
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+					this.search_record = localStorage.getItem('keywords').split(",");
+				},
+				methods: {
+					cancelSearch: function() {
+						this.keyword = '';
+						this.isRecord = true;
+						this.voidRecord = false;
+					},
+					skey: function() {
+						if (this.keyword === '') {
+							this.voidRecord = false;
+							this.isRecord = true;
+						}
+					}
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+				}
+			})
+			// 点击搜索按钮
+			mui(".mui-content").on("tap", ".search-btn", function() {
+				document.activeElement.blur();
+				var idx = app.search_record.indexOf(app.keyword);
+				app.isRecord = false;
+				app.voidRecord = true;
+				if (idx == -1) {
+					app.search_record.push(app.keyword);
+					localStorage.setItem('keywords', app.search_record);
+				} else {
+
+				}
+			})
+			// 点击关键词搜索
+			mui(".mui-content").on("tap", ".keywords-item", function() {
+				app.keyword = this.dataset.keyword;
+				document.activeElement.blur();
+				app.isRecord = false;
+				app.voidRecord = true;
+			})
+
+			// 清空搜索记录
+			mui(".mui-content").on("tap", ".clear-record", function() {
+				document.activeElement.blur();
+				app.search_record = [];
+				app.isRecord = false;
+				localStorage.removeItem('keywords');
+			})
+
+			// 点击键盘的搜索
+			document.getElementById("search").addEventListener("keypress", function(event) {
+				var keyword = app.keyword.replace(/^\s*|\s*$/g, "");
+				if (event.keyCode == "13" && keyword != '') {
+					document.activeElement.blur();
+					var idx = app.search_record.indexOf(app.keyword);
+					app.isRecord = false;
+					app.voidRecord = true;
+					if (idx == -1) {
+						app.search_record.push(app.keyword);
+						localStorage.setItem('keywords', app.search_record);
+					} else {
+
+					}
+					event.preventDefault();
+				} else {
+					// message("请输入用户名或者电话");
+				}
+			});
+		</script>
+	</body>
+
+</html>

@@ -636,7 +636,8 @@
 		<script type="text/javascript">
 			var userInfo = getUserInfo(),
 				skip = 1,
-				limit = 6;
+				limit = 6
+				refresh="";
 			var mask = mui.createMask(function() {
 				// document.querySelector(".tips-cont").classList.add("mui-hidden");
 			});
@@ -670,8 +671,34 @@
 				mounted: function() {
 					mui(".mui-scroll-wrapper").scroll().refresh();
 					mui.init({
-						beforeback: function() {
-							//plus.navigator.setStatusBarStyle("light");
+						swipeBack: true,
+						pullRefresh: {
+							container: "#segmentedControlContents",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									refresh="up";
+									skip += 1;
+									getGoodsList();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								height: '50px',
+								range: '100px',
+								offset: '0px',
+								auto: false,
+								callback: function() {
+									refresh="down";
+									mui('#segmentedControlContents').pullRefresh().refresh(true);
+									skip = 1;
+									getGoodsList("1");
+								}
+							}
 						}
 					});
 					// 初始化两次防止页面乱
@@ -703,7 +730,7 @@
 				for (var i = 0; i < box.length; i++) {
 					box[i].classList.remove("active");
 				}
-				$(this).toggleClass("active");
+				$(this).addClass("active");
 				if (app.sort_type == stp) {
 					return false;
 				}
@@ -774,12 +801,13 @@
 				}, 'json');
 			}
 			// 获取产品列表
-			function getGoodsList(ty, sort_type) {
+			function getGoodsList() {
+				logs(app.ltype);
 				mui.post($ajaxUrl + 'goods', {
 					token: userInfo.token,
 					action: 'team_goods_list',
-					type: ty,
-					sort_type: sort_type,
+					type: app.ltype,
+					sort_type: app.sort_type,
 					goods_name: app.goodsName,
 					team: app.team.join(','),
 					skip: skip,
@@ -787,10 +815,24 @@
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						app.goods_list = res.data;
+						if (skip == 1) {
+							app.goods_list = res.data;
+							if (refresh == 'down') {
+								mui('#segmentedControlContents').pullRefresh().endPulldownToRefresh();
+							}
+						} else {
+							app.goods_list = app.goods_list.concat(res.data);
+							mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(false);
+						}
+						app.void_tips = false;
 					} else {
 						if (skip == 1) {
 							app.void_tips = true;
+						}
+						if (refresh == 'up') {
+							mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(true);
+						} else if (refresh == 'down') {
+							mui('#segmentedControlContents').pullRefresh().endPulldownToRefresh();
 						}
 					}
 				}, 'json');
@@ -810,9 +852,18 @@
 					return false;
 				}
 				app.ltype = ltp;
-				logs(app.ltype);
-				getGoodsList(app.ltype);
+				getGoodsList();
 			})
+			// 点击键盘的搜索
+			document.getElementById("search").addEventListener("keypress", function(event) {
+				var keyword = app.goodsName.replace(/^\s*|\s*$/g, "");
+				if (event.keyCode == "13" && keyword != '') {
+					document.activeElement.blur();
+					event.preventDefault();
+				} else {
+					// message("请输入用户名或者电话");
+				}
+			});
 		</script>
 	</body>
 

@@ -5,966 +5,623 @@
 		<meta charset="utf-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<link href="../css/mui.css" rel="stylesheet" />
-		<link href="../css/mui.picker.css" rel="stylesheet" />
-		<link href="../css/mui.poppicker.css" rel="stylesheet" />
-		<style>
-			.clearfix{
-				clear: both;
-			}
-			input[type='button']:enabled:active, input[type='button'].mui-active:enabled,
-			input[type='submit']:enabled:active,
-			input[type='submit'].mui-active:enabled,
-			input[type='reset']:enabled:active,
-			input[type='reset'].mui-active:enabled,
-			button:enabled:active,
-			button.mui-active:enabled,
-			.mui-btn:enabled:active,
-			.mui-btn.mui-active:enabled
-			{
-				
-			}
-			header img{
-				height: 17px;
-				margin-top: 13px;
-				margin-right: 10px;
-			}
-			.mui-bar{
-				background-color: #FFFFFF;
-			}
-		
-			.search{
-				margin: 0.625rem;
-				padding: 0 10px;
-				border-radius: 0.3125rem;
-				border: 1px solid #DDDDDD;
-				background-color: #FFFFFF;
-			}
-			.mui-icon{
-				font-size: 20px;
-			}
-			.search input{
-				width: 90%;
-				margin: 0;
-				border: none;
-				padding: 3px;
-				font-size: 0.875rem;
-			}
-			
-			.hd{
-				font-size: 14px;
-				border-top: 1px solid #DDDDDD;
-				background-color: #F8F8F8;
-			}
-			.hd li{
-				display: block;
-				/* width: 20%; */
-				width: 25%;
-				float: left;
-				padding: 10px 0;
-				text-align: center;
-			}
-			.hd li.current{
-				color: #F5CA3A;
-				border-bottom: 2px solid #F5CA3A;
-			}
-			
-			.example{
-				width: 100%;
-				margin-bottom: 66px;
-			}
-			.bd li{
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			[v-cloak] {
 				display: none;
 			}
-			.bd li.current{
-				display: block;
+
+			.mui-bar {
+				height: auto;
 			}
-			.Record_list{
-				margin-bottom: 10px;
-				background-color: #FFFFFF;
+
+			.mui-bar .mui-icon {
+				position: absolute;
 			}
-			.Record_list_tile{
-				font-size: 14px;
-				padding: 14px 15px;
-				border-bottom: 1px solid #F2F2F2;
+
+			.mui-bar-nav~.mui-content {
+				padding-top: 84px;
 			}
-			.Record_list_tile .mui-icon{
-				color: #878787;
+
+			.order-type {
+				width: 6.56rem;
+				height: 1.1rem;
+				border: 1px solid #000000;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border-radius: 0.2rem;
+				-webkit-transform: scale(0.5);
+				transform: scale(0.5);
+				overflow: hidden;
+				margin: 0 auto;
+				position: relative;
 			}
-			.commodity_information{
-				padding: 13px 15px;
-				border-bottom: 1px solid #F2F2F2;
-			}
-			.commodity_information_chart{
-				width: 65px;
-				height: 65px;
-			}
-			.commodity_information_chart img{
-				width: 100%;
-				height: 100%;
-			}
-			.jianshu{
-				width: 76%;
-				font-size: 12px;
-				color: #999999;
-			}
-			.font{
-				font-size: 14px;
-				color: #000000;
-				padding-bottom: 10px;
-			}
-			.total{
-				font-size: 12px;
-				margin-top: 10px;
-				text-align: right;
-			}
-			.total span{
-				font-size: 14px;
-			}
-			
-			.purchaser{
-				padding: 10px 15px;
-				font-size: 14px;
-			}
-			.purchaser_chart{
-				width: 31px;
-				height: 31px;
-				display: block;
-			}
-			.purchaser_chart img{
-				width: 100%;
-				height: 100%;
-				border-radius: 50%;
-			}
-			.button{
-				border: none;
-				color: #F5CA3A;
-				border: 1px solid #F5CA3A;
-			}
-			.button:enabled:active{
-				color: #fff;
-				background-color: #ecd482;
-			}
-			
-			.current a{
+
+			.order-type span {
+				width: 50%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.56rem;
 				color: #333333;
+				height: 100%;
+				background: rgba(0, 0, 0, 0);
+				z-index: 3;
+				-webkit-transition: all 0.0.3 s ease-in-out;
+				transition: all 0.0.3 s ease-in-out;
 			}
-			
-			.ship{
-				margin-bottom: 5px;
-				padding: 10px;
-				background-color: #F8F8F8;
+
+			.order-type span.active {
+				color: #DDDDDD;
 			}
-			
-			.lianxi{
-				color: #999999;
-				margin-right: 15px;
-				border: 1px solid #999999;
+
+			.order-type i {
+				position: absolute;
+				left: 0;
+				top: 0;
+				height: 100%;
+				width: 50%;
+				background-color: #333333;
+				z-index: 1;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
 			}
-			
-			.complete{
+
+			.header-top {
+				display: flex;
+				align-items: center;
+				height: 44px;
+				overflow: hidden;
+				padding-top: 10px;
+			}
+
+			.mui-control-content {
+				background-color: transparent;
+				height: 89vh;
+			}
+
+			.mui-segmented-control-inverted {
+				width: 100%;
+				position: relative;
+				height: 44px;
+			}
+
+			.header-bottom {
+				margin-top: 5px;
+				position: relative;
+			}
+
+			.header-bottom .mui-control-item {
+				font-size: 0.28rem;
+				touch-action: pan-y;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+			}
+
+			.mui-segmented-control .mui-control-item {
+				line-height: 44px;
+			}
+
+			.mui-bar .mui-segmented-control {
+				top: 0;
+			}
+
+			.slider-progressBar {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				height: 2px;
+				width: 20%;
+				margin-left: 2.5%;
+				background-color: #F5CA3A;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+				border-radius: 2px;
+			}
+
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				color: #F5CA3A;
+			}
+
+			.order-list-groups {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+				padding: 0.2rem 0 0.2rem;
+				background: transparent;
+			}
+
+			.order-list {
+				background: transparent;
+				padding: 0.2rem;
+			}
+
+			.mui-card {
+				border-radius: 0.1rem;
+				margin: 0.2rem 0;
+			}
+
+			.mui-card-footer:before,
+			.mui-card-header:after {
+				left: 15px;
+			}
+
+			.mui-card-header {
+				font-size: 0.3rem;
+			}
+
+			.mui-card-header .mui-icon {
+				font-size: 0.36rem;
+			}
+
+			.mui-card-header .user-head-img {
+				border-radius: 50%;
+				object-fit: cover;
+				width: 0.65rem;
+				height: 0.65rem;
+				margin-right: 0.25rem;
+			}
+
+			.flex-center {
+				display: flex;
+				align-items: center;
+			}
+
+			.cancel-time {
 				color: #CC9C2D;
 			}
-			
-			button{
-				width: 80px;
+
+			.order-inside-list {
+				margin-bottom: 0.26rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
 			}
-			
-			.mui-search input {
-				background-color: #fff;
-				border-radius: 0.3125rem;
-				border: 1px solid #DDD;
+
+			.order-inside-list:last-of-type {
+				margin-bottom: 0;
 			}
-			
-			/* 弹出框 */
-			#cover{
-			    position: fixed;
-				z-index: 119;
-				top: 0;
+
+			.inside-list-left {
+				width: 1.5rem;
+				height: 1.5rem;
+				overflow: hidden;
+				margin-right: 0.28rem;
+				flex-shrink: 0;
+				position: relative;
+			}
+
+			.goods-type-sign {
+				position: absolute;
+				width: 100%;
+				height: 0.32rem;
+				background-color: rgba(255, 255, 255, 0.6);
+				bottom: 0;
 				left: 0;
-				display: none;
+				font-size: 0.2rem;
+				line-height: 1;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #333333;
+			}
+
+			.inside-list-left img {
 				width: 100%;
 				height: 100%;
-				opacity: 0.3;
-				background: #333333;
+				object-fit: cover;
 			}
-			.tanchu{
-				border-radius: 5px;
-				background-color: #FFFFFF;
-				position: fixed;
-				z-index: 120;
-				width: 92%;
-				top: 25%;
-				left: 4%;
-				right: 4%;
+
+			.inside-list-right {
+				flex-grow: 1;
+				position: relative;
+				width: 4.8rem;
+				height: auto;
+			}
+
+			.inside-list-right p {
+				width: 100%;
+				font-size: 0.28rem;
+				color: #333333;
+				margin-bottom: 0;
+				position: relative;
+			}
+
+			.inside-list-right:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: -0.2rem;
+				width: 100%;
+				height: 1px;
+				background-color: #f5f6f7;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.order-inside-list:last-of-type .inside-list-right:after {
 				display: none;
 			}
-			.tanchu_title{
-				padding: 21px 0;
-				font-size: 17px;
-				text-align: center;
-				border-bottom: 1px solid #F2F2F2;
-			}
-			.tanchu_input{
-				padding: 35px 0;
-				border-bottom: 1px solid #F2F2F2;
-			}
-			.tanchu_express{
-				width: 90%;
-				margin: 0 auto;
+
+			.specification-cont {
 				display: flex;
-				height: 50px;
 				align-items: center;
-				font-size: 14px;
+				justify-content: space-between;
+				font-size: 0.24rem;
+				padding: 0.1rem 0;
+			}
+
+			.specification-left {
+				border-radius: 0.2rem;
 				background-color: #F2F2F2;
-				padding: 0 15px;
-				box-sizing: border-box;
-				overflow: hidden;
+				color: #999999;
+				padding: 0 0.2rem;
+				line-height: 1.6;
+				font-size: 0.24rem;
 			}
-			.tanchu_express span{
-				margin-left: 15px;
+
+			.specification-right span:first-of-type {
+				margin-right: 0.2rem;
 			}
-			.tanchu_express input{
-				width: 75%;
-				border: none;
-				margin: 0;
-				font-size: 14px;
+
+			.distribution-team {
+				font-size: 0.24rem;
+				color: #333333;
+			}
+
+			.distribution-team span {
+				color: #999999;
+				margin-left: 0.2rem;
+			}
+
+			.price-num {
+				display: flex;
+				justify-content: space-between;
+				flex-grow: 1;
+				width: 100%;
+				padding: 0.1rem 0;
+			}
+
+			.mui-card-footer {
+				flex-direction: column;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.net-yield {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+			}
+
+			.net-yield-number {
+				color: #CC9C2D;
+			}
+			.mui-bar .mui-icon.search-btn{
+				position: absolute;
+				right: 20px;
 				background-color: #F2F2F2;
-			}
-			.tanchu_button{
-				text-align: center;
-				padding: 24px 0;
-			}
-			.tanchu_button button{
-				background-color: #F5CA3A;
-				border: none;
-				padding: 12px 0;
-				width: 50%;
-				font-size: 14px;
-				color: #FFFFFF;
-			}
-			.mui-bar-nav~.mui-content{
-				padding-top: 135px;
-			}
-			.mui-backdrop{
-				background-color: rgba(0,0,0,0.2);
-			}
-			.mui-poppicker.mui-active{
-				z-index: 9999;
+				border-radius: 50%;
+				padding: 0.04rem;
+				font-size: 0.42rem;
+				color: #333333;
 			}
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">订单管理</h1>
-		</header>
-
-		<div class="mui-content" id="mui-content">
-			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
-				<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
-					<input type="search" class="mui-input-clear" name="goods_name" placeholder="搜索商品名称">
-				</div>
-				<div class="hd">
-					<li class="current" data-status="1">待付款</li>
-					<li id="wait-send" data-status="2">待发货</li>
-					<li data-status="3">已发货</li>
-					<li data-status="4">已完成</li>
-					<!-- <li data-status="5">退货</li> -->
-					<div class="clearfix"></div>
-				</div>
-			</div>
-			<div class="example">
-				<div class="bd">
-					<li class="current" data-status="1">
-						<!-- <div class="Record_list">
-							<div class="Record_list_tile">
-								<span>待付款(1天7小时后将自动取消订单)</span>
-								<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>
-							</div>
-							<div class="commodity_information">
-								<div class="ship">
-									<div class="commodity_information_chart mui-pull-left">
-										<img src="../image/rotation_chart.png">
-									</div>
-									<div class="mui-pull-right jianshu">
-										<div class="font">
-											<span>旺客</span>
-											<span class="mui-pull-right">￥20/件</span>
-										</div>
-										<div>
-											<span>规格：默认</span>
-											<span class="mui-pull-right">x1</span>
-										</div>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="ship">
-									<div class="commodity_information_chart mui-pull-left">
-										<img src="../image/rotation_chart.png">
-									</div>
-									<div class="mui-pull-right jianshu">
-										<div class="font">
-											<span>旺客</span>
-											<span class="mui-pull-right">￥20/件</span>
-										</div>
-										<div>
-											<span>规格：默认</span>
-											<span class="mui-pull-right">x1</span>
-										</div>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="total">共1件商品合计:￥<span>25.00</span>(含运费:￥5.00)</div>
-							</div>
-							<div class="purchaser">
-								<div class="mui-pull-left">
-									<span class="purchaser_chart mui-pull-left">
-										<img src="../image/bj.jpg">
-									</span>
-									<span class="mui-pull-left" style="margin: 5px 0 0 10px;">微信昵称</span>
-									<div class="clearfix"></div>
-								</div>
-								<button class="mui-pull-right button">联系TA</button>
-								<div class="clearfix"></div>
-							</div>
-						</div> -->
-					</li>
-					<li data-status="2">
-						<!-- <div class="Record_list">
-							<div class="Record_list_tile">
-								<span>
-									<span>付款时间：</span>
-									<span>2018-08-21 18:20:20</span>
-								</span>
-								<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>
-							</div>
-							<div class="commodity_information">
-								<div class="ship">
-									<div class="commodity_information_chart mui-pull-left">
-										<img src="../image/rotation_chart.png">
-									</div>
-									<div class="mui-pull-right jianshu">
-										<div class="font">
-											<span>旺客</span>
-											<span class="mui-pull-right">￥20/件</span>
-										</div>
-										<div>
-											<span>规格：默认</span>
-											<span class="mui-pull-right">x1</span>
-										</div>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="total">共1件商品合计:￥<span>25.00</span>(含运费:￥5.00)</div>
-							</div>
-							<div class="purchaser">
-								<div class="mui-pull-left">
-									<span class="purchaser_chart mui-pull-left">
-										<img src="../image/bj.jpg">
-									</span>
-									<span class="mui-pull-left" style="margin: 5px 0 0 10px;">微信昵称</span>
-									<div class="clearfix"></div>
-								</div>
-								<div>
-									<button class="mui-pull-right button">发货</button>
-									<button class="mui-pull-right lianxi">联系TA</button>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-						</div> -->
-					</li>
-					<li data-status="3">
-						<!-- <div class="Record_list">
-							<div class="Record_list_tile">
-								<span>
-									<span>发货时间：</span>
-									<span>2018-08-21 18:20:20</span>
-								</span>
-								<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>
-							</div>
-							<div class="commodity_information">
-								<div class="ship">
-									<div class="commodity_information_chart mui-pull-left">
-										<img src="../image/rotation_chart.png">
-									</div>
-									<div class="mui-pull-right jianshu">
-										<div class="font">
-											<span>旺客</span>
-											<span class="mui-pull-right">￥20/件</span>
-										</div>
-										<div>
-											<span>规格：默认</span>
-											<span class="mui-pull-right">x1</span>
-										</div>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="ship">
-									<div class="commodity_information_chart mui-pull-left">
-										<img src="../image/rotation_chart.png">
-									</div>
-									<div class="mui-pull-right jianshu">
-										<div class="font">
-											<span>旺客</span>
-											<span class="mui-pull-right">￥20/件</span>
-										</div>
-										<div>
-											<span>规格：默认</span>
-											<span class="mui-pull-right">x1</span>
-										</div>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="total">共1件商品合计:￥<span>25.00</span>(含运费:￥5.00)</div>
-							</div>
-							<div class="purchaser">
-								<div class="mui-pull-left">
-									<span class="purchaser_chart mui-pull-left">
-										<img src="../image/bj.jpg">
-									</span>
-									<span class="mui-pull-left" style="margin: 5px 0 0 10px;">微信昵称</span>
-									<div class="clearfix"></div>
-								</div>
-								<div>
-									<button class="mui-pull-right button">查看物流</button>
-									<button class="mui-pull-right lianxi">联系TA</button>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-						</div> -->
-					</li>
-					<li data-status="4">
-						<!-- <div class="Record_list">
-							<div class="Record_list_tile">
-								<span class="complete">已完成</span>
-								<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>
-							</div>
-							<div class="commodity_information">
-								<div class="ship">
-									<div class="commodity_information_chart mui-pull-left">
-										<img src="../image/rotation_chart.png">
-									</div>
-									<div class="mui-pull-right jianshu">
-										<div class="font">
-											<span>旺客</span>
-											<span class="mui-pull-right">￥20/件</span>
-										</div>
-										<div>
-											<span>规格：默认</span>
-											<span class="mui-pull-right">x1</span>
-										</div>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="total">共1件商品合计:￥<span>25.00</span>(含运费:￥5.00)</div>
-							</div>
-							<div class="purchaser">
-								<div class="mui-pull-left">
-									<span class="purchaser_chart mui-pull-left">
-										<img src="../image/bj.jpg">
-									</span>
-									<span class="mui-pull-left" style="margin: 5px 0 0 10px;">微信昵称</span>
-									<div class="clearfix"></div>
-								</div>
-								<button class="mui-pull-right button">联系TA</button>
-								<div class="clearfix"></div>
-							</div>
-						</div> -->
-					</li>
-				</div>
-			</div>
-
-			<!-- 弹出框 -->
-			<div id="cover"></div>
-			<div class="tanchu">
-				<div class="tanchu_title">物流信息</div>
-				<div class="tanchu_input">
-					<div class="tanchu_express" id="express_company">
-						物流公司<span id="select_company" style=""></span>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<div class="header-top">
+					<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+					<div class="order-type">
+						<i id="bg_full"></i>
+						<span class="order-type-item active" data-order="1">供货订单</span>
+						<span class="order-type-item" data-order="2">分销订单</span>
 					</div>
-					<div class="tanchu_express" style="margin-top: 16px;">
-						单号<input type="number" name="courier_number" style="margin-left: 10%;" />
-					</div>
+					<span class="mui-icon mui-icon-search search-btn"></span>
 				</div>
-				<div class="tanchu_button">
-					<button type="button" class="mui-btn">确认发货</button>
+				<div class="header-bottom">
+					<div class="mui-segmented-control mui-segmented-control-inverted">
+						<a class="mui-control-item mui-active" href="#item1mobile">
+							待付款(10)
+						</a>
+						<a class="mui-control-item" href="#item2mobile">
+							待发货(10)
+						</a>
+						<a class="mui-control-item" href="#item3mobile">
+							已发货(10)
+						</a>
+						<a class="mui-control-item" href="#item4mobile">
+							已完成
+						</a>
+					</div>
+					<div id="slider_progressBar" class="slider-progressBar"></div>
+				</div>
+			</header>
+			<div class="mui-content">
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-control-content mui-active">
+						<ul class="order-list-groups">
+							<li class="order-list" v-for="i in 30">
+								<div class="mui-card">
+									<div class="mui-card-header">
+										<div class="flex-center">
+											<img class="user-head-img" src="../image/5E0eH.png">
+											<span class="user-name">马飞飞</span>
+											<span class="mui-icon mui-icon-arrowright"></span>
+										</div>
+										<span class="cancel-time">5小时候后自动取消</span>
+									</div>
+									<div class="mui-card-content">
+										<div class="mui-card-content-inner">
+											<div class="order-inside-list" v-for="i in 3">
+												<div class="inside-list-left">
+													<img src="../image/5E0eH.png">
+													<div class="goods-type-sign">
+														分销商品
+													</div>
+												</div>
+												<div class="inside-list-right">
+													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
+													<div class="specification-cont">
+														<div class="specification-left">
+															默认规格
+														</div>
+														<div class="specification-right">
+															<span>&yen;30.00</span>
+															<span>x&nbsp;12</span>
+														</div>
+													</div>
+													<div class="distribution-team">
+														分销商：土特产团队<span>[大飞飞]</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="mui-card-footer">
+										<div class="price-num">
+											<span>共1件商品</span>
+											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
+										</div>
+										<div class="net-yield">
+											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="item2mobile" class="mui-control-content">
+						<ul class="order-list-groups">
+							<li class="order-list" v-for="i in 30">
+								<div class="mui-card">
+									<div class="mui-card-header">
+										<div class="flex-center">
+											<img class="user-head-img" src="../image/5E0eH.png">
+											<span class="user-name">马飞飞</span>
+											<span class="mui-icon mui-icon-arrowright"></span>
+										</div>
+										<span class="cancel-time">已付款</span>
+									</div>
+									<div class="mui-card-content">
+										<div class="mui-card-content-inner">
+											<div class="order-inside-list" v-for="i in 3">
+												<div class="inside-list-left">
+													<img src="../image/5E0eH.png">
+													<div class="goods-type-sign">
+														分销商品
+													</div>
+												</div>
+												<div class="inside-list-right">
+													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
+													<div class="specification-cont">
+														<div class="specification-left">
+															默认规格
+														</div>
+														<div class="specification-right">
+															<span>&yen;30.00</span>
+															<span>x&nbsp;12</span>
+														</div>
+													</div>
+													<div class="distribution-team">
+														分销商：土特产团队<span>[大飞飞]</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="mui-card-footer">
+										<div class="price-num">
+											<span>共1件商品</span>
+											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
+										</div>
+										<div class="net-yield">
+											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="item3mobile" class="mui-control-content">
+						<ul class="order-list-groups">
+							<li class="order-list" v-for="i in 30">
+								<div class="mui-card">
+									<div class="mui-card-header">
+										<div class="flex-center">
+											<img class="user-head-img" src="../image/5E0eH.png">
+											<span class="user-name">马飞飞</span>
+											<span class="mui-icon mui-icon-arrowright"></span>
+										</div>
+										<span class="cancel-time">已发货</span>
+									</div>
+									<div class="mui-card-content">
+										<div class="mui-card-content-inner">
+											<div class="order-inside-list" v-for="i in 3">
+												<div class="inside-list-left">
+													<img src="../image/5E0eH.png">
+													<div class="goods-type-sign">
+														分销商品
+													</div>
+												</div>
+												<div class="inside-list-right">
+													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
+													<div class="specification-cont">
+														<div class="specification-left">
+															默认规格
+														</div>
+														<div class="specification-right">
+															<span>&yen;30.00</span>
+															<span>x&nbsp;12</span>
+														</div>
+													</div>
+													<div class="distribution-team">
+														分销商：土特产团队<span>[大飞飞]</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="mui-card-footer">
+										<div class="price-num">
+											<span>共1件商品</span>
+											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
+										</div>
+										<div class="net-yield">
+											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="item4mobile" class="mui-control-content">
+						<ul class="order-list-groups">
+							<li class="order-list" v-for="i in 30">
+								<div class="mui-card">
+									<div class="mui-card-header">
+										<div class="flex-center">
+											<img class="user-head-img" src="../image/5E0eH.png">
+											<span class="user-name">马飞飞</span>
+											<span class="mui-icon mui-icon-arrowright"></span>
+										</div>
+										<span class="cancel-time" v-if="i!=2">交易成功</span>
+										<span class="cancel-time" v-else>退货退款成功</span>
+									</div>
+									<div class="mui-card-content">
+										<div class="mui-card-content-inner">
+											<div class="order-inside-list" v-for="i in 3">
+												<div class="inside-list-left">
+													<img src="../image/5E0eH.png">
+													<div class="goods-type-sign">
+														分销商品
+													</div>
+												</div>
+												<div class="inside-list-right">
+													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
+													<div class="specification-cont">
+														<div class="specification-left">
+															默认规格
+														</div>
+														<div class="specification-right">
+															<span>&yen;30.00</span>
+															<span>x&nbsp;12</span>
+														</div>
+													</div>
+													<div class="distribution-team">
+														分销商：土特产团队<span>[大飞飞]</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="mui-card-footer">
+										<div class="price-num">
+											<span>共1件商品</span>
+											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
+										</div>
+										<div class="net-yield">
+											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
-		<script src="../js/mui.picker.js"></script>
-		<script src="../js/mui.poppicker.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var express_id = '';
-			mui.init({
-				swipeBack: true,
-				pullRefresh: {
-					container: ".mui-content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
-					down: {
-						style: 'circle', //必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
-						color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件颜色
-						height: '50px', //可选,默认50px.下拉刷新控件的高度,
-						range: '100px', //可选 默认100px,控件可下拉拖拽的范围
-						offset: '0px', //可选 默认0px,下拉刷新控件的起始位置
-						auto: false, //可选,默认false.首次加载自动上拉刷新一次
-						callback: function() {
-							getOrderList(true);
-						} //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
-					}
-				}
-			})
-
 			var userInfo = getUserInfo();
-			var goodsName = '';
-			var orderId = 0;
-			mui.plusReady(function() {
-				eventInit();
-				getOrderList(false);
-				var self = plus.webview.currentWebview();
-				var change = self.change; //获得参数
-				if (change) {
-					var btn = document.getElementById('wait-send'); // mui("#wait-send");
-					mui.trigger(btn, 'tap');
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						swipeBack: false,
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui('.mui-scroll-wrapper').scroll({
+						indicators: false
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						plus.webview.currentWebview().setStyle({
+							scrollIndicator: 'none'
+						});
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
 				}
 			})
-
-			//事件初始化
-			function eventInit() {
-				//发货事件监听
-				window.addEventListener('expressSuccess', function() {
-					getOrderList(false);
-				})
-				//搜索监听
-				document.onkeydown = function(event) {
-					var e = event || window.event || arguments.callee.caller.arguments[0];
-					if (e && e.keyCode == 13) { // enter 键
-						goodsName = document.querySelector('input[name=goods_name]').value;
-						getOrderList();
-					}
-				};
-
-				//切换订单选项卡
-				mui('.hd').on('tap', 'li', function() {
-					mui('.hd li').each(function() {
-						this.className = '';
-					})
-					var status = this.dataset.status;
-					this.className = 'current';
-					mui('.bd li').each(function() {
-						this.className = '';
-					})
-					document.querySelector('.bd li[data-status="' + status + '"]').className = 'current';
-				})
-
-				//发货弹窗
-				mui('.mui-content').on('tap', '#cover', function() {
-					this.style.display = 'none';
-					document.querySelector('.tanchu').style.display = 'none';
-				})
-
-				//发货
-				mui('.mui-content').on('tap', '.tanchu_button', function() {
-					// var expressCompany = document.querySelector('input[name=express_company]').value;
-					var courierNumber = document.querySelector('input[name=courier_number]').value;
-					if (express_id== '') {
-						message('请选择物流公司!');
-						return;
-					}
-					if (courierNumber.length == 0) {
-						message('请填写物流单号!');
-						return;
-					}
-					document.querySelector('#cover').style.display = 'none';
-					document.querySelector('.tanchu').style.display = 'none';
-					fnExpress(express_id, courierNumber, orderId);
-				})
-			}
-
-			//订单列表事件
-			function orderEvent() {
-				//查看详情
-				mui('.mui-content').on('tap', '.Record_list', function() {
-					var orderId = this.dataset.id;
-					var status = this.dataset.status;
-					if (status == 1) {
-						openDetailWin('order_details_1', orderId);
-					} else if (status == 2) {
-						openDetailWin('order_details_2', orderId);
-					} else {
-						openDetailWin('order_details_3', orderId);
-					}
-				})
-
-				//聊天
-				mui('.Record_list').on('tap', '.chat', function(e) {
-					var userId = this.dataset.id;
-					var nickname = this.dataset.name;
-					var avatar = this.dataset.avatar;
-					fnOpenWin('dialog.html', 'dialog', {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, {
-						cid: userId,
-						chatName: nickname,
-						avatar: avatar,
-						barStyle: 'dark'
-					}, 'slide-in-right');
-					e.stopPropagation();
-				})
-
-				//发货
-				mui('.Record_list').on('tap', '.deliver', function(e) {
-					orderId = this.dataset.id;
-					document.querySelector('.tanchu').style.display = 'block';
-					document.querySelector('#cover').style.display = 'block';
-					e.stopPropagation();
-				})
-
-				//查看物流
-				mui('.Record_list').on('tap', '.logistics', function(e) {
-					var orderId = this.dataset.id;
-					fnOpenWin('logistics.html', 'logistics', {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, {
-						orderId: orderId
-					}, 'slide-in-right');
-					e.stopPropagation();
-				})
-			}
-
-			//获取订单列表
-			function getOrderList(refresh) {
-				// showload(0);
-				showload(0);
-				mui.post($ajaxUrl + 'order', {
-					action: 'list',
-					token: userInfo.token,
-					goods_name: goodsName
-				}, function(res) {
-					var emptyContent =
-						'<div ><img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-order.png" ><p style="text-align: center;">暂无订单</p></div>';
-					if (res.errno == 0) {
-						var orderList = res.data;
-						var str_1 = '';
-						var str_2 = '';
-						var str_3 = '';
-						var str_4 = '';
-						for (var i in orderList) {
-							if (orderList[i].pay_status == 0) {
-								str_1 += '<div class="Record_list goods-detail" data-status="1" data-id="' + orderList[i].id + '">';
-								str_1 += '<div class="Record_list_tile">';
-								str_1 += '<span>待付款(' + orderList[i].pay_text + '后将自动取消订单)</span>';
-								str_1 += '<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>';
-								str_1 += '</div>';
-								str_1 += '<div class="commodity_information">';
-								var goods = orderList[i].goods;
-								var number = 0;
-								for (var j in goods) {
-									str_1 += '<div class="ship">';
-									str_1 += '<div class="commodity_information_chart mui-pull-left">';
-									str_1 += '<img src="' + goods[j].cover + '">';
-									str_1 += '</div>';
-									str_1 += '<div class="mui-pull-right jianshu">';
-									str_1 += '<div class="font">';
-									str_1 += '<span>' + goods[j].name + '</span>';
-									str_1 += '<span class="mui-pull-right">￥' + goods[j].price + '/件</span>';
-									str_1 += '</div>';
-									str_1 += '<div>';
-									if (goods[j].content.length == 0) {
-										str_1 += '<span>规格：默认</span>';
-									} else {
-										str_1 += '<span>规格：' + goods[j].content + '</span>';
-									}
-									str_1 += '<span class="mui-pull-right">x' + goods[j].number + '</span>';
-									str_1 += '</div>';
-									str_1 += '</div>';
-									str_1 += '<div class="clearfix"></div>';
-									str_1 += '</div>';
-									number += parseInt(goods[j].number);
-								}
-								str_1 += '<div class="total">共' + number + '件商品合计:￥<span>' + orderList[i].total_price + '</span>(含运费:￥' +
-									orderList[i].freight + ')</div>';
-								str_1 += '</div>';
-								str_1 += '<div class="purchaser">';
-								str_1 += '<div class="mui-pull-left">';
-								str_1 += '<span class="purchaser_chart mui-pull-left">';
-								str_1 += '<img src="' + orderList[i].avatar + '">';
-								str_1 += '</span>';
-								str_1 += '<span class="mui-pull-left" style="margin: 5px 0 0 10px;">' + orderList[i].nickname + '</span>';
-								str_1 += '<div class="clearfix"></div>';
-								str_1 += '</div>';
-								str_1 += '<button class="mui-pull-right button chat" data-id="' + orderList[i].user_id + '" data-name="' +
-									orderList[i].nickname + '" data-avatar="' +
-									orderList[i].avatar + '">联系TA</button>';
-								str_1 += '<div class="clearfix"></div>';
-								str_1 += '</div>';
-								str_1 += '</div>';
-							} else if (orderList[i].pay_status == 1 && orderList[i].order_status == 0) {
-								str_2 += '<div class="Record_list goods-detail" data-status="2" data-id="' + orderList[i].id + '">';
-								str_2 += '<div class="Record_list_tile">';
-								str_2 += '<span>';
-								str_2 += '<span>付款时间：</span>';
-								str_2 += '<span>' + orderList[i].pay_time + '</span>';
-								str_2 += '</span>';
-								str_2 += '<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>';
-								str_2 += '</div>';
-								str_2 += '<div class="commodity_information">';
-								var goods = orderList[i].goods;
-								var number = 0;
-								for (var j in goods) {
-									str_2 += '<div class="ship">';
-									str_2 += '<div class="commodity_information_chart mui-pull-left">';
-									str_2 += '<img src="' + goods[j].cover + '">';
-									str_2 += '</div>';
-									str_2 += '<div class="mui-pull-right jianshu">';
-									str_2 += '<div class="font">';
-									str_2 += '<span>' + goods[j].name + '</span>';
-									str_2 += '<span class="mui-pull-right">￥' + goods[j].price + '/件</span>';
-									str_2 += '</div>';
-									str_2 += '<div>';
-									if (goods[j].content.length == 0) {
-										str_2 += '<span>规格：默认</span>';
-									} else {
-										str_2 += '<span>规格：' + goods[j].content + '</span>';
-									}
-									str_2 += '<span class="mui-pull-right">x' + goods[j].number + '</span>';
-									str_2 += '</div>';
-									str_2 += '</div>';
-									str_2 += '<div class="clearfix"></div>';
-									str_2 += '</div>';
-									number += parseInt(goods[j].number);
-								}
-								str_2 += '<div class="total">共' + number + '件商品合计:￥<span>' + orderList[i].total_price + '</span>(含运费:￥' +
-									orderList[i].freight + ')</div>';
-								str_2 += '</div>';
-								str_2 += '<div class="purchaser">';
-								str_2 += '<div class="mui-pull-left">';
-								str_2 += '<span class="purchaser_chart mui-pull-left">';
-								str_2 += '<img src="' + orderList[i].avatar + '">';
-								str_2 += '</span>';
-								str_2 += '<span class="mui-pull-left" style="margin: 5px 0 0 10px;">' + orderList[i].nickname + '</span>';
-								str_2 += '<div class="clearfix"></div>';
-								str_2 += '</div>';
-								str_2 += '<div>';
-								str_2 += '<button class="mui-pull-right button deliver" data-id="' + orderList[i].id + '">发货</button>';
-								str_2 += '<button class="mui-pull-right lianxi chat" data-id="' + orderList[i].user_id + '" data-name="' +
-									orderList[i].nickname + '" data-avatar="' +
-									orderList[i].avatar + '">联系TA</button>';
-								str_2 += '</div>';
-								str_2 += '<div class="clearfix"></div>';
-								str_2 += '</div>';
-								str_2 += '</div>';
-							} else if (orderList[i].pay_status == 1 && orderList[i].order_status == 2) {
-								str_3 += '<div class="Record_list goods-detail" data-status="3" data-id="' + orderList[i].id + '">';
-								str_3 += '<div class="Record_list_tile">';
-								str_3 += '<span>';
-								str_3 += '<span>发货时间：</span>';
-								str_3 += '<span>' + orderList[i].express_time + '</span>';
-								str_3 += '</span>';
-								str_3 += '<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>';
-								str_3 += '</div>';
-								str_3 += '<div class="commodity_information">';
-								var goods = orderList[i].goods;
-								var number = 0;
-								for (var j in goods) {
-									str_3 += '<div class="ship">';
-									str_3 += '<div class="commodity_information_chart mui-pull-left">';
-									str_3 += '<img src="' + goods[j].cover + '">';
-									str_3 += '</div>';
-									str_3 += '<div class="mui-pull-right jianshu">';
-									str_3 += '<div class="font">';
-									str_3 += '<span>' + goods[j].name + '</span>';
-									str_3 += '<span class="mui-pull-right">￥' + goods[j].price + '/件</span>';
-									str_3 += '</div>';
-									str_3 += '<div>';
-									if (goods[j].content.length == 0) {
-										str_3 += '<span>规格：默认</span>';
-									} else {
-										str_3 += '<span>规格：' + goods[j].content + '</span>';
-									}
-									str_3 += '<span class="mui-pull-right">x' + goods[j].number + '</span>';
-									str_3 += '</div>';
-									str_3 += '</div>';
-									str_3 += '<div class="clearfix"></div>';
-									str_3 += '</div>';
-									number += parseInt(goods[j].number);
-								}
-								str_3 += '<div class="total">共' + number + '件商品合计:￥<span>' + orderList[i].total_price + '</span>(含运费:￥' +
-									orderList[i].freight + ')</div>';
-								str_3 += '</div>';
-								str_3 += '<div class="purchaser">';
-								str_3 += '<div class="mui-pull-left">';
-								str_3 += '<span class="purchaser_chart mui-pull-left">';
-								str_3 += '<img src="' + orderList[i].avatar + '">';
-								str_3 += '</span>';
-								str_3 += '<span class="mui-pull-left" style="margin: 5px 0 0 10px;">' + orderList[i].nickname + '</span>';
-								str_3 += '<div class="clearfix"></div>';
-								str_3 += '</div>';
-								str_3 += '<div>';
-								str_3 += '<button class="mui-pull-right button logistics" data-id="' + orderList[i].id + '">查看物流</button>';
-								str_3 += '<button class="mui-pull-right lianxi chat" data-id="' + orderList[i].user_id + '" data-name="' +
-									orderList[i].nickname + '" data-avatar="' +
-									orderList[i].avatar + '">联系TA</button>';
-								str_3 += '</div>';
-								str_3 += '<div class="clearfix"></div>';
-								str_3 += '</div>';
-								str_3 += '</div>';
-							} else if (orderList[i].pay_status == 1 && orderList[i].order_status == 3) {
-								str_4 += '<div class="Record_list goods-detail" data-status="4" data-id="' + orderList[i].id + '">';
-								str_4 += '<div class="Record_list_tile">';
-								str_4 += '<span class="complete">已完成</span>';
-								str_4 += '<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>';
-								str_4 += '</div>';
-								str_4 += '<div class="commodity_information">';
-								var goods = orderList[i].goods;
-								var number = 0;
-								for (var j in goods) {
-									str_4 += '<div class="ship">';
-									str_4 += '<div class="commodity_information_chart mui-pull-left">';
-									str_4 += '<img src="' + goods[j].cover + '">';
-									str_4 += '</div>';
-									str_4 += '<div class="mui-pull-right jianshu">';
-									str_4 += '<div class="font">';
-									str_4 += '<span>' + goods[j].name + '</span>';
-									str_4 += '<span class="mui-pull-right">￥' + goods[j].price + '/件</span>';
-									str_4 += '</div>';
-									str_4 += '<div>';
-									if (goods[j].content.length == 0) {
-										str_4 += '<span>规格：默认</span>';
-									} else {
-										str_4 += '<span>规格：' + goods[j].content + '</span>';
-									}
-									str_4 += '<span class="mui-pull-right">x' + goods[j].number + '</span>';
-									str_4 += '</div>';
-									str_4 += '</div>';
-									str_4 += '<div class="clearfix"></div>';
-									str_4 += '</div>';
-									number += parseInt(goods[j].number);
-								}
-								str_4 += '<div class="total">共' + number + '件商品合计:￥<span>' + orderList[i].total_price + '</span>(含运费:￥' +
-									orderList[i].freight + ')</div>';
-								str_4 += '</div>';
-								str_4 += '<div class="purchaser">';
-								str_4 += '<div class="mui-pull-left">';
-								str_4 += '<span class="purchaser_chart mui-pull-left">';
-								str_4 += '<img src="' + orderList[i].avatar + '">';
-								str_4 += '</span>';
-								str_4 += '<span class="mui-pull-left" style="margin: 5px 0 0 10px;">' + orderList[i].nickname + '</span>';
-								str_4 += '<div class="clearfix"></div>';
-								str_4 += '</div>';
-								str_4 += '<button class="mui-pull-right button chat" data-id="' + orderList[i].user_id + '" data-name="' +
-									orderList[i].nickname + '" data-avatar="' +
-									orderList[i].avatar + '">联系TA</button>';
-								str_4 += '<div class="clearfix"></div>';
-								str_4 += '</div>';
-								str_4 += '</div>';
-							}
-						}
-						if (str_1.length != 0) {
-							document.querySelector('.bd li[data-status="1"]').innerHTML = str_1;
-						} else {
-							document.querySelector('.bd li[data-status="1"]').innerHTML = emptyContent;
-						}
-						if (str_2.length != 0) {
-							document.querySelector('.bd li[data-status="2"]').innerHTML = str_2;
-						} else {
-							document.querySelector('.bd li[data-status="2"]').innerHTML = emptyContent;
-						}
-						if (str_3.length != 0) {
-							document.querySelector('.bd li[data-status="3"]').innerHTML = str_3;
-						} else {
-							document.querySelector('.bd li[data-status="3"]').innerHTML = emptyContent;
-						}
-						if (str_4.length != 0) {
-							document.querySelector('.bd li[data-status="4"]').innerHTML = str_4;
-						} else {
-							document.querySelector('.bd li[data-status="4"]').innerHTML = emptyContent;
-						}
-					} else {
-						mui('.bd li').each(function() {
-							this.innerHTML = emptyContent;
-						})
-					}
-					//结束下拉刷新
-					if (refresh) {
-						mui('.mui-content').pullRefresh().endPulldownToRefresh();
-					} else {
-						orderEvent();
-					}
-					// showload(1);
-					showload(1);
-				}, 'json');
-			}
-
-			//打开订单详情页
-			function openDetailWin(win, orderId) {
-				fnOpenWin(win + '.html', win, {
-					statusbar: {
-						background: '#ffffff'
-					}
-				}, {
-					orderId: orderId
-				}, 'slide-in-right');
-			}
-			// 获取物流公司
-			function logisticsCompany() {
-
-			}
-			// 选择物流公司
-			mui(".mui-content").on('tap', '#express_company', function() {
-				document.querySelector('input[name=courier_number]').blur();
-				var userPicker = new mui.PopPicker();
-				mui.post($ajaxUrl + 'util&action=express_list', {}, function(res) {
-					if (res.errno == 0) {
-						var data = res.data;
-						data.forEach(function(item) {
-							item.value = item.id;
-							item.text = item.e_name;
-							delete item.id;
-							delete item.e_name;
-						})
-						userPicker.setData(data);
-						userPicker.show(function(items) {
-							mui("#select_company")[0].innerText = JSON.stringify(items[0].text).replace(/"/g, "");
-							express_id = items[0].value;
-						});
-					} else {
-
-					}
-				}, 'json');
+			// 切换订单类型
+			mui('.mui-bar').on('tap', '.order-type-item', function() {
+				var btn = document.querySelectorAll(".order-type-item");
+				for (i = 0; i < btn.length; i++) {
+					btn[i].classList.remove("active");
+				}
+				document.getElementById("bg_full").style.left = this.offsetLeft + 'px';
+				this.classList.add("active");
 			})
-			// 重新开启滚动
-			// mui("body").on('tap', '.mui-btn', function() {
-			// 	mui('.mui-content').pullRefresh().setStopped(false);
-			// })
-			// mui('body').on('tap', '.mui-backdrop', function() {
-			// 	mui('.mui-content').pullRefresh().setStopped(false);
-			// })
-			//发货
-			function fnExpress(express_id, courierNumber, orderId) {
-				mui.post($ajaxUrl + 'order', {
-					action: 'express',
-					token: userInfo.token,
-					order_id: orderId,
-					express_id: express_id,
-					courier_number: courierNumber
-				}, function(res) {
-					if (res.errno == 0) {
-						message('发货成功!');
-						setTimeout(function() {
-							getOrderList(false);
-						}, 2000)
-					} else {
-						message(res.message);
-					}
-				}, 'json');
-			}
+			// 切换选项卡
+			mui('.mui-bar').on('tap', '.mui-control-item', function() {
+				document.getElementById("slider_progressBar").style.left = this.offsetLeft + 'px';
+			})
+			// 搜索页面
+			mui('.mui-bar').on('tap', '.search-btn', function() {
+				openPage('order_search.html','order_search','#ffffff')
+			})
 		</script>
 	</body>
+
 </html>
