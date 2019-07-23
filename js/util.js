@@ -874,7 +874,8 @@ function fnLogout() {
 				getAppInfo(function(e) {
 					if (res.data.login_type == 2 && res.data.app_version == e.version) {
 						for (var i = 0; i < wvs.length; i++) {
-							if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+							// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+							if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
 								continue;
 							} else {
 								plus.webview.close(wvs[i]);
@@ -889,7 +890,8 @@ function fnLogout() {
 						// curr.close();
 					} else {
 						for (var i = 0; i < wvs.length; i++) {
-							if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+							// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+							if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
 								continue;
 							} else {
 								plus.webview.close(wvs[i]);

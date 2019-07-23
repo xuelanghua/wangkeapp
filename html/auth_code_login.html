@@ -204,24 +204,26 @@
 			mui.post($ajaxUrl + 'member&action=code_login', {
 				mobile: vmobile,
 				code: vcode,
-				client:plus.device.client,
-				device_id:plus.device.uuid
+				client: mui.os.ios ? 'ios' : (mui.os.android ? 'android' : 'other'),
+				device_id: plus.device.uuid
 			}, function(res) {
 				if (res.errno == 0) {
 					// 登录成功
 					mui.toast('登录成功!');
+					var loginPage = plus.webview.getWebviewById("login");
+					loginPage.hide();
+					loginPage.close();
 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'loginSuccess');
 					localStorage.setItem('user', JSON.stringify(res.data));
 					localStorage.setItem('lastLoginTime', new Date().getTime());
 					var curr = plus.webview.currentWebview();
 					plus.navigator.setStatusBarStyle('dark');
-					plus.webview.close("login");
 					setTimeout(function() {
 						curr.hide();
 						curr.close();
 					}, 1200);
 				} else {
-					// mui.toast(res.message);
+					mui.toast(res.message);
 					return;
 				}
 			}, 'json');

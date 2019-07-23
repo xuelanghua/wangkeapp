@@ -200,42 +200,45 @@
 													plus.webview.close(wvs[i]);
 												}
 											}
+											curr.hide();
+											curr.close();
 											fnOpenWin('mobile_login.html', 'mobile_login', {
 												statusbar: {
 													background: '#2289FF'
 												}
 											}, '', 'slide-in-bottom');
-											curr.hide();
-											curr.close();
 										} else {
 											for (var i = 0; i < wvs.length; i++) {
-												if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+												// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+												if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
 													continue;
 												} else {
 													plus.webview.close(wvs[i]);
 												}
 											}
+											curr.hide();
+											curr.close();
 											fnOpenWin('login.html', 'login', {
 												statusbar: {
 													background: '#122c9a'
 												}
 											}, '', 'slide-in-bottom');
-											curr.hide();
-											curr.close();
 										}
 									})
 								}, 'json');
 							} else {
-								// plus.runtime.restart();
 								for (var i = 0; i < wvs.length; i++) {
-									if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+									// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+									if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
 										continue;
 									} else {
 										plus.webview.close(wvs[i]);
 									}
 								}
-								var loginPage = plus.webview.getWebviewById('login');
-								if (!loginPage) {
+								curr.hide();
+								curr.close();
+								var loginPage = plus.webview.getWebviewById("login");
+								if (loginPage) {
 									loginPage.show();
 								} else {
 									fnOpenWin('login.html', 'login', {
@@ -244,8 +247,6 @@
 										}
 									}, '', 'slide-in-bottom');
 								}
-								curr.hide();
-								curr.close();
 							}
 							break;
 						case 2:
