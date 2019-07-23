@@ -15,7 +15,8 @@
 			[v-cloak] {
 				display: none;
 			}
-			.btn-section{
+
+			.btn-section {
 				color: #FFFDEF;
 				justify-content: center;
 			}
@@ -25,7 +26,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
-			<h1 class="mui-title">添加分销商品</h1>
+			<h1 class="mui-title">编辑分销商品</h1>
 		</header>
 		<div id="mui-content" class="mui-content " v-cloak>
 			<div class="goods-title">
@@ -288,8 +289,6 @@
 						getGoodsType();
 						// 获取快递列表
 						getExpressList();
-
-						// 编辑----------
 						//获取商品规格
 						getGoodSpec();
 						// 获取商品信息
@@ -381,26 +380,23 @@
 						}
 						document.documentElement.style.fontSize = viewport / 7.5 + "px";
 						// 初始化字体大小结束
+						//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+						var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						window.onresize = function() {
+							var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+							var paddeds = document.querySelector(".btn-section");
+							if (resizeHeight * 1 < originalHeight * 1) {
+								//resizeHeight<originalHeight证明窗口被挤压了
+								paddeds.style.zIndex = '-1';
+								paddeds.style.display = 'none';
+							} else {
+								paddeds.style.zIndex = '199';
+								paddeds.style.display = 'flex';
+							}
+						}
 					})
 				}
 			})
-
-			//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-			var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-			window.onresize = function() {
-				var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-				var paddeds = document.querySelector(".btn-section");
-				if (resizeHeight * 1 < originalHeight * 1) {
-					//resizeHeight<originalHeight证明窗口被挤压了
-					paddeds.style.zIndex = '-1';
-					paddeds.style.display = 'none';
-					document.querySelector(".mui-content").style.paddingBottom = 0;
-				} else {
-					paddeds.style.zIndex = '199';
-					paddeds.style.display = 'flex';
-					document.querySelector(".mui-content").style.paddingBottom = '1.2rem';
-				}
-			}
 
 			// 预览主图
 			function previewImage(idx) {
@@ -644,23 +640,24 @@
 					content: app.description,
 					team_ids: app.team_ids.join(','),
 				}
-				logs(datas);
-				// mui.post($ajaxUrl + 'goods', {
-				// 	action: 'edit_team_goods',
-				// 	token: userInfo.token,
-				// 	data: datas,
-				// 	goods_id:goodsId
-				// }, function(res) {
-				// 	// logs(res);
-				// 	if (res.errno == 0) {
-				// 		message('修改成功！');
-				// 		setTimeout(function() {
-				// 			mui.back();
-				// 		}, 500);
-				// 	} else {
-				// 		message(res.message);
-				// 	}
-				// }, 'json');
+				// logs(datas);
+				mui.post($ajaxUrl + 'goods', {
+					action: 'edit_team_goods',
+					token: userInfo.token,
+					data: datas,
+					goods_id: goodsId
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						message('修改成功！');
+						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'reloadYourself');
+						setTimeout(function() {
+							mui.back();
+						}, 500);
+					} else {
+						message(res.message);
+					}
+				}, 'json');
 			}
 			// 编辑------
 			/**
@@ -692,7 +689,7 @@
 
 			//获取商品的信息
 			function getGoodInfo() {
-				logs(goodsId);
+				// logs(goodsId);
 				var ajax_url = $ajaxUrl + 'goods';
 				mui.ajax(ajax_url, {
 					data: {
@@ -704,7 +701,7 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(res) {
-						logs(res);
+						// logs(res);
 						var datas = res.data;
 						app.images = datas.images;
 						app.name = datas.name;
@@ -718,27 +715,15 @@
 						app.top = datas.top;
 						// 为了拿到上次选择的商品类型
 						app.type_p = datas.type_p;
-						for (var i = 0; i < app.goods_type_group.length; i++) {
-							if (app.goods_type_group[i].value == datas.type_p) {
-								app.goods_type_text = app.goods_type_group[i].text;
-							}
-						}
+						app.goods_type_text = datas.type_name;
 						app.settlement_price = datas.settlement_price;
 						app.price = datas.price;
 						app.protect_price = datas.protect_price;
 						app.stock = datas.stock;
 						app.freight = datas.freight;
 						app.default_express = datas.default_express;
-						for (var i = 0; i < app.express_group.length; i++) {
-							if (app.express_group[i].value == datas.default_express) {
-								app.express_text = app.express_group[i].text;
-							}
-						}
-						// 处理
+						app.express_text = datas.express_name;
 						app.team_ids = datas.team_ids.split(","); //上次选的团队
-						//所有的团队列表app.team_list
-						// for
-						// logs(app.team_list);
 					},
 					error: function(xhr, type, errorThrown) {
 						console.log(JSON.stringify('失败'));
