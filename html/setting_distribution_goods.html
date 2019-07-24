@@ -185,11 +185,25 @@
 			}
 
 			.goods-detail-title {
+				font-size: 0.32rem;
+				color: #333333;
+				padding: 0.4rem 0 0.2rem;
+				font-weight: normal;
+				position: relative;
+				display: flex;
+				align-items: center;
+			}
+
+			.goods-detail-title:before {
+				content: '';
 				display: inline-block;
-				border-bottom: 1px solid #DDDDDD;
-				overflow: hidden;
-				padding-bottom: 5px;
-				padding-right: 5%;
+				position: relative;
+				bottom: 0;
+				left: 0;
+				height: 15px;
+				width: 4px;
+				margin-right: 5px;
+				background-color: #333333;
 			}
 
 			.btn-section {
@@ -287,6 +301,10 @@
 				font-size: 0.3rem;
 				color: #999999;
 				text-align: center;
+			}
+
+			.goods-detail-container p {
+				line-height: 1.4;
 			}
 		</style>
 	</head>
@@ -466,7 +484,7 @@
 			function postChoice() {
 				logs(app.goods_detail.price);
 				logs(app.team_id);
-				if(app.team_id==''){
+				if (app.team_id == '') {
 					message("请选择拣货的团队！")
 					return false;
 				}
