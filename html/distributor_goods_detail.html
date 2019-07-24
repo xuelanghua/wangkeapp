@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-
+	<!-- 分销商品详情 -->
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -130,7 +130,7 @@
 				color: #333333;
 			}
 
-			.parameter-cont a:before {
+			.parameter-cont .mui-table-view-cell.mui-collapse.mui-active a:before {
 				position: absolute;
 				right: 15px;
 				bottom: 0;
@@ -167,36 +167,42 @@
 			.parameter-items:first-of-type {
 				width: 30%;
 			}
-			.team-name-cont{
+
+			.team-name-cont {
 				background-color: #FFFFFF;
 				padding: 0.2rem;
 				display: flex;
 				align-items: center;
-				margin: 0.2rem  0;
+				margin: 0.2rem 0;
 			}
-			.team-name-cont img{
+
+			.team-name-cont img {
 				width: 0.88rem;
 				height: 0.88rem;
 				border-radius: 0.1rem;
 				object-fit: cover;
 				margin-right: 0.4rem;
 			}
-			.team-name-cont .mui-icon{
+
+			.team-name-cont .mui-icon {
 				position: absolute;
 				right: 0.2rem;
 				color: #999999;
 			}
+
 			.goods-detail-container {
 				background-color: #FFFFFF;
 			}
-			.goods-detail-container h4.title{
+
+			.goods-detail-container h4.title {
 				font-size: 0.32rem;
 				color: #333333;
-				padding:0.4rem 0.2rem 0.28rem;
+				padding: 0.4rem 0.2rem 0.28rem;
 				font-weight: normal;
 				position: relative;
 			}
-			.goods-detail-container h4.title:after{
+
+			.goods-detail-container h4.title:after {
 				content: '';
 				position: absolute;
 				bottom: 5px;
@@ -205,45 +211,57 @@
 				width: 1.4rem;
 				background-color: #999999;
 			}
-			.goods-detail-container img{
+
+			.goods-detail-container img {
 				max-width: 100% !important;
 				height: auto;
 			}
+
 			.btn-section {
-			  position: fixed;
-			  display: flex;
-			  align-items: center;
-			  z-index: 199;
-			  background-color: #FFFFFF;
-			  height: 1.09rem;
-			  bottom: 0;
-			  width: 100%;
-			  box-shadow: 1px 0 2px 0 rgba(220,220,220,.5);
+				position: fixed;
+				display: flex;
+				align-items: center;
+				z-index: 199;
+				background-color: #FFFFFF;
+				height: 1.09rem;
+				bottom: 0;
+				width: 100%;
+				box-shadow: 1px 0 2px 0 rgba(220, 220, 220, .5);
 			}
+
 			.btn-section div {
-			  color: #333333;
-			  width: 50%;
-			  height: 100%;
-			  display: inline-flex;
-			  align-items: center;
-			  justify-content: center;
-			  position: relative;
+				color: #333333;
+				width: 100%;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
 			}
-			.btn-section .the-warehouse{
-				color:#CC9C2D;
+
+			.btn-section .the-warehouse {
+				color: #CC9C2D;
 			}
-			.btn-section .the-warehouse::after {
-			  content: '';
-			  position: absolute;
-			  display: block;
-			  background-color: #DDDDDD;
-			  top: 50%;
-			  margin-top: -0.185rem;
-			  height: 0.37rem;
-			  left: 0;
-			  width: 1px;
-			  -webkit-transform: scaleX(0.5);
-			  transform: scaleX(0.5);
+
+			.btn-section .the-gray-warehouse {
+				color: #a7a7a7;
+			}
+
+			/* .btn-section .the-warehouse::after {
+				content: '';
+				position: absolute;
+				display: block;
+				background-color: #DDDDDD;
+				top: 50%;
+				margin-top: -0.185rem;
+				height: 0.37rem;
+				left: 0;
+				width: 1px;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			} */
+			.goods-detail-container {
+				line-height: 0;
 			}
 		</style>
 	</head>
@@ -256,17 +274,8 @@
 		<div id="mui-content" class="mui-content " v-cloak>
 			<div class="swiper-container goods-images">
 				<div class="swiper-wrapper">
-					<div class="swiper-slide">
-						<img src="../image/share/bg-img02.jpg">
-					</div>
-					<div class="swiper-slide">
-						<img src="../image/share/bg-img03.jpg">
-					</div>
-					<div class="swiper-slide">
-						<img src="../image/share/bg-img05.jpg">
-					</div>
-					<div class="swiper-slide">
-						<img src="../image/share/bg-img04.jpg">
+					<div class="swiper-slide" v-for="(img,i) in images">
+						<img data-idx="i" :src="img">
 					</div>
 				</div>
 				<!-- Add Pagination -->
@@ -274,20 +283,20 @@
 			</div>
 			<div class="top-container main-container">
 				<div class="goods-title">
-					<p>四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用品</p>
+					<p>{{goods_detail.name}}</p>
 				</div>
 				<div class="profit-cont">
-					<span>提成：&yen;15.00-20.00</span>
+					<span>提成：&yen;{{goods_detail.commission}}</span>
 					<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
 				</div>
 				<div class="price-cont">
-					<span>供货价：&yen;15.00-20.00</span>
-					<span>售价：&yen;15.00-20.00</span>
+					<span>供货价：&yen;{{goods_detail.settlement_price}}</span>
+					<span>售价：&yen;{{goods_detail.price}}</span>
 				</div>
 				<div class="top-info-cont">
-					<span>快递：顺丰速运&yen;10.00</span>
-					<span>销量：900</span>
-					<span>库存：1000</span>
+					<span>快递：{{goods_detail.express_name}}&nbsp;&yen;{{goods_detail.freight}}</span>
+					<span>销量：{{goods_detail.sale_count}}</span>
+					<span>库存：{{goods_detail.stock}}</span>
 				</div>
 			</div>
 			<div class="parameter-cont">
@@ -302,41 +311,41 @@
 								<div class="parameter-items">售价</div>
 								<div class="parameter-items">提成</div>
 							</div>
-							<div class="parameter-list">
-								<div class="parameter-items">红色</div>
-								<div class="parameter-items">136</div>
-								<div class="parameter-items">299</div>
-								<div class="parameter-items">360</div>
-								<div class="parameter-items">60</div>
-							</div>
-							<div class="parameter-list">
-								<div class="parameter-items">蓝色</div>
-								<div class="parameter-items">236</div>
-								<div class="parameter-items">329</div>
-								<div class="parameter-items">330</div>
-								<div class="parameter-items">80</div>
+							<div class="parameter-list" v-for="(c,idx) in spec">
+								<div class="parameter-items">{{c.title}}</div>
+								<div class="parameter-items">{{c.stock}}</div>
+								<div class="parameter-items">{{c.settlement_price}}</div>
+								<div class="parameter-items">{{c.price}}</div>
+								<div class="parameter-items">{{goods_detail.commission}}</div>
 							</div>
 						</div>
 					</li>
 				</ul>
 			</div>
-			<div class="team-name-cont">
-				<img src="../image/5E0eH.png" >
-				<span>阿里巴巴团队</span>
+			<div v-if="index==0" class="team-name-cont" :data-tid="team.id" v-for="(team,index) in team_info">
+				<img :src="team.cover">
+				<span>{{team.name}}</span>
 				<span class="mui-icon mui-icon-arrowright"></span>
 			</div>
 			<div class="goods-detail-container">
 				<h4 class="title">商品详情</h4>
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17614/41/1066658677/201711/28869e0/5ab9e251Neb5e8e1c.jpg!q70.dpg.webp" >
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t1/26930/26/7060/99982/5c665fe3E33a28553/6a7b517d9b805255.jpg!q70.dpg.webp" >
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17902/351/1069557559/144738/5a18345e/5ab9e261N8e01fd9c.jpg!q70.dpg.webp" >
+				<div id="content" v-html="goods_detail.content"></div>
 			</div>
-			<div class="btn-section">
+			<!-- <div class="btn-section">
 				<div class="putaway-btn">
 					添加到仓库
 				</div>
 				<div class="the-warehouse">
 					上架到商城
+				</div>
+			</div> -->
+			<div class="btn-section">
+				<!-- 不可拣货 -->
+				<div v-if="goods_detail.is_pick==1" class="the-gray-warehouse">
+					拣货
+				</div>
+				<div v-else class="the-warehouse">
+					拣货
 				</div>
 			</div>
 		</div>
@@ -349,7 +358,13 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					goods_id: '',
+					goods_detail: {
+						name: ''
+					},
+					images: [],
+					spec: [],
+					team_info: [],
 				},
 				created: function() {
 					// 初始化字体大小
@@ -371,7 +386,52 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						//plus.navigator.setStatusBarStyle("dark");
+						app.goods_id = self.gid;
+						mui.post($ajaxUrl + 'goods&action=goods_detail', {
+							token: userInfo.token,
+							goods_id: app.goods_id
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								app.goods_detail = res.data;
+								app.images = res.data.images;
+								app.spec = res.data.spec;
+								app.team_info = res.data.team_info;
+								if (app.images.length > 1) {
+									setTimeout(function() {
+										swiperInint();
+									}, 500);
+								}
+							} else {
+
+							}
+						}, 'json');
+
+						// 预览图片
+						mui('.mui-content').on('tap', '.swiper-slide img', function() {
+							var index = this.dataset.idx;
+							plus.nativeUI.previewImage(app.images, {
+								current: index,
+								loop: true,
+								indicator: 'default',
+								onLongPress: function(event) {
+									// plus.nativeUI.confirm("保存图片到系统相册",function(e){
+									// 	if(e.index==0){
+									// 		showload('','','保存中···','rgba(0,0,0,0.5)');
+									// 		plus.gallery.save(event.url, function(){
+									// 			showload(1);
+									// 			plus.nativeUI.toast("保存成功!");
+									// 		}, function(){
+									// 			showload(1);
+									// 			plus.nativeUI.toast("保存失败!");
+									// 		} );
+									// 	}else{
+									// 		// plus.nativeUI.toast("取消");
+									// 	}
+									// });
+								}
+							});
+						});
 					})
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -380,7 +440,6 @@
 					}
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
-					swiperInint();
 				}
 			})
 
@@ -402,9 +461,18 @@
 			mui(".mui-content").on("tap", ".putaway-btn", function() {
 				mui.toast('添加到仓库');
 			})
-			// 上架到商城
+			// 拣货
 			mui(".mui-content").on("tap", ".the-warehouse", function() {
-				mui.toast('上架到商城');
+				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
+					goods_id: app.goods_id
+				})
+			})
+			// 打开团队详情
+			mui(".mui-content").on("tap", ".team-name-cont", function() {
+				var team_id = this.dataset.tid;
+				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+					teamid: team_id
+				})
 			})
 		</script>
 	</body>

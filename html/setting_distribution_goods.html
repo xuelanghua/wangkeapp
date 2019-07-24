@@ -134,7 +134,7 @@
 			}
 
 			.express-container {
-				margin-bottom: 0.2rem;
+				margin: 0.2rem 0;
 				background-color: #FFFFFF;
 				padding: 0.4rem 0.2rem;
 			}
@@ -171,6 +171,17 @@
 				margin-top: 0.2rem;
 				background: #FFFffF;
 				padding: 0.2rem 0.2rem;
+			}
+
+			.goods-detail img {
+				max-width: 100% !important;
+				height: auto;
+			}
+
+			.goods-detail-container {
+				font-size: 0;
+				line-height: 0;
+				overflow: hidden;
 			}
 
 			.goods-detail-title {
@@ -219,6 +230,63 @@
 				padding-top: 44px;
 				padding-bottom: 1.09rem;
 			}
+
+			.team-list-container {
+				margin: 0.2rem 0;
+				background-color: #FFFFFF;
+			}
+
+			.team-list-container h5 {
+				font-size: 0.3rem;
+				padding: 0.2rem 0.2rem 0;
+				position: relative;
+				display: flex;
+				align-items: center;
+				color: #000000;
+			}
+
+			.team-list-container h5:before {
+				content: "";
+				position: relative;
+				display: block;
+				width: 4px;
+				height: 16px;
+				background-color: #000033;
+				margin-right: 5px;
+			}
+
+			.team-list-container .mui-table-view-cell {
+				font-size: 0.28rem;
+				color: #666666;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+			}
+
+			.team-list.active span {
+				display: inline-flex;
+				position: relative;
+			}
+
+			.team-list.active span:after {
+				content: '';
+				display: inline-block;
+				width: 19px;
+				height: 20px;
+				position: absolute;
+				background: url('../image/icon/draw-icono.png')center center no-repeat;
+				background-size: contain;
+				right: -0.8rem;
+			}
+
+			.void-detail-container {
+				padding: 0.6rem 0;
+				margin: 0 auto;
+				font-size: 0.3rem;
+				color: #999999;
+				text-align: center;
+			}
 		</style>
 	</head>
 
@@ -230,94 +298,81 @@
 		<div id="mui-content" class="mui-content " v-cloak>
 			<div class="section-one">
 				<div class="good-title">
-					<p>四件套全棉纯棉田园风小清新被套简约床单1.8m双人 春夏季床上用品</p>
+					<p>{{goods_detail.name}}</p>
 				</div>
 				<div class="goods-img-groups">
 					<ul>
-						<li><img src="../image/5E0eH.png" alt=""></li>
-						<li><img src="../image/5E0eH.png" alt=""></li>
-						<li><img src="../image/5E0eH.png" alt=""></li>
-						<li><img src="../image/5E0eH.png" alt=""></li>
+						<li v-for="(img,i) in images"><img :src="img" alt=""></li>
 					</ul>
 				</div>
 			</div>
 			<!-- 规格 -->
-			<div class="option-container">
-				<div class="option-group">
+			<div class="option-container" v-if="spec">
+				<div class="option-group" v-for="(g,idx) in spec">
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell">
 							<span class="group-title">规格</span>
-							<span>默认规格</span>
+							<span>{{g.title}}</span>
 						</li>
 						<li class="mui-table-view-cell">
 							<span class="group-title">供货价格</span>
-							<span>50.00</span>
+							<span>{{g.settlement_price}}</span>
 						</li>
 						<li class="mui-table-view-cell">
 							<span class="group-title">零售价格</span>
-							<input type="number" placeholder="价格不低于供货价">
-							<span class="mui-icon mui-icon-clear"></span>
+							<input type="number" v-model="g.price" :placeholder="'价格不低于'+g.protect_price">
+							<span v-show="g.price" class="mui-icon mui-icon-clear" @tap="g.price=''"></span>
 						</li>
 						<li class="mui-table-view-cell">
 							<span class="group-title">库存</span>
-							<span>200</span>
-						</li>
-					</ul>
-					<img class="del-container" src="../image/icon/setting_distribution_goods-icon1.png">
-				</div>
-				<div class="option-group">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell">
-							<span class="group-title">规格</span>
-							<span>默认规格</span>
-						</li>
-						<li class="mui-table-view-cell">
-							<span class="group-title">供货价格</span>
-							<span>50.00</span>
-						</li>
-						<li class="mui-table-view-cell">
-							<span class="group-title">零售价格</span>
-							<input type="number" placeholder="价格不低于供货价">
-							<span class="mui-icon mui-icon-clear"></span>
-						</li>
-						<li class="mui-table-view-cell">
-							<span class="group-title">库存</span>
-							<span>200</span>
+							<span>{{g.stock}}</span>
 						</li>
 					</ul>
 					<img class="del-container" src="../image/icon/setting_distribution_goods-icon1.png">
 				</div>
 			</div>
 			<div class="express-container">
-				<span>快递： &nbsp;&nbsp;&nbsp;</span><span>顺水速运&nbsp;&nbsp;&nbsp;&nbsp;&yen;10.00</span>
+				<span>快递： &nbsp;&nbsp;&nbsp;</span><span>{{goods_detail.express_name}}&nbsp;&nbsp;&nbsp;&nbsp;&yen;{{goods_detail.freight}}</span>
 			</div>
 			<div class="last-opction">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
 						<span class="last-title">销量</span>
-						<input type="number" placeholder="设置商品虚拟销量">
+						<input type="number" v-model="sale_count" placeholder="设置商品虚拟销量">
 						<span class="mui-icon mui-icon-clear"></span>
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="last-title">浏览</span>
-						<input type="number" placeholder="设置商品虚拟浏览量">
+						<input type="number" v-model="view_count" placeholder="设置商品虚拟浏览量">
 						<span class="mui-icon mui-icon-clear"></span>
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="last-title">排序值</span>
-						<input type="number" placeholder="倒序，值越大排名越靠前">
+						<input type="number" v-model="top" placeholder="倒序，值越大排名越靠前">
 						<span class="mui-icon mui-icon-clear"></span>
+					</li>
+				</ul>
+			</div>
+			<div class="team-list-container">
+				<h5>团队选择</h5>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell team-list" v-for="(team,index) in team_info" :data-tid="team.id" :key="index">
+						<span>{{team.name}}</span>
 					</li>
 				</ul>
 			</div>
 			<div class="goods-detail">
 				<span class="goods-detail-title">商品详情</span>
+				<div v-if="goods_detail.content" class="goods-detail-container" v-html="goods_detail.content"></div>
+				<div v-else class="void-detail-container">
+					暂无详情
+				</div>
 			</div>
 			<div class="btn-section">
-				<div class="putaway-btn">
+				<div class="putaway-btn option-btn" data-status="0">
 					上架出售
 				</div>
-				<div class="the-warehouse">
+				<div class="the-warehouse option-btn" data-status="1">
 					放入仓库
 				</div>
 			</div>
@@ -330,7 +385,17 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					goods_id: '',
+					goods_detail: {},
+					images: [],
+					spec: [],
+					team_info: [],
+					sale_count: '',
+					view_count: '',
+					top: '',
+					team_id: '',
+					// 0仓库 1上架
+					status: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -341,9 +406,6 @@
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束	
 				},
-				methods: {
-
-				},
 				mounted: function() {
 					mui.init({
 						beforeback: function() {
@@ -353,6 +415,36 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						//plus.navigator.setStatusBarStyle("dark");
+						// 获取原本的资料
+						app.goods_id = self.gid;
+						logs(self.gid);
+						mui.post($ajaxUrl + 'goods&action=goods_detail', {
+							token: userInfo.token,
+							goods_id: app.goods_id
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								app.goods_detail = res.data;
+								app.images = res.data.images;
+								app.spec = res.data.spec;
+								app.team_info = res.data.team_info;
+							} else {
+
+							}
+						}, 'json');
+						// 预览图片
+						// 预览图片
+						mui('.mui-content').on('tap', '.goods-img-groups img', function() {
+							var index = this.dataset.idx;
+							plus.nativeUI.previewImage(app.images, {
+								current: index,
+								loop: true,
+								indicator: 'default',
+								onLongPress: function(event) {
+									// 长按操作
+								}
+							});
+						});
 					})
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -362,6 +454,53 @@
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
 				}
+			})
+			// 上架或者加入仓库
+			mui(".mui-content").on("tap", ".option-btn", function() {
+				document.activeElement.blur();
+				app.status = this.dataset.status;
+				postChoice();
+			})
+			// 提交
+			function postChoice() {
+				logs(app.goods_detail.price);
+				logs(app.team_id);
+				if(app.team_id==''){
+					message("请选择拣货的团队！")
+					return false;
+				}
+				mui.post($ajaxUrl + 'goods&action=pick_goods', {
+					token: userInfo.token,
+					goods_id: app.goods_id,
+					sale_count: app.sale_count,
+					view_count: app.view_count,
+					top: app.top,
+					team_id: app.team_id,
+					status: app.status,
+					spec: app.spec,
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						if (app.status == 0) {
+							message("上架成功！");
+							mui.back();
+						} else {
+							message("已经放入仓库！");
+							mui.back();
+						}
+					} else {
+						message(res.message);
+					}
+				}, 'json');
+			}
+			// 点击团队
+			mui(".mui-content").on('tap', ".team-list", function(e) {
+				var _t = document.querySelectorAll(".team-list");
+				for (var _i_ = 0; _i_ < _t.length; _i_++) {
+					_t[_i_].classList.remove("active");
+				}
+				this.classList.add("active")
+				app.team_id = this.dataset.tid;
 			})
 		</script>
 	</body>

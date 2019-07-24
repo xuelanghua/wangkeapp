@@ -490,7 +490,7 @@
 					</div>
 				</div>
 				<!-- 爆款推荐 -->
-				<div class="menu-card">
+				<div class="menu-card" v-if="hot_goods.length>0">
 					<div class="headline">
 						<span>爆款热荐</span>
 						<span class="mui-pull-right change-list animated">换一批</span>
@@ -512,7 +512,7 @@
 									<div class="goods-right-bottom">
 										<span @tap="openGoodsDetail(goods.id)">销量&nbsp;{{goods.sale_count}}</span>
 										<span @tap="openGoodsDetail(goods.id)">95%&nbsp;好评</span>
-										<img class="add-entrepot" src="../image/icon/jianhuo-active.png">
+										<img :data-gid="goods.id" class="add-entrepot" src="../image/icon/jianhuo-active.png">
 									</div>
 									<div class="team-name" :data-idx="index">
 										<span>货源</span>
@@ -574,6 +574,9 @@
 						openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
 							gid: gid
 						})
+						// openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
+						// 	gid: gid
+						// })
 					},
 					// 打开团队详情
 					teamdetail: function(id, cpt) {
@@ -623,6 +626,7 @@
 				mui.post($ajaxUrl + 'notice', {
 					action: 'list'
 				}, function(res) {
+					// logs(res);
 					if (res.errno == 0) {
 						app.notice = res.data;
 						if (app.notice.length > 1) {
@@ -724,9 +728,16 @@
 				app.team_list = app.hot_goods[idx].team_info;
 				mui('#bottomPopover').popover("show", this);
 			})
+			// 拣货
+			mui(".mui-content").on("tap", ".add-entrepot", function() {
+				var gid=this.dataset.gid;
+				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
+					gid:gid
+				});
+			})
 			// 获取爆品
 			function getHotGoodsList() {
-				logs(skip);
+				// logs(skip);
 				mui.post($ajaxUrl + 'goods&action=team_hot_goods', {
 					token: userInfo.token,
 					skip: skip,

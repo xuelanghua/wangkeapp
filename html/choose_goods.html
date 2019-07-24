@@ -19,14 +19,22 @@
 				padding: 0;
 			}
 
-			.mui-row.mui-fullscreen>[class*="mui-col-"] {
-				height: 100%;
+			.mui-row.mui-fullscreen .mui-col-xs-3,
+			.mui-row.mui-fullscreen .mui-col-xs-9 {
+				height: 100% !important;
+				background-color: #FFFFFF;
+			}
+
+			.mui-row.mui-fullscreen .mui-col-xs-3 {
+				background-color: #DDDDDD;
 			}
 
 			.mui-col-xs-3,
 			.mui-control-content {
-				overflow-y: auto;
+				overflow-y: scroll;
+				overflow-x: hidden;
 				height: 100%;
+				-webkit-overflow-scrolling: touch;
 			}
 
 			.mui-segmented-control .mui-control-item {
@@ -40,8 +48,15 @@
 				color: #333333 !important;
 			}
 
-			.mui-col-xs-9 {
+			.mui-plus-pullrefresh .mui-pull-bottom-pocket {
 				background-color: #FFFFFF;
+			}
+
+			.mui-col-xs-9 {
+				overflow-y: scroll;
+				overflow-x: hidden;
+				height: 100%;
+				-webkit-overflow-scrolling: touch;
 			}
 
 			.mui-segmented-control {
@@ -243,6 +258,7 @@
 				padding: 0;
 				overflow: hidden;
 				display: none;
+				min-height: 160px;
 			}
 
 			.team-select.active {
@@ -296,10 +312,6 @@
 				color: #F5CA3A;
 			}
 
-			.team-list img {
-				display: none;
-			}
-
 			.team-list.active span {
 				display: inline-flex;
 				position: relative;
@@ -318,8 +330,8 @@
 
 			/* 主力商品 */
 			.primary-goods {
-				padding-bottom: 0.5rem;
 				padding-top: 0.2rem;
+				background-color: #FFFFFF;
 			}
 
 			.primary-goods .goods-list {
@@ -458,6 +470,18 @@
 				z-index: 10;
 			}
 
+			.bottom-btn:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				width: 100%;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
 			.bottom-btn div {
 				width: 50%;
 				display: inline-flex;
@@ -527,10 +551,22 @@
 				right: 15px;
 				background-color: #DDDDDD;
 			}
+
+			.loading-more,
+			.void-more {
+				display: flex;
+				padding: 0.3rem 0.2rem;
+				font-size: 0.3rem;
+				color: #999999;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.void-more {
+				font-size: 0.24rem;
+			}
 		</style>
-
 	</head>
-
 	<body>
 		<div id="mui-content" v-cloak>
 			<header class="mui-bar mui-bar-nav">
@@ -546,7 +582,7 @@
 							</form>
 						</div>
 						<div class="screen-cont">
-							<div class="screen-item active" data-stp="0">综合</div>
+							<div class="screen-item active" data-stp="1">综合</div>
 							<div class="screen-item" data-stp="1">销量</div>
 							<div class="screen-item" data-stp="2">价格</div>
 							<!-- <div class="screen-item">好评度</div> -->
@@ -556,12 +592,10 @@
 					<!-- 下拉团队选择 -->
 					<div class="team-select">
 						<div class="mui-scroll-wrapper">
-							<!-- 区域滚动的子容器 -->
 							<div class="mui-scroll">
 								<ul class="mui-table-view" id="team_list">
-									<!-- <li class="mui-table-view-cell team-list" v-for="(t,i) in team_list" data-tid="t.id">
-									<img src="../image/icon/draw-icono.png" alt="">
-									<span>{{t.name}}</span>
+									<!-- <li class="mui-table-view-cell team-list" v-for="i in 6">
+										<span>4646587</span>
 									</li> -->
 								</ul>
 							</div>
@@ -573,16 +607,19 @@
 					</div>
 				</div>
 			</header>
+			<!-- 内容区 -->
 			<div class="mui-content mui-row mui-fullscreen">
+				<!-- 左侧分类 -->
 				<div class="mui-col-xs-3">
 					<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
 						<span class="mui-control-item mui-active" data-type="1">爆款</span>
 						<span class="mui-control-item" :data-type="lst.value" v-for="(lst,index) in classified" :key="index">{{lst.text}}</span>
 					</div>
 				</div>
+				<!-- 右侧内容 -->
 				<div id="segmentedControlContents" class="mui-col-xs-9">
 					<div class="primary-goods">
-						<ul class="mui-table-view">
+						<ul class="mui-table-view" id="primary-goods">
 							<li class="mui-table-view-cell goods-list" v-for="(l,index) in goods_list">
 								<div class="goods-img">
 									<img :src="l.cover">
@@ -611,9 +648,15 @@
 									</div>
 								</div>
 							</li>
+							<li class="loading-more" v-if="has_more">
+								<span>加载更多</span>
+							</li>
 							<li v-if="void_tips">
 								<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png">
 								<p style="text-align: center;color:#717171;">暂无商品</p>
+							</li>
+							<li class="void-more" v-else>
+								<span>没有更多啦~</span>
 							</li>
 						</ul>
 					</div>
@@ -636,11 +679,8 @@
 		<script type="text/javascript">
 			var userInfo = getUserInfo(),
 				skip = 1,
-				limit = 6
-				refresh="";
-			var mask = mui.createMask(function() {
-				// document.querySelector(".tips-cont").classList.add("mui-hidden");
-			});
+				limit = 6,
+				refresh = "";
 			var mask = mui.createMask(function() {
 				$('.team-select').removeClass("active");
 			});
@@ -656,7 +696,8 @@
 					goodsName: '',
 					ltype: 1,
 					sort_type: '',
-					c_team: []
+					c_team: [],
+					has_more: false
 				},
 				created: function() {
 					// 初始化字体大小
@@ -671,35 +712,35 @@
 				mounted: function() {
 					mui(".mui-scroll-wrapper").scroll().refresh();
 					mui.init({
-						swipeBack: true,
-						pullRefresh: {
-							container: "#segmentedControlContents",
-							up: {
-								height: 50,
-								auto: false,
-								contentrefresh: "正在加载...",
-								contentnomore: '没有更多数据了',
-								callback: function() {
-									refresh="up";
-									skip += 1;
-									getGoodsList();
-								}
-							},
-							down: {
-								style: 'circle',
-								color: '#2289FF',
-								height: '50px',
-								range: '100px',
-								offset: '0px',
-								auto: false,
-								callback: function() {
-									refresh="down";
-									mui('#segmentedControlContents').pullRefresh().refresh(true);
-									skip = 1;
-									getGoodsList("1");
-								}
-							}
-						}
+						swipeBack: false,
+						// pullRefresh: {
+						// container: "#segmentedControlContents",
+						// up: {
+						// 	height: 50,
+						// 	auto: false,
+						// 	contentrefresh: "正在加载...",
+						// 	contentnomore: '没有更多数据了',
+						// 	callback: function() {
+						// 		refresh = "up";
+						// 		skip += 1;
+						// 		getGoodsList();
+						// 	}
+						// },
+						// down: {
+						// 	style: 'circle',
+						// 	color: '#2289FF',
+						// 	height: '50px',
+						// 	range: '100px',
+						// 	offset: '0px',
+						// 	auto: false,
+						// 	callback: function() {
+						// 		refresh = "down";
+						// 		mui('#segmentedControlContents').pullRefresh().refresh(true);
+						// 		skip = 1;
+						// 		getGoodsList("1");
+						// 	}
+						// }
+						// }
 					});
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -731,29 +772,52 @@
 					box[i].classList.remove("active");
 				}
 				$(this).addClass("active");
-				if (app.sort_type == stp) {
-					return false;
-				}
-				app.sort_type = stp;
 				if (this.dataset.team) {
 					mask.show();
 					$('.team-select').addClass("active");
 				} else {
-					getGoodsList(app.ltype, app.sort_typ);
-					mask.close();
+					$('.team-select').removeClass("active");
+					cancelCT();
+					if (app.sort_type == stp) {
+						return false;
+					}
+					if (stp) {
+						app.sort_type = stp;
+						getGoodsList();
+						mask.close();
+					}
 				}
 			})
 			// 点击团队
 			mui(".mui-bar").on('tap', ".team-list", function(e) {
 				var tid = this.dataset.tid;
-				this.classList.toggle("active");
+				var index = app.team.indexOf(tid);
+				if (index == -1) {
+					app.team.push(tid);
+					this.classList.add("active")
+					// logs(app.team);
+				} else {
+					app.team.splice(index, 1);
+					this.classList.remove("active");
+				}
 			})
 			// 取消团队选择
 			mui(".mui-bar").on('tap', ".left-btn", function(e) {
 				mask.close();
+				app.team = [];
+				cancelCT();
 			})
+			// 取消团队的选择
+			function cancelCT() {
+				var team = document.querySelectorAll(".team-list");
+				for (var i = 0; i < team.length; i++) {
+					team[i].classList.remove("active");
+				}
+			}
 			// 确认团队选择
 			mui(".mui-bar").on('tap', ".right-btn", function(e) {
+				// logs(app.team);
+				getGoodsList();
 				mask.close();
 			})
 			// 获取商品类型
@@ -802,7 +866,6 @@
 			}
 			// 获取产品列表
 			function getGoodsList() {
-				logs(app.ltype);
 				mui.post($ajaxUrl + 'goods', {
 					token: userInfo.token,
 					action: 'team_goods_list',
@@ -813,7 +876,7 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						if (skip == 1) {
 							app.goods_list = res.data;
@@ -825,8 +888,11 @@
 							mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(false);
 						}
 						app.void_tips = false;
+						app.has_more = res.extra.has_more;
 					} else {
+						app.has_more = false;
 						if (skip == 1) {
+							app.goods_list = [];
 							app.void_tips = true;
 						}
 						if (refresh == 'up') {
@@ -851,7 +917,15 @@
 				if (app.ltype == ltp) {
 					return false;
 				}
+				app.goodsName = '';
+				app.team = [];
+				skip = 1;
 				app.ltype = ltp;
+				getGoodsList();
+			})
+			// 加载更多
+			mui(".mui-content").on("tap", ".loading-more", function() {
+				skip += 1;
 				getGoodsList();
 			})
 			// 点击键盘的搜索
@@ -859,6 +933,9 @@
 				var keyword = app.goodsName.replace(/^\s*|\s*$/g, "");
 				if (event.keyCode == "13" && keyword != '') {
 					document.activeElement.blur();
+					app.team = [];
+					skip = 1;
+					getGoodsList();
 					event.preventDefault();
 				} else {
 					// message("请输入用户名或者电话");
