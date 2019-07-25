@@ -631,7 +631,8 @@
 									<div class="goods-info">
 										<span class="wage-text">提成：&yen;{{l.commission}}</span>
 										<span class="price-text">供货价：&yen;{{l.settlement_price}}</span>
-										<img class="add-entrepot" src="../image/icon/jianhuo-active.png">
+										<img v-if="l.is_pick==0" :data-gid="l.id"  class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
+										<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 									</div>
 									<div class="goods-right-bottom">
 										<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
@@ -941,6 +942,13 @@
 					// message("请输入用户名或者电话");
 				}
 			});
+			// 拣货
+			mui(".mui-content").on("tap", ".add-entrepot-btn", function() {
+				var gid=this.dataset.gid;
+				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
+					gid:gid
+				});
+			})
 		</script>
 	</body>
 

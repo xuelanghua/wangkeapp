@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			/* .mui-bar{
+				background-color: #FFFFFF;
+				box-shadow: none;
+			} */
+			.tips{
+				font-size: 15px;
+				color: #FFFFFF;
+				padding: 14px 15px;
+				background-color: #F5CA3A;
+			}
+			.address{
+				padding: 17px 15px;
+				background-color: #FFFFFF;
+			}
+			.address img{
+				width: 15px;
+				margin: 12px 10px 0 0;
+			}
+			.address_name{
+				font-size: 12px;
+				color: #939395;
+			}
+			.address_contacts{
+				font-size: 15px;
+				margin-top: 5px;
+			}
+			
+			.detailed{
+				padding: 0 16px;
+				margin-top: 10px;
+				background-color: #FFFFFF;
+			}
+			.detailed_content{
+				padding: 18px 0;
+				font-size: 14px;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			.commodity_information{
+				padding: 13px 15px;
+				margin: 25px 0;
+				background-color: #F8F8F8;
+			}
+			.commodity_information_chart{
+				width: 65px;
+				height: 65px;
+				margin-right: 10px;
+			}
+			.commodity_information_chart img{
+				width: 100%;
+				height: 100%;
+			}
+			.jianshu{
+				font-size: 12px;
+				color: #999999;
+			}
+			.font{
+				font-size: 14px;
+				color: #000000;
+				padding-bottom: 10px;
+			}
+			.money{
+				color: #999999;
+			}
+			.detailed_content button{
+				padding: 2px 10px;
+				color: #999999;
+				margin-left: 10px;
+			}
+			.total{
+				color: #FB3E3C;
+				font-size: 15px;
+			}
+			
+			.order{
+				padding: 12px 15px;
+				margin-top: 10px;
+				color: #999999;
+				font-size: 14px;
+				background-color: #FFFFFF;
+			}
+			.order_content{
+				margin-top: 10px;
+			}
+			.order_content button{
+				padding: 2px 10px;
+				color: #999999;
+				font-size: 14px;
+				margin-left: 10px;
+			}
+			.state{
+				margin-left: 10px;
+			}
+			
+			.order_contacts{
+				border-top: 1px solid #F2F2F2;
+				border-bottom: 1px solid #F2F2F2;
+				padding: 9px 15px;
+				font-size: 14px;
+				background-color: #FFFFFF;
+			}
+			.order_contacts_chart{
+				width: 40px;
+				height: 40px;
+				margin-right: 10px;
+				border-radius: 50%;
+			}
+			.order_contacts_chart img{
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+			}
+			.order_contacts .contact{
+				margin-top: 6px;
+				color: #999999;
+			}
+			
+			.detailed_title{
+				font-size: 15px;
+				border-left: 7px solid #F5CA3A;
+				padding-left: 10px;
+			}
+		</style>
+	</head>
+
+	<body>=
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">订单详情</h1>
+		</header>
+
+		<div class="mui-content" style="padding-bottom: 25px;">
+			<div class="tips">
+				<div>等待买家付款</div>
+				<div style="font-size: 14px;">订单将在<span id="pay_text">2分</span>后自动取消</div>
+			</div>
+
+			<div class="address">
+				<div class="mui-pull-left">
+					<img src="../image/bosi3.png">
+				</div>
+				<div>
+					<div class="address_contacts">
+						<span id="order_name">xuelang</span>
+						<span id="order_mobile">15398699237</span>
+					</div>
+					<div class="address_name" id="order_address">重庆市万州区回来了</div>
+				</div>
+			</div>
+
+			<div class="detailed">
+				<div class="detailed_content">
+					<div class="detailed_title">购物清单</div>
+					<div class="commodity_information">
+						<div>
+							<div class="commodity_information_chart mui-pull-left">
+								<img src="../image/user_default.png">
+							</div>
+							<div class="jianshu">
+								<div class="font">
+									<span>旺客</span>
+									<span class="mui-pull-right">￥20/件</span>
+								</div>
+								<div>
+									<span>规格：默认</span>
+									<span class="mui-pull-right">x1</span>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+					<div>
+						<span class="mui-pull-left">商品金额</span>
+						<span class="mui-pull-right money" id="order_price">￥20.00</span>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="detailed_content">
+					<span class="mui-pull-left">运费</span>
+					<span class="mui-pull-right money" id="order_freight">￥5.00</span>
+					<div class="clearfix"></div>
+				</div>
+				<div class="detailed_content">
+					<span class="mui-pull-left">
+						<span>订单总计</span>
+						<span>
+							<button id="order_edit">修改</button>
+						</span>
+					</span>
+					<span class="mui-pull-right total" id="order_total_price">￥25.00</span>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+
+			<div class="order">
+				<!-- <div class="order_content">
+					<span class="mui-pull-left"style="margin-top: 3px;">订单编号:</span>
+					<span>
+						<button>复制</button>
+					</span>
+				</div> -->
+				<div class="order_content">
+					<span class="mui-pull-left">订单状态:</span>
+					<span class="state">未完成（未付款）</span>
+				</div>
+				<div class="order_content">
+					<span class="mui-pull-left">下单时间:</span>
+					<span class="state" id="order_create_time">2018-02-27 09:15:59</span>
+				</div>
+			</div>
+			<div class="order_contacts" data-id="" data-name="" data-avatar="">
+				<div class="mui-pull-left">
+					<div class="order_contacts_chart mui-pull-left">
+						<img id="avatar" src="../image/bj.jpg" />
+					</div>
+					<span class="mui-pull-left" style="margin-top: 10px;" id="nickname">微信昵称</span>
+					<div class="clearfix"></div>
+				</div>
+				<div class="mui-pull-right contact">
+					<span>联系TA</span>
+					<span class="mui-icon mui-icon-arrowright" style="font-size: 18px;"></span>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			})
+
+			var orderId = 0;
+			var self = null;
+			var totalPrice = 0;
+			userInfo = getUserInfo();
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				orderId = self.orderId;
+				orderDetail();
+				eventInit();
+			})
+
+			//事件初始化
+			function eventInit() {
+				//聊天
+				mui('.mui-content').on('tap', '.order_contacts', function() {
+					var userId = this.dataset.id;
+					var nickname = this.dataset.name;
+					var avatar = this.dataset.avatar;
+					fnOpenWin('dialog.html', 'dialog', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						cid: userId,
+						chatName: nickname,
+						avatar: avatar,
+						barStyle: 'dark'
+					}, 'slide-in-right');
+				})
+
+				//修改价格
+				mui('.mui-content').on('tap', '#order_edit', function() {
+					plus.nativeUI.prompt("输入修改后的金额", function(e) {
+						if (e.index == 0) {
+							mui.post($ajaxUrl + 'order', {
+									action: 'edit',
+									order_id: orderId,
+									type: 1,
+									price_before: totalPrice,
+									price_after: e.value,
+									token: userInfo.token,
+								}, function(res){
+									if (res.errno == 0) {
+										message('修改成功!');
+										document.getElementById('order_total_price').innerText = '￥' + e.value;
+									} else {
+										message('修改失败!');
+									}
+								}, 'json'
+							);
+						}
+					}, "提示", "修改后的金额", ["确定", "取消"]); 
+				})
+			}
+
+			//获取订单详情
+			function orderDetail() {
+				mui.post($ajaxUrl + 'order', {
+					action: 'detail',
+					token: userInfo.token,
+					order_id: orderId
+				}, function(res) {
+					if (res.errno == 0) {
+						var detail = res.data;
+						totalPrice = detail.total_price;
+						document.getElementById('pay_text').innerText = detail.pay_text;
+						document.getElementById('order_name').innerText = detail.name;
+						document.getElementById('order_mobile').innerText = detail.phone;
+						document.getElementById('order_address').innerText = detail.address + detail.address_detail;
+						document.getElementById('order_price').innerText = '￥' + detail.price;
+						document.getElementById('order_freight').innerText = '￥' + detail.freight;
+						document.getElementById('order_total_price').innerText = '￥' + detail.total_price;
+						document.getElementById('order_create_time').innerText = detail.create_time;
+						document.getElementById('nickname').innerText = detail.buyer.nickName;
+						document.getElementById('avatar').src = detail.buyer.avatarUrl;
+						document.querySelector('.order_contacts').dataset.id = detail.user_id;
+						document.querySelector('.order_contacts').dataset.name = detail.buyer.nickName;
+						document.querySelector('.order_contacts').dataset.avatar = detail.buyer.avatarUrl;
+						var goods = detail.goods;
+						var html = '';
+						for (var i in goods) {
+							if (i == 0) {
+								html += '<div>';
+							} else {
+								html += '<div style="padding-top: 12px;">';
+							}
+							html += '<div class="commodity_information_chart mui-pull-left">';
+							html += '<img src="' + goods[i].cover + '" >';
+							html += '</div>';
+							html += '<div class="jianshu">';
+							html += '<div class="font">';
+							html += '<span>' + goods[i].name + '</span>';
+							html += '<span class="mui-pull-right">￥' + goods[i].price + '/件</span>';
+							html += '</div>';
+							html += '<div>';
+							if (goods[i].content.length == 0) {
+								html += '<span>规格：默认</span>';
+							} else {
+								html += '<span>规格：' + goods[i].content + '</span>';
+							}
+							html += '<span class="mui-pull-right">x' + goods[i].number + '</span>';
+							html += '</div>';
+							html += '</div>';
+							html += '<div class="clearfix"></div>';
+							html += '</div>';
+						}
+						document.querySelector('.commodity_information').innerHTML = html;
+					} else {
+						message(res.message);
+						setTimeout(function() {
+							fnCloseWin('order_details_1');
+						}, 2000)
+					}
+				}, 'json');
+			}
+		</script>
+	</body>
+</html>

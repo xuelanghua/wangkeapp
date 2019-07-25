@@ -266,10 +266,17 @@
 			} */
 			.goods-detail-container {
 				line-height: 0;
-				padding:0 0.2rem;
+				padding:0 0.2rem 1.2rem;
 			}
 			.goods-detail-container p{
 				line-height: 1.4;
+			}
+			.void-detail-container {
+				padding: 0.6rem 0;
+				margin: 0 auto;
+				font-size: 0.3rem;
+				color: #999999;
+				text-align: center;
 			}
 		</style>
 	</head>
@@ -337,7 +344,10 @@
 			</div>
 			<div class="goods-detail-container">
 				<h4 class="title">商品详情</h4>
-				<div id="content" v-html="goods_detail.content"></div>
+				<div v-if="goods_detail.content" id="content" v-html="goods_detail.content"></div>
+				<div v-else class="void-detail-container">
+					暂无详情
+				</div>
 			</div>
 			<!-- <div class="btn-section">
 				<div class="putaway-btn">
@@ -349,7 +359,7 @@
 			</div> -->
 			<div class="btn-section">
 				<!-- 不可拣货 -->
-				<div v-if="goods_detail.is_pick==1" class="the-gray-warehouse">
+				<div v-if="goods_detail.is_pick==1||goods_detail.check_status==0||goods_detail.check_status==2" class="the-gray-warehouse">
 					拣货
 				</div>
 				<div v-else class="the-warehouse">
@@ -399,7 +409,7 @@
 							token: userInfo.token,
 							goods_id: app.goods_id
 						}, function(res) {
-							logs(res);
+							// logs(res);
 							if (res.errno == 0) {
 								app.goods_detail = res.data;
 								app.images = res.data.images;
@@ -472,7 +482,7 @@
 			// 拣货
 			mui(".mui-content").on("tap", ".the-warehouse", function() {
 				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
-					goods_id: app.goods_id
+					gid: app.goods_id
 				})
 			})
 			// 打开团队详情

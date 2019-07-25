@@ -243,6 +243,7 @@ function openPage(url, id, color, extras,aniShow,callback) {
 			bounce: 'none',
 			scrollsToTop: true,
 			popGesture: 'close',
+			scrollIndicator:"none",
 			statusbar: {
 				background: color
 			}

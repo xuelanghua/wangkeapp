@@ -330,7 +330,7 @@
 							<ul class="mui-table-view" id="item1_list">
 								<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,i) in on_sale_list"
 								 :key="i">
-									<div class="chart">
+									<div class="chart" @tap="openGoodsDetail(lst.id)">
 										<div v-if="lst.check_status==0" class="status-mask">
 											审核中
 										</div>
@@ -355,7 +355,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div class="play" data-type="edit">
+											<div class="play" data-type="edit" v-if="lst.check_status==0">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -413,7 +413,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+slo.id">
 											<div class="jiao"></div>
-											<div class="play" data-type="edit">
+											<div class="play" data-type="edit" v-if="lst.check_status==0">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -543,7 +543,7 @@
 				// 		gid: gid
 				// 	})
 				// }
-				openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
+				openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
 					gid: gid
 				})
 			}
@@ -632,6 +632,11 @@
 						getGoodsCount();
 					}
 				})
+			}else if (type == 'jh') {
+				//拣货
+				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
+					gid: currentId
+				})
 			} else if (type == 'edit') {
 				//打开编辑页面
 				mui.openWindow({
@@ -670,7 +675,7 @@
 			limit: 10,
 			goods_name: app.goodsName
 		}, function(res) {
-			// logs(res);
+			logs(res);
 			if (res.errno == 0) {
 				if (skip == 1) {
 					app[g_type + '_list'] = res.data;
@@ -707,7 +712,9 @@
 			action: 'change_status',
 			token: userInfo.token,
 			status: status,
-			goods_id: goods_id
+			goods_id: goods_id,
+			type:"team_goods",
+			role:"captain"
 		}, function(res) {
 			// logs(res);
 			if (res.errno == 0) {
