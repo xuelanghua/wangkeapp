@@ -190,7 +190,6 @@
 				justify-content: center;
 				font-size: 0.2rem;
 				height: 0.32rem;
-				color: #333333;
 				background-color: rgba(0, 0, 0, 0.5);
 				position: absolute;
 				bottom: 0;
@@ -553,7 +552,7 @@
 							</li>
 							<li class="second-section">
 								<span>快递单号</span>
-								<input placeholder="请填写快递单号" type="number">
+								<input placeholder="请填写快递单号" v-model="express_num" type="number">
 								<div class="scan-btn">
 									<img src="../image/icon/order_details_await_sgoods_02.png">
 								</div>
@@ -588,7 +587,8 @@
 					phone: '13888888888',
 					address_detail: '云南省 昆明市 官渡区 高原明珠商务中心A座701',
 					express_id: '',
-					express_name: '请选择'
+					express_name: '请选择',
+					express_num: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -693,8 +693,24 @@
 						background: '#000000'
 					}
 				}, '', 'slide-in-right')
-				setStatusBar('#2289FF', 'light');
+				setStatusBar('#000000', 'light');
 			})
+			// 监听扫码内容
+			window.addEventListener('doit', function(e) {
+				// 转数字
+				var cont = parseInt(e.detail.content);
+				// 判断是否为数字
+				function myIsNaN(value) {
+					return typeof value === 'number' && !isNaN(value);
+				}
+				if (myIsNaN(cont)) {
+					app.express_num = cont;
+				} else {
+					setTimeout(function() {
+						plus.nativeUI.alert("扫码有误，请重新扫码！");
+					}, 500);
+				}
+			}, false);
 		</script>
 	</body>
 

@@ -4,14 +4,14 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<title>扫码</title>
+		<title></title>
 		<link href="../icomoon/style.css" rel="stylesheet" />
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
 			.close {
-				height: 30px;
-				line-height: 30px;
+				height: 44px;
+				line-height: 44px;
 				width: 100%;
 				position: absolute;
 				top: 10px;
@@ -27,6 +27,7 @@
 				position: absolute;
 				top: 40px;
 				background: #000000;
+				display: none;
 			}
 
 			.mask2 {
@@ -64,8 +65,10 @@
 	</head>
 
 	<body>
-		<div class="close" id="colse"><span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;margin-left: 10px;"></span></div>
-		<div class="mask" id="mask"></div>
+		<div class="close" id="colse">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;margin-left: 10px;"></span>
+		</div>
+		<img src="../" class="mask" id="mask">
 		<div class="mask2" id="mask2">
 			<div id="scan1" class="scan">
 				<img src="../image/click.png" />
@@ -84,27 +87,36 @@
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			mui.init({
-				swipeBack: true,
+				swipeBack: false,
+				beforeback: function() {
+					setStatusBar('#f7f7f7', 'dark');
+				}
 			});
 
-			var scan = null;
+			var barcode = null;
 			if (window.plus) {
 				plusready();
 			} else {
 				document.addEventListener('plusready', plusready, false);
 			}
 
-			function onmarked(type, result) { //回调
-				logs("asdfsadf");
-				logs("result");
+			function onmarked(type, result, file) {
 				if (result) {
 					logs(result);
-					scan.close();
+					// var path = plus.io.convertLocalFileSystemURL(file);
+					// document.getElementById("mask").style.display = "block";
+					// document.getElementById("mask").src = path;
+					var view = plus.webview.currentWebview().opener();
+					mui.fire(view, 'doit', {
+						content: result.replace(/\""/g, "")
+					});
+					barcode.close();
+					mui.back();
 				} else {
 					message('扫描失败!', 'center');
 					setTimeout(function() {
 						mui.back();
-					}, 1000)
+					}, 500)
 				}
 			}
 
@@ -113,16 +125,23 @@
 
 			function plusready() {
 				setTimeout(function() {
-					barcode = plus.barcode.create('barcode', [2,8,9,10], {
-						top: '0px',
+					barcode = plus.barcode.create('barcode', [2, 8, 9, 10], {
+						top: '44px',
 						left: '0px',
 						width: '100%',
 						height: '80%',
-						position: 'static'
+						position: 'static',
+						frameColor: "#2289ff",
+						scanbarColor: '#2289ff'
 					});
+					// plus.barcode.BarcodeOptions {
+					// 	conserve:true,
+					// }
 					barcode.onmarked = onmarked;
 					plus.webview.currentWebview().append(barcode);
-					barcode.start();
+					barcode.start({
+						conserve: true,
+					});
 				}, 200);
 
 				//处理返回事件
@@ -135,10 +154,10 @@
 			document.querySelector('#scan2 img').addEventListener('tap', function() {
 				if (/scan_off.png/.test(this.src)) {
 					this.src = "../image/scan_on.png";
-					scan.setFlash(true);
+					barcode.setFlash(true);
 				} else {
 					this.src = "../image/scan_off.png";
-					scan.setFlash(false);
+					barcode.setFlash(false);
 				}
 			})
 
@@ -146,12 +165,10 @@
 			document.querySelector('#scan1 img').addEventListener('tap', function() {
 				plus.gallery.pick(function(path) {
 					plus.barcode.scan(path, onmarked, function(error) {
-						// message(JSON.stringify(error));
-						message("扫描失败");
-					});
+						message("图片识别失败，请重试！");
+					}, [0, 2, 8, 9, 10]);
 				}, function(err) {
-					// message('Failed: ' + err.message);
-					message("扫描失败");
+					message("图片选择错误！");
 				});
 			})
 
