@@ -681,8 +681,6 @@
 					var status = msgItem.getAttribute('msg-status');
 					var index = msgItem.getAttribute('msg-index');
 					var idx = msgItem.getAttribute('msg-idx');
-					// logs(index);
-					// logs(idx);
 					if (msgType == 'audio') {
 						var audios = document.querySelectorAll(".play-state");
 						var playState = document.querySelector(".play-state" + aid);
@@ -702,6 +700,7 @@
 							playState.innerText = '正在播放...';
 							priorId = aid;
 							player.play(function() {
+								player = null;
 								playState.innerText = '点击播放';
 							}, function(e) {
 								playState.innerText = '点击播放';
@@ -715,7 +714,6 @@
 						}, function(res) {
 							recordData.data[index][parseInt(idx)].is_read = "1";
 							document.querySelector(".red-dot" + aid).style.display = "none";
-							bindMsgList();
 						}, 'json');
 					}
 				};
