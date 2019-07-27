@@ -1,0 +1,277 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+				display: none;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 20px;
+			}
+
+			.mui-table-view {
+				padding: 0.2rem 0 0.6rem;
+				border-bottom-left-radius: 0.6rem;
+				border-bottom-right-radius: 0.6rem;
+			}
+
+			.title {
+				display: inline-flex;
+				min-width: 1.2rem;
+				align-items: center;
+				justify-content: space-between;
+				height: auto;
+			}
+
+			.address-info {
+				background-color: #F2F2F2;
+				border-radius: 0.2rem;
+				padding: 0.2rem;
+				overflow: hidden;
+				position: relative;
+				font-size: 0.3rem;
+				color: #333333;
+				display: flex;
+				align-items: center;
+			}
+
+			#city {
+				font-size: 0.28rem;
+				width: 4.9rem;
+			}
+
+			.last-address-info {
+				background-color: #F2F2F2;
+				border-radius: 0.2rem;
+				padding: 0.2rem;
+				overflow: hidden;
+				position: relative;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			span {
+				color: #999999;
+			}
+
+			.mui-navigate-right:after {
+				font-size: 0.36rem;
+				color: #999999;
+			}
+
+			.address-info input,
+			.last-address-info textarea {
+				background: transparent;
+				border: none;
+			}
+
+			.address-info input {
+				height:32px;
+				margin-bottom: 0;
+				padding: 0;
+			}
+
+			.mui-icon-clear {
+				position: absolute;
+				right: 0.1rem;
+				color: #b9b9b9;
+			}
+
+			textarea::-webkit-input-placeholder,
+			input::-webkit-input-placeholder {
+				color: #999;
+				font-size: 0.28rem;
+			}
+
+			textarea {
+				padding: 0.1rem;
+				margin-top: 0.2rem;
+				margin-bottom: 0;
+			}
+
+			.submit-cont {
+				padding: 0.3rem 15px 0;
+			}
+
+			.mui-btn-warning {
+				background-color: #F5CA3A;
+				border-radius: 0.2rem;
+				margin: 0.2rem auto;
+				height: 0.9rem;
+				padding: 0;
+				border: 1px solid #F5CA3A;
+			}
+			input[type=number]{
+				padding: 0;
+				margin: 0;
+			}
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">修改收货信息</h1>
+		</header>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<div class="address-info">
+						<div class="title">收件人：</div>
+						<input type="text" v-model="recipients" name="" id="" value="" placeholder="请填写收件人" />
+						<span v-show="recipients" class="mui-icon mui-icon-clear" @tap="recipients=''"></span>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="address-info">
+						<div class="title">电话：</div>
+						<input type="number" name="" v-model="phone" id="" value="" placeholder="请填写电话" />
+						<span v-show="phone" class="mui-icon mui-icon-clear" @tap="phone=''"></span>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="address-info" id="choice-city">
+						<div class="title">地区：</div>
+						<span class="mui-navigate-right mui-ellipsis" id="city">{{address}}</span>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="last-address-info">
+						<div class="title">详细地址：</div>
+						<span v-show="address_detail" class="mui-icon mui-icon-clear" @tap="address_detail=''"></span>
+						<textarea rows="3" cols="" v-model="address_detail" placeholder="请填写详细地址"></textarea>
+					</div>
+				</li>
+				<div class="submit-cont">
+					<button type="button" class="mui-btn mui-btn-warning mui-btn-block">确定</button>
+				</div>
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					recipients: '',
+					phone: '',
+					address: '请选择',
+					address_detail: ''
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						if (self.recipients) {
+							app.recipients = self.recipients;
+						}
+						if (self.phone) {
+							app.phone = self.phone;
+						}
+						if (self.address_detail) {
+							app.address_detail = self.address_detail;
+						}
+						// 修改的地址回传
+						mui(".mui-content").on('tap', '.mui-btn-block', function() {
+							document.activeElement.blur();
+							if(app.recipients==''){
+								message("请填写收货人!")
+								return false;
+							}
+							if(app.phone==''){
+								message("请填写收货人电话!")
+								return false;
+							}else if(app.phone.length!=11){
+								message("收货人电话填写错误!")
+								return false;
+							}
+							if(app.address_detail==''){
+								message("请填写收货人详细地址!")
+								return false;
+							}
+							var parent_level = plus.webview.currentWebview().opener();
+							mui.fire(parent_level, 'getaddress', {
+								recipients: app.recipients,
+								phone: app.phone,
+								address_detail: app.address_detail
+							});
+							mui.back();
+						})
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+				}
+			});
+			// 地区选择
+			(function($, doc) {
+				var _getParam = function(obj, param) {
+					return obj[param] || '';
+				};
+				var cityPicker = new $.PopPicker({
+					layer: 3
+				});
+				cityPicker.setData(cityData3);
+				mui(".mui-content").on('tap', '#choice-city', function() {
+					document.activeElement.blur();
+					var city = doc.getElementById('city');
+					cityPicker.show(function(items) {
+						city.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2],
+							'text');
+						app.address_detail = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[
+							2], 'text') + " ";
+					});
+				})
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

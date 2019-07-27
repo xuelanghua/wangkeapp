@@ -20,6 +20,9 @@
 				color: #FFFDEF;
 				justify-content: center;
 			}
+			input[disabled='disabled']{
+				color: #999999;
+			}
 		</style>
 	</head>
 
@@ -90,8 +93,8 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>供货价<span class="sign">*</span></label>
-							<input type="number" v-model="settlement_price" placeholder="给商品定个好价格">
-							<span class="mui-icon mui-icon-clear" v-show="settlement_price" @tap="settlement_price=''"></span>
+							<input type="number" disabled="disabled" v-model="settlement_price" placeholder="给商品定个好价格">
+							<!-- <span class="mui-icon mui-icon-clear" v-show="settlement_price" @tap="settlement_price=''"></span> -->
 						</div>
 						<p>结算价格是给分销商的供货价，分销商可以在此价格灵活设置活动 价格</p>
 					</li>
@@ -131,8 +134,8 @@
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>供货价格<span class="sign">*</span></label>
-										<input type="number" v-model="ls.settlement_price" placeholder="给商品定个好价格">
-										<span class="mui-icon mui-icon-clear" v-show="ls.settlement_price" @tap="ls.settlement_price=''"></span>
+										<input type="number" disabled="disabled" v-model="ls.settlement_price" placeholder="给商品定个好价格">
+										<!-- <span class="mui-icon mui-icon-clear" v-show="ls.settlement_price" @tap="ls.settlement_price=''"></span> -->
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
@@ -327,7 +330,7 @@
 							var camera = plus.camera.getCamera();
 							camera.captureImage(function(e) {
 								plus.io.resolveLocalFileSystemURL(e, function(entry) {
-									cropperImg(entry.toLocalURL(), 'add_distribution_goods', ratio);
+									cropperImg(entry.toLocalURL(), 'edit_distribution_goods', ratio);
 									// imageResize(entry.toLocalURL());
 									// 其他操作,比如预览展示
 								}, function(e) {
@@ -343,7 +346,7 @@
 						function galleryImage(cb) {
 							// 从相册中选择图片
 							plus.gallery.pick(function(e) {
-								cropperImg(e, 'add_distribution_goods', ratio);
+								cropperImg(e, 'edit_distribution_goods', ratio);
 							}, function(e) {
 								console.log("取消选择图片");
 							}, {

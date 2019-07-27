@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
- <!-- 我的个人商品详情 -->
+	<!-- 个人商品详情 -->
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -69,7 +69,11 @@
 				background-color: #FFFFFF;
 			}
 
-			
+			.hot-sign {
+				height: 0.28rem;
+				width: auto;
+				margin-right: 0.2rem;
+			}
 
 			.profit-cont {
 				display: flex;
@@ -100,18 +104,6 @@
 				position: relative;
 			}
 
-			.top-info-cont:after {
-				content: '';
-				position: absolute;
-				display: block;
-				top: 0;
-				width: 100%;
-				height: 1px;
-				background-color: #DDDDDD;
-				transform: scaleY(0.5);
-				-webkit-transform: scaleY(0.5);
-			}
-
 			.parameter-cont .mui-table-view-cell.mui-active {
 				background-color: #FFFFFF;
 			}
@@ -126,7 +118,7 @@
 				color: #333333;
 			}
 
-			.parameter-cont a:before {
+			.parameter-cont .mui-table-view-cell.mui-collapse.mui-active a:before {
 				position: absolute;
 				right: 15px;
 				bottom: 0;
@@ -164,6 +156,14 @@
 				width: 30%;
 			}
 
+			.team-name-cont {
+				background-color: #FFFFFF;
+				padding: 0.2rem;
+				display: flex;
+				align-items: center;
+				margin: 0.2rem 0;
+			}
+
 			.team-name-cont img {
 				width: 0.88rem;
 				height: 0.88rem;
@@ -180,24 +180,29 @@
 
 			.goods-detail-container {
 				background-color: #FFFFFF;
+				padding: 0.2rem;
 			}
 
 			.goods-detail-container h4.title {
 				font-size: 0.32rem;
 				color: #333333;
-				padding: 0.4rem 0.2rem 0.28rem;
+				padding: 0.4rem 0 0.2rem;
 				font-weight: normal;
 				position: relative;
+				display: flex;
+				align-items: center;
 			}
-
-			.goods-detail-container h4.title:after {
+			
+			.goods-detail-container h4.title:before {
 				content: '';
-				position: absolute;
-				bottom: 5px;
-				left: 0.2rem;
-				height: 2px;
-				width: 1.4rem;
-				background-color: #999999;
+				display: inline-block;
+				position: relative;
+				bottom: 0;
+				left: 0;
+				height: 15px;
+				width:4px;
+				margin-right: 5px;
+				background-color: #333333;
 			}
 
 			.goods-detail-container img {
@@ -234,6 +239,40 @@
 				width: auto;
 			}
 
+			.btn-section {
+				position: fixed;
+				display: flex;
+				align-items: center;
+				z-index: 199;
+				background-color: #FFFFFF;
+				height: 1.09rem;
+				bottom: 0;
+				width: 100%;
+				box-shadow: 1px 0 2px 0 rgba(220, 220, 220, .5);
+			}
+
+			.btn-section div {
+				color: #333333;
+				width: 100%;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+			}
+
+			.btn-section .the-warehouse {
+				color: #CC9C2D;
+			}
+
+			.btn-section .the-gray-warehouse {
+				color: #a7a7a7;
+			}
+
+			.goods-detail-container {
+				line-height: 0;
+			}
+
 			.nav-right-btn {
 				height: 44px;
 				position: relative;
@@ -253,24 +292,15 @@
 		<header class="mui-bar mui-bar-nav">
 			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 			<h1 class="mui-title">商品详情</h1>
-			<div class="mui-pull-right nav-right-btn">
+			<div class="mui-pull-right nav-right-btn" >
 				分享
 			</div>
 		</header>
 		<div id="mui-content" class="mui-content " v-cloak>
 			<div class="swiper-container goods-images">
 				<div class="swiper-wrapper">
-					<div class="swiper-slide">
-						<img src="../image/share/bg-img02.jpg">
-					</div>
-					<div class="swiper-slide">
-						<img src="../image/share/bg-img03.jpg">
-					</div>
-					<div class="swiper-slide">
-						<img src="../image/share/bg-img05.jpg">
-					</div>
-					<div class="swiper-slide">
-						<img src="../image/share/bg-img04.jpg">
+					<div class="swiper-slide" v-for="(img,i) in images">
+						<img data-idx="i" :src="img">
 					</div>
 				</div>
 				<!-- Add Pagination -->
@@ -278,22 +308,18 @@
 			</div>
 			<div class="top-container main-container">
 				<div class="goods-title">
-					<p>四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用品</p>
+					<p>{{goods_detail.name}}</p>
 				</div>
 				<div class="profit-cont">
-					<span>提成：&yen;15.00-20.00</span>
-				</div>
-				<div class="price-cont">
-					<span>供货价：&yen;15.00-20.00</span>
-					<span>售价：&yen;15.00-20.00</span>
+					<span>&yen;{{goods_detail.price}}</span>
 				</div>
 				<div class="top-info-cont">
-					<span>快递：顺丰速运&yen;10.00</span>
-					<span>销量：900</span>
-					<span>浏览：1000</span>
+					<span>{{goods_detail.freight==0?'包邮':"邮费：&yen;"+goods_detail.freight}}</span>
+					<span>销量：{{goods_detail.sale_count}}</span>
+					<span>浏览：{{goods_detail.view_count}}</span>
 				</div>
 			</div>
-			<div class="parameter-cont">
+			<div class="parameter-cont" v-if="spec.length>0">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell mui-collapse">
 						<a class="mui-navigate-right" href="#">查看规格</a>
@@ -301,44 +327,36 @@
 							<div class="parameter-list">
 								<div class="parameter-items">规格</div>
 								<div class="parameter-items">库存</div>
-								<div class="parameter-items">供货价</div>
 								<div class="parameter-items">售价</div>
-								<div class="parameter-items">提成</div>
 							</div>
-							<div class="parameter-list">
-								<div class="parameter-items">红色</div>
-								<div class="parameter-items">136</div>
-								<div class="parameter-items">299</div>
-								<div class="parameter-items">360</div>
-								<div class="parameter-items">60</div>
-							</div>
-							<div class="parameter-list">
-								<div class="parameter-items">蓝色</div>
-								<div class="parameter-items">236</div>
-								<div class="parameter-items">329</div>
-								<div class="parameter-items">330</div>
-								<div class="parameter-items">80</div>
+							<div class="parameter-list" v-for="(c,idx) in spec">
+								<div class="parameter-items">{{c.title}}</div>
+								<div class="parameter-items">{{c.stock}}</div>
+								<div class="parameter-items">{{c.price}}</div>
 							</div>
 						</div>
 					</li>
 				</ul>
 			</div>
+			<div v-if="index==0" class="team-name-cont" :data-tid="team.id" v-for="(team,index) in team_info">
+				<img :src="team.cover">
+				<span>{{team.name}}</span>
+				<span class="mui-icon mui-icon-arrowright"></span>
+			</div>
 			<div class="goods-detail-container">
 				<h4 class="title">商品详情</h4>
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17614/41/1066658677/201711/28869e0/5ab9e251Neb5e8e1c.jpg!q70.dpg.webp">
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t1/26930/26/7060/99982/5c665fe3E33a28553/6a7b517d9b805255.jpg!q70.dpg.webp">
-				<img src="https://img30.360buyimg.com/popWaterMark/jfs/t17902/351/1069557559/144738/5a18345e/5ab9e261N8e01fd9c.jpg!q70.dpg.webp">
+				<div id="content" v-html="goods_detail.content"></div>
 			</div>
 			<div class="bottom-section">
 				<div class="option-btn" data-type="edit">
 					<img src="../image/icon/bottom-section-01.png" />
 					<span>编辑</span>
 				</div>
-				<div class="option-btn" data-type="up">
+				<div class="option-btn" data-type="up" v-if="goods_detail.status==0">
 					<img src="../image/icon/bottom-section-02.png" />
 					<span>上架</span>
 				</div>
-				<div class="option-btn mui-hidden" data-type="off">
+				<div class="option-btn" data-type="off" v-else>
 					<img src="../image/icon/bottom-section-03.png" />
 					<span>下架</span>
 				</div>
@@ -357,7 +375,13 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					goods_id: '',
+					goods_detail: {
+						name: ''
+					},
+					images: [],
+					spec: [],
+					team_info: [],
 				},
 				created: function() {
 					// 初始化字体大小
@@ -379,7 +403,53 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						//plus.navigator.setStatusBarStyle("dark");
+						app.goods_id = self.gid;
+						mui.post($ajaxUrl + 'goods&action=goods_detail', {
+							token: userInfo.token,
+							goods_id: app.goods_id
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								app.goods_detail = res.data;
+								app.images = res.data.images;
+								app.spec = res.data.spec;
+								app.team_info = res.data.team_info;
+								if (app.images.length > 1) {
+									setTimeout(function() {
+										swiperInint();
+									}, 500);
+								}
+							} else {
+
+							}
+						}, 'json');
+
+						// 预览图片
+						// 长按保存到系统相册
+						mui('.mui-content').on('tap', '.swiper-slide img', function() {
+							var index = this.dataset.idx;
+							plus.nativeUI.previewImage(app.images, {
+								current: index,
+								loop: true,
+								indicator: 'default',
+								onLongPress: function(event) {
+									// plus.nativeUI.confirm("保存图片到系统相册",function(e){
+									// 	if(e.index==0){
+									// 		showload('','','保存中···','rgba(0,0,0,0.5)');
+									// 		plus.gallery.save(event.url, function(){
+									// 			showload(1);
+									// 			plus.nativeUI.toast("保存成功!");
+									// 		}, function(){
+									// 			showload(1);
+									// 			plus.nativeUI.toast("保存失败!");
+									// 		} );
+									// 	}else{
+									// 		// plus.nativeUI.toast("取消");
+									// 	}
+									// });
+								}
+							});
+						});
 					})
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -388,7 +458,6 @@
 					}
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
-					swiperInint();
 				}
 			})
 
@@ -406,18 +475,130 @@
 					}
 				});
 			}
-			// 底部操作
+			// 编辑 上下架 删除
 			mui(".mui-content").on("tap", ".option-btn", function() {
-				var opt = this.dataset.type;
-				if (opt == 'edit') {
-					mui.toast('编辑');
-				} else if (opt == 'up') {
-					mui.toast('上架');
-				} else if (opt == 'off') {
-					mui.toast('下架');
-				} else {
-					mui.toast('删除');
+				var sign = this.dataset.type;
+				if (sign == 'edit') {
+					// 编辑
+					openPage('goods_edit.html', 'goods_edit', '#f7f7f7', {
+						goods_id: app.goods_id
+					})
+				} else if (sign == 'up') {
+					// 上架
+					changeGoodsStatus(1);
+				} else if (sign == 'off') {
+					// 下架
+					changeGoodsStatus(0);
+				} else if (sign == 'del') {
+					// 删除
+					plus.nativeUI.confirm('确认删除该商品?', function(e) {
+						if (e.index == 0) {
+							changeGoodsStatus(-1);
+						}
+					})
 				}
+
+			})
+			// 打开团队详情
+			mui(".mui-content").on("tap", ".team-name-cont", function() {
+				var team_id = this.dataset.tid;
+				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+					teamid: team_id
+				})
+			})
+			//改变商品状态
+			function changeGoodsStatus(status) {
+				mui.post($ajaxUrl + 'goods', {
+					action: 'change_status',
+					token: userInfo.token,
+					status: status,
+					goods_id: app.goods_id,
+					type: "team_goods"
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						if (status == -1) {
+							message('已删除!');
+							mui.back();
+						} else {
+							// message('操作成功!');
+						}
+						if (status == 0) {
+							// 下架
+							app.goods_detail.status = 0;
+							message('下架成功!');
+						} else if (status == 1) {
+							// 上架
+							app.goods_detail.status = 1;
+							message('上架成功!');
+						}
+					} else {
+						message('操作失败!');
+					}
+				}, 'json');
+			}
+			// 分享
+			mui(".mui-bar").on('tap', '.nav-right-btn', function() {
+				var cont = app.goods_detail.name;
+				var img = app.images[0];
+				var imgs = img.substring(img.lastIndexOf("/"));
+				var sd_path = "_downloads" + imgs;
+				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+					shareToMiniprogram({
+						title: cont,
+						content: cont,
+						thumbs: [sd_path],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/shop/detail/detail?id=' + app.goods_detail.id + '&to_uid=' + userInfo.id,
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				}, function(e) {
+					showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
+					var imgpath = '';
+					var imgDtask = plus.downloader.createDownload(img, {
+						method: 'GET'
+					}, function(d, status) {
+						if (status == 200) {
+							plus.zip.compressImage({
+									src: d.filename,
+									dst: d.filename,
+									overwrite: true,
+									width: '500px',
+									height: 'auto',
+									format: 'jpg',
+									quality: 90,
+									clip: {
+										width: "500px",
+										height: "400px"
+									}
+								},
+								function(e) {
+									imgpath = e.target;
+									if (imgpath) {
+										showload(1);
+										shareToMiniprogram({
+											title: cont,
+											content: cont,
+											thumbs: [imgpath],
+											miniProgram: {
+												id: 'gh_9fa5f42ab939',
+												path: '/longbing_card/pages/shop/detail/detail?id=' + id + '&to_uid=' + userInfo.id,
+												webUrl: 'https://app.wangkeapp.cn/'
+											}
+										}, 'miniProgram');
+									}
+								},
+								function(error) {
+									message("Compress error!");
+								});
+						} else {
+							mui.toast('保存失败')
+						}
+					});
+					imgDtask.start()
+				});
 			})
 		</script>
 	</body>

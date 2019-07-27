@@ -1,0 +1,719 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<style type="text/css">
+			.order-detail-head {
+				position: relative;
+				background-color: #FFFFFF;
+				margin-bottom: 0.2rem;
+			}
+
+			.detail-head {
+				width: 100%;
+				height: 1.79rem;
+				background: url("../image/icon/order_details_await_sgoods_01.png") center top no-repeat;
+				background-size: cover;
+				display: flex;
+				align-items: center;
+				padding-left: 0.45rem;
+				position: relative;
+			}
+
+			.detail-head h3 {
+				font-size: 0.35rem;
+				color: #FFFFFF;
+				font-weight: normal;
+				margin-bottom: 0.23rem;
+			}
+
+			.detail-head p {
+				font-size: 0.3rem;
+				color: #FFFFFF;
+			}
+
+			.detail-head p span {
+				min-width: 2.6rem;
+				display: inline-block;
+				/* margin-right: 0.25rem; */
+			}
+
+			.address-info {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.2rem 0.24rem;
+				position: relative;
+			}
+
+			.address-info-right {
+				flex-grow: 1;
+				padding-left: 0.2rem;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.address-info:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				width: 100%;
+				height: 1px;
+				left: 0;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.address-info img {
+				width: 0.42rem;
+				height: auto;
+				flex-shrink: 0;
+			}
+
+			.address-info p {
+				margin-bottom: 0;
+				font-size: 0.26rem;
+			}
+
+			.address-top {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 0.1rem;
+			}
+
+			.address-top p {
+				flex-grow: 1;
+				color: #333333;
+				font-size: 0.3rem;
+				margin: 0;
+			}
+
+			.mui-btn-outlined {
+				height: 0.4rem;
+				width: 0.88rem;
+				line-height: 0.4rem;
+				padding: 0;
+				font-size: 0.2rem;
+				color: #999999;
+				border-radius: 0.12rem;
+			}
+
+			.mui-btn:enabled:active {
+				background-color: #DDDDDD;
+				color: #000000;
+			}
+
+			.customer-info {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.17rem 0.2rem;
+				font-size: 0.28rem;
+			}
+
+			.customer-info img {
+				width: 0.8rem;
+				object-fit: cover;
+				height: 0.8rem;
+				margin-right: 0.32rem;
+				border-radius: 50%;
+			}
+
+			.customer-info div {
+				display: flex;
+				align-items: center;
+			}
+
+			.customer-info .mui-icon-arrowright {
+				font-size: 0.32rem;
+				color: #999999;
+				margin-left: 0.1rem;
+			}
+
+			.mini-card {
+				background-color: #FFFFFF;
+				margin-bottom: 0.2rem;
+			}
+
+			.mini-card .mui-table-view-cell {
+				padding: 0.2rem;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.goods-info {
+				display: flex;
+				align-items: center;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.goods-info .goods-img {
+				position: relative;
+				overflow: hidden;
+				width: 1.39rem;
+				height: 1.39rem;
+				flex-shrink: 0;
+			}
+
+			.goods-info .goods-img img {
+				object-fit: cover;
+				width: 100%;
+				height: 100%;
+			}
+
+			.goods-info .goods-img span {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.2rem;
+				height: 0.32rem;
+				background-color: rgba(0, 0, 0, 0.5);
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				color: #FFFFFF;
+			}
+
+			.goods-desc {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				flex-grow: 1;
+				padding-left: 0.25rem;
+				height: 1.39rem;
+				overflow: hidden;
+			}
+
+			.goods-desc p {
+				max-width: 100%;
+				font-size: 0.28rem;
+				color: #333333;
+			}
+
+			.arguments-cont {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.arguments-cont .mui-badge {
+				font-size: 0.24rem;
+				color: #999999;
+				background-color: #F2F2F2;
+				padding: 4px 8px;
+			}
+
+			.price-cont {
+				font-size: 0.24rem;
+				color: #333333;
+			}
+
+			.price-cont .price {
+				margin-right: 0.3rem;
+			}
+
+			.mini-list-btm {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.24rem;
+				color: #333333;
+				margin-top: 0.3rem;
+			}
+
+			.team-boss-name {
+				color: #999999;
+				margin-left: 0.1rem;
+			}
+
+			.royalty {
+				color: #999999;
+			}
+
+			.royalty span {
+				color: #F5CA3A;
+			}
+
+			.summary-container div {
+				font-size: 0.3rem;
+				color: #333333;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 0.2rem;
+			}
+
+			.summary-container .mui-table-view-cell div:last-of-type {
+				margin-bottom: 0;
+			}
+
+			.await-pay-sum {
+				color: #FF0000;
+			}
+
+			.net-profit-sum {
+				color: #CC9C2D;
+			}
+
+			.last-conatiner {
+				padding: 0.2rem;
+				padding-bottom: 1.1rem;
+				margin-bottom: 0;
+			}
+
+			.last-conatiner ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.last-conatiner li {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.24rem;
+				color: #999999;
+				margin-bottom: 0.2rem;
+			}
+
+			/* 如果是分销商 */
+			.team-name-cont {
+				font-size: 0.24rem;
+				color: #333333;
+			}
+
+			.deliver-goods-btn {
+				width: 100%;
+				background-color: #F5CA3A;
+				height: 1.1rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.3rem;
+				color: #FFFFFF;
+				position: fixed;
+				bottom: 0;
+				z-index: 99;
+			}
+
+			/* 发货窗口 */
+			.deliver-goods-model {
+				position: fixed;
+				z-index: 1045;
+				top: 25%;
+				width: 6.46rem;
+				height: 6.21rem;
+				left: 0.52rem;
+				margin: 0;
+				/* border: 1px solid #000000; */
+				border-radius: 0.1rem;
+				box-shadow: none;
+				display: none;
+			}
+
+			.deliver-goods-model .mui-card-header {
+				justify-content: center;
+				height: 1.19rem;
+				font-size: 0.35rem;
+				color: #474747;
+				box-shadow: none;
+			}
+
+			.mui-card-header:after {
+				background-color: #DDDDDD;
+			}
+
+			.deliver-goods-model ul {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+
+			.mui-card-content-inner {
+				padding: 0 0.3rem;
+			}
+
+			.deliver-goods-model li {
+				margin: 0.5rem 0;
+				border-radius: 0.1rem;
+				background-color: #F2F2F2;
+				display: flex;
+				align-items: center;
+				height: 1rem;
+				padding: 0 0.2rem;
+				position: relative;
+			}
+
+			.deliver-goods-model .first-section {
+				justify-content: space-between;
+			}
+
+			.deliver-goods-model .second-section {
+				padding-right: 0;
+			}
+
+			.deliver-goods-model .ensure-deliver-goods {
+				font-size: 0.3rem;
+				background-color: #F5CA3A;
+				color: #FFFFFF;
+				justify-content: center;
+				margin-top: 0.7rem;
+				margin-bottom: 0;
+			}
+
+			.express-title {
+				color: #999999;
+				margin-right: 0.4rem;
+			}
+
+			.express-title.mui-navigate-right:after {
+				font-size: 0.36rem;
+				right: 0.2rem;
+			}
+
+			.deliver-goods-model span {
+				font-size: 0.3rem;
+				flex-shrink: 0;
+			}
+
+			.deliver-goods-model input {
+				margin: 0;
+				padding: 0;
+				height: 32px;
+				/* width: 3.6rem; */
+				flex-grow: 1;
+				font-size: 0.28rem;
+				margin: 0 0.2rem;
+				border: none;
+				background-color: transparent;
+			}
+
+			.deliver-goods-model .scan-btn {
+				height: 100%;
+				/* background-color: #0062CC; */
+				padding: 0 0.2rem;
+				display: inline-flex;
+				flex-shrink: 0;
+				align-items: center;
+				border-radius: 0.1rem;
+			}
+
+			.scan-btn img {
+				width: 0.36rem;
+				height: 0.36rem;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">订单详情-待付款</h1>
+		</header>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<div class="order-detail-head">
+				<div class="detail-head">
+					<div>
+						<h3>买家已付款</h3>
+						<p>请尽快发货</p>
+					</div>
+				</div>
+				<div class="address-info">
+					<img src="../image/icon/order-details-icon-02.png">
+					<div class="address-info-right">
+						<div class="address-top">
+							<p>
+								<span>{{recipients}}</span>
+								<span>{{phone}}</span>
+							</p>
+							<button type="button" class="mui-btn mui-btn-outlined modification-address">修改</button>
+						</div>
+						<p>{{address_detail}}</p>
+					</div>
+				</div>
+				<div class="customer-info">
+					<div>
+						<img src="../image/5E0eH.png">
+						<span>收件人嘛</span>
+					</div>
+					<div>
+						<span>联系他</span>
+						<span class="mui-icon mui-icon-arrowright"></span>
+					</div>
+				</div>
+			</div>
+			<div class="mini-card">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="i in 3">
+						<div class="goods-info">
+							<div class="goods-img">
+								<img src="../image/5E0eH.png">
+								<span>分销商品</span>
+							</div>
+							<div class="goods-desc">
+								<p class="mui-ellipsis goods-title">四件套全棉纯棉田园风小清新被被套套四件套全棉纯棉田园风小清新被被套套</p>
+								<div class="arguments-cont">
+									<div class="mui-badge">默认规格</div>
+									<div class="price-cont"><span class="price">&yen;20.00</span><span>x1</span></div>
+								</div>
+								<!-- 如果是分销商 -->
+								<div class="team-name-cont mui-hidden">
+									<span class="price">货源：土特产团队</span>
+								</div>
+							</div>
+						</div>
+						<div class="mini-list-btm">
+							<div>分销商：土特产团队<span class="team-boss-name">[飞大大]</span></div>
+							<div class="royalty">提成：<span>&yen;5.00</span></div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="mini-card">
+				<ul class="mui-table-view summary-container">
+					<li class="mui-table-view-cell">
+						<div>
+							<span>共2件商品</span><span>&yen;50.00</span>
+						</div>
+						<div>
+							<span>运费</span><span>包邮</span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div>
+							<span>待付款</span><span class="await-pay-sum">&yen;50.00</span>
+						</div>
+						<div>
+							<!-- 队长 -->
+							<span class="mui-hidden">净收益</span>
+							<!-- 分销商 -->
+							<span>提成</span>
+							<span class="net-profit-sum">&yen;5</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="mini-card last-conatiner">
+				<ul>
+					<li>
+						<span>订单编号：233654891516996</span>
+						<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun('233654891516996')">复制</button>
+					</li>
+					<li>
+						<span>订单状态：未支付</span>
+					</li>
+					<li>
+						<span>下单时间：2019-01-28 09:28.59</span>
+					</li>
+					<li>
+						<span>付款时间：2019-01-28 09:28.59</span>
+					</li>
+				</ul>
+			</div>
+			<!-- 发货窗口 -->
+			<div class="mui-card deliver-goods-model">
+				<div class="mui-card-header">发货</div>
+				<div class="mui-card-content">
+					<div class="mui-card-content-inner">
+						<ul>
+							<li class="first-section" id="express_company">
+								<span>选择快递</span>
+								<span class="express-title mui-navigate-right">{{express_name}}</span>
+							</li>
+							<li class="second-section">
+								<span>快递单号</span>
+								<input placeholder="请填写快递单号" v-model="express_num" type="number">
+								<div class="scan-btn">
+									<img src="../image/icon/order_details_await_sgoods_02.png">
+								</div>
+							</li>
+							<li class="ensure-deliver-goods">
+								确认发货
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="deliver-goods-btn">
+				发货
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var mask = mui.createMask(function() {
+				document.querySelector(".deliver-goods-model").style.display = "none";
+			});
+			// 倒计时
+			var endtimer = "2019/07/26 17:51:00";
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					recipients: '刘备备',
+					phone: '13888888888',
+					address_detail: '云南省 昆明市 官渡区 高原明珠商务中心A座701',
+					express_id: '',
+					express_name: '请选择',
+					express_num: ''
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					//  复制方法
+					copy_fun: function(copy) {
+						//判断是安卓还是ios
+						if (mui.os.ios) {
+							//ios
+							var UIPasteboard = plus.ios.importClass("UIPasteboard");
+							var generalPasteboard = UIPasteboard.generalPasteboard();
+							//设置/获取文本内容:
+							generalPasteboard.plusCallMethod({
+								setValue: copy,
+								forPasteboardType: "public.utf8-plain-text"
+							});
+							generalPasteboard.plusCallMethod({
+								valueForPasteboardType: "public.utf8-plain-text"
+							});
+							message("已成功复制到剪贴板");
+						} else {
+							//安卓
+							var context = plus.android.importClass("android.content.Context");
+							var main = plus.android.runtimeMainActivity();
+							var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
+							plus.android.invoke(clip, "setText", copy);
+							message("已成功复制到剪贴板");
+						}
+					}
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+					})
+				}
+			})
+			// 修改地址
+			mui(".mui-content").on('tap', '.modification-address', function() {
+				openPage('modification_of_receiving_address.html', 'modification_of_receiving_address', '#f7f7f7', {
+					recipients: app.recipients,
+					phone: app.phone,
+					address_detail: app.address_detail,
+				}, "zoom-fade-out")
+			})
+			window.addEventListener('getaddress', function(event) {
+				// 接收地址更改
+				app.recipients = event.detail.recipients
+				app.phone = event.detail.phone
+				app.address_detail = event.detail.address_detail
+			});
+			// 发货
+			mui(".mui-content").on('tap', '.deliver-goods-btn', function() {
+				mask.show();
+				document.querySelector(".deliver-goods-model").style.display = "block";
+			})
+			// 确认发货
+			mui(".mui-content").on('tap', '.ensure-deliver-goods', function() {
+				mask.close();
+				message("发货成功！");
+			})
+			// 为了不让弹出滚动穿透
+			document.querySelector(".deliver-goods-model").addEventListener("touchmove", mui.preventDefault);
+			// 选择物流公司
+			var userPicker = new mui.PopPicker();
+			mui(".mui-content").on('tap', '#express_company', function() {
+				document.activeElement.blur();
+				mui.post($ajaxUrl + 'util&action=express_list', {}, function(res) {
+					if (res.errno == 0) {
+						var data = res.data;
+						data.forEach(function(item) {
+							item.value = item.id;
+							item.text = item.e_name;
+							delete item.id;
+							delete item.e_name;
+						})
+						userPicker.setData(data);
+						userPicker.show(function(items) {
+							app.express_name = JSON.stringify(items[0].text).replace(/"/g, "");
+							app.express_id = items[0].value;
+						});
+					} else {
+
+					}
+				}, 'json');
+			})
+			// 扫一扫
+			mui(".mui-content").on('tap', '.scan-btn', function() {
+				fnOpenWin('odd_scan.html', 'odd_scan', {
+					statusbar: {
+						background: '#000000'
+					}
+				}, '', 'slide-in-right')
+				setStatusBar('#000000', 'light');
+			})
+			// 监听扫码内容
+			window.addEventListener('doit', function(e) {
+				// 转数字
+				var cont = parseInt(e.detail.content);
+				// 判断是否为数字
+				function myIsNaN(value) {
+					return typeof value === 'number' && !isNaN(value);
+				}
+				if (myIsNaN(cont)) {
+					app.express_num = cont;
+					message("扫码成功！");
+				} else {
+					setTimeout(function() {
+						plus.nativeUI.alert("扫码有误，请重新扫码！");
+					}, 500);
+				}
+			}, false);
+		</script>
+	</body>
+
+</html>

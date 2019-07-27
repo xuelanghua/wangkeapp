@@ -142,7 +142,7 @@
 			.mui-card {
 				border-radius: 0.1rem;
 				margin: 0.2rem 0 0;
-				box-shadow:0 0 5px 0 rgba(0,0,0,0.1);
+				box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
 			}
 
 			.mui-card-footer:before,
@@ -199,7 +199,7 @@
 				position: absolute;
 				width: 100%;
 				height: 0.32rem;
-				background-color: rgba(255, 255, 255, 0.6);
+				background-color: rgba(0, 0, 0, 0.5);
 				bottom: 0;
 				left: 0;
 				font-size: 0.2rem;
@@ -207,7 +207,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				color: #333333;
+				color: #FFFFFF;
 			}
 
 			.inside-list-left img {
@@ -302,7 +302,8 @@
 			.net-yield-number {
 				color: #CC9C2D;
 			}
-			.mui-bar .mui-icon.search-btn{
+
+			.mui-bar .mui-icon.search-btn {
 				position: absolute;
 				right: 20px;
 				background-color: #F2F2F2;
@@ -348,7 +349,7 @@
 				<div class="mui-slider-group">
 					<div id="item1mobile" class="mui-control-content mui-active">
 						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 30">
+							<li class="order-list" v-for="i in 6">
 								<div class="mui-card">
 									<div class="mui-card-header">
 										<div class="flex-center">
@@ -358,7 +359,7 @@
 										</div>
 										<span class="cancel-time">5小时后自动取消</span>
 									</div>
-									<div class="mui-card-content">
+									<div class="mui-card-content" @tap="openOrderDetail('await',236)">
 										<div class="mui-card-content-inner">
 											<div class="order-inside-list" v-for="i in 3">
 												<div class="inside-list-left">
@@ -400,7 +401,7 @@
 					</div>
 					<div id="item2mobile" class="mui-control-content">
 						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 30">
+							<li class="order-list" v-for="i in 3">
 								<div class="mui-card">
 									<div class="mui-card-header">
 										<div class="flex-center">
@@ -410,13 +411,13 @@
 										</div>
 										<span class="cancel-time">已付款</span>
 									</div>
-									<div class="mui-card-content">
+									<div class="mui-card-content" @tap="openOrderDetail('shipped',236)">
 										<div class="mui-card-content-inner">
-											<div class="order-inside-list" v-for="i in 3">
+											<div class="order-inside-list" v-for="i in 2">
 												<div class="inside-list-left">
 													<img src="../image/5E0eH.png">
 													<div class="goods-type-sign">
-														分销商品
+														分销商品待发货
 													</div>
 												</div>
 												<div class="inside-list-right">
@@ -566,7 +567,8 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					// 0为供货订单 1为分销订单
+					sales: 0
 				},
 				created: function() {
 					// 初始化字体大小
@@ -578,7 +580,18 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-
+					// 打开详情
+					openOrderDetail: function(type, id) {
+						if (type == "await") {
+							openPage('order_details_await_pay.html', 'order_details_await_pay', '#f7f7f7', {
+								orderId: id
+							}, "zoom-fade-out")
+						} else if (type == "shipped") {
+							openPage('order_details_await_sgoods.html', 'order_details_await_sgoods', '#f7f7f7', {
+								orderId: id
+							}, "zoom-fade-out")
+						}
+					}
 				},
 				mounted: function() {
 					mui.init({
@@ -586,9 +599,6 @@
 						beforeback: function() {
 							//plus.navigator.setStatusBarStyle("light");
 						}
-					});
-					mui('.mui-scroll-wrapper').scroll({
-						indicators: false
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
@@ -620,7 +630,7 @@
 			})
 			// 搜索页面
 			mui('.mui-bar').on('tap', '.search-btn', function() {
-				openPage('order_search.html','order_search','#ffffff')
+				openPage('order_search.html', 'order_search', '#ffffff')
 			})
 		</script>
 	</body>

@@ -152,7 +152,7 @@
 						<span class="search-btn">搜索</span>
 					</div>
 				</form>
-				<div class="search-record" v-show="isRecord">
+				<div class="search-record" v-show="isRecord&&search_record.length>0">
 					<h5>最近搜索</h5>
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell keywords-item" :data-keyword="r" v-for="(r,i) in search_record">{{r}}</li>
@@ -224,6 +224,11 @@
 			// 点击搜索按钮
 			mui(".mui-content").on("tap", ".search-btn", function() {
 				document.activeElement.blur();
+				app.keyword = app.keyword.replace(/^\s*|\s*$/g, "");
+				if (app.keyword == '') {
+					message("关键词不能为空");
+					return false;
+				}
 				var idx = app.search_record.indexOf(app.keyword);
 				app.isRecord = false;
 				app.voidRecord = true;
@@ -252,6 +257,10 @@
 
 			// 点击键盘的搜索
 			document.getElementById("search").addEventListener("keypress", function(event) {
+				if (app.keyword == '') {
+					message("关键词不能为空");
+					return false;
+				}
 				var keyword = app.keyword.replace(/^\s*|\s*$/g, "");
 				if (event.keyCode == "13" && keyword != '') {
 					document.activeElement.blur();

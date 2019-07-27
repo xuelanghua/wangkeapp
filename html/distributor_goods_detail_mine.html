@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-	<!-- 分销商品详情 -->
+	<!-- 个人拣货后的分销商品详情 -->
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -180,24 +180,29 @@
 
 			.goods-detail-container {
 				background-color: #FFFFFF;
+				padding: 0.2rem;
 			}
 
 			.goods-detail-container h4.title {
 				font-size: 0.32rem;
 				color: #333333;
-				padding: 0.4rem 0.2rem 0.28rem;
+				padding: 0.4rem 0 0.2rem;
 				font-weight: normal;
 				position: relative;
+				display: flex;
+				align-items: center;
 			}
-
-			.goods-detail-container h4.title:after {
+			
+			.goods-detail-container h4.title:before {
 				content: '';
-				position: absolute;
-				bottom: 5px;
-				left: 0.2rem;
-				height: 2px;
-				width: 1.4rem;
-				background-color: #999999;
+				display: inline-block;
+				position: relative;
+				bottom: 0;
+				left: 0;
+				height: 15px;
+				width:4px;
+				margin-right: 5px;
+				background-color: #333333;
 			}
 
 			.goods-detail-container img {
@@ -306,7 +311,7 @@
 					<p>{{goods_detail.name}}</p>
 				</div>
 				<div class="profit-cont">
-					<span>提成：&yen;{{goods_detail.commission}}</span>
+					<span>&yen;{{goods_detail.commission}}</span>
 					<img class="hot-sign" src="../image/icon/distributor_goods_detail_mine_sign.png">
 				</div>
 				<div class="top-info-cont">
@@ -480,8 +485,8 @@
 				var sign = this.dataset.type;
 				if (sign == 'edit') {
 					// 编辑
-					openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
-						goods_id: app.goods_id
+					openPage('edit_distribution_goods_again.html', 'edit_distribution_goods_again', '#f7f7f7', {
+						gid: app.goods_id
 					})
 				} else if (sign == 'up') {
 					// 上架
@@ -521,14 +526,16 @@
 							message('已删除!');
 							mui.back();
 						} else {
-							message('操作成功!');
+							// message('操作成功!');
 						}
 						if (status == 0) {
 							// 下架
 							app.goods_detail.status = 0;
+							message('下架成功!');
 						} else if (status == 1) {
 							// 上架
 							app.goods_detail.status = 1;
+							message('上架成功!');
 						}
 					} else {
 						message('操作失败!');
