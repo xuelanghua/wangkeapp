@@ -110,9 +110,9 @@
 								<div v-else-if="list.message_type=='image'" class="msg-content-inner">
 									<img class="msg-content-image" :src="list.content" style="max-width: 100px;" />
 								</div>
-								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key)">
+								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
-									<span class="play-state">点击播放</span>
+									<span class="play-state" :class="'play-state'+list.id">点击播放</span>
 								</div>
 								<div class="msg-content-arrow"></div>
 							</div>
@@ -302,50 +302,18 @@
 						ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
 						//alert(ui.boxMsgText.offsetWidth );
 						var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
-						var msgItemTap = function(msgItem, event) {
-							var msgType = msgItem.getAttribute('msg-type');
-							var msgContent = msgItem.getAttribute('msg-content');
-							// logs(msgType);
-							// logs(msgContent);
-							if (msgType == 'audio') {
-								var playState = msgItem.querySelector('.play-state');
-								if (playStatus) {
-									playStatus = false;
-									playState.innerText = '点击播放';
-									player.stop();
-								} else {
-									playStatus = true;
-									player = plus.audio.createPlayer(msgContent);
-									playState.innerText = '正在播放...';
-									player.play(function() {
-										playState.innerText = '点击播放';
-									}, function(e) {
-										playState.innerText = '点击播放';
-									});
-								}
-								// readAudio();
-								// player = plus.audio.createPlayer(msgContent);
-								// var playState = msgItem.querySelector('.play-state');
-								// playState.innerText = '正在播放...';
-								// player.play(function() {
-								// 	playState.innerText = '点击播放';
-								// }, function(e) {
-								// 	playState.innerText = '点击播放';
-								// });
-							}
-						};
 						var imageViewer = new mui.ImageViewer('.msg-content-image', {
 							dbl: false
 						});
 
 						var bindMsgList = function() {
 							var areaMsgList = document.querySelector('#msg-list');
-							var msgItems = areaMsgList.querySelectorAll('.msg-item');
-							[].forEach.call(msgItems, function(item, index) {
-								item.addEventListener('tap', function(event) {
-									msgItemTap(item, event);
-								}, false);
-							});
+							// var msgItems = areaMsgList.querySelectorAll('.msg-item');
+							// [].forEach.call(msgItems, function(item, index) {
+							// 	item.addEventListener('tap', function(event) {
+							// 		msgItemTap(item, event);
+							// 	}, false);
+							// });
 							imageViewer.findAllImage();
 							// console.log(areaMsgList.scrollHeigh);
 							// console.log(areaMsgList.offsetHeight);
@@ -844,23 +812,46 @@
 					message("学员无法禁言");
 				}
 			})
-			// 标记语音已读
-			function readAudio(aid, idx, i) {
-				// logs(aid);
-				// logs(vm.tid);
-				// logs(vm.courseId);
-				mui.get($ajaxUrl + 'team&action=play_audio', {
-					token: userInfo.token,
-					team_id: vm.tid,
-					type: 2,
-					course_id: vm.courseId,
-					audio_id: aid
-				}, function(res) {
-					logs(res);
-					if (res.errno == 0) {
-						vm.$set(vm.chatList[idx][i], "read_status", 1);
+			// 标记语音已读 
+			var priorId = null;
+			function readAudio(aid, idx, sign, status, msgType, msgContent) {
+				var _self = this;
+				if (msgType == 'audio') {
+					var audios = document.querySelectorAll(".play-state");
+					var playState = document.querySelector(".play-state" + aid);
+					if (aid == priorId && player) {
+						player.stop();
+						player = null;
+						playState.innerText = '点击播放';
+					} else {
+						for (var i = 0; i < audios.length; i++) {
+							audios[i].innerText = '点击播放';
+						}
+						player = plus.audio.createPlayer(msgContent);
+						playState.innerText = '正在播放...';
+						priorId=aid;
+						player.play(function() {
+							player = null;
+							playState.innerText = '点击播放';
+						}, function(e) {
+							player = null;
+							playState.innerText = '点击播放';
+						});
 					}
-				}, 'json');
+				}
+				if (status == 0) {
+					mui.get($ajaxUrl + 'team&action=play_audio', {
+						token: userInfo.token,
+						team_id: vm.tid,
+						type: 1,
+						course_id: 0,
+						audio_id: aid
+					}, function(res) {
+						if (res.errno == 0) {
+							vm.$set(vm.chatList[idx][sign], "read_status", 1);
+						}
+					}, 'json');
+				}
 			}
 			// 打开团队统计
 			mui(".mui-bar").on("tap", ".nav-right-btn", function() {

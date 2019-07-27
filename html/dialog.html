@@ -413,6 +413,21 @@
 				min-width: 90px;
 				text-align: center;
 			}
+			.red-dot{
+				position: absolute;
+				top: 1px;
+				right: 1px;
+				display: inline-block;
+				border-radius: 50%;
+				background-color: #FF0000;
+				width: 6px;
+				height: 6px;
+			}
+			
+			.msg-item-self .red-dot{
+				left: 1px;
+				right: auto;
+			}
 		</style>
 	</head>
 
@@ -430,14 +445,18 @@
 				<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
 					<% for (var i in record[index]) { var item = record[index][i]; %>
-					<div id="<%= ('parent'+item.message_id) %>" class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
+					<div id="<%= ('parent'+item.message_id) %>" class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>'>
 						<% if(item.sender=='self' ) { %>
+						<!-- <i v-if="list.message_type=='audio' && list.read_status==0&&uid!=list.uid" class="red-dot"></i> -->
 							<!-- <i class="msg-user mui-icon mui-icon-person"></i> -->
 							<img class="msg-user-img msg-user my-chat-header"  src="<%= (avatar.user) %>" alt="" />
 						<% } else { %>
 							<img class="msg-user-img target-chat-header" src="<%= (avatar.target) %>"  alt="" />
 						<% } %>
 						<div class="msg-content" data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
+							<% if(item.type=='audio'&&item.is_read==0&&item.sender!='self') { %>
+								<i class="<%=('red-dot red-dot'+item.message_id)%>"></i>
+							<% } %>
 							<div class="msg-content-inner">
 								<% if(item.type=='text' ) { %>
 									<%=( item.content|| '&nbsp;&nbsp;') %>
@@ -657,7 +676,13 @@
 				var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
 				var msgItemTap = function(msgItem, event) {
 					var msgType = msgItem.getAttribute('msg-type');
-					var msgContent = msgItem.getAttribute('msg-content')
+					var msgContent = msgItem.getAttribute('msg-content');
+					var aid = msgItem.getAttribute('msg-id');
+					var status = msgItem.getAttribute('msg-status');
+					var index = msgItem.getAttribute('msg-index');
+					var idx = msgItem.getAttribute('msg-idx');
+					// logs(index);
+					// logs(idx);
 					if (msgType == 'audio') {
 						if (msgType == 'audio') {
 							var playState = msgItem.querySelector('.play-state');
@@ -669,6 +694,7 @@
 								playStatus = true;
 								player = plus.audio.createPlayer(msgContent);
 								playState.innerText = '正在播放...';
+								readAudio(aid, status, index, idx);
 								player.play(function() {
 									playState.innerText = '点击播放';
 								}, function(e) {
@@ -1010,7 +1036,7 @@
 						skip: skip,
 						limit: limit
 					}, function(res) {
-						logs(res);
+						// logs(res);
 						cacheData('recorddata' + chatId, res.data);
 						if (res.errno == 0) {
 							if (loadMore) {
@@ -1093,11 +1119,13 @@
 								// logs(data);
 								if (data.data2) {
 									if (data.data2.user_id == chatId) {
+										logs(data);
 										var message = {
 											sender: chatId,
 											type: data.data2.message_type,
 											content: data.data2.content,
-											message_id: data.message_id
+											message_id: data.message_id,
+											is_read: 0,
 										}
 										send(message);
 									} else {
@@ -1186,7 +1214,7 @@
 					var urls = this.src;
 					plus.nativeUI.confirm("保存图片到系统相册", function(e) {
 						if (e.index == 0) {
-							showload('','','保存中···','rgba(0,0,0,0.5)');
+							showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
 							plus.gallery.save(urls, function() {
 								showload(1);
 								plus.nativeUI.toast("保存成功!");
@@ -1344,6 +1372,18 @@
 			mui('.join-team-verify').on("tap", ".close-verify-window", function() {
 				mui('.join-team-verify')[0].style.display = "none";
 			})
+			// 标记语音已读
+			function readAudio(aid, status, index, idx) {
+				if (status == 0) {
+					mui.get($ajaxUrl + 'chat&action=play_audio', {
+						token: userInfo.token,
+						audio_id: aid
+					}, function(res) {
+						recordData.data[index][parseInt(idx)].is_read = "1";
+						document.querySelector(".red-dot" + aid).style.display = "none";
+					}, 'json');
+				}
+			}
 		</script>
 	</body>
 </html>
