@@ -686,22 +686,24 @@
 					if (msgType == 'audio') {
 						var audios = document.querySelectorAll(".play-state");
 						var playState = document.querySelector(".play-state" + aid);
+						for (var i = 0; i < audios.length; i++) {
+							audios[i].innerText = '点击播放';
+						}
 						if (aid == priorId && player) {
-							player.stop();
-							player = null;
+							if(player){
+								player.stop();
+							}
 							playState.innerText = '点击播放';
 						} else {
-							for (var i = 0; i < audios.length; i++) {
-								audios[i].innerText = '点击播放';
+							if(player){
+								player.stop();
 							}
 							player = plus.audio.createPlayer(msgContent);
 							playState.innerText = '正在播放...';
 							priorId = aid;
 							player.play(function() {
-								player = null;
 								playState.innerText = '点击播放';
 							}, function(e) {
-								player = null;
 								playState.innerText = '点击播放';
 							});
 						}
@@ -713,6 +715,7 @@
 						}, function(res) {
 							recordData.data[index][parseInt(idx)].is_read = "1";
 							document.querySelector(".red-dot" + aid).style.display = "none";
+							bindMsgList();
 						}, 'json');
 					}
 				};
