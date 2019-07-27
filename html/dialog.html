@@ -447,13 +447,11 @@
 					<% for (var i in record[index]) { var item = record[index][i]; %>
 					<div id="<%= ('parent'+item.message_id) %>" class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>'>
 						<% if(item.sender=='self' ) { %>
-						<!-- <i v-if="list.message_type=='audio' && list.read_status==0&&uid!=list.uid" class="red-dot"></i> -->
-							<!-- <i class="msg-user mui-icon mui-icon-person"></i> -->
 							<img class="msg-user-img msg-user my-chat-header"  src="<%= (avatar.user) %>" alt="" />
 						<% } else { %>
 							<img class="msg-user-img target-chat-header" src="<%= (avatar.target) %>"  alt="" />
 						<% } %>
-						<div class="msg-content" data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
+						<div class="msg-content"   msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>' data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
 							<% if(item.type=='audio'&&item.is_read==0&&item.sender!='self') { %>
 								<i class="<%=('red-dot red-dot'+item.message_id)%>"></i>
 							<% } %>
@@ -464,7 +462,7 @@
 									<img class="msg-content-image" src="<%=(item.content)%>" style="max-width: 100px;" />
 								<% } else if(item.type=='audio' ) { %>
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
-									<span class="play-state">点击播放</span>
+									<span class="<%=('play-state play-state'+item.message_id)%>">点击播放</span>
 								<% } %>
 							</div>
 							<div class="msg-content-arrow"></div>
@@ -674,6 +672,8 @@
 
 				ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
 				var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
+				// 标记语音已读 
+				var priorId = null;
 				var msgItemTap = function(msgItem, event) {
 					var msgType = msgItem.getAttribute('msg-type');
 					var msgContent = msgItem.getAttribute('msg-content');
@@ -684,32 +684,36 @@
 					// logs(index);
 					// logs(idx);
 					if (msgType == 'audio') {
-						if (msgType == 'audio') {
-							var playState = msgItem.querySelector('.play-state');
-							if (playStatus) {
-								playStatus = false;
-								playState.innerText = '点击播放';
-								player.stop();
-							} else {
-								playStatus = true;
-								player = plus.audio.createPlayer(msgContent);
-								playState.innerText = '正在播放...';
-								readAudio(aid, status, index, idx);
-								player.play(function() {
-									playState.innerText = '点击播放';
-								}, function(e) {
-									playState.innerText = '点击播放';
-								});
+						var audios = document.querySelectorAll(".play-state");
+						var playState = document.querySelector(".play-state" + aid);
+						if (aid == priorId && player) {
+							player.stop();
+							player = null;
+							playState.innerText = '点击播放';
+						} else {
+							for (var i = 0; i < audios.length; i++) {
+								audios[i].innerText = '点击播放';
 							}
+							player = plus.audio.createPlayer(msgContent);
+							playState.innerText = '正在播放...';
+							priorId = aid;
+							player.play(function() {
+								player = null;
+								playState.innerText = '点击播放';
+							}, function(e) {
+								player = null;
+								playState.innerText = '点击播放';
+							});
 						}
-						// player = plus.audio.createPlayer(msgContent);
-						// var playState = msgItem.querySelector('.play-state');
-						// playState.innerText = '正在播放...';
-						// player.play(function() {
-						// 	playState.innerText = '点击播放';
-						// }, function(e) {
-						// 	playState.innerText = '点击播放';
-						// });
+					}
+					if (status == 0) {
+						mui.get($ajaxUrl + 'chat&action=play_audio', {
+							token: userInfo.token,
+							audio_id: aid
+						}, function(res) {
+							recordData.data[index][parseInt(idx)].is_read = "1";
+							document.querySelector(".red-dot" + aid).style.display = "none";
+						}, 'json');
 					}
 				};
 
@@ -721,7 +725,7 @@
 					ui.areaMsgList.innerHTML = template('msg-template', {
 						"recordData": recordData
 					});
-					var msgItems = ui.areaMsgList.querySelectorAll('.msg-item');
+					var msgItems = ui.areaMsgList.querySelectorAll('.msg-content');
 					[].forEach.call(msgItems, function(item, index) {
 						item.addEventListener('tap', function(event) {
 							msgItemTap(item, event);
