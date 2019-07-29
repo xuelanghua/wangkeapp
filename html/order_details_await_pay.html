@@ -316,14 +316,14 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
-			<h1 class="mui-title">订单详情-待付款</h1>
+			<h1 class="mui-title">订单详情</h1>
 		</header>
 		<div id="mui-content" class="mui-content " v-cloak>
 			<div class="order-detail-head">
 				<div class="detail-head">
 					<div>
 						<h3>等待买家付款</h3>
-						<p><span id="count_down">00小时00分00秒</span>后自动取消</p>
+						<p><span id="count_down">00小时00分00秒后自动取消</span></p>
 					</div>
 				</div>
 				<div class="address-info">
@@ -345,7 +345,7 @@
 						<span>收件人嘛</span>
 					</div>
 					<div>
-						<span>联系他</span>
+						<span>联系TA</span>
 						<span class="mui-icon mui-icon-arrowright"></span>
 					</div>
 				</div>
@@ -422,7 +422,7 @@
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
 			// 倒计时
-			var endtimer = "2019/07/26 17:51:00";
+			var endtimer = "2019/07/29 11:30:00";
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -496,12 +496,12 @@
 							M = H - shengyuM * 60 * 1000;
 						S = parseInt((shenyu - shengyuD * 60 * 60 * 24 * 1000 - shengyuH * 60 * 60 * 1000 - shengyuM * 60 * 1000) /
 							1000);
-						document.getElementById("count_down").innerText = (shengyuH + "小时" + shengyuM + "分" + S + "秒");
-						if (shengyuH || shengyuM || S) {
+						if (shengyuH > 0 || shengyuM > 0 || S > 0) {
 							setTimeout(clock, 500);
+							document.getElementById("count_down").innerText = (shengyuH + "小时" + shengyuM + "分" + S + "秒" + " " + "后自动取消");
 						} else {
 							// 倒计时结束
-
+							document.getElementById("count_down").innerText = "订单已取消";
 						}
 					}
 					// 开始倒计时

@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mui-content>.mui-table-view:first-child {
+				margin: 0;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #F8F8F8;
+			}
+
+			.mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #F9F9F9;
+			}
+
+			.mui-bar-nav~.mui-content {
+				min-height: 90vh;
+				background-color: #FFFFFF;
+			}
+
+			body {
+				background-color: #F9F9F9;
+			}
+
+			.address-list {
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.address-list img {
+				width: 0.36rem;
+				flex-shrink: 0;
+				margin-left: 0.2rem;
+			}
+
+			.address-list-top {
+				margin-bottom: 0.2rem;
+				display: flex;
+				align-items: center;
+			}
+
+			.address-list-top .default-sign {
+				display: inline-block;
+				background-color: #FF0000;
+				color: #FFFFFF;
+				font-size: 0.18rem;
+				padding: 0 3px;
+				line-height: 1.4;
+				border-radius: 3px;
+				align-self: flex-start;
+			}
+
+			.address-list-btm {
+				font-size: 0.22rem;
+				color: #696969;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				line-height: 1.4;
+			}
+
+			.address-list-btm span {
+				display: inline-flex;
+				flex-grow: 1;
+			}
+
+			.address-list .user-phone {
+				margin: 0 0.1rem 0 0.4rem;
+			}
+
+			.add-address {
+				display: flex;
+				align-items: center;
+				width: 60%;
+				background-color: #FF0000;
+				padding: 0.16rem 0;
+				justify-content: center;
+				color: #FFFFFF;
+				margin: 0.4rem auto 0;
+				border-radius: 0.6rem;
+				font-size: 0.3rem;
+			}
+
+			.add-address img {
+				width: 0.32rem;
+				margin-right: 0.1rem;
+			}
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #2289FF;
+				margin-right: -5px;
+			}
+
+			.address-list.active {
+				background-color: #F9F9F9;
+			}
+
+			.address-list.active,
+			.address-list.active .address-list-btm {
+				color: #2289FF;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" class="container" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 v-if="choice" class="mui-title">地址选择</h1>
+				<h1 v-else class="mui-title">地址管理</h1>
+				<div v-if="choice" class="nav-right-btn mui-pull-right">
+					确定
+				</div>
+			</header>
+			<div class="mui-content">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell address-list" :class="choice==true&&choiceIdx==_d.id?'active':''" v-for="(_d,index) in address"
+					 @tap="choiceAddress(_d.id)">
+						<div class="address-list-top">
+							<span class="user-name">{{_d.name}}</span>
+							<span class="user-phone">{{_d.phone}}</span>
+							<span class="default-sign" v-if="_d.isdf==1">默认</span>
+						</div>
+						<div class="address-list-btm">
+							<span>{{_d.address}}</span>
+							<img src="../image/icon/address-edit.png" @tap="editAddress(_d)">
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="add-address">
+				<img src="../image/icon/add-address-icon.png">
+				<span>新增收货地址</span>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					choice: false,
+					choiceIdx: '-1',
+					address: [{
+						id: '230',
+						name: '蓝某某',
+						phone: '13700699999',
+						address: '云南省昆明市官渡区昌宏西路高原明珠商务楼云南省昆明市官渡区昌宏西路高原明珠商务楼A座701',
+						isdf: '1'
+					}, {
+						id: '9',
+						name: '李某某',
+						phone: '137006666666',
+						address: '云南省昆明市官渡区昌宏西路高原明珠商务楼云宏西路高原明珠商务楼云南省昆明市官渡区昌宏西路高原明珠商务楼A座701',
+						isdf: '0'
+					}, {
+						id: '4',
+						name: '钱魔鬼',
+						phone: '13700655555',
+						address: '高原明珠商务楼A座701',
+						isdf: '0'
+					}, {
+						id: '5',
+						name: '华某某',
+						phone: '13700611111',
+						address: '云南省昆明市官渡区昌宏西路高原明珠商务楼',
+						isdf: '0'
+					}]
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					// 地址选择
+					choiceAddress: function(idx) {
+						if (app.choice) {
+							app.choiceIdx = idx;
+						}
+					},
+					editAddress: function(cont) {
+						openPage('add_address.html', 'add_address', '#f7f7f7', {
+							cont: cont
+						});
+					}
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						if (self.choice) {
+							app.choice = true;
+						}
+					})
+				}
+			})
+			mui(".container").on("tap",".add-address",function(){
+				openPage('add_address.html', 'add_address', '#f7f7f7');
+			}) 
+		</script>
+	</body>
+
+</html>

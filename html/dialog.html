@@ -682,28 +682,41 @@
 					var index = msgItem.getAttribute('msg-index');
 					var idx = msgItem.getAttribute('msg-idx');
 					if (msgType == 'audio') {
-						var audios = document.querySelectorAll(".play-state");
 						var playState = document.querySelector(".play-state" + aid);
-						for (var i = 0; i < audios.length; i++) {
+						var audios = document.querySelectorAll(".play-state");
+						for (var i = audios.length-1; i > -1; i--) {
+							if (audios[i].innerText == '正在播放...') {
 							audios[i].innerText = '点击播放';
+								break;
+							}
 						}
 						if (aid == priorId && player) {
-							if(player){
+							if (player) {
 								player.stop();
+								player.close();
+								player = null;
+								// logs(player);
 							}
 							playState.innerText = '点击播放';
 						} else {
-							if(player){
+							if (player) {
 								player.stop();
+								player.close();
+								player = null;
+								// logs(player);
 							}
 							player = plus.audio.createPlayer(msgContent);
 							playState.innerText = '正在播放...';
 							priorId = aid;
 							player.play(function() {
+								player.stop();
+								player.close();
+								playState.innerText = '点击播放';
 								player = null;
-								playState.innerText = '点击播放';
 							}, function(e) {
+								player.close();
 								playState.innerText = '点击播放';
+								player = null;
 							});
 						}
 					}
@@ -1178,7 +1191,7 @@
 										sender: "self",
 										content: res.data.path,
 										type: "audio",
-										
+
 									}
 									send(imgMsg);
 									chatData.type = 'audio';

@@ -96,6 +96,9 @@
 			.function .mui-table-view-cell.mui-media:after {
 				background-color: #f2f2f2;
 			}
+			.mui-table-view-cell.mui-active{
+				background-color: #F9F9F9;
+			}
 		</style>
 	</head>
 	<body>
@@ -109,39 +112,46 @@
 					<img class="chart mui-pull-left" id="avatar" src="../image/user_default.png">
 					<div class="mui-media-body">
 						<div class="title" id="title">&nbsp;</div>
-						<p class='mui-ellipsis mui-table-view-chevron' id="description">&nbsp;</p>
+						<p class="mui-ellipsis mui-table-view-chevron" id="description">&nbsp;</p>
 					</div>
 					<div class="mui-icon mui-icon-arrowright mui-pull-right icon"></div>
 				</a>
 			</div>
 			<div class="function">
-				<ul class="mui-table-view-chevron">
+				<ul class="mui-table-view-chevron mui-clearfix">
 					<li class="mui-table-view-cell mui-media buy-goods-booth">
-						<a class='mui-navigate-right' href="javascript:;">
+						<span class="mui-navigate-right">
 							<img class="mui-media-object mui-pull-left" src="../image/goods-position-icon.png">
 							<div class="mui-media-body">
-								<p class='mui-ellipsis tishi'>购买商品位</p>
+								<p class="mui-ellipsis tishi">购买商品位</p>
 							</div>
 							<span class="goods-position">当前拥有0个</span>
-						</a>
+						</span>
+					</li>
+					<li class="mui-table-view-cell mui-media address-manage">
+						<span class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left" src="../image/icon/address-administration.png">
+							<div class="mui-media-body">
+								<p class="mui-ellipsis tishi">地址管理</p>
+							</div>
+						</span>
 					</li>
 					<li class="mui-table-view-cell mui-media mui-hidden">
-						<a class='mui-navigate-right' href="javascript:;">
+						<span class="mui-navigate-right">
 							<img class="mui-media-object mui-pull-left" src="../image/moneyz.png">
 							<div class="mui-media-body">
-								<p class='mui-ellipsis tishi'>支付方式</p>
+								<p class="mui-ellipsis tishi">支付方式</p>
 							</div>
-						</a>
+						</span>
 					</li>
 					<li class="mui-table-view-cell mui-media mui-hidden">
-						<a class="mui-navigate-right">
+						<span class="mui-navigate-right">
 							<img class="mui-media-object mui-pull-left" src="../image/wuliou.png">
 							<div class="mui-media-body">
-								<p class='mui-ellipsis tishi'>交易和物流通知</p>
+								<p class="mui-ellipsis tishi">交易和物流通知</p>
 							</div>
-						</a>
+						</span>
 					</li>
-					<div class="clearfix"></div>
 				</ul>
 			</div>
 		</div>
@@ -157,7 +167,7 @@
 			var utoken = userInfo.token;
 			//页面加载完毕
 			mui.plusReady(function() {
-				window.addEventListener('buySuccess', function() {
+				window.addEventListener("buySuccess", function() {
 					userInfo = getUserInfo();
 					document.querySelector(".goods-position").innerText="当前拥有"+userInfo.goods_number+"个";
 				})
@@ -177,6 +187,10 @@
 				// 购买商品位
 				mui(".mui-content").on("tap", ".buy-goods-booth", function() {
 					openPage("buy_goods_booth.html", "buy_goods_booth", '#f7f7f7', '');
+				})
+				// 地址管理
+				mui(".mui-content").on("tap", ".address-manage", function() {
+					openPage("address_manage.html", "address_manage", '#f7f7f7', '');
 				})
 			}
 
