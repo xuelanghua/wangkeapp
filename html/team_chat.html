@@ -76,7 +76,7 @@
 								</div>
 								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
-									<span class="play-state" :class="'play-state'+list.id">点击播放</span>
+								<span class="play-state" :class="'play-state'+list.id">点击播放</span>
 								</div>
 								<div class="msg-content-arrow"></div>
 							</div>
@@ -584,7 +584,7 @@
 								skip: skip,
 								limit: limit
 							}, function(res) {
-								logs(res);
+								// logs(res);
 								if (res.errno == 0) {
 									if (skip == 1) {
 										vm.chatList = res.data;
@@ -607,7 +607,7 @@
 
 						// 清空群聊
 						window.addEventListener('doit', function() {
-							vm.chatList={};
+							vm.chatList = {};
 						}, false);
 
 						//阅读消息
@@ -646,25 +646,44 @@
 
 			// 标记语音已读 
 			var priorId = null;
+
 			function readAudio(aid, idx, sign, status, msgType, msgContent) {
 				var _self = this;
 				if (msgType == 'audio') {
 					var audios = document.querySelectorAll(".play-state");
 					var playState = document.querySelector(".play-state" + aid);
-					for (var i = 0; i < audios.length; i++) {
+					for (var i = audios.length-1; i > -1; i--) {
+						if (audios[i].innerText == '正在播放...') {
 						audios[i].innerText = '点击播放';
+							break;
+						}
 					}
 					if (aid == priorId && player) {
-						player.stop();
-						player = null;
+						if (player) {
+							player.stop();
+							player.close();
+							player = null;
+							// logs(player);
+						}
 					} else {
+						if (player) {
+							player.stop();
+							player.close();
+							player = null;
+							// logs(player);
+						}
 						player = plus.audio.createPlayer(msgContent);
 						playState.innerText = '正在播放...';
-						priorId=aid;
+						priorId = aid;
 						player.play(function() {
+							player.stop();
+							player.close();
 							player = null;
 							playState.innerText = '点击播放';
 						}, function(e) {
+							player.stop();
+							player.close();
+							player = null;
 							playState.innerText = '点击播放';
 						});
 					}

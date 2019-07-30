@@ -11,7 +11,7 @@
 		<link href="../css/vip-page.css" type="text/css" rel="stylesheet" />
 		<style>
 			.mui-bar.mui-bar-nav {
-				background-color: #2289ff;
+				background-color: #f5c939;
 				box-shadow: none;
 			}
 
@@ -24,6 +24,9 @@
 			#recharge,
 			#cash {
 				border: 1px solid rgba(255, 255, 255, .6);
+			}
+			.bill-container .expend{
+				color: #333333;
 			}
 			[v-cloak] {
 				display: none;
@@ -47,7 +50,7 @@
 		<div id="mui-content" class="mui-content bill-container" v-cloak>
 			<div class="banner enterplorer-banner">
 				<div class="am-container">
-					<img src="../image/assets.png" style="width: 100%;margin-top: -40px;">
+					<img src="../image/icon/shop_asset_management-top-bg.png" style="width: 100%;margin-top: -40px;">
 				</div>
 				<!-- 背景square -->
 				<ul class="bg-bubbles">
@@ -91,7 +94,9 @@
 						<div class="right-cont">
 							<div class="top mui-clearfix">
 								<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
-								<span class="mui-pull-right earning">{{list.number}}</span>
+								<span class="mui-pull-right earning" :class="list.number>0?'':'expend'">
+									<template v-if="list.number>0">+</template>{{list.number}}
+								</span>
 							</div>
 							<div class="bottom mui-clearfix">
 								<span>{{list.create_time}}</span>
@@ -146,9 +151,14 @@
 								getMemberInfo();
 							}
 						}
+					},
+					beforeback: function() {
+						plus.navigator.setStatusBarStyle("dark");
+						plus.navigator.setStatusBarBackground("#f7f7f7");
 					}
 				});
 				mui.plusReady(function() {
+					plus.navigator.setStatusBarStyle("light");
 					window.addEventListener('rechargeSuccess', function() {
 						setTimeout(function() {
 							location.reload();
@@ -192,6 +202,7 @@
 				skip: skip,
 				limit: 6
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0 && skip == 1) {
 					vm.balanceData = res.data;
 					mui('#mui-content').pullRefresh().endPulldownToRefresh();

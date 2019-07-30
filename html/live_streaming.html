@@ -741,7 +741,7 @@
 							var urls = this.src;
 							plus.nativeUI.confirm("保存图片到系统相册", function(e) {
 								if (e.index == 0) {
-									showload('','','保存中···','rgba(0,0,0,0.5)');
+									showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
 									plus.gallery.save(urls, function() {
 										showload(1);
 										plus.nativeUI.toast("保存成功!");
@@ -814,25 +814,43 @@
 			})
 			// 标记语音已读 
 			var priorId = null;
+
 			function readAudio(aid, idx, sign, status, msgType, msgContent) {
 				if (msgType == 'audio') {
 					var audios = document.querySelectorAll(".play-state");
 					var playState = document.querySelector(".play-state" + aid);
-					for (var i = 0; i < audios.length; i++) {
-						audios[i].innerText = '点击播放';
+					for (var i = audios.length - 1; i > -1; i--) {
+						if (audios[i].innerText == '正在播放...') {
+							audios[i].innerText = '点击播放';
+							break;
+						}
 					}
 					if (aid == priorId && player) {
-						if(player){
+						if (player) {
 							player.stop();
+							player.close();
+							player = null;
+							// logs(player);
 						}
 					} else {
+						if (player) {
+							player.stop();
+							player.close();
+							player = null;
+							// logs(player);
+						}
 						player = plus.audio.createPlayer(msgContent);
 						playState.innerText = '正在播放...';
-						priorId=aid;
+						priorId = aid;
 						player.play(function() {
+							player.stop();
+							player.close();
 							player = null;
 							playState.innerText = '点击播放';
 						}, function(e) {
+							player.stop();
+							player.close();
+							player = null;
 							playState.innerText = '点击播放';
 						});
 					}

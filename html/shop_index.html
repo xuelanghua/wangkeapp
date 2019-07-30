@@ -330,7 +330,7 @@
 			}
 
 			.mui-backdrop.mui-active {
-				background-color: rgba(0,0,0,0.3);
+				background-color: rgba(0, 0, 0, 0.3);
 			}
 
 			.mui-popover .mui-popover-arrow:after {
@@ -438,6 +438,10 @@
 							<img src="../image/icon/store-management-icon-03.png">
 							<span>订单管理</span>
 						</div>
+						<div class="menu-items" id="sales_return">
+							<img src="../image/icon/shop_index_01.png">
+							<span>退货</span>
+						</div>
 					</div>
 				</div>
 				<div class="menu-card">
@@ -512,7 +516,7 @@
 									<div class="goods-right-bottom">
 										<span @tap="openGoodsDetail(goods.id)">销量&nbsp;{{goods.sale_count}}</span>
 										<span @tap="openGoodsDetail(goods.id)">95%&nbsp;好评</span>
-										<img v-if="goods.is_pick==0" :data-gid="goods.id"  class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
+										<img v-if="goods.is_pick==0" :data-gid="goods.id" class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
 										<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 									</div>
 									<div class="team-name" :data-idx="index">
@@ -589,7 +593,7 @@
 				mounted: function() {
 					mui.init({
 						beforeback: function() {
-							//plus.navigator.setStatusBarStyle("light");
+							plus.navigator.setStatusBarStyle("light");
 						}
 					});
 					mui.plusReady(function() {
@@ -658,15 +662,20 @@
 			})
 			// 资产中心
 			mui(".mui-content").on("tap", ".asset-center", function() {
+				plus.navigator.setStatusBarStyle("light");
 				fnOpenWin('shop_asset_management.html', 'shop_asset_management', {
 					statusbar: {
-						background: '#2289ff'
+						background: '#f5c939'
 					}
 				}, '', 'slide-in-right');
 			})
 			//店铺管理
 			mui(".mui-content").on("tap", "#shop_manage", function() {
 				openPage('shop_setting.html', 'shop_setting', '#ffffff');
+			});
+			//退货
+			mui(".mui-content").on("tap", "#sales_return", function() {
+				openPage('sales_return.html', 'sales_return', '#f7f7f7');
 			});
 
 			//商品管理
@@ -731,9 +740,9 @@
 			})
 			// 拣货
 			mui(".mui-content").on("tap", ".add-entrepot-btn", function() {
-				var gid=this.dataset.gid;
+				var gid = this.dataset.gid;
 				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
-					gid:gid
+					gid: gid
 				});
 			})
 			// 获取爆品

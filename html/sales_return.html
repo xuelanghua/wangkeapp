@@ -1,0 +1,359 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+
+			.order-list-groups {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+				padding: 0;
+				background: transparent;
+			}
+
+			.order-list {
+				background: transparent;
+				margin: 0.4rem 0;
+				padding: 0 0.2rem;
+			}
+
+			.mui-card {
+				border-radius: 0.1rem;
+				margin: 0;
+				box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+			}
+
+			.mui-card-footer:before,
+			.mui-card-header:after {
+				left: 15px;
+			}
+
+			.mui-card-header {
+				font-size: 0.3rem;
+			}
+
+			.mui-card-header .mui-icon {
+				font-size: 0.36rem;
+			}
+
+			.mui-card-header .user-head-img {
+				border-radius: 50%;
+				object-fit: cover;
+				width: 0.65rem;
+				height: 0.65rem;
+				margin-right: 0.25rem;
+			}
+
+			.flex-center {
+				display: flex;
+				align-items: center;
+			}
+
+			.cancel-time {
+				color: #CC9C2D;
+			}
+
+			.order-inside-list {
+				margin-bottom: 0.26rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.order-inside-list:last-of-type {
+				margin-bottom: 0;
+			}
+
+			.inside-list-left {
+				width: 1.5rem;
+				height: 1.5rem;
+				overflow: hidden;
+				margin-right: 0.28rem;
+				flex-shrink: 0;
+				position: relative;
+			}
+
+			.goods-type-sign {
+				position: absolute;
+				width: 100%;
+				height: 0.32rem;
+				background-color: rgba(0, 0, 0, 0.5);
+				bottom: 0;
+				left: 0;
+				font-size: 0.2rem;
+				line-height: 1;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #FFFFFF;
+			}
+
+			.inside-list-left img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.inside-list-right {
+				flex-grow: 1;
+				position: relative;
+				width: 4.8rem;
+				height: auto;
+			}
+
+			.inside-list-right p {
+				width: 100%;
+				font-size: 0.28rem;
+				color: #333333;
+				margin-bottom: 0;
+				position: relative;
+			}
+
+			.inside-list-right:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: -0.2rem;
+				width: 100%;
+				height: 1px;
+				background-color: #f5f6f7;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.order-inside-list:last-of-type .inside-list-right:after {
+				display: none;
+			}
+
+			.specification-cont {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.24rem;
+				padding: 0.1rem 0;
+			}
+
+			.specification-left {
+				border-radius: 0.2rem;
+				background-color: #F2F2F2;
+				color: #999999;
+				padding: 0 0.2rem;
+				line-height: 1.6;
+				font-size: 0.24rem;
+			}
+
+			.specification-right span:first-of-type {
+				margin-right: 0.2rem;
+			}
+
+			.distribution-team {
+				font-size: 0.24rem;
+				color: #333333;
+			}
+
+			.distribution-team span {
+				color: #999999;
+				margin-left: 0.2rem;
+			}
+
+			.price-num {
+				display: flex;
+				justify-content: space-between;
+				flex-grow: 1;
+				width: 100%;
+				padding: 0.1rem 0;
+			}
+
+			.mui-card-footer {
+				flex-direction: column;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.operating-floor {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+			}
+
+			.operating-floor span {
+				color: #999999;
+				font-size: 0.24rem;
+			}
+
+			.operating-floor .contact-with-him {
+				color: #2289FF;
+				margin-left: 0.3rem;
+				margin-right: 0.2rem;
+			}
+
+			.mui-bar .mui-icon.search-btn {
+				position: absolute;
+				right: 20px;
+				background-color: #F2F2F2;
+				border-radius: 50%;
+				padding: 0.04rem;
+				font-size: 0.42rem;
+				color: #333333;
+			}
+
+			.mui-btn {
+				width: 1.3rem;
+				height: 0.5rem;
+				border: none;
+				color: #FFFFFF;
+				padding: 0;
+				font-size: 0.24rem;
+				line-height: 0.5rem;
+				border-radius: 0.1rem;
+			}
+
+			.consent-btn {
+				background-color: #F5CA3A;
+			}
+
+			.consent-btn-after {
+				background-color: #999999;
+			}
+
+			.consent-btn.mui-btn:enabled:active {
+				background-color: #ecb600;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">退货</h1>
+			</header>
+			<div class="mui-content">
+				<ul class="order-list-groups">
+					<li class="order-list" v-for="i in 6">
+						<div class="mui-card">
+							<div class="mui-card-header">
+								<div class="flex-center">
+									<img class="user-head-img" src="../image/5E0eH.png">
+									<span class="user-name">马飞飞</span>
+									<span class="mui-icon mui-icon-arrowright"></span>
+								</div>
+								<span class="cancel-time">退货申请</span>
+							</div>
+							<div class="mui-card-content" @tap="openDetail(123)">
+								<div class="mui-card-content-inner">
+									<div class="order-inside-list">
+										<div class="inside-list-left">
+											<img src="../image/5E0eH.png">
+											<div class="goods-type-sign">
+												分销商品
+											</div>
+										</div>
+										<div class="inside-list-right">
+											<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
+											<div class="specification-cont">
+												<div class="specification-left">
+													默认规格
+												</div>
+												<div class="specification-right">
+													<span>&yen;30.00</span>
+													<span>x&nbsp;12</span>
+												</div>
+											</div>
+											<div class="distribution-team">
+												<!-- 分销商名字以及团队 -->
+												分销商：土特产团队<span>[大飞飞]</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="mui-card-footer">
+								<div class="price-num">
+									<span>共1件商品</span>
+									<span>实付款：&nbsp;&yen;30.00(包邮)</span>
+								</div>
+								<div class="operating-floor">
+									<!-- <span>供货商已同意申请</span> -->
+									<!-- <span class="contact-with-him">联系他</span> -->
+									<button type="button" class="mui-btn consent-btn">
+										同意
+									</button>
+									<!-- <button type="button" class="mui-btn consent-btn-after">
+										已同意
+									</button> -->
+									<!-- <button type="button" class="mui-btn mui-btn-danger">
+										确认收货
+									</button> -->
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					// 0为供货订单 1为分销订单
+					sales: 0
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					// 打开退货详情
+					openDetail:function(id){
+						openPage('sales_return_detail.html','sales_return_detail','#f7f7f7',{
+							salesId:id
+						});
+					}
+				},
+				mounted: function() {
+					mui.init({
+						swipeBack: false,
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						mui(".mui-content").on("tap", ".consent-btn", function() {
+							plus.nativeUI.confirm("确认同意退货吗?", function(e) {
+								if (e.index == 0) {
+									message("同意");
+								} else {
+									message("取消");
+								}
+							})
+						})
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>

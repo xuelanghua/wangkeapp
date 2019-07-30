@@ -411,7 +411,7 @@
 										</div>
 										<span class="cancel-time">已付款</span>
 									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('shipped',236)">
+									<div class="mui-card-content" @tap="openOrderDetail('sgoods',236)">
 										<div class="mui-card-content-inner">
 											<div class="order-inside-list" v-for="i in 2">
 												<div class="inside-list-left">
@@ -463,7 +463,7 @@
 										</div>
 										<span class="cancel-time">已发货</span>
 									</div>
-									<div class="mui-card-content">
+									<div class="mui-card-content" @tap="openOrderDetail('shipped',236)">
 										<div class="mui-card-content-inner">
 											<div class="order-inside-list" v-for="i in 3">
 												<div class="inside-list-left">
@@ -516,7 +516,7 @@
 										<span class="cancel-time" v-if="i!=2">交易成功</span>
 										<span class="cancel-time" v-else>退货退款成功</span>
 									</div>
-									<div class="mui-card-content">
+									<div class="mui-card-content" @tap="openOrderDetail('finish',236)">
 										<div class="mui-card-content-inner">
 											<div class="order-inside-list" v-for="i in 3">
 												<div class="inside-list-left">
@@ -586,8 +586,16 @@
 							openPage('order_details_await_pay.html', 'order_details_await_pay', '#f7f7f7', {
 								orderId: id
 							}, "zoom-fade-out")
-						} else if (type == "shipped") {
+						} else if (type == "sgoods") {
 							openPage('order_details_await_sgoods.html', 'order_details_await_sgoods', '#f7f7f7', {
+								orderId: id
+							}, "zoom-fade-out")
+						} else if (type == "shipped") {
+							openPage('order_details_shipped.html', 'order_details_shipped', '#f7f7f7', {
+								orderId: id
+							}, "zoom-fade-out")
+						}else{
+							openPage('order_details_finish.html', 'order_details_finish', '#f7f7f7', {
 								orderId: id
 							}, "zoom-fade-out")
 						}

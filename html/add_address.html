@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-content>.mui-table-view:first-child {
+				margin: 0;
+			}
+
+			.mui-bar-nav~.mui-content {
+				min-height: 100vh;
+				background-color: #FFFFFF;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #F8F8F8;
+			}
+
+			.mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.address-items {
+				display: flex;
+				align-items: center;
+				padding:0.32rem 0.2rem;
+			}
+
+			.address-items .title {
+				flex-shrink: 0;
+				font-size: 0.3rem;
+				color: #333333;
+				display: inline-flex;
+				min-width: 1.2rem;
+			}
+
+			.address-items input {
+				width: auto;
+				flex-grow: 1;
+				margin-left: 0.2rem;
+				padding: 0;
+				height: 0.6rem;
+				margin-bottom: 0;
+				padding-right: 0.6rem;
+				border: none;
+			}
+
+			.mui-icon.mui-icon-clear {
+				position: absolute;
+				right: 0.3rem;
+				color: #DDDDDD;
+			}
+
+			.choice-location {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding-right: 0.66rem;
+			}
+
+			.choice-location span {
+				font-size: 0.26rem;
+			}
+
+			.choice-location span:after {
+				font-size: 0.36rem;
+			}
+
+			.detail-address .title {
+				margin-bottom: 0.2rem;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.detail-address {
+				padding: 0.2rem;
+			}
+
+			.detail-address textarea {
+				border: none;
+			}
+
+			textarea::-webkit-input-placeholder,
+			input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.28rem;
+			}
+
+			.save-address {
+				display: flex;
+				align-items: center;
+				width: 60%;
+				background-color: #FF0000;
+				padding: 0.16rem 0;
+				justify-content: center;
+				color: #FFFFFF;
+				border-radius: 0.6rem;
+				font-size: 0.3rem;
+				position: absolute;
+				bottom: 0.3rem;
+				left: 20%;
+			}
+
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">添加收货地址</h1>
+			</header>
+			<div class="mui-content">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell address-items">
+						<span class="title">收货人</span>
+						<input type="text" v-model="user_name" placeholder="请输入名字">
+						<span v-show="user_name" @tap="user_name=''" class="mui-icon mui-icon-clear"></span>
+					</li>
+					<li class="mui-table-view-cell address-items">
+						<span class="title">手机号码</span>
+						<input type="number" v-model="user_phone" placeholder="请输入手机号码">
+						<span v-show="user_phone" @tap="user_phone=''" class="mui-icon mui-icon-clear"></span>
+					</li>
+					<li class="mui-table-view-cell address-items choice-location" id="choice-location">
+						<span class="title">所在地区</span>
+						<span class="mui-navigate-right">{{location}}</span>
+					</li>
+					<li class="mui-table-view-cell detail-address">
+						<div class="title">
+							<span>详细地址</span>
+							<span v-show="detail_address" @tap="detail_address=''" class="mui-icon mui-icon-clear mui-pull-right"></span>
+						</div>
+						<textarea rows="3" cols="" v-model="detail_address" placeholder="请输入详细地址"></textarea>
+					</li>
+				</ul>
+				<div class="save-address">
+					<span>保存</span>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var _getParam = function(obj, param) {
+				return obj[param] || '';
+			};
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					location: '请选择',
+					user_name: '',
+					user_phone: '',
+					detail_address: ''
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+					})
+				}
+			})
+			var cityPicker = new mui.PopPicker({
+				layer: 3
+			});
+			cityPicker.setData(cityData3);
+			mui(".mui-content").on("tap", "#choice-location", function() {
+				document.activeElement.blur();
+				setTimeout(function(){
+					cityPicker.show(function(items) {
+						app.location = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2],
+							'text');
+					});
+				},200);
+			})
+			// 保存
+			mui(".mui-content").on("tap", ".save-address ", function() {
+				message("保存成功！");
+				mui.back();
+			})
+		</script>
+	</body>
+
+</html>

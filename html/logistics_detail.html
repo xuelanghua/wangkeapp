@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mini-card {
+				background-color: #FFFFFF;
+				margin: 0.2rem 0;
+			}
+
+			.mini-card .mui-table-view-cell {
+				padding: 0.2rem;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.first-conatiner {
+				padding: 0 0.2rem;
+			}
+
+			.first-conatiner ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.first-conatiner li {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.26rem;
+				color: #999999;
+				padding: 0.2rem 0;
+				position: relative;
+			}
+
+			.first-conatiner li:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				width: 100%;
+				height: 1px;
+				background-color: #f1f1f1;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.first-conatiner li:last-of-type:after {
+				display: none;
+			}
+
+			.first-conatiner .mui-btn-outlined {
+				height: 0.4rem;
+				width: 0.88rem;
+				line-height: 0.4rem;
+				padding: 0;
+				font-size: 0.2rem;
+				color: #999999;
+				border-radius: 0.12rem;
+			}
+
+			.first-conatiner .mui-btn:enabled:active {
+				background-color: #DDDDDD;
+				color: #666666;
+			}
+			.last-conatiner{
+				display: flex;
+				position: relative;
+				padding: 0.45rem 0.35rem 0.45rem 0.9rem;
+			}
+			.last-conatiner ul{
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+			}
+			.last-conatiner ul li{
+				width: 100%;
+				padding-left: 0.61rem;
+				position: relative;
+				padding-bottom: 0.8rem;
+				border-left: 1px solid #d4d4d4;
+				margin: 0;
+			}
+			.last-conatiner ul li:last-of-type{
+				border-left: 0;
+				padding-bottom: 0;
+			}
+			.last-conatiner p{
+				font-size: 0.26rem;
+				color: #666666;
+				text-align: justify;
+			}
+			.last-conatiner .timer-cont{
+				font-size: 0.24rem;
+				color: #d2d2d2;
+			}
+			.last-conatiner .sign{
+				display: inline-flex;
+				width: 0.42rem;
+				height: 0.42rem;
+				border-radius: 50%;
+				border: 1px solid #d4d4d4;
+				position: absolute;
+				font-size: 0;
+				left: 0;
+				top: 0;
+				margin-left: -0.21rem;
+				background-color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.last-conatiner .sign:after{
+				content: "";
+				width: 0.24rem;
+				height: 0.24rem;
+				background-color: #999999;
+				margin: 0;
+				border-radius: 50%;
+			}
+			.last-conatiner li:first-of-type .sign{
+				border-color: #F5CA3A;
+			}
+			.last-conatiner li:first-of-type .sign:after{
+				background-color: #F5CA3A;
+			}
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">快递详情</h1>
+			</header>
+			<div class="mui-content">
+				<div class="mini-card first-conatiner">
+					<ul>
+						<li>
+							<span>订单编号：233654891516996</span>
+							<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun('233654891516996')">复制</button>
+						</li>
+						<li>
+							<span>顺丰快递：233654891516996</span>
+							<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun('233654891516996')">复制</button>
+						</li>
+					</ul>
+				</div>
+				<div class="mini-card last-conatiner">
+					<ul>
+						<li>
+							<i class="sign"></i>
+							<p>[昆明市] 你的快递已到达官渡区分管中心渡区分管中心渡区分管中心渡区分管中心</p>
+							<p class="timer-cont">2018-05-22 12:20:58</p>
+						</li>
+						<li>
+							<i class="sign"></i>
+							<p>[昆明市] 你的快递已到达官渡区分管中心渡区分管中心渡区分管中心渡区分管中心</p>
+							<p class="timer-cont">2018-05-22 12:20:58</p>
+						</li>
+						<li>
+							<i class="sign"></i>
+							<p>[昆明市] 你的快递已到达官渡区分管中心</p>
+							<p class="timer-cont">2018-05-22 12:20:58</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					//  复制方法
+					copy_fun: function(copy) {
+						//判断是安卓还是ios
+						if (mui.os.ios) {
+							//ios
+							var UIPasteboard = plus.ios.importClass("UIPasteboard");
+							var generalPasteboard = UIPasteboard.generalPasteboard();
+							//设置/获取文本内容:
+							generalPasteboard.plusCallMethod({
+								setValue: copy,
+								forPasteboardType: "public.utf8-plain-text"
+							});
+							generalPasteboard.plusCallMethod({
+								valueForPasteboardType: "public.utf8-plain-text"
+							});
+							message("复制成功!");
+						} else {
+							//安卓
+							var context = plus.android.importClass("android.content.Context");
+							var main = plus.android.runtimeMainActivity();
+							var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
+							plus.android.invoke(clip, "setText", copy);
+							message("复制成功!");
+						}
+					}
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>
