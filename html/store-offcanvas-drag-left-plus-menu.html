@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/vip-page.css">
+		<style>
+			header.mui-bar{
+				display: none;
+			}
+			.mui-table-view-cell.active{
+				background-color: #e5f1ff;
+			}
+		</style>
+		<script type="text/javascript">
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 5.25 + "px";
+		</script>
+	</head>
+
+	<body>
+		<div class="mui-content menu-page-content">
+			<h2>交易类型</h2>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell border-none active" data-text="筛选" data-type="0"><img src="../image/assert/checked-cls.png">全部</li>
+			</ul>
+			<p>收入</p>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" data-text="店铺收益" data-type="3"><img src="../image/assert/assert3.png">充值</li>
+				<!-- <li class="mui-table-view-cell" data-text="店铺收益" data-type="6"><img src="../image/assert/assert6.png">店铺收益</li> -->
+				<li class="mui-table-view-cell" data-text="广告收益" data-type="15"><img src="../image/assert/assert15.png">广告收益</li>
+				<li class="mui-table-view-cell" data-text="平台赠送" data-type="1"><img src="../image/assert/assert1.png">平台赠送</li>
+				<li class="mui-table-view-cell" data-text="推荐获得" data-type="2"><img src="../image/assert/assert2.png">推荐获得</li>
+				<li class="mui-table-view-cell" data-text="收款码收款" data-type="7"><img src="../image/assert/assert7.png">收款码收款</li>
+				<li class="mui-table-view-cell" data-text="知识付费奖励" data-type="14"><img src="../image/assert/assert14.png">知识付费奖励</li>
+				<li class="mui-table-view-cell" data-text="会员续费奖励" data-type="12"><img src="../image/assert/assert12.png">会员续费奖励</li>
+				<li class="mui-table-view-cell" data-text="商品位购买奖励" data-type="13"><img src="../image/assert/assert13.png">商品位购买奖励</li>
+			</ul>
+			<p>支出</p>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" data-text="红包" data-type="4"><img src="../image/assert/assert4.png">红包</li>
+				<li class="mui-table-view-cell" data-text="提现" data-type="5"><img src="../image/assert/assert5.png">提现</li>
+				<li class="mui-table-view-cell" data-text="会员续费" data-type="10"><img src="../image/assert/assert10.png">会员续费</li>
+				<li class="mui-table-view-cell" data-text="知识付费" data-type="11"><img src="../image/assert/assert11.png">知识付费</li>
+				<li class="mui-table-view-cell" data-text="扫码付款" data-type="8"><img src="../image/assert/assert8.png">扫码付款</li>
+				<li class="mui-table-view-cell" data-text="激活码支付" data-type="9"><img src="../image/assert/assert9.png">激活码支付</li>
+			</ul>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			var typer = '';
+			var text='';
+			//关闭back、menu按键监听，这样侧滑主界面会自动获得back和memu的按键事件，仅在主界面处理按键逻辑即可；
+			mui.init({
+				keyEventBind: {
+					backbutton: false,
+					menubutton: false
+				}
+			});
+			var main = null;
+			mui.plusReady(function() {
+				main = plus.webview.currentWebview().opener();
+			})
+
+			function closeMenu() {
+				mui.fire(main, "menu:swiperight");
+			}
+
+			//左滑显示出来的菜单，只需监听右滑，然后将菜单关闭即可；在该菜单上左滑，不做任何操作；
+			window.addEventListener("swiperight", closeMenu);
+			mui('.mui-content').on('tap', 'li', function() {
+				mui(".mui-content li").each(function() {
+					this.classList.remove('active');
+				});
+				this.classList.add('active');
+				// 隐藏筛选
+				mui.fire(main, "menu:swiperight");
+				typer = this.dataset.type;
+				text = this.dataset.text;
+				mui.fire(main, 'doit', {
+					type: typer,
+					text:text
+				});
+			})
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 5.25 + "px";
+		</script>
+	</body>
+
+</html>

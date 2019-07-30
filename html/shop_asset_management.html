@@ -25,6 +25,9 @@
 			#cash {
 				border: 1px solid rgba(255, 255, 255, .6);
 			}
+			.bill-container .expend{
+				color: #333333;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -91,7 +94,9 @@
 						<div class="right-cont">
 							<div class="top mui-clearfix">
 								<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
-								<span class="mui-pull-right earning">{{list.number}}</span>
+								<span class="mui-pull-right earning" :class="list.number>0?'':'expend'">
+									<template v-if="list.number>0">+</template>{{list.number}}
+								</span>
 							</div>
 							<div class="bottom mui-clearfix">
 								<span>{{list.create_time}}</span>
@@ -221,6 +226,5 @@
 				vm.balance = memberInfo.shop_balance;
 			}, 'json');
 		}
-		
 	</script>
 </html>
