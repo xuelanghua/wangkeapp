@@ -146,9 +146,14 @@
 								getMemberInfo();
 							}
 						}
+					},
+					beforeback: function() {
+						plus.navigator.setStatusBarStyle("dark");
+						plus.navigator.setStatusBarBackground("#f7f7f7");
 					}
 				});
 				mui.plusReady(function() {
+					plus.navigator.setStatusBarStyle("light");
 					window.addEventListener('rechargeSuccess', function() {
 						setTimeout(function() {
 							location.reload();
@@ -192,6 +197,7 @@
 				skip: skip,
 				limit: 6
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0 && skip == 1) {
 					vm.balanceData = res.data;
 					mui('#mui-content').pullRefresh().endPulldownToRefresh();
