@@ -684,9 +684,9 @@
 					if (msgType == 'audio') {
 						var playState = document.querySelector(".play-state" + aid);
 						var audios = document.querySelectorAll(".play-state");
-						for (var i = audios.length-1; i > -1; i--) {
+						for (var i = audios.length - 1; i > -1; i--) {
 							if (audios[i].innerText == '正在播放...') {
-							audios[i].innerText = '点击播放';
+								audios[i].innerText = '点击播放';
 								break;
 							}
 						}
@@ -807,17 +807,17 @@
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
-						send({
-							sender: 'self',
-							type: 'text',
-							content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
-						});
+						// send({
+						// 	sender: 'self',
+						// 	type: 'text',
+						// 	content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
+						// });
 						chatData.content = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
 						chatData.type = 'text';
 						ws.send(JSON.stringify(chatData)); //向服务器发送消息
 						ui.boxMsgText.value = '';
 						mui.trigger(ui.boxMsgText, 'input', null);
-						getRecordList();
+						// getRecordList();
 					} else if (ui.btnMsgType.classList.contains('mui-icon-mic')) {
 						ui.btnMsgType.classList.add('mui-icon-compose');
 						ui.btnMsgType.classList.remove('mui-icon-mic');
@@ -825,7 +825,7 @@
 						ui.boxMsgSound.style.display = 'block';
 						ui.boxMsgText.blur();
 						document.body.focus();
-						getRecordList();
+						// getRecordList();
 					} else if (ui.btnMsgType.classList.contains('mui-icon-compose')) {
 						ui.btnMsgType.classList.add('mui-icon-mic');
 						ui.btnMsgType.classList.remove('mui-icon-compose');
@@ -836,18 +836,18 @@
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
-						getRecordList();
+						// getRecordList();
 					}
 				}, false);
 
 				ui.footerLeft.addEventListener('tap', function(event) {
 					imageUpload(function(res) {
-						var imgMsg = {
-							sender: "self",
-							content: res.url,
-							type: "image"
-						}
-						send(imgMsg);
+						// var imgMsg = {
+						// 	sender: "self",
+						// 	content: res.url,
+						// 	type: "image"
+						// }
+						// send(imgMsg);
 						chatData.type = 'image';
 						chatData.content = res.url;
 						ws.send(JSON.stringify(chatData));
@@ -921,7 +921,8 @@
 					}
 					startTimestamp = (new Date()).getTime();
 					recorder.record({
-						filename: "_doc/audio/"
+						filename: "_doc/audio/",
+						format: "mp3"
 					}, function(path) {
 						if (recordCancel) return;
 						voiceUpload(path);
@@ -1037,6 +1038,73 @@
 						fid: userInfo.id
 					});
 				})
+				// 删除单条聊天记录
+				mui(".mui-popover").on("tap", ".del-btn", function() {
+					mui.post($ajaxUrl + 'chat&action=delete', {
+						token: userInfo.token,
+						message_id: message_id
+					}, function(res) {
+						if (res.errno == 0) {
+							var mols = document.getElementById('parent' + message_id).previousElementSibling;
+							var brother = document.getElementById('parent' + message_id).nextElementSibling;
+							var selfDom = document.getElementById('parent' + message_id);
+							var mcls = mols.className;
+							var bcls = '';
+							if (brother) {
+								bcls = brother.className;
+							} else {
+								bcls = 'data-time';
+							}
+							if (bcls == 'data-time' && mcls == 'data-time') {
+								mols.parentNode.removeChild(mols);
+								selfDom.parentNode.removeChild(selfDom);
+							} else {
+								selfDom.parentNode.removeChild(selfDom);
+							}
+							message('已删除');
+							getRecordList();
+						} else {
+							message('删除失败，请稍后重试');
+						}
+					}, 'json');
+					mui('#middlePopover').popover('hide');
+				})
+				// 聊天记录撤回
+				mui(".mui-popover").on("tap", ".recall-btn", function() {
+					// alert('撤回');
+					mui.post($ajaxUrl + 'chat&action=cancel', {
+						token: userInfo.token,
+						message_id: message_id
+					}, function(res) {
+						// logs(res);
+						if (res.errno == 0) {
+							var mols = document.getElementById('parent' + message_id).previousElementSibling;
+							var brother = document.getElementById('parent' + message_id).nextElementSibling;
+							var selfDom = document.getElementById('parent' + message_id);
+							var mcls = mols.className;
+							var bcls = '';
+							if (brother) {
+								bcls = brother.className;
+							} else {
+								bcls = 'data-time';
+							}
+							if (bcls == 'data-time' && mcls == 'data-time') {
+								mols.parentNode.removeChild(mols);
+								selfDom.parentNode.removeChild(selfDom);
+							} else {
+								// selfDom.style.display="none";
+								selfDom.parentNode.removeChild(selfDom);
+							}
+							message('撤回成功');
+							getRecordList();
+						} else if (res.errno == 2) {
+							message("超过三分钟，无法撤回");
+						} else {
+							message(res.message);
+						}
+					}, 'json');
+					mui('#middlePopover').popover('hide');
+				})
 				//获取聊天记录
 				function getRecordList(loadMore) {
 					if (loadMore) {
@@ -1075,7 +1143,9 @@
 							}
 							document.querySelector('.clear-chatting-records').style.display = "inline-flex";
 						} else {
-							document.querySelector('.clear-chatting-records').style.display = "none";
+							if (recordData.data == '') {
+								document.querySelector('.clear-chatting-records').style.display = "none";
+							}
 							if (!loadMore) {
 								recordData.data = [];
 								recordData.data = res.data;
@@ -1134,7 +1204,7 @@
 								heartCheck.start();
 							} else {
 								data = JSON.parse(data);
-								// logs(data);
+								logs(data);
 								if (data.data2) {
 									if (data.data2.user_id == chatId) {
 										logs(data);
@@ -1144,6 +1214,30 @@
 											content: data.data2.content,
 											message_id: data.message_id,
 											is_read: 0,
+										}
+										send(message);
+									} else {
+										mui.post($ajaxUrl + 'chat&action=unread_message', {
+											token: userInfo.token,
+											message_id: data.data2.id
+										}, function(res) {
+											if (res.errno == 0) {
+												// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
+												// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
+												// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
+												// mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+											}
+										}, 'json')
+									}
+								}
+								if (data.data) {
+									if (data.data.user_id == userInfo.id) {
+										var message = {
+											sender: "self",
+											type: data.data.message_type,
+											content: data.data.content,
+											message_id: data.data.id,
+											is_read: 1,
 										}
 										send(message);
 									} else {
@@ -1187,16 +1281,17 @@
 								if (res.errno == 1) {
 									message(res.message);
 								} else {
-									var imgMsg = {
-										sender: "self",
-										content: res.data.path,
-										type: "audio",
-
-									}
-									send(imgMsg);
+									// 									var imgMsg = {
+									// 										sender: "self",
+									// 										content: res.data.path,
+									// 										type: "audio",
+									// 
+									// 									}
+									// 									send(imgMsg);
 									chatData.type = 'audio';
 									chatData.content = res.data.path;
 									ws.send(JSON.stringify(chatData));
+									// getRecordList();
 									// message("上传成功");
 								}
 							} else {
@@ -1288,37 +1383,7 @@
 					// message('再按一次哟~','center');
 				}
 			})
-			// 删除单条聊天记录
-			mui(".mui-popover").on("tap", ".del-btn", function() {
-				mui.post($ajaxUrl + 'chat&action=delete', {
-					token: userInfo.token,
-					message_id: message_id
-				}, function(res) {
-					if (res.errno == 0) {
-						var mols = document.getElementById('parent' + message_id).previousElementSibling;
-						var brother = document.getElementById('parent' + message_id).nextElementSibling;
-						var selfDom = document.getElementById('parent' + message_id);
-						var mcls = mols.className;
-						var bcls = '';
-						if (brother) {
-							bcls = brother.className;
-						} else {
-							bcls = 'data-time';
-						}
-						if (bcls == 'data-time' && mcls == 'data-time') {
-							mols.parentNode.removeChild(mols);
-							selfDom.parentNode.removeChild(selfDom);
-						} else {
-							selfDom.parentNode.removeChild(selfDom);
-						}
-						message('已删除');
-						getRecordList();
-					} else {
-						message('删除失败，请稍后重试');
-					}
-				}, 'json');
-				mui('#middlePopover').popover('hide');
-			})
+
 			// 复制单条聊天记录
 			mui(".mui-popover").on("tap", ".copy-btn", function() {
 				//判断是安卓还是ios
@@ -1345,42 +1410,7 @@
 				}
 				mui('#middlePopover').popover('hide');
 			})
-			// 聊天记录撤回
-			mui(".mui-popover").on("tap", ".recall-btn", function() {
-				// alert('撤回');
-				mui.post($ajaxUrl + 'chat&action=cancel', {
-					token: userInfo.token,
-					message_id: message_id
-				}, function(res) {
-					// logs(res);
-					if (res.errno == 0) {
-						var mols = document.getElementById('parent' + message_id).previousElementSibling;
-						var brother = document.getElementById('parent' + message_id).nextElementSibling;
-						var selfDom = document.getElementById('parent' + message_id);
-						var mcls = mols.className;
-						var bcls = '';
-						if (brother) {
-							bcls = brother.className;
-						} else {
-							bcls = 'data-time';
-						}
-						if (bcls == 'data-time' && mcls == 'data-time') {
-							mols.parentNode.removeChild(mols);
-							selfDom.parentNode.removeChild(selfDom);
-						} else {
-							// selfDom.style.display="none";
-							selfDom.parentNode.removeChild(selfDom);
-						}
-						message('撤回成功');
-						getRecordList();
-					} else if (res.errno == 2) {
-						message("超过三分钟，无法撤回");
-					} else {
-						message(res.message);
-					}
-				}, 'json');
-				mui('#middlePopover').popover('hide');
-			})
+
 			// 显示清除消息弹窗
 			mui('.mui-bar-nav').on("tap", ".clear-chatting-records", function() {
 				mui('.join-team-verify')[0].style.display = "flex";

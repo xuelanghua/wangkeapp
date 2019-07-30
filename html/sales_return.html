@@ -196,7 +196,7 @@
 			.operating-floor .contact-with-him {
 				color: #2289FF;
 				margin-left: 0.3rem;
-				margin-right: 0.1rem;
+				margin-right: 0.2rem;
 			}
 
 			.mui-bar .mui-icon.search-btn {
@@ -208,6 +208,29 @@
 				font-size: 0.42rem;
 				color: #333333;
 			}
+
+			.mui-btn {
+				width: 1.3rem;
+				height: 0.5rem;
+				border: none;
+				color: #FFFFFF;
+				padding: 0;
+				font-size: 0.24rem;
+				line-height: 0.5rem;
+				border-radius: 0.1rem;
+			}
+
+			.consent-btn {
+				background-color: #F5CA3A;
+			}
+
+			.consent-btn-after {
+				background-color: #999999;
+			}
+
+			.consent-btn.mui-btn:enabled:active {
+				background-color: #ecb600;
+			}
 		</style>
 	</head>
 
@@ -218,222 +241,67 @@
 				<h1 class="mui-title">退货</h1>
 			</header>
 			<div class="mui-content">
-				<div class="mui-slider-group">
-					<div id="item1mobile" class="mui-control-content mui-active">
-						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 6">
-								<div class="mui-card">
-									<div class="mui-card-header">
-										<div class="flex-center">
-											<img class="user-head-img" src="../image/5E0eH.png">
-											<span class="user-name">马飞飞</span>
-											<span class="mui-icon mui-icon-arrowright"></span>
+				<ul class="order-list-groups">
+					<li class="order-list" v-for="i in 6">
+						<div class="mui-card">
+							<div class="mui-card-header">
+								<div class="flex-center">
+									<img class="user-head-img" src="../image/5E0eH.png">
+									<span class="user-name">马飞飞</span>
+									<span class="mui-icon mui-icon-arrowright"></span>
+								</div>
+								<span class="cancel-time">退货申请</span>
+							</div>
+							<div class="mui-card-content" @tap="openDetail(123)">
+								<div class="mui-card-content-inner">
+									<div class="order-inside-list">
+										<div class="inside-list-left">
+											<img src="../image/5E0eH.png">
+											<div class="goods-type-sign">
+												分销商品
+											</div>
 										</div>
-										<span class="cancel-time">退货申请</span>
-									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('await',236)">
-										<div class="mui-card-content-inner">
-											<div class="order-inside-list">
-												<div class="inside-list-left">
-													<img src="../image/5E0eH.png">
-													<div class="goods-type-sign">
-														分销商品
-													</div>
+										<div class="inside-list-right">
+											<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
+											<div class="specification-cont">
+												<div class="specification-left">
+													默认规格
 												</div>
-												<div class="inside-list-right">
-													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
-													<div class="specification-cont">
-														<div class="specification-left">
-															默认规格
-														</div>
-														<div class="specification-right">
-															<span>&yen;30.00</span>
-															<span>x&nbsp;12</span>
-														</div>
-													</div>
-													<div class="distribution-team">
-														<!-- 分销商名字以及团队 -->
-														分销商：土特产团队<span>[大飞飞]</span>
-													</div>
+												<div class="specification-right">
+													<span>&yen;30.00</span>
+													<span>x&nbsp;12</span>
 												</div>
+											</div>
+											<div class="distribution-team">
+												<!-- 分销商名字以及团队 -->
+												分销商：土特产团队<span>[大飞飞]</span>
 											</div>
 										</div>
 									</div>
-									<div class="mui-card-footer">
-										<div class="price-num">
-											<span>共1件商品</span>
-											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
-										</div>
-										<div class="operating-floor">
-											<span>供货商已同意申请</span>
-											<span class="contact-with-him">联系他</span>
-											<button type="button" class="mui-btn mui-btn-warning">
-												同意
-											</button>
-										</div>
-									</div>
 								</div>
-							</li>
-						</ul>
-					</div>
-					<div id="item2mobile" class="mui-control-content">
-						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 3">
-								<div class="mui-card">
-									<div class="mui-card-header">
-										<div class="flex-center">
-											<img class="user-head-img" src="../image/5E0eH.png">
-											<span class="user-name">马飞飞</span>
-											<span class="mui-icon mui-icon-arrowright"></span>
-										</div>
-										<span class="cancel-time">已付款</span>
-									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('sgoods',236)">
-										<div class="mui-card-content-inner">
-											<div class="order-inside-list" v-for="i in 2">
-												<div class="inside-list-left">
-													<img src="../image/5E0eH.png">
-													<div class="goods-type-sign">
-														分销商品待发货
-													</div>
-												</div>
-												<div class="inside-list-right">
-													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
-													<div class="specification-cont">
-														<div class="specification-left">
-															默认规格
-														</div>
-														<div class="specification-right">
-															<span>&yen;30.00</span>
-															<span>x&nbsp;12</span>
-														</div>
-													</div>
-													<div class="distribution-team">
-														分销商：土特产团队<span>[大飞飞]</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="mui-card-footer">
-										<div class="price-num">
-											<span>共1件商品</span>
-											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
-										</div>
-										<div class="net-yield">
-											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
-										</div>
-									</div>
+							</div>
+							<div class="mui-card-footer">
+								<div class="price-num">
+									<span>共1件商品</span>
+									<span>实付款：&nbsp;&yen;30.00(包邮)</span>
 								</div>
-							</li>
-						</ul>
-					</div>
-					<div id="item3mobile" class="mui-control-content">
-						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 30">
-								<div class="mui-card">
-									<div class="mui-card-header">
-										<div class="flex-center">
-											<img class="user-head-img" src="../image/5E0eH.png">
-											<span class="user-name">马飞飞</span>
-											<span class="mui-icon mui-icon-arrowright"></span>
-										</div>
-										<span class="cancel-time">已发货</span>
-									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('shipped',236)">
-										<div class="mui-card-content-inner">
-											<div class="order-inside-list" v-for="i in 3">
-												<div class="inside-list-left">
-													<img src="../image/5E0eH.png">
-													<div class="goods-type-sign">
-														分销商品
-													</div>
-												</div>
-												<div class="inside-list-right">
-													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
-													<div class="specification-cont">
-														<div class="specification-left">
-															默认规格
-														</div>
-														<div class="specification-right">
-															<span>&yen;30.00</span>
-															<span>x&nbsp;12</span>
-														</div>
-													</div>
-													<div class="distribution-team">
-														分销商：土特产团队<span>[大飞飞]</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="mui-card-footer">
-										<div class="price-num">
-											<span>共1件商品</span>
-											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
-										</div>
-										<div class="net-yield">
-											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
-										</div>
-									</div>
+								<div class="operating-floor">
+									<!-- <span>供货商已同意申请</span> -->
+									<!-- <span class="contact-with-him">联系他</span> -->
+									<button type="button" class="mui-btn consent-btn">
+										同意
+									</button>
+									<!-- <button type="button" class="mui-btn consent-btn-after">
+										已同意
+									</button> -->
+									<!-- <button type="button" class="mui-btn mui-btn-danger">
+										确认收货
+									</button> -->
 								</div>
-							</li>
-						</ul>
-					</div>
-					<div id="item4mobile" class="mui-control-content">
-						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 30">
-								<div class="mui-card">
-									<div class="mui-card-header">
-										<div class="flex-center">
-											<img class="user-head-img" src="../image/5E0eH.png">
-											<span class="user-name">马飞飞</span>
-											<span class="mui-icon mui-icon-arrowright"></span>
-										</div>
-										<span class="cancel-time" v-if="i!=2">交易成功</span>
-										<span class="cancel-time" v-else>退货退款成功</span>
-									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('finish',236)">
-										<div class="mui-card-content-inner">
-											<div class="order-inside-list" v-for="i in 3">
-												<div class="inside-list-left">
-													<img src="../image/5E0eH.png">
-													<div class="goods-type-sign">
-														分销商品
-													</div>
-												</div>
-												<div class="inside-list-right">
-													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
-													<div class="specification-cont">
-														<div class="specification-left">
-															默认规格
-														</div>
-														<div class="specification-right">
-															<span>&yen;30.00</span>
-															<span>x&nbsp;12</span>
-														</div>
-													</div>
-													<div class="distribution-team">
-														分销商：土特产团队<span>[大飞飞]</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="mui-card-footer">
-										<div class="price-num">
-											<span>共1件商品</span>
-											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
-										</div>
-										<div class="net-yield">
-											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
-										</div>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
+							</div>
+						</div>
+					</li>
+				</ul>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -457,25 +325,11 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-					// 打开详情
-					openOrderDetail: function(type, id) {
-						if (type == "await") {
-							openPage('order_details_await_pay.html', 'order_details_await_pay', '#f7f7f7', {
-								orderId: id
-							}, "zoom-fade-out")
-						} else if (type == "sgoods") {
-							openPage('order_details_await_sgoods.html', 'order_details_await_sgoods', '#f7f7f7', {
-								orderId: id
-							}, "zoom-fade-out")
-						} else if (type == "shipped") {
-							openPage('order_details_shipped.html', 'order_details_shipped', '#f7f7f7', {
-								orderId: id
-							}, "zoom-fade-out")
-						} else {
-							openPage('order_details_finish.html', 'order_details_finish', '#f7f7f7', {
-								orderId: id
-							}, "zoom-fade-out")
-						}
+					// 打开退货详情
+					openDetail:function(id){
+						openPage('sales_return_detail.html','sales_return_detail','#f7f7f7',{
+							salesId:id
+						});
 					}
 				},
 				mounted: function() {
@@ -487,35 +341,17 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						plus.webview.currentWebview().setStyle({
-							scrollIndicator: 'none'
-						});
+						mui(".mui-content").on("tap", ".consent-btn", function() {
+							plus.nativeUI.confirm("确认同意退货吗?", function(e) {
+								if (e.index == 0) {
+									message("同意");
+								} else {
+									message("取消");
+								}
+							})
+						})
 					})
-					// 初始化两次防止页面乱
-					var viewport = document.documentElement.clientWidth;
-					if (viewport > 750) {
-						viewport = 750
-					}
-					document.documentElement.style.fontSize = viewport / 7.5 + "px";
-					// 初始化字体大小结束
 				}
-			})
-			// 切换订单类型
-			mui('.mui-bar').on('tap', '.order-type-item', function() {
-				var btn = document.querySelectorAll(".order-type-item");
-				for (i = 0; i < btn.length; i++) {
-					btn[i].classList.remove("active");
-				}
-				document.getElementById("bg_full").style.left = this.offsetLeft + 'px';
-				this.classList.add("active");
-			})
-			// 切换选项卡
-			mui('.mui-bar').on('tap', '.mui-control-item', function() {
-				document.getElementById("slider_progressBar").style.left = this.offsetLeft + 'px';
-			})
-			// 搜索页面
-			mui('.mui-bar').on('tap', '.search-btn', function() {
-				openPage('order_search.html', 'order_search', '#ffffff')
 			})
 		</script>
 	</body>
