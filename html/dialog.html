@@ -1230,30 +1230,6 @@
 										send(message);
 									}
 								}
-								if (data.data) {
-									if (data.data.user_id == userInfo.id) {
-										var message = {
-											sender: "self",
-											type: data.data.message_type,
-											content: data.data.content,
-											message_id: data.data.id,
-											is_read: 1,
-										}
-										send(message);
-									} else {
-										mui.post($ajaxUrl + 'chat&action=unread_message', {
-											token: userInfo.token,
-											message_id: data.data2.id
-										}, function(res) {
-											if (res.errno == 0) {
-												// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-												// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-												// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
-												// mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-											}
-										}, 'json')
-									}
-								}
 							}
 						};
 						ws.onclose = function(e) {
