@@ -80,8 +80,68 @@
 			}
 
 			.mui-bar-nav~.mui-content {
-				padding-top: 120px;
+				padding-top: 119px;
 			}
+
+			/* 新样式 */
+			.mui-bar.mui-bar-nav {
+				height: auto;
+				padding: 0;
+				box-shadow: none;
+			}
+
+			.bills-timer {
+				background-color: #FFFFFF;
+				position: relative;
+				height: 75px;
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.28rem;
+			}
+
+			.mui-bar .mui-table-view:before {
+				height: 0;
+			}
+
+			.mui-bar .mui-table-view .mui-table-view-cell.mui-active {
+				background-color: #F7F7F7;
+			}
+
+			.bills-timer .mui-icon-arrowdown {
+				font-size: 0.42rem;
+				color: #333333;
+				padding: 0;
+				margin: 0;
+				margin-bottom: 0.1rem;
+			}
+
+			.bills-timer img {
+				width: 16px;
+				margin-right: 3px;
+				margin-top: -6px;
+				height: auto;
+				border-radius: 0;
+			}
+
+			.bills-timer-left {
+				color: #999999;
+				font-size: 0.26rem;
+			}
+
+			.bills-timer-left span:first-of-type {
+				margin-right: 0.4rem;
+			}
+
+			.nav-bottom-container {
+				background-color: #FFFFFF;
+			}
+
+			.nav-bottom-container .mui-table-view:after {
+				background-color: #DDDDDD;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -96,40 +156,51 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-back mui-pull-left"></a>
-			<h1 class="mui-title">账单</h1>
-		</header>
-		<div id="mui-content" class="mui-content  bill-container" v-cloak>
-			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
-				<div class="mui-scroll">
+		<div id="mui-content">
+			<header class="mui-bar mui-bar-nav">
+				<div class="mui-clearfix nav-container">
+					<a class="mui-action-back mui-icon mui-icon-back mui-pull-left"></a>
+					<h1 class="mui-title">账单</h1>
+				</div>
+				<div class="nav-bottom-container">
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell timer bills-timer">
 							<div id="timer-choice">
-								<div><span class="timer-choice" id="result">{{showTime}}</span><span class="mui-icon mui-icon-arrowdown"></div>
 								<div>
-									<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
-									<span class="title">提现&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
+									<span class="timer-choice" id="result">{{showTime}}</span>
+									<span class="mui-icon mui-icon-arrowdown"></span>
+								</div>
+								<div class="bills-timer-left">
+									<span>收入&nbsp;{{balanceData.income||'0.00'}}</span>
+									<span class="title">支出&nbsp;{{balanceData.expend||'0.00'}}</span>
 								</div>
 							</div>
-							<!-- <div class="more" id="offCanvasShow">
+							<div class="more" id="offCanvasShow">
 								<img src="../image/screen.png"><span id="show-btn">筛选</span>
-							</div> -->
-						</li>
-						<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
-							<img :src="'../image/assert/assert'+list.type+'.png'">
-							<div class="right-cont">
-								<div class="top mui-clearfix">
-									<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
-									<span class="mui-pull-right earning">{{list.number}}</span>
-								</div>
-								<div class="bottom mui-clearfix">
-									<span>{{list.create_time}}</span>
-									<span class="mui-pull-right">{{list.desc}}</span>
-								</div>
 							</div>
 						</li>
 					</ul>
+				</div>
+			</header>
+			<div class="mui-content  bill-container" v-cloak>
+				<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" v-for="(list,index) in balanceData.list" :key="index">
+								<img :src="'../image/assert/assert'+list.type+'.png'">
+								<div class="right-cont">
+									<div class="top mui-clearfix">
+										<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
+										<span class="mui-pull-right earning">{{list.number}}</span>
+									</div>
+									<div class="bottom mui-clearfix">
+										<span>{{list.create_time}}</span>
+										<span class="mui-pull-right">{{list.desc}}</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -193,8 +264,8 @@
 						//setTimeout的目的是等待窗体动画结束后，再执行create webview操作，避免资源竞争，导致窗口动画不流畅；
 						setTimeout(function() {
 							menu = mui.preload({
-								id: 'offcanvas-drag-left-plus-menu',
-								url: 'offcanvas-drag-left-plus-menu.html',
+								id: 'store-offcanvas-drag-left-plus-menu',
+								url: 'store-offcanvas-drag-left-plus-menu.html',
 								styles: {
 									left: "30%",
 									width: '70%',
@@ -274,7 +345,7 @@
 							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
 							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 							// message('没有更多了~');
-						}else if(refresh == 'down'){
+						} else if (refresh == 'down') {
 							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
 						}
 						if (skip == 1) {
@@ -347,7 +418,7 @@
 					showMenu = false;
 				}
 			}
-			// document.getElementById("offCanvasShow").addEventListener('tap', openMenu);
+			document.getElementById("offCanvasShow").addEventListener('tap', openMenu);
 			window.addEventListener('dragright', function(e) {
 				e.detail.gesture.preventDefault();
 			});
@@ -367,7 +438,7 @@
 				document.getElementById('show-btn').innerText = e.detail.text;
 				// logs(app.type);
 			}, false);
-			//重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
+			//重写mui.menu方法，Android版本menu按键 按下可自动打开、关闭侧滑菜单；
 			mui.menu = function() {
 				if (showMenu) {
 					closeMenu();

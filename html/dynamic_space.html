@@ -47,17 +47,18 @@
 			.menu-list.active {
 				width: 100%;
 			}
-			.void-list-tips{
+
+			.void-list-tips {
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				padding: 20% 0;
 			}
-			.void-list-tips img{
+
+			.void-list-tips img {
 				max-width: 140px;
 				height: auto;
 			}
-			
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -135,8 +136,8 @@
 								</div>
 								<div class="operation-menu">
 									<div class="menu-list">
-										<span class="check-detail" @tap="dynamicDetail(d.id)">查看详情</span>
-										<div class="menu-body" :class="'menu-body'+d.id">
+										<span class="check-detail" :class="'check-detail'+ d.id" @tap="dynamicDetail(d.id)">查看详情</span>
+										<div class="menu-body" :class="'menu-body'+ d.id">
 											<div class="menu-arrow"></div>
 											<div v-if="is_self" class="item" @tap="delList(d.id,l,i)">
 												<span class="iconfont icon-delete">&#xe603;</span>删除
@@ -245,7 +246,7 @@
 								document.querySelector('.icon-like' + _t_id).classList.add('heartBeat');
 								setTimeout(function() {
 									document.querySelector('.icon-like' + _t_id).classList.remove('heartBeat');
-									adoreIt();
+									// adoreIt();
 								}, 500);
 								if (app.spaceList[l].list[i].is_thumbs == 1) {
 									app.$set(app.spaceList[l].list[i], "is_thumbs", "0");
@@ -253,8 +254,12 @@
 									app.spaceList[l].list[i].thumbs_user.splice(index, 1);
 								} else {
 									app.$set(app.spaceList[l].list[i], "is_thumbs", "1");
-									app.spaceList[l].list[i].thumbs_user = new Array();
-									app.spaceList[l].list[i].thumbs_user.unshift(userInfo.nickName);
+									if (app.spaceList[l].list[i].thumbs_user.length < 1) {
+										app.spaceList[l].list[i].thumbs_user = new Array();
+										app.spaceList[l].list[i].thumbs_user.unshift(userInfo.nickName);
+									} else {
+										app.spaceList[l].list[i].thumbs_user.unshift(userInfo.nickName);
+									}
 								}
 							} else {
 
