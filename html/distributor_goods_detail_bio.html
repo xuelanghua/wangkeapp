@@ -508,14 +508,15 @@
 			})
 			//改变商品状态
 			function changeGoodsStatus(status) {
+				logs(app.goods_id);
 				mui.post($ajaxUrl + 'goods', {
 					action: 'change_status',
 					token: userInfo.token,
 					status: status,
 					goods_id: app.goods_id,
-					type: "team_goods"
+					// type: "team_goods"
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						if (status == -1) {
 							message('已删除!');

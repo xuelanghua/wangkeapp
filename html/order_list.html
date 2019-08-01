@@ -342,7 +342,7 @@
 			/* 发货窗口 */
 			.deliver-goods-model {
 				position: fixed;
-				z-index: 1045;
+				z-index: 1000;
 				top: 25%;
 				width: 6.46rem;
 				height: 6.21rem;
@@ -352,6 +352,10 @@
 				border-radius: 0.1rem;
 				box-shadow: none;
 				display: none;
+			}
+
+			.mui-poppicker {
+				z-index: 1045;
 			}
 
 			.deliver-goods-model .mui-card-header {
@@ -514,8 +518,9 @@
 				align-items: center;
 				justify-content: center;
 				border-radius: 0.2rem;
-				font-size: 0.32rem;
+				font-size: 0.28rem;
 				color: #555555;
+				flex-shrink: 0;
 			}
 
 			.search-container {
@@ -555,11 +560,11 @@
 						<form action="" onsumit="return false">
 							<div class="mui-input-row search-cont">
 								<div class="search-cont-inside">
-									<span class="mui-icon mui-icon-search" @tap="cancelSearch"></span>
+									<span class="mui-icon mui-icon-search"></span>
 									<input type="search" id="search" v-model="keyword" name="keyword" placeholder="产品名字/搜索订单">
 									<span v-show="keyword" class="mui-icon mui-icon-clear" @tap="keyword=''"></span>
 								</div>
-								<span class="search-btn">搜索</span>
+								<span class="search-btn" @tap="cancelSearch">取消</span>
 							</div>
 						</form>
 					</div>
@@ -920,7 +925,7 @@
 					wait_confirm: 0,
 					finish: 0,
 					// 发货相关
-					address_detail: '云南省 昆明市 官渡区 高原明珠商务中心A座701',
+					address_detail: '',
 					express_id: '',
 					express_name: '请选择',
 					express_num: '',
@@ -942,15 +947,15 @@
 					// 开始搜索
 					starSearch: function() {
 						app.isSeek = true;
-						setTimeout(function(){
+						setTimeout(function() {
 							document.getElementById("search").focus();
-						},300)
+						}, 300)
 					},
 					// 取消搜索
 					cancelSearch: function() {
 						app.keyword = '';
 						app.isSeek = false;
-						skip=1;
+						skip = 1;
 						getGoodsList();
 					},
 					// 打开详情
@@ -1026,6 +1031,13 @@
 						});
 						getOrderNum();
 						getGoodsList();
+						// 重新开启滚动
+						mui("body").on('tap', '.mui-btn', function() {
+							mui('#mui-content').pullRefresh().setStopped(false);
+						})
+						mui('body').on('tap', '.mui-backdrop', function() {
+							mui('#mui-content').pullRefresh().setStopped(false);
+						})
 					})
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -1056,15 +1068,6 @@
 				app.order_sign = this.dataset.sign;
 				mui('#mui-content').pullRefresh().refresh(true);
 				skip = 1;
-				getGoodsList();
-			})
-			// 搜索操作
-			mui('.mui-bar').on('tap', '.search-btn', function() {
-				if (app.keyword == '') {
-					message("请输入关键词！");
-					return false;
-				}
-				document.activeElement.blur();
 				getGoodsList();
 			})
 			// 发货
@@ -1109,6 +1112,7 @@
 			// 选择物流公司
 			var userPicker = new mui.PopPicker();
 			mui(".mui-content").on('tap', '#express_company', function() {
+				mui('#mui-content').pullRefresh().setStopped(true);
 				document.activeElement.blur();
 				mui.post($ajaxUrl + 'util&action=express_list', {}, function(res) {
 					if (res.errno == 0) {
@@ -1121,6 +1125,7 @@
 						})
 						userPicker.setData(data);
 						userPicker.show(function(items) {
+							mui('#mui-content').pullRefresh().setStopped(false);
 							app.express_name = JSON.stringify(items[0].text).replace(/"/g, "");
 							app.express_id = items[0].value;
 						});
@@ -1171,22 +1176,30 @@
 						if (skip == 1) {
 							if (app.order_sign == 1) {
 								app.await_list = res.data;
+								app.await_list_status = false;
 							} else if (app.order_sign == 2) {
 								app.await_sgoods = res.data;
+								app.await_sgoods_status = false;
 							} else if (app.order_sign == 3) {
 								app.send_after = res.data;
+								app.send_after_status = false;
 							} else {
 								app.finish_list = res.data;
+								app.finish_list_status = false;
 							}
 						} else {
 							if (app.order_sign == 1) {
 								app.await_list = app.await_list.concat(res.data);
+								app.await_list_status = false;
 							} else if (app.order_sign == 2) {
 								app.await_sgoods = app.await_sgoods.concat(res.data);
+								app.await_sgoods_status = false;
 							} else if (app.order_sign == 3) {
 								app.send_after = app.send_after.concat(res.data);
+								app.send_after_status = false;
 							} else {
 								app.finish_list = app.finish_list.concat(res.data);
+								app.finish_list_status = false;
 							}
 						}
 						if (pullDirection == "up") {
