@@ -342,7 +342,7 @@
 			/* 发货窗口 */
 			.deliver-goods-model {
 				position: fixed;
-				z-index: 1045;
+				z-index: 1000;
 				top: 25%;
 				width: 6.46rem;
 				height: 6.21rem;
@@ -353,7 +353,9 @@
 				box-shadow: none;
 				display: none;
 			}
-
+			.mui-poppicker{
+				z-index:1045;
+			}
 			.deliver-goods-model .mui-card-header {
 				justify-content: center;
 				height: 1.19rem;
@@ -514,7 +516,7 @@
 				align-items: center;
 				justify-content: center;
 				border-radius: 0.2rem;
-				font-size: 0.32rem;
+				font-size: 0.28rem;
 				color: #555555;
 			}
 
@@ -555,11 +557,11 @@
 						<form action="" onsumit="return false">
 							<div class="mui-input-row search-cont">
 								<div class="search-cont-inside">
-									<span class="mui-icon mui-icon-search" @tap="cancelSearch"></span>
+									<span class="mui-icon mui-icon-search"></span>
 									<input type="search" id="search" v-model="keyword" name="keyword" placeholder="产品名字/搜索订单">
 									<span v-show="keyword" class="mui-icon mui-icon-clear" @tap="keyword=''"></span>
 								</div>
-								<span class="search-btn">搜索</span>
+								<span class="search-btn" @tap="cancelSearch">取消</span>
 							</div>
 						</form>
 					</div>
@@ -920,7 +922,7 @@
 					wait_confirm: 0,
 					finish: 0,
 					// 发货相关
-					address_detail: '云南省 昆明市 官渡区 高原明珠商务中心A座701',
+					address_detail: '',
 					express_id: '',
 					express_name: '请选择',
 					express_num: '',
@@ -1026,6 +1028,13 @@
 						});
 						getOrderNum();
 						getGoodsList();
+						// 重新开启滚动
+						mui("body").on('tap', '.mui-btn', function() {
+							mui('#mui-content').pullRefresh().setStopped(false);
+						})
+						mui('body').on('tap', '.mui-backdrop', function() {
+							mui('#mui-content').pullRefresh().setStopped(false);
+						})
 					})
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -1056,15 +1065,6 @@
 				app.order_sign = this.dataset.sign;
 				mui('#mui-content').pullRefresh().refresh(true);
 				skip = 1;
-				getGoodsList();
-			})
-			// 搜索操作
-			mui('.mui-bar').on('tap', '.search-btn', function() {
-				if (app.keyword == '') {
-					message("请输入关键词！");
-					return false;
-				}
-				document.activeElement.blur();
 				getGoodsList();
 			})
 			// 发货
@@ -1109,6 +1109,7 @@
 			// 选择物流公司
 			var userPicker = new mui.PopPicker();
 			mui(".mui-content").on('tap', '#express_company', function() {
+				mui('#mui-content').pullRefresh().setStopped(true);
 				document.activeElement.blur();
 				mui.post($ajaxUrl + 'util&action=express_list', {}, function(res) {
 					if (res.errno == 0) {
@@ -1121,6 +1122,7 @@
 						})
 						userPicker.setData(data);
 						userPicker.show(function(items) {
+							mui('#mui-content').pullRefresh().setStopped(false);
 							app.express_name = JSON.stringify(items[0].text).replace(/"/g, "");
 							app.express_id = items[0].value;
 						});

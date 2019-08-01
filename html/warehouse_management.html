@@ -114,7 +114,7 @@
 				border-radius: 10px;
 				position: absolute;
 				right: 0;
-				z-index: 16;
+				z-index: 1;
 			}
 			.mui-table-view-cell{
 				padding: 15px;
@@ -639,30 +639,16 @@
 				})
 			} else if (type == 'edit') {
 				//打开编辑页面
-				mui.openWindow({
-					id: 'edit_distribution_goods',
-					url: 'edit_distribution_goods.html',
-					show: {
-						aniShow: 'slide-in-right'
-					},
-					extras: { //extras里面的就是参数了
-						goods_id: currentId
-					},
-					styles: {
-						statusbar: {
-							background: '#f7f7f7',
-						},
-					}
+				openPage('edit_distribution_goods.html','edit_distribution_goods','#f7f7f7',{
+					goods_id: currentId
 				});
 			}
 		})
 		//添加商品
 		document.getElementById('add_goods').addEventListener('tap', function() {
-			fnOpenWin('add_distribution_goods.html', 'add_distribution_goods', {
-				statusbar: {
-					background: '#f7f7f7'
-				}
-			}, '', 'slide-in-right');
+			openPage('add_distribution_goods.html','add_distribution_goods','#f7f7f7',{
+				goods_id: currentId
+			});
 		})
 	}
 	//获取商品列表
