@@ -87,6 +87,12 @@
 			</div>
 			<div class="segment">
 				<ul class="mui-table-view">
+					<li class="mui-table-view-cell clear-cache">
+						<span class="mui-navigate-right">
+							清理缓存
+						</span>
+						<span class="last-desc" id="clear_cache">0 KB</span>
+					</li>
 					<li class="mui-table-view-cell about">
 						<span class="mui-navigate-right">
 							关于旺客
@@ -136,6 +142,16 @@
 			window.addEventListener('changeMobileSuccess', function() {
 				userInfo = getUserInfo();
 				mui('#mobile')[0].innerHTML = userInfo.mobile;
+			})
+			
+			getCacheSize();
+			
+			mui(".mui-content").on("tap", ".clear-cache", function(e) {
+				mui.confirm('确认清除缓存?','提示',['取消','确认'], function (e) {
+					if (e.index == 1) {
+						clearCache();
+					}
+				},'div')
 			})
 
 			// 注销登录
@@ -257,7 +273,7 @@
 			}, false);
 
 			getAppInfo(function(e) {
-				mui('#app_version')[0].innerHTML = '版本号' + e.version;
+				mui('#app_version')[0].innerHTML = '版本号 ' + e.version;
 			})
 			
 			mui('#mobile')[0].innerHTML = userInfo.mobile;
@@ -287,6 +303,60 @@
 					});
 				}
 			}
+		}
+		
+		//以下是读取指定目录下子目录以及文件的大小的方法  
+		function getCacheSize() {
+		    plus.io.resolveLocalFileSystemURL('_doc/', function(entry) { //通过URL参数获取目录对象或文件对象  
+		        var fileSize = 0;
+		        var directoryReader = entry.createReader();
+		        directoryReader.readEntries(function(entries) {   //获取当前目录中的所有文件和子目录
+		            for(var i = 0; i < entries.length; i++) {
+		                if(entries[i].isFile) {
+		                    entries[i].file(function(file) {
+		                        fileSize += (file.size * 0.0009766);
+		                    }, function(e) {
+		                        logs(e.message);
+		                    });  
+		                } else {
+		                    entries[i].getMetadata(function(metadata) {
+		                        fileSize += (metadata.size * 0.0009766); //1字节=0.0009766kb
+		                    }, function() {
+		                        logs(e.message);
+		                    });
+		                }
+		            }
+					setTimeout(function() {
+						fileSize = Math.ceil(fileSize);
+						if (fileSize > 1024) {
+							document.getElementById('clear_cache').innerText = Math.round(fileSize / 1024 * 100) / 100 + ' MB';
+						} else {
+							document.getElementById('clear_cache').innerText = fileSize + ' KB';
+						}
+					}, 500)
+		        }, function(e) {
+		            logs('文件读取失败!');  
+		        });  
+		    }, function(e) {  
+		        logs('文件路径读取失败!');  
+		    });  
+		}  
+		
+		//以下是清除缓存在指定目录中文件的方法
+		function clearCache() {  
+		    plus.io.resolveLocalFileSystemURL('_doc/', function(entry) {  
+		        entry.removeRecursively(function(entry) { //递归删除其下的所有文件及子目录  
+		            mui.toast("缓存清理成功!");  
+		        }, function(e) {  
+		            logs(e.message);  
+		            mui.toast("缓存清理失败!");  
+		        });
+		        setTimeout(function() {  
+		            getCacheSize();
+		        }, 500);
+		    }, function(e) {  
+		        mui.toast('文件路径读取失败');  
+		    });  
 		}
 	</script>
 </html>

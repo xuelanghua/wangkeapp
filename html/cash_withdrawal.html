@@ -90,9 +90,9 @@
 			.band{
 				color: #8CC1FF;
 			}
-			.band:hover{
+			/* .band:hover{
 				color: #999999;
-			}
+			} */
 			.quan{
 				color: #8CC1FF;
 			}
@@ -546,7 +546,7 @@
 						<div class="mui-pull-left shuo">
 							<div>
 								<span style="font-size: 15px;">微信零钱</span>
-								<span style="float: right;margin-top: 1px;margin-right: 60px;">(扣除10%手续费)</span>
+								<span style="float: right;margin-top: 1px;margin-right: 60px;">(扣除{{rate}}%手续费)</span>
 								<div class="clearfix"></div>
 							</div>
 							<!-- <div style="margin-top: 10px;">
@@ -569,7 +569,7 @@
 						<div class="mui-pull-left shuo">
 							<div>
 								<span style="font-size: 15px;">线下打款</span>
-								<span style="float: right;margin-top: 1px;margin-right: 60px;">(扣除10%手续费)</span>
+								<span style="float: right;margin-top: 1px;margin-right: 60px;">(扣除{{rate}}%手续费)</span>
 								<div class="clearfix"></div>
 							</div>
 						</div>
@@ -608,7 +608,7 @@
 					</div>
 					<div style="font-size: 12px;margin-top: 10px;">
 						<span>可提金额</span>
-						<span class="band quan" style="margin-left: 5px;">全部提现 ></span>
+						<span class="band quan" style="margin-left: 5px;">全部提现 &gt;</span>
 					</div>
 				</div>
 				<div class="input">
@@ -621,7 +621,7 @@
 				<div class="tishi">
 					<div>
 						<span class="yu mui-pull-left"></span>
-						<span v-if="enough">额外扣除￥{{(fee * 0.1).toFixed(2)}}手续费（费率10%）</span>
+						<span v-if="enough">额外扣除￥{{(fee * rate / 100).toFixed(2)}}手续费（费率{{rate}}%）</span>
 						<span v-if="!enough" style="color: red;">余额不足</span>
 					</div>
 					<div>
@@ -718,10 +718,12 @@
 				data: {
 					balance: 0,
 					fee: '',
-					enough: true
+					enough: true,
+					rate: 0
 				},
 				created: function() {
 					getMemberInfo();
+					getWithdrawalRate();
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -729,18 +731,22 @@
 						mui('.mui-content').on('tap', '.quan', function() {
 							// vm.fee = (vm.balance / 1.1).toFixed(2);
 							// vm.fee = (vm.balance / 1.1);
-							vm.fee = Math.floor(vm.balance / 1.1 * 100) / 100;
+							if (vm.balance <= 0) {
+								message('没有可提现的金额!');
+								return;
+							}
+							vm.fee = Math.round(vm.balance / (vm.rate / 100 + 1) * 100) / 100;
 						})
 
 						mui('.mui-content').on('tap', '.tixain', function() {
 							document.activeElement.blur();
 							if (!vm.enough || !vm.fee) return;
+							if (vm.fee < 100 || (vm.fee % 100) != 0) {
+								message('小于100部分不能提现');
+								return;
+							}
 							plus.nativeUI.confirm('确认提现?', function(e) {
 								if (e.index == 0) {
-									if (vm.fee < 100 || (vm.fee % 100) != 0) {
-										message('小于100部分不能提现');
-										return;
-									}
 									withdrawDeposit();
 								}
 							})
@@ -752,7 +758,7 @@
 						newFee = parseFloat(newFee);
 						var total = 0;
 						if (!isNaN(newFee)) {
-							total = newFee * 1.1;
+							total = newFee * (vm.rate / 100 + 1);
 						}
 						total = parseFloat(total.toFixed(2));
 						if (total > vm.balance) {
@@ -773,6 +779,19 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						vm.balance = res.data.balance;
+					}
+				}, 'json');
+			}
+			
+			//获取提现费率
+			function getWithdrawalRate() {
+				mui.post($ajaxUrl + 'member', {
+					action: 'withdrawal_rate',
+					token: userInfo.token
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						vm.rate = res.data.withdrawal_rate;
 					}
 				}, 'json');
 			}
@@ -802,58 +821,6 @@
 					showload(1);
 				}, 'json');
 			}
-
-			// 			$(function() {
-			// 				//出现浮动层
-			// 				$(".tixain").click(function() {
-			// 					$(".ftc_wzsf").show();
-			// 				});
-			// 				//关闭浮动
-			// 				$(".close").click(function() {
-			// 					$(".ftc_wzsf").hide();
-			// 					$(".mm_box li").removeClass("mmdd");
-			// 					$(".mm_box li").attr("data", "");
-			// 					i = 0;
-			// 				});
-			// 				//数字显示隐藏
-			// 				$(".xiaq_tb").click(function() {
-			// 					$(".numb_box").slideUp(500);
-			// 				});
-			// 				$(".mm_box").click(function() {
-			// 					$(".numb_box").slideDown(500);
-			// 				});
-			// 				//----
-			// 				var i = 0;
-			// 				$(".nub_ggg li .zf_num").click(function() {
-			// 
-			// 					if (i < 6) {
-			// 						$(".mm_box li").eq(i).addClass("mmdd");
-			// 						$(".mm_box li").eq(i).attr("data", $(this).text());
-			// 						i++
-			// 						if (i == 6) {
-			// 							setTimeout(function() {
-			// 								var data = "";
-			// 								$(".mm_box li").each(function() {
-			// 									data += $(this).attr("data");
-			// 								});
-			// 							}, 100);
-			// 						};
-			// 					}
-			// 				});
-			// 
-			// 				$(".nub_ggg li .zf_del").click(function() {
-			// 					if (i > 0) {
-			// 						i--
-			// 						$(".mm_box li").eq(i).removeClass("mmdd");
-			// 						$(".mm_box li").eq(i).attr("data", "");
-			// 					}
-			// 				});
-			// 
-			// 				$(".nub_ggg li .zf_empty").click(function() {
-			// 					$(".mm_box li").removeClass("mmdd");
-			// 					$(".mm_box li").attr("data", "");
-			// 					i = 0;
-			// 				});
-			// 			});
 		</script>
+	</body>
 </html>

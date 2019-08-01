@@ -84,6 +84,7 @@ function upload(file, cb) {
 					// plus.nativeUI.alert(res.error.message, waiting.close(), '提示', 'OK');
 					plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
 				} else {
+					logs(res);
 					showload(1);
 					cb(res);
 					// waiting.close();

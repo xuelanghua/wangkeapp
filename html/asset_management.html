@@ -193,6 +193,7 @@
 
 		//获取用户余额日志
 		function getUserBalanceLog() {
+			logs(11111);
 			mui.get($ajaxUrl + 'member', {
 				action: 'balance_log',
 				token: userInfo.token,
@@ -201,6 +202,7 @@
 				skip: skip,
 				limit: 6
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					if (refresh == 'up') {
 						vm.balanceData.list = vm.balanceData.list.concat(res.data.list);
@@ -215,7 +217,7 @@
 					if (refresh == 'up') {
 						mui('#pull-refresh').pullRefresh().endPulldownToRefresh();
 						mui('#pull-refresh').pullRefresh().endPullupToRefresh(true);
-					}else if(refresh == 'down') {
+					} else if (refresh == 'down') {
 						mui('#pull-refresh').pullRefresh().endPulldownToRefresh();
 					}
 				}

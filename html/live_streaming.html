@@ -127,8 +127,8 @@
 					<img v-show="say" src="../image/icon/live-streaming-04.png">
 				</div>
 				<div class="menu alone-teacher">
-					<img v-show="checkType==2" src="../image/icon/live-streaming-01.png">
-					<img v-show="checkType==1" src="../image/icon/live-streaming-02.png">
+					<img v-show="checkType==1" src="../image/icon/live-streaming-01.png">
+					<img v-show="checkType==2" src="../image/icon/live-streaming-02.png">
 				</div>
 			</div>
 		</div>
@@ -630,9 +630,9 @@
 										data = JSON.parse(data);
 										logs(data);
 										if (data.error == 0) {
+											vm.say = false;
 											msgData = data.data;
 											// msgData['read_status'] = 1;
-											logs(msgData);
 											send(msgData);
 										} else if (data.error == -2) {
 											message(data.message);
