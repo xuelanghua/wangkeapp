@@ -225,7 +225,8 @@
 						list: []
 					},
 					currentTime: formatDate('y-m', ''),
-					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
+					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月',
+					types: ''
 				},
 				mounted: function() {
 					mui.init({
@@ -327,9 +328,10 @@
 					token: userInfo.token,
 					date: app.currentTime,
 					skip: skip,
-					limit: limit
+					limit: limit,
+					type: app.type
 				}, function(res) {
-					console.log(res);
+					logs(res);
 					if (res.errno == 0) {
 						if (refresh == 'up') {
 							app.balanceData.list = app.balanceData.list.concat(res.data.list);
@@ -433,7 +435,9 @@
 			// 监听菜单点击
 			window.addEventListener("doit", function(e) {
 				app.type = e.detail.type;
+				refresh='';
 				skip = 1;
+				mui('#pullrefresh').pullRefresh().refresh(true);
 				getUserBalanceLog();
 				document.getElementById('show-btn').innerText = e.detail.text;
 				// logs(app.type);

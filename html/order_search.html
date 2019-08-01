@@ -188,7 +188,8 @@
 					keyword: '',
 					search_record: [],
 					isRecord: true,
-					voidRecord: false
+					voidRecord: false,
+					goods_list:[]
 				},
 				created: function() {
 					// 初始化字体大小
@@ -288,6 +289,24 @@
 					// message("请输入用户名或者电话");
 				}
 			});
+			// 获取订单列表
+			function getGoodsList() {
+				mui.post($ajaxUrl + 'order&action=order_list', {
+					token: userInfo.token,
+					type: app.sales,
+					status: app.order_sign,
+					skip: skip,
+					limit: 6
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						app.goods_list = res.data;
+					} else {
+						// 没有拿到数据
+						message(res.message);
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 
