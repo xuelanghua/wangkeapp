@@ -11,7 +11,7 @@
 		<style type="text/css">
 			.mini-card {
 				background-color: #FFFFFF;
-				margin: 0.2rem 0;
+				margin-top: 0.2rem;
 			}
 
 			.mini-card .mui-table-view-cell {
@@ -81,39 +81,47 @@
 				background-color: #DDDDDD;
 				color: #666666;
 			}
-			.last-conatiner{
+
+			.last-conatiner {
 				display: flex;
 				position: relative;
 				padding: 0.45rem 0.35rem 0.45rem 0.9rem;
 			}
-			.last-conatiner ul{
+
+			.last-conatiner ul {
 				list-style: none;
 				margin: 0;
 				padding: 0;
 				width: 100%;
 			}
-			.last-conatiner ul li{
+
+			.last-conatiner ul li {
 				width: 100%;
 				padding-left: 0.61rem;
 				position: relative;
-				padding-bottom: 0.8rem;
+				padding-bottom: 0.5rem;
 				border-left: 1px solid #d4d4d4;
 				margin: 0;
 			}
-			.last-conatiner ul li:last-of-type{
+
+			.last-conatiner ul li:last-of-type {
 				border-left: 0;
 				padding-bottom: 0;
 			}
-			.last-conatiner p{
+
+			.last-conatiner p {
 				font-size: 0.26rem;
 				color: #666666;
 				text-align: justify;
+				-webkit-user-select: auto;
 			}
-			.last-conatiner .timer-cont{
+
+			.last-conatiner .timer-cont {
 				font-size: 0.24rem;
 				color: #d2d2d2;
 			}
-			.last-conatiner .sign{
+
+			.last-conatiner .sign {
 				display: inline-flex;
 				width: 0.42rem;
 				height: 0.42rem;
@@ -129,7 +137,8 @@
 				align-items: center;
 				justify-content: center;
 			}
-			.last-conatiner .sign:after{
+
+			.last-conatiner .sign:after {
 				content: "";
 				width: 0.24rem;
 				height: 0.24rem;
@@ -137,12 +146,15 @@
 				margin: 0;
 				border-radius: 50%;
 			}
-			.last-conatiner li:first-of-type .sign{
+
+			.last-conatiner li:first-of-type .sign {
 				border-color: #F5CA3A;
 			}
-			.last-conatiner li:first-of-type .sign:after{
+
+			.last-conatiner li:first-of-type .sign:after {
 				background-color: #F5CA3A;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -159,32 +171,34 @@
 				<div class="mini-card first-conatiner">
 					<ul>
 						<li>
-							<span>订单编号：233654891516996</span>
-							<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun('233654891516996')">复制</button>
+							<span>订单编号：{{detail.out_trade_no}}</span>
+							<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun(detail.out_trade_no)">复制</button>
 						</li>
 						<li>
-							<span>顺丰快递：233654891516996</span>
-							<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun('233654891516996')">复制</button>
+							<span>{{detail.express_company}}：{{detail.courier_number}}</span>
+							<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun(detail.courier_number)">复制</button>
 						</li>
 					</ul>
 				</div>
 				<div class="mini-card last-conatiner">
 					<ul>
-						<li>
+						<li v-for="(e,i) in express_info" :key="i">
 							<i class="sign"></i>
-							<p>[昆明市] 你的快递已到达官渡区分管中心渡区分管中心渡区分管中心渡区分管中心</p>
-							<p class="timer-cont">2018-05-22 12:20:58</p>
+							<p>{{e.context}}</p>
+							<p class="timer-cont">{{e.time}}</p>
 						</li>
-						<li>
-							<i class="sign"></i>
-							<p>[昆明市] 你的快递已到达官渡区分管中心渡区分管中心渡区分管中心渡区分管中心</p>
-							<p class="timer-cont">2018-05-22 12:20:58</p>
-						</li>
-						<li>
-							<i class="sign"></i>
-							<p>[昆明市] 你的快递已到达官渡区分管中心</p>
-							<p class="timer-cont">2018-05-22 12:20:58</p>
-						</li>
+						<template v-if="!express_info">
+							<li>
+								<i class="sign"></i>
+								<p>[已发货]货物正在出库中</p>
+								<p class="timer-cont">{{detail.express_time}}</p>
+							</li>
+							<li>
+								<i class="sign"></i>
+								<p>已发货</p>
+								<p class="timer-cont">{{detail.express_time}}</p>
+							</li>
+						</template>
 					</ul>
 				</div>
 			</div>
@@ -197,7 +211,8 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					detail: {},
+					express_info: []
 				},
 				created: function() {
 					// 初始化字体大小
@@ -243,7 +258,21 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						//plus.navigator.setStatusBarStyle("dark");
+						app.detail = self.detail;
+						showload();
+						mui.get($ajaxUrl + 'order', {
+							token: userInfo.token,
+							action: 'get_express_info',
+							order_id: app.detail.id
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								app.express_info = res.data.expressInfo.data;
+							} else {
+								logs(res.message);
+							}
+							showload(1);
+						}, 'json');
 					})
 				}
 			})

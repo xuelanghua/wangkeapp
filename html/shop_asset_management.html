@@ -28,6 +28,37 @@
 			.bill-container .expend{
 				color: #333333;
 			}
+			.bill-container .bill-title {
+			  max-width: 4rem;
+			  line-height: 1.2;
+			  color: #333333;
+			}
+			.service-award-container .mui-table-view .top {
+			  font-size: 0.3rem;
+			  color: #333333;
+			  margin-bottom: 0;
+			}
+			.bill-container .top{
+				margin-bottom: 0;
+			}
+			.service-award-container .mui-table-view .right-cont p{
+				padding-bottom: 0;
+			}
+			.bill-container .bottom .timer{
+				font-size: 0.22rem;
+				color: #999999;
+			}
+			.bill-container .price-container{
+				display: flex;
+				align-items: center;
+				font-size: 0.24rem;
+				color: #999;
+				line-height: 1;
+				margin-top: 0.2rem;
+			}
+			.bill-container .price-container span:first-of-type{
+				margin-right: 0.75rem;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -82,7 +113,7 @@
 							<h4>{{currentTime}}</h4>
 							<div>
 								<span>收入&nbsp;&nbsp;</span><span>{{balanceData.income||'0.00'}}</span>
-								<span class="title">提现&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
+								<span class="title">支出&nbsp;&nbsp;</span><span>{{balanceData.expend||'0.00'}}</span>
 							</div>
 						</div>
 						<div class="more">
@@ -93,13 +124,19 @@
 						<img :src="'../image/assert/assert'+list.type+'.png'">
 						<div class="right-cont">
 							<div class="top mui-clearfix">
-								<div class="mui-ellipsis bill-title mui-pull-left">{{list.title}}</div>
+								<div class="mui-pull-left">
+									<p class="mui-ellipsis bill-title ">{{list.title}}</p>
+									<div class="price-container">
+										<span  v-if="list.type==17">订单金额：&yen;{{list.total_price}}</span>
+										<span v-if="list.type==18">提成金额：&yen;30.00</span>
+									</div>
+								</div>
 								<span class="mui-pull-right earning" :class="list.number>0?'':'expend'">
 									<template v-if="list.number>0">+</template>{{list.number}}
 								</span>
 							</div>
 							<div class="bottom mui-clearfix">
-								<span>{{list.create_time}}</span>
+								<span class="timer">{{list.create_time}}</span>
 								<span class="mui-pull-right">{{list.desc}}</span>
 							</div>
 						</div>

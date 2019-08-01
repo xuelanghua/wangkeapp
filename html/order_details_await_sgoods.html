@@ -458,15 +458,15 @@
 							</p>
 							<button type="button" class="mui-btn mui-btn-outlined modification-address">修改</button>
 						</div>
-						<p>{{address_detail}}</p>
+						<p>{{address}}{{address_detail}}</p>
 					</div>
 				</div>
 				<div class="customer-info">
 					<div>
-						<img src="../image/5E0eH.png">
-						<span>收件人嘛</span>
+						<img :src="detail.user_avatar">
+						<span>{{detail.user_name}}</span>
 					</div>
-					<div>
+					<div @tap="contact(detail.to_uid,detail.user_name,detail.user_avatar)">
 						<span>联系TA</span>
 						<span class="mui-icon mui-icon-arrowright"></span>
 					</div>
@@ -474,27 +474,29 @@
 			</div>
 			<div class="mini-card">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" v-for="i in 3">
+					<li class="mui-table-view-cell" v-for="(goods,index) in goods_item" :key="index">
 						<div class="goods-info">
 							<div class="goods-img">
-								<img src="../image/5E0eH.png">
-								<span>分销商品</span>
+								<img :src="goods.cover">
+								<span v-if="detail.team_order==1">分销商品</span>
 							</div>
 							<div class="goods-desc">
-								<p class="mui-ellipsis goods-title">四件套全棉纯棉田园风小清新被被套套四件套全棉纯棉田园风小清新被被套套</p>
+								<p class="mui-ellipsis goods-title">{{goods.name}}</p>
 								<div class="arguments-cont">
-									<div class="mui-badge">默认规格</div>
-									<div class="price-cont"><span class="price">&yen;20.00</span><span>x1</span></div>
+									<div v-if="goods.content" class="mui-badge">{{goods.content}}</div>
+									<div class="price-cont">
+										<span class="price">&yen;{{goods.price}}</span>
+										<span>x{{goods.number}}</span>
+									</div>
 								</div>
-								<!-- 如果是分销商 -->
-								<div class="team-name-cont mui-hidden">
-									<span class="price">货源：土特产团队</span>
+								<div v-if="detail.team_order==1&&sales==1" class="team-name-cont">
+									<span v-if="goods.team_info.name" class="price">货源：{{goods.team_info.name}}</span>
 								</div>
 							</div>
 						</div>
-						<div class="mini-list-btm">
-							<div>分销商：土特产团队<span class="team-boss-name">[飞大大]</span></div>
-							<div class="royalty">提成：<span>&yen;5.00</span></div>
+						<div v-if="detail.team_order==0&&sales==2">
+							<div>分销商：{{goods.team_info.name}}<span class="team-boss-name">[goods.team_info.captain_name]</span></div>
+							<div class="royalty">提成：<span>&yen;{{goods.team_info.commission}}</span></div>
 						</div>
 					</li>
 				</ul>
@@ -503,22 +505,26 @@
 				<ul class="mui-table-view summary-container">
 					<li class="mui-table-view-cell">
 						<div>
-							<span>共2件商品</span><span>&yen;50.00</span>
+							<span v-if="goods_item">共{{goods_item.length}}件商品</span><span>&yen;{{detail.total_price}}</span>
 						</div>
 						<div>
-							<span>运费</span><span>包邮</span>
+							<span>运费</span>
+							<span>
+								<template v-if="detail.freight>0">{{detail.freight}}</template>
+								<template v-else>包邮</template>
+							</span>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
 						<div>
-							<span>待付款</span><span class="await-pay-sum">&yen;50.00</span>
+							<span>实付款</span><span class="await-pay-sum">&yen;{{detail.total_price}}</span>
 						</div>
-						<div>
+						<div v-if="detail.team_order==1">
 							<!-- 队长 -->
-							<span class="mui-hidden">净收益</span>
+							<span v-if="sales==1">提成</span>
 							<!-- 分销商 -->
-							<span>提成</span>
-							<span class="net-profit-sum">&yen;5</span>
+							<span v-else>净收益</span>
+							<span class="net-profit-sum">&yen;{{detail.total_commission}}</span>
 						</div>
 					</li>
 				</ul>
@@ -526,17 +532,17 @@
 			<div class="mini-card last-conatiner">
 				<ul>
 					<li>
-						<span>订单编号：233654891516996</span>
-						<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun('233654891516996')">复制</button>
+						<span>订单编号：{{detail.out_trade_no}}</span>
+						<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun(detail.out_trade_no)">复制</button>
 					</li>
 					<li>
-						<span>订单状态：未支付</span>
+						<span>订单状态：已付款</span>
 					</li>
 					<li>
-						<span>下单时间：2019-01-28 09:28.59</span>
+						<span>下单时间：{{detail.create_time}}</span>
 					</li>
 					<li>
-						<span>付款时间：2019-01-28 09:28.59</span>
+						<span>付款时间：{{detail.pay_time}}</span>
 					</li>
 				</ul>
 			</div>
@@ -583,12 +589,17 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					recipients: '刘备备',
-					phone: '13888888888',
-					address_detail: '云南省 昆明市 官渡区 高原明珠商务中心A座701',
+					recipients: '',
+					phone: '',
+					address: '',
+					address_detail: '',
 					express_id: '',
-					express_name: '请选择',
-					express_num: ''
+					express_name: '',
+					express_num: '',
+					order_id: '',
+					sales: '',
+					goods_item: [],
+					detail: {}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -600,6 +611,15 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
+					// 联系买家
+					contact: function(cid, chatName, avatar) {
+						openPage('dialog.html', 'dialog', '#f7f7f7', {
+							cid: cid,
+							chatName: chatName,
+							avatar: avatar,
+							barStyle: 'dark'
+						});
+					},
 					//  复制方法
 					copy_fun: function(copy) {
 						//判断是安卓还是ios
@@ -634,7 +654,9 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						//plus.navigator.setStatusBarStyle("dark");
+						app.order_id = self.orderId;
+						app.sales = self.sales;
+						getDetailData();
 					})
 				}
 			})
@@ -713,6 +735,24 @@
 					}, 500);
 				}
 			}, false);
+			// 详情资料
+			function getDetailData() {
+				mui.post($ajaxUrl + 'order&action=order_detail', {
+					token: userInfo.token,
+					order_id: app.order_id
+				}, function(res) {
+					logs(res);
+					var data = res.data;
+					if (res.errno == 0) {
+						app.detail = data;
+						app.recipients = data.name;
+						app.phone = data.phone;
+						app.address = data.address;
+						app.address_detail = data.address_detail;
+						app.goods_item = data.item;
+					} else {}
+				}, 'json');
+			}
 		</script>
 	</body>
 

@@ -8,11 +8,9 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
 		<style type="text/css">
-			[v-cloak] {
-				display: none;
-			}
-
 			.mui-bar {
 				height: auto;
 			}
@@ -75,7 +73,7 @@
 				align-items: center;
 				height: 44px;
 				overflow: hidden;
-				padding-top: 10px;
+				/* padding-top: 10px; */
 			}
 
 			.mui-control-content {
@@ -90,7 +88,7 @@
 			}
 
 			.header-bottom {
-				margin-top: 5px;
+				/* margin-top: 5px; */
 				position: relative;
 			}
 
@@ -148,6 +146,7 @@
 			.mui-card-footer:before,
 			.mui-card-header:after {
 				left: 15px;
+				background-color: #ececec;
 			}
 
 			.mui-card-header {
@@ -177,6 +176,7 @@
 
 			.order-inside-list {
 				margin-bottom: 0.26rem;
+				padding: 0.1rem 0;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
@@ -303,272 +303,631 @@
 				color: #CC9C2D;
 			}
 
-			.mui-bar .mui-icon.search-btn {
+			.mui-bar .mui-icon.show-search-btn {
 				position: absolute;
 				right: 20px;
-				background-color: #F2F2F2;
+				background-color: #eaeaea;
 				border-radius: 50%;
 				padding: 0.04rem;
 				font-size: 0.42rem;
 				color: #333333;
 			}
+
+			.mui-control-content {
+				height: auto;
+			}
+
+			.deliver-goods {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				padding-top: 0.1rem;
+			}
+
+			.deliver-goods .mui-btn-outlined {
+				background-color: #F5CA3A;
+				width: 1.3rem;
+				height: 0.5rem;
+				padding: 0;
+				border: none;
+				color: #FFFFFF;
+			}
+
+			.deliver-goods .mui-btn:enabled:active {
+				background-color: #F0AD4E;
+				color: #FFFFFF;
+			}
+
+			/* 发货窗口 */
+			.deliver-goods-model {
+				position: fixed;
+				z-index: 1045;
+				top: 25%;
+				width: 6.46rem;
+				height: 6.21rem;
+				left: 0.52rem;
+				margin: 0;
+				/* border: 1px solid #000000; */
+				border-radius: 0.1rem;
+				box-shadow: none;
+				display: none;
+			}
+
+			.deliver-goods-model .mui-card-header {
+				justify-content: center;
+				height: 1.19rem;
+				font-size: 0.35rem;
+				color: #474747;
+				box-shadow: none;
+			}
+
+			.mui-card-header:after {
+				background-color: #ececec;
+			}
+
+			.deliver-goods-model ul {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+
+			.mui-card-content-inner {
+				padding: 0 0.3rem;
+			}
+
+			.deliver-goods-model li {
+				margin: 0.5rem 0;
+				border-radius: 0.1rem;
+				background-color: #F2F2F2;
+				display: flex;
+				align-items: center;
+				height: 1rem;
+				padding: 0 0.2rem;
+				position: relative;
+			}
+
+			.deliver-goods-model .first-section {
+				justify-content: space-between;
+			}
+
+			.deliver-goods-model .second-section {
+				padding-right: 0;
+			}
+
+			.deliver-goods-model .ensure-deliver-goods {
+				font-size: 0.3rem;
+				background-color: #F5CA3A;
+				color: #FFFFFF;
+				justify-content: center;
+				margin-top: 0.7rem;
+				margin-bottom: 0;
+			}
+
+			.express-title {
+				color: #999999;
+				margin-right: 0.4rem;
+			}
+
+			.express-title.mui-navigate-right:after {
+				font-size: 0.36rem;
+				right: 0.2rem;
+			}
+
+			.deliver-goods-model span {
+				font-size: 0.3rem;
+				flex-shrink: 0;
+			}
+
+			.deliver-goods-model input {
+				margin: 0;
+				padding: 0;
+				height: 32px;
+				/* width: 3.6rem; */
+				flex-grow: 1;
+				font-size: 0.28rem;
+				margin: 0 0.2rem;
+				border: none;
+				background-color: transparent;
+			}
+
+			.deliver-goods-model .scan-btn {
+				height: 100%;
+				/* background-color: #0062CC; */
+				padding: 0 0.2rem;
+				display: inline-flex;
+				flex-shrink: 0;
+				align-items: center;
+				border-radius: 0.1rem;
+			}
+
+			.scan-btn img {
+				width: 0.36rem;
+				height: 0.36rem;
+			}
+
+			/* 发货窗口完结 */
+			/* 订单为空 */
+			.void-list-container {
+				width: 100%;
+				padding-top: 30%;
+				display: block;
+			}
+
+			.void-list-container img {
+				display: block;
+				width: 45%;
+				margin: 0 auto;
+			}
+
+			/* 搜索*/
+			.search-cont {
+				/* background-color: #0062CC; */
+				display: flex;
+				align-items: center;
+				position: relative;
+				padding-top: 0;
+				justify-content: space-between;
+			}
+
+			.search-cont .search-cont-inside {
+				position: relative;
+				margin-left: 2%;
+				display: flex;
+				flex-grow: 1;
+			}
+
+			.search-cont .search-cont-inside input {
+				margin-bottom: 0;
+				background-color: #DDDDDD;
+				border-radius: 0.4rem;
+				padding: 0.1rem 0.6rem;
+				text-align: left;
+				flex-grow: 1;
+				margin: 0;
+			}
+
+			.search-cont .mui-icon-search {
+				position: absolute;
+				left: 0.1rem;
+				font-size: 0.42rem;
+			}
+
+			.search-cont .mui-icon-clear {
+				position: absolute;
+				right: 0.1rem;
+				font-size: 0.42rem;
+				color: #999999;
+			}
+
+			.search-cont-inside {
+				position: relative;
+				display: flex;
+				align-items: center;
+				flex-grow: 1;
+			}
+
+			.search-btn {
+				display: inline-flex;
+				height: 32px;
+				padding: 0 5px;
+				align-items: center;
+				justify-content: center;
+				border-radius: 0.2rem;
+				font-size: 0.32rem;
+				color: #555555;
+			}
+
+			.search-container {
+				margin-left: 0.5rem;
+				/* background-color: #0062CC; */
+				width: 100%;
+				-webkit-transition: display 0.5s ease-in-out;
+				transition: display 0.5s ease-in-out;
+			}
+
+			input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.26rem;
+			}
+
+			.change-container {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 100%;
+				-webkit-transition: display 0.5s ease-in-out;
+				transition: display 0.5s ease-in-out;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 
 	<body>
-		<div id="mui-content" v-cloak>
+		<div id="mui-content" class="mui-clearfix" v-cloak>
 			<header class="mui-bar mui-bar-nav">
 				<div class="header-top">
 					<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
-					<div class="order-type">
-						<i id="bg_full"></i>
-						<span class="order-type-item active" data-order="1">供货订单</span>
-						<span class="order-type-item" data-order="2">分销订单</span>
+					<div v-show="isSeek" class="search-container">
+						<form action="" onsumit="return false">
+							<div class="mui-input-row search-cont">
+								<div class="search-cont-inside">
+									<span class="mui-icon mui-icon-search" @tap="cancelSearch"></span>
+									<input type="search" id="search" v-model="keyword" name="keyword" placeholder="产品名字/搜索订单">
+									<span v-show="keyword" class="mui-icon mui-icon-clear" @tap="keyword=''"></span>
+								</div>
+								<span class="search-btn">搜索</span>
+							</div>
+						</form>
 					</div>
-					<span class="mui-icon mui-icon-search search-btn"></span>
+					<div v-show="!isSeek" class="change-container">
+						<div class="order-type">
+							<i id="bg_full"></i>
+							<span class="order-type-item active" data-order="1">供货订单</span>
+							<span class="order-type-item" data-order="2">分销订单</span>
+						</div>
+						<span class="mui-icon mui-icon-search show-search-btn" @tap="starSearch"></span>
+					</div>
 				</div>
+
 				<div class="header-bottom">
 					<div class="mui-segmented-control mui-segmented-control-inverted">
-						<a class="mui-control-item mui-active" href="#item1mobile">
-							待付款(10)
+						<a class="mui-control-item mui-active" data-sign="1" href="#item1mobile">
+							待付款({{wait_payment}})
 						</a>
-						<a class="mui-control-item" href="#item2mobile">
-							待发货(10)
+						<a class="mui-control-item" data-sign="2" href="#item2mobile">
+							待发货({{wait_deliver}})
 						</a>
-						<a class="mui-control-item" href="#item3mobile">
-							已发货(10)
+						<a class="mui-control-item" data-sign="3" href="#item3mobile">
+							已发货({{wait_confirm}})
 						</a>
-						<a class="mui-control-item" href="#item4mobile">
-							已完成
+						<a class="mui-control-item" data-sign="4" href="#item4mobile">
+							已完成({{finish}})
 						</a>
 					</div>
 					<div id="slider_progressBar" class="slider-progressBar"></div>
 				</div>
 			</header>
 			<div class="mui-content">
-				<div class="mui-slider-group">
-					<div id="item1mobile" class="mui-control-content mui-active">
-						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 6">
-								<div class="mui-card">
-									<div class="mui-card-header">
-										<div class="flex-center">
-											<img class="user-head-img" src="../image/5E0eH.png">
-											<span class="user-name">马飞飞</span>
-											<span class="mui-icon mui-icon-arrowright"></span>
-										</div>
-										<span class="cancel-time">5小时后自动取消</span>
+				<div id="item1mobile" class="mui-control-content mui-active mui-clearfix">
+					<ul class="order-list-groups">
+						<li class="order-list" v-for="(al,idx) in await_list" :key="idx">
+							<div class="mui-card">
+								<div class="mui-card-header">
+									<div class="flex-center">
+										<img class="user-head-img" :src="al.user_avatar">
+										<span class="user-name">{{al.user_name}}</span>
+										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('await',236)">
-										<div class="mui-card-content-inner">
-											<div class="order-inside-list" v-for="i in 3">
-												<div class="inside-list-left">
-													<img src="../image/5E0eH.png">
-													<div class="goods-type-sign">
-														分销商品
+									<span class="cancel-time">
+										<!-- <template v-if="countDown(al.over_time)>0">{{countDown(al.over_time)}}</template>
+										<template v-else>0</template> -->
+										{{countDown(al.over_time)}}分钟后自动取消
+									</span>
+								</div>
+								<div class="mui-card-content">
+									<div class="mui-card-content-inner">
+										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('await',al.id)">
+											<div class="inside-list-left">
+												<img :src="item.cover">
+												<div v-if="al.team_order" class="goods-type-sign">
+													分销商品
+												</div>
+											</div>
+											<div class="inside-list-right">
+												<p class="mui-ellipsis">{{item.name}}</p>
+												<div class="specification-cont">
+													<div class="specification-left">
+														{{item.content}}
+													</div>
+													<div class="specification-right">
+														<span>&yen;{{item.price}}</span>
+														<span>x&nbsp;{{item.number}}</span>
 													</div>
 												</div>
-												<div class="inside-list-right">
-													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
-													<div class="specification-cont">
-														<div class="specification-left">
-															默认规格
-														</div>
-														<div class="specification-right">
-															<span>&yen;30.00</span>
-															<span>x&nbsp;12</span>
-														</div>
-													</div>
-													<div class="distribution-team">
-														分销商：土特产团队<span>[大飞飞]</span>
-													</div>
+												<div v-show="sales==1" class="distribution-team">
+													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
+												</div>
+												<div v-show="sales==2" class="distribution-team">
+													货源：{{item.team_info.name}}
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="mui-card-footer">
-										<div class="price-num">
-											<span>共1件商品</span>
-											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
-										</div>
-										<div class="net-yield">
-											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
-										</div>
+								</div>
+								<div class="mui-card-footer">
+									<div class="price-num">
+										<span v-if="al.item">共{{al.item.length}}件商品</span>
+										<span>待付款：&nbsp;&yen;{{al.total_price}}
+											<template v-if="al.freight==0">(包邮)</template>
+											<template v-else>{{al.freight}}</template>
+										</span>
+									</div>
+									<div v-show="sales==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									</div>
+									<div v-show="sales==2" class="net-yield">
+										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
 									</div>
 								</div>
-							</li>
-						</ul>
+							</div>
+						</li>
+					</ul>
+					<div v-show="await_list_status" class="void-list-container">
+						<img src="../image/icon/void-data.png">
 					</div>
-					<div id="item2mobile" class="mui-control-content">
-						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 3">
-								<div class="mui-card">
-									<div class="mui-card-header">
-										<div class="flex-center">
-											<img class="user-head-img" src="../image/5E0eH.png">
-											<span class="user-name">马飞飞</span>
-											<span class="mui-icon mui-icon-arrowright"></span>
-										</div>
-										<span class="cancel-time">已付款</span>
+				</div>
+				<div id="item2mobile" class="mui-control-content">
+					<ul class="order-list-groups">
+						<li class="order-list" v-for="(al,idx) in await_sgoods" :key="idx">
+							<div class="mui-card">
+								<div class="mui-card-header">
+									<div class="flex-center">
+										<img class="user-head-img" :src="al.user_avatar">
+										<span class="user-name">{{al.user_name}}</span>
+										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('sgoods',236)">
-										<div class="mui-card-content-inner">
-											<div class="order-inside-list" v-for="i in 2">
-												<div class="inside-list-left">
-													<img src="../image/5E0eH.png">
-													<div class="goods-type-sign">
-														分销商品待发货
+									<span class="cancel-time">
+										已付款
+									</span>
+								</div>
+								<div class="mui-card-content">
+									<div class="mui-card-content-inner">
+										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('sgoods',al.id)">
+											<div class="inside-list-left">
+												<img :src="item.cover">
+												<div v-if="al.team_order" class="goods-type-sign">
+													分销商品
+												</div>
+											</div>
+											<div class="inside-list-right">
+												<p class="mui-ellipsis">{{item.name}}</p>
+												<div class="specification-cont">
+													<div class="specification-left">
+														{{item.content}}
+													</div>
+													<div class="specification-right">
+														<span>&yen;{{item.price}}</span>
+														<span>x&nbsp;{{item.number}}</span>
 													</div>
 												</div>
-												<div class="inside-list-right">
-													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
-													<div class="specification-cont">
-														<div class="specification-left">
-															默认规格
-														</div>
-														<div class="specification-right">
-															<span>&yen;30.00</span>
-															<span>x&nbsp;12</span>
-														</div>
-													</div>
-													<div class="distribution-team">
-														分销商：土特产团队<span>[大飞飞]</span>
-													</div>
+												<div v-show="sales==1" class="distribution-team">
+													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
+												</div>
+												<div v-show="sales==2" class="distribution-team">
+													货源：{{item.team_info.name}}
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="mui-card-footer">
-										<div class="price-num">
-											<span>共1件商品</span>
-											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
-										</div>
-										<div class="net-yield">
-											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
-										</div>
+								</div>
+								<div class="mui-card-footer">
+									<div class="price-num">
+										<span v-if="al.item">共{{al.item.length}}件商品</span>
+										<span>待付款：&nbsp;&yen;{{al.total_price}}
+											<template v-if="al.freight==0">(包邮)</template>
+											<template v-else>{{al.freight}}</template>
+										</span>
+									</div>
+									<div v-show="sales==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									</div>
+									<div v-show="sales==2" class="net-yield">
+										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									</div>
+									<div v-if="sales==1" class="deliver-goods">
+										<button type="button" :data-ids="al.id" class="mui-btn mui-btn-outlined deliver-goods-btn">发货</button>
 									</div>
 								</div>
-							</li>
-						</ul>
+							</div>
+						</li>
+					</ul>
+					<div v-show="await_sgoods_status" class="void-list-container">
+						<img src="../image/icon/void-data.png">
 					</div>
-					<div id="item3mobile" class="mui-control-content">
-						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 30">
-								<div class="mui-card">
-									<div class="mui-card-header">
-										<div class="flex-center">
-											<img class="user-head-img" src="../image/5E0eH.png">
-											<span class="user-name">马飞飞</span>
-											<span class="mui-icon mui-icon-arrowright"></span>
-										</div>
-										<span class="cancel-time">已发货</span>
+				</div>
+				<div id="item3mobile" class="mui-control-content">
+					<ul class="order-list-groups">
+						<li class="order-list" v-for="(al,idx) in send_after" :key="idx">
+							<div class="mui-card">
+								<div class="mui-card-header">
+									<div class="flex-center">
+										<img class="user-head-img" :src="al.user_avatar">
+										<span class="user-name">{{al.user_name}}</span>
+										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('shipped',236)">
-										<div class="mui-card-content-inner">
-											<div class="order-inside-list" v-for="i in 3">
-												<div class="inside-list-left">
-													<img src="../image/5E0eH.png">
-													<div class="goods-type-sign">
-														分销商品
+									<span class="cancel-time">
+										已发货
+									</span>
+								</div>
+								<div class="mui-card-content">
+									<div class="mui-card-content-inner">
+										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('shipped',al.id)">
+											<div class="inside-list-left">
+												<img :src="item.cover">
+												<div v-if="al.team_order" class="goods-type-sign">
+													分销商品
+												</div>
+											</div>
+											<div class="inside-list-right">
+												<p class="mui-ellipsis">{{item.name}}</p>
+												<div class="specification-cont">
+													<div class="specification-left">
+														{{item.content}}
+													</div>
+													<div class="specification-right">
+														<span>&yen;{{item.price}}</span>
+														<span>x&nbsp;{{item.number}}</span>
 													</div>
 												</div>
-												<div class="inside-list-right">
-													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
-													<div class="specification-cont">
-														<div class="specification-left">
-															默认规格
-														</div>
-														<div class="specification-right">
-															<span>&yen;30.00</span>
-															<span>x&nbsp;12</span>
-														</div>
-													</div>
-													<div class="distribution-team">
-														分销商：土特产团队<span>[大飞飞]</span>
-													</div>
+												<div v-show="sales==1" class="distribution-team">
+													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
+												</div>
+												<div v-show="sales==2" class="distribution-team">
+													货源：{{item.team_info.name}}
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="mui-card-footer">
-										<div class="price-num">
-											<span>共1件商品</span>
-											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
-										</div>
-										<div class="net-yield">
-											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
-										</div>
+								</div>
+								<div class="mui-card-footer">
+									<div class="price-num">
+										<span v-if="al.item">共{{al.item.length}}件商品</span>
+										<span>待付款：&nbsp;&yen;{{al.total_price}}
+											<template v-if="al.freight==0">(包邮)</template>
+											<template v-else>{{al.freight}}</template>
+										</span>
+									</div>
+									<div v-show="sales==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									</div>
+									<div v-show="sales==2" class="net-yield">
+										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
 									</div>
 								</div>
-							</li>
-						</ul>
+							</div>
+						</li>
+					</ul>
+					<div v-show="send_after_status" class="void-list-container">
+						<img src="../image/icon/void-data.png">
 					</div>
-					<div id="item4mobile" class="mui-control-content">
-						<ul class="order-list-groups">
-							<li class="order-list" v-for="i in 30">
-								<div class="mui-card">
-									<div class="mui-card-header">
-										<div class="flex-center">
-											<img class="user-head-img" src="../image/5E0eH.png">
-											<span class="user-name">马飞飞</span>
-											<span class="mui-icon mui-icon-arrowright"></span>
-										</div>
-										<span class="cancel-time" v-if="i!=2">交易成功</span>
-										<span class="cancel-time" v-else>退货退款成功</span>
+				</div>
+				<div id="item4mobile" class="mui-control-content">
+					<ul class="order-list-groups">
+						<li class="order-list" v-for="(al,idx) in finish_list" :key="idx">
+							<div class="mui-card">
+								<div class="mui-card-header">
+									<div class="flex-center">
+										<img class="user-head-img" :src="al.user_avatar">
+										<span class="user-name">{{al.user_name}}</span>
+										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
-									<div class="mui-card-content" @tap="openOrderDetail('finish',236)">
-										<div class="mui-card-content-inner">
-											<div class="order-inside-list" v-for="i in 3">
-												<div class="inside-list-left">
-													<img src="../image/5E0eH.png">
-													<div class="goods-type-sign">
-														分销商品
+									<span class="cancel-time">
+										已完成
+									</span>
+								</div>
+								<div class="mui-card-content">
+									<div class="mui-card-content-inner">
+										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('finish',al.id)">
+											<div class="inside-list-left">
+												<img :src="item.cover">
+												<div v-if="al.team_order" class="goods-type-sign">
+													分销商品
+												</div>
+											</div>
+											<div class="inside-list-right">
+												<p class="mui-ellipsis">{{item.name}}</p>
+												<div class="specification-cont">
+													<div class="specification-left">
+														{{item.content}}
+													</div>
+													<div class="specification-right">
+														<span>&yen;{{item.price}}</span>
+														<span>x&nbsp;{{item.number}}</span>
 													</div>
 												</div>
-												<div class="inside-list-right">
-													<p class="mui-ellipsis">四件套全棉纯棉田园风小清新被套套四件套全棉纯棉田园风小清新被套套</p>
-													<div class="specification-cont">
-														<div class="specification-left">
-															默认规格
-														</div>
-														<div class="specification-right">
-															<span>&yen;30.00</span>
-															<span>x&nbsp;12</span>
-														</div>
-													</div>
-													<div class="distribution-team">
-														分销商：土特产团队<span>[大飞飞]</span>
-													</div>
+												<div v-show="sales==1" class="distribution-team">
+													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
+												</div>
+												<div v-show="sales==2" class="distribution-team">
+													货源：{{item.team_info.name}}
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="mui-card-footer">
-										<div class="price-num">
-											<span>共1件商品</span>
-											<span>待付款：&nbsp;&yen;30.00(包邮)</span>
-										</div>
-										<div class="net-yield">
-											净收益：<span class="net-yield-number">&nbsp;&yen;5.00</span>
-										</div>
+								</div>
+								<div class="mui-card-footer">
+									<div class="price-num">
+										<span v-if="al.item">共{{al.item.length}}件商品</span>
+										<span>待付款：&nbsp;&yen;{{al.total_price}}
+											<template v-if="al.freight==0">(包邮)</template>
+											<template v-else>{{al.freight}}</template>
+										</span>
+									</div>
+									<div v-show="sales==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									</div>
+									<div v-show="sales==2" class="net-yield">
+										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
 									</div>
 								</div>
-							</li>
-						</ul>
+							</div>
+						</li>
+					</ul>
+					<div v-show="finish_list_status" class="void-list-container">
+						<img src="../image/icon/void-data.png">
+					</div>
+				</div>
+				<!-- 发货窗口 -->
+				<div class="mui-card deliver-goods-model">
+					<div class="mui-card-header">发货</div>
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner">
+							<ul>
+								<li class="first-section" id="express_company">
+									<span>选择快递</span>
+									<span class="express-title mui-navigate-right">{{express_name}}</span>
+								</li>
+								<li class="second-section">
+									<span>快递单号</span>
+									<input placeholder="请填写快递单号" v-model="express_num" type="number">
+									<div class="scan-btn">
+										<img src="../image/icon/order_details_await_sgoods_02.png">
+									</div>
+								</li>
+								<li class="ensure-deliver-goods">
+									确认发货
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var pullDirection = "";
+			var skip = 1;
+			var mask = mui.createMask(function() {
+				document.querySelector(".deliver-goods-model").style.display = "none";
+			});
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					// 0为供货订单 1为分销订单
-					sales: 0
+					// 1为供货订单 2为分销订单
+					sales: 1,
+					order_sign: 1,
+					await_list: [],
+					await_sgoods: [],
+					send_after: [],
+					finish_list: [],
+					// 状态
+					await_list_status: false,
+					await_sgoods_status: false,
+					send_after_status: false,
+					finish_list_status: false,
+					// 数量
+					wait_payment: 0,
+					wait_deliver: 0,
+					wait_confirm: 0,
+					finish: 0,
+					// 发货相关
+					address_detail: '云南省 昆明市 官渡区 高原明珠商务中心A座701',
+					express_id: '',
+					express_name: '请选择',
+					express_num: '',
+					current_id: '',
+					// 搜索
+					keyword: '',
+					isSeek: false
 				},
 				created: function() {
 					// 初始化字体大小
@@ -580,25 +939,50 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
+					// 开始搜索
+					starSearch: function() {
+						app.isSeek = true;
+						setTimeout(function(){
+							document.getElementById("search").focus();
+						},300)
+					},
+					// 取消搜索
+					cancelSearch: function() {
+						app.keyword = '';
+						app.isSeek = false;
+						skip=1;
+						getGoodsList();
+					},
 					// 打开详情
 					openOrderDetail: function(type, id) {
 						if (type == "await") {
 							openPage('order_details_await_pay.html', 'order_details_await_pay', '#f7f7f7', {
-								orderId: id
+								orderId: id,
+								sales: app.sales
 							}, "zoom-fade-out")
 						} else if (type == "sgoods") {
 							openPage('order_details_await_sgoods.html', 'order_details_await_sgoods', '#f7f7f7', {
-								orderId: id
+								orderId: id,
+								sales: app.sales
 							}, "zoom-fade-out")
 						} else if (type == "shipped") {
 							openPage('order_details_shipped.html', 'order_details_shipped', '#f7f7f7', {
-								orderId: id
+								orderId: id,
+								sales: app.sales
 							}, "zoom-fade-out")
-						}else{
+						} else {
 							openPage('order_details_finish.html', 'order_details_finish', '#f7f7f7', {
-								orderId: id
+								orderId: id,
+								sales: app.sales
 							}, "zoom-fade-out")
 						}
+					},
+					// 计算取消时间
+					countDown: function(endtimer) {
+						var startTime = new Date(); // 开始时间
+						var endTime = new Date(endtimer);
+						var timer = Math.floor((endTime - startTime) / 1000 / 60);
+						return timer;
 					}
 				},
 				mounted: function() {
@@ -606,13 +990,42 @@
 						swipeBack: false,
 						beforeback: function() {
 							//plus.navigator.setStatusBarStyle("light");
+						},
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									getGoodsList();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									pullDirection = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									app.sales = 1;
+									app.order_sign = 1;
+									getGoodsList();
+								}
+							}
 						}
 					});
+
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						plus.webview.currentWebview().setStyle({
 							scrollIndicator: 'none'
 						});
+						getOrderNum();
+						getGoodsList();
 					})
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -631,15 +1044,217 @@
 				}
 				document.getElementById("bg_full").style.left = this.offsetLeft + 'px';
 				this.classList.add("active");
+				app.sales = this.dataset.order;
+				mui('#mui-content').pullRefresh().refresh(true);
+				skip = 1;
+				getOrderNum();
+				getGoodsList();
 			})
 			// 切换选项卡
 			mui('.mui-bar').on('tap', '.mui-control-item', function() {
 				document.getElementById("slider_progressBar").style.left = this.offsetLeft + 'px';
+				app.order_sign = this.dataset.sign;
+				mui('#mui-content').pullRefresh().refresh(true);
+				skip = 1;
+				getGoodsList();
 			})
-			// 搜索页面
+			// 搜索操作
 			mui('.mui-bar').on('tap', '.search-btn', function() {
-				openPage('order_search.html', 'order_search', '#ffffff')
+				if (app.keyword == '') {
+					message("请输入关键词！");
+					return false;
+				}
+				document.activeElement.blur();
+				getGoodsList();
 			})
+			// 发货
+			mui(".mui-content").on('tap', '.deliver-goods-btn', function() {
+				mask.show();
+				app.current_id = this.dataset.ids;
+				document.querySelector(".deliver-goods-model").style.display = "block";
+				// 为了不让弹出滚动穿透
+				document.querySelector(".deliver-goods-model").addEventListener("touchmove", mui.preventDefault);
+			})
+			// 确认发货
+			mui(".mui-content").on('tap', '.ensure-deliver-goods', function() {
+				if (app.express_id == '') {
+					message('请选择快递！');
+					return false;
+				}
+				if (app.express_num == '') {
+					message('请填写快递单号！');
+					return false;
+				}
+				mask.close();
+				//发货
+				mui.post($ajaxUrl + 'order', {
+					action: 'express',
+					token: userInfo.token,
+					order_id: app.current_id,
+					express_id: app.express_id,
+					courier_number: app.express_num
+				}, function(res) {
+					if (res.errno == 0) {
+						message('发货成功!');
+						setTimeout(function() {
+							getOrderNum();
+							getGoodsList();
+						}, 1500)
+					} else {
+						message(res.message);
+					}
+				}, 'json');
+
+			})
+			// 选择物流公司
+			var userPicker = new mui.PopPicker();
+			mui(".mui-content").on('tap', '#express_company', function() {
+				document.activeElement.blur();
+				mui.post($ajaxUrl + 'util&action=express_list', {}, function(res) {
+					if (res.errno == 0) {
+						var data = res.data;
+						data.forEach(function(item) {
+							item.value = item.id;
+							item.text = item.e_name;
+							delete item.id;
+							delete item.e_name;
+						})
+						userPicker.setData(data);
+						userPicker.show(function(items) {
+							app.express_name = JSON.stringify(items[0].text).replace(/"/g, "");
+							app.express_id = items[0].value;
+						});
+					} else {
+
+					}
+				}, 'json');
+			})
+			// 扫一扫
+			mui(".mui-content").on('tap', '.scan-btn', function() {
+				fnOpenWin('odd_scan.html', 'odd_scan', {
+					statusbar: {
+						background: '#000000'
+					}
+				}, '', 'slide-in-right')
+				setStatusBar('#000000', 'light');
+			})
+			// 监听扫码内容
+			window.addEventListener('doit', function(e) {
+				// 转数字
+				var cont = parseInt(e.detail.content);
+				// 判断是否为数字
+				function myIsNaN(value) {
+					return typeof value === 'number' && !isNaN(value);
+				}
+				if (myIsNaN(cont)) {
+					app.express_num = cont;
+					message("扫码成功！");
+				} else {
+					setTimeout(function() {
+						plus.nativeUI.alert("扫码有误，请重新扫码！");
+					}, 500);
+				}
+			}, false);
+
+			// 获取订单列表
+			function getGoodsList() {
+				mui.post($ajaxUrl + 'order&action=order_list', {
+					token: userInfo.token,
+					type: app.sales,
+					status: app.order_sign,
+					skip: skip,
+					limit: 6,
+					goods_name: app.keyword
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						if (skip == 1) {
+							if (app.order_sign == 1) {
+								app.await_list = res.data;
+							} else if (app.order_sign == 2) {
+								app.await_sgoods = res.data;
+							} else if (app.order_sign == 3) {
+								app.send_after = res.data;
+							} else {
+								app.finish_list = res.data;
+							}
+						} else {
+							if (app.order_sign == 1) {
+								app.await_list = app.await_list.concat(res.data);
+							} else if (app.order_sign == 2) {
+								app.await_sgoods = app.await_sgoods.concat(res.data);
+							} else if (app.order_sign == 3) {
+								app.send_after = app.send_after.concat(res.data);
+							} else {
+								app.finish_list = app.finish_list.concat(res.data);
+							}
+						}
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					} else {
+						// 没有拿到数据
+						if (skip == 1) {
+							if (app.order_sign == 1) {
+								app.await_list = [];
+								app.await_list_status = true;
+							} else if (app.order_sign == 2) {
+								app.await_sgoods = [];
+								app.await_sgoods_status = true;
+							} else if (app.order_sign == 3) {
+								app.send_after = [];
+								app.send_after_status = true;
+							} else {
+								app.finish_list = [];
+								app.finish_list_status = true;
+							}
+						} else {
+
+						}
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					}
+				}, 'json');
+			}
+			// 获取数量
+			function getOrderNum() {
+				mui.post($ajaxUrl + 'order&action=order_count', {
+					token: userInfo.token,
+					type: app.sales
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						app.wait_payment = res.data.wait_payment;
+						app.wait_deliver = res.data.wait_deliver;
+						app.wait_confirm = res.data.wait_confirm;
+						app.finish = res.data.finish;
+					} else {}
+				}, 'json');
+			}
+			// 点击键盘的搜索
+			document.getElementById("search").addEventListener("keypress", function(event) {
+				if (app.keyword == '') {
+					message("关键词不能为空");
+					return false;
+				}
+				var keyword = app.keyword.replace(/^\s*|\s*$/g, "");
+				if (event.keyCode == "13" && keyword != '') {
+					document.activeElement.blur();
+					if (app.keyword == '') {
+						message("请输入关键词！");
+						return false;
+					}
+					getGoodsList();
+					event.preventDefault();
+				} else {
+					// message("请输入用户名或者电话");
+				}
+			});
 		</script>
 	</body>
 
