@@ -251,32 +251,40 @@
 				message('你还没有设置时间');
 				return false;
 			}
-			// return false;
-			mui.openWindow({
-				url: "target_manage_detail.html",
-				id: "target_manage_detail",
-				createNew: false, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
-				show: {
-					autoShow: true, //页面loaded事件发生后自动显示，默认为true
-				},
-				styles: {
-					statusbar: {
-						background: '#FFF'
-					}
-				},
-				waiting: {
-					autoShow: true, //自动显示等待框，默认为true
-					title: '正在加载...', //等待对话框上显示的提示内容
-				},
-				extras: {
-					user_target_main_content: user_target_main_content,
-					target_record_url: target_record_url,
-					target_record_time: target_record_time,
-					target_total_money: target_total_money,
-					target_description: target_description,
-					target_time: target_time,
-				},
+			openPage('target_manage_detail.html','target_manage_detail','#ffffff',{
+				user_target_main_content: user_target_main_content,
+				target_record_url: target_record_url,
+				target_record_time: target_record_time,
+				target_total_money: target_total_money,
+				target_description: target_description,
+				target_time: target_time,
 			});
+			// return false;
+			// mui.openWindow({
+			// 	url: "target_manage_detail.html",
+			// 	id: "target_manage_detail",
+			// 	createNew: false, //是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+			// 	show: {
+			// 		autoShow: true, //页面loaded事件发生后自动显示，默认为true
+			// 	},
+			// 	styles: {
+			// 		statusbar: {
+			// 			background: '#FFF'
+			// 		}
+			// 	},
+			// 	waiting: {
+			// 		autoShow: true, //自动显示等待框，默认为true
+			// 		title: '正在加载...', //等待对话框上显示的提示内容
+			// 	},
+			// 	extras: {
+			// 		user_target_main_content: user_target_main_content,
+			// 		target_record_url: target_record_url,
+			// 		target_record_time: target_record_time,
+			// 		target_total_money: target_total_money,
+			// 		target_description: target_description,
+			// 		target_time: target_time,
+			// 	},
+			// });
 		});
 		//绑定录音按键的操作事件
 		bindRecordBtnEvent();

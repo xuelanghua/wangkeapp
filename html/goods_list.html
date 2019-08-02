@@ -654,7 +654,6 @@
 						offset: '0px',
 						auto: false,
 						callback: function() {
-							mui('#goods_container').pullRefresh().refresh(true);
 							skip = 1;
 							getGoodsCount();
 							getGoodsList('down');
@@ -796,15 +795,17 @@
 			token: userInfo.token,
 			type: g_type,
 			skip: skip,
-			limit: 10,
+			limit: 8,
 			goods_name: app.goodsName
 		}, function(res) {
+			// logs(res);
 			if (res.errno == 0) {
 				if (skip == 1) {
 					app[g_type + '_list'] = res.data;
 				} else {
 					app[g_type + '_list'] = app[g_type + '_list'].concat(res.data);
 				}
+				
 				if (res.extra.has_more) {
 					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
 				} else {
@@ -818,6 +819,7 @@
 				}
 				mui('#goods_container').pullRefresh().endPullupToRefresh(true);
 			}
+			
 			if (refresh == "down") {
 				mui('#goods_container').pullRefresh().endPulldownToRefresh();
 			}
