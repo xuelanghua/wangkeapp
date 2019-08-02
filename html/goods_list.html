@@ -805,10 +805,10 @@
 				} else {
 					app[g_type + '_list'] = app[g_type + '_list'].concat(res.data);
 				}
-				if (refresh == "up") {
+				if (res.extra.has_more) {
 					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
-				} else if (refresh == "down") {
-					mui('#goods_container').pullRefresh().endPulldownToRefresh();
+				} else {
+					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
 				}
 				app[g_type + '_status'] = false;
 			} else {
@@ -816,11 +816,10 @@
 					app[g_type + '_list'] = [];
 					app[g_type + '_status'] = true;
 				}
-				if (refresh == "up") {
-					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
-				} else if (refresh == "down") {
-					mui('#goods_container').pullRefresh().endPulldownToRefresh();
-				}
+				mui('#goods_container').pullRefresh().endPullupToRefresh(true);
+			}
+			if (refresh == "down") {
+				mui('#goods_container').pullRefresh().endPulldownToRefresh();
 			}
 		}, 'json');
 	}
