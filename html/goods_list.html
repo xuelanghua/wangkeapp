@@ -430,8 +430,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<!-- <div v-if="lst.check_status==1" class="play" data-type="edit" :data-gtype="lst.is_team_goods"> -->
-											<div  class="play" data-type="edit" :data-gtype="lst.is_team_goods">
+											<div v-if="lst.check_status==1" class="play" data-type="edit" :data-gtype="lst.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -489,7 +488,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+slo.id">
 											<div class="jiao"></div>
-											<div class="play" data-type="edit" :data-gtype="slo.is_team_goods">
+											<div v-if="slo.check_status==1" class="play" data-type="edit" :data-gtype="slo.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -547,7 +546,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div class="play" data-type="edit" :data-gtype="lst.is_team_goods">
+											<div v-if="lst.check_status==1" class="play" data-type="edit" :data-gtype="lst.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -634,7 +633,7 @@
 		},
 		mounted: function() {
 			mui.init({
-				swipeBack: true,
+				swipeBack: false,
 				pullRefresh: {
 					container: "#goods_container",
 					up: {
@@ -800,26 +799,27 @@
 			limit: 10,
 			goods_name: app.goodsName
 		}, function(res) {
-			// logs(res);
 			if (res.errno == 0) {
 				if (skip == 1) {
 					app[g_type + '_list'] = res.data;
-					if (refresh == 'down') {
-						mui('#goods_container').pullRefresh().endPulldownToRefresh();
-					}
 				} else {
 					app[g_type + '_list'] = app[g_type + '_list'].concat(res.data);
+				}
+				if (refresh == "up") {
 					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
+				} else if (refresh == "down") {
+					mui('#goods_container').pullRefresh().endPulldownToRefresh();
 				}
 				app[g_type + '_status'] = false;
 			} else {
-				if (refresh == 'up') {
-					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
-				} else if (refresh == 'down') {
-					mui('#goods_container').pullRefresh().endPulldownToRefresh();
-				} else {
+				if (skip == 1) {
 					app[g_type + '_list'] = [];
 					app[g_type + '_status'] = true;
+				}
+				if (refresh == "up") {
+					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
+				} else if (refresh == "down") {
+					mui('#goods_container').pullRefresh().endPulldownToRefresh();
 				}
 			}
 		}, 'json');
@@ -842,6 +842,7 @@
 		}, function(res) {
 			// logs(res);
 			if (res.errno == 0) {
+				skip = 1;
 				getGoodsCount();
 				getGoodsList();
 				message('操作成功!');
