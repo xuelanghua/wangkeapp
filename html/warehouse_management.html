@@ -471,7 +471,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div v-if="lst.check_status!=1" class="play" data-type="edit">
+											<div class="play" data-type="edit">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -743,7 +743,8 @@
 		//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 		var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
 		var paddeds = document.getElementById("add_goods");
-		if (resizeHeight * 1 < originalHeight * 1) {
+		var focus = document.querySelector('input:focus');
+		if (resizeHeight * 1 < originalHeight * 1 && focus) {
 			paddeds.style.zIndex = '-1';
 			paddeds.style.display = 'none';
 		} else {

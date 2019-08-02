@@ -430,7 +430,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div v-if="lst.check_status==1" class="play" data-type="edit" :data-gtype="lst.is_team_goods">
+											<div v-if="(lst.is_team_goods==1&&lst.check_status==1)||lst.is_team_goods==0" class="play" data-type="edit" :data-gtype="lst.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -488,7 +488,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+slo.id">
 											<div class="jiao"></div>
-											<div v-if="slo.check_status==1" class="play" data-type="edit" :data-gtype="slo.is_team_goods">
+											<div v-if="(slo.is_team_goods==1&&slo.check_status==1)||slo.is_team_goods==0" class="play" data-type="edit" :data-gtype="slo.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -546,7 +546,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div v-if="lst.check_status==1" class="play" data-type="edit" :data-gtype="lst.is_team_goods">
+											<div v-if="(lst.is_team_goods==1&&lst.check_status==1)||lst.is_team_goods==0" class="play" data-type="edit" :data-gtype="lst.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -883,7 +883,8 @@
 		//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 		var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
 		var paddeds = document.getElementById("add_merchandise");
-		if (resizeHeight * 1 < originalHeight * 1) {
+		var focus = document.querySelector('input:focus');
+		if (resizeHeight * 1 < originalHeight * 1 && focus) {
 			paddeds.style.display = 'none';
 		} else {
 			paddeds.style.display = 'flex';

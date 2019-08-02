@@ -388,7 +388,8 @@
 			window.onresize = function() {
 				var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
 				var paddeds = document.querySelector(".btn-section");
-				if (resizeHeight * 1 < originalHeight * 1) {
+				var focus = document.querySelector('input:focus') || document.querySelector('textarea:focus');
+				if (resizeHeight * 1 < originalHeight * 1 && focus) {
 					//resizeHeight<originalHeight证明窗口被挤压了
 					paddeds.style.zIndex = '-1';
 					paddeds.style.display = 'none';
