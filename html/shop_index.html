@@ -391,30 +391,30 @@
 				<div class="top-cont">
 					<div class="header-cont">
 						<div class="header-items">
-							<span>累计收款</span>
-							<span>10.00</span>
+							<span>今日收益</span>
+							<span>{{statistics.today}}</span>
 						</div>
 						<div class="header-items">
-							<span>累计提成</span>
-							<span>10.0000000</span>
+							<span>累计收益</span>
+							<span>{{statistics.all}}</span>
 						</div>
 						<div class="header-items">
-							<span>今日收款</span>
-							<span>10.00</span>
+							<span>浏览量</span>
+							<span>{{statistics.view}}</span>
 						</div>
 					</div>
 					<div class="header-cont last-header-cont">
 						<div class="header-items">
-							<span>收款码收款</span>
-							<span>10.00</span>
+							<span>供货收益</span>
+							<span>{{statistics.goods}}</span>
+						</div>
+						<div class="header-items">
+							<span>分销收益</span>
+							<span>{{statistics.commission}}</span>
 						</div>
 						<div class="header-items">
 							<span>待发货</span>
-							<span>10.00</span>
-						</div>
-						<div class="header-items">
-							<span>浏览量</span>
-							<span>100000000</span>
+							<span>{{statistics.deliver}}</span>
 						</div>
 					</div>
 					<div class="asset-center">
@@ -561,7 +561,15 @@
 					// 公告
 					notice: [],
 					hot_goods: [],
-					team_list: []
+					team_list: [],
+					statistics: {
+						all: 0.00,
+						today: 0.00,
+						goods: 0.00,
+						commission: 0.00,
+						view: 0,
+						deliver: 0
+					}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -597,6 +605,7 @@
 					mui.plusReady(function() {
 						getNotice();
 						getHotGoodsList();
+						getStatistics();
 						var self = plus.webview.currentWebview();
 						// 去掉滚动条
 						self.setStyle({
@@ -612,6 +621,7 @@
 					// 初始化字体大小结束
 				}
 			})
+
 			//公告滚动初始化
 			function scrollInit() {
 				var mySwiper = new Swiper('#notice_container', {
@@ -624,6 +634,18 @@
 					},
 				})
 			}
+
+			//获取统计数据
+			function getStatistics() {
+				mui.post($ajaxUrl + 'shop', {
+					action: 'index',
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					app.statistics = res.data;
+				}, 'json');
+			}
+
 			//获取公告
 			function getNotice() {
 				mui.post($ajaxUrl + 'notice', {
