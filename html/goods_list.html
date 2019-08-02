@@ -654,7 +654,6 @@
 						offset: '0px',
 						auto: false,
 						callback: function() {
-							mui('#goods_container').pullRefresh().refresh(true);
 							skip = 1;
 							getGoodsCount();
 							getGoodsList('down');
@@ -796,19 +795,27 @@
 			token: userInfo.token,
 			type: g_type,
 			skip: skip,
-			limit: 10,
+			limit: 8,
 			goods_name: app.goodsName
 		}, function(res) {
+			logs(res);
 			if (res.errno == 0) {
 				if (skip == 1) {
 					app[g_type + '_list'] = res.data;
 				} else {
 					app[g_type + '_list'] = app[g_type + '_list'].concat(res.data);
 				}
-				if (refresh == "up") {
+				if (refresh == "up"&&res.extra.has_more) {
 					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
 				} else if (refresh == "down") {
 					mui('#goods_container').pullRefresh().endPulldownToRefresh();
+				}
+				if(res.extra.has_more){
+					mui('#goods_container').pullRefresh().refresh(true);
+					logs("11111")
+				}else{
+					logs("2222222")
+					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
 				}
 				app[g_type + '_status'] = false;
 			} else {
