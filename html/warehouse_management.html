@@ -355,7 +355,7 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div class="play" data-type="edit" v-if="lst.check_status==0">
+											<div class="play" data-type="edit" v-if="lst.check_status!=1">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
@@ -363,7 +363,7 @@
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
-											<div v-if="lst.check_status==0" class="play" data-type="jh">
+											<div v-if="lst.check_status==1" class="play" data-type="jh">
 												<img src="../image/icon/qyecjh-icon.png" />
 												<div>拣货</div>
 											</div>
@@ -413,15 +413,15 @@
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+slo.id">
 											<div class="jiao"></div>
-											<div class="play" data-type="edit" v-if="lst.check_status==0">
+											<div class="play" data-type="edit" v-if="slo.check_status==0">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
 											</div>
-											<div class="play" data-type="off">
+											<div v-if="slo.status==1" class="play" data-type="off">
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
-											<div class="play" data-type="on">
+											<div v-if="slo.status==0" class="play" data-type="on">
 												<img src="../image/on_sale.png" />
 												<div>上架</div>
 											</div>
