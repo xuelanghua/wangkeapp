@@ -605,6 +605,7 @@
 					mui.plusReady(function() {
 						getNotice();
 						getHotGoodsList();
+						getStatistics();
 						var self = plus.webview.currentWebview();
 						// 去掉滚动条
 						self.setStyle({
@@ -640,6 +641,7 @@
 					action: 'index',
 					token: userInfo.token
 				}, function(res) {
+					logs(res);
 					app.statistics = res.data;
 				}, 'json');
 			}
