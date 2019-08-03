@@ -871,7 +871,6 @@
 						status: status,
 						content: content
 					}
-					console.log(images);
 					formSubmit(submitData);
 				})
 			}
@@ -927,10 +926,11 @@
 					token: userInfo.token,
 					data: data
 				}, function(res) {
-					console.log(JSON.stringify(res));
 					if (res.errno == 0) {
 						message('修改成功!');
+						var opener = plus.webview.currentWebview().opener();
 						mui.fire(plus.webview.getWebviewById('goods_list'), 'goodsAddSuccess');
+						mui.fire(opener, 'doit');
 						setTimeout(function() {
 							plus.webview.close('goods_edit');
 						}, 1000)

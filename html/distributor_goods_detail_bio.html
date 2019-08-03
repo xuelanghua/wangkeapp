@@ -192,7 +192,7 @@
 				display: flex;
 				align-items: center;
 			}
-			
+
 			.goods-detail-container h4.title:before {
 				content: '';
 				display: inline-block;
@@ -200,7 +200,7 @@
 				bottom: 0;
 				left: 0;
 				height: 15px;
-				width:4px;
+				width: 4px;
 				margin-right: 5px;
 				background-color: #333333;
 			}
@@ -269,10 +269,20 @@
 				color: #a7a7a7;
 			}
 
-			.goods-detail-container {
+			.goods-detail-container img {
 				line-height: 0;
+				margin: -4px 0;
+				padding: 0;
+				max-width: 100% !important;
+				height: auto;
 			}
 
+			.goods-detail-container img:first-of-type {
+				margin-top: 0;
+			}
+			.goods-detail-container{
+				padding-bottom: 1.1rem;
+			}
 			.nav-right-btn {
 				height: 44px;
 				position: relative;
@@ -292,7 +302,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 			<h1 class="mui-title">商品详情</h1>
-			<div class="mui-pull-right nav-right-btn" >
+			<div class="mui-pull-right nav-right-btn">
 				分享
 			</div>
 		</header>
@@ -480,7 +490,7 @@
 				var sign = this.dataset.type;
 				if (sign == 'edit') {
 					// 编辑
-					openPage('goods_edit.html', 'goods_edit', '#f7f7f7', {
+					openPage('goods_edit.html', 'goods_edit', '#ffffff', {
 						goods_id: app.goods_id
 					})
 				} else if (sign == 'up') {
@@ -508,7 +518,6 @@
 			})
 			//改变商品状态
 			function changeGoodsStatus(status) {
-				logs(app.goods_id);
 				mui.post($ajaxUrl + 'goods', {
 					action: 'change_status',
 					token: userInfo.token,
@@ -601,6 +610,27 @@
 					imgDtask.start()
 				});
 			})
+			// 监听详情更改
+			window.addEventListener('doit', function() {
+				mui.post($ajaxUrl + 'goods&action=goods_detail', {
+					token: userInfo.token,
+					goods_id: app.goods_id
+				}, function(res) {
+					if (res.errno == 0) {
+						app.goods_detail = res.data;
+						app.images = res.data.images;
+						app.spec = res.data.spec;
+						app.team_info = res.data.team_info;
+						if (app.images.length > 1) {
+							setTimeout(function() {
+								swiperInint();
+							}, 500);
+						}
+					} else {
+				
+					}
+				}, 'json');
+			}, false);
 		</script>
 	</body>
 
