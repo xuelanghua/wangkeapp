@@ -945,26 +945,30 @@
 			<div id="item2" class="mui-control-content primary-goods">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell goods-list" v-for="(g, index) in goods">
-						<div class="goods-img">
+						<div class="goods-img" @tap="openGoodsDetail(g.id)">
 							<img :src="g.cover">
 						</div>
 						<div class="goods-right">
-							<p class="goods-title mui-ellipsis-2">
+							<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(g.id)">
 								{{g.name}}
 							</p>
-							<div class="goods-info">
+							<div class="goods-info" @tap="openGoodsDetail(g.id)">
 								<span class="wage-text">提成：&yen;{{g.commission}}</span>
 								<span class="price-text">供货价：&yen;{{g.settlement_price}}</span>
 							</div>
 							<div class="goods-right-bottom">
-								<img v-if="g.team_hot==1" class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
-								<span>销量&nbsp;{{g.sale_count}}</span>
+								<img v-if="g.team_hot==1" class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png" @tap="openGoodsDetail(g.id)">
+								<span @tap="openGoodsDetail(g.id)">销量&nbsp;{{g.sale_count}}</span>
 								<!-- <span>95%&nbsp;好评</span> -->
-								<img class="add-entrepot" v-if="g.is_pick==0" src="../image/icon/jianhuo-active.png">
+								<img :data-gid="g.id" class="add-entrepot add-entrepot-btn" v-if="g.is_pick==0" src="../image/icon/jianhuo-active.png">
 								<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 							</div>
 						</div>
 					</li>
+					<div v-if="team_goods_status" class="void-tips-conts">
+						<img src="../image/icon/void-data.png">
+						<p>空空如也~</p>
+					</div>
 				</ul>
 			</div>
 			<!-- 学习进度 -->
@@ -1050,7 +1054,8 @@
 				data_status: 0,
 				lProgress: [],
 				slef_id: userInfo.id,
-				goods: []
+				goods: [],
+				team_goods_status:false
 			},
 			computed: {
 				selfrank: function() {
@@ -1065,6 +1070,12 @@
 				}
 			},
 			methods: {
+				// 打开商品详情
+				openGoodsDetail: function(gid) {
+					openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+						gid: gid
+					})
+				},
 				examine: function(status, userId) {
 					mui.post($ajaxUrl + 'team&action=check', {
 						token: userInfo.token,
@@ -1281,24 +1292,24 @@
 				}
 			}, 'json');
 		}
-		
+
 		//获取团队商品
 		function getTeamGoods() {
 			mui.post($ajaxUrl + 'team&action=recommend_goods_list', {
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(1111);
-				logs(res);
 				if (res.errno == 0) {
 					app.goods = res.data;
+					app.team_goods_status=false;
 				} else {
 					app.goods = [];
+					app.team_goods_status=true;
 					// message(res.message);
 				}
 			}, 'json');
 		}
-		
+
 		// 获取验证信息
 		function getApplyList() {
 			mui.post($ajaxUrl + 'team&action=apply_list', {
@@ -1410,5 +1421,12 @@
 				}
 			}, 'json');
 		}
+		// 拣货
+		mui(".mui-content").on("tap", ".add-entrepot-btn", function() {
+			var gid = this.dataset.gid;
+			openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
+				gid: gid
+			});
+		})
 	</script>
 </html>
