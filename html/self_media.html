@@ -404,23 +404,23 @@
 								</div>
 							</li>
 							<!-- 产品列表 -->
-							<li class=" mui-table-view-cell goods-list">
-								<div class="goods-img" @tap="goodsDetail('369')">
-									<img src="../image/5E0eH.png">
+							<li class=" mui-table-view-cell goods-list" v-if="i.type==4">
+								<div class="goods-img" @tap="goodsDetail(i.info.id)">
+									<img :src="i.info.cover">
 								</div>
 								<div class="goods-list-right">
 									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail('369')">塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙塔利班“红队”头目在阿富汗北部被击毙在阿富汗北部被击毙</p>
-									<div class="goods-nature" @tap="goodsDetail('369')">
-										<span>供货价：￥250.00</span>
-										<span>销量： 520件</span>
+									<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail(i.info.id)">{{i.info.name}}</p>
+									<div class="goods-nature" @tap="goodsDetail(i.info.id)">
+										<span>供货价：&yen;{{i.info.price}}</span>
+										<span>销量： {{i.info.sale_count}}件</span>
 									</div>
-									<div class="goods-earnings" @tap="teamDetail('369')">
-										<span>利润：￥50</span>
+									<div class="goods-earnings" >
+										<span @tap="goodsDetail(i.info.id)">利润：&yen;{{i.info.commission}}</span>
 										<!-- 团队 -->
-										<div class="team-name">
+										<div class="team-name" @tap="teamDetail(i.info.team_info[0].id)">
 											<img class="team-icon" src="../image/discover/team-icon.png">
-											<span class="mui-ellipsis">房东的猫猫猫猫猫</span>
+											<span class="mui-ellipsis">{{i.info.team_info[0].name}}</span>
 										</div>
 										<!-- 官方 -->
 										<!-- <img src="../image/discover/official-sign.png"> -->
@@ -589,7 +589,9 @@
 					},
 					// 打开产品详情
 					goodsDetail: function(id) {
-						mui.toast("打开产品详情" + id);
+						openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+							gid: id
+						})
 					},
 					// 打开团队详情
 					teamDetail: function(id) {

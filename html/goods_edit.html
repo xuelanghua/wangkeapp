@@ -558,6 +558,7 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(ret) {
+						logs(ret);
 						if(ret.data.check_status==2){
 							mui("#cause_info")[0].innerText=ret.data.remark;
 							mui("#cause_conts")[0].style.display="block";
@@ -610,12 +611,10 @@
 						//获取运费
 						$('#good_freight').val(ret.data.freight);
 						//获取图片链接 并读取原图片
-						var img_url_str = ret.data.images;
-						for (var i = 0; i < img_url_str.length; i++) {
-							//下标量自增
-							imageId++;
-							//往图片数组中追加图片
-							images[imageId] = img_url_str[i];
+						// var img_url_str = ret.data.images;
+						images=ret.data.images;
+						imageId=ret.data.images.length-1;
+						for (var i = 0; i < images.length; i++) {
 							//js新建一个div 用于展示刚刚添加的图片
 							var newImgDiv = document.createElement('div');
 							//设置该div的id
@@ -623,7 +622,7 @@
 							//为该div设置相关的类
 							newImgDiv.classList.add('picture_display_chear');
 							//拼装一个图片标签展示图片
-							var html = '<img src="' + img_url_str[i] +
+							var html = '<img src="' + images[i] +
 								'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 							//插入html
 							newImgDiv.innerHTML = html;
@@ -725,28 +724,78 @@
 					}, 'slide-in-right');
 				})
 				//上传主图
+				var ratio = 1 / 1;
 				document.getElementById('add_pic').addEventListener('tap', function() {
-					//调用图片上传功能
-					imageUpload(function(res) {
-						//上传完一张图片 运用返回的参数进行图片添加
-						//返回图片的存储地址 并追加进图片数组中
-						//下标量自增
-						imageId++;
-						images[imageId] = res.url;
-						//js新建一个div 用于展示刚刚添加的图片
-						var newImgDiv = document.createElement('div');
-						//设置该div的id
-						newImgDiv.setAttribute('data-id', imageId);
-						//为该div设置相关的类
-						newImgDiv.classList.add('picture_display_chear');
-						//拼装一个图片标签展示图片
-						var html = '<img src="' + res.url +
-							'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-						//插入html
-						newImgDiv.innerHTML = html;
-						//在照片容器之前插入一个元素
-						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+					document.activeElement.blur();
+					var editButtons = new Array();
+					editButtons.push({
+						title: "拍照上传",
+						style: "default"
 					});
+					editButtons.push({
+						title: "从相册选择",
+						style: "default"
+					});
+					plus.nativeUI.actionSheet({
+						cancel: "取消",
+						buttons: editButtons
+					}, function(e) {
+						var index = e.index;
+						switch (index) {
+							case 1:
+								getImage(ratio); //拍照
+								break;
+							case 2:
+								galleryImage(ratio); //相册选择
+								break;
+						}
+					});
+				})
+				// 拍照获取图片
+				function getImage() {
+					var camera = plus.camera.getCamera();
+					camera.captureImage(function(e) {
+						plus.io.resolveLocalFileSystemURL(e, function(entry) {
+							cropperImg(entry.toLocalURL(), 'goods_edit', ratio);
+							// imageResize(entry.toLocalURL());
+							// 其他操作,比如预览展示
+						}, function(e) {
+							console.log("读取拍照文件错误：" + e.message);
+						});
+					}, function(s) {
+						console.log("error" + s);
+					}, {
+						filename: "_doc/camera/"
+					})
+				}
+				// 从相册中选择图片 
+				function galleryImage(cb) {
+					// 从相册中选择图片
+					plus.gallery.pick(function(e) {
+						cropperImg(e, 'goods_edit', ratio);
+					}, function(e) {
+						console.log("取消选择图片");
+					}, {
+						filter: "image",
+						multiple: false,
+						maximum: 5,
+						system: false,
+						onmaxed: function() {
+							plus.nativeUI.alert('最多只能选择1张图片');
+						}
+					});
+				}
+				window.addEventListener('cropperSuccess', function(event) {
+					var img=event.detail.image;
+					images.push(event.detail.image);
+					imgId=images.indexOf(img);
+					var newImgDiv = document.createElement('div');
+					newImgDiv.setAttribute('data-id', imageId);
+					newImgDiv.classList.add('picture_display_chear');
+					var html = '<img src="' + event.detail.image +
+						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					newImgDiv.innerHTML = html;
+					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
 				})
 				//删除主图 
 				mui('#pic-container').on('tap', '.mui-close', function() {
