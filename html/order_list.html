@@ -618,7 +618,7 @@
 										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('await',al.id)">
 											<div class="inside-list-left">
 												<img :src="item.cover">
-												<div v-if="al.team_order" class="goods-type-sign">
+												<div v-if="al.team_order==1" class="goods-type-sign">
 													分销商品
 												</div>
 											</div>
@@ -633,7 +633,7 @@
 														<span>x&nbsp;{{item.number}}</span>
 													</div>
 												</div>
-												<div v-show="sales==1" class="distribution-team">
+												<div v-show="sales==1&&al.team_order==1" class="distribution-team">
 													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
 												</div>
 												<div v-show="sales==2" class="distribution-team">
@@ -648,11 +648,11 @@
 										<span v-if="al.item">共{{al.item.length}}件商品</span>
 										<span>待付款：&nbsp;&yen;{{al.total_price}}
 											<template v-if="al.freight==0">(包邮)</template>
-											<template v-else>{{al.freight}}</template>
+											<template v-else>(邮费:{{al.freight}})</template>
 										</span>
 									</div>
-									<div v-show="sales==1" class="net-yield">
-										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									<div v-show="sales==1&&al.team_order==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.income}}</span>
 									</div>
 									<div v-show="sales==2" class="net-yield">
 										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
@@ -684,7 +684,7 @@
 										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('sgoods',al.id)">
 											<div class="inside-list-left">
 												<img :src="item.cover">
-												<div v-if="al.team_order" class="goods-type-sign">
+												<div v-if="al.team_order==1" class="goods-type-sign">
 													分销商品
 												</div>
 											</div>
@@ -699,7 +699,7 @@
 														<span>x&nbsp;{{item.number}}</span>
 													</div>
 												</div>
-												<div v-show="sales==1" class="distribution-team">
+												<div v-show="sales==1&&al.team_order==1" class="distribution-team">
 													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
 												</div>
 												<div v-show="sales==2" class="distribution-team">
@@ -714,11 +714,11 @@
 										<span v-if="al.item">共{{al.item.length}}件商品</span>
 										<span>待付款：&nbsp;&yen;{{al.total_price}}
 											<template v-if="al.freight==0">(包邮)</template>
-											<template v-else>{{al.freight}}</template>
+											<template v-else>(邮费:{{al.freight}})</template>
 										</span>
 									</div>
-									<div v-show="sales==1" class="net-yield">
-										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									<div v-show="sales==1&&al.team_order==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.income}}</span>
 									</div>
 									<div v-show="sales==2" class="net-yield">
 										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
@@ -753,7 +753,7 @@
 										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('shipped',al.id)">
 											<div class="inside-list-left">
 												<img :src="item.cover">
-												<div v-if="al.team_order" class="goods-type-sign">
+												<div v-if="al.team_order==1" class="goods-type-sign">
 													分销商品
 												</div>
 											</div>
@@ -768,7 +768,7 @@
 														<span>x&nbsp;{{item.number}}</span>
 													</div>
 												</div>
-												<div v-show="sales==1" class="distribution-team">
+												<div v-show="sales==1&&al.team_order==1" class="distribution-team">
 													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
 												</div>
 												<div v-show="sales==2" class="distribution-team">
@@ -783,11 +783,11 @@
 										<span v-if="al.item">共{{al.item.length}}件商品</span>
 										<span>待付款：&nbsp;&yen;{{al.total_price}}
 											<template v-if="al.freight==0">(包邮)</template>
-											<template v-else>{{al.freight}}</template>
+											<template v-else>(邮费:{{al.freight}})</template>
 										</span>
 									</div>
-									<div v-show="sales==1" class="net-yield">
-										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									<div v-show="sales==1&&al.team_order==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.income}}</span>
 									</div>
 									<div v-show="sales==2" class="net-yield">
 										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
@@ -819,7 +819,7 @@
 										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('finish',al.id)">
 											<div class="inside-list-left">
 												<img :src="item.cover">
-												<div v-if="al.team_order" class="goods-type-sign">
+												<div v-if="al.team_order==1" class="goods-type-sign">
 													分销商品
 												</div>
 											</div>
@@ -834,7 +834,7 @@
 														<span>x&nbsp;{{item.number}}</span>
 													</div>
 												</div>
-												<div v-show="sales==1" class="distribution-team">
+												<div v-show="sales==1&&al.team_order==1" class="distribution-team">
 													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
 												</div>
 												<div v-show="sales==2" class="distribution-team">
@@ -849,11 +849,11 @@
 										<span v-if="al.item">共{{al.item.length}}件商品</span>
 										<span>待付款：&nbsp;&yen;{{al.total_price}}
 											<template v-if="al.freight==0">(包邮)</template>
-											<template v-else>{{al.freight}}</template>
+											<template v-else>(邮费:{{al.freight}})</template>
 										</span>
 									</div>
-									<div v-show="sales==1" class="net-yield">
-										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									<div v-show="sales==1&&al.team_order==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.income}}</span>
 									</div>
 									<div v-show="sales==2" class="net-yield">
 										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
@@ -1177,7 +1177,7 @@
 					limit: 6,
 					goods_name: app.keyword
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						if (skip == 1) {
 							if (app.order_sign == 1) {
