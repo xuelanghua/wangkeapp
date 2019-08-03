@@ -839,7 +839,7 @@
 				<a class="mui-control-item mui-active" href="#item1">
 					基本信息
 				</a>
-				<a class="mui-control-item  mui-hidden" href="#item2">
+				<a class="mui-control-item" href="#item2">
 					主力商品
 				</a>
 				<a class="mui-control-item" href="#item3">
@@ -942,45 +942,26 @@
 				<button v-if="!role" type="button" class="mui-btn mui-btn-blue mui-btn-block quit-the-team" @tap="quitTeam">退出团队</button>
 			</div>
 			<!-- 主力商品 -->
-			<div id="item2" class="mui-control-content primary-goods mui-hidden">
+			<div id="item2" class="mui-control-content primary-goods">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell goods-list">
+					<li class="mui-table-view-cell goods-list" v-for="(g, index) in goods">
 						<div class="goods-img">
-							<img src="../image/5E0eH.png">
+							<img :src="g.cover">
 						</div>
 						<div class="goods-right">
 							<p class="goods-title mui-ellipsis-2">
-								四件套全棉纯棉田园风小清新被套简约床单1.8m双人春夏季床上用双人春夏季床上用双人春夏季床上用
+								{{g.name}}
 							</p>
 							<div class="goods-info">
-								<span class="wage-text">提成：&yen;50.00</span>
-								<span class="price-text">供货价：&yen;500.00</span>
+								<span class="wage-text">提成：&yen;{{g.commission}}</span>
+								<span class="price-text">供货价：&yen;{{g.settlement_price}}</span>
 							</div>
 							<div class="goods-right-bottom">
-								<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
-								<span>销量&nbsp;950</span>
-								<span>95%&nbsp;好评</span>
-								<img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png">
-							</div>
-						</div>
-					</li>
-					<li class="mui-table-view-cell goods-list">
-						<div class="goods-img">
-							<img src="../image/5E0eH.png">
-						</div>
-						<div class="goods-right">
-							<p class="goods-title mui-ellipsis-2">
-								四件套全棉纯棉田园风
-							</p>
-							<div class="goods-info">
-								<span class="wage-text">提成：&yen;50.00</span>
-								<span class="price-text">供货价：&yen;500.00</span>
-							</div>
-							<div class="goods-right-bottom">
-								<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
-								<span>销量&nbsp;950</span>
-								<span>95%&nbsp;好评</span>
-								<img class="add-entrepot" src="../image/icon/team-detail-goods-icon-02.png">
+								<img v-if="g.team_hot==1" class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+								<span>销量&nbsp;{{g.sale_count}}</span>
+								<!-- <span>95%&nbsp;好评</span> -->
+								<img class="add-entrepot" v-if="g.is_pick==0" src="../image/icon/jianhuo-active.png">
+								<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 							</div>
 						</div>
 					</li>
@@ -1068,7 +1049,8 @@
 				rla: {},
 				data_status: 0,
 				lProgress: [],
-				slef_id: userInfo.id
+				slef_id: userInfo.id,
+				goods: []
 			},
 			computed: {
 				selfrank: function() {
@@ -1147,6 +1129,8 @@
 					getInfo();
 					getMember();
 					getApplyList();
+					//获取团队商品
+					getTeamGoods();
 					// 获取团队大咖
 					getPerson();
 					getlists();
@@ -1297,6 +1281,24 @@
 				}
 			}, 'json');
 		}
+		
+		//获取团队商品
+		function getTeamGoods() {
+			mui.post($ajaxUrl + 'team&action=recommend_goods_list', {
+				token: userInfo.token,
+				team_id: app.tid
+			}, function(res) {
+				logs(1111);
+				logs(res);
+				if (res.errno == 0) {
+					app.goods = res.data;
+				} else {
+					app.goods = [];
+					// message(res.message);
+				}
+			}, 'json');
+		}
+		
 		// 获取验证信息
 		function getApplyList() {
 			mui.post($ajaxUrl + 'team&action=apply_list', {

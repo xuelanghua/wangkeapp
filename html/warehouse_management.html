@@ -348,7 +348,7 @@
 											<span>供货价：&yen;{{lst.settlement_price}}</span>
 										</div>
 										<div class="right-bottom-cont">
-											<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+											<img v-if="lst.team_hot==1" class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
 											<span>销量：{{lst.sale_count}}</span>
 											<span>库存：{{lst.stock}}</span>
 											<span class="genduo" :data-ids="lst.id">...</span>
@@ -363,7 +363,7 @@
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
-											<div v-if="lst.check_status==1" class="play" data-type="jh">
+											<div v-if="lst.check_status==1&&lst.is_pick==0" class="play" data-type="jh">
 												<img src="../image/icon/qyecjh-icon.png" />
 												<div>拣货</div>
 											</div>

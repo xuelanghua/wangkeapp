@@ -302,7 +302,7 @@
 				</div>
 				<div class="profit-cont">
 					<span>提成：&yen;{{goods_detail.commission}}</span>
-					<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
+					<img v-if="goods_detail.team_hot==1" class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
 				</div>
 				<div class="price-cont">
 					<span>供货价：&yen;{{goods_detail.settlement_price}}</span>
@@ -409,7 +409,7 @@
 							token: userInfo.token,
 							goods_id: app.goods_id
 						}, function(res) {
-							// logs(res);
+							logs(res);
 							if (res.errno == 0) {
 								app.goods_detail = res.data;
 								app.images = res.data.images;

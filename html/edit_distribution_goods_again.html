@@ -441,7 +441,7 @@
 							token: userInfo.token,
 							goods_id: app.goods_id
 						}, function(res) {
-							// logs(res);
+							logs(res);
 							if (res.errno == 0) {
 								app.goods_detail = res.data;
 								app.images = res.data.images;
@@ -452,7 +452,9 @@
 								app.view_count = res.data.view_count;
 								app.top = res.data.top;
 							} else {
-
+								plus.nativeUI.alert(res.message, function() {
+									mui.back();
+								})
 							}
 						}, 'json');
 						// 预览图片
