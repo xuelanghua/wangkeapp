@@ -466,10 +466,14 @@
 						</div>
 						<div v-if="detail.team_order==1">
 							<!-- 队长 -->
-							<span v-if="sales==1">提成</span>
-							<!-- 分销商 -->
-							<span v-else>净收益</span>
-							<span class="net-profit-sum">&yen;{{detail.total_commission}}</span>
+							<template v-if="sales==1">
+								<span>净收益</span>
+								<span class="net-profit-sum">&yen;{{detail.total_income}}</span>
+							</template>
+							<template v-else>
+								<span>提成</span>
+								<span class="net-profit-sum">&yen;{{detail.total_commission}}</span>
+							</template>
 						</div>
 					</li>
 				</ul>
