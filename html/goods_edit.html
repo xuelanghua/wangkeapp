@@ -506,7 +506,7 @@
 			})
 			var flag = true;
 			var imageId = 0;
-			var images = new Array();	//存储图片的数组
+			var images = new Array(); //存储图片的数组
 			var specId = 0;
 			var spec = new Array();
 			var content = '';
@@ -516,10 +516,10 @@
 			var status = 0;
 			var goodsTypeTitle = '';
 			var userInfo = getUserInfo();
-			var good_type_container = '';	//分类数组容器
+			var good_type_container = ''; //分类数组容器
 			var good_spec_container = ''; //商品规格容器
 			var goodsId = 0;
-			
+
 			mui.plusReady(function() {
 				var wv = plus.webview.currentWebview();
 				goodsId = wv.goods_id;
@@ -559,11 +559,11 @@
 					timeout: 10000,
 					success: function(ret) {
 						logs(ret);
-						if(ret.data.check_status==2){
-							mui("#cause_info")[0].innerText=ret.data.remark;
-							mui("#cause_conts")[0].style.display="block";
-						}else{
-							mui("#cause_conts")[0].style.display="none";
+						if (ret.data.check_status == 2) {
+							mui("#cause_info")[0].innerText = ret.data.remark;
+							mui("#cause_conts")[0].style.display = "block";
+						} else {
+							mui("#cause_conts")[0].style.display = "none";
 						}
 						//商品id
 						$('#goods_id').val(ret.data.id);
@@ -612,8 +612,8 @@
 						$('#good_freight').val(ret.data.freight);
 						//获取图片链接 并读取原图片
 						// var img_url_str = ret.data.images;
-						images=ret.data.images;
-						imageId=ret.data.images.length-1;
+						images = ret.data.images;
+						imageId = ret.data.images.length - 1;
 						for (var i = 0; i < images.length; i++) {
 							//js新建一个div 用于展示刚刚添加的图片
 							var newImgDiv = document.createElement('div');
@@ -651,7 +651,7 @@
 						// logs(ret.data.content);
 						// content = htmlspecialchars_decode(ret.data.content);
 						content = ret.data.content;
-						
+
 					},
 					error: function(xhr, type, errorThrown) {
 						console.log(JSON.stringify('失败'));
@@ -685,7 +685,7 @@
 					}
 				});
 			}
-			
+
 			//事件初始化
 			function eventInit() {
 				//详情添加完毕监听
@@ -786,9 +786,9 @@
 					});
 				}
 				window.addEventListener('cropperSuccess', function(event) {
-					var img=event.detail.image;
+					var img = event.detail.image;
 					images.push(event.detail.image);
-					imgId=images.indexOf(img);
+					imgId = images.indexOf(img);
 					var newImgDiv = document.createElement('div');
 					newImgDiv.setAttribute('data-id', imageId);
 					newImgDiv.classList.add('picture_display_chear');
