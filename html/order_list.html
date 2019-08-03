@@ -1016,9 +1016,8 @@
 									pullDirection = "down";
 									mui('#mui-content').pullRefresh().refresh(true);
 									skip = 1;
-									app.sales = 1;
-									app.order_sign = 1;
 									getGoodsList();
+									getOrderNum();
 								}
 							}
 						}
@@ -1143,6 +1142,13 @@
 				}, '', 'slide-in-right')
 				setStatusBar('#000000', 'light');
 			})
+			
+			// 监听发货成功
+			window.addEventListener('deliverSuccess', function(e) {
+				getOrderNum();
+				getGoodsList();
+			}, false);
+			
 			// 监听扫码内容
 			window.addEventListener('doit', function(e) {
 				// 转数字

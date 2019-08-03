@@ -667,27 +667,63 @@
 			// 修改地址
 			mui(".mui-content").on('tap', '.modification-address', function() {
 				openPage('modification_of_receiving_address.html', 'modification_of_receiving_address', '#f7f7f7', {
+					orderId: app.order_id,
 					recipients: app.recipients,
 					phone: app.phone,
+					address: app.address,
 					address_detail: app.address_detail,
 				}, "zoom-fade-out")
 			})
-			window.addEventListener('getaddress', function(event) {
-				// 接收地址更改
-				app.recipients = event.detail.recipients
-				app.phone = event.detail.phone
-				app.address_detail = event.detail.address_detail
+			
+			// window.addEventListener('getaddress', function(event) {
+			// 	// 接收地址更改
+			// 	app.recipients = event.detail.recipients
+			// 	app.phone = event.detail.phone
+			// 	app.address_detail = event.detail.address_detail
+			// });
+			
+			window.addEventListener('editAddressSuccess', function(event) {
+				// 更新订单信息
+				getDetailData();
 			});
+			
 			// 发货
 			mui(".mui-content").on('tap', '.deliver-goods-btn', function() {
 				mask.show();
 				document.querySelector(".deliver-goods-model").style.display = "block";
 			})
+			
 			// 确认发货
 			mui(".mui-content").on('tap', '.ensure-deliver-goods', function() {
+				if (app.express_id == '') {
+					message('请选择快递！');
+					return false;
+				}
+				if (app.express_num == '') {
+					message('请填写快递单号！');
+					return false;
+				}
 				mask.close();
-				message("发货成功！");
+				//发货
+				mui.post($ajaxUrl + 'order', {
+					action: 'express',
+					token: userInfo.token,
+					order_id: app.order_id,
+					express_id: app.express_id,
+					courier_number: app.express_num
+				}, function(res) {
+					if (res.errno == 0) {
+						message('发货成功!');
+						mui.fire(plus.webview.getWebviewById('order_list'), 'deliverSuccess');
+						setTimeout(function() {
+							mui.back();
+						}, 1500)
+					} else {
+						message(res.message);
+					}
+				}, 'json');
 			})
+			
 			// 为了不让弹出滚动穿透
 			document.querySelector(".deliver-goods-model").addEventListener("touchmove", mui.preventDefault);
 			// 选择物流公司
@@ -713,6 +749,7 @@
 					}
 				}, 'json');
 			})
+			
 			// 扫一扫
 			mui(".mui-content").on('tap', '.scan-btn', function() {
 				fnOpenWin('odd_scan.html', 'odd_scan', {
@@ -722,6 +759,7 @@
 				}, '', 'slide-in-right')
 				setStatusBar('#000000', 'light');
 			})
+			
 			// 监听扫码内容
 			window.addEventListener('doit', function(e) {
 				// 转数字

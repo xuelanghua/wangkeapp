@@ -334,7 +334,7 @@
 								<span>{{recipients}}</span>
 								<span>{{phone}}</span>
 							</p>
-							<button type="button" class="mui-btn mui-btn-outlined modification-address">修改</button>
+							<!-- <button type="button" class="mui-btn mui-btn-outlined modification-address">修改</button> -->
 						</div>
 						<p>{{address}}{{address_detail}}</p>
 					</div>
@@ -505,15 +505,23 @@
 				openPage('modification_of_receiving_address.html', 'modification_of_receiving_address', '#f7f7f7', {
 					recipients: app.recipients,
 					phone: app.phone,
+					address: app.address,
 					address_detail: app.address_detail,
 				}, "zoom-fade-out")
 			})
+			
 			window.addEventListener('getaddress', function(event) {
 				// 接收地址更改
 				app.recipients = event.detail.recipients
 				app.phone = event.detail.phone
 				app.address_detail = event.detail.address_detail
 			});
+			
+			window.addEventListener('editAddressSuccess', function(event) {
+				// 接收地址更改
+				getDetailData();
+			});
+			
 			// 倒计时
 			function clock() {
 				var today = new Date(), //当前时间

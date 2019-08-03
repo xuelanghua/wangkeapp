@@ -412,7 +412,7 @@
 							<span>分销收益</span>
 							<span>{{statistics.commission}}</span>
 						</div>
-						<div class="header-items">
+						<div class="header-items" id="deliver">
 							<span>待发货</span>
 							<span>{{statistics.deliver}}</span>
 						</div>
@@ -513,7 +513,7 @@
 									</div>
 									<div class="goods-right-bottom">
 										<span @tap="openGoodsDetail(goods.id)">销量&nbsp;{{goods.sale_count}}</span>
-										<span @tap="openGoodsDetail(goods.id)">95%&nbsp;好评</span>
+										<!-- <span @tap="openGoodsDetail(goods.id)">95%&nbsp;好评</span> -->
 										<img v-if="goods.is_pick==0" :data-gid="goods.id" class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
 										<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 									</div>
@@ -704,7 +704,7 @@
 			});
 
 			//订单管理
-			mui(".mui-content").on("tap", "#order_manage", function() {
+			mui(".mui-content").on("tap", "#order_manage, #deliver", function() {
 				openPage('order_list.html', 'order_list', '#f7f7f7');
 			});
 

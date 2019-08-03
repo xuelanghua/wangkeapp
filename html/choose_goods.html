@@ -556,7 +556,7 @@
 			.void-more {
 				display: flex;
 				padding: 0.3rem 0.2rem;
-				font-size: 0.3rem;
+				font-size: 0.24rem;
 				color: #999999;
 				align-items: center;
 				justify-content: center;
@@ -637,7 +637,7 @@
 									<div class="goods-right-bottom">
 										<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
 										<span>销量&nbsp;{{l.sale_count}}</span>
-										<span>95%&nbsp;好评</span>
+										<!-- <span>95%&nbsp;好评</span> -->
 									</div>
 									<div class="team-name" v-if="l.team_info.length==1">
 										<span>{{l.team_info[0].name}}</span>
@@ -650,15 +650,15 @@
 								</div>
 							</li>
 							<li class="loading-more" v-if="has_more">
-								<span>加载更多</span>
+								<span>点击加载更多</span>
 							</li>
 							<li v-if="void_tips">
 								<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png">
 								<p style="text-align: center;color:#717171;">暂无商品</p>
 							</li>
-							<li class="void-more" v-else>
+							<!-- <li class="void-more" v-else>
 								<span>没有更多啦~</span>
-							</li>
+							</li> -->
 						</ul>
 					</div>
 				</div>
@@ -881,12 +881,12 @@
 					if (res.errno == 0) {
 						if (skip == 1) {
 							app.goods_list = res.data;
-							if (refresh == 'down') {
-								mui('#segmentedControlContents').pullRefresh().endPulldownToRefresh();
-							}
+							// if (refresh == 'down') {
+							// 	mui('#segmentedControlContents').pullRefresh().endPulldownToRefresh();
+							// }
 						} else {
 							app.goods_list = app.goods_list.concat(res.data);
-							mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(false);
+							// mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(false);
 						}
 						app.void_tips = false;
 						app.has_more = res.extra.has_more;
@@ -896,11 +896,11 @@
 							app.goods_list = [];
 							app.void_tips = true;
 						}
-						if (refresh == 'up') {
-							mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(true);
-						} else if (refresh == 'down') {
-							mui('#segmentedControlContents').pullRefresh().endPulldownToRefresh();
-						}
+						// if (refresh == 'up') {
+						// 	mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(true);
+						// } else if (refresh == 'down') {
+						// 	mui('#segmentedControlContents').pullRefresh().endPulldownToRefresh();
+						// }
 					}
 				}, 'json');
 			}
