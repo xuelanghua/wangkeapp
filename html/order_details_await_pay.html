@@ -367,14 +367,14 @@
 										<span>x{{goods.number}}</span>
 									</div>
 								</div>
-								<div v-if="detail.team_order==1&&sales==1" class="team-name-cont">
+								<div v-if="detail.team_order==1&&sales==2" class="team-name-cont">
 									<span v-if="goods.team_info.name" class="price">货源：{{goods.team_info.name}}</span>
 								</div>
 							</div>
 						</div>
 						<div v-if="detail.team_order==1&&sales==2">
-							<div>分销商：{{goods.team_info.name}}<span class="team-boss-name">[goods.team_info.captain_name]</span></div>
-							<div class="royalty" v-if="goods.team_info.commission>0">提成：<span>&yen;{{goods.team_info.commission}}</span></div>
+							<div>分销商：{{goods.team_info.name}}<span class="team-boss-name">[{{detail.to_user_name}}]</span></div>
+							<div class="royalty">提成：<span>&yen;{{goods.commission}}</span></div>
 						</div>
 					</li>
 				</ul>
@@ -399,10 +399,14 @@
 						</div>
 						<div v-if="detail.team_order==1">
 							<!-- 队长 -->
-							<span v-if="sales==1">提成</span>
-							<!-- 分销商 -->
-							<span v-else>净收益</span>
-							<span class="net-profit-sum">&yen;{{detail.total_commission}}</span>
+							<template v-if="sales==1">
+								<span>净收益</span>
+								<span class="net-profit-sum">&yen;{{detail.total_income}}</span>
+							</template>
+							<template v-else>
+								<span>提成</span>
+								<span class="net-profit-sum">&yen;{{detail.total_commission}}</span>
+							</template>
 						</div>
 					</li>
 				</ul>
@@ -555,7 +559,7 @@
 					token: userInfo.token,
 					order_id: app.order_id
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0) {
 						app.detail = data;
