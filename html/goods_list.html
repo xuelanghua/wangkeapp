@@ -419,13 +419,13 @@
 										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
 											{{lst.name}}
 										</div>
-										<div class="price-container">
+										<div class="price-container" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
 											<span>&yen;{{lst.price}}</span>
 										</div>
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
-											<span>库存：{{lst.stock}}</span>
-											<span v-if="lst.is_team_goods==1">分销商品</span>
+											<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
+											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">分销商品</span>
 											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
@@ -463,7 +463,7 @@
 							<ul class="mui-table-view" id="item2_list">
 								<li class="mui-table-view-cell" :class="slo.check_status==1?'':'lucid-active'" v-for="(slo,idx) in sale_out_list"
 								 :key="idx">
-									<div class="chart">
+									<div class="chart" @tap="openGoodsDetail(slo.id,slo.is_team_goods)">
 										<div v-if="slo.check_status==0" class="status-mask">
 											审核中
 										</div>
@@ -473,17 +473,17 @@
 										<img :src="slo.cover">
 									</div>
 									<div class="customer-content">
-										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(lst.id,slo.is_team_goods)">
+										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(slo.id,slo.is_team_goods)">
 											{{slo.name}}
 										</div>
-										<div class="price-container">
+										<div class="price-container" @tap="openGoodsDetail(slo.id,slo.is_team_goods)">
 											<!-- <span>提成：&yen;{{slo.commission}}</span> -->
 											<span>&yen;{{slo.price}}</span>
 										</div>
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
-											<span>库存：{{slo.stock}}</span>
-											<span v-if="slo.is_team_goods==1">分销商品</span>
+											<span @tap="openGoodsDetail(slo.id,slo.is_team_goods)">库存：{{slo.stock}}</span>
+											<span v-if="slo.is_team_goods==1" @tap="openGoodsDetail(slo.id,slo.is_team_goods)">分销商品</span>
 											<span class="genduo" :data-ids="slo.id">...</span>
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+slo.id">
@@ -521,7 +521,7 @@
 							<ul class="mui-table-view" id="item3_list">
 								<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,sign) in off_sale_list"
 								 :key="sign">
-									<div class="chart">
+									<div class="chart" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
 										<div v-if="lst.check_status==0" class="status-mask">
 											审核中
 										</div>
@@ -534,14 +534,14 @@
 										<div class="customer_information mui-ellipsis-2" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
 											{{lst.name}}
 										</div>
-										<div class="price-container">
+										<div class="price-container"  @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
 											<!-- <span>提成：&yen;{{lst.commission}}</span> -->
 											<span>&yen;&nbsp;{{lst.price}}</span>
 										</div>
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
-											<span>库存：{{lst.stock}}</span>
-											<span v-if="lst.is_team_goods==1">分销商品</span>
+											<span  @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
+											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">分销商品</span>
 											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
