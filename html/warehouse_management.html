@@ -114,7 +114,7 @@
 				border-radius: 10px;
 				position: absolute;
 				right: 0;
-				z-index: 1;
+				z-index: 8;
 			}
 			.mui-table-view-cell{
 				padding: 15px;
@@ -180,6 +180,7 @@
 				font-size: 16px;
 				background-color: #F4CA3A;
 				color: #ffffff;
+				z-index: 12;
 			}
 			.mui-table-view-cell.mui-active{
 				background: #FFFFFF;
@@ -293,6 +294,7 @@
 			.mui-backdrop {
 				 background-color: rgba(0,0,0,0);
 			}
+			
 			[v-cloak] {
 				display: none;
 			}
@@ -504,9 +506,6 @@
 <script src="../js/vue.min.js"></script>
 <script type="text/javascript">
 	var userInfo = getUserInfo();
-	var mask = mui.createMask(function() {
-		document.querySelector(".playb" + currentId).style.display = 'none';
-	});
 	var g_type = 'on_sale',
 		skip = 1,
 		limit = 8,
@@ -587,6 +586,9 @@
 				})
 				getGoodsList(false);
 			})
+			document.addEventListener('tap', function() {
+				document.querySelector(".playb" + currentId).style.display = 'none';
+			})
 		}
 	})
 
@@ -606,7 +608,6 @@
 			}
 			currentId = this.dataset.ids;
 			document.querySelector(".playb" + currentId).style.display = 'block';
-			mask.show();
 			e.stopPropagation();
 		})
 		//点击窗口关闭商品操作弹窗
@@ -617,7 +618,6 @@
 		// })
 		mui('.mui-content').on('tap', '.play', function(e) {
 			var type = this.dataset.type;
-			mask.close();
 			if (type == 'off') {
 				//下架按钮
 				changeGoodsStatus(0, currentId);
@@ -632,21 +632,21 @@
 						getGoodsCount();
 					}
 				})
-			}else if (type == 'jh') {
+			} else if (type == 'jh') {
 				//拣货
 				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
 					gid: currentId
 				})
 			} else if (type == 'edit') {
 				//打开编辑页面
-				openPage('edit_distribution_goods.html','edit_distribution_goods','#f7f7f7',{
+				openPage('edit_distribution_goods.html', 'edit_distribution_goods', '#f7f7f7', {
 					goods_id: currentId
 				});
 			}
 		})
 		//添加商品
 		document.getElementById('add_goods').addEventListener('tap', function() {
-			openPage('add_distribution_goods.html','add_distribution_goods','#f7f7f7',{
+			openPage('add_distribution_goods.html', 'add_distribution_goods', '#f7f7f7', {
 				goods_id: currentId
 			});
 		})
@@ -685,7 +685,7 @@
 			}
 		}, 'json');
 	}
-	
+
 	// 切换选项卡
 	mui(".mui-content").on("tap", ".mui-control-item", function() {
 		g_type = this.dataset.type;
@@ -700,8 +700,8 @@
 			token: userInfo.token,
 			status: status,
 			goods_id: goods_id,
-			type:"team_goods",
-			role:"captain"
+			type: "team_goods",
+			role: "captain"
 		}, function(res) {
 			// logs(res);
 			if (res.errno == 0) {
@@ -737,21 +737,21 @@
 			}
 		}, 'json');
 	}
-	
+
 	// 监听编辑
 	window.addEventListener('reloadYourself', function() {
 		getGoodsCount();
 		getGoodsList();
 	})
-	
-	
+
+
 	// 监听拣货成功
 	window.addEventListener('refreshList', function() {
 		getGoodsList();
 	}, false);
-	
+
 	// 判断软键盘是否弹起
-	/* var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 	window.onresize = function() {
 		//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 		var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -764,5 +764,5 @@
 			paddeds.style.zIndex = '999';
 			paddeds.style.display = 'block';
 		}
-	} */
+	}
 </script>
