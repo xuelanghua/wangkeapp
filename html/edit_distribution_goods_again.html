@@ -389,10 +389,10 @@
 				</div>
 			</div>
 			<div class="btn-section">
-				<div class="putaway-btn option-btn" data-status="0">
+				<div class="putaway-btn option-btn" data-status="1">
 					上架出售
 				</div>
-				<div class="the-warehouse option-btn" data-status="1">
+				<div class="the-warehouse option-btn" data-status="0">
 					放入仓库
 				</div>
 			</div>
@@ -519,7 +519,8 @@
 				}, function(res) {
 					// logs(res);
 					if (res.errno == 0) {
-						if (app.status == 0) {
+						mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
+						if (app.status == 1) {
 							message("上架成功！");
 							mui.back();
 						} else {
