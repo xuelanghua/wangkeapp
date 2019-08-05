@@ -446,7 +446,7 @@
 							<ul class="mui-table-view" id="item3_list">
 								<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,sign) in off_sale_list"
 								 :key="sign">
-									<div class="chart">
+									<div class="chart" @tap="openGoodsDetail(lst.id)">
 										<div v-if="lst.check_status==0" class="status-mask">
 											审核中
 										</div>
@@ -707,6 +707,9 @@
 			if (res.errno == 0) {
 				getGoodsCount();
 				getGoodsList();
+				if (status == -1) {
+					mui.fire(plus.webview.getWebviewById('shop_index'), 'reloadYourself');
+				}
 				message('操作成功!');
 			} else {
 				message(res.message);
@@ -740,6 +743,13 @@
 		getGoodsCount();
 		getGoodsList();
 	})
+	
+	
+	// 监听拣货成功
+	window.addEventListener('refreshList', function() {
+		getGoodsList();
+	}, false);
+	
 	// 判断软键盘是否弹起
 	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 	window.onresize = function() {
@@ -755,8 +765,4 @@
 			paddeds.style.display = 'block';
 		}
 	}
-	// 监听拣货成功
-	window.addEventListener('refreshList', function() {
-		getGoodsList();
-	}, false);
 </script>

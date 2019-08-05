@@ -512,8 +512,10 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						mui.fire(plus.webview.currentWebview().opener(), 'refreshList');
-						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'refreshList');
+						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'refreshList'); 
 						mui.fire(plus.webview.getWebviewById('choose_goods'), 'refreshList');
+						mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
+						mui.fire(plus.webview.getWebviewById('shop_index'), 'reloadYourself');
 						if (app.status == 0) {
 							message("上架成功！");
 							mui.back();

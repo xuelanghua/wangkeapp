@@ -530,12 +530,6 @@
 				}, function(res) {
 					// logs(res);
 					if (res.errno == 0) {
-						if (status == -1) {
-							message('已删除!');
-							mui.back();
-						} else {
-							// message('操作成功!');
-						}
 						if (status == 0) {
 							// 下架
 							app.goods_detail.status = 0;
@@ -544,6 +538,10 @@
 							// 上架
 							app.goods_detail.status = 1;
 							message('上架成功!');
+						} else if (status == -1) {
+							mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
+							message('已删除!');
+							mui.back();
 						}
 					} else {
 						message('操作失败!');
