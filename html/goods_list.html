@@ -317,13 +317,7 @@
 				touch-action: pan-y;
 			}
 			.mui-backdrop {
-				 background-color: rgba(0,0,0,0.6);
-				 opacity: 0.9;
-				 z-index: 12;
-				 position: fixed;
-				 top:0;
-				 bottom: 0;
-				 width: 100%;
+				 background-color: rgba(0,0,0,0);
 			}
 			/* 弹窗样式 */
 			
@@ -602,7 +596,9 @@
 <script src="../js/vue.min.js"></script>
 <script type="text/javascript">
 	var userInfo = getUserInfo();
-	
+	var mask = mui.createMask(function() {
+		document.querySelector(".playb" + currentId).style.display = 'none';
+	});
 	var g_type = 'on_sale',
 		skip = 1,
 		limit = 8,
@@ -678,13 +674,15 @@
 				})
 				getGoodsList(false);
 			})
-
-			document.addEventListener('tap', function() {
-				document.querySelector(".playb" + currentId).style.display = 'none';
-			})
+			if(mui.os.ios ){
+				document.addEventListener('tap', function() {
+					document.querySelector(".playb" + currentId).style.display = 'none';
+				})
+			}else{
+				// 不采取操作
+			}
 		}
 	})
-
 	function eventInit() {
 		// 搜索
 		document.onkeydown = function(event) {
@@ -701,6 +699,11 @@
 			}
 			currentId = this.dataset.ids;
 			document.querySelector(".playb" + currentId).style.display = 'block';
+			if(mui.os.ios ){
+				//不采取操作
+			}else{
+				mask.show();
+			}
 			e.stopPropagation();
 		})
 		//点击窗口关闭商品操作弹窗
@@ -713,6 +716,7 @@
 			var type = this.dataset.type;
 			// 是否团队商品
 			var gtype = this.dataset.gtype;
+			mask.close();
 			if (type == 'off') {
 				//下架按钮
 				// "team_goods"

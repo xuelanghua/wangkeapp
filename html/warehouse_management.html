@@ -506,6 +506,9 @@
 <script src="../js/vue.min.js"></script>
 <script type="text/javascript">
 	var userInfo = getUserInfo();
+	var mask = mui.createMask(function() {
+		document.querySelector(".playb" + currentId).style.display = 'none';
+	});
 	var g_type = 'on_sale',
 		skip = 1,
 		limit = 8,
@@ -586,9 +589,13 @@
 				})
 				getGoodsList(false);
 			})
-			document.addEventListener('tap', function() {
-				document.querySelector(".playb" + currentId).style.display = 'none';
-			})
+			if(mui.os.ios ){
+				document.addEventListener('tap', function() {
+					document.querySelector(".playb" + currentId).style.display = 'none';
+				})
+			}else{
+				// 不采取操作
+			}
 		}
 	})
 
@@ -608,6 +615,11 @@
 			}
 			currentId = this.dataset.ids;
 			document.querySelector(".playb" + currentId).style.display = 'block';
+			if(mui.os.ios ){
+				//不采取操作
+			}else{
+				mask.show();
+			}
 			e.stopPropagation();
 		})
 		//点击窗口关闭商品操作弹窗
@@ -618,6 +630,7 @@
 		// })
 		mui('.mui-content').on('tap', '.play', function(e) {
 			var type = this.dataset.type;
+			mask.close();
 			if (type == 'off') {
 				//下架按钮
 				changeGoodsStatus(0, currentId);
