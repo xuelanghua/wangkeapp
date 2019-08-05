@@ -302,6 +302,7 @@
 			.goods-detail-container p {
 				line-height: 1.4;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -439,7 +440,7 @@
 							token: userInfo.token,
 							goods_id: app.goods_id
 						}, function(res) {
-							logs(res);
+							// logs(res);
 							if (res.errno == 0) {
 								app.goods_detail = res.data;
 								app.images = res.data.images;
@@ -449,7 +450,6 @@
 
 							}
 						}, 'json');
-						// 预览图片
 						// 预览图片
 						mui('.mui-content').on('tap', '.goods-img-groups img', function() {
 							var index = this.dataset.idx;
@@ -470,7 +470,7 @@
 					}
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
-					
+
 					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 					var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 					window.onresize = function() {
@@ -479,11 +479,9 @@
 						var focus = document.querySelector('input:focus');
 						if (resizeHeight * 1 < originalHeight * 1 && focus) {
 							//resizeHeight<originalHeight证明窗口被挤压了
-							logs(11111);
 							paddeds.style.zIndex = '-1';
 							paddeds.style.display = 'none';
 						} else {
-							logs(22222);
 							paddeds.style.zIndex = '199';
 							paddeds.style.display = 'flex';
 						}
@@ -498,8 +496,6 @@
 			})
 			// 提交
 			function postChoice() {
-				logs(app.goods_detail.price);
-				logs(app.team_id);
 				if (app.team_id == '') {
 					message("请选择拣货的团队！")
 					return false;
@@ -514,8 +510,10 @@
 					status: app.status,
 					spec: app.spec,
 				}, function(res) {
-					logs(res);
 					if (res.errno == 0) {
+						mui.fire(plus.webview.currentWebview().opener(), 'refreshList');
+						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'refreshList');
+						mui.fire(plus.webview.getWebviewById('choose_goods'), 'refreshList');
 						if (app.status == 0) {
 							message("上架成功！");
 							mui.back();
