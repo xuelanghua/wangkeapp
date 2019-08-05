@@ -421,7 +421,6 @@
 							token: userInfo.token,
 							goods_id: app.goods_id
 						}, function(res) {
-							logs(res);
 							if (res.errno == 0) {
 								app.goods_detail = res.data;
 								app.images = res.data.images;
@@ -595,17 +594,18 @@
 											thumbs: [imgpath],
 											miniProgram: {
 												id: 'gh_9fa5f42ab939',
-												path: '/longbing_card/pages/shop/detail/detail?id=' + id + '&to_uid=' + userInfo.id,
+												path: '/longbing_card/pages/shop/detail/detail?id=' + app.goods_detail.id + '&to_uid=' + userInfo.id,
 												webUrl: 'https://app.wangkeapp.cn/'
 											}
 										}, 'miniProgram');
 									}
 								},
 								function(error) {
-									message("Compress error!");
+									showload(1);
+									message("图片压缩失败！");
 								});
 						} else {
-							mui.toast('保存失败')
+							message('保存失败')
 						}
 					});
 					imgDtask.start()
