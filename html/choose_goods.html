@@ -1,4 +1,5 @@
-<strong></strong><!doctype html>
+<strong></strong>
+<!doctype html>
 <html>
 
 	<head>
@@ -621,17 +622,17 @@
 					<div class="primary-goods">
 						<ul class="mui-table-view" id="primary-goods">
 							<li class="mui-table-view-cell goods-list" v-for="(l,index) in goods_list">
-								<div class="goods-img">
+								<div class="goods-img" @tap="openGoodsDetail(l.id)">
 									<img :src="l.cover">
 								</div>
 								<div class="goods-right">
-									<p class="goods-title mui-ellipsis-2">
+									<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(l.id)">
 										{{l.name}}
 									</p>
 									<div class="goods-info">
-										<span class="wage-text">提成：&yen;{{l.commission}}</span>
-										<span class="price-text">供货价：&yen;{{l.settlement_price}}</span>
-										<img v-if="l.is_pick==0" :data-gid="l.id"  class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
+										<span class="wage-text" @tap="openGoodsDetail(l.id)">提成：&yen;{{l.commission}}</span>
+										<span class="price-text" @tap="openGoodsDetail(l.id)">供货价：&yen;{{l.settlement_price}}</span>
+										<img v-if="l.is_pick==0" :data-gid="l.id" class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
 										<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 									</div>
 									<div class="goods-right-bottom">
@@ -709,7 +710,13 @@
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束	
 				},
-				methods: {},
+				methods: {
+					openGoodsDetail: function(gid) {
+						openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+							gid: gid
+						})
+					}
+				},
 				mounted: function() {
 					mui(".mui-scroll-wrapper").scroll().refresh();
 					mui.init({
@@ -944,12 +951,12 @@
 			});
 			// 拣货
 			mui(".mui-content").on("tap", ".add-entrepot-btn", function() {
-				var gid=this.dataset.gid;
+				var gid = this.dataset.gid;
 				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
-					gid:gid
+					gid: gid
 				});
 			})
-			
+
 			// 监听拣货成功
 			window.addEventListener('refreshList', function() {
 				getGoodsList();

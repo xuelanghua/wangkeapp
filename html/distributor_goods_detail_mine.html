@@ -281,6 +281,12 @@
 			.goods-detail-container{
 				padding-bottom: 1.3rem;
 			}
+			.goods-detail-container p {
+				line-height: 1.4;
+			}
+			.goods-detail-container div{
+				line-height: 1.8;
+			}
 			.nav-right-btn {
 				height: 44px;
 				position: relative;
@@ -351,7 +357,7 @@
 					</li>
 				</ul>
 			</div>
-			<div v-if="index==0" class="team-name-cont" :data-tid="team.id" v-for="(team,index) in team_info">
+			<div v-if="team.selected==1" class="team-name-cont" :data-tid="team.id" v-for="(team,index) in team_info">
 				<img :src="team.cover||'https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg'">
 				<span>{{team.name}}</span>
 				<span class="mui-icon mui-icon-arrowright"></span>
@@ -421,6 +427,7 @@
 							token: userInfo.token,
 							goods_id: app.goods_id
 						}, function(res) {
+							logs(res);
 							if (res.errno == 0) {
 								app.goods_detail = res.data;
 								app.images = res.data.images;

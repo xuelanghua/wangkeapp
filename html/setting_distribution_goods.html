@@ -303,6 +303,35 @@
 				line-height: 1.4;
 			}
 
+			.recommend {
+				font-size: 12px;
+				padding: 0 0.2rem 0.1rem;
+				margin: 0.2rem 0;
+				background-color: #FFFFFF;
+			}
+
+			.recommend .mui-input-row label {
+				font-size: 16px;
+			}
+
+			.mui-switch-blue.mui-active {
+				background-color: #FFD626;
+				border: 2px solid #FFD626;
+			}
+
+			.mui-input-row {
+				margin: 0;
+			}
+
+			.mui-input-row label {
+				font-size: 14px;
+				margin-left: -15px;
+			}
+
+			.tishi {
+				color: #999999;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -353,6 +382,15 @@
 			<div class="express-container">
 				<span>快递： &nbsp;&nbsp;&nbsp;</span><span>{{goods_detail.express_name}}&nbsp;&nbsp;&nbsp;&nbsp;&yen;{{goods_detail.freight}}</span>
 			</div>
+			<div class="recommend">
+				<div class="mui-input-row">
+					<label>设为推荐</label>
+					<div class="mui-switch mui-switch-blue" id="recommend_switch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</div>
+				<div class="tishi">设为推荐则该商品会在所属商品分类中置顶</div>
+			</div>
 			<div class="last-opction">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
@@ -401,6 +439,7 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var recommend = 0;
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -508,11 +547,12 @@
 					top: app.top,
 					team_id: app.team_id,
 					status: app.status,
+					is_recommend: recommend,
 					spec: app.spec,
 				}, function(res) {
 					if (res.errno == 0) {
 						mui.fire(plus.webview.currentWebview().opener(), 'refreshList');
-						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'refreshList'); 
+						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'refreshList');
 						mui.fire(plus.webview.getWebviewById('choose_goods'), 'refreshList');
 						mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
 						mui.fire(plus.webview.getWebviewById('shop_index'), 'reloadYourself');
@@ -536,6 +576,14 @@
 				}
 				this.classList.add("active")
 				app.team_id = this.dataset.tid;
+			})
+			//推荐开关监听
+			document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
+				if (event.detail.isActive) {
+					recommend = 1;
+				} else {
+					recommend = 0;
+				}
 			})
 		</script>
 	</body>
