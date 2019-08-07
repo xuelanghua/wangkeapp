@@ -233,28 +233,28 @@
 			<div class="invite-team-members">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell cover-list">
-						<div class="mui-input-row mui-radio team-type" data-team="2">
+						<div class="mui-input-row mui-radio team-type">
 							<span class="mui-navigate-right">团队封面</span>
 							<img v-if="coverImg" class="cover-img" :src="coverImg">
 							<span v-else class="select-img">请选择</span>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
-						<div class="mui-input-row mui-radio team-type" data-team="2">
+						<div class="mui-input-row mui-radio team-type">
 							<label for="data-team">
 								<p class="title">数据团队</p>
 								<p>只展示团队数据。</p>
 							</label>
-							<input id="data_team" name="team" type="radio" checked="checked">
+							<input value="2" id="data_team" name="team" type="radio" checked="checked">
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
-						<div class="mui-input-row mui-radio team-type" data-team="1">
+						<div class="mui-input-row mui-radio team-type">
 							<label for="official_team">
 								<p class="title">正式团队</p>
 								<p>既可以查看团队数据，又可以进行团队分销。</p>
 							</label>
-							<input id="official_team" name="team" type="radio">
+							<input value="1" id="official_team" name="team" type="radio">
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
@@ -339,7 +339,7 @@
 				notice: '',
 				imagePath: [],
 				data_status: false,
-				teamType: '2',
+				teamType: 2,
 				coverImg: '',
 				uploadCover: 'images/6/2019/05/team_bg.jpg'
 			},
@@ -367,12 +367,14 @@
 		})
 		// 创建团队
 		mui(".mui-content").on('tap', '#create-group', function() {
+			app.teamType = document.querySelector("input[type='radio']:checked").value;
+			// return false;
 			document.activeElement.blur();
 			// logs(app.uids);
-			if(!app.teamName){
+			if (!app.teamName) {
 				message("团队名称不能为空");
 				return;
-			}else if(app.teamName.length>10){
+			} else if (app.teamName.length > 10) {
 				message("团队名称不能超过十个字");
 				return;
 			}
@@ -412,10 +414,6 @@
 			} else {
 				app.data_status = 0;
 			}
-		})
-		// 团队类型选择
-		mui('.mui-content').on('tap', '.team-type', function() {
-			app.teamType = this.dataset.team;
 		})
 		// 团队封面图选择
 		var ratio = 550 / 290;
