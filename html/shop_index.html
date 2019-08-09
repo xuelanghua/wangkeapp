@@ -551,6 +551,7 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var skip = 1;
+			var refresh = false;
 			var userInfo = getUserInfo();
 			var mask = mui.createMask(function() {
 				document.querySelector(".tips-cont").classList.add("mui-hidden");
@@ -600,7 +601,20 @@
 					mui.init({
 						beforeback: function() {
 							plus.navigator.setStatusBarStyle("light");
-						}
+						},
+						pullRefresh: {
+							container: ".mui-content",
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									refresh = true;
+									getNotice();
+									getHotGoodsList();
+									getStatistics();
+								}
+							}
+						}						
 					});
 					mui.plusReady(function() {
 						getNotice();
@@ -643,6 +657,10 @@
 				}, function(res) {
 					logs(res);
 					app.statistics = res.data;
+					if (refresh) {
+						refresh = false;
+						mui('.mui-content').pullRefresh().endPulldownToRefresh();
+					}
 				}, 'json');
 			}
 

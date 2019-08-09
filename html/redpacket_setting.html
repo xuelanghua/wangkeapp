@@ -118,6 +118,9 @@
 			.mui-table-view-cell:after{
 				height: 1px;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 	<body>
@@ -128,7 +131,7 @@
 			<div class="mui-pull-right asset-center">资产中心</div>
 		</header>
 
-		<div class="mui-content">
+		<div class="mui-content" v-cloak>
 			<ul class="money input-money-cont">
 				<li class="mui-clearfix">
 					<div class="mui-pull-left">输入红包金额(必填)</div>
@@ -166,84 +169,120 @@
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/mui.picker.min.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		var red_status = 0;
 		var timer = "";
-		mui.init({
-			swipeBack: true,
-		});
-
 		var userInfo = getUserInfo();
 		var flag = true;
-		mui.plusReady(function() {
-			settingInit(); //初始化设置
-			var currentWebview = plus.webview.currentWebview();
-			var fro = currentWebview.from;
-			document.getElementById('back').addEventListener('tap', function() {
-				if (fro == 'setting') {
-					setStatusBar('', 'light');
+		var vm = new Vue({
+			el: ".mui-content",
+			data: {
+				
+			},
+			created: function() {
+				// 初始化字体大小
+				var viewport = document.documentElement.clientWidth;
+				if (viewport > 750) {
+					viewport = 750
 				}
-				mui.back();
-			})
-
-			document.querySelector('#submit').addEventListener('tap', function() {
-				if (!flag) return;
-				var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
-				var redpacket_num = parseFloat(document.querySelector('input[name=redpacket_num]').value);
-				// console.log(redpacket_fee);
-				var redpacket_wish = document.querySelector('textarea[name=redpacket_wish]').value;
-				if (isNaN(redpacket_fee)) {
-					plus.nativeUI.toast('请输入红包金额!');
-					return;
-				}
-				if (isNaN(redpacket_num)) {
-					plus.nativeUI.toast('请输入红包个数!');
-					return;
-				}
-
-				if (redpacket_num < 1 || redpacket_num > 500) {
-					plus.nativeUI.toast('红包个数输入错误!');
-					return;
-				}
-
-				if (redpacket_fee < 0.3 || redpacket_fee > 200) {
-					plus.nativeUI.toast('红包金额输入错误!');
-					return;
-				}
-
-				if (redpacket_wish.length == 0) {
-					plus.nativeUI.toast('请输入红包祝福语!');
-					return;
-				}
-
-				flag = false;
-				mui.post($ajaxUrl + 'userqrcode', {
-					action: 'redpacket_setting',
-					redpacket_fee: redpacket_fee,
-					redpacket_wish: redpacket_wish,
-					token: userInfo.token,
-					redpacket_number: redpacket_num,
-					share_status: red_status,
-					redpacket_expire_time: timer
-				}, function(res) {
-					if (res.errno == 0) {
-						plus.nativeUI.toast(res.message);
-						setTimeout(function() {
-							if (fro == 'setting') {
-								setStatusBar('', 'light');
+				document.documentElement.style.fontSize = viewport / 7.5 + "px";
+				// 初始化字体大小结束	
+			},
+			mounted: function() {
+				mui.init({
+					swipeBack: true,
+				});
+				mui.plusReady(function() {
+					settingInit(); //初始化设置
+					var currentWebview = plus.webview.currentWebview();
+					var fro = currentWebview.from;
+					document.getElementById('back').addEventListener('tap', function() {
+						if (fro == 'setting') {
+							setStatusBar('', 'light');
+						}
+						mui.back();
+					})
+					
+					mui('.mui-bar').on('tap', '.asset-center', function() {
+						openPage('asset_management.html', 'asset_management', '#2289ff', '');
+						plus.navigator.setStatusBarStyle("light");
+					})
+					
+					window.addEventListener('changecolor', function(event) {
+						plus.navigator.setStatusBarStyle("dark");
+					})
+					
+					mui('.mui-content').on('toggle', '.mui-switch', function(event) {
+						if (event.detail.isActive) {
+							red_status = 1;
+						} else {
+							red_status = 0;
+						}
+						// message("状态"+red_status);
+					})
+				
+					document.querySelector('#submit').addEventListener('tap', function() {
+						if (!flag) return;
+						var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
+						var redpacket_num = parseFloat(document.querySelector('input[name=redpacket_num]').value);
+						// console.log(redpacket_fee);
+						var redpacket_wish = document.querySelector('textarea[name=redpacket_wish]').value;
+						if (isNaN(redpacket_fee)) {
+							plus.nativeUI.toast('请输入红包金额!');
+							return;
+						}
+						if (isNaN(redpacket_num)) {
+							plus.nativeUI.toast('请输入红包个数!');
+							return;
+						}
+				
+						if (redpacket_num < 1 || redpacket_num > 500) {
+							plus.nativeUI.toast('红包个数输入错误!');
+							return;
+						}
+				
+						if (redpacket_fee < 0.3 || redpacket_fee > 200) {
+							plus.nativeUI.toast('红包金额输入错误!');
+							return;
+						}
+				
+						if (redpacket_wish.length == 0) {
+							plus.nativeUI.toast('请输入红包祝福语!');
+							return;
+						}
+				
+						flag = false;
+						mui.post($ajaxUrl + 'userqrcode', {
+							action: 'redpacket_setting',
+							redpacket_fee: redpacket_fee,
+							redpacket_wish: redpacket_wish,
+							token: userInfo.token,
+							redpacket_number: redpacket_num,
+							share_status: red_status,
+							redpacket_expire_time: timer
+						}, function(res) {
+							if (res.errno == 0) {
+								plus.nativeUI.toast(res.message);
+								setTimeout(function() {
+									if (fro == 'setting') {
+										setStatusBar('', 'light');
+									}
+									var view = plus.webview.currentWebview().opener();
+									mui.fire(view, 'doit');
+									mui.back();
+								}, 1000)
+							} else {
+								flag = true;
+								plus.nativeUI.toast(res.message);
 							}
-							var view = plus.webview.currentWebview().opener();
-							mui.fire(view, 'doit');
-							mui.back();
-						}, 1000)
-					} else {
-						flag = true;
-						plus.nativeUI.toast(res.message);
-					}
-				}, 'json');
-			})
-		})
-
+						}, 'json');
+					})
+				})
+			}
+		});
+		
+		
 		function settingInit() {
 			showload(0);
 			mui.post($ajaxUrl + 'userqrcode', {
@@ -273,22 +312,17 @@
 				showload(1);
 			}, 'json')
 		}
-		mui('.mui-bar').on('tap', '.asset-center', function() {
-			openPage('asset_management.html', 'asset_management', '#2289ff', '');
-			plus.navigator.setStatusBarStyle("light");
-		})
-
-		window.addEventListener('changecolor', function(event) {
-			plus.navigator.setStatusBarStyle("dark");
-		})
-		mui('.mui-content').on('toggle', '.mui-switch', function(event) {
-			if (event.detail.isActive) {
-				red_status = 1;
-			} else {
-				red_status = 0;
-			}
-			// message("状态"+red_status);
-		})
+		
+		// function getCurrentLocation() {
+		// 	plus.geolocation.getCurrentPosition(function(p) {
+		// 		getTodayWeather(p.coords.longitude + ',' + p.coords.latitude);
+		// 	}, function(e) {
+		// 		message('获取地理位置失败!', 'center');
+		// 		console.log(e.message);
+		// 		getTodayWeather('102.746571,24.980774');
+		// 	});
+		// }
+		
 		// 选择活动结束时间
 		var choice = document.getElementById("active_end");
 		mui(".mui-content").on('tap', '.active-end', function() {
