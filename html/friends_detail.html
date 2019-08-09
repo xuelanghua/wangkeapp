@@ -16,6 +16,82 @@
 				color: #999999;
 			}
 
+			.affirm-share-card {
+				position: fixed;
+				top: 50%;
+				left: 10%;
+				width: 80%;
+				height: auto;
+				background-color: #FFFFFF;
+				-webkit-transform: translateY(-130px);
+				transform: translateY(-130px);
+				box-shadow: 0 0 10px 0 rgba(0, 0, 0, .3);
+				border-radius: 5px;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				z-index: 1045;
+				line-height: 1;
+				display: none;
+			}
+
+			.affirm-share-card textarea {
+				border-bottom: 1px solid #DDDDDD;
+				border-width: 0.01rem;
+				border: none;
+				width: 100%;
+				border-radius: 0;
+				background-color: #F9F9F9;
+				margin: 0;
+				font-size: 0.3rem;
+				padding: 0.1rem;
+				min-height: 1.6rem;
+				color: #333333;
+			}
+
+			.affirm-share-card .title {
+				border-bottom: 0.01rem solid #DDDDDD;
+				height: 56px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.32rem;
+				position: relative;
+				margin-top: 0;
+			}
+
+			.affirm-share-card .bottom-btn {
+				border-top: 0.01rem solid #DDDDDD;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.affirm-share-card .bottom-btn button {
+				width: 50%;
+				display: inline-block;
+				height: 50px;
+				border: none;
+				border-radius: 0;
+			}
+
+			.affirm-share-card .bottom-btn button:last-of-type {
+				border-left: 0.01rem solid #DDDDDD;
+			}
+
+			.affirm-share-card .bottom-btn button:active {
+				background-color: #DDDDDD;
+				color: #333333;
+			}
+
+			.clear-btn {
+				display: inline-block;
+				position: absolute;
+				right: 10px;
+				color: #DDDDDD;
+				font-size: 12px;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -171,6 +247,14 @@
 				<img src="../image/icon/add_friends_icon.png" class="constrain-img">
 				<span>添加好友</span>
 			</div>
+			<div class="affirm-share-card">
+				<div class="title">自定义分享标题<span class="clear-btn mui-hidden">清空</span></div>
+				<textarea rows="" maxlength="30" @input="monitorl" v-model="share_title" cols="" placeholder="请输入自定义标题"></textarea>
+				<div class="bottom-btn">
+					<button type="button" id="cancel_btn">取消</button>
+					<button type="button" id="affirm_btn">确认</button>
+				</div>
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
@@ -179,6 +263,9 @@
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script type="text/javascript">
+			var mask = mui.createMask(function() {
+				document.querySelector(".affirm-share-card").style.display = "none";
+			});
 			if (mui.os.ios) {
 				mui.init({
 					swipeBack: true
@@ -203,7 +290,8 @@
 					is_voice_like: 0,
 					addshow: false,
 					audioUrl: '',
-					view_total: 0
+					view_total: 0,
+					share_title: ''
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -230,30 +318,27 @@
 							}
 						})
 						mui(".mui-content").on("tap", ".share-card", function() {
-							var avatar = muiCont.friendData.avatar || '../image/user_default.jpg'
-							if (muiCont.contName == '') {
-								message('用户名为空，暂时无法分享');
-							} else {
-								shareToMiniprogram({
-									title: muiCont.contName + '的旺客名片',
-									content: '旺天下之客,让营销更简单!',
-									thumbs: [avatar],
-									miniProgram: {
-										id: 'gh_9fa5f42ab939',
-										path: '/longbing_card/pages/index/index?to_uid=' + fid + '&is_qr=1&currentTabBar=toCard',
-										webUrl: 'https://app.wangkeapp.cn/'
-									}
-								}, 'miniProgram');
-							}
+							muiCont.share_title = muiCont.contName + '的旺客名片!';
+							mask.show();
+							document.querySelector(".affirm-share-card").style.display = "flex";
+							setTimeout(function() {
+								document.querySelector(".affirm-share-card textarea").focus();
+							}, 220);
 						})
 					})
-
 				},
 				methods: {
 					addFriend: function() {
 						openPage('friend_verification.html', 'friend_verification', '#f7f7f7', {
 							fid: fid
 						});
+					},
+					monitorl: function() {
+						var _self = this;
+						if (_self.share_title.length >= 30) {
+							message("自定义标题不能大于30字！")
+							_self.share_title = _self.share_title.substring(0, 30);
+						}
 					}
 				}
 			});
@@ -292,18 +377,18 @@
 								current: index,
 								loop: true,
 								indicator: 'number',
-								onLongPress: function(event){
-									plus.nativeUI.confirm("保存图片到系统相册",function(e){
-										if(e.index==0){
-											showload('','','保存中···','rgba(0,0,0,0.5)');
-											plus.gallery.save(event.url, function(){
+								onLongPress: function(event) {
+									plus.nativeUI.confirm("保存图片到系统相册", function(e) {
+										if (e.index == 0) {
+											showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
+											plus.gallery.save(event.url, function() {
 												showload(1);
 												plus.nativeUI.toast("保存成功!");
-											}, function(){
+											}, function() {
 												showload(1);
 												plus.nativeUI.toast("保存失败!");
-											} );
-										}else{
+											});
+										} else {
 											// plus.nativeUI.toast("取消");
 										}
 									});
@@ -425,8 +510,38 @@
 			}
 			// 跳转名片二维码页面
 			mui(".mui-content").on("tap", ".user-qr-code", function() {
-				openPage('business_card.html', 'business_card', '#f7f7f7', {toUid: fid});
+				openPage('business_card.html', 'business_card', '#f7f7f7', {
+					toUid: fid
+				});
 			})
+			// 取消分享
+			mui(".mui-content").on("tap", "#cancel_btn", function() {
+				mask.close();
+			})
+			// 确认分享
+			mui(".mui-content").on("tap", "#affirm_btn", function() {
+				if (!muiCont.share_title) {
+					message("请输入分享标题！");
+					return false;
+				}
+				mask.close();
+				var avatar = muiCont.friendData.avatar || '../image/user_default.jpg'
+				if (muiCont.contName == '') {
+					message('用户名为空，暂时无法分享');
+				} else {
+					shareToMiniprogram({
+						title: muiCont.share_title,
+						content: '旺天下之客,让营销更简单!',
+						thumbs: [avatar],
+						miniProgram: {
+							id: 'gh_9fa5f42ab939',
+							path: '/longbing_card/pages/index/index?to_uid=' + fid + '&is_qr=1&currentTabBar=toCard',
+							webUrl: 'https://app.wangkeapp.cn/'
+						}
+					}, 'miniProgram');
+				}
+			})
+			mui(".affirm-share-card")[0].addEventListener("touchmove", mui.preventDefault);
 		</script>
 	</body>
 </html>

@@ -114,44 +114,6 @@
 		</header>
 
 		<div class="mui-content team-list-container" v-cloak>
-			<div class="my-team" v-if="createFlag">
-				<h2><i></i>数据团队</h2>
-				<ul>
-					<li class="team-list" v-for="(list, index) in createList" :key="index">
-						<!-- <img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'"
-						 @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
-						<div class="inside">
-							<i class="adorn"></i>
-							<div class="inside-top" @tap="detail(list.team_id,list.type)">
-								<div class="team-title">
-									{{list.name}}
-									<span class="mui-badge mui-badge-primary">
-										<span class="iconfont icon-friends"></span>
-										{{list.current_number}} 人
-									</span>
-								</div>
-								<div class="time-person">
-									<span class="create-time">创建时间：{{list.create_time}}</span>
-									<span class="create-time">创建人：{{list.captain_name.name||list.captain_name.nickName}}</span>
-								</div>
-							</div>
-							<div class="opction-cont">
-								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name,list.type)">
-									<img src="../image/icon/team-list-opction02.png">
-									<span>群聊</span>
-								</div>
-								<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-									<img src="../image/icon/team-list-opction01.png">
-									<span>数据</span>
-								</div>
-							</div>
-						</div>
-					</li>
-				</ul>
-				<div v-else>
-					暂未创建团队
-				</div>
-			</div>
 			<div class="my-join-team" v-if="joinFlag">
 				<h2><i></i>正式团队</h2>
 				<ul>
@@ -200,6 +162,45 @@
 					</li>
 				</ul>
 			</div>
+			<div class="my-team" v-if="createFlag">
+				<h2><i></i>数据团队</h2>
+				<ul>
+					<li class="team-list" v-for="(list, index) in createList" :key="index">
+						<!-- <img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'"
+						 @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
+						<div class="inside">
+							<i class="adorn"></i>
+							<div class="inside-top" @tap="detail(list.team_id,list.type)">
+								<div class="team-title">
+									{{list.name}}
+									<span class="mui-badge mui-badge-primary">
+										<span class="iconfont icon-friends"></span>
+										{{list.current_number}} 人
+									</span>
+								</div>
+								<div class="time-person">
+									<span class="create-time">创建时间：{{list.create_time}}</span>
+									<span class="create-time">创建人：{{list.captain_name.name||list.captain_name.nickName}}</span>
+								</div>
+							</div>
+							<div class="opction-cont">
+								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name,list.type)">
+									<img src="../image/icon/team-list-opction02.png">
+									<span>群聊</span>
+								</div>
+								<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
+									<img src="../image/icon/team-list-opction01.png">
+									<span>数据</span>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<div v-else>
+					暂未创建团队
+				</div>
+			</div>
+
 			<div class="operation-section">
 				<span class="create-team">创建团队</span>
 				<span class="join-team">加入团队</span>
