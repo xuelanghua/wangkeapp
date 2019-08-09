@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title></title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<link href="../css/mui.imageviewer.css" rel="stylesheet" />
+		<!-- <link href="../css/mui.imageviewer.css" rel="stylesheet" /> -->
 		<link href="../css/team_chat.css" rel="stylesheet" />
 		<style>
 			.msg-item .msg-content{
@@ -82,6 +82,158 @@
 				width:20px;
 				height: auto;
 			}
+			/* 图片预览 */
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			p img {
+				max-width: 100%;
+				height: auto;
+			}
 		</style>
 	</head>
 
@@ -108,7 +260,7 @@
 									{{ list.content|| '&nbsp;&nbsp;' }}
 								</div>
 								<div v-else-if="list.message_type=='image'" class="msg-content-inner">
-									<img class="msg-content-image" :src="list.content" style="max-width: 100px;" />
+									<img data-preview-src="" data-preview-group="1" class="msg-content-image" :src="list.content" style="max-width: 100px;" />
 								</div>
 								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
@@ -154,7 +306,9 @@
 			<div id="audio_tips" class="rsalert">手指上滑，取消发送</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
-		<script src="../js/mui.imageViewer.js"></script>
+		<!-- <script src="../js/mui.imageViewer.js"></script> -->
+		<script src="../js/mui.zoom.js"></script>
+		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/arttmpl.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/upload.js"></script>
@@ -169,7 +323,7 @@
 					swipe: true, //默认为true
 					drag: true, //默认为true
 					hold: true, //默认为false，不监听
-					release: true, //默认为false，不监听
+					release: true //默认为false，不监听
 				},
 				beforeback: function() {
 					mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
@@ -302,10 +456,9 @@
 						ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
 						//alert(ui.boxMsgText.offsetWidth );
 						var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
-						var imageViewer = new mui.ImageViewer('.msg-content-image', {
-							dbl: false
-						});
-
+						// var imageViewer = new mui.ImageViewer('.msg-content-image', {
+						// 	dbl: false
+						// });
 						var bindMsgList = function() {
 							var areaMsgList = document.querySelector('#msg-list');
 							// var msgItems = areaMsgList.querySelectorAll('.msg-item');
@@ -314,11 +467,12 @@
 							// 		msgItemTap(item, event);
 							// 	}, false);
 							// });
-							imageViewer.findAllImage();
+							// imageViewer.findAllImage();
 							// console.log(areaMsgList.scrollHeigh);
 							// console.log(areaMsgList.offsetHeight);
 							areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
 							// areaMsgList.scrollTop = areaMsgList.offsetHeight + 1000;
+							mui.previewImage();
 						};
 
 						// bindMsgList();
@@ -737,23 +891,27 @@
 							getChatList();
 						})
 						// 长按保存图片咯
-						mui(".mui-imageviewer").on("longtap", "img", function() {
-							var urls = this.src;
-							plus.nativeUI.confirm("保存图片到系统相册", function(e) {
-								if (e.index == 0) {
-									showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
-									plus.gallery.save(urls, function() {
-										showload(1);
-										plus.nativeUI.toast("保存成功!");
-									}, function() {
-										showload(1);
-										plus.nativeUI.toast("保存失败!");
-									});
-								} else {
-									//plus.nativeUI.toast("取消");
-								}
-							});
-						})
+						document.querySelector(".mui-zoom")[0].addEventListener("longtap",function(){
+							alert(45653312)
+						});
+						//mui(".mui-preview-image").on("longtap", "img", function() {
+						// 	alert("asdf");
+						// 	var urls = this.src;
+						// 	plus.nativeUI.confirm("保存图片到系统相册", function(e) {
+						// 		if (e.index == 0) {
+						// 			showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
+						// 			plus.gallery.save(urls, function() {
+						// 				showload(1);
+						// 				plus.nativeUI.toast("保存成功!");
+						// 			}, function() {
+						// 				showload(1);
+						// 				plus.nativeUI.toast("保存失败!");
+						// 			});
+						// 		} else {
+						// 			//plus.nativeUI.toast("取消");
+						// 		}
+						// 	});
+						// })
 					})
 				}
 			})
