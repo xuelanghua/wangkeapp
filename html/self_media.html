@@ -155,11 +155,12 @@
 			}
 
 			.mui-segmented-control.mui-scroll-wrapper {
-				height: 48px;
+				height: 44px;
+				background-color: #FFFFFF;
 			}
 
 			.mui-segmented-control.mui-scroll-wrapper .mui-scroll {
-				height: 48px;
+				height: 44px;
 			}
 
 			.subMenu .mui-scroll .mui-control-item {
@@ -230,6 +231,14 @@
 			.mui-table-view:after {
 				height: 0;
 			}
+
+			div::-webkit-scrollbar {
+				display: none;
+			}
+
+			.screen-menu:first-of-type::after {
+				display: none;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -273,9 +282,21 @@
 				<div id="zhanwei" style="width: 100%;height:58px;position: relative;display: none;">
 					<!-- 占位 -->
 				</div>
-				<ul id="screen-menu" class="screen-menu mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-					<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</li>
-				</ul>
+				<!-- <div class="first-menu">
+					<div class="mui-scroll-wrapper mui-slider-indicator ">
+						<ul id="screen-menu" class="mui-scroll screen-menu mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+							<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</li>
+						</ul>
+					</div>
+				</div> -->
+				<!-- 第一组菜单 -->
+				<div id="screen-menu" class="subMenu screen-menu">
+					<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+						<div class="mui-scroll">
+							<span class="mui-control-item" v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</span>
+						</div>
+					</div>
+				</div>
 				<!-- 第二组菜单 -->
 				<div v-show="isArticleClassify" id="subMenu" class="subMenu">
 					<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
@@ -376,12 +397,16 @@
 								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
 								<div class="curriculum-img" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
 									<img :src="i.info.cover_url">
+									<!-- 是否购买课程标记 -->
+									<img class="buy-sign mui-hidden" src="../image/icon/already-bought-icon.png">
 								</div>
 								<div class="curriculum-list-right">
 									<!-- 官方加stick-sign -->
 									<p class="mui-ellipsis-2" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
 										{{i.info.title}}
 									</p>
+									<!-- 商品价格 -->
+									<span class="course-price mui-hidden">&yen;25.00</span>
 									<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
 										<div class="mui-pull-left">
 											<span class="ting-ke">主讲人：{{i.info.teacher_name}}</span>
@@ -404,7 +429,7 @@
 								</div>
 							</li>
 							<!-- 产品列表 -->
-							<li class=" mui-table-view-cell goods-list" v-if="i.type==4">
+							<li class="mui-table-view-cell goods-list" v-if="i.type==4">
 								<div class="goods-img" @tap="goodsDetail(i.info.id)">
 									<img :src="i.info.cover">
 								</div>
@@ -415,15 +440,32 @@
 										<span>供货价：&yen;{{i.info.price}}</span>
 										<span>销量： {{i.info.sale_count}}件</span>
 									</div>
-									<div class="goods-earnings" >
+									<div class="goods-earnings">
 										<span @tap="goodsDetail(i.info.id)">利润：&yen;{{i.info.commission}}</span>
 										<!-- 团队 -->
 										<div class="team-name" @tap="teamDetail(i.info.team_info[0].id)">
 											<img class="team-icon" src="../image/discover/team-icon.png">
 											<span class="mui-ellipsis">{{i.info.team_info[0].name}}</span>
 										</div>
+									</div>
+								</div>
+							</li>
+							<!-- 产品列表 -->
+							<li class=" mui-table-view-cell goods-list" v-if="i.type==5">
+								<div class="goods-img" @tap="goodsDetail(i.info.id)">
+									<img :src="i.info.cover">
+								</div>
+								<div class="goods-list-right">
+									<!-- 官方加stick-sign stick-sign-->
+									<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail(i.info.id)">{{i.info.name}}</p>
+									<div class="goods-nature" @tap="goodsDetail(i.info.id)">
+										<span>供货价：&yen;{{i.info.price}}</span>
+										<span>销量： {{i.info.sale_count}}件</span>
+									</div>
+									<div class="goods-earnings">
+										<span @tap="goodsDetail(i.info.id)">利润：&yen;{{i.info.commission}}</span>
 										<!-- 官方 -->
-										<!-- <img src="../image/discover/official-sign.png"> -->
+										<img src="../image/discover/official-sign.png">
 									</div>
 								</div>
 							</li>
@@ -491,6 +533,10 @@
 							title: '企业总仓',
 							id: '4',
 							selected: false
+						}, {
+							title: '旺客总仓',
+							id: '5',
+							selected: false
 						}
 					],
 					like: false,
@@ -523,10 +569,10 @@
 						var _index = app.typeler.indexOf(stype);
 						if (_index == -1) {
 							app.typeler.push(stype);
-							this.screen[idx].selected=true;
+							this.screen[idx].selected = true;
 						} else {
 							app.typeler.splice(_index, 1);
-							this.screen[idx].selected=false;
+							this.screen[idx].selected = false;
 						}
 						if (pullDirection == 'up') {
 							mui('#mui-content').pullRefresh().refresh(true);
@@ -600,23 +646,49 @@
 						});
 					},
 					//打开课程详情
-					curriculumDetail: function(cid, status, tid, title, teid, silent, idx) {
-						if (status == 1 || status == 2) {
-							openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-								tid: tid,
-								courseId: cid,
-								courseTitle: title,
-								teacherId: teid,
-								isSilent: silent
-							});
-						} else {
-							// 未开播提示
-							openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
-								course: app.dynamic[idx].info,
-								kaola: true
-							});
-						}
-						// mui.toast("打开课程详情" + status);
+					curriculumDetail: function(cid, status, tid, title, teid, silent, idx, isbuy) {
+						// 判断是否购买
+						// if (isbuy == 1) {
+						// 	if (status == 1 || status == 2) {
+						// 		// 直播页面
+						// 		openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+						// 			tid: tid,
+						// 			courseId: cid,
+						// 			courseTitle: title,
+						// 			teacherId: teid,
+						// 			isSilent: silent
+						// 		});
+						// 	} else {
+						// 		// 未开播提示
+						// 		openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
+						// 			course: app.dynamic[idx].info,
+						// 			kaola: true
+						// 		});
+						// 	}
+						// } else {
+						// 	openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
+						// 		course: app.dynamic[idx].info,
+						// 	});
+						// } 
+						openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
+							course: app.dynamic[idx].info,
+						});
+						// if (status == 1 || status == 2) {
+						// 	// 直播页面
+						// 	openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+						// 		tid: tid,
+						// 		courseId: cid,
+						// 		courseTitle: title,
+						// 		teacherId: teid,
+						// 		isSilent: silent
+						// 	});
+						// } else {
+						// 	// 未开播提示
+						// 	openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
+						// 		course: app.dynamic[idx].info,
+						// 		kaola: true
+						// 	});
+						// }
 					},
 					// 评论
 					pinglun: function(t_id, i_idx) {
@@ -711,6 +783,9 @@
 						}
 					});
 					mui.plusReady(function() {
+						plus.webview.currentWebview().setStyle({
+							scrollIndicator: 'none'
+						});
 						var ws = plus.webview.currentWebview();
 						// 滚动的时候动态修改状态栏颜色
 						var statusbarHeight = plus.navigator.getStatusbarHeight();
@@ -749,7 +824,7 @@
 							bounce: true
 						});
 						// 滚动到最左边
-						mui('.mui-scroll-wrapper').scroll().scrollTo(0, 0, 100);
+						// mui('.mui-scroll-wrapper').scroll().scrollTo(0, 0, 100);
 					})
 					// 初始化两次防止页面乱
 					// 初始化字体大小
@@ -1106,7 +1181,7 @@
 				}
 				getDiscoverData();
 			}
-			
+
 			// 预览图片
 			function previewImage(parentIdx, selfIdx) {
 				var urls = app.dynamic[parentIdx].info.cover;

@@ -126,6 +126,20 @@
 				object-fit: cover;
 				margin-right: 0;
 			}
+
+			.list-inside {
+				display: flex;
+				align-items: center;
+			}
+
+			.mui-icon-clear {
+				position: relative;
+				top: auto;
+				left: auto;
+				right: auto;
+				color: #DDDDDD;
+				margin-top: 0px;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -147,11 +161,17 @@
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
 					<h2>课程名称</h2>
-					<input class="course-name" type="text" v-model="courseName" placeholder="请输入课程名称">
+					<div class="list-inside">
+						<input class="course-name" type="text" v-model="courseName" placeholder="请输入课程名称">
+						<span v-show="courseName" class="mui-icon mui-icon-clear" @tap="courseName=''"></span>
+					</div>
 				</li>
 				<li class="mui-table-view-cell">
 					<h2>培训通知<span>通知内容将在群聊显示</span></h2>
-					<input class="course-message" type="text" v-model="courseMessage" placeholder="输入内容">
+					<div class="list-inside">
+						<input class="course-message" type="text" v-model="courseMessage" placeholder="输入内容">
+						<span v-show="courseMessage" class="mui-icon mui-icon-clear" @tap="courseMessage=''"></span>
+					</div>
 				</li>
 				<li class="mui-table-view-cell select-speaker">
 					<h2>主讲人<span class="" id="finish_speaker">{{lecturerName}}</span></h2>
@@ -172,6 +192,13 @@
 					<h2>课程封面<span>(选填)</span></h2>
 					<div class="mui-navigate-right img-cont mui-clearfix">
 						<img class="mui-pull-right" :src="courseImg">
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<h2>设置价格<span>(选填，不填则视为免费课程)</span></h2>
+					<div class="list-inside">
+						<input type="number" name="" id="" v-model="coursePrice" placeholder="请填写价格" value="" />
+						<span v-show="coursePrice" class="mui-icon mui-icon-clear" @tap="coursePrice=''"></span>
 					</div>
 				</li>
 				<!-- <li class="mui-table-view-cell curriculum-time choice-team">
@@ -208,7 +235,8 @@
 					courseImg: "https://cdn.wangkeapp.cn/images/6/2019/05/course_bg.png",
 					uplodImg: 'images/6/2019/05/course_bg.png',
 					isedit: false,
-					tid: ''
+					tid: '',
+					coursePrice: ''
 				},
 				mounted: function() {
 					mui.init({
@@ -406,6 +434,7 @@
 							cover: app.uplodImg,
 							teacher_id: app.lecturerId,
 							start_time: app.startCourse,
+							price: app.coursePrice,
 							end_time: app.endCourse,
 						}, function(res) {
 							if (res.errno == 0) {

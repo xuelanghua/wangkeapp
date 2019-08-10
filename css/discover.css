@@ -107,23 +107,26 @@ li {
   font-size: 13px;
   color: #999999;
 }
-.screen-menu {
-  padding: 15px 5px;
-  margin: 0;
-  display: flex;
-  list-style: none;
+.first-menu {
   position: relative;
+  width: 100%;
+  height: 60px;
+}
+.screen-menu.subMenu {
+  margin: 0;
+  list-style: none;
   -webkit-transition: all 0.25s ease-in-out;
   transition: all 0.25s ease-in-out;
+  height: 56px;
 }
-.screen-menu.fixed {
+.screen-menu.subMenu.fixed {
   position: fixed;
   z-index: 10;
   width: 100%;
   padding: 10px 5px;
   background-color: #ffffff;
 }
-.screen-menu::after {
+.screen-menu.subMenu::after {
   content: '';
   position: absolute;
   display: block;
@@ -135,7 +138,7 @@ li {
   transform: scaleY(0.5);
   -webkit-transform: scaleY(0.5);
 }
-.screen-menu li {
+.screen-menu.subMenu span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -149,15 +152,16 @@ li {
   margin: 0 5px;
   color: #333333;
   box-sizing: border-box;
+  width: 120px;
 }
-.screen-menu li.active {
+.screen-menu.subMenu span.active {
   background-color: #d7eaff;
   color: #2289ff;
   position: relative;
   box-sizing: border-box;
   font-weight: 600;
 }
-.screen-menu li.active::after {
+.screen-menu.subMenu span.active::after {
   content: '';
   display: block;
   position: absolute;
@@ -319,7 +323,7 @@ li {
 }
 .discover-list-container .official-article .article-right p {
   text-align: justify;
-  color: #084c9a;
+  color: #333333;
   font-size: 14px;
   min-height: 41px;
 }
@@ -356,6 +360,7 @@ li {
   overflow: hidden;
   flex-shrink: 0;
   margin-right: 12px;
+  position: relative;
 }
 .discover-list-container .goods-list .goods-img img {
   width: 100%;
@@ -430,11 +435,17 @@ li {
 }
 .discover-list-container .curriculum-list {
   display: flex;
+  align-items: center;
 }
 .discover-list-container .curriculum-list .curriculum-list-right {
   flex-grow: 1;
 }
 .discover-list-container .curriculum-list p {
+  color: #333333;
+}
+.discover-list-container .curriculum-list .course-price {
+  font-size: 0.24rem;
+  font-weight: bold;
   color: #333333;
 }
 .discover-list-container .curriculum-list .curriculum-img {
@@ -443,14 +454,22 @@ li {
   overflow: hidden;
   flex-shrink: 0;
   margin-right: 12px;
+  position: relative;
 }
 .discover-list-container .curriculum-list .curriculum-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+.discover-list-container .curriculum-list .curriculum-img .buy-sign {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+}
 .discover-list-container .curriculum-list .status-cont {
-  padding-top: 5px;
+  line-height: 1;
 }
 .discover-list-container .curriculum-list .cretae-timer {
   font-size: 12px;
