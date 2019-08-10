@@ -125,7 +125,7 @@
 	</head>
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<div class="mui-icon mui-icon-left-nav mui-pull-left" id="back"></div>
+			<div class="mui-icon mui-action-back mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">红包设置</h1>
 			<!-- <div class="mui-pull-right record">红包记录</div> -->
 			<div class="mui-pull-right asset-center">资产中心</div>
@@ -136,32 +136,43 @@
 				<li class="mui-clearfix">
 					<div class="mui-pull-left">输入红包金额(必填)</div>
 					<div class="mui-pull-right input-money">
-						<input type="number" name="redpacket_fee" placeholder="0.3~200" /><span>元</span>
+						<input type="number" v-model="redpacket_info.redpacket_fee" :value="redpacket_info.redpacket_fee" placeholder="0.3~200" /><span>元</span>
 					</div>
 				</li>
 				<li class="mui-clearfix">
 					<div class="mui-pull-left">输入红包个数(必填)</div>
 					<div class="mui-pull-right input-money">
-						<input type="number" name="redpacket_num" placeholder="1~500" /><span>个</span>
+						<input type="number" v-model="redpacket_info.redpacket_number" :value="redpacket_info.redpacket_number" placeholder="1~500" /><span>个</span>
 					</div>
 				</li>
 				<li class="mui-clearfix mui-table-view-cell active-end">
 					<div class="mui-pull-left">活动结束时间</div>
 					<div class="mui-pull-right mui-clearfix">
-						<span id="active_end" class="mui-navigate-right mui-pull-right">请选择</span>
-						<!-- <input type="number" name="active_end" placeholder="1~500" /><span>个</span> -->
+						<span class="mui-navigate-right mui-pull-right">{{redpacket_info.redpacket_expire_time==0?"请选择":redpacket_info.redpacket_expire_time}}</span>
 					</div>
 				</li>
 				<li class="mui-table-view-cell mutual-red">
 					<span>双向红包</span>
-					<div class="mui-switch mui-switch-blue">
+					<div class="mui-switch mui-switch-blue share-status" :class="redpacket_info.share_status==1?'mui-active':''">
 						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell mutual-red">
+					<span>距离验证</span>
+					<div class="mui-switch mui-switch-blue distance-verify" :class="redpacket_info.distance_verify==1?'mui-active':''">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-clearfix" v-if="redpacket_info.distance_verify==1">
+					<div class="mui-pull-left">输入红包领取范围</div>
+					<div class="mui-pull-right input-money">
+						<input type="number" v-model="redpacket_info.redpacket_distance" :value="redpacket_info.redpacket_distance" placeholder="红包领取范围" /><span>km</span>
 					</div>
 				</li>
 			</ul>
 			<div class="money">
 				<div class="redpacket-wish-title">输入红包祝福语(必填)</div>
-				<textarea class="redpacket-wish" name="redpacket_wish" rows="3" cols="" placeholder="恭喜发财"></textarea>
+				<textarea class="redpacket-wish" v-model="redpacket_info.redpacket_wish" :value="redpacket_info.redpacket_wish" rows="3" cols="" placeholder="恭喜发财"></textarea>
 			</div>
 			<button class="save" id="submit">确 定</button>
 		</div>
@@ -171,38 +182,45 @@
 	<script src="../js/mui.picker.min.js"></script>
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
-		var red_status = 0;
-		var timer = "";
 		var userInfo = getUserInfo();
-		var flag = true;
 		var vm = new Vue({
 			el: ".mui-content",
 			data: {
-				
+				redpacket_info : {
+					redpacket_fee: 0.3,
+					redpacket_number: 0,
+					redpacket_expire_time: "",
+					share_status: 0,
+					redpacket_wish: "",
+					distance_verify: 0,
+					redpacket_distance: 0,
+					redpacket_latitude: '',
+					redpacket_longitude: '',
+				},
+				flag: true
 			},
 			created: function() {
 				// 初始化字体大小
-				var viewport = document.documentElement.clientWidth;
-				if (viewport > 750) {
-					viewport = 750
-				}
-				document.documentElement.style.fontSize = viewport / 7.5 + "px";
+				// var viewport = document.documentElement.clientWidth;
+				// if (viewport > 750) {
+				// 	viewport = 750
+				// }
+				// document.documentElement.style.fontSize = viewport / 7.5 + "px";
 				// 初始化字体大小结束	
 			},
 			mounted: function() {
 				mui.init({
 					swipeBack: true,
-				});
-				mui.plusReady(function() {
-					settingInit(); //初始化设置
-					var currentWebview = plus.webview.currentWebview();
-					var fro = currentWebview.from;
-					document.getElementById('back').addEventListener('tap', function() {
-						if (fro == 'setting') {
+					beforeback: function() {
+						var view = plus.webview.currentWebview().opener();
+						if (view.id == 'setting') {
 							setStatusBar('', 'light');
 						}
-						mui.back();
-					})
+					}
+				});
+				
+				mui.plusReady(function() {
+					settingInit(); //初始化设置
 					
 					mui('.mui-bar').on('tap', '.asset-center', function() {
 						openPage('asset_management.html', 'asset_management', '#2289ff', '');
@@ -213,67 +231,88 @@
 						plus.navigator.setStatusBarStyle("dark");
 					})
 					
-					mui('.mui-content').on('toggle', '.mui-switch', function(event) {
+					mui('.mui-content').on('toggle', '.share-status', function(event) {
 						if (event.detail.isActive) {
-							red_status = 1;
+							vm.redpacket_info.share_status = 1;
 						} else {
-							red_status = 0;
+							vm.redpacket_info.share_status = 0;
 						}
-						// message("状态"+red_status);
+					})
+					
+					mui('.mui-content').on('toggle', '.distance-verify', function(event) {
+						if (event.detail.isActive) {
+							plus.geolocation.getCurrentPosition(function(p) {
+								vm.redpacket_info.distance_verify = 1;
+								vm.redpacket_info.redpacket_longitude = p.coords.longitude;
+								vm.redpacket_info.redpacket_latitude = p.coords.latitude;
+							}, function(e) {
+								vm.redpacket_info.distance_verify = 0;
+								message('获取地理位置失败, 红包距离验证开启失败!', 'center');
+							});
+						} else {
+							vm.redpacket_info.distance_verify = 0;
+						}
 					})
 				
 					document.querySelector('#submit').addEventListener('tap', function() {
-						if (!flag) return;
-						var redpacket_fee = parseFloat(document.querySelector('input[name=redpacket_fee]').value);
-						var redpacket_num = parseFloat(document.querySelector('input[name=redpacket_num]').value);
-						// console.log(redpacket_fee);
-						var redpacket_wish = document.querySelector('textarea[name=redpacket_wish]').value;
-						if (isNaN(redpacket_fee)) {
+						if (!vm.flag) return;
+						if (isNaN(vm.redpacket_info.redpacket_fee)) {
 							plus.nativeUI.toast('请输入红包金额!');
 							return;
 						}
-						if (isNaN(redpacket_num)) {
+						if (isNaN(vm.redpacket_info.redpacket_number)) {
 							plus.nativeUI.toast('请输入红包个数!');
 							return;
 						}
 				
-						if (redpacket_num < 1 || redpacket_num > 500) {
+						if (vm.redpacket_info.redpacket_number < 1 || vm.redpacket_info.redpacket_number > 500) {
 							plus.nativeUI.toast('红包个数输入错误!');
 							return;
 						}
 				
-						if (redpacket_fee < 0.3 || redpacket_fee > 200) {
+						if (vm.redpacket_info.redpacket_fee < 0.3 || vm.redpacket_info.redpacket_fee > 200) {
 							plus.nativeUI.toast('红包金额输入错误!');
 							return;
 						}
 				
-						if (redpacket_wish.length == 0) {
+						if (vm.redpacket_info.redpacket_wish.length == 0) {
 							plus.nativeUI.toast('请输入红包祝福语!');
 							return;
 						}
-				
-						flag = false;
+						
+						if (vm.redpacket_info.distance_verify == 1) {
+							if (isNaN(vm.redpacket_info.redpacket_distance)) {
+								plus.nativeUI.toast('请输入红包领取范围值!');
+								return;
+							}
+							
+							if (vm.redpacket_info.redpacket_distance <= 0) {
+								plus.nativeUI.toast('红包领取范围输入错误!');
+								return;
+							}
+						}
+						
+						vm.flag = false;
 						mui.post($ajaxUrl + 'userqrcode', {
 							action: 'redpacket_setting',
-							redpacket_fee: redpacket_fee,
-							redpacket_wish: redpacket_wish,
+							redpacket_fee: vm.redpacket_info.redpacket_fee,
+							redpacket_wish: vm.redpacket_info.redpacket_wish,
 							token: userInfo.token,
-							redpacket_number: redpacket_num,
-							share_status: red_status,
-							redpacket_expire_time: timer
+							redpacket_number: vm.redpacket_info.redpacket_number,
+							share_status: vm.redpacket_info.share_status,
+							redpacket_expire_time: vm.redpacket_info.redpacket_expire_time,
+							distance_verify: vm.redpacket_info.distance_verify,
+							redpacket_distance: vm.redpacket_info.redpacket_distance,
+							redpacket_longitude: vm.redpacket_info.redpacket_longitude,
+							redpacket_latitude: vm.redpacket_info.redpacket_latitude
 						}, function(res) {
 							if (res.errno == 0) {
 								plus.nativeUI.toast(res.message);
 								setTimeout(function() {
-									if (fro == 'setting') {
-										setStatusBar('', 'light');
-									}
-									var view = plus.webview.currentWebview().opener();
-									mui.fire(view, 'doit');
 									mui.back();
 								}, 1000)
 							} else {
-								flag = true;
+								vm.flag = true;
 								plus.nativeUI.toast(res.message);
 							}
 						}, 'json');
@@ -292,24 +331,11 @@
 				logs(res);
 				if (res.errno == 0) {
 					var setting = res.data;
-					if (setting.redpacket_fee > 0) {
-						document.querySelector('input[name=redpacket_fee]').value = setting.redpacket_fee;
-					}
-					if (setting.redpacket_wish.length > 0) {
-						document.querySelector('textarea[name=redpacket_wish]').value = setting.redpacket_wish;
-					}
-					if (setting.redpacket_number.length > 0) {
-						document.querySelector('input[name=redpacket_num]').value = setting.redpacket_number;
-					}
-					if (setting.share_status == 1) {
-						red_status = 1;
-						document.querySelector('.mui-switch').classList.add("mui-active");
-					}
-					if (setting.redpacket_expire_time != 0) {
-						document.querySelector('#active_end').innerText = setting.redpacket_expire_time;
-					}
+					vm.redpacket_info = setting;
 				}
-				showload(1);
+				setTimeout(function() {
+					showload(1);
+				}, 500)
 			}, 'json')
 		}
 		
@@ -324,18 +350,16 @@
 		// }
 		
 		// 选择活动结束时间
-		var choice = document.getElementById("active_end");
 		mui(".mui-content").on('tap', '.active-end', function() {
 			var options = {
 				type: "datetime",
 				beginYear: 2019,
 				endYear: 2029,
-				value: timer
+				value: vm.redpacket_info.redpacket_expire_time
 			}
 			var timePicker = new mui.DtPicker(options);
 			timePicker.show(function(rs) {
-				timer = rs.text;
-				choice.innerText = rs.text;
+				vm.redpacket_info.redpacket_expire_time = rs.text;
 			})
 		})
 	</script>

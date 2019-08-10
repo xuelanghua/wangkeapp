@@ -367,6 +367,22 @@
 						if (fid != selfid && muiCont.is_friend == 1) {
 							document.querySelector('.mui-icon-more').style.display = 'block';
 						}
+						
+						//如果是个人开启红包的话,更新用户当前的地理位置
+						if (fid == userInfo.id) {
+							plus.geolocation.getCurrentPosition(function(p) {
+								mui.post($ajaxUrl + 'userqrcode&action=update_user_coordinate', {
+										token: userInfo.token,
+										redpacket_latitude: p.coords.latitude,
+										redpacket_longitude: p.coords.longitude
+									}, function(res){
+										logs(res);
+									},'json'
+								);
+							}, function(e) {
+								console.log('获取地理位置失败, 红包距离验证开启失败!', 'center');
+							});
+						}
 						// 预览图片
 						var self = plus.webview.currentWebview();
 						tid = self.aid;

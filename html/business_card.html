@@ -620,6 +620,7 @@
 						token: userInfo.token,
 						to_uid: toUid
 					}, function(res) {
+						logs(res);
 						if (res.errno == 0) {
 							var type = res.data.type;
 							qrurl = res.data.url;
@@ -628,6 +629,9 @@
 							// document.getElementById('qr-img').setAttribute('src', url);
 							if (type == 'redpacket') {
 								app.description = '扫二维码领红包';
+								if (res.share_status == 1 && toUid != userInfo.id) {
+									message('双向红包需要VIP及以上级别才有效!', 'center');
+								}
 							} else if (type == 'card') {
 								app.description = '扫二维码加我好友';
 							} else if (type == 'link') {
