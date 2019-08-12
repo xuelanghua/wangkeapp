@@ -1,5 +1,6 @@
 $ajaxUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
 $uploadUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
+$videoUrl = 'https://app.wangkeapp.cn/web/index.php?i=6&c=utility&a=file&do=upload&type=video'; //图片上传接口
 $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
 
 // $ajaxUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口

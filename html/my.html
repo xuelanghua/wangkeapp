@@ -15,8 +15,6 @@
 			li {
 				list-style: none;
 			}
-
-
 			#btn_show {
 				margin-right: 16px;
 				width: 20px;
@@ -478,6 +476,10 @@
 						<img src="../image/icon/my-page-list-03.png">
 						<span class="mui-navigate-right">我的店铺</span>
 					</li>
+					<li class="mui-table-view-cell" id="bought_course">
+						<img src="../image/icon/buy-course-icon.png">
+						<span class="mui-navigate-right">我的购买</span>
+					</li>
 					<li class="mui-table-view-cell" id="boss">
 						<img src="../image/icon/my-page-list-04.png">
 						<span class="mui-navigate-right">团队</span>
@@ -634,7 +636,10 @@
 						setStatusBar('', 'dark');
 					}
 				})
-
+				// 已购买课程列表
+				mui('.mui-content').on('tap', '#bought_course', function() {
+					openPage('bought_course_list.html','bought_course_list',"#f7f7f7")
+				})
 				//团队
 				mui('.mui-content').on('tap', '#boss', function() {
 					mui.post($ajaxUrl + 'team&action=team_list', {
