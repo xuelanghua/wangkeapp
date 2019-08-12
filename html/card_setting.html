@@ -692,14 +692,15 @@
 				</div>
 			</div>
 			<div class="video-recording">
-				<div class="personality_title">视频展示</div>
+				<div class="personality_title">视频展示(视频大小限制10M以内)</div>
 				<div class="choose-video">
 					<span class="mui-navigate-right" id="again-updata">请选择</span>
 				</div>
 				<div class="video-container">
-					<video width="100%" height="" src="https://bfwangke.oss-cn-shenzhen.aliyuncs.com/videos/test/video.mp4" controls="controls"
+					<video width="100%" height="200" src="" poster="../image/target/sound_recording.png" controls="controls"
 					 preload="auto"></video>
 				</div>
+				<input type="hidden" name="my_video" value="">
 			</div>
 			<div class="picture_display">
 				<div class="personality_title">图片展示</div>
@@ -901,8 +902,11 @@
 			
 			// 上传视频
 			mui('.mui-content').on('tap', '.choose-video', function() {
-				plus.gallery.pick(function(e) {
-					var vpath = plus.io.convertLocalFileSystemURL(e);
+				// var videoUrl = document.querySelector('.video-container video').src;
+				// logs(videoUrl);return;
+				plus.gallery.pick(function(path) {
+					var vpath = path;
+					// var vpath = plus.io.convertLocalFileSystemURL(path);
 					showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
 					var task = plus.uploader.createUpload($videoUrl, {
 							method: "POST",
@@ -910,12 +914,14 @@
 							priority: 100
 						},
 						function(t, status) { //上传完成
-							logs(t);
 							if (status == 200) {
 								var res = JSON.parse(t.responseText);
 								if (res.error) {
 									plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
 								} else {
+									logs(res);
+									document.querySelector('input[name=my_video]').value = res.filename;
+									document.querySelector('.video-container video').src = res.url;
 									showload(1);
 								}
 							} else {
@@ -931,13 +937,14 @@
 					task.start();
 					setTimeout(function() {
 						showload(1);
-					}, 10000);
-				}, function() {
+					}, 30000);
+				}, function(e) {
 					message("选择出错！")
 				}, {
 					filter: "video"
 				});
 			})
+			
 			//删除图片
 			mui('#pic-container').on('tap', '.mui-close', function() {
 				var parentDiv = this.parentElement;
@@ -960,6 +967,7 @@
 					company_address: document.querySelector('input[name=company_address]').value,
 					desc: document.querySelector('textarea[name=desc]').value,
 					voice: document.querySelector('input[name=voice]').value,
+					my_video: document.querySelector('input[name=my_video]').value,
 					voice_time: voiceTime,
 					images: images.filter(function(e) {
 						return e != null
@@ -983,6 +991,7 @@
 			showload(0);
 			mui.get($ajaxUrl + 'staff&action=card&token=' + userInfo.token, function(res) {
 				if (res.errno == 0) {
+					logs(res.data);
 					loadInfo(res.data);
 				}
 				// else {
@@ -1060,6 +1069,11 @@
 				document.querySelector('input[name=voice_time]').value = data.voice_time;
 				document.querySelector('input[name=voice]').value = data.voice;
 				voiceTime = data.voice_time;
+			}
+			
+			if (data.my_video.length != 0) {
+				document.querySelector('.video-container video').src = data.my_video;
+				document.querySelector('input[name=my_video]').value = data.my_video;
 			}
 
 			if (data.images.length != 0) {
