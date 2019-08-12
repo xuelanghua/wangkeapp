@@ -73,6 +73,10 @@
 				position: relative;
 			}
 
+			.opction-btn.grayness {
+				opacity: 0.3;
+			}
+
 			.opction-btn:nth-of-type(2):after,
 			.opction-btn:last-of-type:after {
 				content: "";
@@ -153,7 +157,7 @@
 									<img src="../image/icon/team-list-opction03.png">
 									<span>团队课程</span>
 								</div>
-								<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
+								<div class="opction-btn" :class="list.data_status==0&&list.is_captain==0?'grayness':''" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
 									<img src="../image/icon/team-list-opction01.png">
 									<span>数据</span>
 								</div>
@@ -274,9 +278,7 @@
 									'&m=longbing_card'
 							}, 'slide-in-right');
 						} else {
-							openPage('team_detail.html', 'team_detail', '#f7f7f7', {
-								teamid: team_id
-							});
+							// 不做跳转
 						}
 					},
 					// 群聊

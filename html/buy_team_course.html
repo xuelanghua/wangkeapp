@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mini-card {
+				margin: 0.2rem 0;
+				background-color: #FFFFFF;
+				padding: 0.4rem 0.2rem;
+				display: flex;
+				align-items: center;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			.mini-card:last-of-type {
+				border-bottom-right-radius: 0.6rem;
+				border-bottom-left-radius: 0.6rem;
+				box-shadow: 0 8px 3px 0 rgba(220, 220, 220, 0.1);
+			}
+
+			.course-img {
+				overflow: hidden;
+				width: 2.26rem;
+				height: 1.6rem;
+				margin-right: 0.3rem;
+				flex-shrink: 0;
+			}
+
+			.course-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.course-info {
+				flex-grow: 1;
+			}
+
+			.course-info p {
+				font-size: 0.22rem;
+				margin-bottom: 0;
+				line-height: 1.4;
+			}
+
+			.course-info .title {
+				font-size: 0.28rem;
+				color: #333333;
+				text-align: justify;
+				margin-bottom: 0.2rem;
+			}
+
+			.mui-input-group {
+				width: 100%;
+			}
+
+			.mui-input-group:after,
+			.mui-input-group:before,
+			.mui-input-group .mui-input-row:after {
+				display: none;
+			}
+
+			.mui-radio input[type=radio] {
+				top: 50%;
+				margin-top: -16px;
+			}
+
+			.mui-input-row.mui-radio {
+				height: auto;
+				padding: 0.1rem 0.2rem;
+				margin-bottom: 0.2rem;
+			}
+
+			.mui-radio label {
+				display: flex;
+				align-items: center;
+				padding-left: 0;
+				font-size: 0.32rem;
+			}
+
+			.mui-radio label span {
+				color: #DDDDDD;
+			}
+
+			.icon {
+				width: 0.42rem;
+				height: auto;
+				margin-right: 0.2rem;
+			}
+
+			h2 {
+				font-size: 0.5rem;
+				color: #F4412D;
+				text-align: center;
+				padding: 0.3rem 0;
+				font-weight: normal;
+			}
+
+			.pay-btn {
+				width: 6.98rem;
+				height: 0.97rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #FFFFFF;
+				background-color: #2289FF;
+				border-radius: 0.1rem;
+				margin: 0.6rem 0 0.6rem;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">购买课程</h1>
+			</header>
+			<div class="mui-content">
+				<div class="mini-card">
+					<div class="course-img">
+						<img :src="course.cover_url">
+					</div>
+					<div class="course-info">
+						<p class="title">
+							{{course.title}}
+						</p>
+						<p>主讲人：{{course.teacher_name}}</p>
+						<p>结束时间：{{course.end_time}}</p>
+					</div>
+				</div>
+				<div class="mini-card">
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-radio">
+							<label><img class="icon" src="../image/red-packet-pay-icon.png">余额<span>&nbsp;&nbsp;200.00&nbsp;&nbsp;(不足支付)</span></label>
+							<input name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio">
+							<label><img class="icon" src="../image/WeChat.png">微信支付</label>
+							<input name="radio1" type="radio" checked="">
+						</div>
+						<h2>&yen;225.00</h2>
+						<div class="pay-btn">
+							支付
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					course: {}
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.course = self.course;
+						logs(app.course);
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>

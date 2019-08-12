@@ -252,21 +252,16 @@
 			
 			.picture_display_chear {
 				position: relative;
-				/* width: 80px; */
-				width: 5.53rem;
-				/* height: 80px; */
-				height: 5.53rem;
-				margin-right: 10px;
+				width: 33.3333%;
+				height: 6rem;
 				margin-bottom: 10px;
-				/* padding: 20px; */
-				/* padding-bottom: 10px; */
-				/* background-color: #DDDDDD; */
+				padding-right: 10px;
 			}
 			
 			.mui-close {
 				position: absolute!important;
 				top: -8px;
-				right: -8px;
+				right: 0;
 				display: block;
 				width: 20px;
 				height: 20px;
@@ -491,6 +486,38 @@
 				width: 100%;
 				height: auto;
 			}
+			/* 视频部分 */
+			.video-recording{
+				width: 100%;
+				padding: 0.625rem;
+				margin-top:10px;
+				background-color: #FFFFFF;
+			}
+			.choose-video{
+				display: flex;
+				align-items: center;
+				padding: 5px;
+				font-size: 14px;
+				position: relative;
+				margin-bottom: 10px;
+			}
+			
+			.choose-video:after{
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				background-color: #DDDDDD;
+				position: absolute;
+				bottom: -2px;
+				left: 0;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+			.choose-video .mui-navigate-right:after{
+				right: 0;
+				font-size: 18px;
+			}
 		</style>
 	</head>
 
@@ -664,7 +691,16 @@
 					<button id="voice_record" class="hold_down">开始录音 按住说话</button>
 				</div>
 			</div>
-
+			<div class="video-recording">
+				<div class="personality_title">视频展示</div>
+				<div class="choose-video">
+					<span class="mui-navigate-right" id="again-updata">请选择</span>
+				</div>
+				<div class="video-container">
+					<video width="100%" height="" src="https://bfwangke.oss-cn-shenzhen.aliyuncs.com/videos/test/video.mp4" controls="controls"
+					 preload="auto"></video>
+				</div>
+			</div>
 			<div class="picture_display">
 				<div class="personality_title">图片展示</div>
 				<div id="pic-container">
@@ -819,7 +855,7 @@
 					document.querySelector('.member-company-address').innerText = '暂未填写';
 				}
 			})
-			
+
 			//按住录音
 			document.getElementById('voice_record').addEventListener('hold', function() {
 				document.querySelector('.showArea').style.display = 'block';
@@ -846,7 +882,7 @@
 					document.querySelector('.play').src = '../image/bofang.png';
 				}, voiceTime * 1000)
 			})
-		
+
 
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
@@ -862,7 +898,46 @@
 					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
 				});
 			})
-
+			
+			// 上传视频
+			mui('.mui-content').on('tap', '.choose-video', function() {
+				plus.gallery.pick(function(e) {
+					var vpath = plus.io.convertLocalFileSystemURL(e);
+					showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
+					var task = plus.uploader.createUpload($videoUrl, {
+							method: "POST",
+							blocksize: 614400,
+							priority: 100
+						},
+						function(t, status) { //上传完成
+							logs(t);
+							if (status == 200) {
+								var res = JSON.parse(t.responseText);
+								if (res.error) {
+									plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
+								} else {
+									showload(1);
+								}
+							} else {
+								console.log("上传失败：" + status);
+								plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
+							}
+						}
+					);
+					// 页面中要上传的 视频路径
+					task.addFile(vpath, {
+						key: 'file'
+					});
+					task.start();
+					setTimeout(function() {
+						showload(1);
+					}, 10000);
+				}, function() {
+					message("选择出错！")
+				}, {
+					filter: "video"
+				});
+			})
 			//删除图片
 			mui('#pic-container').on('tap', '.mui-close', function() {
 				var parentDiv = this.parentElement;
