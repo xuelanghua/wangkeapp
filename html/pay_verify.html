@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			body {
+				background-color: transparent;
+			}
+
+			.mui-content {
+				height: 100vh;
+				padding-top: 10px;
+			}
+
+			.card-container {
+				width: 100%;
+				height: 100%;
+				background-color: #FFFFFF;
+				border-top-left-radius: 10px;
+				border-top-right-radius: 10px;
+				box-shadow: 0 0 10px 0 rgba(0, 0, 0, .3);
+				overflow: hidden;
+			}
+
+			.title {
+				padding: 10px 10px 10px 15px;
+				font-size: 16px;
+				color: #333333;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				position: relative;
+				line-height: 1;
+			}
+
+			.title:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.title .mui-icon {
+				font-size: 32px;
+				right: 0;
+			}
+
+			.mui-input-row {
+				width: 95%;
+				left: 2.5%;
+				position: relative;
+				/* background-color: #333333; */
+				margin: 0;
+				padding: 0;
+				margin-top: 10%;
+				overflow: visible;
+			}
+
+			.mui-input-row input[type=number] {
+				margin-bottom: 0;
+				padding-right: 36px;
+				border: none;
+				position: relative;
+				border-radius: 0.1rem;
+				background-color: transparent;
+			}
+
+			.mui-input-row:before,
+			.regain-code:before {
+				content: '';
+				display: block;
+				position: absolute;
+				width: 200%;
+				height: 200%;
+				border: 1px solid #dddddd;
+				left: 0;
+				top: -1px;
+				border-radius: 0.2rem;
+				transform-origin: 0 0;
+				-webkit-transform-origin: 0 0;
+				transform: scale(0.5, 0.5);
+				-webkit-transform: scale(0.5, 0.5);
+				box-sizing: border-box;
+			}
+
+			.regain-code:before {
+				border-radius: 0.6rem;
+				border-color: #2289FF;
+				top: 0;
+			}
+
+			.mui-icon-clear {
+				position: absolute;
+				right: 5px;
+				top: 50%;
+				margin-top: -14px;
+				font-size: 26px;
+				color: #DDDDDD;
+			}
+
+			.info-cont {
+				display: flex;
+				align-items: center;
+				padding: 0.4rem 0.2rem 0;
+				justify-content: space-between;
+				flex-wrap: wrap;
+			}
+
+			.info-cont p {
+				margin: 0;
+				font-size: 0.24rem;
+			}
+
+			.regain-code {
+				color: #2289ff;
+				font-size: 0.22rem;
+				position: relative;
+				padding: 0.05rem 0.14rem;
+				background-color: #E8F2FF;
+				border-radius: 0.3rem;
+			}
+
+			.confirm-btn {
+				margin-top: 30%;
+				width: 80%;
+				margin-left: 10%;
+				font-size: 18px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: #2289FF;
+				color: #FFFFFF;
+				height: 44px;
+				border-radius: 47px;
+			}
+
+			.regain-code.gray {
+				color: #d1d1d1;
+				background-color: #FFFFFF;
+			}
+
+			.regain-code.gray:before {
+				border-color: #d1d1d1;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<div class="mui-content">
+				<div class="card-container">
+					<div class="title">
+						<span>短信验证</span> <span class="mui-icon mui-icon-closeempty"></span>
+					</div>
+					<div class="mui-input-row">
+						<input v-model="verify_code" type="number" placeholder="请输入验证码">
+						<span v-show="verify_code" class="mui-icon mui-icon-clear" @tap="verify_code=''"></span>
+					</div>
+					<div class="info-cont">
+						<p>已向您1596*****13的手机号发送了验证码</p>
+						<div v-if="send_status" class="regain-code get-regain-code">
+							获取验证码
+						</div>
+						<div v-else class="regain-code gray">
+							重新获取{{sec}}s
+						</div>
+					</div>
+					<div class="confirm-btn">确定</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					verify_code: '',
+					sec: 30,
+					send_status: true
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							var opener = plus.webview.currentWebview().opener();
+							mui.fire(opener, 'doit');
+						}
+					});
+					mui.plusReady(function() {
+						var opener = plus.webview.currentWebview().opener();
+						// 关闭当前窗口
+						mui('.mui-content').on('tap', '.mui-icon-closeempty', function() {
+							mui.fire(opener, 'doit');
+						})
+						// 确认输入
+						mui('.mui-content').on('tap', '.mui-icon-closeempty', function() {
+
+						})
+					})
+				}
+			})
+			// 获取验证码
+			mui(".mui-content").on('tap', '.get-regain-code', function() {
+				app.send_status = false;
+				cutDown();
+			})
+			// 确认提交
+			mui(".mui-content").on('tap', '.confirm-btn', function() {
+				if (app.verify_code.length == '') {
+					message("请输入验证码！");
+					return false;
+				} else if (app.verify_code.length != 6) {
+					message("验证码有误！");
+					return false;
+				}
+			})
+			// 倒计时
+			function cutDown() {
+				var taimer = setInterval(function() {
+					app.sec -= 1;
+					if (app.sec == 0) {
+						clearInterval(taimer);
+						setTimeout(function() {
+							app.sec = 30;
+							app.send_status = true;
+						}, 1000);
+					}
+				}, 1000);
+			}
+		</script>
+
+	</body>
+
+</html>

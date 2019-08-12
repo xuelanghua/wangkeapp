@@ -255,9 +255,11 @@
 				width: 33.3333%;
 				height: 6rem;
 				margin-bottom: 10px;
-				padding-right: 10px;
 			}
-			
+			.picture_display_chear:nth-of-type(3n+2){
+				padding-left: 5px;
+				padding-right: 5px;
+			}
 			.mui-close {
 				position: absolute!important;
 				top: -8px;
@@ -277,6 +279,7 @@
 			.picture_display_chear img {
 				width: 100%;
 				height: 100%;
+				object-fit: cover;
 			}
 			
 			.preservation{
@@ -697,8 +700,7 @@
 					<span class="mui-navigate-right" id="again-updata">请选择</span>
 				</div>
 				<div class="video-container">
-					<video width="100%" height="200" src="" poster="../image/target/sound_recording.png" controls="controls"
-					 preload="auto"></video>
+					<video id="video" width="100%" height="200" src="" poster="" controls="controls" preload="auto"></video>
 				</div>
 				<input type="hidden" name="my_video" value="">
 			</div>
@@ -725,13 +727,30 @@
 	<script src="../js/upload.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			swipeBack: false,
-			gestureConfig: {
-				hold: true, //默认为false，不监听
-				release: true //默认为false，不监听
-			}
-		})
-
+				swipeBack: false,
+				gestureConfig: {
+					hold: true, //默认为false，不监听
+					release: true //默认为false，不监听
+				}
+			})
+			// (function() {
+			// 	var video;
+			// 	var scale = 0.8;
+			// 	var initialize = function() {
+			// 		video = document.getElementById("video");
+			// 		video.addEventListener('loadeddata', captureImage);
+			// 	};
+			// 
+			// 	var captureImage = function() {
+			// 		var canvas = document.createElement("canvas");
+			// 		canvas.width = video.videoWidth * scale;
+			// 		canvas.height = video.videoHeight * scale;
+			// 		canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+			// 		var cover = canvas.toDataURL("image/png");
+			// 		video.setAttribute("poster",cover);
+			// 	};
+			// 	initialize();
+			// })();
 		var cardType = 'cardType1';
 		var voiceTime = 0;
 		var timer = null;
@@ -745,6 +764,7 @@
 			userInfo = getUserInfo();
 			getMemberInfo();
 			eventInit();
+			initialize('video');
 			mui.previewImage();
 		})
 
@@ -899,14 +919,11 @@
 					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
 				});
 			})
-			
+
 			// 上传视频
 			mui('.mui-content').on('tap', '.choose-video', function() {
-				// var videoUrl = document.querySelector('.video-container video').src;
-				// logs(videoUrl);return;
 				plus.gallery.pick(function(path) {
 					var vpath = path;
-					// var vpath = plus.io.convertLocalFileSystemURL(path);
 					showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
 					var task = plus.uploader.createUpload($videoUrl, {
 							method: "POST",
@@ -922,6 +939,7 @@
 									logs(res);
 									document.querySelector('input[name=my_video]').value = res.filename;
 									document.querySelector('.video-container video').src = res.url;
+									document.getElementById("again-updata").innerText="重新选择";
 									showload(1);
 								}
 							} else {
@@ -944,7 +962,7 @@
 					filter: "video"
 				});
 			})
-			
+
 			//删除图片
 			mui('#pic-container').on('tap', '.mui-close', function() {
 				var parentDiv = this.parentElement;
@@ -1070,10 +1088,11 @@
 				document.querySelector('input[name=voice]').value = data.voice;
 				voiceTime = data.voice_time;
 			}
-			
+
 			if (data.my_video.length != 0) {
 				document.querySelector('.video-container video').src = data.my_video;
 				document.querySelector('input[name=my_video]').value = data.my_video;
+				document.getElementById("again-updata").innerText="重新选择";
 			}
 
 			if (data.images.length != 0) {
@@ -1227,7 +1246,7 @@
 					mui.fire(plus.webview.getWebviewById('user'), 'cardSettingSuccess')
 					setTimeout(function() {
 						fnCloseWin('card_setting');
-					}, 2000)
+					}, 500)
 				} else {
 					message('修改失败!');
 					submitFlag = true;

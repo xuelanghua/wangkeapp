@@ -91,7 +91,9 @@
 				color: #DDDDDD;
 				font-size: 12px;
 			}
-
+			.video-container{
+				background-color: #FFFFFF;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -234,6 +236,10 @@
 				</ul>
 				<p v-else style="margin: 10px 0;">暂无数据</p>
 			</div>
+			<h5 class="personality-desc">视频展示</h5>
+			<div class="video-container" v-if="my_video!=''">
+				<video id="video"  width="100%" height="200" :src="my_video" poster="" controls="controls" preload="auto"></video>
+			</div>
 			<h5 class="personality-desc">图片展示</h5>
 			<div class="img-show" id="img-show">
 				<ul v-if="friendData.images">
@@ -291,7 +297,8 @@
 					addshow: false,
 					audioUrl: '',
 					view_total: 0,
-					share_title: ''
+					share_title: '',
+					my_video:'',
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -348,21 +355,24 @@
 					token: userInfo.token,
 					user_id: fid
 				}, function(res) {
+					logs(res);
 					var data = res.data;
 					if (res.errno == 0) {
 						muiCont.cardType = data.card_type;
 						muiCont.contName = data.name;
 						muiCont.phoneNum = data.phone;
-						muiCont.friendData = data;
+						muiCont.friendData = data; 
 						muiCont.is_friend = data.is_friend;
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;
 						muiCont.audioUrl = data.voice;
 						muiCont.view_total = data.card_view.length;
+						muiCont.my_video = data.my_video;
+						initialize('video');
 						mui(".mui-title")[0].innerText = data.name;
 						var selfid = userInfo.id;
 						if (fid != selfid && muiCont.is_friend != 1) {
-							muiCont.addshow = true;
+							muiCont.addshow = true; 
 						}
 						if (fid != selfid && muiCont.is_friend == 1) {
 							document.querySelector('.mui-icon-more').style.display = 'block';

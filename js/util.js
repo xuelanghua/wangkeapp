@@ -1081,3 +1081,47 @@ function wxpayErrorMessage(errcode) {
 		return "请求错误";
 	}
 }
+// 创建和展示验证页面
+function showVerify() {
+	mask = mui.createMask(function() {
+		plus.webview.getWebviewById("pay_verify").close();
+	});
+	var page = plus.webview.getWebviewById("pay_verify");
+	if (page) {
+		page.addEventListener('loaded', function() {
+			page.show('slide-in-right', 200);
+		}, false);
+	} else {
+		page = plus.webview.create('pay_verify.html', 'pay_verify', {
+			bounce: 'none',
+			popGesture: 'close',
+			scrollIndicator: "none",
+			height: "50%",
+			top: '50%',
+			popGesture: 'none',
+			softinputMode: 'adjustPan',
+			softinputNavBar: 'none',
+			userSelect: false,
+			background: 'transparent',
+			hardwareAccelerated: true,
+		});
+		page.addEventListener('loaded', function() {
+			page.show('slide-in-bottom', 200);
+		}, false);
+	}
+	mask.show();
+}
+
+// 使用视频第一帧作为封面
+function initialize(vid) {
+	var scale = 0.8;
+	var video = document.getElementById(vid);
+	video.addEventListener('loadeddata', function() {
+		var canvas = document.createElement("canvas");
+		canvas.width = video.videoWidth * scale;
+		canvas.height = video.videoHeight * scale;
+		canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+		var cover = canvas.toDataURL("image/png");
+		video.setAttribute("poster", cover);
+	});
+}
