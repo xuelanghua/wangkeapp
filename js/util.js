@@ -235,21 +235,25 @@ function formatDate(format, date) {
 }
 
 // 打开窗口
-function openPage(url, id, color, extras,aniShow,callback) {
+function openPage(url, id, color, extras, aniShow, callback) {
 	var page = plus.webview.getWebviewById(id);
 	if (page) {
-		plus.webview.show( id, aniShow||'slide-in-right', 200, callback, extras );
+		page.addEventListener('loaded', function() {
+			page.show(aniShow || 'slide-in-right', 200, callback, extras);
+		}, false);
 	} else {
 		page = plus.webview.create(url, id, {
 			bounce: 'none',
 			scrollsToTop: true,
 			popGesture: 'close',
-			scrollIndicator:"none",
+			scrollIndicator: "none",
 			statusbar: {
 				background: color
 			}
 		}, extras);
-		plus.webview.show( id, aniShow||'slide-in-right', 200, callback, extras );
+		page.addEventListener('loaded', function() {
+			page.show(aniShow || 'slide-in-right', 200, callback, extras);
+		}, false);
 	}
 }
 
@@ -1076,4 +1080,3 @@ function wxpayErrorMessage(errcode) {
 		return "请求错误";
 	}
 }
-
