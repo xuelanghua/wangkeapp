@@ -221,7 +221,7 @@
 						}
 					});
 					mui.plusReady(function() {
-						app.phone_num=userInfo.mobile.substring(5,9);
+						app.phone_num=userInfo.mobile.substring(0,3)+"****"+userInfo.mobile.substring(7,11);
 						var opener = plus.webview.currentWebview().opener();
 						// 关闭当前窗口
 						mui('.mui-content').on('tap', '.mui-icon-closeempty', function() {
@@ -310,16 +310,6 @@
 						app.send_status = false;
 						cutDown();
 					}
-				}, 'json');
-			}
-			//获取用户信息
-			function getMemberInfo() {
-				mui.post($ajaxUrl + 'member', {
-					action: 'detail',
-					token: userInfo.token
-				}, function(res) {
-					var memberInfo = res.data;
-					vm.balance = memberInfo.balance;
 				}, 'json');
 			}
 		</script>
