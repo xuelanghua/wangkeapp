@@ -129,6 +129,42 @@
 				padding-bottom: 0.2rem;
 				background-color: #FFFFFF;
 			}
+			
+			.curriculum-list-right {
+				flex-grow: 1;
+			}
+			
+			.course-bottom {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			
+			.course-price {
+				font-size: 0.28rem;
+				color: #333333;
+			}
+
+			/* 没有购买记录 */
+			.void-tips-conts {
+				width: 100%;
+				padding-top: 10%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+
+			.void-tips-conts img {
+				width: 60%;
+				height: auto;
+				margin-bottom: 10px;
+			}
+
+			.void-tips-conts p {
+				font-size: 16px;
+				color: #999999;
+			}
 
 			[v-cloak] {
 				display: none;
@@ -145,43 +181,48 @@
 			<div class="mui-content">
 				<div class="list-container">
 					<ul>
-						<li class="mui-table-view-cell curriculum-list">
-							<div class="curriculum-img">
-								<img src="../image/5E0eH.png">
-							</div>
-							<div class="curriculum-list-right">
-								<!-- 官方加stick-sign -->
-								<p class="mui-ellipsis-2 course-title">
-									可杀对方啊苏打粉可见阿斯顿发阿萨拉快递放假拉水电费递放假拉水电费递放假拉水电费递放假拉水电费递放假拉水电费
-								</p>
-								<!-- 商品价格 -->
-								<span class="course-price mui-hidden">&yen;25.00</span>
-								<div class="status-cont mui-clearfix">
-									<div class="mui-pull-left">
-										<span class="ting-ke">主讲人：兰某某</span>
+						<template v-for="(course, index) in courseList">
+							<li class="mui-table-view-cell curriculum-list">
+								<div class="curriculum-img">
+									<img :src="course.cover_url">
+								</div>
+								<div class="curriculum-list-right">
+									<!-- 官方加stick-sign -->
+									<p class="mui-ellipsis-2 course-title">
+										{{course.title}}
+									</p>
+									<!-- 商品价格 -->
+									<span class="course-price" v-if="course.price>0">&yen;{{course.price}}</span>
+									<div class="status-cont mui-clearfix">
+										<div class="mui-pull-left">
+											<span class="ting-ke">主讲人：{{course.teacher_name}}</span>
+										</div>
+									</div>
+									<div class="course-bottom">
+										<div v-if="course.state==0" class="cretae-timer">
+											开播：{{course.start_time}}
+										</div>
+										<div v-else-if="course.state==1" class="train-ing">
+											<img style="width: 0.38rem;" src="../image/discover/loading.gif">
+											<span>培训中</span>
+										</div>
+										<div v-else class="cretae-timer">
+											结束：{{course.end_time}}
+										</div>
+										<div class="team-name mui-pull-right" @tap="teamDetail(team_id)">
+											<img class="team-icon" src="../image/discover/team-icon.png">
+											<span class="mui-ellipsis">{{course.team_name}}</span>
+										</div>
 									</div>
 								</div>
-								<div>
-									<div class="cretae-timer">
-										开播：2019-08-12
-									</div>
-									<!-- <div class="train-ing">
-										<img style="width: 0.38rem;" src="../image/discover/loading.gif">
-										<span>培训中</span>
-									</div> -->
-									<!-- <div class="cretae-timer">
-										结束：2019-08-16
-									</div> -->
-									<div class="team-name mui-pull-right" @tap="teamDetail(team_id)">
-										<img class="team-icon" src="../image/discover/team-icon.png">
-										<span class="mui-ellipsis">房东的猫</span>
-									</div>
-								</div>
-							</div>
-						</li>
+							</li>
+						</template>
 					</ul>
 				</div>
-				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="pay_verify">支付</button>
+				<div v-if="isVoid" class="void-tips-conts">
+					<img src="../image/self_media_tips01.png">
+					<p>空空如也~</p>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -189,10 +230,15 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var skip = 1;
+			var limit = 1;
+			var pullRefresh = '';
+
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					courseList: []
+					courseList: [],
+					isVoid: false
 				},
 				created: function() {
 					// 初始化字体大小
@@ -234,14 +280,66 @@
 					mui.init({
 						beforeback: function() {
 							plus.navigator.setStatusBarStyle("light");
+						},
+						pullRefresh: {
+							container: ".mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullRefresh = "up";
+									skip++;
+									getPurchaseRecord();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									pullRefresh = "down";
+									mui('.mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getPurchaseRecord();
+								}
+							}
 						}
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						plus.navigator.setStatusBarStyle("dark");
+						getPurchaseRecord();
 					})
 				}
 			})
+
+			function getPurchaseRecord() {
+				mui.get($ajaxUrl + 'team&action=course_purchase_record', {
+					token: userInfo.token,
+					skip: skip,
+					limit: limit
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						if (skip == 1) {
+							app.isVoid = false;
+							app.courseList = res.data;
+						} else {
+							app.courseList = app.courseList.concat(res.data);
+						}
+						mui('.mui-content').pullRefresh().endPullupToRefresh(false);
+					} else {
+						if (skip == 1) {
+							app.isVoid = true;
+						}
+						mui('.mui-content').pullRefresh().endPullupToRefresh(true);
+					}
+					if (pullRefresh == 'down') {
+						mui('.mui-content').pullRefresh().endPulldownToRefresh();
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 
