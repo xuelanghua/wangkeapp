@@ -395,30 +395,30 @@
 							<!-- 课程列表列表 -->
 							<li class="mui-table-view-cell curriculum-list" v-if="i.type==3">
 								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-								<div class="curriculum-img" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+								<div class="curriculum-img" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m,i.info.is_silent,i.info.is_buy)">
 									<img :src="i.info.cover_url">
 									<!-- 是否购买课程标记 -->
-									<img class="buy-sign mui-hidden" src="../image/icon/already-bought-icon.png">
+									<img v-if="i.info.is_buy==1" class="buy-sign" src="../image/icon/already-bought-icon.png">
 								</div>
 								<div class="curriculum-list-right">
 									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+									<p class="mui-ellipsis-2" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m,i.info.is_silent,i.info.is_buy)">
 										{{i.info.title}}
 									</p>
 									<!-- 商品价格 -->
-									<span class="course-price mui-hidden">&yen;25.00</span>
-									<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+									<span class="course-price" v-if="i.info.price>0">&yen;{{i.info.price}}</span>
+									<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m,i.info.is_silent,i.info.is_buy)">
 										<div class="mui-pull-left">
 											<span class="ting-ke">主讲人：{{i.info.teacher_name}}</span>
 										</div>
 									</div>
 									<div>
-										<div v-if="i.info.state==0" class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+										<div v-if="i.info.state==0" class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m,i.info.is_silent,i.info.is_buy)">
 											开播：{{i.info.start_time}}
 										</div>
-										<div v-else-if="i.info.state==1" class="train-ing" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+										<div v-else-if="i.info.state==1" class="train-ing" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m,i.info.is_silent,i.info.is_buy)">
 											<img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
-										<div v-else class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m)">
+										<div v-else class="cretae-timer" @tap="curriculumDetail(i.info.id,i.info.state,i.info.team_id,i.info.title,i.info.teacher_id, i.info.is_silent,m,i.info.is_silent,i.info.is_buy)">
 											结束：{{i.info.end_time}}
 										</div>
 										<div class="team-name mui-pull-right" @tap="teamDetail(i.info.team_id)">
@@ -533,7 +533,8 @@
 							title: '企业总仓',
 							id: '4',
 							selected: false
-						}, {
+						},
+						{
 							title: '旺客总仓',
 							id: '5',
 							selected: false
@@ -648,47 +649,29 @@
 					//打开课程详情
 					curriculumDetail: function(cid, status, tid, title, teid, silent, idx, isbuy) {
 						// 判断是否购买
-						// if (isbuy == 1) {
-						// 	if (status == 1 || status == 2) {
-						// 		// 直播页面
-						// 		openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-						// 			tid: tid,
-						// 			courseId: cid,
-						// 			courseTitle: title,
-						// 			teacherId: teid,
-						// 			isSilent: silent
-						// 		});
-						// 	} else {
-						// 		// 未开播提示
-						// 		openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
-						// 			course: app.dynamic[idx].info,
-						// 			kaola: true
-						// 		});
-						// 	}
-						// } else {
-						// 	openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
-						// 		course: app.dynamic[idx].info,
-						// 	});
-						// } 
-						openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
-							course: app.dynamic[idx].info,
-						});
-						// if (status == 1 || status == 2) {
-						// 	// 直播页面
-						// 	openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-						// 		tid: tid,
-						// 		courseId: cid,
-						// 		courseTitle: title,
-						// 		teacherId: teid,
-						// 		isSilent: silent
-						// 	});
-						// } else {
-						// 	// 未开播提示
-						// 	openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
-						// 		course: app.dynamic[idx].info,
-						// 		kaola: true
-						// 	});
-						// }
+						logs(isbuy);
+						if (isbuy == 1) {
+							if (status == 1 || status == 2) {
+								// 直播页面
+								openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+									tid: tid,
+									courseId: cid,
+									courseTitle: title,
+									teacherId: teid,
+									isSilent: silent
+								});
+							} else {
+								// 未开播提示
+								openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
+									course: app.dynamic[idx].info,
+									kaola: true
+								});
+							}
+						} else {
+							openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
+								course: app.dynamic[idx].info,
+							});
+						} 
 					},
 					// 评论
 					pinglun: function(t_id, i_idx) {
@@ -873,7 +856,7 @@
 					limit: limit,
 					article_cid: app.cid,
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						if (skip == 1) {
 							app.dynamic = [];
@@ -1003,6 +986,10 @@
 			window.addEventListener('doit', function() {
 				app.typeler = [];
 				skip = 1;
+				getDiscoverData();
+			}, false);
+			// 监听课程购买
+			window.addEventListener('buycourse', function() {
 				getDiscoverData();
 			}, false);
 			// 更换封面

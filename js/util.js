@@ -239,9 +239,7 @@ function formatDate(format, date) {
 function openPage(url, id, color, extras, aniShow, callback) {
 	var page = plus.webview.getWebviewById(id);
 	if (page) {
-		page.addEventListener('loaded', function() {
-			page.show(aniShow || 'slide-in-right', 200, callback, extras);
-		}, false);
+		page.show(aniShow || 'slide-in-right', 200, callback, extras);
 	} else {
 		page = plus.webview.create(url, id, {
 			bounce: 'none',
@@ -1086,15 +1084,19 @@ function wxpayErrorMessage(errcode) {
 	}
 }
 // 创建和展示验证页面
-function showVerify() {
+function showVerify(time) {
 	mask = mui.createMask(function() {
-		plus.webview.getWebviewById("pay_verify").close();
+		var verify = plus.webview.getWebviewById("pay_verify");
+		if (verify) {
+			verify.hide();
+		}
 	});
 	var page = plus.webview.getWebviewById("pay_verify");
 	if (page) {
-		page.addEventListener('loaded', function() {
-			page.show('slide-in-right', 200);
-		}, false);
+		mui.fire(plus.webview.getWebviewById('pay_verify'), 'cutDown', {
+			time: time
+		});
+		page.show('slide-in-bottom', 200);
 	} else {
 		page = plus.webview.create('pay_verify.html', 'pay_verify', {
 			bounce: 'none',
@@ -1108,6 +1110,9 @@ function showVerify() {
 			userSelect: false,
 			background: 'transparent',
 			hardwareAccelerated: true,
+		});
+		mui.fire(plus.webview.getWebviewById('pay_verify'), 'cutDown', {
+			time: time
 		});
 		page.addEventListener('loaded', function() {
 			page.show('slide-in-bottom', 200);
