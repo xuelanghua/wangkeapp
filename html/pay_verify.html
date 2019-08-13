@@ -198,7 +198,6 @@
 					sec: 60,
 					send_status: true,
 					course_id: '',
-					pay_type: '',
 					phone_num:''
 				},
 				created: function() {
@@ -244,6 +243,7 @@
 					message("验证码有误！");
 					return false;
 				}
+				app.course_id=getcache("course_id");
 				confirmation();
 			})
 			// 倒计时
@@ -267,10 +267,12 @@
 			}
 			// 确定
 			function confirmation() {
+				logs(app.course_id);
+				logs(app.verify_code);
 				mui.post($ajaxUrl + 'team&action=course_purchase', {
 					token: userInfo.token,
 					course_id: app.course_id,
-					pay_type: app.pay_type,
+					pay_type: 'balance',
 					code: app.verify_code
 				}, function(res) {
 					logs(res);
@@ -278,7 +280,7 @@
 						message("支付成功！");
 						mui.back();
 					} else {
-						message("支付失败，稍后重试！");
+						message(message);
 					}
 				}, 'json');
 			}
@@ -296,9 +298,7 @@
 
 			//获取短信验证
 			function getVerifyCode() {
-				app.send_status = false;
-				cutDown();
-				return;
+				// return false;
 				mui.post($ajaxUrl + 'verifycode', {
 					receiver: userInfo.mobile,
 					action: "login"
