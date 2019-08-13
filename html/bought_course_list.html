@@ -183,33 +183,33 @@
 					<ul>
 						<template v-for="(course, index) in courseList">
 							<li class="mui-table-view-cell curriculum-list">
-								<div class="curriculum-img">
+								<div class="curriculum-img" @tap="curriculumDetail(course)">
 									<img :src="course.cover_url">
 								</div>
 								<div class="curriculum-list-right">
 									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2 course-title">
+									<p class="mui-ellipsis-2 course-title" @tap="curriculumDetail(course)">
 										{{course.title}}
 									</p>
 									<!-- 商品价格 -->
-									<span class="course-price" v-if="course.price>0">&yen;{{course.price}}</span>
-									<div class="status-cont mui-clearfix">
+									<span class="course-price" v-if="course.price>0" @tap="curriculumDetail(course)">&yen;{{course.price}}</span>
+									<div class="status-cont mui-clearfix" @tap="curriculumDetail(course)">
 										<div class="mui-pull-left">
 											<span class="ting-ke">主讲人：{{course.teacher_name}}</span>
 										</div>
 									</div>
 									<div class="course-bottom">
-										<div v-if="course.state==0" class="cretae-timer">
+										<div v-if="course.state==0" class="cretae-timer" @tap="curriculumDetail(course)">
 											开播：{{course.start_time}}
 										</div>
-										<div v-else-if="course.state==1" class="train-ing">
+										<div v-else-if="course.state==1" class="train-ing" @tap="curriculumDetail(course)">
 											<img style="width: 0.38rem;" src="../image/discover/loading.gif">
 											<span>培训中</span>
 										</div>
-										<div v-else class="cretae-timer">
+										<div v-else class="cretae-timer" @tap="curriculumDetail(course)">
 											结束：{{course.end_time}}
 										</div>
-										<div class="team-name mui-pull-right" @tap="teamDetail(team_id)">
+										<div class="team-name mui-pull-right" @tap="teamDetail(course.team_id)">
 											<img class="team-icon" src="../image/discover/team-icon.png">
 											<span class="mui-ellipsis">{{course.team_name}}</span>
 										</div>
@@ -251,20 +251,21 @@
 				},
 				methods: {
 					// 跳转课程详情
-					curriculumDetail: function(idx) {
+					curriculumDetail: function(courseInfo) {
+						logs(courseInfo);
 						if (status == 1 || status == 2) {
 							// 直播页面
 							openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-								tid: tid,
-								courseId: cid,
-								courseTitle: title,
-								teacherId: teid,
-								isSilent: silent
+								tid: courseInfo.team_id,
+								courseId: courseInfo.id,
+								courseTitle: courseInfo.title,
+								teacherId: courseInfo.teacher_id,
+								isSilent: courseInfo.is_silent
 							});
 						} else {
 							// 未开播提示
 							openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
-								course: app.courseList[idx].info,
+								course: courseInfo,
 								kaola: true
 							});
 						}
