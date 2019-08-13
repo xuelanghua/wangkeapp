@@ -198,7 +198,7 @@
 					sec: 60,
 					send_status: true,
 					course_id: '',
-					phone_num:''
+					phone_num: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -220,7 +220,7 @@
 						}
 					});
 					mui.plusReady(function() {
-						app.phone_num=userInfo.mobile.substring(0,3)+"****"+userInfo.mobile.substring(7,11);
+						app.phone_num = userInfo.mobile.substring(0, 3) + "****" + userInfo.mobile.substring(7, 11);
 						var opener = plus.webview.currentWebview().opener();
 						// 关闭当前窗口
 						mui('.mui-content').on('tap', '.mui-icon-closeempty', function() {
@@ -243,7 +243,7 @@
 					message("验证码有误！");
 					return false;
 				}
-				app.course_id=getcache("course_id");
+				app.course_id = getcache("course_id");
 				confirmation();
 			})
 			// 倒计时
@@ -267,18 +267,16 @@
 			}
 			// 确定
 			function confirmation() {
-				logs(app.course_id);
-				logs(app.verify_code);
 				mui.post($ajaxUrl + 'team&action=course_purchase', {
 					token: userInfo.token,
 					course_id: app.course_id,
 					pay_type: 'balance',
 					code: app.verify_code
 				}, function(res) {
-					logs(res);
 					if (res.errno == 0) {
 						message("支付成功！");
-						mui.back();
+						plus.webview.close('buy_team_course', 'fade-out');
+						plus.webview.close('pay_verify', 'fade-out');
 					} else {
 						message(message);
 					}
@@ -298,7 +296,6 @@
 
 			//获取短信验证
 			function getVerifyCode() {
-				// return false;
 				mui.post($ajaxUrl + 'verifycode', {
 					receiver: userInfo.mobile,
 					action: "login"
@@ -313,7 +310,5 @@
 				}, 'json');
 			}
 		</script>
-
 	</body>
-
 </html>
