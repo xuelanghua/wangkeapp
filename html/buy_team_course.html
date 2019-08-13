@@ -20,8 +20,8 @@
 			}
 
 			.mini-card:last-of-type {
-				border-bottom-right-radius: 0.6rem;
-				border-bottom-left-radius: 0.6rem;
+				border-bottom-right-radius: 0.3rem;
+				border-bottom-left-radius: 0.3rem;
 				box-shadow: 0 8px 3px 0 rgba(220, 220, 220, 0.1);
 				flex-direction: column;
 			}
@@ -85,6 +85,10 @@
 				font-size: 0.32rem;
 			}
 
+			.mui-radio label span.active {
+				color: #333333;
+			}
+			
 			.mui-radio label span {
 				color: #DDDDDD;
 			}
@@ -152,7 +156,7 @@
 							<label>
 								<img class="icon" src="../image/red-packet-pay-icon.png">
 									余额
-								<span>&nbsp;&nbsp;{{balance}}&nbsp;&nbsp;<template v-if="insufficient">(不足支付)</template></span>
+								<span :class="!insufficient ? 'active' : ''">&nbsp;&nbsp;{{balance}}&nbsp;&nbsp;<template v-if="insufficient">(不足支付)</template></span>
 							</label>
 							<input name="radio1" value="balance" type="radio" :disabled="insufficient" v-model="payType">
 						</div>
@@ -186,7 +190,7 @@
 					cut_down: 60,
 					price:'',
 					balance: '',
-					insufficient:false
+					insufficient: false
 				},
 				created: function() {
 					// 初始化字体大小
@@ -316,11 +320,12 @@
 					token: userInfo.token
 				}, function(res) {
 					app.balance=res.data.balance
-					if(app.balance<app.price){
+					if(parseFloat(app.balance) < parseFloat(app.price)){
 						app.insufficient=true;
 					}else{
 						app.insufficient=false;
 					}
+					logs(app.insufficient);
 				}, 'json');
 			}
 		</script>

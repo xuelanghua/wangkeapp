@@ -395,30 +395,30 @@
 							<!-- 课程列表列表 -->
 							<li class="mui-table-view-cell curriculum-list" v-if="i.type==3">
 								<!-- <img style="width: 0.38rem;" src="../image/discover/loading.gif" > -->
-								<div class="curriculum-img" @tap="curriculumDetail(m)">
+								<div class="curriculum-img" @tap="curriculumDetail(i.info)">
 									<img :src="i.info.cover_url">
 									<!-- 是否购买课程标记 -->
 									<img v-if="i.info.is_buy==1" class="buy-sign" src="../image/icon/already-bought-icon.png">
 								</div>
 								<div class="curriculum-list-right">
 									<!-- 官方加stick-sign -->
-									<p class="mui-ellipsis-2" @tap="curriculumDetail(m)">
+									<p class="mui-ellipsis-2" @tap="curriculumDetail(i.info)">
 										{{i.info.title}}
 									</p>
 									<!-- 商品价格 -->
 									<span class="course-price" v-if="i.info.price>0">&yen;{{i.info.price}}</span>
-									<div class="status-cont mui-clearfix" @tap="curriculumDetail(m)">
+									<div class="status-cont mui-clearfix" @tap="curriculumDetail(i.info)">
 										<div class="mui-pull-left">
 											<span class="ting-ke">主讲人：{{i.info.teacher_name}}</span>
 										</div>
 									</div>
 									<div>
-										<div v-if="i.info.state==0" class="cretae-timer" @tap="curriculumDetail(m)">
+										<div v-if="i.info.state==0" class="cretae-timer" @tap="curriculumDetail(i.info)">
 											开播：{{i.info.start_time}}
 										</div>
-										<div v-else-if="i.info.state==1" class="train-ing" @tap="curriculumDetail(m)">
+										<div v-else-if="i.info.state==1" class="train-ing" @tap="curriculumDetail(i.info)">
 											<img style="width: 0.38rem;" src="../image/discover/loading.gif">培训中</div>
-										<div v-else class="cretae-timer" @tap="curriculumDetail(m)">
+										<div v-else class="cretae-timer" @tap="curriculumDetail(i.info)">
 											结束：{{i.info.end_time}}
 										</div>
 										<div class="team-name mui-pull-right" @tap="teamDetail(i.info.team_id)">
@@ -647,34 +647,33 @@
 						});
 					},
 					//打开课程详情
-					curriculumDetail: function(i) {
+					curriculumDetail: function(courseInfo) {
 						// 判断是否购买
-						// logs(app.dynamic[i]);
-						// return false;
-						var isbuy=app.dynamic[i].is_buy;
-						if (isbuy == 1||app.dynamic[i].price==0) {
-							if (status == 1 || status == 2) {
+						// logs(courseInfo);
+						if (courseInfo.is_buy == 1 || courseInfo.price == 0) {
+							if (courseInfo.state == 1 || courseInfo.state == 2) {
 								// 直播页面
 								openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-									tid: app.dynamic[i].team_id,
-									courseId: app.dynamic[i].id,
-									courseTitle:  app.dynamic[i].title,
-									teacherId: app.dynamic[i].teacher_id,
-									isSilent: app.dynamic[i].is_silent
+									tid: courseInfo.team_id,
+									courseId: courseInfo.id,
+									courseTitle: courseInfo.title,
+									teacherId: courseInfo.teacher_id,
+									isSilent: courseInfo.is_silent
 								});
 							} else {
 								// 未开播提示
 								openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
-									course: app.dynamic[i].info,
+									course: courseInfo,
 									kaola: true
 								});
 							}
 						} else {
 							openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
-								course: app.dynamic[i].info,
+								course: courseInfo,
 							});
 						} 
 					},
+					
 					// 评论
 					pinglun: function(t_id, i_idx) {
 						document.querySelector(".menu-list" + timeline_id).classList.remove("active");
