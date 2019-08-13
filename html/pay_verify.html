@@ -26,6 +26,7 @@
 				border-top-right-radius: 10px;
 				box-shadow: 0 0 10px 0 rgba(0, 0, 0, .3);
 				overflow: hidden;
+				position: relative;
 			}
 
 			.title {
@@ -133,7 +134,7 @@
 			}
 
 			.confirm-btn {
-				margin-top: 30%;
+				margin-top: 20%;
 				width: 80%;
 				margin-left: 10%;
 				font-size: 18px;
@@ -173,7 +174,7 @@
 						<span v-show="verify_code" class="mui-icon mui-icon-clear" @tap="verify_code=''"></span>
 					</div>
 					<div class="info-cont">
-						<p>已向您1596*****13的手机号发送了验证码</p>
+						<p>已向您{{phone_num}}的手机号发送了验证码</p>
 						<div v-if="send_status" class="regain-code get-regain-code">
 							获取验证码
 						</div>
@@ -194,11 +195,11 @@
 				el: "#mui-content",
 				data: {
 					verify_code: '',
-					sec: 30,
+					sec: 60,
 					send_status: true,
-					course_id:'',
-					pay_type:'',
-					code:''
+					course_id: '',
+					pay_type: '',
+					phone_num:''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -220,25 +221,22 @@
 						}
 					});
 					mui.plusReady(function() {
+						app.phone_num=userInfo.mobile.substring(5,9);
 						var opener = plus.webview.currentWebview().opener();
 						// 关闭当前窗口
 						mui('.mui-content').on('tap', '.mui-icon-closeempty', function() {
 							mui.fire(opener, 'doit');
-						})
-						// 确认输入
-						mui('.mui-content').on('tap', '.mui-icon-closeempty', function() {
-
 						})
 					})
 				}
 			})
 			// 获取验证码
 			mui(".mui-content").on('tap', '.get-regain-code', function() {
-				app.send_status = false;
-				cutDown();
+				getVerifyCode();
 			})
 			// 确认提交
 			mui(".mui-content").on('tap', '.confirm-btn', function() {
+				document.activeElement.blur();
 				if (app.verify_code.length == '') {
 					message("请输入验证码！");
 					return false;
@@ -246,30 +244,82 @@
 					message("验证码有误！");
 					return false;
 				}
+				confirmation();
 			})
 			// 倒计时
+			var timer = null;
+
 			function cutDown() {
-				var taimer = setInterval(function() {
+				if (timer) {
+					return false;
+				}
+				timer = setInterval(function() {
 					app.sec -= 1;
 					if (app.sec == 0) {
-						clearInterval(taimer);
+						clearInterval(timer);
 						setTimeout(function() {
-							app.sec = 30;
+							timer = null;
+							app.sec = 60;
 							app.send_status = true;
 						}, 1000);
 					}
 				}, 1000);
 			}
-			// 获取验证码
-			function getVerifyCode() {
+			// 确定
+			function confirmation() {
 				mui.post($ajaxUrl + 'team&action=course_purchase', {
 					token: userInfo.token,
-					course_id:app.course_id,
-					pay_type:app.pay_type,
-					code:app.code
+					course_id: app.course_id,
+					pay_type: app.pay_type,
+					code: app.verify_code
 				}, function(res) {
 					logs(res);
-					if (res.errno == 0) {} else {}
+					if (res.errno == 0) {
+						message("支付成功！");
+						mui.back();
+					} else {
+						message("支付失败，稍后重试！");
+					}
+				}, 'json');
+			}
+			// 事件监听
+			window.addEventListener('cutDown', function(e) {
+				var time = e.detail.time;
+				if (time > 0 && time != 60) {
+					app.sec = time;
+					app.send_status = false;
+					cutDown();
+				} else {
+					getVerifyCode();
+				}
+			})
+
+			//获取短信验证
+			function getVerifyCode() {
+				app.send_status = false;
+				cutDown();
+				return;
+				mui.post($ajaxUrl + 'verifycode', {
+					receiver: userInfo.mobile,
+					action: "login"
+				}, function(res) {
+					if (res.errno == 1) {
+						mui.toast(res.message);
+						return false;
+					} else {
+						app.send_status = false;
+						cutDown();
+					}
+				}, 'json');
+			}
+			//获取用户信息
+			function getMemberInfo() {
+				mui.post($ajaxUrl + 'member', {
+					action: 'detail',
+					token: userInfo.token
+				}, function(res) {
+					var memberInfo = res.data;
+					vm.balance = memberInfo.balance;
 				}, 'json');
 			}
 		</script>

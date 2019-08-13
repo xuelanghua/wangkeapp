@@ -149,19 +149,19 @@
 				<div class="mini-card">
 					<form class="mui-input-group">
 						<div class="mui-input-row mui-radio">
-							<label><img class="icon" src="../image/red-packet-pay-icon.png">余额<span>&nbsp;&nbsp;200.00&nbsp;&nbsp;(不足支付)</span></label>
-							<input name="radio1"  value="balance" type="radio" :disabled="isDis">
+							<label><img class="icon" src="../image/red-packet-pay-icon.png">余额<span>&nbsp;&nbsp;{{price}}&nbsp;&nbsp;(不足支付)</span></label>
+							<input name="radio1" value="balance" type="radio" :disabled="isDis" v-model="payType">
 						</div>
 						<div class="mui-input-row mui-radio">
 							<label><img class="icon" src="../image/WeChat.png">微信支付</label>
-							<input name="radio1" value="wxpay" type="radio" checked="checked">
+							<input name="radio1" value="wxpay" type="radio" checked="checked" v-model="payType">
 						</div>
-						<h2>&yen;225.00</h2>
-						<div class="pay-btn">
+						<h2>&yen;{{price}}</h2>
+						<div class="pay-btn" @tap="wechatpay">
 							支付
 						</div>
 					</form>
-					<p class="remark-info">※注：此商品为虚拟商品，购买后将无法退换货。</p>
+					<p class="remark-info">※注：此商品为虚拟商品，不支持退换货。</p>
 				</div>
 			</div>
 		</div>
@@ -170,11 +170,18 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var mask = null;
+			var channel = null;
+			var wxChannel = null;
+			var WXPAYSERVER = $ajaxUrl + 'team&action=course_purchase';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
 					course: {},
-					isDis:false
+					isDis: false,
+					payType: 'wxpay',
+					cut_down: 60,
+					price: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -186,10 +193,20 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-
+					// 支付
+					wechatpay: function() {
+						if (this.payType == "wxpay") {
+							// asdf
+							pay('wxpay');
+						} else {
+							showVerify(app.cut_down);
+							if (app.cut_down == 60) {
+								cutDown();
+							}
+						}
+					}
 				},
 				mounted: function() {
-
 					mui.init({
 						beforeback: function() {
 							//plus.navigator.setStatusBarStyle("light");
@@ -198,10 +215,112 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.course = self.course;
+						app.price = self.course.price;
 						logs(app.course);
+						plus.payment.getChannels(function(channels) {
+							for (var i in channels) {
+								if (channels[i].id == "wxpay") {
+									wxChannel = channels[i];
+								} else {
+									aliChannel = channels[i];
+								}
+							}
+						}, function(e) {
+							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
+						});
 					})
 				}
 			})
+			window.addEventListener('doit', function() {
+				mask.close();
+			}, false);
+			// 倒计时
+			function cutDown() {
+				var taimer = setInterval(function() {
+					app.cut_down -= 1;
+					if (app.cut_down == 0 || app.cut_down < 0) {
+						clearInterval(taimer);
+						setTimeout(function() {
+							app.cut_down = 60;
+						}, 1000);
+					}
+				}, 1000);
+			}
+			
+			// 2. 发起支付请求
+			function pay(id) {
+				// 从服务器请求支付订单
+				var PAYSERVER = '';
+				if (id == 'wxpay') {
+					PAYSERVER = WXPAYSERVER;
+					channel = wxChannel;
+				} else {
+					message("不支持此支付通道!", 'center');
+					return;
+				}
+
+				showload(0);
+				mui.post(PAYSERVER, {
+					token: userInfo.token,
+					course_id: app.course.id,
+					pay_type: 'wxpay',
+					code: ''
+				}, function(res) {
+					console.log(JSON.stringify(res));
+					showload(1);
+					if (res.errno == 0) {
+						var data = res.data;
+						var param = {
+							appid: data.appid,
+							noncestr: data.nonce_str,
+							package: 'Sign=WXPay',
+							partnerid: data.mch_id,
+							prepayid: data.prepay_id,
+							timestamp: data.timeStamp,
+							sign: data.paySign
+						};
+
+						plus.payment.request(channel, param, function(result) {
+							message('支付成功!');
+							mui.fire(plus.webview.getWebviewById('self_media'), 'buycourse');
+							setTimeout(function() {
+								mui.back();
+							}, 800)
+						}, function(error) {
+							console.log(JSON.stringify(error));
+							// plus.nativeUI.alert("支付失败：" + error.code);
+							var message = error.message;
+							var regexp = /(\-)?\d+/;
+							var code = message.match(regexp);
+							if (code.length > 0) {
+								code = code[0];
+							} else {
+								code = "-9";
+							}
+							plus.nativeUI.alert("支付失败：" + wxpayErrorMessage(code));
+						});
+					} else {
+						plus.nativeUI.alert(res.message, null, '提示');
+					}
+				}, 'json')
+			}
+			// 确定
+			function confirmation() {
+				mui.post($ajaxUrl + 'team&action=course_purchase', {
+					token: userInfo.token,
+					course_id: app.course_id,
+					pay_type: app.pay_type,
+					code: app.verify_code
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						message("支付成功！");
+						mui.back();
+					} else {
+						message("支付失败，稍后重试！");
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 
