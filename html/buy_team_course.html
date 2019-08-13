@@ -150,11 +150,11 @@
 					<form class="mui-input-group">
 						<div class="mui-input-row mui-radio">
 							<label><img class="icon" src="../image/red-packet-pay-icon.png">余额<span>&nbsp;&nbsp;200.00&nbsp;&nbsp;(不足支付)</span></label>
-							<input name="radio1" type="radio">
+							<input name="radio1"  value="balance" type="radio" :disabled="isDis">
 						</div>
 						<div class="mui-input-row mui-radio">
 							<label><img class="icon" src="../image/WeChat.png">微信支付</label>
-							<input name="radio1" type="radio" checked="">
+							<input name="radio1" value="wxpay" type="radio" checked="checked">
 						</div>
 						<h2>&yen;225.00</h2>
 						<div class="pay-btn">
@@ -173,7 +173,8 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					course: {}
+					course: {},
+					isDis:false
 				},
 				created: function() {
 					// 初始化字体大小

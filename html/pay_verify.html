@@ -195,7 +195,10 @@
 				data: {
 					verify_code: '',
 					sec: 30,
-					send_status: true
+					send_status: true,
+					course_id:'',
+					pay_type:'',
+					code:''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -256,6 +259,18 @@
 						}, 1000);
 					}
 				}, 1000);
+			}
+			// 获取验证码
+			function getVerifyCode() {
+				mui.post($ajaxUrl + 'team&action=course_purchase', {
+					token: userInfo.token,
+					course_id:app.course_id,
+					pay_type:app.pay_type,
+					code:app.code
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {} else {}
+				}, 'json');
 			}
 		</script>
 
