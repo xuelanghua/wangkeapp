@@ -384,7 +384,7 @@
 						// logs(res);
 						if (res.errno == 0) {
 							showload(1);
-							message("群发成功");
+							message(res.message);
 							app.uids = [];
 							app.message='';
 							messageContent = ''; 
@@ -395,7 +395,7 @@
 							}, 100);
 						} else {
 							showload(1);
-							message("群发失败，稍后重试");
+							message(res.message);
 						}
 					},
 					error: function(xhr, type, errorThrown) {

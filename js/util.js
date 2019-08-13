@@ -732,6 +732,8 @@ function pushCallback(data, event) {
 						background: '#FFFFFF'
 					}
 				}, extra, '');
+			} else if (url == 'groupMessage') {
+				plus.nativeUI.alert('消息群发成功!');
 			} else {
 				if (url) {
 					logs(url);
@@ -790,6 +792,8 @@ function pushCallback(data, event) {
 			playNoticeAudio();
 		} else if (url == 'logout') {
 			fnLogout();
+		} else if (url == 'groupMessage') {
+			plus.nativeUI.alert('消息群发成功!');
 		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}
@@ -1113,15 +1117,24 @@ function showVerify() {
 }
 
 // 使用视频第一帧作为封面
-function initialize(vid) {
+function initializeVideoPoster(vid, event) {
 	var scale = 0.8;
 	var video = document.getElementById(vid);
-	video.addEventListener('loadeddata', function() {
+	if (event) {
+		video.addEventListener('loadeddata', function() {
+			var canvas = document.createElement("canvas");
+			canvas.width = video.videoWidth * scale;
+			canvas.height = video.videoHeight * scale;
+			canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+			var cover = canvas.toDataURL("image/png");
+			video.setAttribute("poster", cover);
+		});
+	} else {
 		var canvas = document.createElement("canvas");
 		canvas.width = video.videoWidth * scale;
 		canvas.height = video.videoHeight * scale;
 		canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 		var cover = canvas.toDataURL("image/png");
 		video.setAttribute("poster", cover);
-	});
+	}
 }

@@ -521,6 +521,9 @@
 				right: 0;
 				font-size: 18px;
 			}
+			.video-container {
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -727,30 +730,12 @@
 	<script src="../js/upload.js"></script>
 	<script type="text/javascript">
 		mui.init({
-				swipeBack: false,
-				gestureConfig: {
-					hold: true, //默认为false，不监听
-					release: true //默认为false，不监听
-				}
-			})
-			// (function() {
-			// 	var video;
-			// 	var scale = 0.8;
-			// 	var initialize = function() {
-			// 		video = document.getElementById("video");
-			// 		video.addEventListener('loadeddata', captureImage);
-			// 	};
-			// 
-			// 	var captureImage = function() {
-			// 		var canvas = document.createElement("canvas");
-			// 		canvas.width = video.videoWidth * scale;
-			// 		canvas.height = video.videoHeight * scale;
-			// 		canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-			// 		var cover = canvas.toDataURL("image/png");
-			// 		video.setAttribute("poster",cover);
-			// 	};
-			// 	initialize();
-			// })();
+			swipeBack: false,
+			gestureConfig: {
+				hold: true, //默认为false，不监听
+				release: true //默认为false，不监听
+			}
+		})
 		var cardType = 'cardType1';
 		var voiceTime = 0;
 		var timer = null;
@@ -764,7 +749,7 @@
 			userInfo = getUserInfo();
 			getMemberInfo();
 			eventInit();
-			initialize('video');
+			initializeVideoPoster('video', true);
 			mui.previewImage();
 		})
 
@@ -937,9 +922,10 @@
 									plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
 								} else {
 									logs(res);
+									document.querySelector('.video-container').style.display = 'block';
 									document.querySelector('input[name=my_video]').value = res.filename;
 									document.querySelector('.video-container video').src = res.url;
-									document.getElementById("again-updata").innerText="重新选择";
+									document.getElementById("again-updata").innerText = "重新选择";
 									showload(1);
 								}
 							} else {
@@ -1090,9 +1076,10 @@
 			}
 
 			if (data.my_video.length != 0) {
+				document.querySelector('.video-container').style.display = 'block';
 				document.querySelector('.video-container video').src = data.my_video;
 				document.querySelector('input[name=my_video]').value = data.my_video;
-				document.getElementById("again-updata").innerText="重新选择";
+				document.getElementById("again-updata").innerText = "重新选择";
 			}
 
 			if (data.images.length != 0) {
