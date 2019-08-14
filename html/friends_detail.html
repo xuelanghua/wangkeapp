@@ -238,7 +238,7 @@
 			</div>
 			<h5 class="personality-desc" v-if="my_video!=''">视频展示</h5>
 			<div class="video-container" v-if="my_video!=''">
-				<video id="video" width="100%" height="200" :src="my_video" poster="" controls="controls" preload="auto"></video>
+				<video id="video" width="100%" height="200" :src="my_video" :poster="my_video+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" controls="controls" preload="auto"></video>
 			</div>
 			<h5 class="personality-desc">图片展示</h5>
 			<div class="img-show" id="img-show">
@@ -368,9 +368,6 @@
 						muiCont.audioUrl = data.voice;
 						muiCont.view_total = data.card_view.length;
 						muiCont.my_video = data.my_video;
-						setTimeout(function() {
-							initializeVideoPoster('video', false);
-						}, 500);
 						mui(".mui-title")[0].innerText = data.name;
 						var selfid = userInfo.id;
 						if (fid != selfid && muiCont.is_friend != 1) {

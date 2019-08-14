@@ -624,17 +624,18 @@
 
 				//商城首页
 				mui('.mui-content').on('tap', '#shop', function() {
-					var activation = checkMember();
-					if (activation) {
-						fnOpenWin('shop_index.html', 'shop_index', {
-							statusbar: {
-								background: '#F7F7F7'
-							}
-						}, {
-							page: 'my'
-						}, 'slide-in-right');
-						setStatusBar('', 'dark');
-					}
+					checkMember(function(e) {
+						if (e) {
+							fnOpenWin('shop_index.html', 'shop_index', {
+								statusbar: {
+									background: '#F7F7F7'
+								}
+							}, {
+								page: 'my'
+							}, 'slide-in-right');
+							setStatusBar('', 'dark');
+						}
+					})
 				})
 				// 已购买课程列表
 				mui('.mui-content').on('tap', '#bought_course', function() {
@@ -779,7 +780,7 @@
 					// message(group_id);
 					// group_id=5;
 					if (group_id == 0) {
-						checkMember();
+						checkMember(function(e){});
 					} else if (group_id == 1) {
 						openPage('member.html', 'member', '#ffffff', '');
 						console.log(group_id);

@@ -451,13 +451,15 @@
 			// 显示我的目标
 			mui(".mui-bar-nav").on("tap", ".my-target-menu", function(e) {
 				if (this.innerText == '设定目标') {
-					if (checkMember()) {
-						fnOpenWin('target_manage_index.html', 'target_manage_index', {
-							statusbar: {
-								background: '#FFF'
-							}
-						}, '', 'slide-in-right');
-					}
+					checkMember(function(e) {
+						if (e) {
+							fnOpenWin('target_manage_index.html', 'target_manage_index', {
+								statusbar: {
+									background: '#FFF'
+								}
+							}, '', 'slide-in-right');
+						}
+					})
 				} else {
 					$(".target-modal-frame").addClass("active");
 				}

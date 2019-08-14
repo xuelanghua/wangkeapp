@@ -749,7 +749,7 @@
 			userInfo = getUserInfo();
 			getMemberInfo();
 			eventInit();
-			initializeVideoPoster('video', true);
+			// initializeVideoPoster('video', true);
 			mui.previewImage();
 		})
 
@@ -925,6 +925,7 @@
 									document.querySelector('.video-container').style.display = 'block';
 									document.querySelector('input[name=my_video]').value = res.filename;
 									document.querySelector('.video-container video').src = res.url;
+									document.querySelector('.video-container video').setAttribute('poster', res.url + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast');
 									document.getElementById("again-updata").innerText = "重新选择";
 									showload(1);
 								}
@@ -1078,6 +1079,7 @@
 			if (data.my_video.length != 0) {
 				document.querySelector('.video-container').style.display = 'block';
 				document.querySelector('.video-container video').src = data.my_video;
+				document.querySelector('.video-container video').setAttribute('poster', data.my_video + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast');
 				document.querySelector('input[name=my_video]').value = data.my_video;
 				document.getElementById("again-updata").innerText = "重新选择";
 			}

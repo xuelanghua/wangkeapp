@@ -603,15 +603,16 @@
 			
 			//打开商城
 			mui('.mui-content').on('tap', '#shop', function() {
-				var activation = checkMember();
-				if (activation) {
-					fnOpenWin('shop_index.html', 'shop_index', {
-						statusbar: {
-							background: '#F7F7F7'
-						}
-					}, '', 'slide-in-right');
-					setStatusBar('', 'dark');
-				}
+				checkMember(function(e) {
+					if (e) {
+						fnOpenWin('shop_index.html', 'shop_index', {
+							statusbar: {
+								background: '#F7F7F7'
+							}
+						}, '', 'slide-in-right');
+						setStatusBar('', 'dark');
+					}
+				});
 			})
 			
 			//打开目标
