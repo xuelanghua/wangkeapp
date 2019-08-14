@@ -45,13 +45,15 @@
 				height: 100%;
 				object-fit: cover;
 			}
-			.goods-img .buy-sign{
+
+			.goods-img .buy-sign {
 				position: absolute;
 				right: -2px;
 				top: 0;
 				width: 0.7rem;
 				height: 0.7rem;
 			}
+
 			.goods-right-cont {
 				max-width: 4.58rem;
 				flex-grow: 1;
@@ -273,10 +275,12 @@
 				/* background-color: #007AFF; */
 				margin-right: -10px;
 			}
-			.course-price{
+
+			.course-price {
 				font-size: 0.28rem;
 				color: #333333;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -303,7 +307,7 @@
 							<p class="mui-ellipsis-2" @tap="streaming(c)">
 								{{c.title}}
 							</p>
-							<div v-if="c.price>0" class="course-price" @tap="streaming(c)"> 
+							<div v-if="c.price>0" class="course-price" @tap="streaming(c)">
 								&yen;{{c.price}}
 							</div>
 							<div class="streaming-status" @tap="streaming(c)">
@@ -325,7 +329,7 @@
 							</div>
 							<div v-else-if="c.state==1" class="hear-cont">
 								<div class="loading-cont"><img src="../image/discover/loading.gif">培训中</div>
-								<div v-if="role==1" class="delete-course" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-icon.png">删除</div>
+								<div v-if="role==1" class="delete-course" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-icon-1.png">删除</div>
 							</div>
 							<div v-else class="hear-cont">
 								<p>已结束：{{c.end_time}}</p>
@@ -392,9 +396,9 @@
 						var target = document.querySelector('.menu-cont' + i);
 						target.classList.add("active");
 						// if (target.classList.contains("active")) {
-							mask.show();
+						mask.show();
 						// } else {
-							// mask.close();
+						// mask.close();
 						// }
 					},
 					//直播详情
@@ -402,7 +406,7 @@
 						// logs(coursei);
 						// return false;
 						// 直播页面
-						if (coursei.is_buy == 1 || coursei.price == 0||coursei.captain_uid==userInfo.id) {
+						if (coursei.is_buy == 1 || coursei.price == 0 || coursei.captain_uid == userInfo.id) {
 							if (coursei.state == 1 || coursei.state == 2) {
 								// 直播页面
 								openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
@@ -423,7 +427,7 @@
 							openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
 								course: coursei,
 							});
-						} 
+						}
 						// if (coursei.state != 0) {
 						// 	openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
 						// 		tid: coursei.team_id,
@@ -526,7 +530,7 @@
 			}
 			// 创建课程
 			mui(".mui-content").on("tap", ".create-course-btn", function() {
-				if (app.role==1) {
+				if (app.role == 1) {
 					openPage('create_course.html', 'create_course', '#f7f7f7', {
 						tid: app.tid,
 						title: '创建课程'

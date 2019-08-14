@@ -602,7 +602,7 @@
 						<li class="order-list" v-for="(al,idx) in await_list" :key="idx">
 							<div class="mui-card">
 								<div class="mui-card-header">
-									<div class="flex-center">
+									<div class="flex-center" @tap="contact(al.user_id,al.user_name,al.user_avatar)">
 										<img class="user-head-img" :src="al.user_avatar">
 										<span class="user-name">{{al.user_name}}</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
@@ -670,7 +670,7 @@
 						<li class="order-list" v-for="(al,idx) in await_sgoods" :key="idx">
 							<div class="mui-card">
 								<div class="mui-card-header">
-									<div class="flex-center">
+									<div class="flex-center" @tap="contact(al.user_id,al.user_name,al.user_avatar)">
 										<img class="user-head-img" :src="al.user_avatar">
 										<span class="user-name">{{al.user_name}}</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
@@ -739,7 +739,7 @@
 						<li class="order-list" v-for="(al,idx) in send_after" :key="idx">
 							<div class="mui-card">
 								<div class="mui-card-header">
-									<div class="flex-center">
+									<div class="flex-center" @tap="contact(al.user_id,al.user_name,al.user_avatar)">
 										<img class="user-head-img" :src="al.user_avatar">
 										<span class="user-name">{{al.user_name}}</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
@@ -805,7 +805,7 @@
 						<li class="order-list" v-for="(al,idx) in finish_list" :key="idx">
 							<div class="mui-card">
 								<div class="mui-card-header">
-									<div class="flex-center">
+									<div class="flex-center" @tap="contact(al.user_id,al.user_name,al.user_avatar)">
 										<img class="user-head-img" :src="al.user_avatar">
 										<span class="user-name">{{al.user_name}}</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
@@ -944,6 +944,19 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
+					// 联系买家
+					contact: function(cid, chatName, avatar) {
+						if(cid==userInfo.id){
+							message("不能和自己联系哟~");
+							return false;
+						}
+						openPage('dialog.html', 'dialog', '#f7f7f7', {
+							cid: cid,
+							chatName: chatName,
+							avatar: avatar,
+							barStyle: 'dark'
+						});
+					},
 					// 开始搜索
 					starSearch: function() {
 						app.isSeek = true;
