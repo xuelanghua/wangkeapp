@@ -455,8 +455,16 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
+					// 打开产品详情
+					openGoodsDetail:function(goodsId){
+						//
+					},
 					// 联系买家
 					contact: function(cid, chatName, avatar) {
+						if(cid==userInfo.id){
+							message("不能和自己联系哟~");
+							return false;
+						}
 						openPage('dialog.html', 'dialog', '#f7f7f7', {
 							cid: cid,
 							chatName: chatName,
