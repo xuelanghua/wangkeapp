@@ -15,65 +15,59 @@ var getUserInfo = function() {
 }
 
 //检查是否开通会员
-function checkMember() {
+function checkMember(callback) {
 	var userInfo = getUserInfo();
 	var statusBarStyle = plus.navigator.getStatusBarStyle();
-	if (userInfo.is_activation == 0) {
-		// plus.nativeUI.confirm('此功能需要开通VIP会员才可使用,前往开通?', function(e) {
-		// 	if (e.index == 0) {
-		// 		fnOpenWin('activation.html', 'activation', '', {
-		// 			statusBarStyle: statusBarStyle
-		// 		}, 'slide-in-bottom');
-		// 		setStatusBar('', 'light');
-		// 	}
-		// });
-		// var tips = plus.webview.create("tipsmodel/opening_model.html", "opening_model", {
-		// 	background: "transparent"
-		// }, "");
-		// tips.show();
-		mui.openWindow({
-			url: "tipsmodel/opening_model.html",
-			id: "opening_model",
-			styles: {
-				bounce: 'none',
-				scrollsToTop: true,
-				popGesture: 'close',
-				// background: '#ffffff',
-				background: 'transparent',
-				statusbar: {
-					background: "#000000"
+	mui.get($ajaxUrl + 'member', {
+		action: 'detail',
+		token: userInfo.token
+	}, function(res) {
+		var memberInfo = res.data;
+		if (memberInfo.is_activation == 0) {
+			mui.openWindow({
+				url: "tipsmodel/opening_model.html",
+				id: "opening_model",
+				styles: {
+					bounce: 'none',
+					scrollsToTop: true,
+					popGesture: 'close',
+					background: 'transparent',
+					statusbar: {
+						background: "#000000"
+					}
+				},
+				extras: '',
+				createNew: false,
+				show: {
+					autoShow: true,
+					aniShow: 'none',
+					duration: 150,
+					event: 'titleUpdate',
+					extras: {
+						acceleration: 'auto',
+						capture: '',
+						otherCapture: ''
+					}
+				},
+				waiting: {
+					autoShow: false
 				}
-			},
-			extras: '',
-			createNew: false,
-			show: {
-				autoShow: true,
-				aniShow: 'none',
-				duration: 150,
-				event: 'titleUpdate',
-				extras: {
-					acceleration: 'auto',
-					capture: '',
-					otherCapture: ''
+			})
+			return callback(false);
+		} else if (memberInfo.is_activation == 1 && memberInfo.expire_time < parseInt(new Date().getTime() / 1000)) {
+			plus.nativeUI.confirm('您的会员已到期,前往续费?', function(e) {
+				if (e.index == 0) {
+					openPage('vt_renew.html', 'vt_renew', '#f7f7f7', {
+						type: 2,
+						groupId: memberInfo.group_id,
+						fee: 69.00
+					});
 				}
-			},
-			waiting: {
-				autoShow: false
-			}
-		})
-		return false;
-	} else if (userInfo.is_activation == 1 && userInfo.expire_time < parseInt(new Date().getTime() / 1000)) {
-		plus.nativeUI.confirm('您的会员已到期,前往续费?', function() {
-			if (e.index == 0) {
-				fnOpenWin('activation.html', 'activation', '', {
-					statusBarStyle: statusBarStyle
-				}, 'slide-in-bottom');
-			}
-		});
-
-		return false;
-	}
-	return true;
+			});
+			return callback(false);
+		}
+		return callback(true);
+	}, 'json');
 }
 
 //获取用户信息
@@ -731,7 +725,7 @@ function pushCallback(data, event) {
 					}
 				}, extra, '');
 			} else if (url == 'groupMessage') {
-				plus.nativeUI.alert('消息群发成功!');
+				plus.nativeUI.toast('消息群发成功!');
 			} else {
 				if (url) {
 					logs(url);
@@ -791,7 +785,7 @@ function pushCallback(data, event) {
 		} else if (url == 'logout') {
 			fnLogout();
 		} else if (url == 'groupMessage') {
-			plus.nativeUI.alert('消息群发成功!');
+			plus.nativeUI.toast('消息群发成功!');
 		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}
