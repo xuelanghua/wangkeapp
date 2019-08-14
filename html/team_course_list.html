@@ -90,7 +90,7 @@
 				background-color: #DDDDDD;
 				border-radius: 0.2rem;
 				font-size: 0.24rem;
-				color: #999999;
+				color: #666666;
 				line-height: 1;
 				position: relative;
 			}
@@ -459,13 +459,16 @@
 									token: userInfo.token,
 									course_id: course_id
 								}, function(res) {
+									logs(res);
 									if (res.errno == 0) {
 										message("已删除");
 										teamCourse();
 										if (app.teamCourse.length == 0) {
 											document.querySelector(".void-course-tips").style.display = "flex";
 										}
-									} else {}
+									} else {
+										message(res.message);
+									}
 								}, 'json');
 							}
 						})
