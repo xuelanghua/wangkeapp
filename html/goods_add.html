@@ -576,91 +576,91 @@
 				})
 
 				//上传主图
+				document.getElementById('add_pic').addEventListener('tap', function() {
+					imageUpload(function(res) {
+						images[imageId] = res.url;
+						imageId++;
+						var newImgDiv = document.createElement('div');
+						newImgDiv.setAttribute('data-id', imageId);
+						newImgDiv.classList.add('picture_display_chear');
+						var html = '<img src="' + res.url +
+							'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+						newImgDiv.innerHTML = html;
+						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+					});
+				})
+				// var ratio = 1 / 1;
 				// document.getElementById('add_pic').addEventListener('tap', function() {
-				// 	imageUpload(function(res) {
-				// 		images[imageId] = res.url;
-				// 		imageId++;
-				// 		var newImgDiv = document.createElement('div');
-				// 		newImgDiv.setAttribute('data-id', imageId);
-				// 		newImgDiv.classList.add('picture_display_chear');
-				// 		var html = '<img src="' + res.url +
-				// 			'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-				// 		newImgDiv.innerHTML = html;
-				// 		document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+				// 	document.activeElement.blur();
+				// 	var editButtons = new Array();
+				// 	editButtons.push({
+				// 		title: "拍照上传",
+				// 		style: "default"
+				// 	});
+				// 	editButtons.push({
+				// 		title: "从相册选择",
+				// 		style: "default"
+				// 	});
+				// 	plus.nativeUI.actionSheet({
+				// 		cancel: "取消",
+				// 		buttons: editButtons
+				// 	}, function(e) {
+				// 		var index = e.index;
+				// 		switch (index) {
+				// 			case 1:
+				// 				getImage(ratio); //拍照
+				// 				break;
+				// 			case 2:
+				// 				galleryImage(ratio); //相册选择
+				// 				break;
+				// 		}
 				// 	});
 				// })
-				var ratio = 1 / 1;
-				document.getElementById('add_pic').addEventListener('tap', function() {
-					document.activeElement.blur();
-					var editButtons = new Array();
-					editButtons.push({
-						title: "拍照上传",
-						style: "default"
-					});
-					editButtons.push({
-						title: "从相册选择",
-						style: "default"
-					});
-					plus.nativeUI.actionSheet({
-						cancel: "取消",
-						buttons: editButtons
-					}, function(e) {
-						var index = e.index;
-						switch (index) {
-							case 1:
-								getImage(ratio); //拍照
-								break;
-							case 2:
-								galleryImage(ratio); //相册选择
-								break;
-						}
-					});
-				})
-				// 拍照获取图片
-				function getImage() {
-					var camera = plus.camera.getCamera();
-					camera.captureImage(function(e) {
-						plus.io.resolveLocalFileSystemURL(e, function(entry) {
-							cropperImg(entry.toLocalURL(), 'goods_add', ratio);
-							// imageResize(entry.toLocalURL());
-							// 其他操作,比如预览展示
-						}, function(e) {
-							console.log("读取拍照文件错误：" + e.message);
-						});
-					}, function(s) {
-						console.log("error" + s);
-					}, {
-						filename: "_doc/camera/"
-					})
-				}
-				// 从相册中选择图片 
-				function galleryImage(cb) {
-					// 从相册中选择图片
-					plus.gallery.pick(function(e) {
-						cropperImg(e, 'goods_add', ratio);
-					}, function(e) {
-						console.log("取消选择图片");
-					}, {
-						filter: "image",
-						multiple: false,
-						maximum: 5,
-						system: false,
-						onmaxed: function() {
-							plus.nativeUI.alert('最多只能选择1张图片');
-						}
-					});
-				}
-				window.addEventListener('cropperSuccess', function(event) {
-					images[imageId] = event.detail.image;
-					imageId++;
-					var newImgDiv = document.createElement('div');
-					newImgDiv.setAttribute('data-id', imageId);
-					newImgDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + event.detail.image +
-						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-					newImgDiv.innerHTML = html;
-					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-				})
+				// // 拍照获取图片
+				// function getImage() {
+				// 	var camera = plus.camera.getCamera();
+				// 	camera.captureImage(function(e) {
+				// 		plus.io.resolveLocalFileSystemURL(e, function(entry) {
+				// 			cropperImg(entry.toLocalURL(), 'goods_add', ratio);
+				// 			// imageResize(entry.toLocalURL());
+				// 			// 其他操作,比如预览展示
+				// 		}, function(e) {
+				// 			console.log("读取拍照文件错误：" + e.message);
+				// 		});
+				// 	}, function(s) {
+				// 		console.log("error" + s);
+				// 	}, {
+				// 		filename: "_doc/camera/"
+				// 	})
+				// }
+				// // 从相册中选择图片 
+				// function galleryImage(cb) {
+				// 	// 从相册中选择图片
+				// 	plus.gallery.pick(function(e) {
+				// 		cropperImg(e, 'goods_add', ratio);
+				// 	}, function(e) {
+				// 		console.log("取消选择图片");
+				// 	}, {
+				// 		filter: "image",
+				// 		multiple: false,
+				// 		maximum: 5,
+				// 		system: false,
+				// 		onmaxed: function() {
+				// 			plus.nativeUI.alert('最多只能选择1张图片');
+				// 		}
+				// 	});
+				// }
+				// window.addEventListener('cropperSuccess', function(event) {
+				// 	images[imageId] = event.detail.image;
+				// 	imageId++;
+				// 	var newImgDiv = document.createElement('div');
+				// 	newImgDiv.setAttribute('data-id', imageId);
+				// 	newImgDiv.classList.add('picture_display_chear');
+				// 	var html = '<img src="' + event.detail.image +
+				// 		'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+				// 	newImgDiv.innerHTML = html;
+				// 	document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+				// })
 				//删除主图 
 				mui('#pic-container').on('tap', '.mui-close', function() {
 					var parentDiv = this.parentElement;
