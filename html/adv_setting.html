@@ -202,79 +202,86 @@
 		adv_list();
 		var top_adv = document.getElementById('top_adv');
 		top_adv.addEventListener('tap', function() {
-			imgTyper = "top_adv";
-			choiceImgOption();
+			// imgTyper = "top_adv";
+			// choiceImgOption();
+			imageUpload(function(event){
+				top_adv.innerHTML = '<img src="' + event.url + '">';
+				document.querySelector('input[name="top_adv"]').value = event.filename;
+			});
 		})
 		var bottom_adv = document.getElementById('bottom_adv');
-		bottom_adv.addEventListener('tap', function() {
-			imgTyper = "bottom_adv";
-			choiceImgOption();
+		bottom_adv.addEventListener('tap', function(event) {
+			// imgTyper = "bottom_adv";
+			// choiceImgOption();
+			imageUpload(function(event){
+				bottom_adv.innerHTML = '<img src="' + event.url + '">';
+				document.querySelector('input[name="bottom_adv"]').value = event.filename;
+			});
 		})
 
-		function choiceImgOption() {
-			plus.nativeUI.actionSheet({
-				cancel: "取消",
-				buttons: [{
-					title: "拍照上传"
-				}, {
-					title: "从相册选择"
-				}]
-			}, function(e) {
-				var index = e.index;
-				switch (index) {
-					case 0:
-						// text += "取消";
-						break;
-					case 1:
-						getImage(ratio);
-						// message("拍照");
-						break;
-					case 2:
-						galleryImage(ratio);
-						// message("相册");
-						break;
-				}
-			});
-		}
-		// 拍照获取图片
-		function getImage() {
-			var camera = plus.camera.getCamera();
-			camera.captureImage(function(e) {
-				plus.io.resolveLocalFileSystemURL(e, function(entry) {
-					cropperImg(entry.toLocalURL(), 'adv_setting', ratio);
-					// imageResize(entry.toLocalURL());
-					// 其他操作,比如预览展示
-				}, function(e) {
-					console.log("读取拍照文件错误：" + e.message);
-				});
-			}, function(s) {
-				console.log("error" + s);
-			}, {
-				filename: "_doc/camera/"
-			})
-		}
-		// 从相册中选择图片 
-		function galleryImage(cb) {
-			// 从相册中选择图片
-			plus.gallery.pick(function(e) {
-				cropperImg(e, 'adv_setting', ratio);
-			}, function(e) {
-				console.log("取消选择图片");
-			}, {
-				filter: "image",
-				multiple: false,
-				maximum: 5,
-				system: false,
-				onmaxed: function() {
-					plus.nativeUI.alert('最多只能选择1张图片');
-				}
-			});
-		}
+		// function choiceImgOption() {
+		// 	plus.nativeUI.actionSheet({
+		// 		cancel: "取消",
+		// 		buttons: [{
+		// 			title: "拍照上传"
+		// 		}, {
+		// 			title: "从相册选择"
+		// 		}]
+		// 	}, function(e) {
+		// 		var index = e.index;
+		// 		switch (index) {
+		// 			case 0:
+		// 				// text += "取消";
+		// 				break;
+		// 			case 1:
+		// 				getImage(ratio);
+		// 				// message("拍照");
+		// 				break;
+		// 			case 2:
+		// 				galleryImage(ratio);
+		// 				// message("相册");
+		// 				break;
+		// 		}
+		// 	});
+		// }
+		// // 拍照获取图片
+		// function getImage() {
+		// 	var camera = plus.camera.getCamera();
+		// 	camera.captureImage(function(e) {
+		// 		plus.io.resolveLocalFileSystemURL(e, function(entry) {
+		// 			cropperImg(entry.toLocalURL(), 'adv_setting', ratio);
+		// 			// 其他操作,比如预览展示
+		// 		}, function(e) {
+		// 			console.log("读取拍照文件错误：" + e.message);
+		// 		});
+		// 	}, function(s) {
+		// 		console.log("error" + s);
+		// 	}, {
+		// 		filename: "_doc/camera/"
+		// 	})
+		// }
+		// // 从相册中选择图片 
+		// function galleryImage(cb) {
+		// 	// 从相册中选择图片
+		// 	plus.gallery.pick(function(e) {
+		// 		cropperImg(e, 'adv_setting', ratio);
+		// 	}, function(e) {
+		// 		console.log("取消选择图片");
+		// 	}, {
+		// 		filter: "image",
+		// 		multiple: false,
+		// 		maximum: 5,
+		// 		system: false,
+		// 		onmaxed: function() {
+		// 			plus.nativeUI.alert('最多只能选择1张图片');
+		// 		}
+		// 	});
+		// }
 
-		window.addEventListener('cropperSuccess', function(event) {
-			document.getElementById(imgTyper).innerHTML = '<img src="' + event.detail.image + '">';
-			document.querySelector('input[name=' + imgTyper + ']').value = event.detail.filename;
-		})
+		// window.addEventListener('cropperSuccess', function(event) {
+		// 	document.getElementById(imgTyper).innerHTML = '<img src="' + event.detail.image + '">';
+		// 	document.querySelector('input[name=' + imgTyper + ']').value = event.detail.filename;
+		// })
 
 		var submit = document.getElementById('submit');
 		submit.addEventListener('tap', function() {
