@@ -274,11 +274,15 @@
 					code: app.verify_code
 				}, function(res) {
 					if (res.errno == 0) {
+						mui.fire(plus.webview.getWebviewById('self_media'), 'buycourse');
+						mui.fire(plus.webview.getWebviewById('team_course_list'), 'buycourse');
 						message("支付成功！");
-						plus.webview.close('buy_team_course', 'fade-out');
-						plus.webview.close('pay_verify', 'fade-out');
+						setTimeout(function() {
+							plus.webview.close('buy_team_course', 'fade-out');
+							plus.webview.close('pay_verify', 'fade-out');
+						}, 800)
 					} else {
-						message(message);
+						message(res.message);
 					}
 				}, 'json');
 			}
