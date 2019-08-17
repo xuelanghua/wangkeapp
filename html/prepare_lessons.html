@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.master-container {
+				padding: 0.2rem;
+			}
+
+			.mui-table-view {
+				background-color: transparent;
+			}
+
+			.mui-table-view-cell {
+				/* background-color: #FFFFFF; */
+				width: 7.13rem;
+				/* height: 4.83rem; */
+				margin-bottom: 0.2rem;
+				border-radius: 0.1rem;
+				padding: 0;
+			}
+
+			.mui-table-view-cell:after,
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-slider-handle {
+				padding: 0.2rem;
+				height: auto;
+				border-radius: 0.1rem;
+			}
+
+
+			.data-bank {
+				max-width: 3rem;
+			}
+
+			.data-bank p {
+				font-size: 0.24rem;
+				margin-bottom: 0;
+			}
+
+			.card-sign-cont {
+				width: 0.75rem;
+				height: 0.75rem;
+				position: absolute;
+				top: 0;
+				right: 0;
+				z-index: 8;
+			}
+
+			.mui-slider-right .move-up-btn {
+				margin-left: 0.2rem;
+				border-top-left-radius: 0.1rem !important;
+				border-bottom-left-radius: 0.1rem !important;
+			}
+
+			.mui-slider-right .modifier-btn {
+				position: relative;
+			}
+
+			.mui-table-view-cell>.mui-slider-right>.mui-btn.move-up-btn {
+				color: #2289FF !important;
+			}
+
+			.mui-table-view-cell>.mui-slider-right>.mui-btn.move-down-btn {
+				border-left: 1px solid #f9f9f9 !important;
+				color: #2289FF !important;
+			}
+
+			.mui-table-view-cell>.mui-slider-right>.mui-btn.modifier-btn {
+				border-left: 1px solid #f9f9f9 !important;
+			}
+
+			.mui-table-view-cell>.mui-slider-right>.mui-btn.delete-btn {
+				border-left: 1px solid #f9f9f9 !important;
+				/* color: #FF0000 !important; */
+			}
+
+			.mui-table-view-cell>.mui-slider-left>.mui-btn,
+			.mui-table-view-cell>.mui-slider-right>.mui-btn {
+				padding: 0 12px;
+			}
+
+			.mui-table-view-cell>.mui-slider-left>.mui-btn:after,
+			.mui-table-view-cell>.mui-slider-right>.mui-btn:after {
+				z-index: -66;
+			}
+
+			.mui-btn.mui-btn-primary {
+				background-color: #FFFFFF;
+				color: #333333 !important;
+			}
+
+			.add-master {
+				height: 44px;
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: auto;
+				color: #2289ff;
+				font-size: 14px;
+				z-index: 12;
+				padding: 0 10px;
+				margin-right: -5px;
+			}
+
+			.mui-table-view-cell,.mui-slider-handle {
+				touch-action: pan-y;
+			}
+			.mui-table-view{
+				padding-bottom: 50px;
+			}
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">备课</h1>
+			<div class="add-master mui-pull-right">
+				保存
+			</div>
+		</header>
+		<div id="mui-content" class="mui-content master-container" v-cloak>
+			<ul id="OA_task_1" class="mui-table-view" v-if="remarkList.length>0">
+				<template v-for="(h,i) in remarkList" :key="i">
+					<!-- 文字 -->
+					<li class="mui-table-view-cell" :id="'master-list'+h.id" v-if="h.type=='text'">
+						<div class="mui-slider-right mui-disabled">
+							<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,'up')">上移</span>
+							<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,'down')">下移</span>
+							<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(h)">修改</span>
+							<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+						</div>
+						<div class="mui-slider-handle">
+							<div class="remark-info">
+								<p>{{h.contant}}</p>
+								<div class="send-msg-btn">
+									<img src="" >
+									<span>发送</span>
+								</div>
+							</div>
+						</div>
+					</li>
+					<!-- 图片 -->
+					<li class="mui-table-view-cell" :id="'master-list'+h.id" v-else-if="h.type=='img'">
+						<div class="mui-slider-right mui-disabled">
+							<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,'up')">上移</span>
+							<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,'down')">下移</span>
+							<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(h)">修改</span>
+							<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+						</div>
+						<div class="mui-slider-handle">
+					
+						</div>
+					</li>
+					<!-- 语音 -->
+					<li class="mui-table-view-cell" :id="'master-list'+h.id" v-else-if="h.type=='audio'">
+						<div class="mui-slider-right mui-disabled">
+							<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,'up')">上移</span>
+							<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,'down')">下移</span>
+							<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(h)">修改</span>
+							<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+						</div>
+						<div class="mui-slider-handle">
+					
+						</div>
+					</li>
+					<!-- 视频 -->
+					<li class="mui-table-view-cell" :id="'master-list'+h.id" v-else>
+						<div class="mui-slider-right mui-disabled">
+							<span class="mui-btn mui-btn-primary move-up-btn" @tap="stickMaster(h.id)">上移</span>
+							<span class="mui-btn mui-btn-primary move-down-btn" @tap="stickMaster(h.id)">下移</span>
+							<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(h)">修改</span>
+							<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+						</div>
+						<div class="mui-slider-handle">
+					
+						</div>
+					</li>
+				</template>
+			</ul>
+			<div v-else style="padding: 30%;text-align: center;color:#999999;font-size:18px;">
+				暂无备课~
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					tid: '',
+					remarkList: [{
+						id: '369',
+						type: "text",
+						content: '你好好阿萨德福利卡士大夫埃里克森打飞机阿斯顿发了。',
+						remark: '这个条消息一定要在一点前发出去。',
+						status:0 //待发送
+					}, {
+						id: '111',
+						type: "audio",
+						content: 'https://www.baidu.com/',
+						remark: '这是一条语音消息。',
+						status:0 //待发送
+					}, {
+						id: '222',
+						type: "img",
+						content: 'https://www.baidu.com/',
+						remark: '这是一条图片消息。',
+						status:0 //待发送
+					}, {
+						id: '36',
+						type: "text",
+						content: '我是最后一条需要发送的文字消息',
+						remark: '最后一条消息的备注信息',
+						status:1 //已发送
+					}, {
+						id: '',
+						type: "text",
+						content: '我是最后一条需要发送的文字消息',
+						remark: '最后一条消息的备注信息',
+						status:1 //已发送
+					}]
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							plus.navigator.setStatusBarStyle("dark");
+						}
+					})
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.tid = self.tid;
+						getRemarkList();
+					})
+				}
+			})
+			// 获取列表
+			function getRemarkList() {
+				
+			}
+			// 删除
+			function deleteMaster(s_id, i) {
+				var _this_dom = document.getElementById('master-list' + s_id);
+				plus.nativeUI.confirm("确认删除该动态吗？", function(e) {
+					if (e.index) {
+						// 取消
+						message("取消");
+						mui.swipeoutClose(_this_dom);
+					} else {
+						mui.swipeoutClose(_this_dom);
+						message("已删除");
+						app.remarkList.splice(i, 1);
+					}
+				})
+			}
+			// 上移或者下移
+			function moveIt(ids,status) {
+				
+			}
+			// 修改
+			function editMaster(lst) {
+
+			}
+		</script>
+	</body>
+
+</html>
