@@ -21,6 +21,21 @@
 				font-size: 0.3rem;
 			}
 
+			.video-container {
+				width: 100%;
+				padding: 0.2rem;
+				background-color: #000000;
+				position: relative;
+			}
+
+			.mui-icon-clear {
+				color: #FF0000;
+				font-size: 36px;
+				position: absolute;
+				right: 0;
+				top: 0;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -47,7 +62,7 @@
 				<!-- <input class="issue-title" id="issue-title" type="text" name="title" placeholder="动态名称" /> -->
 				<textarea class="issue-desc" v-model="issue_desc" id="issue-desc" rows="5" maxlength="1000" name="desc" placeholder="填写动态内容(1000字)"></textarea>
 			</div>
-			<div class="picture_display">
+			<div class="picture_display" v-if="video_src==''">
 				<div id="pic-container">
 					<div v-if="images" class="picture_display_chear" v-for="(img,i) in images" :key="i">
 						<img :src="img" data-preview-src="" data-preview-group="1" />
@@ -60,7 +75,11 @@
 					</div>
 				</div>
 			</div>
-			<!-- <div class="issue-dynamics">发布动态</div> -->
+			<div class="video-container" v-else>
+				<video id="video" width="100%" height="200" controls="controls" :poster="video_src+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"
+				 :src="video_src"></video>
+				<span class="mui-icon mui-icon-clear" @tap="clearChoice"></span>
+			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
@@ -73,7 +92,9 @@
 				el: "#mui-content",
 				data: {
 					images: [],
-					issue_desc: ''
+					issue_desc: '',
+					video_src: '',
+					is_video: 0
 				},
 				created: function() {
 					// 初始化字体大小
@@ -87,6 +108,10 @@
 				methods: {
 					delImg: function(idx) {
 						this.images.splice(idx, 1);
+					},
+					clearChoice:function(){
+						app.images=[];
+						app.video_src='';
 					}
 				},
 				mounted: function() {
@@ -109,11 +134,102 @@
 						plus.navigator.setStatusBarStyle("dark");
 						//上传图片
 						document.getElementById('add_pic').addEventListener('tap', function() {
-							imageUpload(function(res) {
-								app.images.push(res.url);
-							});
+							if (mui.os.plus) {
+								var buttonTitle = [{
+									title: "拍照",
+									style: 'default'
+								}, {
+									title: "从手机相册选择",
+									style: 'default'
+								}, {
+									title: "选择视频",
+									style: 'default'
+								}];
+
+								plus.nativeUI.actionSheet({
+									// title: "上传图片",
+									cancel: "取消",
+									buttons: buttonTitle
+								}, function(b) {
+									switch (b.index) {
+										case 0:
+											break;
+										case 1:
+											app.is_video = 0;
+											getImg(setChoice);
+											break;
+										case 2:
+											app.is_video = 0;
+											galleryImg(setChoice);
+											break;
+										case 3:
+											app.is_video = 1;
+											galleryViedo(setChoice);
+											break;
+										default:
+											break;
+									}
+								})
+							}
 						})
 					})
+
+					function setChoice(res) {
+						if (app.is_video == 0)
+							app.images.push(res.url);
+						else
+							app.video_src = res.url;
+						app.images.push(res.url);
+					}
+					// 从相册中选择视频
+					function galleryViedo(cb) {
+						// 从相册中选择图片
+						plus.gallery.pick(function(e) {
+							uploadViedo(e, cb);
+						}, function(e) {
+							console.log("取消选择图片");
+						}, {
+							filter: "video",
+							multiple: false,
+							maximum: 5,
+							system: false,
+							onmaxed: function() {
+								plus.nativeUI.alert('最多只能选择1张图片');
+							}
+						});
+					}
+					// 上传的方法
+					function uploadViedo(file, cb) {
+						showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
+						var task = plus.uploader.createUpload($videoUrl, {
+								method: "POST",
+								blocksize: 614400,
+								priority: 100
+							},
+							function(t, status) { //上传完成
+								if (status == 200) {
+									var res = JSON.parse(t.responseText);
+									if (res.error) {
+										plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
+									} else {
+										logs(res);
+										showload(1);
+										cb(res);
+									}
+								} else {
+									plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
+								}
+							}
+						);
+						// 页面中要上传的 图片路径
+						task.addFile(file, {
+							key: 'file'
+						});
+						task.start();
+						setTimeout(function() {
+							showload(1);
+						}, 10000);
+					}
 					// 发布
 					mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
 						e.preventDefault();
@@ -130,7 +246,8 @@
 							content: app.issue_desc,
 							cover: app.images.filter(function(e) {
 								return e != null
-							}).join(',')
+							}).join(','),
+							is_video: app.video_src
 						}, function(res) {
 							if (res.errno == 0) {
 								plus.key.hideSoftKeybord();

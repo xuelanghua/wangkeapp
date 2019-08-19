@@ -67,7 +67,6 @@ function galleryImg(cb) {
 		}
 	});
 }
-
 // 上传的方法
 function upload(file, cb) {
 	// var waiting = plus.nativeUI.showWaiting('图片上传中...');

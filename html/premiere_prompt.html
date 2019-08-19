@@ -7,10 +7,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
-			[v-cloak] {
-				display: none;
-			}
-
 			.mui-content {
 				background-color: #FFFFFF;
 				height: 100vh;
@@ -54,6 +50,19 @@
 				text-align: left;
 				color: #999999;
 			}
+
+			.mui-btn-blue {
+				height: 44px;
+				padding: 0;
+				font-size: 16px;
+				width: 90%;
+				margin: 60px auto 0;
+				border-radius: 30px;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -80,6 +89,7 @@
 				<li class="items-li">直播时间：{{s_time}}</li>
 				<li class="items-li">结束时间：{{e_time}}</li>
 			</ul>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" @tap="prepareLessons">备课</button>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -91,10 +101,15 @@
 					title: '',
 					s_time: '',
 					e_time: '',
-					person: ''
+					person: '',
+					course: {}
 				},
 				methods: {
-
+					prepareLessons: function(e) {
+						openPage('prepare_lessons.html', 'prepare_lessons', '#f7f7f7', {
+							course: app.course
+						});
+					}
 				},
 				mounted: function() {
 					mui.init({
@@ -105,6 +120,7 @@
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("dark");
 						var self = plus.webview.currentWebview();
+						app.course = self.course;
 						if (self.kaola) {
 							logs(self.course);
 							app.title = self.course.title;
