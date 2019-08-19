@@ -378,7 +378,8 @@
 						action: 'login_setting',
 					}, function(res) {
 						getAppInfo(function(e) {
-							if (res.data.login_type == 2 && res.data.app_version == e.version) {
+							//审核时使线上的res.data.login_type和升级包中的不一致
+							if (res.data.login_type == 3 && res.data.app_version == e.version) {
 								fnOpenWin('html/mobile_login.html', 'mobile_login', {
 									statusbar: {
 										background: '#2289FF'

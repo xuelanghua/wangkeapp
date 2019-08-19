@@ -247,7 +247,12 @@
 								vm.redpacket_info.redpacket_latitude = p.coords.latitude;
 							}, function(e) {
 								vm.redpacket_info.distance_verify = 0;
+								mui(".distance-verify").switch().toggle();
 								message('获取地理位置失败, 红包距离验证开启失败!', 'center');
+							}, {
+								enableHighAccuracy: true,
+								provider: 'system',
+								coordsType: 'wgs84',
 							});
 						} else {
 							vm.redpacket_info.distance_verify = 0;
