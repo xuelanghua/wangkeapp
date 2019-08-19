@@ -33,12 +33,12 @@
 		</header>
 		<div class="mui-content data-statistics-container">
 			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item mui-active" href="#item2">行为</a>
-				<a class="mui-control-item" href="#item1">时间</a>
+				<a class="mui-control-item mui-active" href="#item1">时间</a>
+				<a class="mui-control-item" href="#item2">行为</a>
 			</div>
 			<div class="segmentedControl-cont">
 				<!-- 第一个选项卡 -->
-				<div id="item1" class="mui-control-content" v-cloak>
+				<div id="item1" class="mui-control-content mui-active" v-cloak>
 					<ul id="refresh-container" v-if="contstatus" class="time-line-cont">
 						<li v-for="(item,key,index) in dataGroup" :key="index">
 							<div class="time-line-items-title">
@@ -52,7 +52,7 @@
 											<span class="user-name">{{items.nickName}}</span>
 											<span class="create-time">{{items.create_time}}</span>
 										</div>
-										<div class="top-right">
+										<div class="top-right" @tap="goChat(items.user_id, items.nickName, items.avatarUrl)">
 											<img class="chat-icon" src="../image/icon/data-statistics-icon-01.png">
 										</div>
 									</div>
@@ -136,9 +136,9 @@
 											<p v-else><span>第{{items.count}}次评论</span>了你的<span>动态</span></p>
 										</div>
 										<div v-else-if="items.type==6">
-											<p v-if="items.count==1"><span>首次查看公司官网</span>,看来他对公司感兴趣</p>
-											<p v-else-if="items.count==2"><span>第{{items.count}}次查看公司官网</span>,赶快主动沟通</p>
-											<p v-else><span>第{{items.count}}次查看公司官网</span>,高意向客户成交在望</p>
+											<p v-if="items.count==1"><span>首次查看了你的团队</span>,看来他对你的团队感兴趣</p>
+											<p v-else-if="items.count==2"><span>第{{items.count}}次查看你的团队</span>,赶快主动沟通</p>
+											<p v-else><span>第{{items.count}}次查看你的团队</span>,高意向客户成交在望</p>
 										</div>
 										<div v-else-if="items.type==7">
 											<p v-if="items.count==1"><span>首次浏览</span>你的<span>动态({{items.target_name}})详情</span></p>
@@ -155,7 +155,7 @@
 					</div>
 				</div>
 				<!-- 第二个选项卡 -->
-				<div id="item2" class="mui-control-content mui-active">
+				<div id="item2" class="mui-control-content">
 					<div id="showUserPicker" class="select-time">
 						<p class="select-title"><span id="selectTitle">近7天</span>被查看的行为统计</p>
 						<i class="mui-icon mui-icon-arrowdown"></i>
@@ -386,6 +386,10 @@
 						}
 					}
 				}, 'json')
+			}
+			
+			function goChat(cid, chatName, avatar) {
+				openPage('dialog.html', 'dialog', '#F7F7F7', {cid: cid, chatName: chatName, barStyle: 'dark', avatar: avatar}, '', '');
 			}
 		</script>
 	</body>

@@ -652,7 +652,7 @@ function pushInit() {
 			if (!msg.payload) {
 				return;
 			}
-			if (plus.os.name == "Android") {
+			if (typeof(msg.payload) == 'string') {
 				msg.payload = JSON.parse(msg.payload);
 			}
 			pushCallback(msg.payload, 'receive');
@@ -674,7 +674,7 @@ function pushInit() {
 		if (!msg.payload) {
 			return;
 		}
-		if (plus.os.name == "Android") {
+		if (typeof(msg.payload) == 'string') {
 			msg.payload = JSON.parse(msg.payload);
 		}
 		pushCallback(msg.payload, 'click');
@@ -692,10 +692,11 @@ function pushCallback(data, event) {
 	var type = data.type;
 	var url = data.url;
 	var extra = data.extra;
-	logs(type);
-	logs(url);
-	logs(extra);
-	logs(event);
+	// logs(type);
+	// logs(url);
+	// logs(extra);
+	// logs(event);
+	// logs(data);
 	if (event == 'click') {
 		if (type == 'jump') {
 			if (url == 'chat') {
@@ -709,11 +710,7 @@ function pushCallback(data, event) {
 			} else if (url == 'dialog') {
 				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-				// fnOpenWin('html/' + url + '.html', url, {
-				// 	statusbar: {
-				// 		background: '#F7F7F7'
-				// 	}
-				// }, extra, '');
+				// openPage('html/dialog.html', 'dialog', '#F7F7F7', extra, '', '');
 			} else if (url == 'team_chat') {
 				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
 				mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
@@ -726,9 +723,8 @@ function pushCallback(data, event) {
 				}, extra, '');
 			} else if (url == 'groupMessage') {
 				plus.nativeUI.toast('消息群发成功!');
-			} else {
+			} else  {
 				if (url) {
-					logs(url);
 					fnOpenWin('html/' + url + '.html', url, '', extra, '');
 				}
 			}
@@ -736,14 +732,13 @@ function pushCallback(data, event) {
 			if (url == 'activation') {
 				updateUserInfo();
 				mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
-				mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
-				mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
-				mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
 			} else if (url == 'logout') {
 				fnLogout();
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
+		} else if (type == 'notice') {
+			openPage('html/data_statistics.html', 'data_statistics', '#FFFFFF', '', '', '');
 		}
 	} else if (event == 'receive') {
 		if (url == 'dialog') {
@@ -770,9 +765,6 @@ function pushCallback(data, event) {
 			playNoticeAudio();
 		} else if (url == 'activation') {
 			mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
-			mui.fire(plus.webview.getWebviewById('member'), 'activationSuccess');
-			mui.fire(plus.webview.getWebviewById('maker'), 'activationSuccess');
-			mui.fire(plus.webview.getWebviewById('agent'), 'activationSuccess');
 			updateUserInfo();
 		} else if (url == 'buyGoodsBoothSuccess') {
 			updateUserInfo();
@@ -786,7 +778,12 @@ function pushCallback(data, event) {
 			fnLogout();
 		} else if (url == 'groupMessage') {
 			plus.nativeUI.toast('消息群发成功!');
-		} else {
+		}  else if (url == 'radar') {
+			if (data.times == 1) {
+				data.times++;
+				pushMessage(data.content, data);
+			}
+		}  else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}
 	}
@@ -832,7 +829,7 @@ function clearBadge() {
 		plus.runtime.setBadgeNumber(0);
 	} else {
 		plus.runtime.setBadgeNumber(-1);
-		plus.push.clear();
+		// plus.push.clear();
 	}
 }
 
@@ -1136,4 +1133,11 @@ function initializeVideoPoster(vid, event) {
 		var cover = canvas.toDataURL("image/png");
 		video.setAttribute("poster", cover);
 	}
+}
+
+function pushMessage(content, payload) {
+	plus.push.createMessage(content, JSON.stringify(payload), {
+		cover: false,
+		sound: "system",
+	})
 }
