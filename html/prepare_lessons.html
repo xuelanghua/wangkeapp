@@ -318,6 +318,123 @@
 				padding: 0;
 			}
 
+			.start-record.hold-active {
+				background-color: #005cbf;
+				color: #DDDDDD;
+			}
+
+			.showArea {
+				width: 120px;
+				height: 120px;
+				background-color: #999999;
+				font-size: 15px;
+				position: fixed;
+				bottom: 55%;
+				left: 35%;
+				color: #FFFFFF;
+				border-radius: 5px;
+				display: none;
+				text-align: center;
+			}
+
+			.showArea img {
+				width: 80px;
+				display: block;
+				margin: 0 auto;
+			}
+
+			footer {
+				position: fixed;
+				width: 100%;
+				/* max-height: 120px; */
+				min-height: 50px;
+				border-top: solid 1px #bbb;
+				left: 0px;
+				bottom: 0px;
+				padding: 0px 50px;
+				overflow: hidden;
+				background-color: #fafafa;
+				touch-action: pan-y;
+			}
+
+			.footer-left {
+				position: absolute;
+				width: 50px;
+				height: 50px;
+				left: 0px;
+				bottom: 0px;
+				text-align: center;
+				vertical-align: middle;
+				line-height: 100%;
+				padding: 12px 4px;
+			}
+
+			.footer-right {
+				position: absolute;
+				width: 50px;
+				height: 50px;
+				right: 0px;
+				bottom: 0px;
+				text-align: center;
+				vertical-align: middle;
+				line-height: 100%;
+				padding: 12px 5px;
+				display: inline-block;
+			}
+
+			.footer-center {
+				height: auto;
+				padding: 5px 0px;
+				display: flex;
+				align-items: center;
+				touch-action: pan-y;
+			}
+
+			.footer-center .input-text {
+				width: 100%;
+				height: 40px;
+				border-radius: 5px;
+				padding: 0.1rem;
+				background: #fff;
+				border: solid 1px #ddd;
+				font-size: 16px !important;
+				line-height: 1.4 !important;
+				font-family: verdana !important;
+				overflow-y: scroll;
+				max-height: 120px !important;
+				touch-action: pan-y;
+			}
+
+			.footer-center .input-sound {
+				background-color: #eee;
+			}
+
+			footer .mui-icon {
+				color: #000;
+			}
+
+			footer .mui-icon:active {
+				color: #007AFF !important;
+			}
+
+			footer .mui-icon-paperplane:before {
+				content: "添加";
+				font-weight: 600;
+			}
+
+			footer .mui-icon-paperplane {
+				font-size: 16px;
+				word-break: keep-all;
+				line-height: 100%;
+				padding-top: 6px;
+				color: rgba(0, 135, 250, 1);
+			}
+
+			.footer-center .input-sound {
+				background-color: #eee;
+				width: 100%;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -350,165 +467,200 @@
 					<button type="button" class="mui-btn mui-btn-outlined" @tap="confirmEdit">确认</button>
 				</div>
 			</div>
-			<ul id="OA_task_1" class="mui-table-view" v-if="remarkList.length>0">
-				<template v-for="(h,i) in remarkList" :key="i">
-					<!-- 文字 -->
-					<li class="mui-table-view-cell" :id="'master-list'+h.id" v-if="h.type=='text'">
-						<div class="mui-slider-right mui-disabled">
-							<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
-							<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
-							<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
-							<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
-						</div>
-						<div class="mui-slider-handle">
-							<div class="remark-info">
-								<p class="text-desc">{{h.content}}</p>
-								<div class="send-msg-btn">
-									<template v-if="h.status==0">
-										<img src="../image/icon/prepare-lessons03.png">
-										<span>发送</span>
-									</template>
-									<template v-else>
-										<img src="../image/icon/prepare-lessons02.png">
-										<span class="gray">发送</span>
-									</template>
+			<div id="OA_task_1" v-if="remarkList.length>0">
+				<ul class="mui-table-view">
+					<template v-for="(h,i) in remarkList" :key="i" v-if="h.status!=-1">
+						<!-- 文字 -->
+						<li class="mui-table-view-cell" :id="'master_list_'+i" v-if="h.type=='text'">
+							<div class="mui-slider-right mui-disabled">
+								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
+								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
+								<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
+								<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+							</div>
+							<div class="mui-slider-handle">
+								<div class="remark-info">
+									<p class="text-desc">{{h.content}}</p>
+									<div class="send-msg-btn">
+										<template v-if="h.status==0">
+											<img src="../image/icon/prepare-lessons03.png">
+											<span>发送</span>
+										</template>
+										<template v-else>
+											<img src="../image/icon/prepare-lessons02.png">
+											<span class="gray">重发</span>
+										</template>
+									</div>
+								</div>
+								<div class="remake-section">
+									<img src="../image/icon/prepare-lessons04.png">
+									<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
+									 cols=""></textarea>
 								</div>
 							</div>
-							<div class="remake-section">
-								<img src="../image/icon/prepare-lessons04.png">
-								<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
-								 cols=""></textarea>
+						</li>
+						<!-- 图片 -->
+						<li class="mui-table-view-cell" :id="'master_list_'+i" v-else-if="h.type=='img'">
+							<div class="mui-slider-right mui-disabled">
+								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
+								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
+								<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
+								<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
 							</div>
-						</div>
-					</li>
-					<!-- 图片 -->
-					<li class="mui-table-view-cell" :id="'master-list'+h.id" v-else-if="h.type=='img'">
-						<div class="mui-slider-right mui-disabled">
-							<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
-							<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
-							<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
-							<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
-						</div>
-						<div class="mui-slider-handle">
-							<div class="remark-info">
-								<img v-if="h.content" class="img-cont" :src="h.content" @tap="previewImage(h.content)">
-								<img v-else class="choice-item" @tap="choiceItem(i)" src="../image/icon/prepare-lessons06.png">
-								<div class="send-msg-btn">
-									<template v-if="h.status==0">
-										<img src="../image/icon/prepare-lessons03.png">
-										<span>发送</span>
-									</template>
-									<template v-else>
-										<img src="../image/icon/prepare-lessons02.png">
-										<span class="gray">发送</span>
-									</template>
+							<div class="mui-slider-handle">
+								<div class="remark-info">
+									<img v-if="h.content" class="img-cont" :src="h.content" @tap="previewImage(h.content)">
+									<img v-else class="choice-item" @tap="choiceItem(i)" src="../image/icon/prepare-lessons06.png">
+									<div class="send-msg-btn">
+										<template v-if="h.status==0">
+											<img src="../image/icon/prepare-lessons03.png">
+											<span>发送</span>
+										</template>
+										<template v-else>
+											<img src="../image/icon/prepare-lessons02.png">
+											<span class="gray">重发</span>
+										</template>
+									</div>
+								</div>
+								<div class="remake-section">
+									<img src="../image/icon/prepare-lessons04.png">
+									<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
+									 cols=""></textarea>
 								</div>
 							</div>
-							<div class="remake-section">
-								<img src="../image/icon/prepare-lessons04.png">
-								<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
-								 cols=""></textarea>
+						</li>
+						<!-- 语音 -->
+						<li class="mui-table-view-cell" :id="'master_list_'+i" v-else-if="h.type=='audio'">
+							<div class="mui-slider-right mui-disabled">
+								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
+								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
+								<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
+								<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
 							</div>
-						</div>
-					</li>
-					<!-- 语音 -->
-					<li class="mui-table-view-cell" :id="'master-list'+h.id" v-else-if="h.type=='audio'">
-						<div class="mui-slider-right mui-disabled">
-							<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
-							<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
-							<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
-							<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
-						</div>
-						<div class="mui-slider-handle">
-							<div class="remark-info">
-								<div class="start-record mui-hidden">
-									开始录音&nbsp;&nbsp;按住说话
+							<div class="mui-slider-handle">
+								<div class="remark-info">
+									<div v-if="h.content==''" class="start-record" :data-idx="i" :id="'start_record'+h.id">
+										开始录音&nbsp;&nbsp;按住说话
+									</div>
+									<div v-else class="play-record" @tap="playAudio(h)">
+										<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
+										<span class="play-status" :id="'play_status_'+h.id">点击播放</span>
+										<span class="record-timer">1′10″</span>
+									</div>
+									<div class="send-msg-btn">
+										<template v-if="h.status==0">
+											<img src="../image/icon/prepare-lessons03.png">
+											<span>发送</span>
+										</template>
+										<template v-else>
+											<img src="../image/icon/prepare-lessons02.png">
+											<span class="gray">重发</span>
+										</template>
+									</div>
 								</div>
-								<div class="play-record">
-									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
-									<span :id="'play_status_'+h.id">点击播放</span>
-									<span class="record-timer">1′10″</span>
-								</div>
-								<div class="send-msg-btn">
-									<template v-if="h.status==0">
-										<img src="../image/icon/prepare-lessons03.png">
-										<span>发送</span>
-									</template>
-									<template v-else>
-										<img src="../image/icon/prepare-lessons02.png">
-										<span class="gray">发送</span>
-									</template>
-								</div>
-							</div>
-							<div class="remake-section">
-								<img src="../image/icon/prepare-lessons04.png">
-								<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
-								 cols=""></textarea>
-							</div>
-						</div>
-					</li>
-					<!-- 视频 -->
-					<li class="mui-table-view-cell" :id="'master-list'+h.id" v-else>
-						<div class="mui-slider-right mui-disabled">
-							<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
-							<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
-							<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id)">修改</span>
-							<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
-						</div>
-						<div class="mui-slider-handle">
-							<div class="remark-info">
-								<div v-if="h.content" class="video-container">
-									<video width="100%" height="200px" controls="controls" src="h.content" :poster="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"></video>
-								</div>
-								<img v-else class="choice-item" @tap="choiceVideo(i)" src="../image/icon/prepare-lessons05.png">
-								<div class="send-msg-btn">
-									<template v-if="h.status==0">
-										<img src="../image/icon/prepare-lessons03.png">
-										<span>发送</span>
-									</template>
-									<template v-else>
-										<img src="../image/icon/prepare-lessons02.png">
-										<span class="gray">重发</span>
-									</template>
+								<div class="remake-section">
+									<img src="../image/icon/prepare-lessons04.png">
+									<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
+									 cols=""></textarea>
 								</div>
 							</div>
-							<div class="remake-section">
-								<img src="../image/icon/prepare-lessons04.png">
-								<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
-								 cols=""></textarea>
+						</li>
+						<!-- 视频 -->
+						<li class="mui-table-view-cell" :id="'master_list_'+i" v-else>
+							<div class="mui-slider-right mui-disabled">
+								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
+								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
+								<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id)">修改</span>
+								<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
 							</div>
-						</div>
-					</li>
-				</template>
-			</ul>
+							<div class="mui-slider-handle">
+								<div class="remark-info">
+									<div v-if="h.content" class="video-container">
+										<video width="100%" height="200px" controls="controls" src="h.content" :poster="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"></video>
+									</div>
+									<img v-else class="choice-item" @tap="choiceVideo(i)" src="../image/icon/prepare-lessons05.png">
+									<div class="send-msg-btn">
+										<template v-if="h.status==0">
+											<img src="../image/icon/prepare-lessons03.png">
+											<span>发送</span>
+										</template>
+										<template v-else>
+											<img src="../image/icon/prepare-lessons02.png">
+											<span class="gray">重发</span>
+										</template>
+									</div>
+								</div>
+								<div class="remake-section">
+									<img src="../image/icon/prepare-lessons04.png">
+									<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
+									 cols=""></textarea>
+								</div>
+							</div>
+						</li>
+					</template>
+				</ul>
+			</div>
 			<div v-else style="padding: 30%;text-align: center;color:#999999;font-size:18px;">
 				暂无备课~
 			</div>
-			<img style="width: 100%;" :src="test">
+			<div class="showArea" id="sound-alert">
+				<img src="../image/luyin.gif">
+				<div>松开结束录音</div>
+			</div>
+			<footer>
+				<div class="footer-left">
+					<i id="msg-image" class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
+				</div>
+				<div class="footer-center">
+					<textarea id="msg-text" @input="adaptiveHeight('msg-text')" type="text" row="1" class="input-text"></textarea>
+					<button id="msg-sound" type="button" class="input-sound" style="display: none;">按住说话</button>
+				</div>
+				<label for="" class="footer-right">
+					<i id="msg-type" class="mui-icon mui-icon-mic"></i>
+				</label>
+			</footer>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/upload.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo = getUserInfo();
-			var mask = mui.createMask(function() {
-				app.is_edit = false;
-			});
-			var c_index = '';
+			var userInfo = getUserInfo(),
+				MIN_SOUND_TIME = 800,
+				// 当前录音的index
+				audioIdx = null,
+				player = null,
+				priorId = '',
+				types = 'img',
+				mask = mui.createMask(function() {
+					if (app.edit_content.length < 1) {
+						message("请输入内容！");
+						return false;
+					}
+					app.is_edit = false;
+				}),
+				c_index = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					tid: '',
 					is_edit: false,
 					edit_content: '',
 					test: '',
+					course_id: '',
+					// 记录是否保存
+					isSave: false,
 					remarkList: [{
 						id: '369',
 						type: "text",
 						content: '1 你好好阿萨德福利卡士大夫埃里克森打飞机阿斯顿发了。',
 						remark: '这个条消息一定要在一点前发出去。',
-						status: 0 //待发送
+						status: 0 //待发送 删除改-1
+					}, {
+						id: '586',
+						type: "audio",
+						content: 'https://bfwangke.oss-cn-shenzhen.aliyuncs.com/audios/alice.mp3',
+						remark: '最后一条消息的备注信息',
+						status: 1 //已发送
 					}, {
 						id: '111',
 						type: "audio",
@@ -545,14 +697,19 @@
 						content: 'https://cdn.wangkeapp.cn/videos/6/2019/08/TuVwcR77HUihRQi2hLhzRNZNucA7w9.mp4',
 						remark: '最后一条消息的备注信息',
 						status: 1 //已发送
-					}]
+					}, ]
 				},
 				methods: {
 					adaptiveHeight: function(_id) {
 						var textarea = document.getElementById(_id);
 						makeExpandingArea(textarea);
 					},
+					// 确认输入的文字
 					confirmEdit: function() {
+						if (app.edit_content.length < 1) {
+							message("请输入内容！");
+							return false;
+						}
 						mask.close();
 						app.remarkList[c_index].content = app.edit_content;
 					},
@@ -564,13 +721,12 @@
 						});
 					},
 					// 选择视频
-					choiceVideo: function() {
+					choiceVideo: function(idx) {
 						if (mui.os.plus) {
 							var buttonTitle = [{
 								title: "选择视频",
 								style: 'default'
 							}];
-
 							plus.nativeUI.actionSheet({
 								cancel: "取消",
 								buttons: buttonTitle
@@ -579,28 +735,369 @@
 									case 0:
 										break;
 									case 1:
-										choiceVideo(function() {
-
-										});
+										videoUpload(function(res) {
+											app.remarkList[idx].content = res.url;
+										})
 										break;
 									default:
 										break;
 								}
 							})
 						}
+					},
+					// 播放音频
+					playAudio: function(audio) {
+						var status = document.getElementById('play_status_' + audio.id);
+						var statusTiele = document.querySelectorAll(".play-status");
+						for (var i in statusTiele) {
+							statusTiele[i].innerText = '点击播放';
+						}
+						if (audio.id == priorId && player) {
+							if (player) {
+								player.stop();
+								player = null;
+							}
+							status.innerText = '点击播放';
+						} else {
+							if (player) {
+								player.stop();
+								player = null;
+							}
+							player = plus.audio.createPlayer(audio.content);
+							status.innerText = '正在播放...';
+							priorId = audio.id;
+							player.play(function() {
+								player.stop();
+								status.innerText = '点击播放';
+								player = null;
+							}, function(e) {
+								player.stop();
+								status.innerText = '点击播放';
+								player = null;
+							});
+						}
 					}
 				},
 				mounted: function() {
+					var old_back = mui.back;
+					mui.back = function() {
+						if (app.isSave) {
+							old_back();
+						} else {
+							plus.nativeUI.confirm("还没有保存编辑，确认返回吗？", function(e) {
+								if (e.index == 0) {
+									old_back();
+								} else {
+									return false;
+								}
+							})
+						}
+					}
+					var ui = {
+						footer: document.querySelector('footer'),
+						footerRight: document.querySelector('.footer-right'),
+						footerLeft: document.querySelector('.footer-left'),
+						btnMsgType: document.querySelector('#msg-type'),
+						boxMsgText: document.querySelector('#msg-text'),
+						boxMsgSound: document.querySelector('#msg-sound'),
+						btnMsgImage: document.querySelector('#msg-image'),
+						boxSoundAlert: document.querySelector('#sound-alert'),
+						content: document.querySelector('.mui-content')
+					};
 					mui.init({
+						keyEventBind: {
+							backbutton: true,
+							menubutton: true
+						},
 						beforeback: function() {
 							plus.navigator.setStatusBarStyle("dark");
+						},
+						gestureConfig: {
+							tap: true, //默认为true
+							doubletap: false, //默认为false
+							longtap: false, //默认为false
+							swipe: true, //默认为true
+							drag: true, //默认为true
+							hold: true, //默认为false，不监听
+							release: true //默认为false，不监听
 						}
 					})
+					// 防止滚动穿透
+					mui('.public-container')[0].addEventListener("touchmove", mui.preventDefault);
+					mui('.input-text')[0].addEventListener("swipeup", mui.preventDefault);
+					mui('.input-text')[0].addEventListener("swipedown", mui.preventDefault);
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						app.tid = self.tid;
+						app.course_id = self.course.id;
 						getRemarkList();
+						// 录音相关
+						var recordCancel = false,
+							recorder = null,
+							startTimestamp = null,
+							stopTimestamp = null,
+							stopTimer = null;
+						// 开始录音
+						mui('.mui-content').on('hold', '.start-record', function() {
+							audioIdx = this.dataset.idx;
+							this.classList.add("hold-active");
+							startRecord();
+							document.querySelector(".showArea").style.display = "block";
+						})
+						// 松开
+						mui('.mui-content').on('release', '.start-record', function() {
+							this.classList.remove("hold-active");
+							document.querySelector(".showArea").style.display = "none";
+							stopTimestamp = (new Date()).getTime();
+							if (stopTimestamp - startTimestamp < MIN_SOUND_TIME) {
+								message("录音时间太短请重新录制！");
+								recordCancel = true;
+							} else {
 
+							}
+							recorder.stop();
+						})
+						// 录音方法
+						function startRecord(creat) {
+							recorder = plus.audio.getRecorder();
+							if (recorder == null) {
+								plus.nativeUI.toast("不能获取录音对象");
+								return;
+							}
+							startTimestamp = (new Date()).getTime();
+							recorder.record({
+								filename: "_doc/audio/",
+								format: "mp3"
+							}, function(path) {
+								if (recordCancel) return;
+								voiceUpload(path, creat);
+							}, function(e) {
+								plus.nativeUI.toast("录音时出现异常: " + e.message);
+							});
+						}
+						//----------------------------------------------->//
+						function msgTextFocus() {
+							ui.boxMsgText.focus();
+							setTimeout(function() {
+								ui.boxMsgText.focus();
+							}, 150);
+						}
+						// 监听输入框获得焦点
+						ui.boxMsgText.addEventListener('input', function(event) {
+							ui.btnMsgType.classList[ui.boxMsgText.value == '' ? 'remove' : 'add']('mui-icon-paperplane');
+							ui.btnMsgType.setAttribute("for", ui.boxMsgText.value == '' ? '' : 'msg-text');
+						});
+						//解决长按“发送”按钮，导致键盘关闭的问题；
+						ui.footerRight.addEventListener('touchstart', function(event) {
+							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
+								msgTextFocus();
+								event.preventDefault();
+							}
+						});
+
+						//解决长按“发送”按钮，导致键盘关闭的问题；
+						ui.footerRight.addEventListener('touchmove', function(event) {
+							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
+								msgTextFocus();
+								event.preventDefault();
+							}
+						});
+						// 录音对象的创建
+						ui.boxMsgSound.addEventListener('hold', function(event) {
+							startRecord('creat');
+							document.querySelector(".showArea").style.display = "block";
+						}, false);
+						// 放手
+						ui.boxMsgSound.addEventListener('release', function(event) {
+							document.querySelector(".showArea").style.display = "none";
+							stopTimestamp = (new Date()).getTime();
+							if (stopTimestamp - startTimestamp < MIN_SOUND_TIME) {
+								message("录音时间太短请重新录制！");
+								recordCancel = true;
+							} else {
+
+							}
+							recorder.stop();
+						}, false);
+						var bindMsgList = function() {
+							var areaMsgList = document.querySelector('#OA_task_1');
+							logs(areaMsgList.scrollHeight);
+							logs(areaMsgList.offsetHeight);
+							// areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
+							areaMsgList.scrollTop = 1686;
+						};
+						// 发送
+						ui.footerRight.addEventListener('release', function(event) {
+							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
+								ui.boxMsgText.focus();
+								setTimeout(function() {
+									ui.boxMsgText.focus();
+								}, 150);
+								creatItem('text', ui.boxMsgText.value);
+								bindMsgList();
+								ui.boxMsgText.value = '';
+								mui.trigger(ui.boxMsgText, 'input', null);
+							} else if (ui.btnMsgType.classList.contains('mui-icon-mic')) {
+								ui.btnMsgType.classList.add('mui-icon-compose');
+								ui.btnMsgType.classList.remove('mui-icon-mic');
+								ui.boxMsgText.style.display = 'none';
+								ui.boxMsgSound.style.display = 'block';
+								ui.boxMsgText.blur();
+								document.body.focus();
+							} else if (ui.btnMsgType.classList.contains('mui-icon-compose')) {
+								ui.btnMsgType.classList.add('mui-icon-mic');
+								ui.btnMsgType.classList.remove('mui-icon-compose');
+								ui.boxMsgSound.style.display = 'none';
+								ui.boxMsgText.style.display = 'block';
+								ui.boxMsgText.focus();
+								setTimeout(function() {
+									ui.boxMsgText.focus();
+								}, 150);
+							}
+						}, false);
+
+						// 上传视频
+						ui.footerLeft.addEventListener('tap', function(event) {
+							plus.nativeUI.actionSheet({
+								// title: "上传图片",
+								cancel: "取消",
+								buttons: [{
+									title: "拍照",
+									style: 'default'
+								}, {
+									title: "从手机相册选择",
+									style: 'default'
+								}]
+							}, function(b) { /*actionSheet 按钮点击事件*/
+								switch (b.index) {
+									case 0:
+										break;
+									case 1:
+										getImg(function(res) {
+											creatItem('img', res.url);
+										}); /*拍照*/
+										break;
+									case 2:
+										uploadVideo(function(res) {
+											if (types == "img") {
+												creatItem('img', res.url);
+											} else {
+												creatItem('video', res.url);
+												types = "img";
+											}
+										})
+										break;
+									default:
+										break;
+								}
+							})
+						}, false);
+
+						function uploadVideo(cb) {
+							plus.gallery.pick(function(e) {
+								var file = e;
+								var format = file.substring(file.lastIndexOf(".") + 1);
+								if (format == 'jpg' || format == 'png' || format == 'gif' || format == 'webp') {
+									imageResize(file, cb);
+								} else {
+									types = 'video';
+									plus.io.getVideoInfo({
+										filePath: file,
+										success: function(res) {
+											if (res.size < $videoMaxSize) {
+												showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
+												var task = plus.uploader.createUpload($videoUrl, {
+														method: "POST",
+														blocksize: 614400,
+														priority: 100
+													},
+													function(t, status) { //上传完成
+														if (status == 200) {
+															var res = JSON.parse(t.responseText);
+															if (res.error) {
+																plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
+															} else {
+																showload(1);
+																cb(res);
+															}
+														} else {
+															console.log("上传失败：" + status);
+															plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
+														}
+													}
+												);
+												// 页面中要上传的 图片路径
+												task.addFile(file, {
+													key: 'file'
+												});
+												task.start();
+												setTimeout(function() {
+													showload(1);
+												}, 10000);
+											} else {
+												plus.nativeUI.alert('选择视频文件过大!', '', '提示', 'OK');
+											}
+										},
+										fail: function(error) {
+											plus.nativeUI.alert(error.message, '', '提示', 'OK');
+										}
+									});
+								}
+
+							}, function(e) {
+								console.log("取消选择");
+							}, {
+								filter: "none",
+								multiple: false,
+								maximum: 5,
+								system: false,
+								onmaxed: function() {
+									plus.nativeUI.alert('最多只能选择1个');
+								}
+							});
+						}
+						// 创建新的条目
+						function creatItem(type, cont) {
+							var item = {
+								id: '',
+								type: type,
+								content: cont,
+								remark: '',
+								status: 0,
+							};
+							app.remarkList.push(item);
+							// logs(app.remarkList);
+						}
+
+						//音频文件上传
+						function voiceUpload(file, creat) {
+							var task = plus.uploader.createUpload($voiceUrl, {
+									method: "POST",
+									blocksize: 614400,
+									priority: 100
+								},
+								function(t, status) { //上传完成
+									if (status == 200) {
+										var res = JSON.parse(t.responseText);
+										if (res.errno == 1) {
+											message(res.message);
+										} else {
+											if (creat) {
+												creatItem('audio', res.data.path)
+											} else {
+												app.remarkList[audioIdx].content = res.data.path;
+											}
+										}
+									} else {
+										message('发送失败!');
+									}
+								}
+							);
+							// 页面中要上传的
+							task.addFile(file, {
+								key: 'upfile'
+							});
+							task.start();
+						}
 					})
 				}
 			})
@@ -616,13 +1113,14 @@
 					plus.io.getVideoInfo({
 						filePath: e,
 						success: function(res) {
-							var size=res.size;
-							if(size==0){
+							var size = res.size;
+							if (size == 0) {
 								message('请重新选择视频！');
-							}else if(size>10000000){
+							} else if (size > 10000000) {
 								message('视频文件须小于10MB！');
-							}else{
+							} else {
 								message('选择成功！');
+								logs(e);
 							}
 						}
 					});
@@ -648,28 +1146,29 @@
 					} else {
 						mui.swipeoutClose(_this_dom);
 						message("已删除");
-						app.remarkList.splice(i, 1);
+						app.remarkList[i].status = '-1';
 					}
 				})
 			}
 			// 上移或者下移
 			function moveIt(_id, idx, status) {
-				var _this_dom = document.getElementById('master-list' + _id);
+				logs(idx);
+				var _this_dom = document.getElementById('master_list_' + idx);
 				var _this = app.remarkList[idx];
 				if (status == 'up') {
+					mui.swipeoutClose(_this_dom);
 					if (idx == 0) {
 						mui.toast("第一个不允许上移！");
 						return false;
 					}
-					mui.swipeoutClose(_this_dom);
 					app.remarkList.splice(idx, 1);
 					app.remarkList.splice(idx - 1, 0, _this);
 				} else {
+					mui.swipeoutClose(_this_dom);
 					if (idx == app.remarkList.length - 1) {
 						mui.toast("最后一个不允许下移！");
 						return false;
 					}
-					mui.swipeoutClose(_this_dom);
 					app.remarkList.splice(idx, 1);
 					app.remarkList.splice(idx + 1, 0, _this);
 				}
@@ -695,7 +1194,6 @@
 			// 文本框自适应高度
 			function makeExpandingArea(el) {
 				var timer = null;
-				//由于ie8有溢出堆栈问题，故调整了这里
 				var setStyle = function(el, auto) {
 					if (auto) el.style.height = 'auto';
 					el.style.height = el.scrollHeight + 'px';
@@ -724,7 +1222,6 @@
 					el.attachEvent("onkeydown", function() {
 						var key = window.event.keyCode;
 						if (key == 8 || key == 46) delayedResize(el);
-
 					});
 					el.attachEvent("oncut", function() {
 						delayedResize(el);
@@ -744,6 +1241,20 @@
 					}
 				});
 			}
+			// 编辑完成,保存
+			mui('.mui-bar').on('tap', '.add-master', function() {
+				logs(userInfo.token);
+				logs(app.course_id);
+				logs(app.remarkList);
+				mui.post($ajaxUrl + 'team&action=create_course_draft', {
+					token: userInfo.token,
+					course_id: app.course_id,
+					data: app.remarkList
+				}, function(res) {
+					logs(res);
+					// if (res.errno == 0) {} else {}
+				}, 'json');
+			})
 		</script>
 	</body>
 

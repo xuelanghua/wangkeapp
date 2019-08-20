@@ -58,6 +58,7 @@
 				width: 90%;
 				margin: 60px auto 0;
 				border-radius: 30px;
+				display: none;
 			}
 
 			[v-cloak] {
@@ -95,6 +96,7 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -121,6 +123,9 @@
 						plus.navigator.setStatusBarStyle("dark");
 						var self = plus.webview.currentWebview();
 						app.course = self.course;
+						if(userInfo.id==self.course.teacher_id){
+							document.querySelector(".mui-btn-blue").style.display="block";
+						}
 						if (self.kaola) {
 							logs(self.course);
 							app.title = self.course.title;
