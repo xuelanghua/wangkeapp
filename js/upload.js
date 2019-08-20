@@ -107,18 +107,34 @@ function upload(file, cb) {
 
 //压缩（需要获取本地文件权限）  
 function imageResize(src, cb) {
-	var filename = src.substring(src.lastIndexOf('/') + 1);
-	plus.zip.compressImage({
+	var filename = src.substring(src.lastIndexOf('/') + 1),
+		direction = 0;
+	plus.io.getImageInfo({
 		src: src,
-		dst: '_doc/' + filename,
-		overwrite: true,
-		width: '1024px', //这里指定了宽度，同样可以修改  
-		format: 'jpg',
-		quality: 100 //图片质量不再修改，以免失真  
-	}, function(e) {
-		upload(e.target, cb);
-	}, function(err) {
-		plus.nativeUI.alert('处理出错!', '', '提示', 'OK');
-	})
-}
+		success: function(res) {
+			var o = res.orientation;
+			if (o == 'right') {
+				direction = 90;
+			} else if (o == 'left') {
+				direction = 270;
+			}else if(o == 'down'){
+				direction = 180;
+			}
+			plus.zip.compressImage({
+				src: src,
+				dst: '_doc/' + filename,
+				overwrite: true,
+				width: '1024px', //这里指定了宽度，同样可以修改  
+				format: 'jpg',
+				quality: 100 ,//图片质量不再修改，以免失真  
+				rotate:direction
+			}, function(e) {
+				upload(e.target, cb);
+			}, function(err) {
+				plus.nativeUI.alert('处理出错!', '', '提示', 'OK');
+			})
+		}
+	});
 
+
+}

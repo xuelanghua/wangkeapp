@@ -484,6 +484,7 @@
 			<div v-else style="padding: 30%;text-align: center;color:#999999;font-size:18px;">
 				暂无备课~
 			</div>
+			<img style="width: 100%;" :src="test">
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -501,6 +502,7 @@
 					tid: '',
 					is_edit: false,
 					edit_content: '',
+					test: '',
 					remarkList: [{
 						id: '369',
 						type: "text",
@@ -598,6 +600,7 @@
 						var self = plus.webview.currentWebview();
 						app.tid = self.tid;
 						getRemarkList();
+
 					})
 				}
 			})
@@ -608,32 +611,26 @@
 			// 选择视频
 			function choiceVideo() {
 				plus.gallery.pick(function(e) {
+					var direction = null;
 					// 选择成功执行
-					// var urls = plus.io.convertLocalFileSystemURL(e);
-					// console.log(urls);
-					// console.log(e);
-					// plus.io.getVideoInfo(e, function() {
-					// 	console.log(333333333333);
-					// });
-					plus.io.getImageInfo({
-						src: "../image/add.png",
+					plus.io.getVideoInfo({
+						filePath: e,
 						success: function(res) {
-							logs(res);
-						},
-						fail: function(res) {
-							logs(33333);
-						},
-						complete: function(res) {
-							logs(444444);
+							var size=res.size;
+							if(size==0){
+								message('请重新选择视频！');
+							}else if(size>10000000){
+								message('视频文件须小于10MB！');
+							}else{
+								message('选择成功！');
+							}
 						}
 					});
-					logs(555555);
 				}, function(e) {
 					console.log("取消选择图片");
 				}, {
-					filter: "none",
+					filter: "video",
 					multiple: false,
-					maximum: 5,
 					system: false,
 					onmaxed: function() {
 						plus.nativeUI.alert('最多只能选择1张图片');
