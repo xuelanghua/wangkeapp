@@ -609,12 +609,25 @@
 			function choiceVideo() {
 				plus.gallery.pick(function(e) {
 					// 选择成功执行
-					var urls = plus.io.convertLocalFileSystemURL(e);
-					console.log(urls);
-					plus.io.getVideoInfo(e, function() {
-						console.log(333333333333);
+					// var urls = plus.io.convertLocalFileSystemURL(e);
+					// console.log(urls);
+					// console.log(e);
+					// plus.io.getVideoInfo(e, function() {
+					// 	console.log(333333333333);
+					// });
+					plus.io.getImageInfo({
+						src: "../image/add.png",
+						success: function(res) {
+							logs(res);
+						},
+						fail: function(res) {
+							logs(33333);
+						},
+						complete: function(res) {
+							logs(444444);
+						}
 					});
-					console.log(44444444);
+					logs(555555);
 				}, function(e) {
 					console.log("取消选择图片");
 				}, {
