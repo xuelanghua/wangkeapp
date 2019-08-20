@@ -463,7 +463,7 @@
 			<div class="public-container" :class="is_edit?'active':''">
 				<textarea v-model="edit_content" placeholder="请输入内容" rows="5" cols="" id="public_area" @input="adaptiveHeight('public_area')"></textarea>
 				<div class="action-cont">
-					<button type="button" class="mui-btn mui-btn-outlined" @tap="mask.close()">取消</button>
+					<button type="button" class="mui-btn mui-btn-outlined" @tap="cancelEdit()">取消</button>
 					<button type="button" class="mui-btn mui-btn-outlined" @tap="confirmEdit">确认</button>
 				</div>
 			</div>
@@ -648,7 +648,7 @@
 					test: '',
 					course_id: '',
 					// 记录是否保存
-					isSave: false,
+					isSave: true,
 					remarkList: [{
 						id: '369',
 						type: "text",
@@ -703,6 +703,11 @@
 					adaptiveHeight: function(_id) {
 						var textarea = document.getElementById(_id);
 						makeExpandingArea(textarea);
+					},
+					// 取消
+					cancelEdit:function(){
+						app.edit_content = app.remarkList[c_index].content;
+						mask.close();
 					},
 					// 确认输入的文字
 					confirmEdit: function() {
@@ -775,6 +780,14 @@
 								status.innerText = '点击播放';
 								player = null;
 							});
+						}
+					},
+					// 发送备课内容
+					sendRemake:function(msg,status){
+						if(status==1){
+							// 重发
+						}else{
+							// 直接发
 						}
 					}
 				},
@@ -1175,7 +1188,7 @@
 			}
 			// 修改
 			function editMaster(idx, _id, type) {
-				var _this_dom = document.getElementById('master-list' + _id);
+				var _this_dom = document.getElementById('master_list_' + idx);
 				mui.swipeoutClose(_this_dom);
 				if (type == "text") {
 					app.is_edit = true;
