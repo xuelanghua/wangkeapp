@@ -613,44 +613,24 @@
 				plus.gallery.pick(function(e) {
 					var direction = null;
 					// 选择成功执行
-					// plus.io.getVideoInfo({
-					// 	filePath:e,
-					// 	success:function(res){
-					// 		logs(res)
-					// 	}
-					// });
-					// app.test=e;
-					var url = e;
-					plus.io.getImageInfo({
-						src: e,
+					plus.io.getVideoInfo({
+						filePath: e,
 						success: function(res) {
-							logs(res);
-							if (res.orientation == 'right') {
-								direction = 90;
-								logs(direction);
+							var size=res.size;
+							if(size==0){
+								message('请重新选择视频！');
+							}else if(size>10000000){
+								message('视频文件须小于10MB！');
+							}else{
+								message('选择成功！');
 							}
-							plus.zip.compressImage({
-								src: url,
-								dst:"_doc/opk.jpg",
-								overwrite:true,
-								rotate: direction
-							}, function(_e) {
-								logs(_e.target);
-								logs(111111111111);
-								app.test = _e.target;
-							}, function(error) {
-								logs(error.message);
-								logs(22222222222222222);
-							})
 						}
 					});
-
 				}, function(e) {
 					console.log("取消选择图片");
 				}, {
-					filter: "none",
+					filter: "video",
 					multiple: false,
-					maximum: 5,
 					system: false,
 					onmaxed: function() {
 						plus.nativeUI.alert('最多只能选择1张图片');
