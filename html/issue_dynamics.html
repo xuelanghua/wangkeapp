@@ -164,7 +164,7 @@
 											break;
 										case 3:
 											app.is_video = 1;
-											galleryViedo(setChoice);
+											videoUpload(setChoice);
 											break;
 										default:
 											break;
@@ -181,55 +181,6 @@
 							app.video_src = res.url;
 						app.images.push(res.url);
 					}
-					// 从相册中选择视频
-					function galleryViedo(cb) {
-						// 从相册中选择图片
-						plus.gallery.pick(function(e) {
-							uploadViedo(e, cb);
-						}, function(e) {
-							console.log("取消选择图片");
-						}, {
-							filter: "video",
-							multiple: false,
-							maximum: 5,
-							system: false,
-							onmaxed: function() {
-								plus.nativeUI.alert('最多只能选择1张图片');
-							}
-						});
-					}
-					// 上传的方法
-					function uploadViedo(file, cb) {
-						showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
-						var task = plus.uploader.createUpload($videoUrl, {
-								method: "POST",
-								blocksize: 614400,
-								priority: 100
-							},
-							function(t, status) { //上传完成
-								if (status == 200) {
-									var res = JSON.parse(t.responseText);
-									if (res.error) {
-										plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
-									} else {
-										logs(res);
-										showload(1);
-										cb(res);
-									}
-								} else {
-									plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
-								}
-							}
-						);
-						// 页面中要上传的 图片路径
-						task.addFile(file, {
-							key: 'file'
-						});
-						task.start();
-						setTimeout(function() {
-							showload(1);
-						}, 10000);
-					}
 					// 发布
 					mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
 						e.preventDefault();
@@ -237,8 +188,8 @@
 							message("内容不能为空！");
 							return;
 						}
-						if (app.issue_desc.length > 500) {
-							message("动态长度不能大于500个字符");
+						if (app.issue_desc.length > 1000) {
+							message("动态长度不能大于1000个字符");
 							return;
 						}
 						mui.post($ajaxUrl + 'timeline&action=add', {

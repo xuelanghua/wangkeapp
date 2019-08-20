@@ -107,17 +107,17 @@ function upload(file, cb) {
 
 //压缩（需要获取本地文件权限）  
 function imageResize(src, cb) {
-	var filename = src.substring(src.lastIndexOf('/') + 1),
-		direction = 0;
+	var filename = src.substring(src.lastIndexOf('/') + 1);
+	var direction = 0;
 	plus.io.getImageInfo({
 		src: src,
 		success: function(res) {
-			var o = res.orientation;
-			if (o == 'right') {
+			var orientation = res.orientation;
+			if (orientation == 'right') {
 				direction = 90;
-			} else if (o == 'left') {
+			} else if (orientation == 'left') {
 				direction = 270;
-			}else if(o == 'down'){
+			} else if (orientation == 'down') {
 				direction = 180;
 			}
 			plus.zip.compressImage({
@@ -126,15 +126,74 @@ function imageResize(src, cb) {
 				overwrite: true,
 				width: '1024px', //这里指定了宽度，同样可以修改  
 				format: 'jpg',
-				quality: 100 ,//图片质量不再修改，以免失真  
-				rotate:direction
+				quality: 100, //图片质量不再修改，以免失真  
+				rotate: direction
 			}, function(e) {
 				upload(e.target, cb);
 			}, function(err) {
 				plus.nativeUI.alert('处理出错!', '', '提示', 'OK');
 			})
+		},
+		fail: function(error) {
+			plus.nativeUI.alert(error.message, '', '提示', 'OK');
 		}
 	});
+}
 
-
+//视频上传
+function videoUpload(cb) {
+	plus.gallery.pick(function(e) {
+		var file = e;
+		plus.io.getVideoInfo({
+			filePath: file,
+			success: function(res) {
+				if (res.size < $videoMaxSize) {
+					showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
+					var task = plus.uploader.createUpload($videoUrl, {
+							method: "POST",
+							blocksize: 614400,
+							priority: 100
+						},
+						function(t, status) { //上传完成
+							if (status == 200) {
+								var res = JSON.parse(t.responseText);
+								if (res.error) {
+									plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
+								} else {
+									showload(1);
+									cb(res);
+								}
+							} else {
+								console.log("上传失败：" + status);
+								plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
+							}
+						}
+					);
+					// 页面中要上传的 图片路径
+					task.addFile(file, {
+						key: 'file'
+					});
+					task.start();
+					setTimeout(function() {
+						showload(1);
+					}, 10000);
+				} else {
+					plus.nativeUI.alert('选择视频文件过大!', '', '提示', 'OK');
+				}
+			},
+			fail: function(error) {
+				plus.nativeUI.alert(error.message, '', '提示', 'OK');
+			}
+		});
+	}, function(e) {
+		console.log("取消选择视频");
+	}, {
+		filter: "video",
+		multiple: false,
+		maximum: 5,
+		system: false,
+		onmaxed: function() {
+			plus.nativeUI.alert('最多只能选择1个视频');
+		}
+	});
 }
