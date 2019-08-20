@@ -702,7 +702,7 @@
 				methods: {
 					adaptiveHeight: function(_id) {
 						var textarea = document.getElementById(_id);
-						makeExpandingArea(textarea);
+						makeExpandingArea(textarea, _id);
 					},
 					// 取消
 					cancelEdit:function(){
@@ -841,6 +841,11 @@
 					mui('.input-text')[0].addEventListener("swipedown", mui.preventDefault);
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
+						if (mui.os.ios) {
+							self.setStyle({
+								softinputMode: "adjustResize"
+							});
+						}
 						app.course_id = self.course.id;
 						getRemarkList();
 						// 录音相关
@@ -1205,7 +1210,7 @@
 				}
 			}
 			// 文本框自适应高度
-			function makeExpandingArea(el) {
+			function makeExpandingArea(el, eleId) {
 				var timer = null;
 				var setStyle = function(el, auto) {
 					if (auto) el.style.height = 'auto';
@@ -1222,7 +1227,11 @@
 				}
 				if (el.addEventListener) {
 					el.addEventListener('input', function() {
-						setStyle(el, 1);
+						if (eleId == 'public_area') {
+							setStyle(el, 1);
+						} else {
+							setStyle(el);
+						}
 					}, false);
 					setStyle(el)
 				} else if (el.attachEvent) {
