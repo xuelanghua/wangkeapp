@@ -234,6 +234,9 @@
 				max-width: 100%;
 				height: auto;
 			}
+			.remark-course{
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -241,8 +244,11 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title"></h1>
-			<div class="nav-right-btn mui-pull-right">
+			<div class="nav-right-btn mui-pull-right statistics-btn">
 				<img src="../image/icon/team-list-opction01.png">
+			</div>
+			<div class="nav-right-btn mui-pull-right remark-course">
+				<img src="../image/icon/remark.png">
 			</div>
 		</header>
 		<pre id="h"></pre>
@@ -350,7 +356,8 @@
 					courseId: 0,
 					checkType: 1,
 					// 讲师id
-					teacher_id: 0
+					teacher_id: 0,
+					course:{}
 				},
 				created: function() {
 
@@ -379,6 +386,10 @@
 						vm.tid = tid;
 						vm.teacher_id = wv.teacherId;
 						vm.courseId = wv.courseId;
+						vm.course=wv.course;
+						if(userInfo.id==wv.teacherId){
+							document.querySelector(".remark-course").style.display="flex";
+						}
 						if (wv.isSilent == 1) {
 							vm.say = true;
 						} else {
@@ -770,7 +781,6 @@
 								ws = new WebSocket("wss://app.wangkeapp.cn/wss");
 								ws.onopen = function() {
 									if (ws.readyState == WebSocket.OPEN) {
-										// console.log("连接已打开...");
 										heartCheck.reset();
 										heartCheck.start();
 									}
@@ -778,7 +788,6 @@
 								ws.onmessage = function(event) {
 									var data = event.data;
 									if (data == 'pong') {
-										// console.log('websocket连接正常...');
 										heartCheck.reset();
 										heartCheck.start();
 									} else {
@@ -787,37 +796,11 @@
 										if (data.error == 0) {
 											vm.say = false;
 											msgData = data.data;
-											// msgData['read_status'] = 1;
 											send(msgData);
 										} else if (data.error == -2) {
 											message(data.message);
 											vm.say = true;
 										}
-										// data['read_status'] = 1;
-										// logs(data);
-										// if (data.data2) {
-										// 	if (data.data2.user_id == chatId) {
-										// 		var message = {
-										// 			sender: chatId,
-										// 			type: data.data2.message_type,
-										// 			content: data.data2.content,
-										// 			message_id: data.message_id
-										// 		}
-										// 		send(message);
-										// 	} else {
-										// 		mui.post($ajaxUrl + 'chat&action=unread_message', {
-										// 			token: userInfo.token,
-										// 			message_id: data.data2.id
-										// 		}, function(res) {
-										// 			if (res.errno == 0) {
-										// 				// mui.fire(plus.webview.getWebviewById('chat'), 'refreshNotice');
-										// 				// mui.fire(plus.webview.getWebviewById('home'), 'refreshNotice');
-										// 				// mui.fire(plus.webview.getWebviewById('user'), 'refreshNotice');
-										// 				// mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
-										// 			}
-										// 		}, 'json')
-										// 	}
-										// }
 									}
 								};
 								ws.onclose = function(e) {
@@ -1025,11 +1008,20 @@
 				}
 			}
 			// 打开团队统计
-			mui(".mui-bar").on("tap", ".nav-right-btn", function() {
+			mui(".mui-bar").on("tap", ".statistics-btn", function() {
 				openPage('course_statistics.html', 'course_statistics', '#f7f7f7', {
 					course_id: vm.courseId,
 					tid: vm.tid
 				});
+			})
+			// 打开备课
+			mui(".mui-bar").on("tap", ".remark-course", function() {
+				openPage('prepare_lessons.html', 'prepare_lessons', '#f7f7f7', {
+					course: vm.course
+				});
+			})
+			window.addEventListener("reloadList",function(e){
+				send(e.detail.msgData);
 			})
 		</script>
 	</body>
