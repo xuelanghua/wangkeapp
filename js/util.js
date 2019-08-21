@@ -724,7 +724,7 @@ function pushCallback(data, event) {
 				}, extra, '');
 			} else if (url == 'groupMessage') {
 				plus.nativeUI.toast('消息群发成功!');
-			} else  {
+			} else {
 				if (url) {
 					fnOpenWin('html/' + url + '.html', url, '', extra, '');
 				}
@@ -779,12 +779,12 @@ function pushCallback(data, event) {
 			fnLogout();
 		} else if (url == 'groupMessage') {
 			plus.nativeUI.toast('消息群发成功!');
-		}  else if (url == 'radar') {
+		} else if (url == 'radar') {
 			if (data.times == 1) {
 				data.times++;
 				pushMessage(data.content, data);
 			}
-		}  else {
+		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}
 	}
@@ -1141,4 +1141,11 @@ function pushMessage(content, payload) {
 		cover: false,
 		sound: "system",
 	})
+}
+
+// 播放视频
+function videoPlayer(url) {
+	openPage('player_model.html', 'player_model', '#000000', {
+		url: url
+	}, 'zoom-fade-out');
 }
