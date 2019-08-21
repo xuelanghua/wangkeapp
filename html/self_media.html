@@ -239,6 +239,26 @@
 			.screen-menu:first-of-type::after {
 				display: none;
 			}
+			.video-cover{
+				width: 60%;
+				height:3rem;
+				overflow: hidden;
+				position: relative;
+			}
+			.video-cover .player-btn{
+				width: 60px;
+				height: auto;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%,-50%);
+				transform: translate(-50%,-50%);
+			}
+			.video-cover img{
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -332,11 +352,17 @@
 									<p class="dynamic-desc" :class="i.info.cover.length>0?'mui-ellipsis-2':'mui-ellipsis-3'" @tap="dynamicDetail(i.info.id)">
 										{{i.info.content}}
 									</p>
-									<ul v-if="i.info.cover!=''" class="illustrating-picture">
-										<li v-for="(img,pridx) in i.info.cover">
-											<img @tap="previewImage(m,pridx)" class="illustrating" :src="img">
-										</li>
-									</ul>
+									<template v-if="i.info.cover!=''">
+										<div class="video-cover" v-if="i.info.is_video==1" @tap="videoPlayer(i.info.cover[0])">
+											<img :src="i.info.cover[0]+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
+											<img class="player-btn" src="../image/icon/video-player.png">
+										</div>
+										<ul v-else class="illustrating-picture">
+											<li v-for="(img,pridx) in i.info.cover">
+												<img @tap="previewImage(m,pridx)" class="illustrating" :src="img">
+											</li>
+										</ul>
+									</template>
 									<div class="operation-menu">
 										<div class="menu-list" :class="'menu-list'+i.info.id">
 											<span class="check-detail" @tap="dynamicDetail(i.info.id)">查看详情</span>
@@ -562,6 +588,12 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
+					// 播放视频
+					videoPlayer:function(url){
+						openPage('player_model.html','player_model','#000000',{
+							url:url
+						});
+					},
 					// 选择标签
 					selectedTj: function(id, idx) {
 						skip = 1;
@@ -650,7 +682,7 @@
 					curriculumDetail: function(courseInfo) {
 						// 判断是否购买
 						// logs(courseInfo);
-						if (courseInfo.is_buy == 1 || courseInfo.price == 0||courseInfo.captain_uid==userInfo.id) {
+						if (courseInfo.is_buy == 1 || courseInfo.price == 0 || courseInfo.captain_uid == userInfo.id) {
 							if (courseInfo.state == 1 || courseInfo.state == 2) {
 								// 直播页面
 								openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
@@ -659,7 +691,7 @@
 									courseTitle: courseInfo.title,
 									teacherId: courseInfo.teacher_id,
 									isSilent: courseInfo.is_silent,
-									course:courseInfo
+									course: courseInfo
 								});
 							} else {
 								// 未开播提示
@@ -672,9 +704,9 @@
 							openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
 								course: courseInfo,
 							});
-						} 
+						}
 					},
-					
+
 					// 评论
 					pinglun: function(t_id, i_idx) {
 						document.querySelector(".menu-list" + timeline_id).classList.remove("active");
