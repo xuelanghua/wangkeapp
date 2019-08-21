@@ -463,12 +463,12 @@
 			<div class="public-container" :class="is_edit?'active':''">
 				<textarea v-model="edit_content" placeholder="请输入内容" rows="5" cols="" id="public_area" @input="adaptiveHeight('public_area')"></textarea>
 				<div class="action-cont">
-					<button type="button" class="mui-btn mui-btn-outlined" @tap="mask.close()">取消</button>
+					<button type="button" class="mui-btn mui-btn-outlined" @tap="cancelEdit()">取消</button>
 					<button type="button" class="mui-btn mui-btn-outlined" @tap="confirmEdit">确认</button>
 				</div>
 			</div>
-			<div id="OA_task_1" v-if="remarkList.length>0">
-				<ul class="mui-table-view">
+			<div id="OA_task_1">
+				<ul class="mui-table-view" v-if="remarkList!=[]&&remarkList!=1">
 					<template v-for="(h,i) in remarkList" :key="i" v-if="h.status!=-1">
 						<!-- 文字 -->
 						<li class="mui-table-view-cell" :id="'master_list_'+i" v-if="h.type=='text'">
@@ -481,7 +481,7 @@
 							<div class="mui-slider-handle">
 								<div class="remark-info">
 									<p class="text-desc">{{h.content}}</p>
-									<div class="send-msg-btn">
+									<div class="send-msg-btn" @tap="sendRemake(h)">
 										<template v-if="h.status==0">
 											<img src="../image/icon/prepare-lessons03.png">
 											<span>发送</span>
@@ -511,7 +511,7 @@
 								<div class="remark-info">
 									<img v-if="h.content" class="img-cont" :src="h.content" @tap="previewImage(h.content)">
 									<img v-else class="choice-item" @tap="choiceItem(i)" src="../image/icon/prepare-lessons06.png">
-									<div class="send-msg-btn">
+									<div class="send-msg-btn" @tap="sendRemake(h)">
 										<template v-if="h.status==0">
 											<img src="../image/icon/prepare-lessons03.png">
 											<span>发送</span>
@@ -545,9 +545,9 @@
 									<div v-else class="play-record" @tap="playAudio(h)">
 										<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
 										<span class="play-status" :id="'play_status_'+h.id">点击播放</span>
-										<span class="record-timer">1′10″</span>
+										<span class="record-timer">{{h.duration_desc}}</span>
 									</div>
-									<div class="send-msg-btn">
+									<div class="send-msg-btn" @tap="sendRemake(h)">
 										<template v-if="h.status==0">
 											<img src="../image/icon/prepare-lessons03.png">
 											<span>发送</span>
@@ -576,10 +576,10 @@
 							<div class="mui-slider-handle">
 								<div class="remark-info">
 									<div v-if="h.content" class="video-container">
-										<video width="100%" height="200px" controls="controls" src="h.content" :poster="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"></video>
+										<video width="100%" height="200px" controls="controls" :src="h.content" :poster="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"></video>
 									</div>
 									<img v-else class="choice-item" @tap="choiceVideo(i)" src="../image/icon/prepare-lessons05.png">
-									<div class="send-msg-btn">
+									<div class="send-msg-btn" @tap="sendRemake(h)">
 										<template v-if="h.status==0">
 											<img src="../image/icon/prepare-lessons03.png">
 											<span>发送</span>
@@ -600,7 +600,7 @@
 					</template>
 				</ul>
 			</div>
-			<div v-else style="padding: 30%;text-align: center;color:#999999;font-size:18px;">
+			<div v-if="voidRemarkList" style="padding: 30%;text-align: center;color:#999999;font-size:18px;">
 				暂无备课~
 			</div>
 			<div class="showArea" id="sound-alert">
@@ -632,6 +632,9 @@
 				player = null,
 				priorId = '',
 				types = 'img',
+				// 聊天
+				ws = null,
+				chatData = null,
 				mask = mui.createMask(function() {
 					if (app.edit_content.length < 1) {
 						message("请输入内容！");
@@ -648,61 +651,28 @@
 					test: '',
 					course_id: '',
 					// 记录是否保存
-					isSave: false,
-					remarkList: [{
-						id: '369',
-						type: "text",
-						content: '1 你好好阿萨德福利卡士大夫埃里克森打飞机阿斯顿发了。',
-						remark: '这个条消息一定要在一点前发出去。',
-						status: 0 //待发送 删除改-1
-					}, {
-						id: '586',
-						type: "audio",
-						content: 'https://bfwangke.oss-cn-shenzhen.aliyuncs.com/audios/alice.mp3',
-						remark: '最后一条消息的备注信息',
-						status: 1 //已发送
-					}, {
-						id: '111',
-						type: "audio",
-						content: '2 https://www.baidu.com/',
-						remark: '这是一条语音消息。',
-						status: 0 //待发送
-					}, {
-						id: '222',
-						type: "img",
-						content: 'https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/08/A1jWp00wI210WO2250aJ220mT7vm2D.jpg',
-						remark: '这是一条图片消息。',
-						status: 0 //待发送
-					}, {
-						id: '3695',
-						type: "img",
-						content: '',
-						remark: '这是一条图片消息2',
-						status: 0 //待发送
-					}, {
-						id: '36',
-						type: "text",
-						content: '4 我是倒数第二条啊',
-						remark: '最后一条消息的备注信息',
-						status: 1 //已发送
-					}, {
-						id: '698',
-						type: "video",
-						content: '',
-						remark: '最后一条消息的备注信息',
-						status: 1 //已发送
-					}, {
-						id: '698',
-						type: "video",
-						content: 'https://cdn.wangkeapp.cn/videos/6/2019/08/TuVwcR77HUihRQi2hLhzRNZNucA7w9.mp4',
-						remark: '最后一条消息的备注信息',
-						status: 1 //已发送
-					}, ]
+					isSave: true,
+					remarkList: [],
+					// 是否为空
+					voidRemarkList: false,
+					course: {}
 				},
 				methods: {
+					// 时间格式化
+					format: function(time) {
+						var timer = toFixed(time),
+							_str = timer / 60,
+							_m = _str.substring(_str.lastIndexOf(".") + 1);
+
+					},
 					adaptiveHeight: function(_id) {
 						var textarea = document.getElementById(_id);
 						makeExpandingArea(textarea, _id);
+					},
+					// 取消
+					cancelEdit: function() {
+						app.edit_content = app.remarkList[c_index].content;
+						mask.close();
 					},
 					// 确认输入的文字
 					confirmEdit: function() {
@@ -776,6 +746,30 @@
 								player = null;
 							});
 						}
+					},
+					// 发送备课内容
+					sendRemake: function(msg, idx) {
+						logs(app.course);
+						if(app.course.state==0){
+							message("暂未开课！");
+							return false;
+						}
+						if (msg.status == 1) {
+							// 重发
+							plus.nativeUI.confirm("该消息已发送过，确认重新发送吗？", function(e) {
+								if (e.index) {
+									// message("取消");
+								} else {
+									affirm(idx,msg);
+								}
+							})
+						} else {
+							// 直接发
+							affirm(idx,msg);
+							// chatData.content = msg.content;
+							// chatData.message_type = msg.type;
+							// ws.send(JSON.stringify(chatData));
+						}
 					}
 				},
 				mounted: function() {
@@ -833,8 +827,19 @@
 								softinputMode: "adjustResize"
 							});
 						}
-						app.course_id = self.course.id;
+						app.course = self.course;
+						chatData = {
+							team_id: app.course.team_id,
+							course_id: app.course.id,
+							user_id: userInfo.id,
+							uniacid: userInfo.uniacid,
+							type: 2,
+							content: '',
+							message_type: '',
+						}
+						app.course_id = app.course.id;
 						getRemarkList();
+						WebSocketInit();
 						// 录音相关
 						var recordCancel = false,
 							recorder = null,
@@ -1061,20 +1066,30 @@
 							});
 						}
 						// 创建新的条目
-						function creatItem(type, cont) {
+						function creatItem(type, cont, duration, duration_desc) {
 							var item = {
 								id: '',
 								type: type,
 								content: cont,
 								remark: '',
 								status: 0,
+								duration: duration || 0,
+								duration_desc: duration_desc || ''
 							};
 							app.remarkList.push(item);
-							// logs(app.remarkList);
+							logs(app.remarkList);
 						}
 
 						//音频文件上传
 						function voiceUpload(file, creat) {
+							var duration = 0;
+							showload(false, false, '音频上传中...', "rgba(0,0,0,0.5)");
+							plus.io.getAudioInfo({
+								filePath: file,
+								success: function(res) {
+									duration = Math.round(res.duration);
+								}
+							});
 							var task = plus.uploader.createUpload($voiceUrl, {
 									method: "POST",
 									blocksize: 614400,
@@ -1087,13 +1102,17 @@
 											message(res.message);
 										} else {
 											if (creat) {
-												creatItem('audio', res.data.path)
+												creatItem('audio', res.data.path, duration, formatSeconds(duration));
 											} else {
 												app.remarkList[audioIdx].content = res.data.path;
+												app.remarkList[audioIdx].duration = duration;
+												app.remarkList[audioIdx].duration_desc = formatSeconds(duration);
 											}
 										}
+										showload(1);
 									} else {
 										message('发送失败!');
+										showload(1);
 									}
 								}
 							);
@@ -1108,7 +1127,17 @@
 			})
 			// 获取列表
 			function getRemarkList() {
-
+				mui.post($ajaxUrl + 'team&action=course_draft_list', {
+					token: userInfo.token,
+					course_id: app.course_id
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.remarkList = res.data;
+					} else {
+						app.voidRemarkList = true;
+					}
+				}, 'json');
 			}
 			// 选择视频
 			function choiceVideo() {
@@ -1151,6 +1180,9 @@
 					} else {
 						mui.swipeoutClose(_this_dom);
 						message("已删除");
+						for (var j in app.remarkList) {
+							logs(app[j]);
+						}
 						app.remarkList[i].status = '-1';
 					}
 				})
@@ -1180,7 +1212,7 @@
 			}
 			// 修改
 			function editMaster(idx, _id, type) {
-				var _this_dom = document.getElementById('master-list' + _id);
+				var _this_dom = document.getElementById('master_list_' + idx);
 				mui.swipeoutClose(_this_dom);
 				if (type == "text") {
 					app.is_edit = true;
@@ -1252,18 +1284,127 @@
 			}
 			// 编辑完成,保存
 			mui('.mui-bar').on('tap', '.add-master', function() {
-				logs(userInfo.token);
-				logs(app.course_id);
-				logs(app.remarkList);
 				mui.post($ajaxUrl + 'team&action=create_course_draft', {
 					token: userInfo.token,
 					course_id: app.course_id,
 					data: app.remarkList
 				}, function(res) {
-					logs(res);
-					// if (res.errno == 0) {} else {}
+					// logs(res);
+					if (res.errno == 0) {
+						message("保存成功！");
+					} else {
+						message("保存失败，请稍后重试！");
+					}
 				}, 'json');
 			})
+			// 转换时分秒
+			function formatSeconds(value) {
+				var secondTime = value;
+				var minuteTime = 0;
+				var hourTime = 0;
+				if (secondTime > 60) {
+					minuteTime = parseInt(secondTime / 60);
+					secondTime = parseInt(secondTime % 60);
+					if (minuteTime > 60) {
+						hourTime = parseInt(minuteTime / 60);
+						minuteTime = parseInt(minuteTime % 60);
+					}
+				}
+				var result = "" + parseInt(secondTime) + "″";
+				if (minuteTime > 0) {
+					result = "" + parseInt(minuteTime) + "′" + result;
+				}
+				if (hourTime > 0) {
+					result = "" + parseInt(hourTime) + ":" + result;
+				}
+				return result;
+			}
+			//---------------------------------------------------------------------
+			//websocket 心跳检测
+			var timer = 0
+			var heartCheck = {
+				timeout: 3e3,
+				timeoutObj: null,
+				serverTimeoutObj: null,
+				reset: function() {
+					clearTimeout(timer);
+					clearTimeout(this.serverTimeoutObj);
+					clearTimeout(this.timeoutObj);
+					// console.log("heartCheck.reset.timer");
+					return;
+				},
+				start: function() {
+					this.timeoutObj = setTimeout(function() {
+						var t = {
+							ping: !0,
+							user_id: userInfo.id,
+							uniacid: userInfo.uniacid,
+							type: 2
+						};
+						ws.send(JSON.stringify(t));
+					}, this.timeout);
+				},
+			};
+			// 聊天初始化
+			function WebSocketInit() {
+				if ("WebSocket" in window) {
+					// 打开一个 web socket
+					ws = new WebSocket("wss://app.wangkeapp.cn/wss");
+					ws.onopen = function() {
+						if (ws.readyState == WebSocket.OPEN) {
+							heartCheck.reset();
+							heartCheck.start();
+						}
+					};
+					ws.onmessage = function(event) {
+						var data = event.data;
+						if (data == 'pong') {
+							heartCheck.reset();
+							heartCheck.start();
+						} else {
+							data = JSON.parse(data);
+							logs(data);
+							if (data.error == 0) {
+								msgData = data.data;
+								mui.fire(plus.webview.getWebviewById("live_streaming"),"reloadList",{
+									msgData:msgData
+								});
+							} else if (data.error == -2) {
+								message(data.message);
+							}
+						}
+					};
+					ws.onclose = function(e) {
+						// 关闭 websocket
+						console.log("连接已关闭...");
+					};
+					ws.onerror = function(e) {
+						logs(e);
+					}
+				} else {
+					message("您的手机不支持 WebSocket!");
+				}
+			}
+			// 发送确认
+			function affirm(idx, msg) {
+						logs(idx);
+				// mui.post($ajaxUrl + 'team&action=change_course_draft_status', {
+				// 	token: userInfo.token,
+				// 	draft_id:msg.id,
+				// 	status:1,
+				// }, function(res) {
+				// 	logs(res);
+				// 	if (res.errno == 0) {
+				// 		// 成功
+				// 		app.remarkList[idx].status=1;
+				// 		chatData.content = msg.content;
+				// 		chatData.message_type = msg.type;
+				// 		ws.send(JSON.stringify(chatData));
+				// 	} else {
+				// 		message("发送失败，请稍后重试！");
+				// 	}
+				// }, 'json');
+			}
 		</script>
 	</body>
 
