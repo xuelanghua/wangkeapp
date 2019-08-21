@@ -59,6 +59,10 @@
 				max-width: 140px;
 				height: auto;
 			}
+
+			.mui-bar-footer~.mui-content {
+				padding-bottom: 0;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -127,9 +131,14 @@
 							<li class="dynamic-lists" v-for="(d,i) in u.list" :key="i">
 								<div class="dynamic-lists-body" @tap="dynamicDetail(d.id)">
 									<div class="lan-arrow"></div>
-									<ul class="img-groups" v-if="d.cover.length>0&&d.cover!=''">
-										<li v-for="(img,m) in d.cover" class="img-cont"><img :src="img"></li>
-									</ul>
+									<template v-if="d.cover.length>0&&d.cover!=''">
+										<div class="video-cover" v-if="d.is_video==1">
+											<img :src="d.cover[0]+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
+										</div>
+										<ul v-else class="img-groups">
+											<li v-for="(img,m) in d.cover" class="img-cont"><img :src="img"></li>
+										</ul>
+									</template>
 									<p class="mui-ellipsis-2 dynamic-character">
 										{{d.content}}
 									</p>
@@ -191,8 +200,10 @@
 			var mask = mui.createMask(function() {
 				app.menuStatus = false;
 				app.isComment = false;
-				document.querySelector(".menu-body" + _com_id).classList.remove("active");
-				document.querySelector(".comment-icon-cont" + _com_id).classList.remove("active");
+				if (_com_id) {
+					document.querySelector(".menu-body" + _com_id).classList.remove("active");
+					document.querySelector(".comment-icon-cont" + _com_id).classList.remove("active");
+				}
 				mui('.mui-bar-footer')[0].style.display = "none";
 				plus.key.hideSoftKeybord();
 			});
@@ -481,7 +492,7 @@
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						app.spaceList = res.data;
 						if (pullDirection == "up") {

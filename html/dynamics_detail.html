@@ -38,6 +38,28 @@
 			.dynamics-detail-container .comment-cont {
 				padding-top: 0;
 			}
+			.video-cover {
+				width: 60%;
+				height: 3rem;
+				overflow: hidden;
+				position: relative;
+			}
+			
+			.video-cover .player-btn {
+				width: 45px;
+				height: auto;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+			
+			.video-cover img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -57,11 +79,17 @@
 		<div id="mui-content" class="mui-content dynamics-detail-container" v-cloak>
 			<div class="dynamics-content">
 				<p>{{content}}</p>
-				<ul class="dynamics-img-group" v-if="cover.length>0&&cover[0]!=''">
-					<li v-for="(img,idx) in cover" :key="idx">
-						<img class="preview-img" :data-idx="idx" :src="img">
-					</li>
-				</ul>
+				<template v-if="cover.length>0&&cover[0]!=''">
+					<ul v-if="is_video==0" class="dynamics-img-group">
+						<li v-for="(img,idx) in cover" :key="idx">
+							<img class="preview-img" :data-idx="idx" :src="img">
+						</li>
+					</ul>
+					<div v-else class="video-cover" @tap="videoPlayer(cover[0])">
+						<img :src="cover[0]+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
+						<img class="player-btn" src="../image/icon/video-player.png">
+					</div>
+				</template>
 			</div>
 			<div class="dynamics-title-cont">
 				<div class="dynamics-title-left">
@@ -145,7 +173,8 @@
 						//评论用户列表
 					],
 					// 全部数据
-					all_datas: {}
+					all_datas: {},
+					is_video:0
 				},
 				methods: {
 					// 显示菜单
@@ -266,6 +295,7 @@
 						muiCont.comment = data.comment.data;
 						muiCont.likes = data.thumbs_user;
 						muiCont.author = data.author;
+						muiCont.is_video=data.is_video;
 						
 						// 长按保存到系统相册
 						var urls = data.cover;
