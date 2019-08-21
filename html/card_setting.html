@@ -865,7 +865,6 @@
 			//按住录音
 			document.getElementById('voice_record').addEventListener('hold', function() {
 				document.querySelector('.showArea').style.display = 'block';
-				voiceTime = 0;
 				startRecord();
 			})
 
@@ -1138,7 +1137,7 @@
 		//创建计时器记录录音时长
 		function timeInterval() {
 			timer = setInterval(function() {
-				voiceTime++;
+				// voiceTime++;
 			}, 1000)
 		}
 
@@ -1150,17 +1149,31 @@
 				return;
 			}
 			logs(r.supportedFormats);
-			timeInterval();
 			r.record({
 				filename: "_doc/audio/",
 				format: 'mp3'
 			}, function(e) {
-				document.querySelector('.voice-container').children[0].classList.add('hidden');
-				document.querySelector('.voice-container').children[1].classList.remove('hidden');
-				document.querySelector('.voice-time').innerText = voiceTime;
-				document.querySelector('input[name=voice_time]').value = voiceTime;
-				document.querySelector('input[name=voice]').value = e;
-				voiceUpload(e);
+				var file = e;
+				plus.io.getAudioInfo({
+					filePath: file,
+					success: function(res) {
+						voiceTime = Math.round(res.duration);
+						if (voiceTime < 2) {
+							message('录音小于2秒,请重新录制');
+							return;
+						}
+						document.querySelector('.voice-container').children[0].classList.add('hidden');
+						document.querySelector('.voice-container').children[1].classList.remove('hidden');
+						document.querySelector('.voice-time').innerText = voiceTime;
+						document.querySelector('input[name=voice_time]').value = voiceTime;
+						document.querySelector('input[name=voice]').value = file;
+						voiceUpload(file);
+					},
+					fail: function(error) {
+						message(error.message);
+						return;
+					}
+				});
 			}, function(e) {
 				message("Audio record failed: " + e.message);
 			});
@@ -1185,10 +1198,6 @@
 
 		//文件上传
 		function voiceUpload(file) {
-			if (voiceTime < 2) {
-				message('录音小于2秒,请重新录制');
-				return;
-			}
 			showload(0, 0, '上传录音，请稍后……', "rgba(0,0,0,0.5)");
 			mask.show();
 			var task = plus.uploader.createUpload($voiceUrl, {
