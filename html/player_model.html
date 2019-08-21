@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+
+			body,
+			html {
+				width: 100%;
+				height: 100%;
+				background-color: #000000;
+			}
+			.mui-icon-arrowleft{
+				color: #FFFFFF;
+				margin: 10px 0 10px 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" class="mui-content" >
+			<sapn class="mui-action-back mui-icon mui-icon-arrowleft" ></sapn>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			var url = '';
+			var player = null;
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				url = self.url;
+				
+				// 创建视频播放控件
+				if (!player) {
+					player = plus.video.createVideoPlayer('videoplayer', {
+						src: url,
+						autoplay: true,
+						direction: -90,
+						'show-center-play-btn': true,
+						'enable-progress-gesture':false,
+						top: '44px',
+						height:'90%'
+					});
+					plus.webview.currentWebview().append(player);
+					// 监听开始播放事件
+					player.addEventListener('play', function(e) {
+						// console.log('Video play');
+					}, false)
+					// 监听播放进度更新事件
+					player.addEventListener('timeupdate', function(e) {
+						// console.log(JSON.stringify(e));
+					}, false);
+					// 监听播放结束事件
+					player.addEventListener('ended', function(e) {
+						// console.log('Video ended');
+					}, false);
+				}
+			})
+		</script>
+	</body>
+
+</html>
