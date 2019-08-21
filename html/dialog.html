@@ -669,7 +669,7 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/upload.js"></script>
+		<script src="../js/media.js"></script>
 		<!-- <script src="../js/mui.imageViewer.js"></script> -->
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
@@ -996,52 +996,20 @@
 				}, false);
 
 				ui.footerLeft.addEventListener('tap', function(event) {
-					imageUpload(function(res) {
-						// var imgMsg = {
-						// 	sender: "self",
-						// 	content: res.url,
-						// 	type: "image"
-						// }
-						// send(imgMsg);
-						chatData.type = 'image';
+					chooseMedia('none', function(res) {
+						chatData.type = res.type;
 						chatData.content = res.url;
 						ws.send(JSON.stringify(chatData));
+					}, function(e) {
+						if (e.code > 100) {
+							message(e.message);
+						}
 					})
-					//	var btnArray = [{
-					//		title: "拍照"
-					//	}, {
-					//		title: "从相册选择"
-					//	}];
-					//	plus.nativeUI.actionSheet({
-					//		title: "选择照片",
-					//		cancel: "取消",
-					//		buttons: btnArray
-					//	}, function(e) {
-					//		var index = e.index;
-					//		switch (index) {
-					//			case 0:
-					//				break;
-					//			case 1:
-					//				var cmr = plus.camera.getCamera();
-					//				cmr.captureImage(function(path) {
-					//					send({
-					//						sender: 'self',
-					//						type: 'image',
-					//						content: "file://" + plus.io.convertLocalFileSystemURL(path)
-					//					});
-					//				}, function(err) {});
-					//				break;
-					//			case 2:
-					//				plus.gallery.pick(function(path) {
-					//					send({
-					//						sender: 'self',
-					//						type: 'image',
-					//						content: path
-					//					});
-					//				}, function(err) {}, null);
-					//				break;
-					//		}
-					//	});
+					// imageUpload(function(res) {
+					// 	chatData.type = 'image';
+					// 	chatData.content = res.url;
+					// 	ws.send(JSON.stringify(chatData));
+					// })
 				}, false);
 
 				var setSoundAlertVisable = function(show) {

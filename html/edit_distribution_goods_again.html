@@ -380,15 +380,6 @@
 			<div class="express-container">
 				<span>快递： &nbsp;&nbsp;&nbsp;</span><span>{{goods_detail.express_name}}&nbsp;&nbsp;&nbsp;&nbsp;&yen;{{goods_detail.freight}}</span>
 			</div>
-			<!-- <div class="recommend">
-				<div class="mui-input-row">
-					<label>设为推荐</label>
-					<div class="mui-switch mui-switch-blue" id="recommend_switch">
-						<div class="mui-switch-handle"></div>
-					</div>
-				</div>
-				<div class="tishi">设为推荐则该商品会在名片页展示</div>
-			</div> -->
 			<div class="last-opction">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
@@ -438,7 +429,6 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
-			// var recommend = 0;
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -557,7 +547,6 @@
 					team_id: app.team_id,
 					status: app.status,
 					spec: app.spec,
-					// is_recommend:recommend
 				}, function(res) {
 					// logs(res);
 					if (res.errno == 0) {
@@ -583,14 +572,6 @@
 				this.classList.add("active")
 				app.team_id = this.dataset.tid;
 			})
-			//推荐开关监听
-			// document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
-			// 	if (event.detail.isActive) {
-			// 		recommend = 1;
-			// 	} else {
-			// 		recommend = 0;
-			// 	}
-			// })
 		</script>
 	</body>
 

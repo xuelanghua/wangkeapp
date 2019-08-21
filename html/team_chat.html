@@ -499,11 +499,20 @@
 						}, false);
 
 						ui.footerLeft.addEventListener('tap', function(event) {
-							imageUpload(function(res) {
-								chatData.message_type = 'image';
+							chooseMedia('none', function(res) {
+								chatData.message_type = res.type;
 								chatData.content = res.url;
 								ws.send(JSON.stringify(chatData));
+							}, function(e) {
+								if (e.code > 100) {
+									message(e.message);
+								}
 							})
+							// imageUpload(function(res) {
+							// 	chatData.message_type = 'image';
+							// 	chatData.content = res.url;
+							// 	ws.send(JSON.stringify(chatData));
+							// })
 							// var btnArray = [{
 							// 	title: "拍照"
 							// }, {
