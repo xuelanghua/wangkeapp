@@ -267,9 +267,15 @@
 			}
 
 			.img-cont {
-				max-height: 3.47rem;
-				max-width: 5rem;
-				width: auto;
+				width: 5rem; 
+				max-height: 3rem;
+				object-fit: cover;
+				border-radius: 3px;
+				overflow: hidden;
+			}
+			.img-cont  img{
+				width: 100%;
+				height: 100%;
 				object-fit: cover;
 			}
 
@@ -313,9 +319,12 @@
 			}
 
 			.video-container {
-				flex-grow: 1;
-				background-color: #000000;
-				padding: 0;
+				width: 5rem;
+				max-height: 3rem;
+				object-fit: cover;
+				border-radius: 3px;
+				overflow: hidden;
+				position: relative;
 			}
 
 			.start-record.hold-active {
@@ -434,7 +443,20 @@
 				background-color: #eee;
 				width: 100%;
 			}
-
+			.video-cover{
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			.player-btn {
+				width: 60px;
+				height: auto;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -509,7 +531,9 @@
 							</div>
 							<div class="mui-slider-handle">
 								<div class="remark-info">
-									<img v-if="h.content" class="img-cont" :src="h.content" @tap="previewImage(h.content)">
+									<div class="img-cont" v-if="h.content" >
+										<img :src="h.content" @tap="previewImage(h.content)">
+									</div>
 									<img v-else class="choice-item" @tap="choiceItem(i)" src="../image/icon/prepare-lessons06.png">
 									<div class="send-msg-btn" @tap="sendRemake(h)">
 										<template v-if="h.status==0">
@@ -575,8 +599,10 @@
 							</div>
 							<div class="mui-slider-handle">
 								<div class="remark-info">
-									<div v-if="h.content" class="video-container">
-										<video width="100%" height="200px" controls="controls" :src="h.content" :poster="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"></video>
+									<div v-if="h.content" class="video-container" @tap="videoPlayer(h.content)">
+										<!-- <video width="100%" height="200px" controls="controls" :src="h.content" :poster="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"></video> -->
+										<img class="video-cover" src="https://cdn.wangkeapp.cn/videos/6/2019/08/Wr40Ky45g90zo3Lo7oy8gTf9T553i3.mp4?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast" >
+										<img class="player-btn" src="../image/icon/video-player.png">
 									</div>
 									<img v-else class="choice-item" @tap="choiceVideo(i)" src="../image/icon/prepare-lessons05.png">
 									<div class="send-msg-btn" @tap="sendRemake(h)">
@@ -603,6 +629,7 @@
 			<!-- v-if="voidRemarkList" -->
 			<div v-if="voidRemarkList" style="padding: 20%;text-align: center;color:#999999;font-size:18px;">
 				<img src="../image/icon/void-remark-info.png" style="width:100%;" >
+				<p>暂无备课~</p>
 			</div>
 			<div class="showArea" id="sound-alert">
 				<img src="../image/luyin.gif">
@@ -659,6 +686,12 @@
 					course: {}
 				},
 				methods: {
+					// 播放视频
+					videoPlayer: function(url) {
+						openPage('player_model.html', 'player_model', '#000000', {
+							url: url
+						}, 'zoom-fade-out');
+					},
 					// 时间格式化
 					format: function(time) {
 						var timer = toFixed(time),
@@ -1078,7 +1111,8 @@
 								duration_desc: duration_desc || ''
 							};
 							app.remarkList.push(item);
-							logs(app.remarkList);
+							app.voidRemarkList=false;
+							// logs(app.remarkList);
 						}
 
 						//音频文件上传
