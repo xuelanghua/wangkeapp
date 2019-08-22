@@ -1406,7 +1406,6 @@
 							heartCheck.start();
 						} else {
 							data = JSON.parse(data);
-							logs(data);
 							if (data.error == 0) {
 								msgData = data.data;
 								mui.fire(plus.webview.getWebviewById("live_streaming"), "reloadList", {
@@ -1430,7 +1429,6 @@
 			}
 			// 发送确认
 			function affirm(idx, msg) {
-				// logs(idx);
 				mui.post($ajaxUrl + 'team&action=change_course_draft_status', {
 					token: userInfo.token,
 					draft_id:msg.id,
