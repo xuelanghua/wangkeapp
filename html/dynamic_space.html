@@ -77,6 +77,15 @@
 				height: 100%;
 				object-fit: cover;
 			}
+			.video-cover .player-btn {
+				width: 45px;
+				height: auto;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -148,6 +157,7 @@
 									<template v-if="d.cover.length>0&&d.cover!=''">
 										<div class="video-cover" v-if="d.is_video==1">
 											<img :src="d.cover[0]+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
+											<img class="player-btn" src="../image/icon/video-player.png">
 										</div>
 										<ul v-else class="img-groups">
 											<li v-for="(img,m) in d.cover" class="img-cont"><img :src="img"></li>
