@@ -255,8 +255,8 @@
 								<div v-if="list.message_type=='text'" class="msg-content-inner" v-html="list.content">
 									{{ list.content|| '&nbsp;&nbsp;' }}
 								</div>
-								<div class="begins-inform" v-else-if="list.message_type=='course'">
-									<img :src="list.content.cover" alt="">
+								<div class="begins-inform" v-else-if="list.message_type=='course'" @tap="goStreaming(list.content)">
+									<img :src="list.content.cover_url" alt="">
 									<p class="course-desc">{{list.content.title}}</p>
 									<p class="begin-timer">开播时间：{{list.content.start_time}}</p>
 									<p class="begin-timer">主讲人：{{list.content.teacher_name}}</p>
@@ -960,6 +960,32 @@
 					});
 				}
 			})
+			
+			function goStreaming(courseInfo) {
+				// 直播页面
+				if (courseInfo.is_buy == 1 || courseInfo.price == 0 || courseInfo.captain_uid == userInfo.id) {
+					if (courseInfo.state == 1 || courseInfo.state == 2) {
+						// 直播页面
+						openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+							tid: courseInfo.team_id,
+							courseId: courseInfo.id,
+							courseTitle: courseInfo.title,
+							teacherId: courseInfo.teacher_id,
+							isSilent: courseInfo.is_silent
+						});
+					} else {
+						// 未开播提示
+						openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
+							course: courseInfo,
+							kaola: true
+						});
+					}
+				} else {
+					openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
+						course: courseInfo,
+					});
+				}
+			}
 		</script>
 	</body>
 
