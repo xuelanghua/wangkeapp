@@ -81,7 +81,7 @@
 		<div id="mui-content" class="mui-content " v-cloak>
 			<ul class="mui-table-view">
 				<!-- 自己添加slef-ranking -->
-				<li class="mui-table-view-cell slef-ranking" v-for="(l,i) in course_list" :key="i" @tap="goChat(l.team_id,l.id,l.title,l.teacher_id,l.is_silent)">
+				<li class="mui-table-view-cell slef-ranking" v-for="(l,i) in course_list" :key="i" @tap="goChat(l)">
 					<div class="list-left">
 						<p class="mui-ellipsis-2">
 							{{l.title}}
@@ -125,13 +125,14 @@
 						}
 						return value;
 					},
-					goChat:function(tid,cid,title,teid,silent){
+					goChat: function(course) {
 						openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-							tid: tid,
-							courseId: cid,
-							courseTitle: title,
-							teacherId: teid,
-							isSilent: silent
+							tid: course.team_id,
+							courseId: course.id,
+							courseTitle: course.title,
+							teacherId: course.teacher_id,
+							isSilent: course.is_silent,
+							course:course
 						});
 					}
 				},
@@ -158,7 +159,7 @@
 						token: userInfo.token
 					}, function(res) {
 						logs(res);
-						if (res.errno == 0) { 
+						if (res.errno == 0) {
 							app.course_list = res.data;
 							setTimeout(function() {
 								initpro();
