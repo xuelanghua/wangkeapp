@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
+		<link href="../css/animate.min.css" rel="stylesheet" />
 		<style type="text/css">
 			.recharge-sum {
 				height: 0.89rem;
@@ -45,6 +46,62 @@
 				transform: scaleY(.5);
 				background-color: #dddddd;
 			}
+
+			.confirm-payment {
+				border: none;
+				font-size: 16px;
+				height: 44px;
+			}
+
+			.item-option {
+				display: flex;
+				flex-wrap: wrap;
+			}
+
+			.option {
+				width: 33.3333%;
+				margin: 0.2rem 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.option-inside {
+				width: 85%;
+				height: 1rem;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				border-radius: 0.1rem;
+				border: 1px solid #000000;
+			}
+
+			.option-inside span {
+				font-size: 0.3rem;
+				color: #000000;
+			}
+
+			.option-inside span:last-of-type {
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+
+			}
+
+			.item-option .option .option-inside.active {
+				background-color: #ddedff;
+				border-color: #2289ff;
+			}
+
+			.item-option .option .option-inside.active span {
+				color: #2289FF;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -65,7 +122,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">推广服务包</h1>
 		</header>
-		<div id="collections" class="mui-content"  v-cloak>
+		<div id="collections" class="mui-content" v-cloak>
 			<div class="activation-code-activation">
 				<div class="pattern-of-payment">
 					<form class="mui-input-group">
@@ -80,9 +137,17 @@
 						<div class="pattern-of-payment">
 							<ul class="mui-table-view">
 								<li class="mui-table-view-cell total">
-									<p>推广服务包</p>
+									<!-- <p>推广服务包</p>
 									<div class="recharge-sum">
 										<leabel>&yen;</leabel><input type="number" name="fee" />
+									</div> -->
+									<div class="item-option">
+										<div class="option" v-for="(o,i) in option"  :key="i">
+											<div class="option-inside animated" :class="{'active':checkedIdx==i,'rubberBand':checkedIdx==i&&effect==1}" @tap="choiceOption(i,o.value)">
+												<span>{{o.value}}元</span>
+												<span>{{o.title}}</span>
+											</div>
+										</div>
 									</div>
 									<button class="confirm-payment mui-pay">购买</button>
 								</li>
@@ -113,13 +178,42 @@
 			var ALIPAYSERVER = $ajaxUrl + 'member&action=recharge';
 			var WXPAYSERVER = $ajaxUrl + 'member&action=recharge';
 
-			var fee = 0;
+			var fee = 5;
 			// vue实例初始化
 			var app = new Vue({
 				el: "#collections",
-				data:{
+				data: {
+					option: [{
+						value: 5,
+						title: '一级推广包',
+						checked: ""
+					}, {
+						value: 10,
+						title: '二级推广包',
+						checked: ""
+					}, {
+						value: 50,
+						title: '三级推广包',
+						checked: ""
+					}, {
+						value: 100,
+						title: '中级推广包',
+						checked: ""
+					}, {
+						value: 500,
+						title: '高级推广包',
+						checked: "active"
+					}],
+					checkedIdx: 0,
+					effect:0
 				},
-				created: function() {},
+				methods: {
+					choiceOption: function(idx,val) {
+						this.checkedIdx = idx;
+						this.effect=1;
+						fee = val;
+					}
+				},
 				mounted: function() {
 					mui.plusReady(function() {
 						plus.payment.getChannels(function(channels) {
@@ -136,7 +230,6 @@
 
 						//支付
 						mui('.mui-content').on('tap', '.mui-pay', function() {
-							fee = mui('input[name=fee]')[0].value;
 							payType = document.querySelector('input[name=radio1]:checked').value;
 							document.activeElement.blur();
 							if (payType.length == 0) {
