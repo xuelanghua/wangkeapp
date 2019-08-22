@@ -278,7 +278,8 @@
 									<img data-preview-src="" data-preview-group="1" class="msg-content-image" :src="list.content" style="max-width: 100px;" />
 								</div>
 								<div v-else-if="list.message_type=='video'" class="img-content-inner" @tap="videoPlayer(list.content)">
-									<img :src="list.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" style="max-width: 100px;" />
+									<img :src="list.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"
+									 style="max-width: 100px;" />
 									<img class="player-btn" src="../image/icon/video-player.png">
 								</div>
 								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
@@ -370,24 +371,23 @@
 					checkType: 1,
 					// 讲师id
 					teacher_id: 0,
-					course:{}
+					course: {}
 				},
 				created: function() {
 
 				},
-				methods:{
-				},
+				methods: {},
 				mounted: function() {
 					mui.init({
 						swipeBack: false,
 						gestureConfig: {
-							tap: true, 
-							doubletap: true, 
-							longtap: true, 
-							swipe: true, 
-							drag: true, 
-							hold: false, 
-							release: false 
+							tap: true,
+							doubletap: true,
+							longtap: true,
+							swipe: true,
+							drag: true,
+							hold: true,
+							release: true
 						},
 						beforeback: function() {
 							mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
@@ -399,9 +399,9 @@
 						vm.tid = tid;
 						vm.teacher_id = wv.teacherId;
 						vm.courseId = wv.courseId;
-						vm.course=wv.course;
-						if(userInfo.id==wv.teacherId){
-							document.querySelector(".remark-course").style.display="flex";
+						vm.course = wv.course;
+						if (userInfo.id == wv.teacherId) {
+							document.querySelector(".remark-course").style.display = "flex";
 						}
 						if (wv.isSilent == 1) {
 							vm.say = true;
@@ -555,6 +555,7 @@
 						// });
 
 						ui.footerRight.addEventListener('release', function(event) {
+							logs(222222);
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
 								//showKeyboard();
 								ui.boxMsgText.focus();
@@ -567,8 +568,14 @@
 								// 	type: 'text',
 								// 	content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
 								// });
+								var msgContent = ui.boxMsgText.value.replace(/(\s*$)/g, "");
+								if (msgContent == '') {
+									ui.boxMsgText.value = '';
+									message('发送内容不能为空!');
+									return;
+								}
 								chatData['message_type'] = 'text';
-								chatData['content'] = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
+								chatData['content'] = msgContent.replace(new RegExp('\n', 'gm'), '<br/>');
 								// logs(chatData);
 								ws.send(JSON.stringify(chatData)); //向服务器发送消息
 								ui.boxMsgText.value = '';
@@ -806,6 +813,7 @@
 										heartCheck.reset();
 										heartCheck.start();
 									}
+									console.log("连接已打开...");
 								};
 								ws.onmessage = function(event) {
 									var data = event.data;
@@ -1042,7 +1050,7 @@
 					course: vm.course
 				});
 			})
-			window.addEventListener("reloadList",function(e){
+			window.addEventListener("reloadList", function(e) {
 				send(e.detail.msgData);
 			})
 		</script>

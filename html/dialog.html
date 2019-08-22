@@ -992,7 +992,13 @@
 						// 	type: 'text',
 						// 	content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
 						// });
-						chatData.content = ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>');
+						var msgContent = ui.boxMsgText.value.replace(/(\s*$)/g, "");
+						if (msgContent == '') {
+							ui.boxMsgText.value = '';
+							message('发送内容不能为空!');
+							return;
+						}
+						chatData.content = msgContent.replace(new RegExp('\n', 'gm'), '<br/>');
 						chatData.type = 'text';
 						ws.send(JSON.stringify(chatData)); //向服务器发送消息
 						ui.boxMsgText.value = '';
