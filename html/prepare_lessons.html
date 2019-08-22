@@ -107,7 +107,8 @@
 				justify-content: center;
 				width: auto;
 				color: #2289ff;
-				font-size: 14px;
+				font-size: 15px;
+				text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 				z-index: 12;
 				padding: 0 10px;
 				margin-right: -5px;
@@ -267,13 +268,14 @@
 			}
 
 			.img-cont {
-				width: 5rem; 
+				width: 5rem;
 				max-height: 3rem;
 				object-fit: cover;
 				border-radius: 3px;
 				overflow: hidden;
 			}
-			.img-cont  img{
+
+			.img-cont img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
@@ -443,11 +445,13 @@
 				background-color: #eee;
 				width: 100%;
 			}
-			.video-cover{
+
+			.video-cover {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 			}
+
 			.player-btn {
 				width: 60px;
 				height: auto;
@@ -457,6 +461,7 @@
 				-webkit-transform: translate(-50%, -50%);
 				transform: translate(-50%, -50%);
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -503,7 +508,7 @@
 							<div class="mui-slider-handle">
 								<div class="remark-info">
 									<p class="text-desc">{{h.content}}</p>
-									<div class="send-msg-btn" @tap="sendRemake(h)">
+									<div class="send-msg-btn" @tap="sendRemake(h,i)">
 										<template v-if="h.status==0">
 											<img src="../image/icon/prepare-lessons03.png">
 											<span>发送</span>
@@ -531,11 +536,11 @@
 							</div>
 							<div class="mui-slider-handle">
 								<div class="remark-info">
-									<div class="img-cont" v-if="h.content" >
+									<div class="img-cont" v-if="h.content">
 										<img :src="h.content" @tap="previewImage(h.content)">
 									</div>
 									<img v-else class="choice-item" @tap="choiceItem(i)" src="../image/icon/prepare-lessons06.png">
-									<div class="send-msg-btn" @tap="sendRemake(h)">
+									<div class="send-msg-btn" @tap="sendRemake(h,i)">
 										<template v-if="h.status==0">
 											<img src="../image/icon/prepare-lessons03.png">
 											<span>发送</span>
@@ -571,7 +576,7 @@
 										<span class="play-status" :id="'play_status_'+h.id">点击播放</span>
 										<span class="record-timer">{{h.duration_desc}}</span>
 									</div>
-									<div class="send-msg-btn" @tap="sendRemake(h)">
+									<div class="send-msg-btn" @tap="sendRemake(h,i)">
 										<template v-if="h.status==0">
 											<img src="../image/icon/prepare-lessons03.png">
 											<span>发送</span>
@@ -601,11 +606,11 @@
 								<div class="remark-info">
 									<div v-if="h.content" class="video-container" @tap="videoPlayer(h.content)">
 										<!-- <video width="100%" height="200px" controls="controls" :src="h.content" :poster="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"></video> -->
-										<img class="video-cover" src="https://cdn.wangkeapp.cn/videos/6/2019/08/Wr40Ky45g90zo3Lo7oy8gTf9T553i3.mp4?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast" >
+										<img class="video-cover" src="https://cdn.wangkeapp.cn/videos/6/2019/08/Wr40Ky45g90zo3Lo7oy8gTf9T553i3.mp4?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast">
 										<img class="player-btn" src="../image/icon/video-player.png">
 									</div>
 									<img v-else class="choice-item" @tap="choiceVideo(i)" src="../image/icon/prepare-lessons05.png">
-									<div class="send-msg-btn" @tap="sendRemake(h)">
+									<div class="send-msg-btn" @tap="sendRemake(h,i)">
 										<template v-if="h.status==0">
 											<img src="../image/icon/prepare-lessons03.png">
 											<span>发送</span>
@@ -628,7 +633,7 @@
 			</div>
 			<!-- v-if="voidRemarkList" -->
 			<div v-if="voidRemarkList" style="padding: 20%;text-align: center;color:#999999;font-size:18px;">
-				<img src="../image/icon/void-remark-info.png" style="width:100%;" >
+				<img src="../image/icon/void-remark-info.png" style="width:100%;">
 				<p>暂无备课~</p>
 			</div>
 			<div class="showArea" id="sound-alert">
@@ -783,8 +788,7 @@
 					},
 					// 发送备课内容
 					sendRemake: function(msg, idx) {
-						logs(app.course);
-						if(app.course.state==0){
+						if (app.course.state == 0) {
 							message("暂未开课！");
 							return false;
 						}
@@ -794,12 +798,12 @@
 								if (e.index) {
 									// message("取消");
 								} else {
-									affirm(idx,msg);
+									affirm(idx, msg);
 								}
 							})
 						} else {
 							// 直接发
-							affirm(idx,msg);
+							affirm(idx, msg);
 							// chatData.content = msg.content;
 							// chatData.message_type = msg.type;
 							// ws.send(JSON.stringify(chatData));
@@ -964,8 +968,8 @@
 						}, false);
 						var bindMsgList = function() {
 							var areaMsgList = document.querySelector('#OA_task_1');
-							logs(areaMsgList.scrollHeight);
-							logs(areaMsgList.offsetHeight);
+							// logs(areaMsgList.scrollHeight);
+							// logs(areaMsgList.offsetHeight);
 							// areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
 							areaMsgList.scrollTop = 1686;
 						};
@@ -1111,7 +1115,7 @@
 								duration_desc: duration_desc || ''
 							};
 							app.remarkList.push(item);
-							app.voidRemarkList=false;
+							app.voidRemarkList = false;
 							// logs(app.remarkList);
 						}
 
@@ -1166,7 +1170,7 @@
 					token: userInfo.token,
 					course_id: app.course_id
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						app.remarkList = res.data;
 					} else {
@@ -1189,7 +1193,7 @@
 								message('视频文件须小于10MB！');
 							} else {
 								message('选择成功！');
-								logs(e);
+								// logs(e);
 							}
 						}
 					});
@@ -1207,24 +1211,28 @@
 			// 删除
 			function deleteMaster(s_id, i) {
 				var _this_dom = document.getElementById('master-list' + s_id);
-				plus.nativeUI.confirm("确认删除该动态吗？", function(e) {
+				plus.nativeUI.confirm("确认删除该条备课吗？", function(e) {
 					if (e.index) {
 						// 取消
 						message("取消");
 						mui.swipeoutClose(_this_dom);
 					} else {
 						mui.swipeoutClose(_this_dom);
-						message("已删除");
-						for (var j in app.remarkList) {
-							logs(app[j]);
-						}
 						app.remarkList[i].status = '-1';
+						message("已删除");
+						for (var j = 0; j < app.remarkList.length; j++) {
+							if (app.remarkList[j].status != -1) {
+								app.voidRemarkList = false;
+								break;
+							} else {
+								app.voidRemarkList = true;
+							}
+						}
 					}
 				})
 			}
 			// 上移或者下移
 			function moveIt(_id, idx, status) {
-				logs(idx);
 				var _this_dom = document.getElementById('master_list_' + idx);
 				var _this = app.remarkList[idx];
 				if (status == 'up') {
@@ -1401,8 +1409,8 @@
 							logs(data);
 							if (data.error == 0) {
 								msgData = data.data;
-								mui.fire(plus.webview.getWebviewById("live_streaming"),"reloadList",{
-									msgData:msgData
+								mui.fire(plus.webview.getWebviewById("live_streaming"), "reloadList", {
+									msgData: msgData
 								});
 							} else if (data.error == -2) {
 								message(data.message);
@@ -1422,23 +1430,24 @@
 			}
 			// 发送确认
 			function affirm(idx, msg) {
-						logs(idx);
-				// mui.post($ajaxUrl + 'team&action=change_course_draft_status', {
-				// 	token: userInfo.token,
-				// 	draft_id:msg.id,
-				// 	status:1,
-				// }, function(res) {
-				// 	logs(res);
-				// 	if (res.errno == 0) {
-				// 		// 成功
-				// 		app.remarkList[idx].status=1;
-				// 		chatData.content = msg.content;
-				// 		chatData.message_type = msg.type;
-				// 		ws.send(JSON.stringify(chatData));
-				// 	} else {
-				// 		message("发送失败，请稍后重试！");
-				// 	}
-				// }, 'json');
+				// logs(idx);
+				mui.post($ajaxUrl + 'team&action=change_course_draft_status', {
+					token: userInfo.token,
+					draft_id:msg.id,
+					status:1,
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						// 成功
+						message("发送成功！");
+						app.remarkList[idx].status=1;
+						chatData.content = msg.content;
+						chatData.message_type = msg.type;
+						ws.send(JSON.stringify(chatData));
+					} else {
+						message("发送失败，请稍后重试！");
+					}
+				}, 'json');
 			}
 		</script>
 	</body>
