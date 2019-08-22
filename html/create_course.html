@@ -435,8 +435,7 @@
 							message("请选择课程封面");
 							return;
 						}
-						mui(".course-name")[0].blur();
-						mui(".course-message")[0].blur();
+						document.activeElement.blur();
 						mui.post($ajaxUrl + 'team&action=add_course', {
 							token: userInfo.token,
 							course_id: app.courseId,
@@ -449,6 +448,7 @@
 							price: app.coursePrice,
 							end_time: app.endCourse,
 						}, function(res) {
+							logs(res);
 							if (res.errno == 0) {
 								if (app.isedit) {
 									message("修改成功");
