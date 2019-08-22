@@ -204,6 +204,27 @@
 				max-width: 100%;
 				height: auto;
 			}
+			.begins-inform img{
+				width: 100%;
+				height: auto;
+			}
+			.begins-inform  p{
+				margin: 5px 0;
+				line-height: 1.4;
+				text-align: justify;
+			}
+			.course-desc{
+				color: #323333;
+				font-size: 15px;
+			}
+			.begin-timer{
+				color: #2289ff;
+				font-size: 15px;
+			}
+			.inform-desc{
+				color: #999999;
+				font-size: 12px;
+			}
 		</style>
 	</head>
 
@@ -224,17 +245,23 @@
 				<template v-for="(item, index) in chatList" :key="index">
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;">{{index}}</div>
 					<template v-for="(list, key) in item" :key="key">
-						<div class="msg-item" :class="uid==list.uid?'msg-item-self':''" :msg-type="list.message_type" :msg-content="list.content">
+						<div class="msg-item mui-clearfix" :class="uid==list.uid?'msg-item-self':''" :msg-type="list.message_type"
+						 :msg-content="list.content">
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
 							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" alt="" />
 							<div class="msg-content">
+								<div class="msg-content-arrow"></div>
 								<i v-if="list.message_type=='audio' && list.read_status==0&&uid!=list.uid" class="red-dot"></i>
 								<div v-if="list.message_type=='text'" class="msg-content-inner" v-html="list.content">
 									{{ list.content|| '&nbsp;&nbsp;' }}
 								</div>
-								<!-- <div class="begins-inform">
-									<img src="" alt="">
-								</div> -->
+								<div class="begins-inform" v-else-if="list.message_type=='course'">
+									<img :src="list.content.cover" alt="">
+									<p class="course-desc">{{list.content.title}}</p>
+									<p class="begin-timer">开播时间：{{list.content.start_time}}</p>
+									<p class="begin-timer">主讲人：{{list.content.teacher_name}}</p>
+									<p class="inform-desc">{{list.content.notice}}</p>
+								</div>
 								<div v-else-if="list.message_type=='image'" class="img-content-inner">
 									<img data-preview-src="" data-preview-group="1" :src="list.content" style="max-width: 100px;" />
 								</div>
@@ -246,9 +273,8 @@
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
 									<span class="play-state" :class="'play-state'+list.id">点击播放</span>
 								</div>
-								<div class="msg-content-arrow"></div>
 							</div>
-							<div class="mui-item-clear"></div>
+							<!-- <div class="mui-item-clear"></div> -->
 						</div>
 					</template>
 				</template>
@@ -803,7 +829,7 @@
 							}, 'json');
 						}
 						// 长按保存图片咯
-						mui("body").on("longtap", "img",  function() {
+						mui("body").on("longtap", ".mui-preview-image img", function() {
 							var urls = this.src;
 							plus.nativeUI.confirm("保存图片到系统相册", function(e) {
 								if (e.index == 0) {
@@ -832,9 +858,9 @@
 				if (msgType == 'audio') {
 					var audios = document.querySelectorAll(".play-state");
 					var playState = document.querySelector(".play-state" + aid);
-					for (var i = audios.length-1; i > -1; i--) {
+					for (var i = audios.length - 1; i > -1; i--) {
 						if (audios[i].innerText == '正在播放...') {
-						audios[i].innerText = '点击播放';
+							audios[i].innerText = '点击播放';
 							break;
 						}
 					}
