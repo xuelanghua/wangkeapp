@@ -37,7 +37,12 @@
 			var player = null;
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
+				self.setStyle({render:'always'})
 				url = self.url;
+				var position = 'static';
+				if (mui.os.ios) {
+					position = 'absolute';
+				}
 				
 				// 创建视频播放控件
 				if (!player) {
@@ -46,12 +51,12 @@
 						autoplay: true,
 						direction: -90,
 						top: '5%',
-						height:'90%',
-						'show-progress': false,
+						height: '90%',
+						'show-progress': true,
 						'show-fullscreen-btn': true,
 						'show-play-btn': true,
-						'show-center-play-btn': false,
-						'enable-progress-gesture':false,
+						'show-center-play-btn': false, 
+						position: position
 					});
 					plus.webview.currentWebview().append(player);
 					// 监听开始播放事件
@@ -65,6 +70,12 @@
 					// 监听播放结束事件
 					player.addEventListener('ended', function(e) {
 						// console.log('Video ended');
+					}, false);
+					// 监听播放全屏事件
+					player.addEventListener('fullscreenchange', function(e) {
+						if (e.detail.fullScreen && mui.os.ios) {
+							player.setStyles({position: "static"})
+						}
 					}, false);
 				}
 			})

@@ -159,6 +159,15 @@
 				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
 				transition: transform 0.5s ease, opacity 0.5s ease;
 			}
+			.player-btn {
+				width: 40px;
+				height: auto;
+				position: absolute;
+				top: 47%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
 			@-webkit-keyframes fadeIn {
 				0% {
 					opacity: 0;
@@ -247,13 +256,18 @@
 									{{ list.content|| '&nbsp;&nbsp;' }}
 								</div>
 								<div class="begins-inform" v-else-if="list.message_type=='course'">
-									<img src="../image/course-default-img.png" alt="">
-									<p class="course-desc">卖报小行家课程培训，教你如何成为合格卖报员</p>
-									<p class="begin-timer">开播时间：2018-05-21</p>
-									<p class="inform-desc">啦啦啦，我是卖报的小行家，天不怕地不怕，啦啦啦，我是卖报的小行家。天不怕地不怕，</p>
+									<img :src="list.content.cover" alt="">
+									<p class="course-desc">{{list.content.title}}</p>
+									<p class="begin-timer">开播时间：{{list.content.start_time}}</p>
+									<p class="begin-timer">主讲人：{{list.content.teacher_name}}</p>
+									<p class="inform-desc">{{list.content.notice}}</p>
 								</div>
-								<div v-else-if="list.message_type=='image'" class="msg-content-inner">
+								<div v-else-if="list.message_type=='image'" class="img-content-inner">
 									<img data-preview-src="" data-preview-group="1" :src="list.content" style="max-width: 100px;" />
+								</div>
+								<div v-else-if="list.message_type=='video'" class="img-content-inner" @tap="videoPlayer(list.content)">
+									<img :src="list.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" style="max-width: 100px;" />
+									<img class="player-btn" src="../image/icon/video-player.png">
 								</div>
 								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
@@ -289,7 +303,7 @@
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/arttmpl.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/upload.js"></script>
+		<script src="../js/media.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init({
