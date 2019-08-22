@@ -23,9 +23,15 @@
 
 			.video-container {
 				width: 100%;
-				padding: 0.2rem;
-				background-color: #000000;
+				padding: 0 0.2rem 0.2rem 0.2rem;
+				/* background-color: #000000; */
 				position: relative;
+			}
+			
+			.video-container img {
+				width: 100%;
+				height: 200px;
+				object-fit: cover;
 			}
 
 			.mui-icon-clear {
@@ -33,7 +39,17 @@
 				font-size: 36px;
 				position: absolute;
 				right: 0;
-				top: 0;
+				top: -18px;
+			}
+			
+			img.player-btn {
+				width: 60px;
+				height: 60px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
 			}
 
 			[v-cloak] {
@@ -75,16 +91,18 @@
 					</div>
 				</div>
 			</div>
-			<div class="video-container" v-else>
-				<video id="video" width="100%" height="200" controls="controls" :poster="video_src+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"
-				 :src="video_src"></video>
-				<span class="mui-icon mui-icon-clear" @tap="clearChoice"></span>
+			<div class="video-container" v-else @tap="videoPlayer(video_src)">
+				<!-- <video id="video" width="100%" height="200" controls="controls" :poster="video_src+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"
+				 :src="video_src"></video> -->
+				<img :src="video_src+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" >
+				<img class="player-btn" src="../image/icon/video-player.png">
+				<span class="mui-icon mui-icon-clear" @tap.stop="clearChoice"></span>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
-		<script src="../js/upload.js"></script>
+		<script src="../js/media.js"></script>
 		<script type="text/javascript" src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
@@ -109,9 +127,9 @@
 					delImg: function(idx) {
 						this.images.splice(idx, 1);
 					},
-					clearChoice:function(){
-						app.images=[];
-						app.video_src='';
+					clearChoice: function() {
+						app.images = [];
+						app.video_src = '';
 					}
 				},
 				mounted: function() {
@@ -134,53 +152,25 @@
 						plus.navigator.setStatusBarStyle("dark");
 						//上传图片
 						document.getElementById('add_pic').addEventListener('tap', function() {
-							if (mui.os.plus) {
-								var buttonTitle = [{
-									title: "拍照",
-									style: 'default'
-								}, {
-									title: "从手机相册选择",
-									style: 'default'
-								}, {
-									title: "选择视频",
-									style: 'default'
-								}];
-
-								plus.nativeUI.actionSheet({
-									// title: "上传图片",
-									cancel: "取消",
-									buttons: buttonTitle
-								}, function(b) {
-									switch (b.index) {
-										case 0:
-											break;
-										case 1:
-											app.is_video = 0;
-											getImg(setChoice);
-											break;
-										case 2:
-											app.is_video = 0;
-											galleryImg(setChoice);
-											break;
-										case 3:
-											app.is_video = 1;
-											videoUpload(setChoice);
-											break;
-										default:
-											break;
-									}
-								})
-							}
+							chooseMedia('none', function(res) {
+								logs(res);
+								if (res.type == 'video') {
+									app.is_video = 1;
+									app.video_src = res.url;
+									app.images = [];
+									app.images.push(res.url);
+								} else {
+									app.is_video = 0;
+									app.images.push(res.url);
+								}
+							}, function(e) {
+								if (e.code > 100) {
+									message(e.message);
+								}
+							})
 						})
 					})
 
-					function setChoice(res) {
-						if (app.is_video == 0)
-							app.images.push(res.url);
-						else
-							app.video_src = res.url;
-						app.images.push(res.url);
-					}
 					// 发布
 					mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
 						e.preventDefault();

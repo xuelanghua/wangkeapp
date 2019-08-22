@@ -813,7 +813,6 @@
 										heartCheck.reset();
 										heartCheck.start();
 									}
-									console.log("连接已打开...");
 								};
 								ws.onmessage = function(event) {
 									var data = event.data;
@@ -822,7 +821,6 @@
 										heartCheck.start();
 									} else {
 										data = JSON.parse(data);
-										logs(data);
 										if (data.error == 0) {
 											vm.say = false;
 											msgData = data.data;
@@ -1050,8 +1048,10 @@
 					course: vm.course
 				});
 			})
-			window.addEventListener("reloadList", function(e) {
-				send(e.detail.msgData);
+			window.addEventListener("sendMessage", function(e) {
+				chatData['message_type'] = e.detail.chatData.message_type;
+				chatData['content'] = e.detail.chatData.content;
+				ws.send(JSON.stringify(chatData)); //向服务器发送消息
 			})
 		</script>
 	</body>

@@ -108,7 +108,7 @@
 				width: auto;
 				color: #2289ff;
 				font-size: 15px;
-				text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+				text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 				z-index: 12;
 				padding: 0 10px;
 				margin-right: -5px;
@@ -527,7 +527,7 @@
 							</div>
 						</li>
 						<!-- 图片 -->
-						<li class="mui-table-view-cell" :id="'master_list_'+i" v-else-if="h.type=='img'">
+						<li class="mui-table-view-cell" :id="'master_list_'+i" v-else-if="h.type=='image'">
 							<div class="mui-slider-right mui-disabled">
 								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
 								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
@@ -655,7 +655,7 @@
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/upload.js"></script>
+		<script src="../js/media.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo(),
@@ -664,7 +664,6 @@
 				audioIdx = null,
 				player = null,
 				priorId = '',
-				types = 'img',
 				// 聊天
 				ws = null,
 				chatData = null,
@@ -725,34 +724,26 @@
 					// 选择照片
 					choiceItem: function(i) {
 						c_index = i;
+						chooseMedia('image', function(res) {
+							app.remarkList[i].content = res.url;
+						}, function(e) {
+							if (e.code > 100) {
+								message(e.message);
+							}
+						})
 						imageUpload(function(res) {
 							app.remarkList[i].content = res.url;
 						});
 					},
 					// 选择视频
 					choiceVideo: function(idx) {
-						if (mui.os.plus) {
-							var buttonTitle = [{
-								title: "选择视频",
-								style: 'default'
-							}];
-							plus.nativeUI.actionSheet({
-								cancel: "取消",
-								buttons: buttonTitle
-							}, function(b) { /*actionSheet 按钮点击事件*/
-								switch (b.index) {
-									case 0:
-										break;
-									case 1:
-										videoUpload(function(res) {
-											app.remarkList[idx].content = res.url;
-										})
-										break;
-									default:
-										break;
-								}
-							})
-						}
+						chooseMedia('video', function(res) {
+							app.remarkList[idx].content = res.url;
+						}, function(e) {
+							if (e.code > 100) {
+								message(e.message);
+							}
+						})
 					},
 					// 播放音频
 					playAudio: function(audio) {
@@ -792,21 +783,21 @@
 							message("暂未开课！");
 							return false;
 						}
+						if (msg.id == '') {
+							message("请先保存后再发送！");
+							return false;
+						}
 						if (msg.status == 1) {
 							// 重发
 							plus.nativeUI.confirm("该消息已发送过，确认重新发送吗？", function(e) {
-								if (e.index) {
-									// message("取消");
-								} else {
-									affirm(idx, msg);
+								if (!e.index) {
+									affirm(idx, msg, false);
+									logs(456);
 								}
 							})
 						} else {
 							// 直接发
-							affirm(idx, msg);
-							// chatData.content = msg.content;
-							// chatData.message_type = msg.type;
-							// ws.send(JSON.stringify(chatData));
+							affirm(idx, msg, true);
 						}
 					}
 				},
@@ -866,6 +857,7 @@
 							});
 						}
 						app.course = self.course;
+						logs(app.course);
 						chatData = {
 							team_id: app.course.team_id,
 							course_id: app.course.id,
@@ -877,7 +869,6 @@
 						}
 						app.course_id = app.course.id;
 						getRemarkList();
-						WebSocketInit();
 						// 录音相关
 						var recordCancel = false,
 							recorder = null,
@@ -922,6 +913,7 @@
 								plus.nativeUI.toast("录音时出现异常: " + e.message);
 							});
 						}
+						
 						//----------------------------------------------->//
 						function msgTextFocus() {
 							ui.boxMsgText.focus();
@@ -1005,104 +997,15 @@
 
 						// 上传视频
 						ui.footerLeft.addEventListener('tap', function(event) {
-							plus.nativeUI.actionSheet({
-								// title: "上传图片",
-								cancel: "取消",
-								buttons: [{
-									title: "拍照",
-									style: 'default'
-								}, {
-									title: "从手机相册选择",
-									style: 'default'
-								}]
-							}, function(b) { /*actionSheet 按钮点击事件*/
-								switch (b.index) {
-									case 0:
-										break;
-									case 1:
-										getImg(function(res) {
-											creatItem('img', res.url);
-										}); /*拍照*/
-										break;
-									case 2:
-										uploadVideo(function(res) {
-											if (types == "img") {
-												creatItem('img', res.url);
-											} else {
-												creatItem('video', res.url);
-												types = "img";
-											}
-										})
-										break;
-									default:
-										break;
+							chooseMedia('none', function(res) {
+								creatItem(res.type, res.url);
+							}, function(e) {
+								if (e.code > 100) {
+									message(e.message);
 								}
 							})
 						}, false);
-
-						function uploadVideo(cb) {
-							plus.gallery.pick(function(e) {
-								var file = e;
-								var format = file.substring(file.lastIndexOf(".") + 1);
-								if (format == 'jpg' || format == 'png' || format == 'gif' || format == 'webp') {
-									imageResize(file, cb);
-								} else {
-									types = 'video';
-									plus.io.getVideoInfo({
-										filePath: file,
-										success: function(res) {
-											if (res.size < $videoMaxSize) {
-												showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
-												var task = plus.uploader.createUpload($videoUrl, {
-														method: "POST",
-														blocksize: 614400,
-														priority: 100
-													},
-													function(t, status) { //上传完成
-														if (status == 200) {
-															var res = JSON.parse(t.responseText);
-															if (res.error) {
-																plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
-															} else {
-																showload(1);
-																cb(res);
-															}
-														} else {
-															console.log("上传失败：" + status);
-															plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
-														}
-													}
-												);
-												// 页面中要上传的 图片路径
-												task.addFile(file, {
-													key: 'file'
-												});
-												task.start();
-												setTimeout(function() {
-													showload(1);
-												}, 10000);
-											} else {
-												plus.nativeUI.alert('选择视频文件过大!', '', '提示', 'OK');
-											}
-										},
-										fail: function(error) {
-											plus.nativeUI.alert(error.message, '', '提示', 'OK');
-										}
-									});
-								}
-
-							}, function(e) {
-								console.log("取消选择");
-							}, {
-								filter: "none",
-								multiple: false,
-								maximum: 5,
-								system: false,
-								onmaxed: function() {
-									plus.nativeUI.alert('最多只能选择1个');
-								}
-							});
-						}
+						
 						// 创建新的条目
 						function creatItem(type, cont, duration, duration_desc) {
 							var item = {
@@ -1117,7 +1020,7 @@
 							app.remarkList.push(item);
 							app.voidRemarkList = false;
 							// logs(app.remarkList);
-						}
+						} 
 
 						//音频文件上传
 						function voiceUpload(file, creat) {
@@ -1178,6 +1081,7 @@
 					}
 				}, 'json');
 			}
+
 			// 选择视频
 			function choiceVideo() {
 				plus.gallery.pick(function(e) {
@@ -1208,13 +1112,14 @@
 					}
 				});
 			}
+
 			// 删除
 			function deleteMaster(s_id, i) {
 				var _this_dom = document.getElementById('master-list' + s_id);
 				plus.nativeUI.confirm("确认删除该条备课吗？", function(e) {
 					if (e.index) {
 						// 取消
-						message("取消");
+						// message("取消");
 						mui.swipeoutClose(_this_dom);
 					} else {
 						mui.swipeoutClose(_this_dom);
@@ -1231,6 +1136,7 @@
 					}
 				})
 			}
+
 			// 上移或者下移
 			function moveIt(_id, idx, status) {
 				var _this_dom = document.getElementById('master_list_' + idx);
@@ -1253,6 +1159,7 @@
 					app.remarkList.splice(idx + 1, 0, _this);
 				}
 			}
+
 			// 修改
 			function editMaster(idx, _id, type) {
 				var _this_dom = document.getElementById('master_list_' + idx);
@@ -1265,12 +1172,13 @@
 					}, 300)
 					c_index = idx;
 					app.edit_content = app.remarkList[c_index].content;
-				} else if (type == "img") {
+				} else if (type == "image") {
 					app.remarkList[idx].content = '';
 				} else {
 					app.remarkList[idx].content = '';
 				}
 			}
+
 			// 文本框自适应高度
 			function makeExpandingArea(el, eleId) {
 				var timer = null;
@@ -1312,6 +1220,7 @@
 					}); //处理粘贴
 				}
 			}
+
 			// 图片预览
 			function previewImage(urls) {
 				var url = [];
@@ -1325,8 +1234,10 @@
 					}
 				});
 			}
+
 			// 编辑完成,保存
 			mui('.mui-bar').on('tap', '.add-master', function() {
+				document.activeElement.blur();
 				mui.post($ajaxUrl + 'team&action=create_course_draft', {
 					token: userInfo.token,
 					course_id: app.course_id,
@@ -1334,12 +1245,14 @@
 				}, function(res) {
 					// logs(res);
 					if (res.errno == 0) {
+						getRemarkList();
 						message("保存成功！");
 					} else {
 						message("保存失败，请稍后重试！");
 					}
 				}, 'json');
 			})
+
 			// 转换时分秒
 			function formatSeconds(value) {
 				var secondTime = value;
@@ -1362,90 +1275,35 @@
 				}
 				return result;
 			}
-			//---------------------------------------------------------------------
-			//websocket 心跳检测
-			var timer = 0
-			var heartCheck = {
-				timeout: 3e3,
-				timeoutObj: null,
-				serverTimeoutObj: null,
-				reset: function() {
-					clearTimeout(timer);
-					clearTimeout(this.serverTimeoutObj);
-					clearTimeout(this.timeoutObj);
-					// console.log("heartCheck.reset.timer");
-					return;
-				},
-				start: function() {
-					this.timeoutObj = setTimeout(function() {
-						var t = {
-							ping: !0,
-							user_id: userInfo.id,
-							uniacid: userInfo.uniacid,
-							type: 2
-						};
-						ws.send(JSON.stringify(t));
-					}, this.timeout);
-				},
-			};
-			// 聊天初始化
-			function WebSocketInit() {
-				if ("WebSocket" in window) {
-					// 打开一个 web socket
-					ws = new WebSocket("wss://app.wangkeapp.cn/wss");
-					ws.onopen = function() {
-						if (ws.readyState == WebSocket.OPEN) {
-							heartCheck.reset();
-							heartCheck.start();
-						}
-					};
-					ws.onmessage = function(event) {
-						var data = event.data;
-						if (data == 'pong') {
-							heartCheck.reset();
-							heartCheck.start();
-						} else {
-							data = JSON.parse(data);
-							if (data.error == 0) {
-								msgData = data.data;
-								mui.fire(plus.webview.getWebviewById("live_streaming"), "reloadList", {
-									msgData: msgData
-								});
-							} else if (data.error == -2) {
-								message(data.message);
-							}
-						}
-					};
-					ws.onclose = function(e) {
-						// 关闭 websocket
-						console.log("连接已关闭...");
-					};
-					ws.onerror = function(e) {
-						logs(e);
-					}
-				} else {
-					message("您的手机不支持 WebSocket!");
-				}
-			}
+
 			// 发送确认
-			function affirm(idx, msg) {
-				mui.post($ajaxUrl + 'team&action=change_course_draft_status', {
-					token: userInfo.token,
-					draft_id:msg.id,
-					status:1,
-				}, function(res) {
-					logs(res);
-					if (res.errno == 0) {
-						// 成功
-						message("发送成功！");
-						app.remarkList[idx].status=1;
-						chatData.content = msg.content;
-						chatData.message_type = msg.type;
-						ws.send(JSON.stringify(chatData));
-					} else {
-						message("发送失败，请稍后重试！");
-					}
-				}, 'json');
+			function affirm(idx, msg, nMsg) {
+				if (nMsg) {
+					mui.post($ajaxUrl + 'team&action=change_course_draft_status', {
+						token: userInfo.token,
+						draft_id: msg.id,
+						status: 1,
+					}, function(res) {
+						if (res.errno == 0) {
+							// 成功
+							message("发送成功！");
+							app.remarkList[idx].status = 1;
+							chatData.content = msg.content;
+							chatData.message_type = msg.type;
+							mui.fire(plus.webview.getWebviewById('live_streaming'), 'sendMessage', {
+								chatData: chatData
+							});
+						} else {
+							message("发送失败，请稍后重试！");
+						}
+					}, 'json');
+				} else {
+					chatData.content = msg.content;
+					chatData.message_type = msg.type;
+					mui.fire(plus.webview.getWebviewById('live_streaming'), 'sendMessage', {
+						chatData: chatData
+					});
+				}
 			}
 		</script>
 	</body>
