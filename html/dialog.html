@@ -135,6 +135,10 @@
 			.msg-item .msg-content .msg-content-inner {
 				overflow-x: hidden;
 			}
+			.msg-item .msg-content .img-content-inner  {
+				overflow-x: hidden;
+				line-height: 0;
+			}
 			.msg-item .msg-content .msg-content-arrow {
 				position: absolute;
 				border: solid 1px #d3d3d3;
@@ -580,6 +584,16 @@
 				max-width: 100%;
 				height: auto;
 			}
+			
+			.player-btn {
+				width: 40px;
+				height: auto;
+				position: absolute;
+				top: 47%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
 		</style>
 	</head>
 
@@ -607,16 +621,25 @@
 							<% if(item.type=='audio'&&item.is_read==0&&item.sender!='self') { %>
 								<i class="<%=('red-dot red-dot'+item.message_id)%>"></i>
 							<% } %>
-							<div class="msg-content-inner">
-								<% if(item.type=='text' ) { %>
-									<%=( item.content|| '&nbsp;&nbsp;') %>
-								<% } else if(item.type=='image' ) { %>
-									<img data-preview-src="" data-preview-group="1" class="msg-content-image" src="<%=(item.content)%>" style="max-width: 100px;" />
-								<% } else if(item.type=='audio' ) { %>
-									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
-									<span class="<%=('play-state play-state'+item.message_id)%>">点击播放</span>
-								<% } %>
-							</div>
+							<% if(item.type=='text' || item.type=='audio') { %>
+								<div class="msg-content-inner">
+									<% if(item.type=='text' ) { %>
+										<%=( item.content|| '&nbsp;&nbsp;') %>
+									<% } else if(item.type=='audio' ) { %>
+										<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
+										<span class="<%=('play-state play-state'+item.message_id)%>">点击播放</span>
+									<% } %>
+								</div>
+							<% } else { %>
+								<div class="img-content-inner">
+									<% if(item.type=='image' ) { %>
+										<img data-preview-src="" data-preview-group="1" class="msg-content-image" src="<%=(item.content)%>" style="max-width: 100px;" />
+									<% } else if(item.type=='video' ) { %>
+										<img class="msg-content-image" src="<%=(item.content)+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'%>" style="max-width: 100px;" />
+										<img class="player-btn" src="../image/icon/video-player.png">
+									<% } %>
+								</div>
+							<% } %>
 							<div class="msg-content-arrow"></div>
 						</div>
 						<div class="mui-item-clear"></div>
@@ -882,6 +905,8 @@
 								document.querySelector(".red-dot" + aid).style.display = "none";
 							}, 'json');
 						}
+					} else if (msgType == 'video') {
+						videoPlayer(msgContent);
 					}
 				};
 

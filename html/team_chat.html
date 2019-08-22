@@ -159,6 +159,15 @@
 				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
 				transition: transform 0.5s ease, opacity 0.5s ease;
 			}
+			.player-btn {
+				width: 40px;
+				height: auto;
+				position: absolute;
+				top: 47%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
 			@-webkit-keyframes fadeIn {
 				0% {
 					opacity: 0;
@@ -226,12 +235,16 @@
 								<!-- <div class="begins-inform">
 									<img src="" alt="">
 								</div> -->
-								<div v-else-if="list.message_type=='image'" class="msg-content-inner">
+								<div v-else-if="list.message_type=='image'" class="img-content-inner">
 									<img data-preview-src="" data-preview-group="1" :src="list.content" style="max-width: 100px;" />
+								</div>
+								<div v-else-if="list.message_type=='video'" class="img-content-inner" @tap="videoPlayer(list.content)">
+									<img :src="list.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" style="max-width: 100px;" />
+									<img class="player-btn" src="../image/icon/video-player.png">
 								</div>
 								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
-								<span class="play-state" :class="'play-state'+list.id">点击播放</span>
+									<span class="play-state" :class="'play-state'+list.id">点击播放</span>
 								</div>
 								<div class="msg-content-arrow"></div>
 							</div>
@@ -264,7 +277,7 @@
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/arttmpl.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/upload.js"></script>
+		<script src="../js/media.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init({

@@ -168,5 +168,5 @@ function upload(file, type, success, fail) {
 	task.start();
 	setTimeout(function() {
 		showload(1);
-	}, 10000);
+	}, 30000);
 }
