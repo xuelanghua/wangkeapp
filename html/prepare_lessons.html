@@ -17,9 +17,7 @@
 			}
 
 			.mui-table-view-cell {
-				/* background-color: #FFFFFF; */
 				width: 100%;
-				/* height: 4.83rem; */
 				margin-bottom: 0.2rem;
 				border-radius: 0.1rem;
 				padding: 0;
@@ -268,8 +266,8 @@
 			}
 
 			.img-cont {
-				width: 5rem;
-				max-height: 3rem;
+				max-width: 5rem;
+				height: 3rem;
 				object-fit: cover;
 				border-radius: 3px;
 				overflow: hidden;
@@ -346,6 +344,7 @@
 				border-radius: 5px;
 				display: none;
 				text-align: center;
+				z-index: 1045;
 			}
 
 			.showArea img {
@@ -420,6 +419,10 @@
 				background-color: #eee;
 			}
 
+			footer {
+				z-index: 1045;
+			}
+
 			footer .mui-icon {
 				color: #000;
 			}
@@ -448,7 +451,7 @@
 
 			.video-cover {
 				width: 100%;
-				height: 100%;
+				height: 3rem;
 				object-fit: cover;
 			}
 
@@ -494,142 +497,149 @@
 					<button type="button" class="mui-btn mui-btn-outlined" @tap="confirmEdit">确认</button>
 				</div>
 			</div>
-			<div id="OA_task_1">
-				<ul class="mui-table-view" v-if="remarkList!=[]&&remarkList!=1">
-					<template v-for="(h,i) in remarkList" :key="i" v-if="h.status!=-1">
-						<!-- 文字 -->
-						<li class="mui-table-view-cell" :id="'master_list_'+i" v-if="h.type=='text'">
-							<div class="mui-slider-right mui-disabled">
-								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
-								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
-								<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
-								<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
-							</div>
-							<div class="mui-slider-handle">
-								<div class="remark-info">
-									<p class="text-desc">{{h.content}}</p>
-									<div class="send-msg-btn" @tap="sendRemake(h,i)">
-										<template v-if="h.status==0">
-											<img src="../image/icon/prepare-lessons03.png">
-											<span>发送</span>
-										</template>
-										<template v-else>
-											<img src="../image/icon/prepare-lessons02.png">
-											<span class="gray">重发</span>
-										</template>
-									</div>
-								</div>
-								<div class="remake-section">
-									<img src="../image/icon/prepare-lessons04.png">
-									<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
-									 cols=""></textarea>
-								</div>
-							</div>
-						</li>
-						<!-- 图片 -->
-						<li class="mui-table-view-cell" :id="'master_list_'+i" v-else-if="h.type=='image'">
-							<div class="mui-slider-right mui-disabled">
-								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
-								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
-								<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
-								<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
-							</div>
-							<div class="mui-slider-handle">
-								<div class="remark-info">
-									<div class="img-cont" v-if="h.content">
-										<img :src="h.content" @tap="previewImage(h.content)">
-									</div>
-									<img v-else class="choice-item" @tap="choiceItem(i)" src="../image/icon/prepare-lessons06.png">
-									<div class="send-msg-btn" @tap="sendRemake(h,i)">
-										<template v-if="h.status==0">
-											<img src="../image/icon/prepare-lessons03.png">
-											<span>发送</span>
-										</template>
-										<template v-else>
-											<img src="../image/icon/prepare-lessons02.png">
-											<span class="gray">重发</span>
-										</template>
-									</div>
-								</div>
-								<div class="remake-section">
-									<img src="../image/icon/prepare-lessons04.png">
-									<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
-									 cols=""></textarea>
-								</div>
-							</div>
-						</li>
-						<!-- 语音 -->
-						<li class="mui-table-view-cell" :id="'master_list_'+i" v-else-if="h.type=='audio'">
-							<div class="mui-slider-right mui-disabled">
-								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
-								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
-								<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
-								<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
-							</div>
-							<div class="mui-slider-handle">
-								<div class="remark-info">
-									<div v-if="h.content==''" class="start-record" :data-idx="i" :id="'start_record'+h.id">
-										开始录音&nbsp;&nbsp;按住说话
-									</div>
-									<div v-else class="play-record" @tap="playAudio(h)">
-										<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
-										<span class="play-status" :id="'play_status_'+h.id">点击播放</span>
-										<span class="record-timer">{{h.duration_desc}}</span>
-									</div>
-									<div class="send-msg-btn" @tap="sendRemake(h,i)">
-										<template v-if="h.status==0">
-											<img src="../image/icon/prepare-lessons03.png">
-											<span>发送</span>
-										</template>
-										<template v-else>
-											<img src="../image/icon/prepare-lessons02.png">
-											<span class="gray">重发</span>
-										</template>
-									</div>
-								</div>
-								<div class="remake-section">
-									<img src="../image/icon/prepare-lessons04.png">
-									<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
-									 cols=""></textarea>
-								</div>
-							</div>
-						</li>
-						<!-- 视频 -->
-						<li class="mui-table-view-cell" :id="'master_list_'+i" v-else>
-							<div class="mui-slider-right mui-disabled">
-								<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
-								<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
-								<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id)">修改</span>
-								<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
-							</div>
-							<div class="mui-slider-handle">
-								<div class="remark-info">
-									<div v-if="h.content" class="video-container" @tap="videoPlayer(h.content)">
-										<img class="video-cover" :src="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
-										<img class="player-btn" src="../image/icon/video-player.png">
-									</div>
-									<img v-else class="choice-item" @tap="choiceVideo(i)" src="../image/icon/prepare-lessons05.png">
-									<div class="send-msg-btn" @tap="sendRemake(h,i)">
-										<template v-if="h.status==0">
-											<img src="../image/icon/prepare-lessons03.png">
-											<span>发送</span>
-										</template>
-										<template v-else>
-											<img src="../image/icon/prepare-lessons02.png">
-											<span class="gray">重发</span>
-										</template>
-									</div>
-								</div>
-								<div class="remake-section">
-									<img src="../image/icon/prepare-lessons04.png">
-									<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
-									 cols=""></textarea>
-								</div>
-							</div>
-						</li>
-					</template>
-				</ul>
+			<div class="" style="position: absolute;top:0;bottom:0;height:100vh;width: 95%">
+				<div class="mui-scroll-wrapper" style="padding-top: 60px;">
+					<div class="mui-scroll">
+						<div id="OA_task_1">
+							<ul class="mui-table-view" v-if="remarkList!=[]&&remarkList!=1">
+								<template v-for="(h,i) in remarkList" :key="i" v-if="h.status!=-1">
+									<!-- 文字 -->
+									<li class="mui-table-view-cell" :id="'master_list_'+i" v-if="h.type=='text'">
+										<div class="mui-slider-right mui-disabled">
+											<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
+											<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
+											<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
+											<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+										</div>
+										<div class="mui-slider-handle">
+											<div class="remark-info">
+												<p class="text-desc">{{h.content}}</p>
+												<div class="send-msg-btn" @tap="sendRemake(h,i)">
+													<template v-if="h.status==0">
+														<img src="../image/icon/prepare-lessons03.png">
+														<span>发送</span>
+													</template>
+													<template v-else>
+														<img src="../image/icon/prepare-lessons02.png">
+														<span class="gray">重发</span>
+													</template>
+												</div>
+											</div>
+											<div class="remake-section">
+												<img src="../image/icon/prepare-lessons04.png">
+												<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
+												 cols=""></textarea>
+											</div>
+										</div>
+									</li>
+									<!-- 图片 -->
+									<li class="mui-table-view-cell" :id="'master_list_'+i" v-else-if="h.type=='image'">
+										<div class="mui-slider-right mui-disabled">
+											<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
+											<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
+											<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
+											<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+										</div>
+										<div class="mui-slider-handle">
+											<div class="remark-info">
+												<div class="img-cont" v-if="h.content">
+													<img :src="h.content" @tap="previewImage(h.content)">
+												</div>
+												<img v-else class="choice-item" @tap="choiceItem(i)" src="../image/icon/prepare-lessons06.png">
+												<div class="send-msg-btn" @tap="sendRemake(h,i)">
+													<template v-if="h.status==0">
+														<img src="../image/icon/prepare-lessons03.png">
+														<span>发送</span>
+													</template>
+													<template v-else>
+														<img src="../image/icon/prepare-lessons02.png">
+														<span class="gray">重发</span>
+													</template>
+												</div>
+											</div>
+											<div class="remake-section">
+												<img src="../image/icon/prepare-lessons04.png">
+												<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
+												 cols=""></textarea>
+											</div>
+										</div>
+									</li>
+									<!-- 语音 -->
+									<li class="mui-table-view-cell" :id="'master_list_'+i" v-else-if="h.type=='audio'">
+										<div class="mui-slider-right mui-disabled">
+											<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
+											<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
+											<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
+											<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+										</div>
+										<div class="mui-slider-handle">
+											<div class="remark-info">
+												<div v-if="h.content==''" class="start-record" :data-idx="i" :id="'start_record'+h.id">
+													开始录音&nbsp;&nbsp;按住说话
+												</div>
+												<div v-else class="play-record" @tap="playAudio(h)">
+													<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
+													<span class="play-status" :id="'play_status_'+h.id">点击播放</span>
+													<span class="record-timer">{{h.duration_desc}}</span>
+												</div>
+												<div class="send-msg-btn" @tap="sendRemake(h,i)">
+													<template v-if="h.status==0">
+														<img src="../image/icon/prepare-lessons03.png">
+														<span>发送</span>
+													</template>
+													<template v-else>
+														<img src="../image/icon/prepare-lessons02.png">
+														<span class="gray">重发</span>
+													</template>
+												</div>
+											</div>
+											<div class="remake-section">
+												<img src="../image/icon/prepare-lessons04.png">
+												<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
+												 cols=""></textarea>
+											</div>
+										</div>
+									</li>
+									<!-- 视频 -->
+									<li class="mui-table-view-cell" :id="'master_list_'+i" v-else>
+										<div class="mui-slider-right mui-disabled">
+											<span class="mui-btn mui-btn-primary move-up-btn" @tap="moveIt(h.id,i,'up')">上移</span>
+											<span class="mui-btn mui-btn-primary move-down-btn" @tap="moveIt(h.id,i,'down')">下移</span>
+											<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id)">修改</span>
+											<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
+										</div>
+										<div class="mui-slider-handle">
+											<div class="remark-info">
+												<div v-if="h.content" class="video-container" @tap="videoPlayer(h.content)">
+													<img class="video-cover" :src="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
+													<img class="player-btn" src="../image/icon/video-player.png">
+												</div>
+												<img v-else class="choice-item" @tap="choiceVideo(i)" src="../image/icon/prepare-lessons05.png">
+												<div class="send-msg-btn" @tap="sendRemake(h,i)">
+													<template v-if="h.status==0">
+														<img src="../image/icon/prepare-lessons03.png">
+														<span>发送</span>
+													</template>
+													<template v-else>
+														<img src="../image/icon/prepare-lessons02.png">
+														<span class="gray">重发</span>
+													</template>
+												</div>
+											</div>
+											<div class="remake-section">
+												<img src="../image/icon/prepare-lessons04.png">
+												<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
+												 cols=""></textarea>
+											</div>
+										</div>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
+
 			<!-- v-if="voidRemarkList" -->
 			<div v-if="voidRemarkList" style="padding: 20%;text-align: center;color:#999999;font-size:18px;">
 				<img src="../image/icon/void-remark-info.png" style="width:100%;">
@@ -826,6 +836,16 @@
 						boxSoundAlert: document.querySelector('#sound-alert'),
 						content: document.querySelector('.mui-content')
 					};
+					// 滚动初始化
+					mui('.mui-scroll-wrapper').scroll({
+						scrollY: true, //是否竖向滚动
+						scrollX: false, //是否横向滚动
+						startX: 0, //初始化时滚动至x
+						startY: 0, //初始化时滚动至y
+						indicators: false, //是否显示滚动条
+						deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
+						bounce: true //是否启用回弹
+					});
 					mui.init({
 						keyEventBind: {
 							backbutton: true,
@@ -912,7 +932,7 @@
 								plus.nativeUI.toast("录音时出现异常: " + e.message);
 							});
 						}
-						
+
 						//----------------------------------------------->//
 						function msgTextFocus() {
 							ui.boxMsgText.focus();
@@ -1004,7 +1024,7 @@
 								}
 							})
 						}, false);
-						
+
 						// 创建新的条目
 						function creatItem(type, cont, duration, duration_desc) {
 							var item = {
@@ -1018,8 +1038,8 @@
 							};
 							app.remarkList.push(item);
 							app.voidRemarkList = false;
-							// logs(app.remarkList);
-						} 
+							setHet();
+						}
 
 						//音频文件上传
 						function voiceUpload(file, creat) {
@@ -1078,6 +1098,7 @@
 					} else {
 						app.voidRemarkList = true;
 					}
+					setHet();
 				}, 'json');
 			}
 
@@ -1304,6 +1325,15 @@
 					});
 					message("发送成功！");
 				}
+			}
+			function setHet(){
+				app.$nextTick(function() {
+					setTimeout(function(){
+						var het = document.querySelector(".mui-scroll").offsetHeight;
+					var ohet = document.querySelector(".mui-scroll-wrapper").offsetHeight;
+					mui('.mui-scroll-wrapper').scroll().scrollTo(0, -het+ohet-60);
+					},300)
+				})
 			}
 		</script>
 	</body>
