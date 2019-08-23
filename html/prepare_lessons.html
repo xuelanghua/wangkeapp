@@ -6,6 +6,7 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/animate.min.css" />
 		<style type="text/css">
 			.mui-bar-nav~.mui-content {
 				padding: 60px 0.2rem 1rem;
@@ -517,7 +518,7 @@
 												<div class="send-msg-btn" @tap="sendRemake(h,i)">
 													<template v-if="h.status==0">
 														<span>发送</span>
-														<img src="../image/icon/prepare-lessons03.png">
+														<img class="sajdlf" src="../image/icon/prepare-lessons03.png">
 													</template>
 													<template v-else>
 														<span class="gray">重发</span>
@@ -801,7 +802,6 @@
 							plus.nativeUI.confirm("该消息已发送过，确认重新发送吗？", function(e) {
 								if (!e.index) {
 									affirm(idx, msg, false);
-									logs(456);
 								}
 							})
 						} else {
@@ -1305,7 +1305,6 @@
 						status: 1,
 					}, function(res) {
 						if (res.errno == 0) {
-							// 成功
 							message("发送成功！");
 							app.remarkList[idx].status = 1;
 							chatData.content = msg.content;
@@ -1326,13 +1325,17 @@
 					message("发送成功！");
 				}
 			}
-			function setHet(){
+
+			function setHet() {
 				app.$nextTick(function() {
-					setTimeout(function(){
+					setTimeout(function() {
 						var het = document.querySelector(".mui-scroll").offsetHeight;
-					var ohet = document.querySelector(".mui-scroll-wrapper").offsetHeight;
-					mui('.mui-scroll-wrapper').scroll().scrollTo(0, -het+ohet-60);
-					},300)
+						var ohet = document.querySelector(".mui-scroll-wrapper").offsetHeight;
+						// var viewport = document.documentElement.clientHeight || document.body.clientHeight;
+						if (het > ohet) {
+							mui('.mui-scroll-wrapper').scroll().scrollTo(0, -het + ohet - 60);
+						}
+					}, 300)
 				})
 			}
 		</script>
