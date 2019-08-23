@@ -140,7 +140,11 @@
 				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
 				transition: transform 0.5s ease, opacity 0.5s ease;
 			}
-
+			
+			.picture_display_chear img {
+				object-fit: cover;
+			}
+			
 			@-webkit-keyframes fadeIn {
 				0% {
 					opacity: 0;
@@ -180,6 +184,9 @@
 					opacity: 0;
 				}
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -198,87 +205,100 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">店铺设置</h1>
 		</header>
-		<div class="mui-content store-manage-container">
+		<div class="mui-content store-manage-container" v-cloak>
 			<h2 class="headline">基本信息</h2>
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell" id="store-img">
-					<div class="manage-left mui-navigate-right"><span>店铺图标</span><img class="sml-icon" id="store_avatar" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF+mlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE5LTA1LTA5VDA5OjMxOjIxKzA4OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDE5LTA1LTA5VDA5OjMxOjIxKzA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAxOS0wNS0wOVQwOTozMToyMSswODowMCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozNjEyOWU2My0xM2M0LTcwNDgtOTkxZC1mNzY0MjViNDFjZjAiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpkMjY0ZWJhMy1kNWVhLTE3NGMtOWYyYi04NmQyNjg2ZDA0ZjgiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo4ZTVjNzE3Yy02NzIwLTRiNDEtYjZkNS1kZTFkMThmMzYzNDMiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIiBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjhlNWM3MTdjLTY3MjAtNGI0MS1iNmQ1LWRlMWQxOGYzNjM0MyIgc3RFdnQ6d2hlbj0iMjAxOS0wNS0wOVQwOTozMToyMSswODowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTggKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDozNjEyOWU2My0xM2M0LTcwNDgtOTkxZC1mNzY0MjViNDFjZjAiIHN0RXZ0OndoZW49IjIwMTktMDUtMDlUMDk6MzE6MjErMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7SLhzrAAAGP0lEQVR4nO3db6hlVRnH8c/NaW5OM9j8AUNHqdCmAu0PlCYq9aqxgoFyZioJKpP+WRL5pncRjBakkpZIWRARep2EXhToq6IanYyIUStnGgwGkYpxvNLcMSed8cVzTmfP8cw5++yz/9271xc27HPv3ms9e/1Ya/9Zz3qeuaWlJYn2sKppA3JwFrZktjfjPGzEJnEN6/AClrCI//T2n8b+oe25Wq2fkjYK8np8EFfivUKAPMz3tg0TjjuAh/E7/Ar/LGZmNcy1ZMi6ADvwUbwTczXVexJ/xv3Yjb/XVO9paVKQ1+BjuBaXN2XEEHtwN+7Ff5swoAlB1uHz+BrOrrvynPwLt+AucT+qjToFWY8v4waTx/m2cAS3447efuXUIcicGJZuFk9Fy5HD+Dp+jBNVVlS1IO/AneJpaSXwML4kHgQq4VUVlTuP7+CPVo4YxLU8Iq5tvooKqughb8M9uLjsglvGo+Ip8W9lFlp2D9mJP1j5YhDX+Ii45tIoS5A57BI9Y21JZS4H1op3ll1KepktY8hajZ+I7ttl7sGncHyWQmbtIWvwC0kM+LhoizWzFDKLIGvEx7mrZjFghXEVfmkGUYoKslp8kHtf0YpXMO8XbbO6yMlFBJkTb6xbi1TYEbaKNpr6Rl9EkJtwTYHzusY1oq2mYtqnrO1YUN98xUpgJ+7Le/A0grxVvAh16T2jDJbwbjnf6PMOWfO699JXFq8VL4+5vn3lFWQX3l7UooSL5byf5BmyLhFTm2fMaFTXeUlMVe8dd9CkHrIKP5DEKIMzRFuO9fSZJMgXdOPLbV1chC+OO2DckLVeuMVsLNmorvOscHsaOUc/rofcKIlRBetF247kdD1kE54ULjuJ8jmKNwrniVM4XQ+5XhKjStbiK6P+MaqHnIlDlq/LznLhMM7H89k/juohOyQx6mCTERN7owT5bPW2JHpcO/yH4SHrAi3wAO8YF+Jg/8dwD9lRry0JQ8PWsCDbazQkEVyd/ZEdss7BU9LkU92cxGax/O6UHrJVEqMJ5mQ8d7KCXFG/LYkeV/Z3soK0ZVlZF7msv9O/h5wllhMnmmM9Fvs9ZEuTliTQW/6dBGkPW0iCtIm3kARpE6cMWec1aEgiOJ+BIGmqtnk2kARpExsZCNLGqEBd49UMBEnz582zluoCByQK0hek1og3iZEcZSDIiw0akgj+x0CQZxo0JBEcYSBILbGgEmN5hoEghxo0JBEcYiDIgQYNSQQHGAjyRIOGJIInGAiyv0FDEsEpPSQJ0jz7GQjynIw7Y6J2Dur5NGQ/nexpxJQEPNTfyQry2wYMSQT/b/vkStoOzjXClfRp7GvEnG6zT08MXvn5/f56bUng59kfw4LcW6MhiWAh+2NYkIPS01ad7DG0Ym3UjOEP67ElgR8N/yEti26O3Muin8f367Co49xlSAzGh9b4hxRBriqW8AZThNY4LDLLJKrhdiPEIIVnaoLC4ZmexTersKjjfMMYH4ZJMRdX4U9SVLmyeFzkaTyt29Ukz8UX8TkRwDExGy/hOhN84PK4ku6VbvBlcIcJEUnJH9l6XkS1TkNXMR7Fe0QC5bHkdbZ+QSQsaUXi3GXGkmi7iWIwnff7X/FpEZsjkZ/PiLbLxbTLEXbj21Oe02W+ZYrMCBRLCjaHn0o5RCbxM3zSlCNKkQU7J0U3fKDAuV3hQdFGUw/vRVdQHRfJ6H9T8PyVzK/xEQXT582ypO0YPiT1lCwP4MOibQox6xrDY9gmzcUTbbDNDGJQzqLP4/iEyJfeVW4WbTBTlk/Kzxa9E3frzsTWURHneGHSgXkpe1n0Ai7FYyWX20YeE9mHShODatap/0V8t7kVJyoov2lO4DZxjbnfwPNSRYL7LJeKND8XVVlJjTwuPqFP/GpblKojOezFu0RqhsWK66qSRdwgJpcqE4Pqe0iWDeKiru/tLweO4Hv4rpqWjtcpSJ91IjHWV3F23ZXn5N/iHninmsOONCFInzPFY/J1MnFrG+Yh4Uq7YIQTWx00KUiWC0Vmhu3qzyi6T0wr3KcFqTraIkiWzfiACH1+Bd5UcvlP4vdiGdmDYtVYa2ijIMO8TkRNzW6bhbvrBjHfv6Z37DExVXpEeAY+JZYbZ7fF2iwvwHIQpFO8DNEfXjyrtjZsAAAAAElFTkSuQmCC"></div>
+					<div class="manage-left mui-navigate-right"><span>店铺图标</span><img class="sml-icon" :src="storeInfo.store_avatar || '../image/app_logo.png'"></div>
 				</li>
 				<li class="mui-table-view-cell" id="store-name">
-					<div class="manage-left mui-navigate-right"><span>店铺名称</span><span class="store-name" id="store_name"></span></div>
+					<div class="manage-left mui-navigate-right"><span>店铺名称</span><span class="store-name">{{storeInfo.store_name}}</span></div>
 				</li>
 				<li class="mui-table-view-cell" id="store-desc">
 					<div class="manage-left mui-navigate-right"><span>店铺介绍</span>
-						<p class="mui-ellipsis" id="store_description"></p>
+						<p class="mui-ellipsis">{{storeInfo.store_description}}</p>
 					</div>
 				</li>
 			</ul>
 			<h2 class="headline">店铺广告</h2>
 			<div class="picture_display">
 				<div id="pic-container">
-					<div class="picture_display_chear" id="add_pic">
-						<img src="../image/icon/upload-img-icon.jpg">
-					</div>
-					<input type="hidden" name="images" />
+					<template v-if="storeInfo.store_advertising==''">
+						<div class="picture_display_chear add-pic">
+							<img src="../image/icon/upload-img-icon.jpg">
+						</div>
+						<input type="hidden" name="images" />
+					</template>
+					<template v-else>
+						<div class="picture_display_chear">
+							<img :src="storeInfo.store_advertising" data-preview-src="" data-preview-group="1" />
+							<span class="mui-close">
+								<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
+							</span>
+						</div>
+					</template>
 				</div>
 			</div>
 		</div>
 	</body>
 	<script src="../js/mui.js"></script>
 	<script src="../js/mui.zoom.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script src="../js/mui.previewimage.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/upload.js"></script>
 	<script type="text/javascript">
-		mui.init({
-			swipeBack: true
-		});
-		//获取用户信息
 		var userInfo = getUserInfo();
-		var uid = userInfo.id;
-		var utoken = userInfo.token;
-
-		mui.plusReady(function() {
-			//接收店铺名称修改返回的广播 刷新页面
-			window.addEventListener('changename', function(e) {
-				window.location.reload();
-			});
-			//接收店铺介绍修改返回的广播 刷新页面
-			window.addEventListener('changdescription', function(e) {
-				window.location.reload();
-			});
-			//监听图片裁剪返回的数据
-			window.addEventListener('cropperSuccess', function(e) {
-				//返回裁剪完成的图片上传后的地址
-				console.log(JSON.stringify(e.detail));
-				var image_url = e.detail.image;
-				//将返回的图片地址 给到个人店铺下的数据中
-				var ajax_url = $ajaxUrl + 'store';
-				mui.ajax(ajax_url, {
-					data: {
-						action: 'updateStoreInfo',
-						token: utoken,
-						store_avatar: image_url,
-						op: 'store_avatar',
-					},
-					dataType: 'json',
-					type: 'post',
-					timeout: 10000,
-					success: function(ret) {
-						console.log(JSON.stringify('成功'));
-						console.log(JSON.stringify(ret));
-					},
-					error: function(xhr, type, errorThrown) {
-						console.log(JSON.stringify('失败'));
-						console.log(JSON.stringify(errorThrown));
-					}
+		var vm = new Vue({
+			el: '.mui-content',
+			data: {
+				storeInfo: {}
+			},
+			created: function() {
+				mui.init({
+					swipeBack: true
 				});
-				document.getElementById('store_avatar').src = image_url;
-			});
-			eventInit();
-			userInfo = getUserInfo();
-			mui.previewImage();
-			getStoreInfo();
+			},
+			mounted: function() {
+				mui.plusReady(function() {
+					//接收店铺名称修改返回的广播 刷新页面
+					window.addEventListener('storeSetting', function(e) {
+						getStoreInfo();
+					});
+					
+					//监听图片裁剪返回的数据
+					window.addEventListener('cropperSuccess', function(e) {
+						var image_url = e.detail.image;
+						//将返回的图片地址 给到个人店铺下的数据中
+						var ajax_url = $ajaxUrl + 'store';
+						mui.ajax(ajax_url, {
+							data: {
+								action: 'updateStoreInfo',
+								token: userInfo.token,
+								store_avatar: image_url,
+								op: 'store_avatar',
+							},
+							dataType: 'json',
+							type: 'post',
+							timeout: 10000,
+							success: function(ret) {
+								console.log(JSON.stringify('成功'));
+								console.log(JSON.stringify(ret));
+							},
+							error: function(xhr, type, errorThrown) {
+								console.log(JSON.stringify('失败'));
+								console.log(JSON.stringify(errorThrown));
+							}
+						});
+						// vm.storeInfo.store_avatar = image_url;
+						vm.$set(vm.storeInfo, 'store_avatar', image_url);
+						mui.fire(plus.webview.getWebviewById('shop_setting'), 'storeSetting');
+					});
+					eventInit();
+					getStoreInfo();
+					mui.previewImage();
+				})
+			}
 		})
 
 		/**
@@ -286,40 +306,14 @@
 		 */
 		function getStoreInfo() {
 			var ajax_url = $ajaxUrl + 'store';
-			mui.ajax(ajax_url, {
-				data: {
+			mui.get($ajaxUrl + 'store', {
 					action: 'getStoreDetial',
-					token: utoken,
-				},
-				dataType: 'json',
-				type: 'post',
-				timeout: 10000,
-				success: function(ret) {
-					// console.log(JSON.stringify('成功'));
-					// console.log(JSON.stringify(ret));
-					//店铺头像
-					document.getElementById('store_avatar').src = ret.data.store_avatar || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF+mlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE5LTA1LTA5VDA5OjMxOjIxKzA4OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDE5LTA1LTA5VDA5OjMxOjIxKzA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAxOS0wNS0wOVQwOTozMToyMSswODowMCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozNjEyOWU2My0xM2M0LTcwNDgtOTkxZC1mNzY0MjViNDFjZjAiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpkMjY0ZWJhMy1kNWVhLTE3NGMtOWYyYi04NmQyNjg2ZDA0ZjgiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo4ZTVjNzE3Yy02NzIwLTRiNDEtYjZkNS1kZTFkMThmMzYzNDMiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIiBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjhlNWM3MTdjLTY3MjAtNGI0MS1iNmQ1LWRlMWQxOGYzNjM0MyIgc3RFdnQ6d2hlbj0iMjAxOS0wNS0wOVQwOTozMToyMSswODowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTggKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDozNjEyOWU2My0xM2M0LTcwNDgtOTkxZC1mNzY0MjViNDFjZjAiIHN0RXZ0OndoZW49IjIwMTktMDUtMDlUMDk6MzE6MjErMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7SLhzrAAAGP0lEQVR4nO3db6hlVRnH8c/NaW5OM9j8AUNHqdCmAu0PlCYq9aqxgoFyZioJKpP+WRL5pncRjBakkpZIWRARep2EXhToq6IanYyIUStnGgwGkYpxvNLcMSed8cVzTmfP8cw5++yz/9271xc27HPv3ms9e/1Ya/9Zz3qeuaWlJYn2sKppA3JwFrZktjfjPGzEJnEN6/AClrCI//T2n8b+oe25Wq2fkjYK8np8EFfivUKAPMz3tg0TjjuAh/E7/Ar/LGZmNcy1ZMi6ADvwUbwTczXVexJ/xv3Yjb/XVO9paVKQ1+BjuBaXN2XEEHtwN+7Ff5swoAlB1uHz+BrOrrvynPwLt+AucT+qjToFWY8v4waTx/m2cAS3447efuXUIcicGJZuFk9Fy5HD+Dp+jBNVVlS1IO/AneJpaSXwML4kHgQq4VUVlTuP7+CPVo4YxLU8Iq5tvooKqughb8M9uLjsglvGo+Ip8W9lFlp2D9mJP1j5YhDX+Ii45tIoS5A57BI9Y21JZS4H1op3ll1KepktY8hajZ+I7ttl7sGncHyWQmbtIWvwC0kM+LhoizWzFDKLIGvEx7mrZjFghXEVfmkGUYoKslp8kHtf0YpXMO8XbbO6yMlFBJkTb6xbi1TYEbaKNpr6Rl9EkJtwTYHzusY1oq2mYtqnrO1YUN98xUpgJ+7Le/A0grxVvAh16T2jDJbwbjnf6PMOWfO699JXFq8VL4+5vn3lFWQX3l7UooSL5byf5BmyLhFTm2fMaFTXeUlMVe8dd9CkHrIKP5DEKIMzRFuO9fSZJMgXdOPLbV1chC+OO2DckLVeuMVsLNmorvOscHsaOUc/rofcKIlRBetF247kdD1kE54ULjuJ8jmKNwrniVM4XQ+5XhKjStbiK6P+MaqHnIlDlq/LznLhMM7H89k/juohOyQx6mCTERN7owT5bPW2JHpcO/yH4SHrAi3wAO8YF+Jg/8dwD9lRry0JQ8PWsCDbazQkEVyd/ZEdss7BU9LkU92cxGax/O6UHrJVEqMJ5mQ8d7KCXFG/LYkeV/Z3soK0ZVlZF7msv9O/h5wllhMnmmM9Fvs9ZEuTliTQW/6dBGkPW0iCtIm3kARpE6cMWec1aEgiOJ+BIGmqtnk2kARpExsZCNLGqEBd49UMBEnz582zluoCByQK0hek1og3iZEcZSDIiw0akgj+x0CQZxo0JBEcYSBILbGgEmN5hoEghxo0JBEcYiDIgQYNSQQHGAjyRIOGJIInGAiyv0FDEsEpPSQJ0jz7GQjynIw7Y6J2Dur5NGQ/nexpxJQEPNTfyQry2wYMSQT/b/vkStoOzjXClfRp7GvEnG6zT08MXvn5/f56bUng59kfw4LcW6MhiWAh+2NYkIPS01ad7DG0Ym3UjOEP67ElgR8N/yEti26O3Muin8f367Co49xlSAzGh9b4hxRBriqW8AZThNY4LDLLJKrhdiPEIIVnaoLC4ZmexTersKjjfMMYH4ZJMRdX4U9SVLmyeFzkaTyt29Ukz8UX8TkRwDExGy/hOhN84PK4ku6VbvBlcIcJEUnJH9l6XkS1TkNXMR7Fe0QC5bHkdbZ+QSQsaUXi3GXGkmi7iWIwnff7X/FpEZsjkZ/PiLbLxbTLEXbj21Oe02W+ZYrMCBRLCjaHn0o5RCbxM3zSlCNKkQU7J0U3fKDAuV3hQdFGUw/vRVdQHRfJ6H9T8PyVzK/xEQXT582ypO0YPiT1lCwP4MOibQox6xrDY9gmzcUTbbDNDGJQzqLP4/iEyJfeVW4WbTBTlk/Kzxa9E3frzsTWURHneGHSgXkpe1n0Ai7FYyWX20YeE9mHShODatap/0V8t7kVJyoov2lO4DZxjbnfwPNSRYL7LJeKND8XVVlJjTwuPqFP/GpblKojOezFu0RqhsWK66qSRdwgJpcqE4Pqe0iWDeKiru/tLweO4Hv4rpqWjtcpSJ91IjHWV3F23ZXn5N/iHninmsOONCFInzPFY/J1MnFrG+Yh4Uq7YIQTWx00KUiWC0Vmhu3qzyi6T0wr3KcFqTraIkiWzfiACH1+Bd5UcvlP4vdiGdmDYtVYa2ijIMO8TkRNzW6bhbvrBjHfv6Z37DExVXpEeAY+JZYbZ7fF2iwvwHIQpFO8DNEfXjyrtjZsAAAAAElFTkSuQmCC';
-					//名称
-					document.getElementById('store_name').innerHTML = ret.data.store_name;
-					//介绍
-					document.getElementById('store_description').innerHTML = ret.data.store_description;
-					//广告图
-					if (ret.data.store_advertising) {
-						var newImgDiv = document.createElement('div');
-						newImgDiv.setAttribute('data-id', imageId);
-						newImgDiv.classList.add('picture_display_chear');
-						var html = '<img src="' + ret.data.store_advertising +
-							'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-						newImgDiv.innerHTML = html;
-						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-						document.getElementById('add_pic').style.display = "none";
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-					console.log(JSON.stringify('失败'));
-					console.log(JSON.stringify(errorThrown));
-				}
-			});
+					token: userInfo.token,
+				}, function(res){
+					logs(res.data);
+					vm.storeInfo = res.data;
+				}, 'json'
+			);
 		}
 
 		/**
@@ -351,51 +345,19 @@
 					}
 				});
 			});
-			//上传图片
-			document.getElementById('add_pic').addEventListener('tap', function() {
+			
+			// // //上传图片
+			mui('#pic-container').on('tap', '.add-pic', function() {
 				imageUpload(function(res) {
-					images[imageId] = res.url;
-					imageId++;
-					var newImgDiv = document.createElement('div');
-					newImgDiv.setAttribute('data-id', imageId);
-					newImgDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + res.url +
-						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-					newImgDiv.innerHTML = html;
-					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-					document.getElementById('add_pic').style.display = "none";
-					//获取到url传到后台作为店铺广告的链接
-					console.log(JSON.stringify(res));
-					var ajax_url = $ajaxUrl + 'store';
-					mui.ajax(ajax_url, {
-						data: {
-							action: 'updateStoreInfo',
-							token: utoken,
-							store_advertising: res.url,
-							op: 'store_advertising',
-						},
-						dataType: 'json',
-						type: 'post',
-						timeout: 10000,
-						success: function(ret) {
-							console.log(JSON.stringify('成功'));
-							console.log(JSON.stringify(ret));
-						},
-						error: function(xhr, type, errorThrown) {
-							console.log(JSON.stringify('失败'));
-							console.log(JSON.stringify(errorThrown));
-						}
-					});
+					vm.$set(vm.storeInfo, 'store_advertising', res.url);
 				});
 			})
+			
 			//删除图片
 			mui('#pic-container').on('tap', '.mui-close', function() {
-				var parentDiv = this.parentElement;
-				var imgId = parentDiv.dataset.id;
-				parentDiv.remove();
-				delete images[imgId];
-				document.getElementById('add_pic').style.display = "block";
+				vm.$set(vm.storeInfo, 'store_advertising', '');
 			})
+			
 			// 跳转修改店铺名称
 			mui(".mui-table-view").on("tap", "#store-name", function() {
 				fnOpenWin("change_store_name.html", "change_store_name", {
@@ -403,10 +365,10 @@
 						background: '#f7f7f7'
 					}
 				}, {
-					name_string: document.getElementById('store_name').innerHTML,
-					utoken: utoken,
+					name_string: vm.storeInfo.store_name,
 				}, 'slide-in-right');
 			})
+			
 			//跳转到店铺简介
 			mui(".mui-table-view").on("tap", "#store-desc", function() {
 				fnOpenWin("store_desc.html", "store_desc", {
@@ -414,11 +376,11 @@
 						background: '#f7f7f7'
 					}
 				}, {
-					desc_string: document.getElementById('store_description').innerHTML,
-					utoken: utoken,
+					desc_string: vm.storeInfo.store_description,
 				}, 'slide-in-right');
 			})
 		}
+		
 		// 拍照获取图片
 		function getImage() {
 			var camera = plus.camera.getCamera();
@@ -436,9 +398,9 @@
 				filename: "_doc/camera/"
 			})
 		}
+		
 		// 从相册中选择图片 
 		function galleryImage(cb) {
-			// 从相册中选择图片
 			plus.gallery.pick(function(e) {
 				cropperImg(e, 'store_setting');
 			}, function(e) {
@@ -452,15 +414,6 @@
 					plus.nativeUI.alert('最多只能选择1张图片');
 				}
 			});
-		}
-		//图片转base64
-		function canvasGen(image) {
-			var canvas = document.createElement('canvas');
-			canvas.width = image.width;
-			canvas.height = image.height;
-			var ctx = canvas.getContext('2d');
-			ctx.drawImage(image, 0, 0, image.width, image.height);
-			var data = canvas.toDataUrl("image/jpeg", 1);
 		}
 	</script>
 </html>

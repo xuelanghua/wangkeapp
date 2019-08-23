@@ -96,8 +96,13 @@
 			.function .mui-table-view-cell.mui-media:after {
 				background-color: #f2f2f2;
 			}
-			.mui-table-view-cell.mui-active{
+
+			.mui-table-view-cell.mui-active {
 				background-color: #F9F9F9;
+			}
+
+			[v-cloak] {
+				display: none;
 			}
 		</style>
 	</head>
@@ -106,13 +111,13 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">店铺管理</h1>
 		</header>
-		<div class="mui-content">
+		<div class="mui-content" v-cloak>
 			<div class="header" id="store_setting">
 				<a href="javascript:void(0);">
-					<img class="chart mui-pull-left" id="avatar" src="../image/user_default.png">
+					<img class="chart mui-pull-left" :src="storeInfo.store_avatar||'../image/app_logo.png'">
 					<div class="mui-media-body">
-						<div class="title" id="title">&nbsp;</div>
-						<p class="mui-ellipsis mui-table-view-chevron" id="description">&nbsp;</p>
+						<div class="title">{{storeInfo.store_name}}</div>
+						<p class="mui-ellipsis mui-table-view-chevron">{{storeInfo.store_description}}</p>
 					</div>
 					<div class="mui-icon mui-icon-arrowright mui-pull-right icon"></div>
 				</a>
@@ -125,7 +130,7 @@
 							<div class="mui-media-body">
 								<p class="mui-ellipsis tishi">购买商品位</p>
 							</div>
-							<span class="goods-position">当前拥有0个</span>
+							<span class="goods-position">当前拥有{{boothNumber}}个</span>
 						</span>
 					</li>
 					<li class="mui-table-view-cell mui-media address-manage mui-hidden">
@@ -157,25 +162,38 @@
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: true
-			})
 			//获取用户信息
 			var userInfo = getUserInfo();
-			var uid = userInfo.id;
-			var utoken = userInfo.token;
-			//页面加载完毕
-			mui.plusReady(function() {
-				window.addEventListener("buySuccess", function() {
-					userInfo = getUserInfo();
-					document.querySelector(".goods-position").innerText="当前拥有"+userInfo.goods_number+"个";
-				})
-				
-				eventinit();
-				getSelfStoreInfo();
-				document.querySelector(".goods-position").innerText="当前拥有"+userInfo.goods_number+"个";
-			});
+			//vm=ViewModel 
+			var vm = new Vue({
+				el: ".mui-content",
+				data: {
+					storeInfo: {},
+					boothNumber: 0
+				},
+				created: function() {
+					mui.init({
+						swipeBack: true
+					})
+				},
+				mounted: function() {
+					//页面加载完毕
+					mui.plusReady(function() {
+						window.addEventListener("buySuccess", function() {
+							getMemberInfo();
+						})
+						window.addEventListener("storeSetting", function() {
+							getSelfStoreInfo();
+						})
+						eventinit();
+						getMemberInfo();
+						getSelfStoreInfo();
+					});
+				}
+			})
+
 			/**
 			 * 绑定元素监听
 			 */
@@ -194,45 +212,35 @@
 				})
 			}
 
-
-
 			//获取当前用户的店铺信息
 			function getSelfStoreInfo() {
-				var ajax_url = $ajaxUrl + 'store';
-				mui.ajax(ajax_url, {
-					data: {
-						action: 'getSelfStoreInfo',
-						token: utoken,
-					},
-					dataType: 'json',
-					type: 'post',
-					timeout: 10000,
-					success: function(ret) {
-						if (ret.errno == 1) {
-							//提示后 跳转到店铺信息设置页面
-							message(ret.message);
-							fnOpenWin("store_setting.html", "store_setting", {
-								statusbar: {
-									background: '#f7f7f7'
-								}
-							}, '', 'slide-in-right');
-							plus.webview.close('shop_setting', 'none');
-						}
-						if (ret.errno == 0) {
-							console.log(ret.data.avatar);
-							document.getElementById('title').innerHTML = ret.data.store_name;
-							if (ret.data.store_avatar) {
-								document.getElementById('avatar').src = ret.data.store_avatar;
+				mui.get($ajaxUrl + 'store', {
+					action: 'getSelfStoreInfo',
+					token: userInfo.token,
+				}, function(res) {
+					if (res.errno == 0) {
+						vm.storeInfo = res.data;
+					} else {
+						message(ret.message);
+						fnOpenWin("store_setting.html", "store_setting", {
+							statusbar: {
+								background: '#f7f7f7'
 							}
-							document.getElementById('description').innerHTML = ret.data.store_description;
-							document.getElementById('title').innerHTML = ret.data.store_name;
-						}
-					},
-					error: function(xhr, type, errorThrown) {
-						console.log(JSON.stringify('失败'));
-						console.log(JSON.stringify(errorThrown));
+						}, '', 'slide-in-right');
+						plus.webview.close('shop_setting', 'none');
 					}
-				});
+				}, 'json');
+			}
+			
+			//获取用户信息
+			function getMemberInfo() {
+				mui.get($ajaxUrl + 'member', {
+					action: 'detail',
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					vm.boothNumber = res.data.goods_number;
+				}, 'json');
 			}
 		</script>
 	</body>
