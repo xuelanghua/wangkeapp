@@ -459,22 +459,28 @@
 					var total = parseInt(res.data) + parseInt(app.number);
 					if (total > 0) {
 						app.numbers = total;
-						setBadge(total);
-						mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
-							number: res.data
-						});
-						mui.fire(plus.webview.getWebviewById('friend'), 'friendApplyNumber', {
-							number: res.data
-						});
+						if ($noticeNumber != total) {
+							$noticeNumber = total;
+							setBadge(total);
+							mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
+								number: res.data
+							});
+							mui.fire(plus.webview.getWebviewById('friend'), 'friendApplyNumber', {
+								number: res.data
+							});
+						}
 					} else {
-						mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
-							number: 0
-						});
-						mui.fire(plus.webview.getWebviewById('friend'), 'friendApplyNumber', {
-							number: 0
-						});
 						app.numbers = 0;
-						clearBadge();
+						if ($noticeNumber != 0) {
+							$noticeNumber = 0
+							clearBadge();
+							mui.fire(plus.webview.getWebviewById('chat'), 'friendApplyNumber', {
+								number: 0
+							});
+							mui.fire(plus.webview.getWebviewById('friend'), 'friendApplyNumber', {
+								number: 0
+							});
+						}
 					}
 				}, 'json')
 			}
