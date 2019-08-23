@@ -112,7 +112,8 @@
 					images: [],
 					issue_desc: '',
 					video_src: '',
-					is_video: 0
+					is_video: 0,
+					submitStatus: true
 				},
 				created: function() {
 					// 初始化字体大小
@@ -173,6 +174,9 @@
 
 					// 发布
 					mui(".mui-bar").on("tap", ".issue-dynamics", function(e) {
+						if (!vm.submitStatus) {
+							return;
+						}
 						e.preventDefault();
 						if (!app.issue_desc) {
 							message("内容不能为空！");
@@ -182,6 +186,7 @@
 							message("动态长度不能大于1000个字符");
 							return;
 						}
+						vm.submitStatus = false;
 						mui.post($ajaxUrl + 'timeline&action=add', {
 							token: userInfo.token,
 							content: app.issue_desc,
@@ -201,6 +206,7 @@
 							} else {
 								message("发布失败，请稍后重试。");
 							}
+							vm.submitStatus = true;
 						}, 'json')
 					})
 				}
