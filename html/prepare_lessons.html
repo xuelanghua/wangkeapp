@@ -605,8 +605,7 @@
 							<div class="mui-slider-handle">
 								<div class="remark-info">
 									<div v-if="h.content" class="video-container" @tap="videoPlayer(h.content)">
-										<!-- <video width="100%" height="200px" controls="controls" :src="h.content" :poster="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"></video> -->
-										<img class="video-cover" src="https://cdn.wangkeapp.cn/videos/6/2019/08/Wr40Ky45g90zo3Lo7oy8gTf9T553i3.mp4?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast">
+										<img class="video-cover" :src="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
 										<img class="player-btn" src="../image/icon/video-player.png">
 									</div>
 									<img v-else class="choice-item" @tap="choiceVideo(i)" src="../image/icon/prepare-lessons05.png">
@@ -1303,6 +1302,7 @@
 					mui.fire(plus.webview.getWebviewById('live_streaming'), 'sendMessage', {
 						chatData: chatData
 					});
+					message("发送成功！");
 				}
 			}
 		</script>

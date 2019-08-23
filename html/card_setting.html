@@ -524,6 +524,28 @@
 			.video-container {
 				display: none;
 			}
+			.video-cover {
+				width: 60%;
+				height: 120px;
+				overflow: hidden;
+				position: relative;
+			}
+			
+			.video-cover .player-btn {
+				width: 60px;
+				height: auto;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+			
+			.video-cover img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
 		</style>
 	</head>
 
@@ -703,7 +725,11 @@
 					<span class="mui-navigate-right" id="again-updata">请选择</span>
 				</div>
 				<div class="video-container">
-					<video id="video" width="100%" height="200" src="" poster="" controls="controls" preload="auto"></video>
+					<!-- <video id="video" width="100%" height="200" src="" poster="" controls="controls" preload="auto"></video> -->
+					<div class="video-cover">
+						<img id="video_cover">
+						<img class="player-btn" src="../image/icon/video-player.png">
+					</div>
 				</div>
 				<input type="hidden" name="my_video" value="">
 			</div>
@@ -736,6 +762,7 @@
 				release: true //默认为false，不监听
 			}
 		})
+		var video_path='';
 		var cardType = 'cardType1';
 		var voiceTime = 0;
 		var timer = null;
@@ -921,10 +948,11 @@
 									plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
 								} else {
 									logs(res);
+									video_path=res.url;
 									document.querySelector('.video-container').style.display = 'block';
 									document.querySelector('input[name=my_video]').value = res.filename;
-									document.querySelector('.video-container video').src = res.url;
-									document.querySelector('.video-container video').setAttribute('poster', res.url + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast');
+									document.getElementById("video_cover").src = res.url+ '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast';
+									// document.querySelector('.video-container video').setAttribute('poster', res.url + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast');
 									document.getElementById("again-updata").innerText = "重新选择";
 									showload(1);
 								}
@@ -1077,8 +1105,10 @@
 
 			if (data.my_video.length != 0) {
 				document.querySelector('.video-container').style.display = 'block';
-				document.querySelector('.video-container video').src = data.my_video;
-				document.querySelector('.video-container video').setAttribute('poster', data.my_video + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast');
+				video_path=data.my_video;
+				// document.querySelector('.video-container video').src = data.my_video;
+				document.getElementById("video_cover").src = data.my_video+ '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast';
+				// document.querySelector('.video-container video').setAttribute('poster', data.my_video + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast');
 				document.querySelector('input[name=my_video]').value = data.my_video;
 				document.getElementById("again-updata").innerText = "重新选择";
 			}
@@ -1262,5 +1292,10 @@
 			ctx.drawImage(image, 0, 0, image.width, image.height);
 			var data = canvas.toDataUrl("image/jpeg", 1);
 		}
+		mui('.mui-content').on('tap',".video-container",function(){
+			openPage('player_model.html', 'player_model', '#000000', {
+				url: video_path
+			}, 'zoom-fade-out');
+		})
 	</script>
 </html>
