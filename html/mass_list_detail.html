@@ -7,7 +7,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
-
 			.block-list {
 				padding: 20px 15px;
 				margin-bottom: 8px;
@@ -45,9 +44,11 @@
 				margin: 10px 0;
 				color: #2289FF;
 			}
-			.block-list .send-loser{
+
+			.block-list .send-loser {
 				color: #ff0000;
 			}
+
 			.mass-status {
 				position: relative;
 				margin: 0 10px;
@@ -291,6 +292,7 @@
 				color: #333333;
 				margin-right: -10px;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -344,7 +346,8 @@
 				data: {
 					msDetail: {},
 					tags: [],
-					to_names: ''
+					to_names: '',
+					fail_names: []
 				},
 				methods: {},
 				mounted: function() {
@@ -397,9 +400,12 @@
 					message_id: mssId
 				}, function(res) {
 					logs(res);
+					var data = res.data;
 					if (res.errno == 0) {
 						app.msDetail = res.data;
-						app.to_names = res.data.to_names.replace(/,/g, "、");
+						// app.to_names = data.to_names.replace(/,/g, "、");
+						app.to_names = data.to_names;
+						app.fail_names = data.fail_names;
 						app.tags = res.data.label_ids.split(",");
 						mui.previewImage();
 					} else {}
