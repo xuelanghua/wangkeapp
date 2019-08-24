@@ -321,15 +321,15 @@
 				<span class="tags" v-for="t in tags">{{t}}</span>
 			</div>
 			<div class="block-list">
-				<p class="desc-footer">发送成功：{{msDetail.fail}}</p>
-				<p class="slecet-person">
-					{{to_names}}
+				<p class="desc-footer">发送成功：{{msDetail.success}}</p>
+				<p class="slecet-person" v-if="msDetail.success>0">
+					{{success_names}}
 				</p>
 			</div>
 			<div class="block-list">
-				<p class="desc-footer send-loser">发送失败：{{msDetail.total}}</p>
-				<p class="slecet-person">
-					{{to_names}}
+				<p class="desc-footer send-loser">发送失败：{{msDetail.fail}}</p>
+				<p class="slecet-person" v-if="msDetail.fail>0">
+					{{fail_names}}
 				</p>
 			</div>
 		</div>
@@ -346,8 +346,8 @@
 				data: {
 					msDetail: {},
 					tags: [],
-					to_names: '',
-					fail_names: []
+					success_names: '',
+					fail_names: ''
 				},
 				methods: {},
 				mounted: function() {
@@ -403,9 +403,8 @@
 					var data = res.data;
 					if (res.errno == 0) {
 						app.msDetail = res.data;
-						// app.to_names = data.to_names.replace(/,/g, "、");
-						app.to_names = data.to_names;
-						app.fail_names = data.fail_names;
+						app.success_names = data.success_names.join('，');
+						app.fail_names = data.fail_names.join(',');
 						app.tags = res.data.label_ids.split(",");
 						mui.previewImage();
 					} else {}
