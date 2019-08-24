@@ -77,13 +77,26 @@
 				height: 150px;
 				object-fit: cover;
 			}
-			.void-mass-tips{
+
+			.void-mass-tips {
 				padding: 20% 0 80%;
 				font-size: 18px;
 				text-align: center;
 				color: #DDDDDD;
 				background-color: #FFFFFF;
 			}
+
+			.send-ing {
+				color: #2289FF;
+			}
+
+			h5 {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.send-ing img {}
 		</style>
 	</head>
 
@@ -95,16 +108,21 @@
 		<div id="mui-content" class="mui-content setting-container" v-cloak>
 			<ul v-if="lists" class="mui-table-view">
 				<li class="mui-table-view-cell" v-for="(d,i) in lists" :key="i" :data-title="d.create_time" :data-mass_id="d.id">
-					<h5>{{d.create_time}}</h5>
+					<h5>
+						{{d.create_time}}
+						<!-- <span v-if="d.status==1">发送成功</span> -->
+						<!-- <span  v-else class="send-ing">发送中<img src="../image/icon/ellipse-1.5s-200px.svg"></span> -->
+						<span class="send-ing">发送中<img src="../image/icon/ellipse-1.5s-200px.svg"></span>
+					</h5>
 					<p v-if="d.message_type=='text'" class="mui-ellipsis-2 mass-desc">
 						{{d.content}}
 					</p>
 					<img class="img-message" v-else :src="d.content">
-					<p class="desc-footer">群发人数：{{d.total}}<span class="mass-status">发送失败：{{d.fail}}</span></p>
+					<p class="desc-footer">发送成功：{{d.success}}<span class="mass-status">发送失败：{{d.fail}}</span></p>
 				</li>
 			</ul>
 			<div v-if="iSvoid" class="void-mass-tips">
-			<!-- <div class="void-mass-tips"> -->
+				<!-- <div class="void-mass-tips"> -->
 				暂无群发记录~
 			</div>
 		</div>
@@ -118,7 +136,7 @@
 				data: {
 					names: '',
 					lists: [],
-					iSvoid:false
+					iSvoid: false
 				},
 				methods: {
 
