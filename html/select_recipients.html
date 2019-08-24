@@ -41,6 +41,7 @@
 			.mui-table-view-cell {
 				display: flex;
 				align-items: center;
+				padding: 20px 15px;
 			}
 
 			.mui-table-view-cell img {
@@ -51,14 +52,22 @@
 				overflow: hidden;
 			}
 
+			.mui-table-view-cell.mui-active {
+				background-color: #F9F9F9;
+			}
+
 			.mui-table-view-cell.mui-checkbox input[type=checkbox] {
 				position: relative;
 				top: 0;
 				left: 0;
 			}
-			.mui-table-view-cell:after,.mui-table-view-cell:before{
-				
+
+			.mui-table-view-cell:after,
+			.mui-table-view-cell:before {
+				left: 15px;
+				background-color: #DDDDDD;
 			}
+
 			.mui-table-view-cell.mui-checkbox.mui-left {
 				padding-left: 0.2rem;
 			}
@@ -134,6 +143,7 @@
 				align-items: center;
 				justify-content: center;
 				font-size: 15px;
+				z-index: 99;
 			}
 
 			.footer-btn .next-disabled {
@@ -195,16 +205,20 @@
 		</header>
 
 		<div class="mui-content setting-container" v-cloak>
-			<ul v-if="!voidData" class="mui-table-view">
-				<template v-for="(vel,key,i) in lists" :key="i">
-					<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-						<input class="checkeds" type="checkbox" :data-names="items.nickName" :value="items.id" :data-avatar="items.avatarUrl"
-						 :disabled="items.join_status==1" />
-						<img :src="items.avatarUrl" alt=" ">
-						<span>{{items.nickName}}</span>
-					</li>
-				</template>
-			</ul>
+			<div v-if="!voidData" class="mui-scroll-wrapper" style="padding: 44px 0 44px;">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<template v-for="(vel,key,i) in lists" :key="i">
+							<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+								<input class="checkeds" type="checkbox" :data-names="items.nickName" :value="items.id" :data-avatar="items.avatarUrl"
+								 :disabled="items.join_status==1" />
+								<img :src="items.avatarUrl" alt=" ">
+								<span>{{items.nickName}}</span>
+							</li>
+						</template>
+					</ul>
+				</div>
+			</div>
 			<div class="mui-text-center" v-else style="padding-top: 60px;color: #999999;">
 				没有数据
 			</div>
@@ -221,20 +235,20 @@
 	<script src="../js/vue.min.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			pullRefresh: {
-				container: ".mui-indexed-list",
-				up: {
-					height: 50,
-					auto: false,
-					contentrefresh: "正在加载...",
-					contentnomore: '没有更多数据了',
-					callback: function() {
-						// skip += 1;
-						// refresh = 'up';
-						// getFansList();
-					}
-				}
-			}
+			// pullRefresh: {
+			// 	container: ".mui-content",
+			// 	up: {
+			// 		height: 50,
+			// 		auto: false,
+			// 		contentrefresh: "正在加载...",
+			// 		contentnomore: '没有更多数据了',
+			// 		callback: function() {
+			// 			// skip += 1;
+			// 			// refresh = 'up';
+			// 			// getFansList();
+			// 		}
+			// 	}
+			// }
 		});
 		var userInfo = getUserInfo();
 		var tid = '';
@@ -264,6 +278,16 @@
 				maxMember: 200
 			},
 			mounted: function() {
+				// 滚动组件初始化
+				mui('.mui-scroll-wrapper').scroll({
+					scrollY: true,
+					scrollX: false,
+					startX: 0,
+					startY: 0,
+					indicators: false,
+					deceleration: 0.0006,
+					bounce: true
+				});
 				var checkedValues = [];
 				mui.plusReady(function() {
 					var header = document.querySelector('header.mui-bar');
@@ -302,7 +326,7 @@
 					app.tagsname = self.names;
 					// 会员组id 
 					getUserList();
-					mui('.mui-indexed-list-inner').on('change', 'input', function() {
+					mui('.mui-content').on('change', 'input', function() {
 						var index = app.uids.indexOf(this.value);
 						var idx = app.userName.indexOf(this.dataset.names);
 						// 添加选择的id
