@@ -299,7 +299,8 @@
 				// 没有数据
 				voidData:false,
 				nextStatus: false,
-				preStatus: false
+				preStatus: false,
+				maxMember: 200
 			},
 			mounted: function() {
 				var checkedValues = [];
@@ -352,11 +353,11 @@
 						if (index > -1) {
 							app.uids.splice(index, 1);
 						} else {
-							if(app.uids.length <= 100){
+							if(app.uids.length <= app.maxMember){
 								app.uids.push(this.value);
 							}else{
 								this.checked = false;
-								message("群发人数不能超过100人");
+								message("群发人数不能超过" + app.maxMember + "人");
 								return;
 							}
 						}
@@ -365,10 +366,10 @@
 						if (idx > -1) {
 							app.userName.splice(index, 1);
 						} else {
-							if(app.uids.length <= 100){
+							if(app.uids.length <= app.maxMember){
 								app.userName.push(this.dataset.names);
 							} else {
-								message("群发人数不能超过100人");
+								message("群发人数不能超过" + app.maxMember + "人");
 							}
 						}
 						count = app.uids.length;
@@ -408,8 +409,8 @@
 						} else {
 							app.tags.push(app.tagsname);
 						}
-						if (count > 100) {
-							message("群发人数不能超过100人");
+						if (count > app.maxMember) {
+							message("群发人数不能超过" + app.maxMember + "人");
 							return;
 						}
 						if (count > 0) {
@@ -429,8 +430,8 @@
 						if (!allselect) {
 							// app.uids = [];
 							// app.userName = [];
-							if (app.uids.length >= 100) {
-								message("群发人数不能超过100人");
+							if (app.uids.length >= app.maxMember) {
+								message("群发人数不能超过" + app.maxMember + "人");
 								return;
 							}
 							mui("input[type='checkbox']").each(function() {
