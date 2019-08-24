@@ -96,7 +96,20 @@
 				justify-content: space-between;
 			}
 
-			.send-ing img {}
+			.send-ing {
+				display: inline-flex;
+				align-items: center;
+				width: auto;
+				height: 20px;
+				overflow: hidden;
+				margin-right: -15px;
+			}
+			.send-ing img {
+				width: 40px;
+				height: 40px;
+				margin-left: -5px;
+				margin-top: -3px;
+			}
 		</style>
 	</head>
 
@@ -110,9 +123,8 @@
 				<li class="mui-table-view-cell" v-for="(d,i) in lists" :key="i" :data-title="d.create_time" :data-mass_id="d.id">
 					<h5>
 						{{d.create_time}}
-						<!-- <span v-if="d.status==1">发送成功</span> -->
-						<!-- <span  v-else class="send-ing">发送中<img src="../image/icon/ellipse-1.5s-200px.svg"></span> -->
-						<span class="send-ing">发送中<img src="../image/icon/ellipse-1.5s-200px.svg"></span>
+						<span v-if="d.status==1">发送成功</span>
+						<span  v-else class="send-ing">发送中<img src="../image/icon/ellipse-1.5s-200px.svg"></span>
 					</h5>
 					<p v-if="d.message_type=='text'" class="mui-ellipsis-2 mass-desc">
 						{{d.content}}
