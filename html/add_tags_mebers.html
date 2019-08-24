@@ -149,12 +149,17 @@
 			}
 
 			.page-number {
+				position: fixed;
+				bottom: -1px;
+				left: 0;
+				width:100%;
 				background-color: #EEEEEE;
 				padding: 0 20%;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				margin-bottom: 1px;
+				z-index: 9;
 			}
 
 			.current-page {
@@ -166,6 +171,22 @@
 				padding: 0.2rem;
 				/* margin-left: 0.5rem; */
 				color: #2289FF;
+			}
+			
+			.empty-container {
+				width: 100%;
+				padding-top: 30%;
+				display: block;
+			}
+			
+			.empty-container img {
+				display: block;
+				width: 45%;
+				margin: 0 auto;
+			}
+			
+			.empty-container p {
+				text-align: center;
 			}
 		</style>
 		<script>
@@ -225,7 +246,7 @@
 					<a>Z</a>
 				</div>
 				<div class="mui-indexed-list-alert"></div>
-				<div class="mui-indexed-list-inner">
+				<div class="mui-indexed-list-inner" style="padding-bottom: 100px;">
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
 						<template v-for="(vel,k,i) in lists" :key="i">
@@ -238,11 +259,15 @@
 							</li>
 						</template>
 					</ul>
-					<div class="page-number">
-						<!-- <span class="current-page">当前页{{skip}}</span> -->
-						<span class="nex-page">下一页</span>
+					<div v-if="voidData" class="empty-container">
+						<img src="../image/icon/void-data.png">
+						<p>没有数据~</p>
 					</div>
 				</div>
+			</div>
+			<div class="page-number">
+				<!-- <span class="current-page">当前页{{skip}}</span> -->
+				<span class="nex-page" v-if="isNext">下一页</span>
 			</div>
 		</div>
 	</body>
@@ -255,6 +280,7 @@
 			tgid = '',
 			refresh = '',
 			skip = 0,
+			limit = 200,
 			types = 'new_customer';
 		// 之前的
 		// 选中的全部
@@ -263,13 +289,14 @@
 		var checkedCrm = {};
 		var checkedFriend = {};
 		var app = new Vue({
-			el: "#list",
+			el: ".mui-content",
 			data: {
 				lists: {},
 				uids: [],
 				yuids: [],
 				skip: 0,
 				isNext: true,
+				voidData: false
 			},
 			mounted: function() {
 				var viewport = document.documentElement.clientWidth;
@@ -370,13 +397,15 @@
 							}
 						}
 					});
+					
 					// 切换类型
 					mui('.mui-content').on('tap', '.mui-control-item', function() {
 						if (types == this.dataset.types) {
 							return;
 						}
 						app.skip = 1;
-						app.isNext = true;
+						app.isNext = true
+						app.voidData = false;
 						types = this.dataset.types;
 						// var list = document.getElementById('list');
 						// var signs = list.querySelectorAll('.checkeds');
@@ -430,7 +459,7 @@
 							type: types,
 							exist_uids: getstr,
 							skip: app.skip,
-							limit: 200
+							limit: limit
 						}, function(res) {
 							console.log(JSON.stringify(res));
 							if (res.errno == 0) {
@@ -448,12 +477,16 @@
 								}, 1000);
 								showload(true, 1000);
 								app.skip += 1;
+								app.isNext = true;
+								app.voidData = false;
 							} else {
 								showload(true, 1000);
 								if (app.skip != 1) {
-									app.isNext = false;
-									plus.nativeUI.alert("没有下一页啦");
+									message("没有下一页啦");
+								} else {
+									app.voidData = true;
 								}
+								app.isNext = false;
 							}
 						}, 'json');
 					}
@@ -462,7 +495,7 @@
 						if (app.isNext) {
 							getUserList();
 						} else {
-							plus.nativeUI.alert("没有下一页啦");
+							message("没有下一页啦");
 						}
 					})
 				})
