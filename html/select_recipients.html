@@ -56,7 +56,9 @@
 				top: 0;
 				left: 0;
 			}
-
+			.mui-table-view-cell:after,.mui-table-view-cell:before{
+				
+			}
 			.mui-table-view-cell.mui-checkbox.mui-left {
 				padding-left: 0.2rem;
 			}
@@ -188,13 +190,12 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">选择收件人</h1>
-			<!-- <span class="mui-pull-right create-team-btn mui-disabled" id="next">确定</span> -->
+			<h1 class="mui-title"></h1>
 			<span class="mui-pull-right create-team-btn">全选</span>
 		</header>
 
 		<div class="mui-content setting-container" v-cloak>
-			<ul  class="mui-table-view">
+			<ul v-if="!voidData" class="mui-table-view">
 				<template v-for="(vel,key,i) in lists" :key="i">
 					<li :data-value="items.initial" :data-tags="items.pinyin" v-for="(items,index) in vel" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
 						<input class="checkeds" type="checkbox" :data-names="items.nickName" :value="items.id" :data-avatar="items.avatarUrl"
@@ -240,7 +241,7 @@
 		var count = 0;
 		var allselect = false;
 		var app = new Vue({
-			el: "#list",
+			el: ".mui-content",
 			data: {
 				lists: {},
 				uids: [],
