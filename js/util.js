@@ -1005,8 +1005,7 @@ function downWgt() {
 // 更新应用资源  
 function installWgt(path) {
 	// showload(0, 0, "文件安装中...", "rgba(0,0,0,0.5)");
-	plus.runtime.install(path, {}, function() {
-		// plus.nativeUI.closeWaiting();
+	plus.runtime.install(path, {force: true}, function() {
 		showload(1, 1000);
 		console.log("安装文件成功！");
 		plus.nativeUI.alert("应用资源更新成功！", function() {

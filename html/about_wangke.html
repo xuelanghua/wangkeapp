@@ -132,9 +132,9 @@
 
 			// 检查更新
 			mui(".mui-content").on("tap", "#check-updates", function() {
-				// var currentVersion = plus.runtime.version;
 				var newVersion = systemSetting.app_version;
-				if (currentVersion != newVersion) {
+				
+				if (currentVersion != newVersion && systemSetting.prompt_update == 1) {
 					plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?', function(e) {
 						if (e.index == 0) {
 							downWgt();

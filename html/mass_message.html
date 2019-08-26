@@ -383,15 +383,15 @@
 						// logs(res);
 						if (res.errno == 0) {
 							showload(1);
-							message(res.message);
+							
 							app.uids = [];
 							app.message='';
 							messageContent = ''; 
 							app.tags = [];
 							app.person = [];
-							setTimeout(function() {
+							plus.nativeUI.alert(res.message, function() {
 								openPage('mass_list.html', 'mass_list', '#f7f7f7');
-							}, 1000);
+							});
 						} else {
 							showload(1);
 							message(res.message);
