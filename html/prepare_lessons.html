@@ -465,7 +465,15 @@
 				-webkit-transform: translate(-50%, -50%);
 				transform: translate(-50%, -50%);
 			}
-
+			.mui-table-view-cell .edit-border{
+				border: 1px dashed #2289FF;
+			}
+			.mui-table-view-cell .grayness{
+				background-color: #eeeeee;
+			}
+			.mui-table-view-cell.grayness{
+				box-shadow: 0 0 10px 0 rgba(0,0,0,.2);
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -512,7 +520,7 @@
 											<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
 											<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
 										</div>
-										<div class="mui-slider-handle">
+										<div class="mui-slider-handle" :class="h.content==''?'edit-border':''" >
 											<div class="remark-info">
 												<p class="text-desc">{{h.content}}</p>
 												<div class="send-msg-btn" @tap="sendRemake(h,i)">
@@ -525,7 +533,7 @@
 														<img src="../image/icon/prepare-lessons02.png">
 													</template>
 												</div>
-											</div>
+											</div> 
 											<div class="remake-section">
 												<img src="../image/icon/prepare-lessons04.png">
 												<textarea placeholder="添加备注" v-model="remarkList[i].remark" class="remake-area" :id="'textarea_'+h.id" rows="2"
@@ -541,7 +549,7 @@
 											<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
 											<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
 										</div>
-										<div class="mui-slider-handle">
+										<div class="mui-slider-handle" :class="h.content==''?'edit-border':''" >
 											<div class="remark-info">
 												<div class="img-cont" v-if="h.content">
 													<img :src="h.content" @tap="previewImage(h.content)">
@@ -573,7 +581,7 @@
 											<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id,h.type)">修改</span>
 											<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
 										</div>
-										<div class="mui-slider-handle">
+										<div class="mui-slider-handle" :class="h.content==''?'edit-border':''" >
 											<div class="remark-info">
 												<div v-if="h.content==''" class="start-record" :data-idx="i" :id="'start_record'+h.id">
 													开始录音&nbsp;&nbsp;按住说话
@@ -609,7 +617,7 @@
 											<span class="mui-btn mui-btn-primary modifier-btn" @tap="editMaster(i,h.id)">修改</span>
 											<span class="mui-btn mui-btn-primary delete-btn" @tap="deleteMaster(h.id,i)">删除</span>
 										</div>
-										<div class="mui-slider-handle">
+										<div class="mui-slider-handle" :class="h.content==''?'edit-border':''" >
 											<div class="remark-info">
 												<div v-if="h.content" class="video-container" @tap="videoPlayer(h.content)">
 													<img class="video-cover" :src="h.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
@@ -640,7 +648,6 @@
 					</div>
 				</div>
 			</div>
-
 			<!-- v-if="voidRemarkList" -->
 			<div v-if="voidRemarkList" style="padding: 20%;text-align: center;color:#999999;font-size:18px;">
 				<img src="../image/icon/void-remark-info.png" style="width:100%;">
@@ -1092,7 +1099,7 @@
 					token: userInfo.token,
 					course_id: app.course_id
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						app.remarkList = res.data;
 					} else {
@@ -1178,6 +1185,7 @@
 					app.remarkList.splice(idx, 1);
 					app.remarkList.splice(idx + 1, 0, _this);
 				}
+				
 			}
 
 			// 修改

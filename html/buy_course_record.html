@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.sum-money {
+				height: 60px;
+				background-color: #f5f6f8;
+				display: flex;
+				align-items: center;
+				color: #ea2420;
+				font-size: 16px;
+				padding-left: 0.2rem;
+			}
+
+			.sum-money span {
+				color: #333333;
+				margin-right: 18px;
+			}
+
+			.mui-table-view {
+				/* padding-bottom: 1rem; */
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell,
+			.mui-table-view {
+				background-color: #ffffff;
+			}
+
+			.mui-table-view-cell {
+				display: flex;
+				padding: 0.2rem 0.3rem 0.2rem 0.2rem;
+				align-items: center;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+				left: 1.1rem;
+				right: 0;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #F9F9F9;
+			}
+
+			.mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.user-head-image {
+				width: 0.75rem;
+				height: 0.75rem;
+				overflow: hidden;
+				border-radius: 50%;
+				margin-right: 0.25rem;
+				flex-shrink: 0;
+			}
+
+			.user-head-image img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.user-name,
+			.right-info-inside {
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.user-info-cont {
+				flex-grow: 1;
+			}
+
+			.right-info {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 0.1rem;
+			}
+
+			.right-info-inside img {
+				width: 0.24rem;
+				height: 0.24rem;
+				margin-left: 0.1rem;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">购买记录</h1>
+			</header>
+			<div class="mui-content">
+				<div class="sum-money">
+					<span>课程总收入</span>
+					&yen;258.26
+				</div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(l,i) in 16" :key="i">
+						<div class="user-head-image">
+							<img src="../image/5E0eH.png">
+						</div>
+						<div class="user-info-cont">
+							<div class="right-info">
+								<span class="user-name">房东先生</span>
+								<div class="right-info-inside">
+									<span class="money">+52.26</span>
+									<img v-if="i%2 ==0" src="../image/WeChat.png" alt="">
+									<img v-else src="../image/red-packet-pay-icon.png" alt="">
+								</div>
+							</div>
+							<p>2018-11-20 18:20</p>
+						</div>
+					</li>
+					<!-- <div>课程id:{{course_id}}</div>
+					token:{{token}} -->
+				</ul>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					course_id: '',
+					token: userInfo.token
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.course_id = self.courseId
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>

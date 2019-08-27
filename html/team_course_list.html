@@ -19,11 +19,12 @@
 			}
 
 			.team-class-container .mui-table-view-cell {
-				padding: 0 0.2rem;
-				height: 2.29rem;
+				padding: 0.2rem;
+				min-height: 2.29rem;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+				overflow: visible;
 			}
 
 			.team-class-container .mui-table-view-cell:after {
@@ -104,8 +105,8 @@
 			}
 
 			.more-option {
-				width: 0.77rem;
-				height: 0.32rem;
+				width: 0.5rem;
+				height: 0.28rem;
 				line-height: 1;
 				position: relative;
 			}
@@ -120,7 +121,7 @@
 
 			/* 更多 菜单 */
 			.hear-cont .menu-list {
-				width: 3.29rem;
+				width: auto;
 				height: 0.8rem;
 				position: absolute;
 				z-index: 999;
@@ -129,9 +130,9 @@
 				justify-content: flex-end;
 				overflow: visible;
 				padding: 0;
-				right: 0.8rem;
 				transition: all 0.2s ease-in-out;
 				-webkit-transition: all 0.2s ease-in-out;
+				right: 0.47rem;
 			}
 
 			.hear-cont .menu-list.active {
@@ -168,18 +169,19 @@
 
 			.menu-body .item {
 				height: 100%;
-				font-size: 0.26rem;
+				font-size: 0.24rem;
 				color: #FFFFFF;
 				display: flex;
 				align-items: center;
 				flex-grow: 1;
 				justify-content: center;
 				position: relative;
+				padding: 0 0.08rem;
 			}
 
 			.menu-body .item img {
-				width: 0.3rem;
-				height: 0.3rem;
+				width: 0.28rem;
+				height: 0.28rem;
 				margin-right: 0.1rem;
 			}
 
@@ -191,8 +193,8 @@
 				-webkit-transform: scaleX(0.5);
 				transform: scaleX(0.5);
 				background-color: #DDDDDD;
-				height: 80%;
-				top: 10%;
+				height: 60%;
+				top: 20%;
 				right: 0;
 			}
 
@@ -280,7 +282,10 @@
 				font-size: 0.28rem;
 				color: #333333;
 			}
-
+			.purchase-record{
+				font-size: 0.26rem;
+				color: #2289FF;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -313,13 +318,15 @@
 							<div class="streaming-status" @tap="streaming(c)">
 								<p>主讲人：{{c.teacher_name}}</p>
 							</div>
-							<div class="hear-cont" v-if="c.state==0">
-								<p @tap="streaming(c)">开播：{{c.start_time}}</p>
+							<div class="hear-cont" v-if="c.state==0||c.state==1">
+								<p v-if="c.state==0" @tap="streaming(c)">开播：{{c.start_time}}</p>
+								<div v-else class="loading-cont"><img src="../image/discover/loading.gif">培训中</div>
 								<div class="menu-list" :class="'menu-cont'+idx">
 									<div class="menu-body">
 										<!-- 箭头 -->
 										<div class="menu-arrow"></div>
-										<div class="item item1" @tap="editCourse(idx)"><img src="../image/icon/team-class-edit-icon.png">编辑</div>
+										<div class="item item1" v-if="c.price>0" @tap="record(c.id)"><img src="../image/icon/team-class-edit-icon.png">购买记录</div>
+										<div class="item item1" v-if="c.state!=1" @tap="editCourse(idx)"><img src="../image/icon/team-class-edit-icon.png">编辑</div>
 										<div class="item" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-w-icon.png">删除</div>
 									</div>
 								</div>
@@ -327,12 +334,9 @@
 									<span class="mui-icon mui-icon-more-filled"></span>
 								</div>
 							</div>
-							<div v-else-if="c.state==1" class="hear-cont">
-								<div class="loading-cont"><img src="../image/discover/loading.gif">培训中</div>
-								<div v-if="role==1" class="delete-course" @tap="delCourse(c.id)"><img src="../image/icon/delete-team-class-icon-1.png">删除</div>
-							</div>
 							<div v-else class="hear-cont">
 								<p>已结束：{{c.end_time}}</p>
+								<span  v-if="c.price>0&&role==1" class="purchase-record" @tap="record(idx)">购买记录</span>
 							</div>
 						</div>
 					</li>
@@ -390,6 +394,13 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
+					// 购买记录
+					record:function(_id){
+						mask.close();
+						openPage('buy_course_record.html','buy_course_record','#f7f7f7',{
+							courseId:_id
+						})
+					},
 					// 显示编辑菜单
 					showEdit: function(i) {
 						menuidx = i;
