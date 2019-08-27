@@ -118,6 +118,28 @@
 				height: 100%;
 				object-fit: cover;
 			}
+			.operation-container{
+				align-items: center;
+				position: fixed;
+				width: 100%;
+				height: 48px;
+				bottom: 0;
+				left: 0;
+				background-color: #FFFFFF;
+				box-shadow: 0 -0.1px 2px 0 rgba(0,0,0,0.1);
+				z-index: 99999;
+				display: none;
+			}
+			.operation-container div{
+				width: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.operation-container div:first-of-type{
+				border-right: 1px solid #DDDDDD;
+				color: #2289FF;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -290,6 +312,10 @@
 				</div>
 			</div>
 		</div>
+		<div class="operation-container">
+			<div class="send-msg">发送消息</div>
+			<div class="check-dynamic">查看动态</div>
+		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
@@ -335,7 +361,11 @@
 						fid = self.fid;
 						getFriendsInfo();
 						// 跳转到更多页面
-
+						if(fid!=userInfo.id){
+							document.querySelector(".operation-container").style.display="flex";
+						}else{
+							document.querySelector(".operation-container").style.display="none";
+						}
 						window.addEventListener('refreshFriendInfo', function(e) {
 							getFriendsInfo();
 						})
@@ -574,6 +604,37 @@
 			// 取消分享
 			mui(".mui-content").on("tap", "#cancel_btn", function() {
 				mask.close();
+			})
+			// 发消息
+			mui(".operation-container").on("tap", ".send-msg", function() {
+				openPage('dialog.html', 'dialog', '#f7f7f7', {
+					cid: fid,
+					chatName: muiCont.contName,
+					avatar: muiCont.friendData.avatar,
+					barStyle: 'dark'
+				});
+			})
+			// 看动态
+			mui(".operation-container").on("tap", ".check-dynamic", function() {
+				mui.openWindow({
+					url: "dynamic_space.html",
+					id: 'dynamic_space',
+					extras: {
+						user_id: fid,
+					},
+					waiting: {
+						autoShow: true, //自动显示等待框，默认为true
+						options: {
+							background: "rgba(0,0,0,0)",
+							loading: {
+								display: 'block',
+								height: '70px',
+								icon: "../image/jump.png",
+								interval: 25
+							}
+						}
+					}
+				})
 			})
 			// 确认分享
 			mui(".mui-content").on("tap", "#affirm_btn", function() {

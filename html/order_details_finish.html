@@ -362,7 +362,52 @@
 				transform: scaleY(0.5);
 				-webkit-transform: scaleY(0.5);
 			}
+/* 联系队长 */
+			.mui-table-view-cell.contact-captain {
+				display: flex;
+				align-items: center;
+				position: relative;
+				padding: 0;
+				padding-right: 22px;
+				font-size: 15px;
+				color: #333333;
+				margin-top: 10px;
+				padding-top: 20px;
+			}
 
+			.mui-table-view-cell.contact-captain:before {
+				content: '';
+				position: absolute;
+				display: block;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.mui-table-view-cell.contact-captain .mui-navigate-right {
+				color: #999999;
+			}
+
+			.mui-table-view-cell.contact-captain .mui-navigate-right:after {
+				right: 0;
+				font-size: 20px;
+				top: 71%;
+			}
+
+			.contact-left-cont {
+				display: flex;
+				align-items: center;
+			}
+
+			.contact-left-cont img {
+				width: 20px !important;
+				height: auto;
+				margin-right: 8px;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -491,6 +536,13 @@
 					<li>
 						<span>完成时间：{{detail.update_time}}</span>
 					</li>
+					<li class="mui-table-view-cell contact-captain" v-if="detail.team_order==1" @tap="contact(c.captain_uid,c.captain_name,c.captain_avatar)">
+						<div class="contact-left-cont">
+							<img src="../image/icon/contact-the-merchant.png" alt="">
+							<span>联系队长</span>
+						</div>
+						<span class="mui-navigate-right">{{c.captain_name}}</span>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -517,6 +569,7 @@
 					address: '',
 					goods_item: '',
 					endtimer: '',
+					c:{}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -602,6 +655,7 @@
 						app.address = data.address;
 						app.address_detail = data.address_detail;
 						app.goods_item = data.item;
+						app.c=data.item[0].team_info;
 					} else {}
 				}, 'json');
 			}
