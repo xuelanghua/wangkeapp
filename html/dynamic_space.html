@@ -388,10 +388,13 @@
 					mui.plusReady(function() {
 						var ws = plus.webview.currentWebview();
 						// 获取传参
+						var titleText = '';
 						user_id = ws.user_id;
 						if (user_id == userInfo.id) {
+							titleText = '我的动态';
 							app.is_self = true;
 						} else {
+							titleText = '好友动态';
 							app.is_self = false;
 						}
 						discoverInfo();
@@ -401,17 +404,19 @@
 								softinputMode: "adjustResize"
 							});
 						}
+						
 						// 设置渐变导航栏
 						ws.setStyle({
 							scrollIndicator: 'none',
 							"titleNView": {
 								backgroundColor: '#FFFFFF',
-								titleText: '',
+								titleText: titleText,
 								titleColor: '#000000',
 								type: 'transparent', //透明渐变样式
 								autoBackButton: true
 							}
 						})
+						
 						// 滚动的时候动态修改状态栏颜色
 						var conts = document.getElementById("dynamic-container");
 						window.addEventListener('scroll', function() {
