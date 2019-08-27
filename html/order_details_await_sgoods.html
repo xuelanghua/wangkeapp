@@ -433,6 +433,55 @@
 				height: 0.36rem;
 			}
 
+			/* 联系队长 */
+			.mui-table-view-cell.contact-captain {
+				display: flex;
+				align-items: center;
+				position: relative;
+				padding: 0;
+				padding-right: 22px;
+				font-size: 15px;
+				color: #333333;
+				margin-top: 10px;
+				padding-top: 20px;
+			}
+
+			.mui-table-view-cell.contact-captain:before {
+				content: '';
+				position: absolute;
+				display: block;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.mui-table-view-cell.contact-captain .mui-navigate-right {
+				color: #999999;
+			}
+
+			.mui-table-view-cell.contact-captain .mui-navigate-right:after {
+				right: 0;
+				font-size: 20px;
+				top: 71%;
+			}
+
+			.contact-left-cont {
+				display: flex;
+				align-items: center;
+			}
+
+			.contact-left-cont img {
+				width: 20px !important;
+				height: auto;
+				margin-right: 8px;
+				
+				
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -552,6 +601,13 @@
 					<li>
 						<span>付款时间：{{detail.pay_time}}</span>
 					</li>
+					<li class="mui-table-view-cell contact-captain" v-if="detail.team_order==1" @tap="contact(c.captain_uid,c.captain_name,c.captain_avatar)">
+						<div class="contact-left-cont">
+							<img src="../image/icon/contact-the-merchant.png" alt="">
+							<span>联系队长</span>
+						</div>
+						<span class="mui-navigate-right">{{c.captain_name}}</span>
+					</li>
 				</ul>
 			</div>
 			<!-- 发货窗口 -->
@@ -578,7 +634,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="deliver-goods-btn">
+			<div class="deliver-goods-btn" v-if="detail.team_order==0">
 				发货
 			</div>
 		</div>
@@ -607,7 +663,8 @@
 					order_id: '',
 					sales: '',
 					goods_item: [],
-					detail: {}
+					detail: {},
+					c:{}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -621,7 +678,7 @@
 				methods: {
 					// 联系买家
 					contact: function(cid, chatName, avatar) {
-						if(cid==userInfo.id){
+						if (cid == userInfo.id) {
 							message("不能和自己联系哟~");
 							return false;
 						}
@@ -682,25 +739,25 @@
 					address_detail: app.address_detail,
 				}, "zoom-fade-out")
 			})
-			
+
 			// window.addEventListener('getaddress', function(event) {
 			// 	// 接收地址更改
 			// 	app.recipients = event.detail.recipients
 			// 	app.phone = event.detail.phone
 			// 	app.address_detail = event.detail.address_detail
 			// });
-			
+
 			window.addEventListener('editAddressSuccess', function(event) {
 				// 更新订单信息
 				getDetailData();
 			});
-			
+
 			// 发货
 			mui(".mui-content").on('tap', '.deliver-goods-btn', function() {
 				mask.show();
 				document.querySelector(".deliver-goods-model").style.display = "block";
 			})
-			
+
 			// 确认发货
 			mui(".mui-content").on('tap', '.ensure-deliver-goods', function() {
 				if (app.express_id == '') {
@@ -731,7 +788,7 @@
 					}
 				}, 'json');
 			})
-			
+
 			// 为了不让弹出滚动穿透
 			document.querySelector(".deliver-goods-model").addEventListener("touchmove", mui.preventDefault);
 			// 选择物流公司
@@ -757,7 +814,7 @@
 					}
 				}, 'json');
 			})
-			
+
 			// 扫一扫
 			mui(".mui-content").on('tap', '.scan-btn', function() {
 				fnOpenWin('odd_scan.html', 'odd_scan', {
@@ -767,7 +824,7 @@
 				}, '', 'slide-in-right')
 				setStatusBar('#000000', 'light');
 			})
-			
+
 			// 监听扫码内容
 			window.addEventListener('doit', function(e) {
 				// 转数字
@@ -800,6 +857,7 @@
 						app.address = data.address;
 						app.address_detail = data.address_detail;
 						app.goods_item = data.item;
+						app.c=data.item[0].team_info;
 					} else {}
 				}, 'json');
 			}

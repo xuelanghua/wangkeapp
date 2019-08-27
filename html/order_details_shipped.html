@@ -350,7 +350,7 @@
 				font-size: 0.42rem;
 			}
 
-			.logistics-container:after {  
+			.logistics-container:after {
 				content: '';
 				position: absolute;
 				display: block;
@@ -361,6 +361,53 @@
 				background-color: #DDDDDD;
 				transform: scaleY(0.5);
 				-webkit-transform: scaleY(0.5);
+			}
+
+			/* 联系队长 */
+			.mui-table-view-cell.contact-captain {
+				display: flex;
+				align-items: center;
+				position: relative;
+				padding: 0;
+				padding-right: 22px;
+				font-size: 15px;
+				color: #333333;
+				margin-top: 10px;
+				padding-top: 20px;
+			}
+
+			.mui-table-view-cell.contact-captain:before {
+				content: '';
+				position: absolute;
+				display: block;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.mui-table-view-cell.contact-captain .mui-navigate-right {
+				color: #999999;
+			}
+
+			.mui-table-view-cell.contact-captain .mui-navigate-right:after {
+				right: 0;
+				font-size: 20px;
+				top: 71%;
+			}
+
+			.contact-left-cont {
+				display: flex;
+				align-items: center;
+			}
+
+			.contact-left-cont img {
+				width: 20px !important;
+				height: auto;
+				margin-right: 8px;
 			}
 
 			[v-cloak] {
@@ -496,6 +543,13 @@
 					<li>
 						<span>发货时间：{{detail.express_time}}</span>
 					</li>
+					<li class="mui-table-view-cell contact-captain" v-if="detail.team_order==1" @tap="contact(c.captain_uid,c.captain_name,c.captain_avatar)">
+						<div class="contact-left-cont">
+							<img src="../image/icon/contact-the-merchant.png" alt="">
+							<span>联系队长</span>
+						</div>
+						<span class="mui-navigate-right">{{c.captain_name}}</span>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -515,13 +569,14 @@
 					express_id: '',
 					express_name: '请选择',
 					express_num: '',
-					detail :'',
-					recipients :'',
-					phone :'',
-					address :'',
-					address_detail :'',
-					goods_item :'',
-					endtimer :'',
+					detail: '',
+					recipients: '',
+					phone: '',
+					address: '',
+					address_detail: '',
+					goods_item: '',
+					endtimer: '',
+					c:{}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -535,7 +590,7 @@
 				methods: {
 					// 联系买家
 					contact: function(cid, chatName, avatar) {
-						if(cid==userInfo.id){
+						if (cid == userInfo.id) {
 							message("不能和自己联系哟~");
 							return false;
 						}
@@ -587,12 +642,12 @@
 				}
 			})
 			// 打开快递详情
-			mui(".mui-content").on('tap','.logistics-container',function(){
+			mui(".mui-content").on('tap', '.logistics-container', function() {
 				// openPage('logistics.html','logistics.html','#f7f7f7',{
 				// 	orderId:"12346"
 				// },"zoom-fade-out");
-				openPage('logistics_detail.html','logistics_detail','#f7f7f7',{
-					detail:app.detail
+				openPage('logistics_detail.html', 'logistics_detail', '#f7f7f7', {
+					detail: app.detail
 				});
 			})
 			// 详情资料
@@ -610,6 +665,7 @@
 						app.address = data.address;
 						app.address_detail = data.address_detail;
 						app.goods_item = data.item;
+						app.c=data.item[0].team_info;
 					} else {}
 				}, 'json');
 			}
