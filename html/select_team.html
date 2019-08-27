@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			body {
+				background-color: transparent;
+				height: 100%;
+				width: 100%;
+			}
+
+			.mui-content {
+				padding: 44px 0 40px;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				box-sizing: border-box;
+			}
+
+			.team-list {
+				width: 100%;
+				height: 100%;
+				background-color: #FFFFFF;
+				border-bottom-left-radius: 10px;
+				border-bottom-right-radius: 10px;
+				overflow-y: scroll;
+				overflow-x: hidden;
+				padding: 0 10px;
+				box-shadow: 0 3px 3px 0 rgba(0, 0, 0, .2);
+			}
+
+			.team-list ul {
+				overflow-y: scroll;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell {
+				text-align: center;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+				left: 0;
+				right: 0;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #f9f9f9;
+			}
+
+			.mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.mui-table-view-cell.active {
+				background-color: #f9f9f9;
+				color: #2289FF;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<div class="mui-content">
+				<div class="team-list">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell" :class="t.is_default==1?'active':''" v-for="(t,i) in teamList" @tap="choiceThis(t,i)">
+							{{t.name}}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					teamList: []
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					choiceThis: function(t, idx) {
+						// logs(t);
+						mui.post($ajaxUrl + 'team&action=set_default_team', {
+							token: userInfo.token,
+							team_id: t.team_id
+						}, function(res) {
+							if (res.errno == 0) {
+								for (var i = 0; i < app.teamList.length; i++) {
+									app.teamList[i].is_default = 0;
+								}
+								app.teamList[idx].is_default = 1;
+								mui.fire(plus.webview.getWebviewById('home'), 'choiceName', {
+									names: t.name
+								});
+							} else {
+								message("切换失败，请稍后重试");
+							}
+						}, 'json');
+					}
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.teamList = self.team_list;
+						logs(app.teamList);
+					})
+					// mui('.mui-scroll-wrapper').scroll({
+					// 	scrollY: true,
+					// 	scrollX: false,
+					// 	startX: 0,
+					// 	startY: 0,
+					// 	indicators: false,
+					// 	deceleration: 0.0006,
+					// 	bounce: true
+					// });
+				}
+			})
+		</script>
+	</body>
+
+</html>

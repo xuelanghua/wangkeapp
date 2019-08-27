@@ -563,6 +563,8 @@
 				z-index: 12;
 				width: 100%;
 				display: none;
+				max-height: 200px;
+				overflow-y: scroll;
 			}
 
 			.team-list .mui-table-view-cell {
@@ -581,8 +583,8 @@
 			}
 
 			.mui-backdrop {
-				z-index: 90;
-				background-color: transparent;
+				z-index: 1045;
+				background-color: rgba(0, 0, 0, 0);
 			}
 
 			.Notice .swiper-container {
@@ -616,7 +618,11 @@
 						<span id="team_name">旺客</span>
 						<span class="mui-icon mui-icon-arrowup mui-icon-arrowdown"></span>
 						<div class="team-list">
+							<!-- <div class="mui-scroll-wrapper"> -->
+							<!-- <div class="mui-scroll"> -->
 							<ul class="mui-table-view" id="team-list"></ul>
+							<!-- </div> -->
+							<!-- </div> -->
 						</div>
 					</div>
 					<a href="#topPopover" class="add-btn" id="openPopover">
@@ -807,12 +813,14 @@
 	<script src="../js/swiper.min.js"></script>
 	<script src="../js/Zepto.min.js"></script>
 	<script>
-		var team_type = "";
-		var mask = mui.createMask(function() {
-			$(".mui-title .mui-icon").removeClass("mui-icon-arrowdown");
-			$(".team-list").slideUp();
-		});
-		var default_team_id = '';
+		var team_list = [],
+			teams = null,
+			team_type = "",
+			mask = mui.createMask(function() {
+				teams.hide("slide-out-top");
+				plus.navigator.setStatusBarStyle('dark');
+			}),
+			default_team_id = '';
 		mui.init({
 			swipeBack: false,
 			keyEventBind: {
@@ -843,7 +851,7 @@
 			if (plus.device.model === 'iPhoneX') {
 				logs("运行在iphoneX上");
 			}
-
+			plus.navigator.setStatusBarStyle('dark');
 			// var self = plus.webview.currentWebview();
 			// self.setStyle({
 			// 	bottom: 51
@@ -1322,17 +1330,8 @@
 				if (res.errno == 0) {
 					var data = res.data;
 					if (data.length > 1) {
-						var html = "";
-						for (var i in data) {
-							if (data[i].is_default == 1) {
-								document.getElementById("team_name").innerText = data[i].name;
-								default_team_id = data[i].team_id;
-								team_type = data[i].type;
-							}
-							html += '<li class="mui-table-view-cell" data-typer=' + data[i].type + ' data-tid=' + data[i].team_id + '>' +
-								data[i].name + '</li>';
-						}
-						document.getElementById("team-list").innerHTML = html;
+						team_list=data;
+						teamchange = true;
 					} else if (data.length == 1 && data != "") {
 						team_type = data[0].type;
 						document.getElementById("team_name").innerText = data[0].name;
@@ -1345,38 +1344,41 @@
 						teamchange = false;
 						default_team_id = 0;
 					}
-				} else {}
+				} else {
+					document.getElementById("team_name").innerText = "旺客"
+					mui(".mui-title .mui-icon")[0].style.display = "none";
+					teamchange = false;
+					default_team_id = 0;
+				}
 			}, 'json');
 		}
 		//切换团队
 		mui('.mui-bar').on('tap', '.mui-title', function() {
-			// alert(":asdf");
 			mui(".mui-bar")[0].classList.add("active");
 			if (teamchange) {
 				mask.show();
-				$(".mui-title .mui-icon").toggleClass("mui-icon-arrowdown");
-				$(".team-list").slideToggle();
-			}
-
-		})
-		// 切换团队名称
-		mui('.mui-bar').on('tap', '.mui-table-view-cell', function(event) {
-			mask.close();
-			mui(".mui-bar")[0].classList.remove("active");
-			default_team_id = this.dataset.tid;
-			team_type = this.dataset.typer;
-			var _self = this;
-			mui.post($ajaxUrl + 'team&action=set_default_team', {
-				token: userInfo.token,
-				team_id: default_team_id
-			}, function(res) {
-				if (res.errno == 0) {
-					$("#team_name").text(_self.innerText);
+				if (teams) {
+					teams.show('slide-in-top');
 				} else {
-					message("切换失败，请稍后重试");
+					teams = plus.webview.create('select_team.html', 'select_team', {
+						background: "transparent",
+						dock: 'top',
+						hardwareAccelerated: true,
+						height: '40%',
+						statusbar: {
+							background: '#FFFFFF',
+							color: '#000'
+						}
+					}, {
+						team_list:team_list
+					});
+					teams.show('slide-in-top');
 				}
-			}, 'json');
-			event.stopPropagation();
+			}
+		})
+		window.addEventListener('choiceName', function(e) {
+			$("#team_name").text(e.detail.names);
+			mask.close();
 		})
 	</script>
 </html>

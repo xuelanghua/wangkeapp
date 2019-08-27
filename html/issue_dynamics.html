@@ -51,7 +51,9 @@
 				-webkit-transform: translate(-50%, -50%);
 				transform: translate(-50%, -50%);
 			}
-
+			.issue-dynamics-container .picture_display .picture_display_chear{
+				overflow: visible;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -81,7 +83,7 @@
 			<div class="picture_display" v-if="video_src==''">
 				<div id="pic-container">
 					<div v-if="images" class="picture_display_chear" v-for="(img,i) in images" :key="i">
-						<img :src="img" data-preview-src="" data-preview-group="1" />
+						<img :src="img" data-preview-src="" @tap="previewImage(i)" />
 						<span class="mui-close" @tap="delImg(i)">
 							<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
 						</span>
@@ -101,7 +103,6 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/media.js"></script>
 		<script type="text/javascript" src="../js/vue.min.js"></script>
 		<script type="text/javascript">
@@ -211,6 +212,14 @@
 					})
 				}
 			})
+			function previewImage(idx) {
+				var urls = app.images;
+				plus.nativeUI.previewImage(urls, {
+					current: idx,
+					loop: true,
+					indicator: 'default',
+				});
+			}
 		</script>
 	</body>
 
