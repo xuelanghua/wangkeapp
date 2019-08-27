@@ -92,8 +92,6 @@
 				</div>
 			</div>
 			<div class="video-container" v-else @tap="videoPlayer(video_src)">
-				<!-- <video id="video" width="100%" height="200" controls="controls" :poster="video_src+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"
-				 :src="video_src"></video> -->
 				<img :src="video_src+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" >
 				<img class="player-btn" src="../image/icon/video-player.png">
 				<span class="mui-icon mui-icon-clear" @tap.stop="clearChoice"></span>
@@ -149,10 +147,11 @@
 							return true;
 						}
 					});
+					
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("dark");
 						//上传图片
-						document.getElementById('add_pic').addEventListener('tap', function() {
+						mui(".mui-content").on("tap", "#add_pic", function() {
 							chooseMedia('none', function(res) {
 								logs(res);
 								if (res.type == 'video') {

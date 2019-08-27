@@ -24,14 +24,22 @@
 				margin-left: 10px;
 				font-size: 36px;
 			}
+			
+			.save-video {
+				padding-right: 15px;
+				padding-top: 5px;
+				font-size: 25px;
+			}
 		</style>
 	</head>
 
 	<body>
 		<div id="mui-content" class="mui-content" >
-			<sapn class="mui-action-back mui-icon mui-icon-closeempty"></sapn>
+			<div class="mui-action-back mui-icon mui-icon-closeempty mui-pull-left"></div>
+			<div class="mui-pull-right mui-icon mui-icon-download save-video"></div>
 		</div>
 		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			var url = '';
 			var player = null;
@@ -43,6 +51,32 @@
 				if (mui.os.ios) {
 					position = 'absolute';
 				}
+				
+				// 长按保存视频
+				mui(".mui-content").on("tap", ".save-video", function() {
+					console.log(url);
+					plus.nativeUI.confirm("保存视频到相册", function(e) {
+						if (e.index == 0) {
+							showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
+							plus.downloader.createDownload(url, {
+								filename: "_doc/video/"
+							}, function(d, status) {
+								if (status == 200) {
+									plus.gallery.save(d.filename, function() {
+										showload(1);
+										plus.nativeUI.toast("保存成功!");
+									}, function(e) {
+										showload(1);
+										plus.nativeUI.toast("保存失败!");
+									});  
+								} else {
+									plus.nativeUI.toast("保存失败!");
+									showload(1);
+								}
+							}).start();
+						}
+					});
+				})
 				
 				// 创建视频播放控件
 				if (!player) {

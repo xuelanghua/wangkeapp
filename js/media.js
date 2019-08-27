@@ -1,6 +1,22 @@
+//判断是否是特殊手机,特殊手机视频和图片分开选择
+function checkSpecialModel() {
+	var deviceModel = plus.device.model.toLocaleLowerCase();
+	var specialModel = ['vivo'];
+	
+	var flag = false;
+	for (var i in specialModel) {
+		if (deviceModel.indexOf(specialModel[i]) > -1) {
+			flag = true;
+			break;
+		}
+	}
+	return flag;
+}
+
 //调用图片上传
 function chooseMedia(type, success, fail) {
 	if (mui.os.plus) {
+		var isSpecialModel = checkSpecialModel();
 		var buttonTitle = [{
 				title: "从相册选择",
 				style: 'default'
@@ -11,6 +27,13 @@ function chooseMedia(type, success, fail) {
 				style: "default"
 			};
 			buttonTitle.unshift(option);
+		}
+		if (isSpecialModel) {
+			var vivoOption = {
+				title: "选择视频",
+				style: 'default'
+			}
+			buttonTitle.push(vivoOption);
 		}
 		plus.nativeUI.actionSheet({
 			cancel: "取消",
@@ -27,7 +50,13 @@ function chooseMedia(type, success, fail) {
 						takePhoto(success, fail); /*拍照*/
 					break;
 				case 2:
-					galleryImg(type, success, fail); /*打开相册*/
+					if (isSpecialModel)
+						galleryImg('image', success, fail); /*打开相册选择图片*/
+					else
+						galleryImg(type, success, fail); /*打开相册*/
+					break;
+				case 3:
+					galleryImg('video', success, fail); /*打开相册选择视频*/
 					break;
 				default:
 					break;
