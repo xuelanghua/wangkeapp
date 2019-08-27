@@ -95,6 +95,23 @@
 				height: 0.24rem;
 				margin-left: 0.1rem;
 			}
+			
+			/* 记录为空 */
+			.void-list-container {
+				width: 100%;
+				padding-top: 30%;
+				display: block;
+			}
+			
+			.void-list-container img {
+				display: block;
+				width: 45%;
+				margin: 0 auto;
+			}
+			.void-list-container p {
+				text-align: center;
+				font-size: 14px;
+			}
 
 			[v-cloak] {
 				display: none;
@@ -109,30 +126,34 @@
 				<h1 class="mui-title">购买记录</h1>
 			</header>
 			<div class="mui-content">
-				<div class="sum-money">
+				<div class="sum-money" v-if="courseIncome>0">
 					<span>课程总收入</span>
-					&yen;258.26
+					&yen;{{courseIncome}}
 				</div>
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" v-for="(l,i) in 16" :key="i">
+				<ul class="mui-table-view" v-if="!voidData">
+					<li class="mui-table-view-cell" v-for="(list,key) in purchaseList" :key="key" @tap="goChat(list)">
 						<div class="user-head-image">
-							<img src="../image/5E0eH.png">
+							<img :src="list.avatar">
 						</div>
 						<div class="user-info-cont">
 							<div class="right-info">
-								<span class="user-name">房东先生</span>
+								<span class="user-name">{{list.name}}</span>
 								<div class="right-info-inside">
-									<span class="money">+52.26</span>
-									<img v-if="i%2 ==0" src="../image/WeChat.png" alt="">
+									<span class="money">+{{list.fee}}</span>
+									<img v-if="list.pay_type=='wxpay'" src="../image/WeChat.png" alt="">
 									<img v-else src="../image/red-packet-pay-icon.png" alt="">
 								</div>
 							</div>
-							<p>2018-11-20 18:20</p>
+							<p>{{list.create_time}}</p>
 						</div>
 					</li>
 					<!-- <div>课程id:{{course_id}}</div>
 					token:{{token}} -->
 				</ul>
+				<div class="void-list-container" v-if="voidData">
+					<img src="../image/icon/void-data.png" alt="">
+					<p>暂无记录~</p>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -143,8 +164,10 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					course_id: '',
-					token: userInfo.token
+					course_id: 0,
+					purchaseList: [],
+					courseIncome: 0,
+					voidData: false
 				},
 				created: function() {
 					// 初始化字体大小
@@ -156,7 +179,18 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-
+					goChat: function(chatData) {
+						fnOpenWin('dialog.html', 'dialog', {
+							statusbar: {
+								background: '#F7F7F7'
+							}
+						}, {
+							cid: chatData.uid,
+							chatName: chatData.name,
+							barStyle: 'dark',
+							avatar: chatData.avatar
+						}, 'slide-in-right');
+					}
 				},
 				mounted: function() {
 					mui.init({
@@ -166,10 +200,28 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						app.course_id = self.courseId
+						app.course_id = self.courseId;
+						getPurchaseRecord();
 					})
 				}
 			})
+			
+			function getPurchaseRecord() {
+				mui.get($ajaxUrl + 'team', {
+						action: 'team_course_purchase_record',
+						token: userInfo.token,
+						course_id: app.course_id
+					}, function(res){
+						if (res.errno == 0) {
+							app.purchaseList = res.data.list;
+							app.courseIncome = res.data.income;
+							app.voidData = false;
+						} else {
+							app.voidData = true;
+						}
+					}, 'json'
+				);
+			}
 		</script>
 	</body>
 
