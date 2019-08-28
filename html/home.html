@@ -1332,6 +1332,12 @@
 					if (data.length > 1) {
 						team_list=data;
 						teamchange = true;
+						for(var i=0;i<data.length;i++){
+							if(data[i].is_default==1){
+								document.getElementById("team_name").innerText = data[i].name;
+								break;
+							}
+						}
 					} else if (data.length == 1 && data != "") {
 						team_type = data[0].type;
 						document.getElementById("team_name").innerText = data[0].name;
@@ -1354,7 +1360,7 @@
 		}
 		//切换团队
 		mui('.mui-bar').on('tap', '.mui-title', function() {
-			mui(".mui-bar")[0].classList.add("active");
+			mui(".mui-bar .mui-icon")[0].classList.remove("mui-icon-arrowdown");
 			if (teamchange) {
 				mask.show();
 				if (teams) {
@@ -1378,6 +1384,7 @@
 		})
 		window.addEventListener('choiceName', function(e) {
 			$("#team_name").text(e.detail.names);
+			mui(".mui-bar .mui-icon")[0].classList.add("mui-icon-arrowdown");
 			mask.close();
 		})
 	</script>
