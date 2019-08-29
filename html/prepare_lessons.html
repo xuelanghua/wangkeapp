@@ -1034,6 +1034,7 @@
 
 						// 创建新的条目
 						function creatItem(type, cont, duration, duration_desc) {
+							app.isSave=false;
 							var item = {
 								id: '',
 								type: type,
@@ -1187,6 +1188,7 @@
 					app.remarkList.splice(idx, 1);
 					app.remarkList.splice(idx + 1, 0, _this);
 				}
+				plus.key.hideSoftKeybord();
 			}
 
 			// 修改
@@ -1198,6 +1200,7 @@
 					app.is_edit = true;
 					mask.show();
 					setTimeout(function() {
+						plus.key.showSoftKeybord();
 						document.getElementById("public_area").focus();
 					}, 300)
 					c_index = idx;
@@ -1350,9 +1353,6 @@
 					}, 300)
 				})
 			}
-			window.addAddressList('tap',function(){
-				document.activeElement.blur();
-			});
 		</script>
 	</body>
 
