@@ -390,7 +390,18 @@
 			</div>
 			<div class="tips">
 				<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 -->
-				精美的商品图片让商品脱颖而出
+				精美的商品图片可以让商品脱颖而出
+			</div>
+			<div class="bian">
+				<div class="recommend">
+					<div class="mui-input-row">
+						<label>设为推荐</label>
+						<div class="mui-switch mui-switch-blue mui-active" id="recommend_switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</div>
+					<div class="tishi">推荐商品将在个人名片页进行展示</div>
+				</div>
 			</div>
 			<div class="bian">
 				<div class="choice" style="padding: 10px 0;padding-bottom" id="goods_type_pick">
@@ -499,6 +510,7 @@
 			var specId = 0;
 			var spec = new Array();
 			var content = '';
+			var recommend = 1;
 			var type = 0;
 			var type_p = 0;
 			var status = 0;
@@ -557,6 +569,12 @@
 						$('#goods_id').val(ret.data.id);
 						//商品名称
 						$('#good_name').val(ret.data.name);
+						//获取推荐值
+						recommend = ret.data.recommend;
+						//推荐状态为1 打开开关
+						if (recommend == 0) {
+							mui("#recommend_switch").switch().toggle();
+						}
 						//获取价格
 						$('#good_price').val(ret.data.price);
 						//获取库存
@@ -682,6 +700,14 @@
 				//商品分类选择监听
 				document.getElementById('goods_type_pick').addEventListener('tap', function() {
 					goodsTypePick();
+				})
+				//推荐开关监听
+				document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
+					if (event.detail.isActive) {
+						recommend = 1;
+					} else {
+						recommend = 0;
+					}
 				})
 				//添加商品详情
 				mui('.mui-content').on('tap', '#goods_detail', function() {
@@ -889,6 +915,7 @@
 						goods_id: goods_id,
 						name: goods_name,
 						images: images,
+						recommend: recommend,
 						type: type,
 						type_p: type_p,
 						price: goods_price,

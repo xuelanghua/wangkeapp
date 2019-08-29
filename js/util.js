@@ -17,7 +17,7 @@ var getUserInfo = function() {
 }
 
 //检查是否开通会员
-function checkMember(callback) {
+function checkMember(callback) { 
 	var userInfo = getUserInfo();
 	var statusBarStyle = plus.navigator.getStatusBarStyle();
 	mui.get($ajaxUrl + 'member', {
@@ -874,7 +874,7 @@ function fnLogout() {
 				action: 'login_setting',
 			}, function(res) {
 				getAppInfo(function(e) {
-					if (res.data.login_type == 2 && res.data.app_version == e.version) {
+					if (res.data.login_type == 3 && res.data.app_version == e.version) {
 						for (var i = 0; i < wvs.length; i++) {
 							// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
 							if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {

@@ -380,7 +380,19 @@
 
 			<div class="tips">
 				<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 -->
-				精美的商品图片让商品脱颖而出
+				精美的商品图片可以让商品脱颖而出
+			</div>
+			
+			<div class="bian">
+				<div class="recommend">
+					<div class="mui-input-row">
+						<label>设为推荐</label>
+						<div class="mui-switch mui-switch-blue mui-active" id="recommend_switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</div>
+					<div class="tishi">推荐商品将在个人名片页进行展示</div>
+				</div>
 			</div>
 			
 			<div class="bian">
@@ -513,6 +525,7 @@
 			var specId = 0;
 			var spec = new Array();
 			var content = '';
+			var recommend = 1;
 			var type = 0; //二级分类
 			var type_p = 0; //一级分类
 			var status = 0;
@@ -540,6 +553,15 @@
 				//商品分类选择监听
 				document.getElementById('goods_type_pick').addEventListener('tap', function() {
 					goodsTypePick();
+				})
+				
+				//推荐开关监听
+				document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
+					if (event.detail.isActive) {
+						recommend = 1;
+					} else {
+						recommend = 0;
+					}
 				})
 
 				//添加商品详情
@@ -748,6 +770,7 @@
 					var submitData = {
 						name: goods_name,
 						images: images,
+						recommend: recommend,
 						type: type,
 						type_p: type_p,
 						price: goods_price,
@@ -809,6 +832,7 @@
 
 			//提交操作
 			function formSubmit(data) {
+				document.activeElement.blur();
 				if (!flag) {
 					return;
 				}
