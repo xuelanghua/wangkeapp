@@ -1142,6 +1142,7 @@
 
 			// 删除
 			function deleteMaster(s_id, i) {
+				app.isSave=false;
 				var _this_dom = document.getElementById('master-list' + s_id);
 				plus.nativeUI.confirm("确认删除该条备课吗？", function(e) {
 					if (e.index) {
@@ -1166,6 +1167,7 @@
 
 			// 上移或者下移
 			function moveIt(_id, idx, status) {
+				app.isSave=false;
 				var _this_dom = document.getElementById('master_list_' + idx);
 				var _this = app.remarkList[idx];
 				if (status == 'up') {
@@ -1185,11 +1187,11 @@
 					app.remarkList.splice(idx, 1);
 					app.remarkList.splice(idx + 1, 0, _this);
 				}
-				
 			}
 
 			// 修改
 			function editMaster(idx, _id, type) {
+				app.isSave=false;
 				var _this_dom = document.getElementById('master_list_' + idx);
 				mui.swipeoutClose(_this_dom);
 				if (type == "text") {
@@ -1274,8 +1276,10 @@
 					// logs(res);
 					if (res.errno == 0) {
 						getRemarkList();
+						app.isSave=true;
 						message("保存成功！");
 					} else {
+						app.isSave=false;
 						message("保存失败，请稍后重试！");
 					}
 				}, 'json');
@@ -1346,6 +1350,9 @@
 					}, 300)
 				})
 			}
+			window.addAddressList('tap',function(){
+				document.activeElement.blur();
+			});
 		</script>
 	</body>
 
