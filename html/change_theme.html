@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<style type="text/css">
+			.mui-content {
+				width: 100%;
+				height: 100vh;
+				background: #FFFFFF url("../image/icon/change-theme-05.png") center top no-repeat;
+				background-size: contain;
+				touch-action: pan-x;
+			}
+
+			.swiper-container {
+				margin-top: 10%;
+				width: 100%;
+				height: 500px;
+				margin-left: auto;
+				margin-right: auto;
+				touch-action: pan-x;
+			}
+
+			.swiper-slide {
+				width: 100%;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				touch-action: pan-x;
+			}
+
+			.swiper-slide .slide-items {
+				width: auto;
+				height: 100%;
+			}
+
+			.theme-title {
+				width: 150px;
+				height: 36px;
+				background-color: #2289FF;
+				border-radius: 30px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #FFFFFF;
+				margin: 10% auto 0;
+				box-shadow: 0 0 10px 0 rgba(0, 0, 0, .3);
+			}
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #FFFFFF;
+				margin-right: -5px;
+			}
+
+			.mui-bar {
+				background: #2289FF;
+				box-shadow: none;
+				color: #FFFFFF;
+			}
+
+			.mui-bar h1 {
+				color: #FFFFFF;
+			}
+
+			.arrows-left,
+			.arrows-right {
+				width: 20px;
+				position: absolute;
+				z-index: 999;
+				top: 40%;
+				overflow: hidden;
+			}
+
+			.arrows-left {
+				left: 15px;
+				transform: rotate(180deg);
+			}
+
+			.arrows-right {
+				right: 15px;
+			}
+
+			.arrows-left img,
+			.arrows-right img {
+				width: 100%;
+				height: auto;
+			}
+
+			.tips-info {
+				position: absolute;
+				top: 48px;
+				right: 15px;
+				overflow: hidden;
+				z-index: 999;
+				background-color: #F7F7F7;
+				width: 19px;
+				height: 18px;
+				font-size: 14px;
+				line-height: 1;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 10px;
+				color: #333333;
+				box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+			}
+
+			/* 弹窗 */
+			.tips-cont {
+				background-color: #f7f7f7;
+				border-radius: 5px;
+				padding: 10px 5px;
+				touch-action: none;
+				width: 200px;
+				font-size: 14px;
+				text-align: justify;
+				box-shadow: 0 0 3px rgba(0, 0, 0, .36);
+			}
+
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">主题切换</h1>
+			<div class="mui-pull-right nav-right-btn">
+				保存
+			</div>
+		</header>
+		<div class="mui-content">
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<img class="slide-items" src="../image/icon/change-theme-02.png">
+					</div>
+					<div class="swiper-slide">
+						<img class="slide-items" src="../image/icon/change-theme-03.png">
+					</div>
+					<div class="swiper-slide">
+						<img class="slide-items" src="../image/icon/change-theme-04.png">
+					</div>
+				</div>
+				<!-- Add Pagination -->
+				<div class="swiper-pagination"></div>
+				<!-- 箭头 -->
+				<div class="arrows-left">
+					<img src="../image/icon/change-theme-01.png">
+				</div>
+				<div class="arrows-right">
+					<img src="../image/icon/change-theme-01.png">
+				</div>
+			</div>
+			<div class="theme-title"><span id="current_color">白色</span>主题</div>
+			<span class="tips-info">i</span>
+		</div>
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="tips-cont" style="background: #F7F7F7;border: ;">
+				主题切换成功后，请在微信小程序端预览切换效果。
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo(),
+				token = '',
+				fid = '',
+				current_idx = 0,
+				current_color = document.getElementById('current_color');
+			mui.init({
+				beforeback: function() {
+					plus.navigator.setStatusBarStyle("dark");
+				}
+			});
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				plus.navigator.setStatusBarStyle("light");
+				token = self.token;
+				user_id = self.fid;
+				mui('.arrows-left')[0].style.opacity = "0.3";
+			})
+			var swiper = new Swiper('.swiper-container', {
+				slidesPerView: 1,
+				loop: false,
+				initialSlide: current_idx,
+				pagination: {
+					el: '.swiper-pagination',
+					clickable: true,
+				},
+				on: {
+					slideChange: function() {
+						var idx = this.realIndex;
+						current_idx = idx;
+						switch (idx) {
+							case 0:
+								current_color.innerText = '白色'
+								break;
+							case 1:
+								current_color.innerText = '黑蓝'
+								break;
+							default:
+								current_color.innerText = '黑金'
+						}
+						if (this.realIndex == 0) {
+							mui('.arrows-left')[0].style.opacity = "0.3";
+						} else if (this.realIndex == 2) {
+							mui('.arrows-right')[0].style.opacity = "0.3";
+						} else {
+							mui('.arrows-left')[0].style.opacity = "1";
+							mui('.arrows-right')[0].style.opacity = "1";
+						}
+					},
+				},
+			});
+			mui('.mui-content').on('tap', '.arrows-left', function() {
+				swiper.slidePrev();
+			})
+			mui('.mui-content').on('tap', '.arrows-right', function() {
+				swiper.slideNext();
+			})
+			mui('.mui-content').on('tap', '.tips-info', function() {
+				mui('#topPopover').popover('show', document.querySelector(".tips-info"));
+				setTimeout(function() {
+					mui('#topPopover').popover('hide', document.querySelector(".tips-info"));
+				}, 5000);
+			})
+			mui('.mui-bar').on('tap', '.nav-right-btn', function() {
+				message("保存主题：" + current_idx);
+				return false;
+				mui.post($ajaxUrl + 'xxx', {
+					token: token,
+					theme: current_idx
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						message("主题切换成功！")
+					} else {
+						message("主题切换失败，请稍后重试！")
+					}
+				}, 'json');
+			})
+		</script>
+	</body>
+
+</html>

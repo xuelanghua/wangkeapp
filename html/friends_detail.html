@@ -91,18 +91,20 @@
 				color: #DDDDDD;
 				font-size: 12px;
 			}
-			.video-container{
+
+			.video-container {
 				background-color: #FFFFFF;
 				padding: 0.2rem 0.3rem;
 				display: flex;
 			}
+
 			.video-cover {
 				width: 100%;
 				height: 3rem;
 				overflow: hidden;
 				position: relative;
 			}
-			
+
 			.video-cover .player-btn {
 				width: 60px;
 				height: auto;
@@ -112,13 +114,14 @@
 				-webkit-transform: translate(-50%, -50%);
 				transform: translate(-50%, -50%);
 			}
-			
+
 			.video-cover img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 			}
-			.operation-container{
+
+			.operation-container {
 				align-items: center;
 				position: fixed;
 				width: 100%;
@@ -126,20 +129,38 @@
 				bottom: 0;
 				left: 0;
 				background-color: #FFFFFF;
-				box-shadow: 0 -0.1px 2px 0 rgba(0,0,0,0.1);
+				box-shadow: 0 -0.1px 2px 0 rgba(0, 0, 0, 0.1);
 				z-index: 99999;
 				display: none;
 			}
-			.operation-container div{
+
+			.operation-container div {
 				width: 50%;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 			}
-			.operation-container div:first-of-type{
+
+			.operation-container div:first-of-type {
 				border-right: 1px solid #DDDDDD;
 				color: #2289FF;
 			}
+
+			.friends-detail-container .img-show {
+				padding-bottom: 65px;
+			}
+
+			.change-theme {
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				margin-right: -5px;
+				font-size: 14px;
+				color: #333333;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -158,6 +179,7 @@
 		<header class="mui-bar mui-bar-nav friends-detail-header">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title"></h1>
+			<span class="mui-pull-right change-theme mui-hidden">主题</span>
 			<span class="mui-pull-right mui-icon mui-icon-more" style="display: none;"></span>
 		</header>
 		<div id="mui-content" class="mui-content friends-detail-container" v-cloak>
@@ -352,7 +374,7 @@
 					audioUrl: '',
 					view_total: 0,
 					share_title: '',
-					my_video:'',
+					my_video: '',
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -361,16 +383,16 @@
 						fid = self.fid;
 						getFriendsInfo();
 						// 跳转到更多页面
-						if(fid!=userInfo.id){
-							document.querySelector(".operation-container").style.display="flex";
-						}else{
-							document.querySelector(".operation-container").style.display="none";
+						if (fid != userInfo.id) {
+							document.querySelector(".operation-container").style.display = "flex";
+						} else {
+							document.querySelector(".operation-container").style.display = "none";
 						}
 						window.addEventListener('refreshFriendInfo', function(e) {
 							getFriendsInfo();
 						})
 
-						mui(".friends-detail-header").on("tap", "span", function() {
+						mui(".friends-detail-header").on("tap", ".mui-icon-more", function() {
 							if (muiCont.is_friend == 1) {
 								openPage('friends_detail_more.html', 'friends_detail_more', '#f7f7f7', {
 									token: userInfo.token,
@@ -381,6 +403,12 @@
 							} else {
 								message("请先添加好友！");
 							}
+						})
+						mui(".friends-detail-header").on("tap", ".change-theme", function() {
+							openPage('change_theme.html', 'change_theme', '#2289ff', {
+								token: userInfo.token,
+								fid: fid
+							});
 						})
 						mui(".mui-content").on("tap", ".share-card", function() {
 							muiCont.share_title = muiCont.contName + '的旺客名片!';
@@ -419,7 +447,7 @@
 						muiCont.cardType = data.card_type;
 						muiCont.contName = data.name;
 						muiCont.phoneNum = data.phone;
-						muiCont.friendData = data; 
+						muiCont.friendData = data;
 						muiCont.is_friend = data.is_friend;
 						muiCont.is_reliable = data.is_reliable;
 						muiCont.is_voice_like = data.is_voice_like;
@@ -429,23 +457,24 @@
 						mui(".mui-title")[0].innerText = data.name;
 						var selfid = userInfo.id;
 						if (fid != selfid && muiCont.is_friend != 1) {
-							muiCont.addshow = true; 
+							muiCont.addshow = true;
 						}
 						if (fid != selfid && muiCont.is_friend == 1) {
 							document.querySelector('.mui-icon-more').style.display = 'block';
+						} else {
+							document.querySelector('.change-theme').classList.remove('mui-hidden');
 						}
-						
+
 						//如果是个人开启红包的话,更新用户当前的地理位置
 						if (fid == userInfo.id) {
 							plus.geolocation.getCurrentPosition(function(p) {
 								mui.post($ajaxUrl + 'userqrcode&action=update_user_coordinate', {
-										token: userInfo.token,
-										redpacket_latitude: p.coords.latitude,
-										redpacket_longitude: p.coords.longitude
-									}, function(res){
-										logs(res);
-									},'json'
-								);
+									token: userInfo.token,
+									redpacket_latitude: p.coords.latitude,
+									redpacket_longitude: p.coords.longitude
+								}, function(res) {
+									logs(res);
+								}, 'json');
 							}, function(e) {
 								console.log('获取地理位置失败, 红包距离验证开启失败!', 'center');
 							}, {
