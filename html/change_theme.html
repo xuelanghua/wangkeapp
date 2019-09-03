@@ -21,7 +21,7 @@
 			.swiper-container {
 				margin-top: 10%;
 				width: 100%;
-				height: 500px;
+				height: 75%;
 				margin-left: auto;
 				margin-right: auto;
 				touch-action: pan-x;
@@ -101,15 +101,23 @@
 				height: auto;
 			}
 
-			.tips-info {
+			.tips-info-cont {
 				position: absolute;
-				top: 48px;
-				right: 15px;
-				overflow: hidden;
+				right: 0;
+				top: 44px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 				z-index: 999;
+				width: 50px;
+				height: 50px;
+			}
+
+			.tips-info {
+				overflow: hidden;
 				background-color: #F7F7F7;
-				width: 19px;
-				height: 18px;
+				width: 20px;
+				height: 20px;
 				font-size: 14px;
 				line-height: 1;
 				display: inline-flex;
@@ -170,7 +178,9 @@
 				</div>
 			</div>
 			<div class="theme-title"><span id="current_color">白色</span>主题</div>
-			<span class="tips-info">i</span>
+			<div class="tips-info-cont mui-pull-right">
+				<span class="tips-info">i</span>
+			</div>
 		</div>
 		<!--右上角弹出菜单-->
 		<div id="topPopover" class="mui-popover">
@@ -184,9 +194,8 @@
 		<script src="../js/util.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo(),
-				token = '',
-				fid = '',
 				current_idx = 0,
+				swiper = null,
 				current_color = document.getElementById('current_color');
 			mui.init({
 				beforeback: function() {
@@ -196,43 +205,66 @@
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
 				plus.navigator.setStatusBarStyle("light");
-				token = self.token;
-				user_id = self.fid;
 				mui('.arrows-left')[0].style.opacity = "0.3";
 			})
-			var swiper = new Swiper('.swiper-container', {
-				slidesPerView: 1,
-				loop: false,
-				initialSlide: current_idx,
-				pagination: {
-					el: '.swiper-pagination',
-					clickable: true,
-				},
-				on: {
-					slideChange: function() {
-						var idx = this.realIndex;
-						current_idx = idx;
-						switch (idx) {
-							case 0:
-								current_color.innerText = '白色'
-								break;
-							case 1:
-								current_color.innerText = '黑蓝'
-								break;
-							default:
-								current_color.innerText = '黑金'
-						}
-						if (this.realIndex == 0) {
-							mui('.arrows-left')[0].style.opacity = "0.3";
-						} else if (this.realIndex == 2) {
-							mui('.arrows-right')[0].style.opacity = "0.3";
-						} else {
-							mui('.arrows-left')[0].style.opacity = "1";
-							mui('.arrows-right')[0].style.opacity = "1";
-						}
+			mui.post($ajaxUrl + 'staff&action=card_theme', {
+				token: userInfo.token,
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					if (res.data == 'gold') {
+						current_idx = 2;
+						mui('.arrows-right')[0].style.opacity = "0.3";
+					} else if (res.data == 'dark') {
+						current_idx = 1;
+						mui('.arrows-left')[0].style.opacity = "0.3";
+					} else {
+						current_idx = 0;
+						mui('.arrows-left')[0].style.opacity = "1";
+						mui('.arrows-right')[0].style.opacity = "1";
+					}
+					swiperInit();
+				} else {
+					swiperInit();
+					// 主题获取失败
+				}
+			}, 'json');
+
+			function swiperInit() {
+				swiper = new Swiper('.swiper-container', {
+					slidesPerView: 1,
+					loop: false,
+					initialSlide: current_idx,
+					pagination: {
+						el: '.swiper-pagination',
+						clickable: true,
 					},
-				},
-			});
+					on: {
+						slideChange: function() {
+							var idx = this.realIndex;
+							current_idx = idx;
+							switch (idx) {
+								case 0:
+									current_color.innerText = '白色'
+									break;
+								case 1:
+									current_color.innerText = '黑蓝'
+									break;
+								default:
+									current_color.innerText = '黑金'
+							}
+							if (this.realIndex == 0) {
+								mui('.arrows-left')[0].style.opacity = "0.3";
+							} else if (this.realIndex == 2) {
+								mui('.arrows-right')[0].style.opacity = "0.3";
+							} else {
+								mui('.arrows-left')[0].style.opacity = "1";
+								mui('.arrows-right')[0].style.opacity = "1";
+							}
+						},
+					},
+				});
+			}
 			mui('.mui-content').on('tap', '.arrows-left', function() {
 				swiper.slidePrev();
 			})
@@ -240,20 +272,24 @@
 				swiper.slideNext();
 			})
 			// 显示tips
-			mui('.mui-content').on('tap', '.tips-info', function() {
-				mui('#topPopover').popover('show', document.querySelector(".tips-info"));
-				setTimeout(function() {
-					mui('#topPopover').popover('hide', document.querySelector(".tips-info"));
-				}, 3000);
+			mui('.mui-content').on('tap', '.tips-info-cont', function() {
+				mui('#topPopover').popover('toggle', document.querySelector(".tips-info"));
 			})
 			mui('.mui-bar').on('tap', '.nav-right-btn', function() {
-				message("保存主题：" + current_idx);
-				return false;
-				mui.post($ajaxUrl + 'xxx', {
-					token: token,
-					theme: current_idx
+				var theme = 'default';
+				if (current_idx == 1) {
+					theme = 'dark'
+				} else if (current_idx == 2) {
+					theme = 'gold'
+				} else {
+					//默认
+				}
+				mui.post($ajaxUrl + 'staff', {
+					token: userInfo.token,
+					theme: theme,
+					action: 'change_card_theme'
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
 						message("主题切换成功！")
 					} else {
