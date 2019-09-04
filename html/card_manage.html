@@ -83,8 +83,9 @@
 				color: #DDDDDD;
 				font-size: 12px;
 			}
-			.mui-backdrop{
-				 background-color: rgba(0,0,0,0);
+
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
 			}
 		</style>
 		<script type="text/javascript">
@@ -117,6 +118,12 @@
 				</li>
 			</ul>
 			<ul class="mui-table-view manage-lists">
+				<li class="mui-table-view-cell change-theme">
+					<div class="manage-left mui-navigate-right">
+						<img class="sml-icon" src="../image/icon/change-color-icon.png">
+						<span>修改主题</span>
+					</div>
+				</li>
 				<li class="mui-table-view-cell share">
 					<div class="manage-left mui-navigate-right"><img class="sml-icon" src="../image/icon/share-icon-icon.png"><span>转发名片</span></div>
 				</li>
@@ -145,7 +152,7 @@
 				document.querySelector(".affirm-share-card").style.display = "none";
 			});
 			var userInfo = getUserInfo();
-			var share_title=userInfo.name+'的旺客名片!';
+			var share_title = userInfo.name + '的旺客名片!';
 			mui.plusReady(function() {
 				setUserCard();
 				plus.navigator.setStatusBarStyle('dark');
@@ -163,9 +170,13 @@
 				mui(".mui-content").on("tap", ".edit", function() {
 					openPage('card_setting.html', 'card_setting', '#ffffff', '');
 				})
+				//修改主题
+				mui(".mui-content").on("tap", ".change-theme", function() {
+					openPage('change_theme.html', 'change_theme', '#2289ff', '');
+				})
 				mui(".mui-content").on("tap", ".share", function() {
 					share_title = userInfo.nickName + '的旺客名片!';
-					document.querySelector(".affirm-share-card textarea").value=share_title;
+					document.querySelector(".affirm-share-card textarea").value = share_title;
 					mask.show();
 					document.querySelector(".affirm-share-card").style.display = "flex";
 					setTimeout(function() {
@@ -173,12 +184,12 @@
 					}, 220);
 				})
 				// 取消分享
-				document.getElementById("cancel_btn").addEventListener('tap',function(){
+				document.getElementById("cancel_btn").addEventListener('tap', function() {
 					mask.close();
 				})
 				// 确认分享
 				document.getElementById("affirm_btn").addEventListener('tap', function() {
-					share_title=document.querySelector(".affirm-share-card textarea").value;
+					share_title = document.querySelector(".affirm-share-card textarea").value;
 					if (!share_title) {
 						message("请输入分享标题！");
 						return false;
@@ -189,7 +200,7 @@
 						message('用户名为空，暂时无法分享');
 					} else {
 						shareToMiniprogram({
-							title:share_title,
+							title: share_title,
 							content: '旺天下之客,让营销更简单!',
 							thumbs: [avatar],
 							miniProgram: {
