@@ -346,10 +346,19 @@
 				});
 			});
 			
-			// // //上传图片
+			//上传图片
 			mui('#pic-container').on('tap', '.add-pic', function() {
 				imageUpload(function(res) {
 					vm.$set(vm.storeInfo, 'store_advertising', res.url);
+					mui.post($ajaxUrl + 'store', {
+							action: 'updateStoreInfo',
+							token: userInfo.token,
+							store_advertising: res.url,
+							op: 'store_advertising',
+						}, function(res){
+							console.log(res);
+						}, 'json'
+					);
 				});
 			})
 			

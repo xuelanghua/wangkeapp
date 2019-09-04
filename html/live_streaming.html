@@ -268,7 +268,7 @@
 					<template v-for="(list, key) in item" :key="key">
 						<div class="msg-item" :class="uid==list.uid?'msg-item-self':''" :msg-type="list.message_type" :msg-content="list.content">
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
-							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" alt="" />
+							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)" alt="" />
 							<div class="msg-content">
 								<i v-if="list.read_status==0&&list.message_type=='audio'" class="red-dot"></i>
 								<div v-if="list.message_type=='text'" class="msg-content-inner" v-html="list.content">
@@ -524,7 +524,7 @@
 								ui.boxMsgText.focus();
 							}, 150);
 						}
-
+						
 						//解决长按“发送”按钮，导致键盘关闭的问题；
 						ui.footerRight.addEventListener('touchstart', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -1036,6 +1036,13 @@
 					}, 'json');
 				}
 			}
+			
+			function toUserDetail(uid) {
+				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+					fid: uid
+				});
+			}
+			
 			// 打开团队统计
 			mui(".mui-bar").on("tap", ".statistics-btn", function() {
 				openPage('course_statistics.html', 'course_statistics', '#f7f7f7', {

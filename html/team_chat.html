@@ -248,7 +248,7 @@
 						<div class="msg-item mui-clearfix" :class="uid==list.uid?'msg-item-self':''" :msg-type="list.message_type"
 						 :msg-content="list.content">
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
-							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" alt="" />
+							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)" alt="" />
 							<div class="msg-content">
 								<div class="msg-content-arrow"></div>
 								<i v-if="list.message_type=='audio' && list.read_status==0&&uid!=list.uid" class="red-dot"></i>
@@ -471,7 +471,7 @@
 								ui.boxMsgText.focus();
 							}, 150);
 						}
-
+						
 						//解决长按“发送”按钮，导致键盘关闭的问题；
 						ui.footerRight.addEventListener('touchstart', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -992,6 +992,12 @@
 						course: courseInfo,
 					});
 				}
+			}
+			
+			function toUserDetail(uid) {
+				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+					fid: uid
+				});
 			}
 		</script>
 	</body>

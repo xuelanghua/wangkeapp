@@ -8,7 +8,7 @@ $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&
 // $videoUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=video'; //视频上传接口
 // $voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
 
-$debug = true;
+$debug = false;
 $videoMaxSize = 10 * 1024 * 1024;
 $noticeNumber = 0;
 //获取用户信息
@@ -874,7 +874,7 @@ function fnLogout() {
 				action: 'login_setting',
 			}, function(res) {
 				getAppInfo(function(e) {
-					if (res.data.login_type == 3 && res.data.app_version == e.version) {
+					if (res.data.login_type == 3) {
 						for (var i = 0; i < wvs.length; i++) {
 							// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
 							if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
