@@ -150,7 +150,7 @@
 				padding-bottom: 65px;
 			}
 
-			.change-theme {
+			/* .change-theme {
 				height: 100%;
 				display: inline-flex;
 				align-items: center;
@@ -159,8 +159,28 @@
 				margin-right: -5px;
 				font-size: 14px;
 				color: #333333;
+			} */
+			.mui-icon-more{
+				color: #000000;
 			}
-
+			.tips-cont {
+				background-color: #f7f7f7;
+				border-radius: 5px;
+				padding: 0;
+				touch-action: none;
+				width: 120px;
+				font-size: 14px;
+				text-align: justify;
+				box-shadow: 0 0 5px rgba(0, 0, 0, .6);
+			}
+			
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
+			}
+			.mui-popover .mui-popover-arrow:after{
+				box-shadow: 0 0 5px rgba(0, 0, 0, .32);
+			}
+			
 			[v-cloak] {
 				display: none;
 			}
@@ -179,8 +199,8 @@
 		<header class="mui-bar mui-bar-nav friends-detail-header">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title"></h1>
-			<span class="mui-pull-right change-theme mui-hidden">主题</span>
-			<span class="mui-pull-right mui-icon mui-icon-more" style="display: none;"></span>
+			<a href="#topPopover" class="mui-pull-right mui-icon mui-icon-more change-theme mui-hidden"></a>
+			<span class="mui-pull-right mui-icon mui-icon-more edit-remark" style="display: none;"></span>
 		</header>
 		<div id="mui-content" class="mui-content friends-detail-container" v-cloak>
 			<!-- 名片样式一 -->
@@ -338,6 +358,17 @@
 			<div class="send-msg">发送消息</div>
 			<div class="check-dynamic">查看动态</div>
 		</div>
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="tips-cont" style="background: #F7F7F7;border: ;">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell edit-card-btn">名片编辑</li>
+					<li class="mui-table-view-cell change-theme-btn">主题修改</li>
+					<li class="mui-table-view-cell operation-demo-btn">操作演示</li>
+				</ul>
+			</div>
+		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
@@ -392,7 +423,7 @@
 							getFriendsInfo();
 						})
 
-						mui(".friends-detail-header").on("tap", ".mui-icon-more", function() {
+						mui(".friends-detail-header").on("tap", ".edit-remark", function() {
 							if (muiCont.is_friend == 1) {
 								openPage('friends_detail_more.html', 'friends_detail_more', '#f7f7f7', {
 									token: userInfo.token,
@@ -404,11 +435,23 @@
 								message("请先添加好友！");
 							}
 						})
-						mui(".friends-detail-header").on("tap", ".change-theme", function() {
+						// 主题修改
+						mui(".mui-popover").on("tap", ".change-theme-btn", function() {
+							mui('#topPopover').popover('hide', document.querySelector(".change-theme"));
 							openPage('change_theme.html', 'change_theme', '#2289ff', {
 								token: userInfo.token,
 								fid: fid
 							});
+						})
+						// 名片编辑
+						mui(".mui-popover").on("tap", ".edit-card-btn", function() {
+							mui('#topPopover').popover('hide', document.querySelector(".change-theme"));
+							openPage('card_setting.html', 'card_setting', '#ffffff');
+						})
+						// 操作演示
+						mui(".mui-popover").on("tap", ".operation-demo-btn", function() {
+							mui('#topPopover').popover('hide', document.querySelector(".change-theme"));
+							videoPlayer('https://bfwangke.oss-cn-shenzhen.aliyuncs.com/videos/6/2019/06/kn5KtllV45fTfu0acvuMnAV0NU0IVI.mp4');
 						})
 						mui(".mui-content").on("tap", ".share-card", function() {
 							muiCont.share_title = muiCont.contName + '的旺客名片!';
@@ -460,11 +503,12 @@
 							muiCont.addshow = true;
 						}
 						if (fid != selfid && muiCont.is_friend == 1) {
-							document.querySelector('.mui-icon-more').style.display = 'block';
-						} else {
+							document.querySelector('.edit-remark').style.display = 'block';
+						} else if(fid == selfid){
 							document.querySelector('.change-theme').classList.remove('mui-hidden');
+						}else{
+							
 						}
-
 						//如果是个人开启红包的话,更新用户当前的地理位置
 						if (fid == userInfo.id) {
 							plus.geolocation.getCurrentPosition(function(p) {
