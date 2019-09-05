@@ -496,8 +496,10 @@
 			});
 			// _uploadRole
 			_imageUploader.on( 'error', function() {
-			    if( arguments[0]=="Q_TYPE_DENIED" ) w.alert("请上传图片格式文件");
-		        if( arguments[0]=="F_EXCEED_SIZE" ) w.alert("文件大小不能超过"+(arguments[1] / 1048576)+"M");
+			    // if( arguments[0]=="Q_TYPE_DENIED" ) w.alert("请上传图片格式文件");
+			    if( arguments[0]=="Q_TYPE_DENIED" ) mui.toast("请上传图片格式文件");
+		        // if( arguments[0]=="F_EXCEED_SIZE" ) w.alert("文件大小不能超过"+(arguments[1] / 1048576)+"M");
+		        if( arguments[0]=="F_EXCEED_SIZE" ) mui.toast("文件大小不能超过"+(arguments[1] / 1048576)+"M");
 			});
 			_imageUploader.on( 'uploadComplete', function() { _hideLoadingMask(); });			
 			_imageUploader.on( 'uploadSuccess', function( _file, _call ) {
@@ -521,7 +523,8 @@
 					_args.changer();
 			    }else{
 					console.log(JSON.stringify(_call))
-			    	w.alert('上传失败：['+_call.msg+']');
+			    	// w.alert('上传失败：['+_call.msg+']');
+			    	mui.toast('上传失败：['+_call.msg+']');
 			    }
 			    if( !_hasStyleBarBtn ){
 			    	_hideEditorControllerLayer();
@@ -561,7 +564,8 @@
 						}
 						_args.changer();
 					}, function(_err){
-						w.alert('上传失败：['+_err+']');
+						// w.alert('上传失败：['+_err+']');
+						mui.toast('上传失败：['+_err+']');
 					});
 				}catch(_e){
 					console.warn(_e);
@@ -588,7 +592,8 @@
 			},
 			insertImage: function(){
 				if( typeof WebUploader === 'undefined' && typeof _args.uploader != 'function' ){
-					window.alert('上传参数未定义.');
+					// window.alert('上传参数未定义.');
+					mui.toast('上传参数未定义.');
 				}
 			},
 			insertHr: function(){
@@ -655,9 +660,15 @@
 		});
 		_$editorDeleteLayer.on('click', '.Eleditor-delete-clear', function() {
 
-			if( !confirm('确定清空内容吗？') ){
-				return;
-			}
+			mui.confirm('确定清空内容吗', '提示', ['取消','确认'] , function (e) {
+				if (e.index == 0) {
+					return;
+				}
+			},'div')
+			
+			// if( !confirm('确定清空内容吗？') ){
+			// 	return;
+			// }
 
 			var _$cloneNode = _$wrap.clone();
 				_$cloneNode.find('.Eleditor-placeholder').remove();
@@ -751,7 +762,12 @@
 		});
 
 		_$editorTextModule.on('click', ".Eleditor-textEditor-clean", function() {
-			confirm('确定清空内容（不可恢复）？') && _$editorTextArea.html("");
+			mui.confirm('确定清空内容吗', '提示', ['取消','确认'] , function (e) {
+				if (e.index == 1) {
+					_$editorTextArea.html("");
+				}
+			},'div')
+			// confirm('确定清空内容（不可恢复）？') && _$editorTextArea.html("");
 		});
 
 		_$editorTextModule.on('click', ".Eleditor-cancel,.Eleditor-commit", function() {
@@ -765,7 +781,8 @@
 				var _hasPlaceHolder = _$selected.hasClass('Eleditor-placeholder');
 
 				if( !_content ){
-					return alert('请输入内容文字');
+					// return alert('请输入内容文字');
+					return mui.toast('请输入内容文字');
 				}
 
 				_appendHistory();
