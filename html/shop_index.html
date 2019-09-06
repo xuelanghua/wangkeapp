@@ -326,7 +326,7 @@
 				align-items: center;
 				width: 0.9rem;
 			}
-			
+
 			.official-sign {
 				position: relative;
 				font-size: 0.24rem;
@@ -339,7 +339,7 @@
 				align-items: center;
 				width: 1.2rem;
 			}
-			
+
 			.official-sign img {
 				width: 100%;
 			}
@@ -528,20 +528,20 @@
 					<div class="primary-goods">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell goods-list" v-for="(goods,index) in hot_goods" :key="index">
-								<div class="goods-img" @tap="openGoodsDetail(goods.id)">
+								<div class="goods-img" @tap="openGoodsDetail(goods.id,goods.uid)">
 									<img :src="goods.cover">
 								</div>
 								<div class="goods-right">
-									<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(goods.id)">
+									<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(goods.id,goods.uid)">
 										{{goods.name}}
 									</p>
-									<div class="goods-info" @tap="openGoodsDetail(goods.id)">
+									<div class="goods-info" @tap="openGoodsDetail(goods.id,goods.uid)">
 										<span class="wage-text">提成：&yen;{{goods.commission}}</span>
 										<span class="price-text">供货价：&yen;{{goods.settlement_price}}</span>
 									</div>
 									<div class="goods-right-bottom">
-										<span @tap="openGoodsDetail(goods.id)">销量&nbsp;{{goods.sale_count}}</span>
-										<!-- <span @tap="openGoodsDetail(goods.id)">95%&nbsp;好评</span> -->
+										<span @tap="openGoodsDetail(goods.id,goods.uid)">销量&nbsp;{{goods.sale_count}}</span>
+										<!-- <span @tap="openGoodsDetail(goods.id,goods.uid)">95%&nbsp;好评</span> -->
 										<img v-if="goods.is_pick==0" :data-gid="goods.id" class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
 										<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 									</div>
@@ -611,10 +611,17 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-					openGoodsDetail: function(gid) {
-						openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
-							gid: gid
-						})
+					openGoodsDetail: function(gid, uid) {
+						if (uid == 0) {
+							openPage('wangke_distributor_goods_detail.html', 'wangke_distributor_goods_detail', '#f7f7f7', {
+								gid: gid
+							})
+						} else {
+							openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+								gid: gid
+							})
+						}
+
 						// openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
 						// 	gid: gid
 						// })
@@ -643,7 +650,7 @@
 									getStatistics();
 								}
 							}
-						}						
+						}
 					});
 					mui.plusReady(function() {
 						getNotice();
@@ -711,12 +718,12 @@
 					}
 				}, 'json')
 			}
-			
+
 			// 监听编辑
 			window.addEventListener('reloadYourself', function() {
 				getHotGoodsList();
 			})
-			
+
 			// 查看公告详情
 			mui(".mui-content").on("tap", ".swiper-slide", function() {
 				var idx = this.dataset.idx;
@@ -765,7 +772,7 @@
 			mui(".mui-content").on("tap", "#stock_goods", function() {
 				openPage('choose_goods.html', 'choose_goods', '#ffffff');
 			});
-			
+
 			//旺客总仓拣货分销
 			mui(".mui-content").on("tap", "#pick_wangke_goods", function() {
 				openPage('choose_wangke_goods.html', 'choose_wangke_goods', '#ffffff');

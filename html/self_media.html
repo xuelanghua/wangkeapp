@@ -488,18 +488,18 @@
 							</li>
 							<!-- 产品列表 -->
 							<li class=" mui-table-view-cell goods-list" v-if="i.type==5">
-								<div class="goods-img" @tap="goodsDetail(i.info.id)">
+								<div class="goods-img" @tap="wangkeGoodsDetail(i.info.id)">
 									<img :src="i.info.cover">
 								</div>
 								<div class="goods-list-right">
 									<!-- 官方加stick-sign stick-sign-->
-									<p class="mui-ellipsis-2 stick-sign" @tap="goodsDetail(i.info.id)">{{i.info.name}}</p>
-									<div class="goods-nature" @tap="goodsDetail(i.info.id)">
+									<p class="mui-ellipsis-2 stick-sign" @tap="wangkeGoodsDetail(i.info.id)">{{i.info.name}}</p>
+									<div class="goods-nature" @tap="wangkeGoodsDetail(i.info.id)">
 										<span>供货价：&yen;{{i.info.price}}</span>
 										<span>销量： {{i.info.sale_count}}件</span>
 									</div>
 									<div class="goods-earnings">
-										<span @tap="goodsDetail(i.info.id)">利润：&yen;{{i.info.commission}}</span>
+										<span @tap="wangkeGoodsDetail(i.info.id)">利润：&yen;{{i.info.commission}}</span>
 										<!-- 官方 -->
 										<img src="../image/discover/official-sign.png">
 									</div>
@@ -673,6 +673,12 @@
 					// 打开产品详情
 					goodsDetail: function(id) {
 						openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+							gid: id
+						})
+					},
+					// 打开旺客产品详情
+					wangkeGoodsDetail: function(id) {
+						openPage('wangke_distributor_goods_detail.html', 'wangke_distributor_goods_detail', '#f7f7f7', {
 							gid: id
 						})
 					},
@@ -886,13 +892,6 @@
 			}
 			// 数据请求
 			function getDiscoverData() {
-				logs("//..................................................")
-				logs(userInfo.token)
-				logs(app.typeler.join(","))
-				logs(skip)
-				logs(limit)
-				logs(app.cid)
-				logs("//..................................................")
 				mui.post($ajaxUrl + 'discover&action=discover_list', {
 					token: userInfo.token,
 					type: app.typeler.join(","),
