@@ -326,6 +326,23 @@
 				align-items: center;
 				width: 0.9rem;
 			}
+			
+			.official-sign {
+				position: relative;
+				font-size: 0.24rem;
+				color: #999999;
+				margin-top: 5px;
+				line-height: 1;
+				padding: 0;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				width: 1.2rem;
+			}
+			
+			.official-sign img {
+				width: 100%;
+			}
 
 			.mui-backdrop.mui-active {
 				background-color: rgba(0, 0, 0, 0.3);
@@ -461,6 +478,17 @@
 						</div>
 					</div>
 				</div>
+				<div class="menu-card mui-hidden">
+					<div class="headline">
+						旺客总仓
+					</div>
+					<div class="menu-body">
+						<div class="menu-items" id="pick_wangke_goods">
+							<img src="../image/icon/store-management-icon-11.png">
+							<span>拣货分销</span>
+						</div>
+					</div>
+				</div>
 				<div class="menu-card">
 					<div class="headline">
 						个人商城
@@ -517,10 +545,11 @@
 										<img v-if="goods.is_pick==0" :data-gid="goods.id" class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
 										<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 									</div>
-									<div class="team-name" :data-idx="index">
+									<div v-if="goods.type=='team'" class="team-name" :data-idx="index">
 										<span>货源</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
+									<div v-else class="official-sign"><img src="../image/discover/official-sign.png"></div>
 								</div>
 							</li>
 						</ul>
@@ -732,9 +761,14 @@
 				openPage('order_list.html', 'order_list', '#f7f7f7');
 			});
 
-			//拣货分销
+			//团队商品拣货分销
 			mui(".mui-content").on("tap", "#stock_goods", function() {
 				openPage('choose_goods.html', 'choose_goods', '#ffffff');
+			});
+			
+			//旺客总仓拣货分销
+			mui(".mui-content").on("tap", "#pick_wangke_goods", function() {
+				openPage('choose_wangke_goods.html', 'choose_wangke_goods', '#ffffff');
 			});
 
 			//添加分销商品

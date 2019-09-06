@@ -984,7 +984,12 @@ function getContactsInit() {
 
 // 下载wgt文件  
 function downWgt() {
-	var wgtUrl = "https://cdn.wangkeapp.cn/wangke.wgt";
+	var wgtUrl = '';
+	if (mui.os.ios) {
+		wgtUrl = "https://cdn.wangkeapp.cn/wangke_ios.wgt";
+	} else {
+		wgtUrl = "https://cdn.wangkeapp.cn/wangke_android.wgt";
+	}
 	plus.nativeUI.showWaiting("应用资源更新中...");
 	// showload(0, 0, "升级中...", "rgba(0,0,0,0.5)");
 	plus.downloader.createDownload(wgtUrl, {

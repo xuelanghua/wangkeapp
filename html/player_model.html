@@ -30,6 +30,20 @@
 				padding-top: 5px;
 				font-size: 25px;
 			}
+			
+			[v-cloak] {
+				display: none;
+			}
+			
+			.video-container {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.video-container video{
+				width: 100%;
+				height: 90%;
+			}
 		</style>
 	</head>
 
@@ -38,78 +52,96 @@
 			<div class="mui-action-back mui-icon mui-icon-closeempty mui-pull-left"></div>
 			<div class="mui-pull-right mui-icon mui-icon-download save-video"></div>
 		</div>
+		<div class="video-container" v-cloak v-if="clientType=='ios'">
+			<video :src="videoSource" :poster="videoSource+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" controls="controls" autoplay="autoplay"></video>
+		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var url = '';
 			var player = null;
-			mui.plusReady(function() {
-				var self = plus.webview.currentWebview();
-				self.setStyle({render:'always'})
-				url = self.url;
-				var position = 'static';
-				if (mui.os.ios) {
-					position = 'absolute';
-				}
-				
-				// 长按保存视频
-				mui(".mui-content").on("tap", ".save-video", function() {
-					plus.nativeUI.confirm("保存视频到相册", function(e) {
-						if (e.index == 0) {
-							showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
-							plus.downloader.createDownload(url, {
-								filename: "_doc/video/"
-							}, function(d, status) {
-								if (status == 200) {
-									plus.gallery.save(d.filename, function() {
-										showload(1);
-										plus.nativeUI.toast("保存成功!");
-									}, function(e) {
-										showload(1);
-										plus.nativeUI.toast("保存失败!");
-									});  
-								} else {
-									plus.nativeUI.toast("保存失败!");
-									showload(1);
+			var app = new Vue({
+				'el': '.video-container',
+				data: {
+					clientType: 'android',
+					videoSource: ''
+				},
+				created: function() {
+					
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						self.setStyle({render:'always'})
+						url = self.url;
+						app.videoSource = url;
+						var position = 'static';
+						if (mui.os.ios) {
+							position = 'absolute';
+							app.clientType = 'ios';
+						}
+						
+						// 保存视频
+						mui(".mui-content").on("tap", ".save-video", function() {
+							plus.nativeUI.confirm("保存视频到相册", function(e) {
+								if (e.index == 0) {
+									showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
+									plus.downloader.createDownload(url, {
+										filename: "_doc/video/"
+									}, function(d, status) {
+										if (status == 200) {
+											plus.gallery.save(d.filename, function() {
+												showload(1);
+												plus.nativeUI.toast("保存成功!");
+											}, function(e) {
+												showload(1);
+												plus.nativeUI.toast("保存失败!");
+											});  
+										} else {
+											plus.nativeUI.toast("保存失败!");
+											showload(1);
+										}
+									}).start();
 								}
-							}).start();
+							});
+						})
+						
+						// 创建视频播放控件
+						if (!player && app.clientType == 'android') {
+							player = plus.video.createVideoPlayer('videoplayer', {
+								src: url,
+								autoplay: true,
+								direction: -90,
+								top: '5%',
+								height: '90%',
+								'show-progress': true,
+								'show-fullscreen-btn': true,
+								'show-play-btn': true,
+								'show-center-play-btn': false, 
+								position: position
+							});
+							plus.webview.currentWebview().append(player);
+							// 监听开始播放事件
+							player.addEventListener('play', function(e) {
+								// console.log('Video play');
+							}, false)
+							// 监听播放进度更新事件
+							player.addEventListener('timeupdate', function(e) {
+								// console.log(JSON.stringify(e));
+							}, false);
+							// 监听播放结束事件
+							player.addEventListener('ended', function(e) {
+								// console.log('Video ended');
+							}, false);
+							// 监听播放全屏事件
+							player.addEventListener('fullscreenchange', function(e) {
+								if (e.detail.fullScreen && mui.os.ios) {
+									player.setStyles({top: "7%"});
+								}
+							}, false);
 						}
-					});
-				})
-				
-				// 创建视频播放控件
-				if (!player) {
-					player = plus.video.createVideoPlayer('videoplayer', {
-						src: url,
-						autoplay: true,
-						direction: -90,
-						top: '5%',
-						height: '90%',
-						'show-progress': true,
-						'show-fullscreen-btn': true,
-						'show-play-btn': true,
-						'show-center-play-btn': false, 
-						position: position
-					});
-					plus.webview.currentWebview().append(player);
-					// 监听开始播放事件
-					player.addEventListener('play', function(e) {
-						// console.log('Video play');
-					}, false)
-					// 监听播放进度更新事件
-					player.addEventListener('timeupdate', function(e) {
-						// console.log(JSON.stringify(e));
-					}, false);
-					// 监听播放结束事件
-					player.addEventListener('ended', function(e) {
-						// console.log('Video ended');
-					}, false);
-					// 监听播放全屏事件
-					player.addEventListener('fullscreenchange', function(e) {
-						if (e.detail.fullScreen && mui.os.ios) {
-							player.setStyles({top: "7%"});
-						}
-					}, false);
+					})
 				}
 			})
 		</script>
