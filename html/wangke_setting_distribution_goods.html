@@ -1,0 +1,580 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.section-one {
+				background-color: #FFFFFF;
+				margin-top: 0.2rem;
+			}
+
+			.good-title {
+				position: relative;
+				padding: 0.2rem 0.15rem 0.3rem;
+			}
+
+			.good-title p {
+				margin: 0;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.good-title:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				width: 100%;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+				left: 0;
+			}
+
+			.goods-img-groups {
+				padding: 0.4rem 0.2rem;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			.goods-img-groups ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				align-items: center;
+			}
+
+			.goods-img-groups li {
+				width: 25%;
+				padding: 0 1.2%;
+				height: 80px;
+			}
+
+			.goods-img-groups li img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.option-group {
+				padding-left: 15px;
+				width: 6.67rem;
+				border: 1px solid #DDDDDD;
+				border-left: none;
+				margin: 0.3rem 0;
+				position: relative;
+				overflow: visible;
+				background-color: #ffffff;
+			}
+
+			.del-container {
+				width: 0.5rem;
+				height: auto;
+				position: absolute;
+				top: 50%;
+				z-index: 6;
+				margin-top: -0.25rem;
+				right: -0.25rem;
+			}
+
+			.option-group .mui-table-view-cell {
+				padding: 0.35rem 0;
+				display: flex;
+				align-items: center;
+			}
+
+			.option-group .mui-table-view-cell input[type=number] {
+				width: 50%;
+				border-radius: 0;
+				margin: 0;
+				height: 20px;
+				padding: 0;
+				font-size: 0.3rem;
+				border: none;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.option-group .mui-table-view-cell:after {
+				left: 0;
+			}
+
+			.option-group .mui-table-view-cell span {
+				font-size: 0.3rem;
+				color: #999999;
+			}
+
+			.option-group .mui-table-view-cell .group-title {
+				color: #333333;
+				margin-right: 0.4rem;
+			}
+
+			input::-webkit-input-placeholder {
+				color: #DDDDDD;
+				font-size: 0.26rem;
+			}
+
+			.mui-table-view:after,
+			.mui-table-view:before {
+				height: 0;
+			}
+
+			.express-container {
+				margin: 0.2rem 0;
+				background-color: #FFFFFF;
+				padding: 0.4rem 0.2rem;
+			}
+
+			.last-opction .mui-table-view-cell {
+				padding: 0.35rem 0.2rem;
+				display: flex;
+				align-items: center;
+			}
+
+			.last-opction .mui-table-view-cell input[type=number] {
+				width: 50%;
+				border-radius: 0;
+				margin: 0;
+				height: 20px;
+				padding: 0;
+				font-size: 0.3rem;
+				border: none;
+			}
+
+			.last-opction .last-title {
+				margin-right: 0.4rem;
+			}
+
+			.option-group .mui-table-view-cell .mui-icon.mui-icon-clear,
+			.last-opction .mui-table-view-cell .mui-icon.mui-icon-clear {
+				position: absolute;
+				right: 10%;
+				font-size: 0.36rem;
+				color: #DDDDDD;
+			}
+
+			.goods-detail {
+				margin-top: 0.2rem;
+				background: #FFFffF;
+				padding: 0.2rem 0.2rem;
+			}
+
+			.goods-detail img {
+				max-width: 100% !important;
+				height: auto;
+			}
+
+			.goods-detail-container {
+				font-size: 0;
+				line-height: 0;
+				overflow: hidden;
+			}
+
+			.goods-detail-title {
+				font-size: 0.32rem;
+				color: #333333;
+				padding: 0.4rem 0 0.2rem;
+				font-weight: normal;
+				position: relative;
+				display: flex;
+				align-items: center;
+			}
+
+			.goods-detail-title:before {
+				content: '';
+				display: inline-block;
+				position: relative;
+				bottom: 0;
+				left: 0;
+				height: 15px;
+				width: 4px;
+				margin-right: 5px;
+				background-color: #333333;
+			}
+
+			.btn-section {
+				position: fixed;
+				display: flex;
+				align-items: center;
+				z-index: 199;
+				background-color: #F5CA3A;
+				height: 1.09rem;
+				bottom: 0;
+				width: 100%;
+			}
+
+			.btn-section div {
+				color: #FFFFFF;
+				width: 50%;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+			}
+
+			.btn-section .putaway-btn::after {
+				content: '';
+				position: absolute;
+				display: block;
+				background-color: #FFFFFF;
+				top: 50%;
+				margin-top: -0.185rem;
+				height: 0.37rem;
+				right: 0;
+				width: 1px;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+
+			.mui-bar-nav~.mui-content {
+				padding-top: 44px;
+				padding-bottom: 1.09rem;
+			}
+
+			.team-list-container {
+				margin: 0.2rem 0;
+				background-color: #FFFFFF;
+			}
+
+			.team-list-container h5 {
+				font-size: 0.3rem;
+				padding: 0.2rem 0.2rem 0;
+				position: relative;
+				display: flex;
+				align-items: center;
+				color: #000000;
+			}
+
+			.team-list-container h5:before {
+				content: "";
+				position: relative;
+				display: block;
+				width: 4px;
+				height: 16px;
+				background-color: #000033;
+				margin-right: 5px;
+			}
+
+			.team-list-container .mui-table-view-cell {
+				font-size: 0.28rem;
+				color: #666666;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+			}
+
+			.team-list.active span {
+				display: inline-flex;
+				position: relative;
+			}
+
+			.team-list.active span:after {
+				content: '';
+				display: inline-block;
+				width: 19px;
+				height: 20px;
+				position: absolute;
+				background: url('../image/icon/draw-icono.png')center center no-repeat;
+				background-size: contain;
+				right: -0.8rem;
+			}
+
+			.void-detail-container {
+				padding: 0.6rem 0;
+				margin: 0 auto;
+				font-size: 0.3rem;
+				color: #999999;
+				text-align: center;
+			}
+
+			.goods-detail-container p {
+				line-height: 1.4;
+			}
+
+			.recommend {
+				font-size: 12px;
+				padding: 0 0.2rem 0.1rem;
+				margin: 0.2rem 0;
+				background-color: #FFFFFF;
+			}
+
+			.recommend .mui-input-row label {
+				font-size: 16px;
+			}
+
+			.mui-switch-blue.mui-active {
+				background-color: #FFD626;
+				border: 2px solid #FFD626;
+			}
+
+			.mui-input-row {
+				margin: 0;
+			}
+
+			.mui-input-row label {
+				font-size: 14px;
+				margin-left: -15px;
+			}
+
+			.tishi {
+				color: #999999;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">设置分销商品</h1>
+		</header>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<div class="section-one">
+				<div class="good-title">
+					<p>{{goods_detail.name}}</p>
+				</div>
+				<div class="goods-img-groups">
+					<ul>
+						<li v-for="(img,i) in images"><img :src="img" alt=""></li>
+					</ul>
+				</div>
+			</div>
+			<!-- 规格 -->
+			<div class="option-container" v-if="spec">
+				<div class="option-group" v-for="(g,idx) in spec">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<span class="group-title">规格</span>
+							<span>{{g.title}}</span>
+						</li>
+						<li class="mui-table-view-cell">
+							<span class="group-title">供货价格</span>
+							<span>{{g.settlement_price}}</span>
+						</li>
+						<li class="mui-table-view-cell">
+							<span class="group-title">零售价格</span>
+							<input type="number" v-model="g.price" :placeholder="'价格不低于'+g.protect_price">
+							<span v-show="g.price" class="mui-icon mui-icon-clear" @tap="g.price=''"></span>
+						</li>
+						<li class="mui-table-view-cell">
+							<span class="group-title">库存</span>
+							<span>{{g.stock}}</span>
+						</li>
+					</ul>
+					<img class="del-container" src="../image/icon/setting_distribution_goods-icon1.png">
+				</div>
+			</div>
+			<div class="express-container">
+				<span>快递： &nbsp;&nbsp;&nbsp;</span><span>{{goods_detail.express_name}}&nbsp;&nbsp;&nbsp;&nbsp;&yen;{{goods_detail.freight}}</span>
+			</div>
+			<div class="recommend">
+				<div class="mui-input-row">
+					<label>设为推荐</label>
+					<div class="mui-switch mui-switch-blue mui-active" id="recommend_switch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</div>
+				<div class="tishi">推荐商品将在个人名片页进行展示</div>
+			</div>
+			<div class="last-opction">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<span class="last-title">销量</span>
+						<input type="number" v-model="sale_count" placeholder="设置商品虚拟销量">
+						<span class="mui-icon mui-icon-clear"></span>
+					</li>
+					<li class="mui-table-view-cell">
+						<span class="last-title">浏览</span>
+						<input type="number" v-model="view_count" placeholder="设置商品虚拟浏览量">
+						<span class="mui-icon mui-icon-clear"></span>
+					</li>
+					<li class="mui-table-view-cell">
+						<span class="last-title">排序值</span>
+						<input type="number" v-model="top" placeholder="倒序，值越大排名越靠前">
+						<span class="mui-icon mui-icon-clear"></span>
+					</li>
+				</ul>
+			</div>
+			<div class="goods-detail">
+				<span class="goods-detail-title">商品详情</span>
+				<div v-if="goods_detail.content" class="goods-detail-container" v-html="goods_detail.content"></div>
+				<div v-else class="void-detail-container">
+					暂无详情
+				</div>
+			</div>
+			<div class="btn-section">
+				<div class="putaway-btn option-btn" data-status="1">
+					上架出售
+				</div>
+				<div class="the-warehouse option-btn" data-status="0">
+					放入仓库
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var recommend = 1;
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					goods_id: '',
+					goods_detail: {},
+					images: [],
+					spec: [],
+					team_info: [],
+					sale_count: '',
+					view_count: '',
+					top: '',
+					team_id: '',
+					// 0仓库 1上架
+					status: ''
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+						// 获取原本的资料
+						app.goods_id = self.gid;
+						mui.post($ajaxUrl + 'goods&action=wangke_goods_detail', {
+							token: userInfo.token,
+							goods_id: app.goods_id
+						}, function(res) {
+							// logs(res);
+							if (res.errno == 0) {
+								app.goods_detail = res.data;
+								app.images = res.data.images;
+								app.spec = res.data.spec;
+								app.team_info = res.data.team_info;
+							} else {
+
+							}
+						}, 'json');
+						// 预览图片
+						mui('.mui-content').on('tap', '.goods-img-groups img', function() {
+							var index = this.dataset.idx;
+							plus.nativeUI.previewImage(app.images, {
+								current: index,
+								loop: true,
+								indicator: 'default',
+								onLongPress: function(event) {
+									// 长按操作
+								}
+							});
+						});
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+
+					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					/* var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+					window.onresize = function() {
+						var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+						var paddeds = document.querySelector(".btn-section");
+						var focus = document.querySelector('input:focus');
+						if (resizeHeight * 1 < originalHeight * 1 && focus) {
+							//resizeHeight<originalHeight证明窗口被挤压了
+							paddeds.style.zIndex = '-1';
+							paddeds.style.display = 'none';
+						} else {
+							paddeds.style.zIndex = '199';
+							paddeds.style.display = 'flex';
+						}
+					} */
+				}
+			})
+			// 上架或者加入仓库
+			mui(".mui-content").on("tap", ".option-btn", function() {
+				document.activeElement.blur();
+				app.status = this.dataset.status;
+				postChoice();
+			})
+			// 提交
+			function postChoice() {
+				logs("//-------------------")
+				mui.post($ajaxUrl + 'goods&action=pick_wangke_goods', {
+					token: userInfo.token,
+					goods_id: app.goods_id,
+					sale_count: app.sale_count,
+					view_count: app.view_count,
+					top: app.top,
+					status: app.status,
+					is_recommend: recommend,
+					spec: app.spec,
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						mui.fire(plus.webview.currentWebview().opener(), 'refreshList');
+						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'refreshList');
+						mui.fire(plus.webview.getWebviewById('choose_goods'), 'refreshList');
+						mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
+						mui.fire(plus.webview.getWebviewById('shop_index'), 'reloadYourself');
+						if (app.status == 0) {
+							message("已经放入仓库！");
+							mui.back();
+						} else {
+							message("上架成功！");
+							mui.back();
+						}
+					} else {
+						message(res.message);
+					}
+				}, 'json');
+			}
+			// 点击团队
+			mui(".mui-content").on('tap', ".team-list", function(e) {
+				var _t = document.querySelectorAll(".team-list");
+				for (var _i_ = 0; _i_ < _t.length; _i_++) {
+					_t[_i_].classList.remove("active");
+				}
+				this.classList.add("active")
+				app.team_id = this.dataset.tid;
+			})
+			//推荐开关监听
+			document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
+				if (event.detail.isActive) {
+					recommend = 1;
+				} else {
+					recommend = 0;
+				}
+			})
+		</script>
+	</body>
+
+</html>

@@ -173,7 +173,9 @@
 				padding: 0 10px;
 				overflow: visible;
 			}
-
+			.subMenu .mui-scroll .mui-control-item-three {
+				width: 33.333%;
+			}
 			.subMenu .mui-scroll {
 				position: absolute;
 				touch-action: pan-y;
@@ -315,8 +317,13 @@
 				<!-- 第一组菜单 -->
 				<div id="screen-menu" class="subMenu screen-menu">
 					<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-						<div class="mui-scroll">
-							<span class="mui-control-item" v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</span>
+						<div class="mui-scroll" v-if="group_id>0">
+							<span class="mui-control-item"  v-for="(menu,idx) in screen" :class="menu.selected?'active':''"
+							 @tap="selectedTj(menu.id,idx)">{{menu.title}}</span>
+						</div>
+						<div class="mui-scroll" v-else>
+							<span class="mui-control-item mui-control-item-three" v-if="menu.id!=4&&menu.id!=5" v-for="(menu,idx) in screen" :class="menu.selected?'active':''"
+							 @tap="selectedTj(menu.id,idx)">{{menu.title}}</span>
 						</div>
 					</div>
 				</div>
@@ -563,11 +570,11 @@
 							id: '4',
 							selected: false
 						},
-						// {
-						// 	title: '旺客总仓',
-						// 	id: '5',
-						// 	selected: false
-						// }
+						{
+							title: '旺客总仓',
+							id: '5',
+							selected: false
+						}
 					],
 					like: false,
 					// 评论部分
@@ -879,7 +886,13 @@
 			}
 			// 数据请求
 			function getDiscoverData() {
-				// logs(skip);
+				logs("//..................................................")
+				logs(userInfo.token)
+				logs(app.typeler.join(","))
+				logs(skip)
+				logs(limit)
+				logs(app.cid)
+				logs("//..................................................")
 				mui.post($ajaxUrl + 'discover&action=discover_list', {
 					token: userInfo.token,
 					type: app.typeler.join(","),
@@ -887,7 +900,7 @@
 					limit: limit,
 					article_cid: app.cid,
 				}, function(res) {
-					logs(res);
+					logs(res); 
 					if (res.errno == 0) {
 						if (skip == 1) {
 							app.dynamic = [];
