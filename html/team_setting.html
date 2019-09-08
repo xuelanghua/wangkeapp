@@ -188,10 +188,13 @@
 							logs(res);
 							var per = plus.webview.currentWebview().opener();
 							if (res.errno == 0) {
+								message("保存成功!");
 								mui.fire(per, 'editTeamInfo');
 								mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
 								mui.back();
-							} else {}
+							} else {
+								message("未做任何修改!");
+							}
 						}, 'json');
 					})
 
@@ -265,6 +268,7 @@
 					})
 				}
 			})
+			
 			// 查看数据权限
 			mui('.mui-content').on('toggle', '.mui-switch', function(event) {
 				if (event.detail.isActive) {
@@ -280,10 +284,13 @@
 					logs(res);
 					if (res.errno == 0) {
 						var per = plus.webview.currentWebview().opener();
+						message("切换成功!");
 						setTimeout(function() {
 							mui.fire(per, 'editTeamInfo');
 							mui.fire(plus.webview.getWebviewById('team_list'), 'refreshTeamList');
 						}, 200);
+					} else {
+						message("切换失败!");
 					}
 					// logs(res);
 				}, 'json');

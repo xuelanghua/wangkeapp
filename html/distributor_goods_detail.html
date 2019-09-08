@@ -223,9 +223,11 @@
 				max-width: 100% !important;
 				height: auto;
 			}
-			.goods-detail-container img:first-of-type{
+
+			.goods-detail-container img:first-of-type {
 				margin-top: 0;
 			}
+
 			.btn-section {
 				position: fixed;
 				display: flex;
@@ -279,9 +281,11 @@
 			.goods-detail-container p {
 				line-height: 1.4;
 			}
-			.goods-detail-container div{
+
+			.goods-detail-container div {
 				line-height: 1.8;
 			}
+
 			.void-detail-container {
 				padding: 0.6rem 0;
 				margin: 0 auto;
@@ -370,7 +374,8 @@
 			</div> -->
 			<div class="btn-section">
 				<!-- 不可拣货 -->
-				<div v-if="goods_detail.is_pick==1||goods_detail.check_status==0||goods_detail.check_status==2||goods_detail.status!=1||goods_detail.stock==0" class="the-gray-warehouse">
+				<div v-if="goods_detail.is_pick==1||goods_detail.check_status==0||goods_detail.check_status==2||goods_detail.status!=1||goods_detail.stock==0"
+				 class="the-gray-warehouse">
 					拣货
 				</div>
 				<div v-else class="the-warehouse">
@@ -416,26 +421,7 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
-						mui.post($ajaxUrl + 'goods&action=goods_detail', {
-							token: userInfo.token,
-							goods_id: app.goods_id
-						}, function(res) {
-							logs(res);
-							if (res.errno == 0) {
-								app.goods_detail = res.data;
-								app.images = res.data.images;
-								app.spec = res.data.spec;
-								app.team_info = res.data.team_info;
-								if (app.images.length > 1) {
-									setTimeout(function() {
-										swiperInint();
-									}, 500);
-								}
-							} else {
-
-							}
-						}, 'json');
-
+						getGoodsDetail();
 						// 预览图片
 						mui('.mui-content').on('tap', '.swiper-slide img', function() {
 							var index = this.dataset.idx;
@@ -486,6 +472,26 @@
 					}
 				});
 			}
+
+			function getGoodsDetail() {
+				mui.post($ajaxUrl + 'goods&action=goods_detail', {
+					token: userInfo.token,
+					goods_id: app.goods_id
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.goods_detail = res.data;
+						app.images = res.data.images;
+						app.spec = res.data.spec;
+						app.team_info = res.data.team_info;
+						if (app.images.length > 1) {
+							setTimeout(function() {
+								swiperInint();
+							}, 500);
+						}
+					}
+				}, 'json');
+			}
 			// 添加到仓库
 			mui(".mui-content").on("tap", ".putaway-btn", function() {
 				mui.toast('添加到仓库');
@@ -502,6 +508,11 @@
 				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
 					teamid: team_id
 				})
+			})
+
+			// 监听拣货
+			window.addEventListener('reloadYourself', function() {
+				getGoodsDetail();
 			})
 		</script>
 	</body>

@@ -417,25 +417,7 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
-						mui.post($ajaxUrl + 'goods&action=goods_detail', {
-							token: userInfo.token,
-							goods_id: app.goods_id
-						}, function(res) {
-							logs(res);
-							if (res.errno == 0) {
-								app.goods_detail = res.data;
-								app.images = res.data.images;
-								app.spec = res.data.spec;
-								app.team_info = res.data.team_info;
-								if (app.images.length > 1) {
-									setTimeout(function() {
-										swiperInint();
-									}, 500);
-								}
-							} else {
-
-							}
-						}, 'json');
+						getGoodsDetail();
 
 						// 预览图片
 						mui('.mui-content').on('tap', '.swiper-slide img', function() {
@@ -487,6 +469,27 @@
 					}
 				});
 			}
+			
+			function getGoodsDetail() {
+				mui.post($ajaxUrl + 'goods&action=goods_detail', {
+					token: userInfo.token,
+					goods_id: app.goods_id
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.goods_detail = res.data;
+						app.images = res.data.images;
+						app.spec = res.data.spec;
+						app.team_info = res.data.team_info;
+						if (app.images.length > 1) {
+							setTimeout(function() {
+								swiperInint();
+							}, 500);
+						}
+					}
+				}, 'json');
+			}
+			
 			// 添加到仓库
 			mui(".mui-content").on("tap", ".putaway-btn", function() {
 				mui.toast('添加到仓库');
@@ -503,6 +506,11 @@
 				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
 					teamid: team_id
 				})
+			})
+			
+			// 监听拣货
+			window.addEventListener('reloadYourself', function() {
+				getGoodsDetail();
 			})
 		</script>
 	</body>

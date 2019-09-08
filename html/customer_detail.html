@@ -589,6 +589,7 @@
 		var noticeStatus = 0;
 		var userInfo = getUserInfo();
 		var groupId = userInfo.group_id;
+		var crmId = 0;
 		mui.plusReady(function() {
 			var self = plus.webview.currentWebview();
 			cid = self.cid;
@@ -614,13 +615,18 @@
 			})
 
 			document.querySelector('#write_button').addEventListener('tap', function() {
-				fnOpenWin('customer_entry.html', 'customer_entry', {
-					statusbar: {
-						background: '#FFF'
-					}
-				}, {
-					cid: cid
-				}, 'slide-in-right');
+				if (crmId > 0) {
+					fnOpenWin('customer_edit.html', 'customer_edit', {statusbar: {background: '#FFFFFF'}}, {cid: crmId}, 'slide-in-right');
+				} else {
+					fnOpenWin('customer_entry.html', 'customer_entry', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, {
+						cid: cid
+					}, 'slide-in-right');
+				}
+				
 				plus.navigator.setStatusBarStyle('dark');
 			})
 
@@ -813,6 +819,7 @@
 			}, function(res) {
 				logs(res);
 				if (res.errno == 0) {
+					calculateRate();
 					var data = res.data;
 					chatName = data.nickName;
 					avatar = data.avatarUrl;
@@ -829,6 +836,10 @@
 					}
 					if (data.card > 0) {
 						document.getElementById('view_card').classList.remove('mui-hidden');
+					}
+					if (data.crm_id > 0) {
+						crmId = data.crm_id;
+						document.getElementById("write_button").innerText = "已录入CRM";
 					}
 					var follow = data.follow;
 					var html = '';
@@ -1066,8 +1077,8 @@
 						dealFlag = 1;
 					}
 
-					// 					document.getElementById('deal_time').innerText = data.date;
-					// 					document.getElementById('deal_percent').innerText = data.rate;
+					document.getElementById('deal_time').innerText = data.date;
+					document.getElementById('deal_percent').innerText = data.rate;
 					if (data.member == 1) {
 						document.getElementById('crm_member').innerText = '下级会员';
 					} else {
@@ -1093,6 +1104,16 @@
 					bd[i].className = "";
 				}
 			}
+		}
+		
+		function calculateRate() {
+			mui.post($ajaxUrl + 'customer', {
+				action: 'rate',
+				token: userInfo.token,
+				user_id: cid,
+			}, function(res) {
+				logs(res);
+			}, 'json')
 		}
 	</script>
 </html>
