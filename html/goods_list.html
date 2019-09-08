@@ -295,6 +295,15 @@
 			.price-container span:first-of-type{
 				color: #F52E20;
 			}
+			.right-bottom-cont span{
+						display: inline-flex;
+						align-items: center;
+			}
+			.right-bottom-cont span img{
+				width: 13px;
+				height: auto;
+				margin-right: 2px;
+			}
 			/* 半透明效果 */
 			/* .mui-table-view-cell.lucid-active{
 				opacity: 0.5;
@@ -428,7 +437,8 @@
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
-											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">分销商品</span>
+											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">企业仓</span>
+											<span v-if="lst.uid==0" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
 											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
 										<div class="playb" :class="'playb'+lst.id">
@@ -487,7 +497,8 @@
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(slo.id,slo.is_team_goods)">库存：{{slo.stock}}</span>
-											<span v-if="slo.is_team_goods==1" @tap="openGoodsDetail(slo.id,slo.is_team_goods)">分销商品</span>
+											<span v-if="slo.is_team_goods==1" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">企业仓</span>
+											<span v-if="slo.uid==0" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
 											<span class="genduo" :data-ids="slo.id">...</span>
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+slo.id">
@@ -546,7 +557,8 @@
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
-											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">分销商品</span>
+											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">企业仓</span>
+											<span v-if="lst.uid==0" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
 											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
@@ -878,7 +890,7 @@
 			limit: 8,
 			goods_name: app.goodsName
 		}, function(res) {
-			// logs(res);
+			logs(res);
 			if (res.errno == 0) {
 				if (skip == 1) {
 					app[g_type + '_list'] = res.data;
