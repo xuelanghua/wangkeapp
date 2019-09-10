@@ -460,7 +460,7 @@
 						<div class="goods-info">
 							<div class="goods-img">
 								<img :src="goods.cover">
-								<span v-if="detail.team_order==1">分销商品</span>
+								<span v-if="detail.team_order>0">分销商品</span>
 							</div>
 							<div class="goods-desc">
 								<p class="mui-ellipsis goods-title">{{goods.name}}</p>
@@ -473,6 +473,9 @@
 								</div>
 								<div v-if="detail.team_order==1&&sales==2" class="team-name-cont">
 									<span v-if="goods.team_info.name" class="price">货源：{{goods.team_info.name}}</span>
+								</div>
+								<div v-if="detail.team_order==9&&sales==2" class="team-name-cont">
+									<span class="price">货源：旺客官方</span>
 								</div>
 							</div>
 						</div>
@@ -487,7 +490,7 @@
 				<ul class="mui-table-view summary-container">
 					<li class="mui-table-view-cell">
 						<div>
-							<span v-if="goods_item">共{{goods_item.length}}件商品</span><span>&yen;{{detail.total_price}}</span>
+							<span v-if="goods_item">共{{goods_item.length}}件商品</span><span>&yen;{{detail.price}}</span>
 						</div>
 						<div>
 							<span>运费</span>
@@ -501,7 +504,7 @@
 						<div>
 							<span>实付款</span><span class="await-pay-sum">&yen;{{detail.total_price}}</span>
 						</div>
-						<div v-if="detail.team_order==1">
+						<div v-if="detail.team_order>0">
 							<!-- 队长 -->
 							<template v-if="sales==1">
 								<span>净收益</span>
@@ -542,6 +545,13 @@
 							<span>联系队长</span>
 						</div>
 						<span class="mui-navigate-right">{{c.captain_name}}</span>
+					</li>
+					<li class="mui-table-view-cell contact-captain" v-if="detail.team_order==9&&detail.service_info.uid>0" @tap="contact(detail.service_info.uid,detail.service_info.name+'(旺客客服)',detail.service_info.avatar)">
+						<div class="contact-left-cont">
+							<img src="../image/icon/contact-the-merchant.png" alt="">
+							<span>联系客服</span>
+						</div>
+						<span class="mui-navigate-right">{{detail.service_info.name}}</span>
 					</li>
 				</ul>
 			</div>

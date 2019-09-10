@@ -173,8 +173,9 @@
 				padding: 0 10px;
 				overflow: visible;
 			}
-			.subMenu .mui-scroll .mui-control-item-three {
-				width: 33.333%;
+			.subMenu .mui-scroll-three {
+				width: 100%!important;
+				text-align: center;
 			}
 			.subMenu .mui-scroll {
 				position: absolute;
@@ -321,8 +322,8 @@
 							<span class="mui-control-item"  v-for="(menu,idx) in screen" :class="menu.selected?'active':''"
 							 @tap="selectedTj(menu.id,idx)">{{menu.title}}</span>
 						</div>
-						<div class="mui-scroll" v-else>
-							<span class="mui-control-item mui-control-item-three" v-if="menu.id!=4&&menu.id!=5" v-for="(menu,idx) in screen" :class="menu.selected?'active':''"
+						<div class="mui-scroll mui-scroll-three" v-else>
+							<span class="mui-control-item" v-if="menu.id<4" v-for="(menu,idx) in screen" :class="menu.selected?'active':''"
 							 @tap="selectedTj(menu.id,idx)">{{menu.title}}</span>
 						</div>
 					</div>
@@ -1033,6 +1034,10 @@
 			}, false);
 			// 监听课程购买
 			window.addEventListener('buycourse', function() {
+				getDiscoverData();
+			}, false);
+			//监听激活
+			window.addEventListener('activationSuccess', function() {
 				getDiscoverData();
 			}, false);
 			// 更换封面

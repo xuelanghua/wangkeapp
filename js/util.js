@@ -734,6 +734,7 @@ function pushCallback(data, event) {
 			if (url == 'activation') {
 				updateUserInfo();
 				mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
+				mui.fire(plus.webview.getWebviewById('media'), 'activationSuccess');
 			} else if (url == 'logout') {
 				fnLogout();
 			} else {
@@ -767,6 +768,7 @@ function pushCallback(data, event) {
 			playNoticeAudio();
 		} else if (url == 'activation') {
 			mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
+			mui.fire(plus.webview.getWebviewById('media'), 'activationSuccess');
 			updateUserInfo();
 		} else if (url == 'buyGoodsBoothSuccess') {
 			updateUserInfo();

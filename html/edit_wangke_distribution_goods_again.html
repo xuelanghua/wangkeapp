@@ -111,7 +111,7 @@
 
 			.option-group .mui-table-view-cell span {
 				font-size: 0.3rem;
-				color: #999999;
+				color: #DDDDDD;
 			}
 
 			.option-group .mui-table-view-cell .group-title {
@@ -242,53 +242,8 @@
 				padding-bottom: 1.09rem;
 			}
 
-			.team-list-container {
-				margin: 0.2rem 0;
-				background-color: #FFFFFF;
-			}
-
-			.team-list-container h5 {
-				font-size: 0.3rem;
-				padding: 0.2rem 0.2rem 0;
-				position: relative;
-				display: flex;
-				align-items: center;
-				color: #000000;
-			}
-
-			.team-list-container h5:before {
-				content: "";
-				position: relative;
-				display: block;
-				width: 4px;
-				height: 16px;
-				background-color: #000033;
-				margin-right: 5px;
-			}
-
-			.team-list-container .mui-table-view-cell {
-				font-size: 0.28rem;
-				color: #666666;
-			}
-
 			.mui-table-view-cell:after {
 				background-color: #DDDDDD;
-			}
-
-			.team-list.active span {
-				display: inline-flex;
-				position: relative;
-			}
-
-			.team-list.active span:after {
-				content: '';
-				display: inline-block;
-				width: 19px;
-				height: 20px;
-				position: absolute;
-				background: url('../image/icon/draw-icono.png')center center no-repeat;
-				background-size: contain;
-				right: -0.8rem;
 			}
 
 			.void-detail-container {
@@ -302,36 +257,34 @@
 			.goods-detail-container p {
 				line-height: 1.4;
 			}
-
 			.recommend {
 				font-size: 12px;
 				padding: 0 0.2rem 0.1rem;
 				margin: 0.2rem 0;
 				background-color: #FFFFFF;
 			}
-
+			
 			.recommend .mui-input-row label {
 				font-size: 16px;
 			}
-
+			
 			.mui-switch-blue.mui-active {
 				background-color: #FFD626;
 				border: 2px solid #FFD626;
 			}
-
+			
 			.mui-input-row {
 				margin: 0;
 			}
-
+			
 			.mui-input-row label {
 				font-size: 14px;
 				margin-left: -15px;
 			}
-
+			
 			.tishi {
 				color: #999999;
 			}
-
 			[v-cloak] {
 				display: none;
 			}
@@ -396,17 +349,17 @@
 					<li class="mui-table-view-cell">
 						<span class="last-title">销量</span>
 						<input type="number" v-model="sale_count" placeholder="设置商品虚拟销量">
-						<span class="mui-icon mui-icon-clear"></span>
+						<span v-show="sale_count!=''" class="mui-icon mui-icon-clear" @tap="sale_count=''"></span>
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="last-title">浏览</span>
 						<input type="number" v-model="view_count" placeholder="设置商品虚拟浏览量">
-						<span class="mui-icon mui-icon-clear"></span>
+						<span v-show="view_count!=''" class="mui-icon mui-icon-clear" @tap="view_count=''"></span>
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="last-title">排序值</span>
 						<input type="number" v-model="top" placeholder="倒序，值越大排名越靠前">
-						<span class="mui-icon mui-icon-clear"></span>
+							<span v-show="top!=''" class="mui-icon mui-icon-clear" @tap="top=''"></span>
 					</li>
 				</ul>
 			</div>
@@ -443,7 +396,6 @@
 					sale_count: '',
 					view_count: '',
 					top: '',
-					team_id: '',
 					// 0仓库 1上架
 					status: ''
 				},
@@ -471,18 +423,25 @@
 							token: userInfo.token,
 							goods_id: app.goods_id
 						}, function(res) {
-							// logs(res);
+							logs(res);
 							if (res.errno == 0) {
 								app.goods_detail = res.data;
 								app.images = res.data.images;
 								app.spec = res.data.spec;
-								app.team_info = res.data.team_info;
+								app.sale_count = res.data.sale_count;
+								app.view_count = res.data.view_count;
+								app.top = res.data.top;
+								recommend =  res.data.is_recommend;
+								if (recommend == 0) {
+									mui("#recommend_switch").switch().toggle();
+								}
 							} else {
 								plus.nativeUI.alert(res.message, function() {
 									mui.back();
 								})
 							}
 						}, 'json');
+						// 预览图片
 						// 预览图片
 						mui('.mui-content').on('tap', '.goods-img-groups img', function() {
 							var index = this.dataset.idx;
@@ -503,8 +462,7 @@
 					}
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
-
-					//软键盘弹起与隐藏  都会引起窗口的高度发生变化
+					
 					/* var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 					window.onresize = function() {
 						var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -537,21 +495,16 @@
 					top: app.top,
 					status: app.status,
 					is_recommend: recommend,
-					spec: app.spec,
+					spec: app.spec
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
-						mui.fire(plus.webview.currentWebview().opener(), 'refreshList');
-						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'refreshList');
-						mui.fire(plus.webview.getWebviewById('choose_wangke_goods'), 'refreshList');
 						mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
-						mui.fire(plus.webview.getWebviewById('shop_index'), 'reloadYourself');
-						mui.fire(plus.webview.getWebviewById('wangke_distributor_goods_detail'), 'reloadYourself');
-						if (app.status == 0) {
-							message("已经放入仓库！");
+						if (app.status == 1) {
+							message("上架成功！");
 							mui.back();
 						} else {
-							message("上架成功！");
+							message("已经放入仓库！");
 							mui.back();
 						}
 					} else {
@@ -559,15 +512,6 @@
 					}
 				}, 'json');
 			}
-			// 点击团队
-			mui(".mui-content").on('tap', ".team-list", function(e) {
-				var _t = document.querySelectorAll(".team-list");
-				for (var _i_ = 0; _i_ < _t.length; _i_++) {
-					_t[_i_].classList.remove("active");
-				}
-				this.classList.add("active")
-				app.team_id = this.dataset.tid;
-			})
 			//推荐开关监听
 			document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
 				if (event.detail.isActive) {

@@ -357,11 +357,6 @@
 					</li>
 				</ul>
 			</div>
-			<div v-if="team.selected==1" class="team-name-cont" :data-tid="team.id" v-for="(team,index) in team_info">
-				<img :src="team.cover||'https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg'">
-				<span>{{team.name}}</span>
-				<span class="mui-icon mui-icon-arrowright"></span>
-			</div>
 			<div class="goods-detail-container">
 				<h4 class="title">商品详情</h4>
 				<div id="content" v-html="goods_detail.content"></div>
@@ -439,7 +434,9 @@
 									}, 500);
 								}
 							} else {
-
+								plus.nativeUI.alert(res.message, function() {
+									mui.back();
+								})
 							}
 						}, 'json');
 
@@ -499,7 +496,7 @@
 				var sign = this.dataset.type;
 				if (sign == 'edit') {
 					// 编辑
-					openPage('edit_distribution_goods_again.html', 'edit_distribution_goods_again', '#f7f7f7', {
+					openPage('edit_wangke_distribution_goods_again.html', 'edit_wangke_distribution_goods_again', '#f7f7f7', {
 						gid: app.goods_id
 					})
 				} else if (sign == 'up') {
@@ -518,13 +515,6 @@
 				}
 
 			})
-			// 打开团队详情
-			mui(".mui-content").on("tap", ".team-name-cont", function() {
-				var team_id = this.dataset.tid;
-				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
-					teamid: team_id
-				})
-			})
 			//改变商品状态
 			function changeGoodsStatus(status) {
 				mui.post($ajaxUrl + 'goods', {
@@ -532,7 +522,7 @@
 					token: userInfo.token,
 					status: status,
 					goods_id: app.goods_id,
-					type: "team_goods"
+					type: "wangke_goods"
 				}, function(res) {
 					// logs(res);
 					if (res.errno == 0) {

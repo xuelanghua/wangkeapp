@@ -407,6 +407,7 @@
 					view_total: 0,
 					share_title: '',
 					my_video: '',
+					demoUrl: ''
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -452,8 +453,9 @@
 						// 操作演示
 						mui(".mui-popover").on("tap", ".operation-demo-btn", function() {
 							mui('#topPopover').popover('hide', document.querySelector(".change-theme"));
-							videoPlayer('https://bfwangke.oss-cn-shenzhen.aliyuncs.com/videos/6/2019/06/kn5KtllV45fTfu0acvuMnAV0NU0IVI.mp4');
+							videoPlayer(muiCont.demoUrl);
 						})
+						
 						mui(".mui-content").on("tap", ".share-card", function() {
 							muiCont.share_title = muiCont.contName + '的旺客名片!';
 							mask.show();
@@ -507,8 +509,11 @@
 							document.querySelector('.edit-remark').style.display = 'block';
 						} else if(fid == selfid){
 							document.querySelector('.change-theme').classList.remove('mui-hidden');
-						}else{
-							
+						}
+						
+						if (data.card_guide != '') {
+							muiCont.demoUrl = data.card_guide;
+							document.querySelector('.operation-demo-btn').classList.remove('mui-hidden');
 						}
 						//如果是个人开启红包的话,更新用户当前的地理位置
 						if (fid == userInfo.id) {

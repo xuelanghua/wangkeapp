@@ -437,13 +437,13 @@
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
-											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">企业仓</span>
-											<span v-if="lst.uid==0" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
+											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/qiyec-icon.png" alt="">企业仓</span>
+											<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
 											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
 										<div class="playb" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div v-if="(lst.is_team_goods==1&&lst.check_status==1)||lst.is_team_goods==0" class="play" data-type="edit"
+											<div v-if="(lst.is_team_goods>0&&lst.check_status==1)||lst.is_team_goods==0" class="play" data-type="edit"
 											 :data-gtype="lst.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
@@ -497,13 +497,13 @@
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(slo.id,slo.is_team_goods)">库存：{{slo.stock}}</span>
-											<span v-if="slo.is_team_goods==1" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">企业仓</span>
-											<span v-if="slo.uid==0" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
+											<span v-if="slo.is_team_goods==1" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/qiyec-icon.png" alt="">企业仓</span>
+											<span v-if="slo.is_team_goods==9" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
 											<span class="genduo" :data-ids="slo.id">...</span>
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+slo.id">
 											<div class="jiao"></div>
-											<div v-if="(slo.is_team_goods==1&&slo.check_status==1)||slo.is_team_goods==0" class="play" data-type="edit"
+											<div v-if="(slo.is_team_goods>0&&slo.check_status==1)||slo.is_team_goods==0" class="play" data-type="edit"
 											 :data-gtype="slo.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
@@ -558,12 +558,12 @@
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
 											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">企业仓</span>
-											<span v-if="lst.uid==0" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
+											<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
 											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
 										<div class="playb mui-clearfix" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div v-if="(lst.is_team_goods==1&&lst.check_status==1)||lst.is_team_goods==0" class="play" data-type="edit"
+											<div v-if="(lst.is_team_goods>0&&lst.check_status==1)||lst.is_team_goods==0" class="play" data-type="edit"
 											 :data-gtype="lst.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
@@ -642,8 +642,12 @@
 					openPage('distributor_goods_detail_bio.html', 'distributor_goods_detail_bio', '#f7f7f7', {
 						gid: gid
 					})
-				} else {
+				} else if (type == 1) {
 					openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
+						gid: gid
+					})
+				} else {
+					openPage('wangke_distributor_goods_detail_mine.html', 'wangke_distributor_goods_detail_mine', '#f7f7f7', {
 						gid: gid
 					})
 				}
@@ -736,6 +740,8 @@
 				// "team_goods"
 				if (gtype == 1) {
 					changeGoodsStatus(0, currentId, "team_goods");
+				} else if (gtype == 9) {
+					changeGoodsStatus(0, currentId, "wangke_goods");
 				} else {
 					changeGoodsStatus(0, currentId);
 				}
@@ -743,6 +749,8 @@
 				//上架按钮
 				if (gtype == 1) {
 					changeGoodsStatus(1, currentId, "team_goods");
+				} else if (gtype == 9) {
+					changeGoodsStatus(1, currentId, "wangke_goods");
 				} else {
 					changeGoodsStatus(1, currentId);
 				}
@@ -752,6 +760,9 @@
 					if (e.index == 0) {
 						if (gtype == 1) {
 							changeGoodsStatus(-1, currentId, "team_goods");
+							getGoodsCount();
+						} else if (gtype == 9) {
+							changeGoodsStatus(-1, currentId, "wangke_goods");
 							getGoodsCount();
 						} else {
 							changeGoodsStatus(-1, currentId);
@@ -763,6 +774,11 @@
 				if (gtype == 1) {
 					//打开编辑页面
 					openPage('edit_distribution_goods_again.html', 'edit_distribution_goods_again', '#f7f7f7', {
+						gid: currentId
+					})
+				} else if (gtype == 9) {
+					//打开编辑页面
+					openPage('edit_wangke_distribution_goods_again.html', 'edit_wangke_distribution_goods_again', '#f7f7f7', {
 						gid: currentId
 					})
 				} else {
