@@ -178,24 +178,107 @@
 				color: #999999;
 				font-size: 12px;
 			}
-			.team-info-top .mui-ellipsis{
+
+			.team-info-top .mui-ellipsis {
 				max-width: 6.05rem;
 			}
-			.page-mini-card-goods .goods-img{
+
+			.page-mini-card-goods .goods-img {
 				width: 64px;
 				height: 64px;
 				border-radius: 2px;
 			}
-			.page-mini-card-goods .team-info-top .mui-ellipsis-2{
+
+			.page-mini-card-goods .team-info-top .mui-ellipsis-2 {
 				max-width: 5.9rem;
 			}
-			.page-mini-card-goods .sign-img{
+
+			.page-mini-card-goods .sign-img {
 				height: 13px;
 				width: auto;
 				border-radius: 0;
 			}
-			.page-mini-card-goods .team-info-btm .profit-sign{
+
+			.page-mini-card-goods .team-info-btm .profit-sign {
 				color: #f2422b;
+			}
+
+			.dynamic-title {
+				font-size: 0.24rem;
+				color: #999999;
+				display: flex;
+				align-items: center;
+				position: relative;
+				overflow: hidden;
+				justify-content: flex-start;
+				width: 100%;
+				padding: 10px 0;
+				line-height: 1;
+			}
+
+			.dynamic-title:before {
+				content: "";
+				display: inline-block;
+				background-color: #2289FF;
+				border-radius: 50%;
+				margin-right: 10px;
+				width: 18px;
+				height: 18px;
+				position: relative;
+			}
+
+			.page-mini-card .dynamic-list {
+				flex-direction: column;
+			}
+
+			.page-mini-card .dynamic-list .user-name {
+				margin-right: 10px;
+			}
+
+			.dynamic-container {
+				padding-left: 0.5rem;
+			}
+
+			.dynamic-container p {
+				font-size: 0.28rem;
+				color: #333333;
+				margin-bottom: 10px;
+			}
+
+			.dynamic-container .dynamic-img {
+				line-height: 0;
+				max-width: 4.2rem;
+			}
+
+			.dynamic-container .dynamic-img .img-item {
+				width: 1.2rem;
+				height: 1.2rem;
+				object-fit: cover;
+				margin-right: 0.2rem;
+				margin-bottom: 0.2rem;
+				border-radius: 0;
+				line-height: 0;
+			}
+			.dynamic-container .video-dynamic {
+				width: 4rem;
+				height: 2.5rem;
+				position: relative;
+			}
+			.dynamic-container .video-dynamic img{
+				width: 100%;
+				height: 100%;
+				border-radius: 0;
+				margin: 0;
+			}
+			.dynamic-container .video-dynamic .player-btn{
+				width: 1rem;
+				height: 1rem;
+				position: absolute;
+				margin: 0;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%,-50%);
+				transform: translate(-50%,-50%);
 			}
 			[v-cloak] {
 				display: none;
@@ -247,10 +330,10 @@
 					</ul>
 				</div>
 				<!-- 课程 -->
-				<div class="page-mini-card page-mini-card-team">
+				<div class="page-mini-card page-mini-card-team mui-hidden">
 					<div class="headline-cont">课程</div>
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell" v-for="i in 3">
+						<li class="mui-table-view-cell" v-for="i in 2">
 							<img src="../image/5E0eH.png">
 							<div class="team-info">
 								<div class="team-info-top">
@@ -265,7 +348,7 @@
 					</ul>
 				</div>
 				<!-- 商品 -->
-				<div class="page-mini-card page-mini-card-goods">
+				<div class="page-mini-card page-mini-card-goods mui-hidden">
 					<div class="headline-cont">商品</div>
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell" v-for="i in 3">
@@ -277,26 +360,33 @@
 								<div class="team-info-btm">
 									<span class="profit-sign">利润：&yen;95</span>
 									<span>团队：比克魔王</span>
-									<img class="sign-img" src="../image/discover/official-sign.png" >
+									<img class="sign-img" src="../image/discover/official-sign.png">
 								</div>
 							</div>
 						</li>
 					</ul>
 				</div>
 				<!-- 动态 -->
-				<div class="page-mini-card page-mini-card-goods">
+				<div class="page-mini-card">
 					<div class="headline-cont">动态</div>
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell" v-for="i in 3">
-							<img class="goods-img" src="../image/5E0eH.png">
-							<div class="team-info">
-								<div class="team-info-top">
-									<span class="mui-ellipsis-2">这是很nb的课程，你应该要报名啊，不然以后就没以后就没以后就没以后就没了 可惜了，可惜了</span>
+						<li class="mui-table-view-cell dynamic-list">
+							<div class="dynamic-title">
+								<span class="user-name">张龙飞</span>
+								<span>2019-09-17</span>
+							</div>
+							<div class="dynamic-container">
+								<p class="mui-ellipsis-2">
+									美文网汇集以爱情,亲情,友情,人生为主题的伤感情感美文网站,内含经典美文,哲理美文,伤感励志等美文欣赏,提供短篇故事,心情随笔日记,优美散文精选,现代诗歌大全,表白
+								</p>
+								<!-- 如果是图片动态 -->
+								<div class="dynamic-img mui-hidden">
+									<img class="img-item" src="../image/5E0eH.png" v-for="i in 9">
 								</div>
-								<div class="team-info-btm">
-									<span class="profit-sign">利润：&yen;95</span>
-									<span>团队：比克魔王</span>
-									<img class="sign-img" src="../image/discover/official-sign.png" >
+								<!-- 如果是视频动态 -->
+								<div class="video-dynamic">
+									<img src="../image/5E0eH.png" >
+									<img class="player-btn" src="../image/icon/video-player.png">
 								</div>
 							</div>
 						</li>
