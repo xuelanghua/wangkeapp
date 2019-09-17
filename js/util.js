@@ -725,6 +725,8 @@ function pushCallback(data, event) {
 				}, extra, '');
 			} else if (url == 'groupMessage') {
 				plus.nativeUI.toast('消息群发成功!');
+			} else if (url == 'courseNotice') {
+				openPage('html/team_chat.html', 'team_chat', '#f7f7f7', extra);
 			} else {
 				if (url) {
 					fnOpenWin('html/' + url + '.html', url, '', extra, '');
@@ -782,6 +784,8 @@ function pushCallback(data, event) {
 			fnLogout();
 		} else if (url == 'groupMessage') {
 			plus.nativeUI.toast('消息群发成功!');
+		} else if (url == 'courseNotice') {
+			console.log('courseNotice');
 		} else if (url == 'radar') {
 			if (data.times == 1) {
 				data.times++;
