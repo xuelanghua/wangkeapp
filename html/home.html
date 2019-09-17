@@ -457,8 +457,12 @@
 
 			#message,
 			#openPopover {
-				position: absolute;
+				position: relative;
 				z-index: 13;
+				flex-shrink: 0;
+				width: 50px;
+				margin: 0;
+				padding: 0;
 				/* background-color: #20D81F; */
 			}
 
@@ -468,8 +472,8 @@
 
 			.open-message,
 			#openPopover {
-				position: absolute;
-				padding: 0 15px;
+				position: relative;
+				padding: 0;
 				height: 42px;
 				display: flex;
 				align-items: center;
@@ -478,7 +482,6 @@
 				/* background-color: #0062CC; */
 				flex-shrink: 0;
 			}
-
 			body {
 				padding-top: constant(safe-area-inset-top);
 			}
@@ -537,12 +540,14 @@
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+				height: 44px;
+				overflow: hidden;
 			}
 
 			.mui-bar .mui-title {
 				display: flex;
-				font-size: 16px;
-				color: #333333;
+				font-size: 14px;
+				color: #ababab;
 				position: relative;
 				flex-grow: 1;
 				align-items: center;
@@ -550,6 +555,14 @@
 				left: 0;
 				right: 0;
 				overflow: visible;
+				background: #f2f2f2;
+				border-radius: 30px;
+				height: 28px;
+				margin: 0 12px;
+			}
+
+			.mui-bar .mui-title .mui-icon {
+				color: #ababab;
 			}
 
 			.mui-bar.active {
@@ -609,28 +622,18 @@
 		<div style="margin-bottom: 50px;">
 			<header class="mui-bar mui-bar-nav" style="height:120px; background-color: #fff;box-shadow: 0 0 0 #fff;">
 				<div class="bar-top">
-					<div id="message" class="open-message">
-						<img src="../image/index-message-icon.png" alt="" class="mui-pull-left" style="width: 25px;height: 22px;">
-						<span class="mui-badge mui-badge-danger" style="display: none;z-index: 14;" id="unread_message">0</span>
-					</div>
 					<div class="mui-title">
-						<span id="team_name">旺客</span>
-						<span class="mui-icon mui-icon-arrowup mui-icon-arrowdown"></span>
-						<div class="team-list">
-							<!-- <div class="mui-scroll-wrapper"> -->
-							<!-- <div class="mui-scroll"> -->
-							<ul class="mui-table-view" id="team-list"></ul>
-							<!-- </div> -->
-							<!-- </div> -->
-						</div>
+						<span class="mui-icon mui-icon-search"></span>
+						<span>搜索</span>
+					</div>
+					<div id="message" class="open-message">
+						<img src="../image/index-message-icon.png" alt="" style="width: 25px;height: 22px;">
+						<span class="mui-badge mui-badge-danger" style="display: none;z-index: 14;" id="unread_message">0</span>
 					</div>
 					<a href="#topPopover" class="add-btn" id="openPopover">
 						<img src="../image/index-add-icon.png" style="width: 20px;height: 20px;">
 					</a>
 				</div>
-				<!-- <a href="#popover" id="openPopover">
-					<img src="../image/index-add-icon.png" class="mui-pull-right" style="width: 20px;height: 20px;margin-top: 11px;margin-right: 10px;">
-				</a> -->
 				<div class="titlecontent mui-clearfix">
 					<div class="titlecontentL">
 						<li id="scan">
@@ -812,11 +815,7 @@
 	<script src="../js/swiper.min.js"></script>
 	<script src="../js/Zepto.min.js"></script>
 	<script>
-		var team_list = [],
-			teams = null,
-			team_type = "",
-			mask = mui.createMask(function() {
-				teams.hide("slide-out-top");
+		var mask = mui.createMask(function() {
 				plus.navigator.setStatusBarStyle('dark');
 			}),
 			default_team_id = '';
@@ -835,7 +834,6 @@
 						getNotice();
 						weatherInit(); //天气初始化
 						slideInit(true); //幻灯片初始化 
-						getTeamList(); //获取团队
 					}
 				}
 			}
@@ -871,9 +869,9 @@
 			})
 
 			//自定义事件监听-首页新增客户点击
-			window.addEventListener('refreshTeamList', function() {
-				getTeamList();
-			})
+			// window.addEventListener('refreshTeamList', function() {
+			// 	getTeamList();
+			// })
 
 			//打开扫一扫
 			var scan = document.getElementById('scan');
@@ -1064,12 +1062,6 @@
 				mui('#popover').popover('hide');
 				// document.getElementById('popover').classList.add('mui-hidden');
 			})
-			// 获取团队信息
-			getTeamList();
-			// setTimeout(function() {
-			// 	plus.navigator.setStatusBarStyle("dark");
-			// 	plus.navigator.setStatusBarBackground('#FFFFFF');
-			// }, 3000);
 		});
 
 		//获取地理位置
@@ -1318,73 +1310,9 @@
 			newPage.show('slide-in-bottom');
 			hideQrcode();
 		}
-		//获取团队信息
-		var teamchange = true;
-
-		function getTeamList() {
-			mui.post($ajaxUrl + 'team&action=personal_team_list', {
-				token: userInfo.token,
-			}, function(res) {
-				logs(res);
-				if (res.errno == 0) {
-					var data = res.data;
-					if (data.length > 1) {
-						team_list=data;
-						teamchange = true;
-						for(var i=0;i<data.length;i++){
-							if(data[i].is_default==1){
-								document.getElementById("team_name").innerText = data[i].name;
-								break;
-							}
-						}
-					} else if (data.length == 1 && data != "") {
-						team_type = data[0].type;
-						document.getElementById("team_name").innerText = data[0].name;
-						default_team_id = data[0].team_id;
-						mui(".mui-title .mui-icon")[0].style.display = "none";
-						teamchange = false;
-					} else {
-						document.getElementById("team_name").innerText = "旺客"
-						mui(".mui-title .mui-icon")[0].style.display = "none";
-						teamchange = false;
-						default_team_id = 0;
-					}
-				} else {
-					document.getElementById("team_name").innerText = "旺客"
-					mui(".mui-title .mui-icon")[0].style.display = "none";
-					teamchange = false;
-					default_team_id = 0;
-				}
-			}, 'json');
-		}
-		//切换团队
+		// 跳转搜索
 		mui('.mui-bar').on('tap', '.mui-title', function() {
-			mui(".mui-bar .mui-icon")[0].classList.remove("mui-icon-arrowdown");
-			if (teamchange) {
-				mask.show();
-				if (teams) {
-					teams.show('slide-in-top');
-				} else {
-					teams = plus.webview.create('select_team.html', 'select_team', {
-						background: "transparent",
-						dock: 'top',
-						hardwareAccelerated: true,
-						height: '40%',
-						statusbar: {
-							background: '#FFFFFF',
-							color: '#000'
-						}
-					}, {
-						team_list:team_list
-					});
-					teams.show('slide-in-top');
-				}
-			}
-		})
-		window.addEventListener('choiceName', function(e) {
-			$("#team_name").text(e.detail.names);
-			mui(".mui-bar .mui-icon")[0].classList.add("mui-icon-arrowdown");
-			mask.close();
+			openPage('home_search.html', 'home_search', '#ededed');
 		})
 	</script>
 </html>

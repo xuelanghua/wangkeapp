@@ -99,6 +99,14 @@
 			.inside-top {
 				padding: 0.2rem 0.3rem 0;
 			}
+
+			.team-list-container .operation-section {
+				z-index: 10;
+			}
+
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -112,131 +120,149 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">团队列表</h1>
-		</header>
-
-		<div class="mui-content team-list-container" v-cloak>
-			<div class="my-join-team" v-if="joinFlag">
-				<h2><i></i>正式团队</h2>
-				<ul>
-					<li class="team-list" v-for="(list, index) in joinList" :key="index">
-						<!-- <img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
-						<div class="inside">
-							<i class="adorn"></i>
-							<div class="inside-top" @tap="detail(list.team_id,list.type)">
-								<div class="team-title">
-									{{list.name}}
-									<span class="mui-badge mui-badge-primary">
-										<span class="iconfont icon-friends"></span>
-										{{list.current_number}} 人
-									</span>
-								</div>
-								<div class="time-person">
-									<span class="rank-num">
-										<img class="rank-sign" :src="'../image/icon/rank'+list.level+'.png'">
-										<span v-if="list.level==0">佰级别收入</span>
-										<span v-if="list.level==1">仟级别收入</span>
-										<span v-if="list.level==2">萬级别收入</span>
-										<span v-if="list.level==3">拾萬级别收入</span>
-										<span v-if="list.level==4">佰萬级别收入</span>
-										<span v-if="list.level==5">仟萬级别收入</span>
-									</span>
-									<span v-if="list.rank>0" class="rank-num">排名：{{list.rank}}</span>
-									<span v-else class="rank-num">暂无排名</span>
-									<span class="create-person">创建人：{{list.captain_name.name || list.captain_name.nickName}}</span>
-								</div>
-							</div>
-							<div class="opction-cont">
-								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name,list.type)">
-									<img src="../image/icon/team-list-opction02.png">
-									<span>群聊</span>
-								</div>
-								<div class="opction-btn" @tap="courseList(list.team_id,list.is_captain)">
-									<img src="../image/icon/team-list-opction03.png">
-									<span>团队课程</span>
-								</div>
-								<div class="opction-btn" :class="list.data_status==0&&list.is_captain==0?'grayness':''" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-									<img src="../image/icon/team-list-opction01.png">
-									<span>数据</span>
-								</div>
-							</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-			<div class="my-team" v-if="createFlag">
-				<h2><i></i>数据团队</h2>
-				<ul>
-					<li class="team-list" v-for="(list, index) in createList" :key="index">
-						<!-- <img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'"
-						 @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
-						<div class="inside">
-							<i class="adorn"></i>
-							<div class="inside-top" @tap="detail(list.team_id,list.type)">
-								<div class="team-title">
-									{{list.name}}
-									<span class="mui-badge mui-badge-primary">
-										<span class="iconfont icon-friends"></span>
-										{{list.current_number}} 人
-									</span>
-								</div>
-								<div class="time-person">
-									<span class="create-time">创建时间：{{list.create_time}}</span>
-									<span class="create-time">创建人：{{list.captain_name.name||list.captain_name.nickName}}</span>
-								</div>
-							</div>
-							<div class="opction-cont">
-								<div class="opction-btn" @tap="groupsChat(list.team_id, list.name,list.type)">
-									<img src="../image/icon/team-list-opction02.png">
-									<span>群聊</span>
-								</div>
-								<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
-									<img src="../image/icon/team-list-opction01.png">
-									<span>数据</span>
-								</div>
-							</div>
-						</div>
-					</li>
-				</ul>
-				<div v-else>
-					暂未创建团队
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+				<div class="mui-title">
+					<span id="team_name">{{teamName}}</span>
+					<span :class="clsName"></span>
 				</div>
-			</div>
+			</header>
 
-			<div class="operation-section">
-				<span class="create-team">创建团队</span>
-				<span class="join-team">加入团队</span>
+			<div class="mui-content team-list-container">
+				<div class="my-join-team" v-if="joinFlag">
+					<h2><i></i>正式团队</h2>
+					<ul>
+						<li class="team-list" v-for="(list, index) in joinList" :key="index">
+							<!-- <img class="sign-tags" src="../image/icon/sign-tags-data-b.png" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
+							<div class="inside">
+								<i class="adorn"></i>
+								<div class="inside-top" @tap="detail(list.team_id,list.type)">
+									<div class="team-title">
+										{{list.name}}
+										<span class="mui-badge mui-badge-primary">
+											<span class="iconfont icon-friends"></span>
+											{{list.current_number}} 人
+										</span>
+									</div>
+									<div class="time-person">
+										<span class="rank-num">
+											<img class="rank-sign" :src="'../image/icon/rank'+list.level+'.png'">
+											<span v-if="list.level==0">佰级别收入</span>
+											<span v-if="list.level==1">仟级别收入</span>
+											<span v-if="list.level==2">萬级别收入</span>
+											<span v-if="list.level==3">拾萬级别收入</span>
+											<span v-if="list.level==4">佰萬级别收入</span>
+											<span v-if="list.level==5">仟萬级别收入</span>
+										</span>
+										<span v-if="list.rank>0" class="rank-num">排名：{{list.rank}}</span>
+										<span v-else class="rank-num">暂无排名</span>
+										<span class="create-person">创建人：{{list.captain_name.name || list.captain_name.nickName}}</span>
+									</div>
+								</div>
+								<div class="opction-cont">
+									<div class="opction-btn" @tap="groupsChat(list.team_id, list.name,list.type)">
+										<img src="../image/icon/team-list-opction02.png">
+										<span>群聊</span>
+									</div>
+									<div class="opction-btn" @tap="courseList(list.team_id,list.is_captain)">
+										<img src="../image/icon/team-list-opction03.png">
+										<span>团队课程</span>
+									</div>
+									<div class="opction-btn" :class="list.data_status==0&&list.is_captain==0?'grayness':''" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
+										<img src="../image/icon/team-list-opction01.png">
+										<span>数据</span>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="my-team" v-if="createFlag">
+					<h2><i></i>数据团队</h2>
+					<ul>
+						<li class="team-list" v-for="(list, index) in createList" :key="index">
+							<!-- <img class="sign-tags" :src="list.data_status==1?'../image/icon/sign-tags-data-y.png':'../image/icon/sign-tags-detail-y.png'"
+						 @tap="teamDetail(list.team_id,list.data_status,list.is_captain)"> -->
+							<div class="inside">
+								<i class="adorn"></i>
+								<div class="inside-top" @tap="detail(list.team_id,list.type)">
+									<div class="team-title">
+										{{list.name}}
+										<span class="mui-badge mui-badge-primary">
+											<span class="iconfont icon-friends"></span>
+											{{list.current_number}} 人
+										</span>
+									</div>
+									<div class="time-person">
+										<span class="create-time">创建时间：{{list.create_time}}</span>
+										<span class="create-time">创建人：{{list.captain_name.name||list.captain_name.nickName}}</span>
+									</div>
+								</div>
+								<div class="opction-cont">
+									<div class="opction-btn" @tap="groupsChat(list.team_id, list.name,list.type)">
+										<img src="../image/icon/team-list-opction02.png">
+										<span>群聊</span>
+									</div>
+									<div class="opction-btn" @tap="teamDetail(list.team_id,list.data_status,list.is_captain)">
+										<img src="../image/icon/team-list-opction01.png">
+										<span>数据</span>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div v-else>
+						暂未创建团队
+					</div>
+				</div>
+
+				<div class="operation-section">
+					<span class="create-team">创建团队</span>
+					<span class="join-team">加入团队</span>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var team_list = [],
+				teams = null,
+				team_type = "",
+				mask = mui.createMask(function() {
+					teams.hide("slide-out-top");
+					plus.navigator.setStatusBarStyle('dark');
+				});
 			mui.init({
 				swipeBack: true,
 				beforeback: function() {
-					setStatusBar('', 'light');
+					var per = plus.webview.currentWebview().opener();
+					if (per.id == "user") {
+						setStatusBar('', 'light');
+					}
 				}
 			});
 
 			var userInfo = getUserInfo();
 			var app = new Vue({
-				el: '.mui-content',
+				el: '#mui-content',
 				data: {
 					createList: [],
 					joinList: [],
 					createFlag: false,
 					joinFlag: false,
 					teamLists: {},
-					userSelf: ""
+					userSelf: "",
+					clsName: 'mui-icon mui-icon-arrowdown',
+					teamName: '旺客'
 					// userSelf:userInfo.nickName
 				},
 				mounted: function() {
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						getTeamList();
+						getPersonTeam();
 						mui('.mui-content').on('tap', '.create-team', function() {
 							if (userInfo.group_id < 2) {
 								message('您没有创建团队的权限!');
@@ -349,6 +375,77 @@
 					role: role
 				});
 			}
+			// 切换团队相关的
+			//获取团队信息
+			var teamchange = true;
+
+			function getPersonTeam() {
+				mui.post($ajaxUrl + 'team&action=personal_team_list', {
+					token: userInfo.token,
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						var data = res.data;
+						if (data.length > 1) {
+							team_list = data;
+							teamchange = true;
+							for (var i = 0; i < data.length; i++) {
+								if (data[i].is_default == 1) {
+									app.teamName = data[i].name;
+									break;
+								}
+							}
+						} else if (data.length == 1 && data != "") {
+							team_type = data[0].type;
+							app.teamName = data[0].name;
+							default_team_id = data[0].team_id;
+							mui(".mui-title .mui-icon")[0].style.display = "none";
+							teamchange = false;
+						} else {
+							app.teamName = "旺客"
+							mui(".mui-title .mui-icon")[0].style.display = "none";
+							teamchange = false;
+							default_team_id = 0;
+						}
+					} else {
+						app.teamName = "旺客"
+						mui(".mui-title .mui-icon")[0].style.display = "none";
+						teamchange = false;
+						default_team_id = 0;
+					}
+				}, 'json');
+			}
+			//切换团队
+			mui('.mui-bar').on('tap', '.mui-title', function() {
+				app.clsName = 'mui-icon mui-icon-arrowup'
+				if (teamchange) {
+					mask.show();
+					if (teams) {
+						teams.show('slide-in-top');
+					} else {
+						teams = plus.webview.create('select_team.html', 'select_team', {
+							background: "transparent",
+							dock: 'top',
+							hardwareAccelerated: true,
+							height: '40%',
+							statusbar: {
+								background: '#FFFFFF',
+								color: '#000000'
+							}
+						}, {
+							team_list: team_list
+						});
+						teams.show('slide-in-top');
+					}
+				}
+			})
+			window.addEventListener('choiceName', function(e) {
+				if (e.detail.names) {
+					app.teamName = e.detail.names;
+				}
+				app.clsName = 'mui-icon mui-icon-arrowdown';
+				mask.close();
+			})
 		</script>
 	</body>
 

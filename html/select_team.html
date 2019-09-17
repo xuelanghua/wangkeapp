@@ -10,13 +10,15 @@
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
 			body {
-				background-color: transparent;
+				background-color: rgba(0,0,0,0) !important;
 				height: 100%;
 				width: 100%;
 			}
 
 			.mui-content {
-				padding: 44px 0 40px;
+				background-color: rgba(0,0,0,0) !important;
+				padding-bottom: 44px;
+				margin-top: 44px;
 				position: absolute;
 				width: 100%;
 				height: 100%;
@@ -37,6 +39,7 @@
 
 			.team-list ul {
 				overflow-y: scroll;
+				background-color: transparent !important;
 			}
 
 			.mui-table-view:before,
@@ -106,7 +109,6 @@
 				},
 				methods: {
 					choiceThis: function(t, idx) {
-						// logs(t);
 						mui.post($ajaxUrl + 'team&action=set_default_team', {
 							token: userInfo.token,
 							team_id: t.team_id
@@ -116,7 +118,7 @@
 									app.teamList[i].is_default = 0;
 								}
 								app.teamList[idx].is_default = 1;
-								mui.fire(plus.webview.getWebviewById('home'), 'choiceName', {
+								mui.fire(plus.webview.getWebviewById('team_list'), 'choiceName', {
 									names: t.name
 								});
 							} else {
@@ -126,27 +128,19 @@
 					}
 				},
 				mounted: function() {
-					mui.init({
-						beforeback: function() {
-							//plus.navigator.setStatusBarStyle("light");
-						}
-					});
+					// 重写返回咯
+					mui.back = function() {
+						mui.fire(plus.webview.getWebviewById('team_list'), 'choiceName', {
+							names:null
+						});
+					}
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.teamList = self.team_list;
-						logs(app.teamList);
 					})
-					// mui('.mui-scroll-wrapper').scroll({
-					// 	scrollY: true,
-					// 	scrollX: false,
-					// 	startX: 0,
-					// 	startY: 0,
-					// 	indicators: false,
-					// 	deceleration: 0.0006,
-					// 	bounce: true
-					// });
 				}
 			})
+			
 		</script>
 	</body>
 

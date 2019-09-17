@@ -35,17 +35,124 @@
 			.mui-segmented-control {
 				z-index: 16;
 			}
+
+			.chat-container .tips-cont li {
+				display: flex;
+				flex-grow: 1;
+				align-items: center;
+				justify-content: center;
+				font-size: 17.5px;
+				color: #2289ff;
+				font-weight: bold;
+				flex-direction: column;
+				position: relative;
+				padding: 22px 0;
+			}
+
+			.chat-container .tips-cont li span {
+				font-size: 12px;
+				color: #999999;
+				font-weight: normal;
+			}
+
+			.chat-container .tips-cont .line-item:after,
+			.chat-container .tips-cont .line-item:before {
+				content: '';
+				width: 1px;
+				height: auto;
+				display: inline-block;
+				position: absolute;
+				top: 25px;
+				bottom: 25px;
+				background-color: #dddddd;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+
+			.chat-container .tips-cont .line-item:before {
+				left: 0;
+			}
+
+			.chat-container .tips-cont .line-item:after {
+				right: 0;
+			}
+
+			/* 20190916 */
+			.chat-container .mui-control-item {
+				position: relative;
+			}
+
+			.chat-container .mui-segmented-control.mui-segmented-control-inverted {
+				height: 44px;
+				display: flex;
+				align-items: center;
+				background-color: #FFFFFF;
+				justify-content: space-between;
+				box-sizing: border-box;
+				padding: 0 5px;
+			}
+
+			.mui-segmented-control .mui-control-item {
+				height: 30px;
+				line-height: 1;
+				background-color: #F2F2F2;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				box-sizing: border-box;
+				border-radius: 5px;
+				/* overflow: visible; */
+			}
+
+			.chat-container .mui-segmented-control.mui-segmented-control-inverted a {
+				width: auto;
+				font-size: 14px;
+				display: inline-flex;
+				align-items: center;
+				margin: 0 5px;
+			}
+			.chat-container .mui-control-item.mui-active::before {
+				content: '';
+				left: 0;
+				top: 0;
+				width: 199%;
+				height: 199%;
+				display: block;
+				position: absolute;
+				border: 1px solid #2289FF;
+				border-radius: 10px;
+				transform-origin: 0 0;
+				-webkit-transform-origin: 0 0;
+				transform: scale(0.5, 0.5);
+				-webkit-transform: scale(0.5, 0.5);
+				box-sizing: border-box;
+				background-color: transparent;
+			}
 		</style>
 	</head>
 
 	<body>
 		<div id="mui-content" class="mui-content chat-container" v-cloak>
 			<ul class="tips-cont">
+				<li>
+					{{customercount.new}}
+					<span>用户总数</span>
+				</li>
+				<li class="line-item">
+					{{customercount.follow}}
+					<span>跟进数量</span>
+				</li>
+				<li>
+					{{customercount.deal}}
+					<span>成交数量</span>
+				</li>
+			</ul>
+			<ul class="tips-cont mui-hidden">
 				<li><i class="totalNum"></i>用户总数:{{customercount.new}}</li>
 				<li><i class="followNum"></i>跟进数量:{{customercount.follow}}</li>
 				<li><i class="bargainNum"></i>成交数量:{{customercount.deal}}</li>
 			</ul>
-			<div class="trapezium-container">
+			<div class="trapezium-container mui-hidden">
 				<div class="trapezium"></div>
 				<div class="trapezium-tips">用户总数:<span class="customer_total">{{customercount.new}}</span></div>
 				<div class="trapezium1"></div>
@@ -53,12 +160,14 @@
 				<div class="trapezium2"></div>
 				<div class="trapezium-tips">成交数量:<span class="customer_total">{{customercount.deal}}</span></div>
 			</div>
-			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-				<a class="mui-control-item mui-active" href="#item1" data-type="new_customer">新增客户</a>
-				<a class="mui-control-item" href="#item2" data-type="recommend">推荐锁定</a>
-				<a class="mui-control-item" href="#item3" data-type="follow">跟进中</a>
-				<a class="mui-control-item" href="#item4" data-type="is_intention">高意向</a>
-				<a class="mui-control-item" href="#item5" data-type="deal">成交</a>
+			<div id="segmentedControl" class=" mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+				<div class="mui-scroll">
+					<a class="mui-control-item mui-active" href="#item1" data-type="new_customer">新增客户</a>
+					<a class="mui-control-item" href="#item2" data-type="recommend">推荐锁定</a>
+					<a class="mui-control-item" href="#item3" data-type="follow">跟进中</a>
+					<a class="mui-control-item" href="#item4" data-type="is_intention">高意向</a>
+					<a class="mui-control-item" href="#item5" data-type="deal">成交</a>
+				</div>
 			</div>
 			<!-- 占位防止菜单固定定位之后的闪烁 -->
 			<div id="perch-cont" style="position: relative;width: 100%;height: 38px;display: none;"></div>
