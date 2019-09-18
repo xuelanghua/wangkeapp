@@ -265,6 +265,33 @@
 				height: 100%;
 				object-fit: cover;
 			}
+			.msg-tips{
+				width: 100%;
+				height: auto;
+				padding: 25px 0 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.msg-tips-inside{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: rgba(0,0,0,0.8);
+				padding: 5px;
+				padding-right: 16px;
+				border-radius: 4px;
+				font-size: 16px;
+				color: #F2F2F2;
+				width: auto;
+			}
+			.msg-tips-user{
+				width: 30px;
+				height: 30px;
+				margin-right: 12px;
+				border-radius: 3px;
+				object-fit: cover;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -308,13 +335,13 @@
 				<div id="zhanwei" style="width: 100%;height:58px;position: relative;display: none;">
 					<!-- 占位 -->
 				</div>
-				<!-- <div class="first-menu">
-					<div class="mui-scroll-wrapper mui-slider-indicator ">
-						<ul id="screen-menu" class="mui-scroll screen-menu mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-							<li v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</li>
-						</ul>
+				<!-- 有消息提醒 -->
+				<div class="msg-tips">
+					<div class="msg-tips-inside">
+						<img class="msg-tips-user" src="../image/5E0eH.png" alt="">
+						<span>12条新消息</span>
 					</div>
-				</div> -->
+				</div>
 				<!-- 第一组菜单 -->
 				<div id="screen-menu" class="subMenu screen-menu">
 					<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
@@ -1244,6 +1271,10 @@
 					}
 				});
 			}
+			// 点击消息提醒
+			mui('.mui-content').on('tap','.msg-tips-inside',function(){
+				openPage('message_queue.html','message_queue','#f7f7f7');
+			})
 		</script>
 	</body>
 

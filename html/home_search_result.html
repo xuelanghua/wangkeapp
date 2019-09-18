@@ -98,7 +98,7 @@
 			}
 
 			.page-mini-card .mui-table-view-cell {
-				padding: 10px 15px;
+				padding: 15px;
 				height: auto;
 			}
 
@@ -155,7 +155,7 @@
 			}
 
 			.team-info-top {
-				margin-bottom: 5px;
+				margin-bottom: 10px;
 			}
 
 			.team-info-top span {
@@ -181,6 +181,7 @@
 
 			.team-info-top .mui-ellipsis {
 				max-width: 6.05rem;
+				color: #333333;
 			}
 
 			.page-mini-card-goods .goods-img {
@@ -191,6 +192,7 @@
 
 			.page-mini-card-goods .team-info-top .mui-ellipsis-2 {
 				max-width: 5.9rem;
+				color: #333333;
 			}
 
 			.page-mini-card-goods .sign-img {
@@ -237,6 +239,7 @@
 
 			.dynamic-container {
 				padding-left: 0.5rem;
+				width: 100%;
 			}
 
 			.dynamic-container p {
@@ -259,27 +262,50 @@
 				border-radius: 0;
 				line-height: 0;
 			}
+
 			.dynamic-container .video-dynamic {
 				width: 4rem;
 				height: 2.5rem;
 				position: relative;
 			}
-			.dynamic-container .video-dynamic img{
+
+			.dynamic-container .video-dynamic img {
 				width: 100%;
 				height: 100%;
 				border-radius: 0;
 				margin: 0;
 			}
-			.dynamic-container .video-dynamic .player-btn{
+
+			.dynamic-container .video-dynamic .player-btn {
 				width: 1rem;
 				height: 1rem;
 				position: absolute;
 				margin: 0;
 				top: 50%;
 				left: 50%;
-				-webkit-transform: translate(-50%,-50%);
-				transform: translate(-50%,-50%);
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
 			}
+
+			.void-tips-cont {
+				height: auto;
+				color: #999999;
+				margin-top: 30%;
+				font-size: 14px;
+				text-align: center;
+			}
+
+			.void-tips-cont img {
+				width: 60%;
+				display: block;
+				margin-left: 20%;
+			}
+
+			.highlight {
+				font-style: normal;
+				color: #2289FF;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -296,101 +322,105 @@
 				<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
 			</header>
 			<div class="mui-content">
-				<!-- 团队 -->
-				<div class="page-mini-card page-mini-card-team">
-					<div class="headline-cont">团队</div>
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell">
-							<img src="../image/5E0eH.png">
-							<div class="team-info">
-								<div class="team-info-top">
-									<span>房东的猫（20人）</span>
-									<span class="mui-badge mui-badge-primary">正式团队</span>
+				<div class="result-container">
+					<!-- 团队 -->
+					<div class="page-mini-card page-mini-card-team">
+						<div class="headline-cont">团队</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<img src="../image/5E0eH.png">
+								<div class="team-info">
+									<div class="team-info-top">
+										<span>房东的猫（20人）</span>
+										<span class="mui-badge mui-badge-primary">正式团队</span>
+									</div>
+									<div class="team-info-btm">
+										<span>佰级别收入</span>
+										<span>排名：899</span>
+										<span>创建人：路飞大大</span>
+									</div>
 								</div>
-								<div class="team-info-btm">
-									<span>佰级别收入</span>
-									<span>排名：899</span>
-									<span>创建人：路飞大大</span>
+							</li>
+							<li class="mui-table-view-cell"><img src="../image/5E0eH.png">
+								<div class="team-info">
+									<div class="team-info-top">
+										<span>房东的猫（20人）</span>
+										<span class="mui-badge mui-badge-warning">数据团队</span>
+									</div>
+									<div class="team-info-btm">
+										<span>佰级别收入</span>
+										<span>排名：899</span>
+										<span>创建人：路飞大大</span>
+									</div>
 								</div>
-							</div>
-						</li>
-						<li class="mui-table-view-cell"><img src="../image/5E0eH.png">
-							<div class="team-info">
-								<div class="team-info-top">
-									<span>房东的猫（20人）</span>
-									<span class="mui-badge mui-badge-warning">数据团队</span>
+							</li>
+						</ul>
+					</div>
+					<!-- 课程 -->
+					<div class="page-mini-card page-mini-card-team ">
+						<div class="headline-cont">课程</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" v-for="i in 2">
+								<img src="../image/5E0eH.png">
+								<div class="team-info">
+									<div class="team-info-top">
+										<p class="mui-ellipsis">这是很nb的课程，你应该要报名啊，不然以后就没了 可惜了，可惜了</p>
+									</div>
+									<div class="team-info-btm">
+										<span>团队：9527</span>
+										<span>讲师：西瓜达人</span>
+									</div>
 								</div>
-								<div class="team-info-btm">
-									<span>佰级别收入</span>
-									<span>排名：899</span>
-									<span>创建人：路飞大大</span>
+							</li>
+						</ul>
+					</div>
+					<!-- 商品 -->
+					<div class="page-mini-card page-mini-card-goods">
+						<div class="headline-cont">商品</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" v-for="i in 3">
+								<img class="goods-img" src="../image/5E0eH.png">
+								<div class="team-info">
+									<div class="team-info-top">
+										<p class="mui-ellipsis-2">这是很nb的课程，你应该要报名啊，不然以后就没以后就没以后就没以后就没了 可惜了，可惜了</p>
+									</div>
+									<div class="team-info-btm">
+										<span class="profit-sign">利润：&yen;95</span>
+										<span>团队：比克魔王</span>
+										<img class="sign-img" src="../image/discover/official-sign.png">
+									</div>
 								</div>
-							</div>
-						</li>
-					</ul>
+							</li>
+						</ul>
+					</div>
+					<!-- 动态 -->
+					<div class="page-mini-card">
+						<div class="headline-cont">动态</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell dynamic-list">
+								<div class="dynamic-title">
+									<span class="user-name">张龙飞</span>
+									<span>2019-09-17</span>
+								</div>
+								<div class="dynamic-container">
+									<p class="mui-ellipsis-2" v-html="highLight(str)"></p>
+									<!-- 如果是图片动态 -->
+									<div class="dynamic-img mui-hidden">
+										<img class="img-item" src="../image/5E0eH.png" v-for="i in 9">
+									</div>
+									<!-- 如果是视频动态 -->
+									<div class="video-dynamic">
+										<img src="../image/5E0eH.png">
+										<img class="player-btn" src="../image/icon/video-player.png">
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
-				<!-- 课程 -->
-				<div class="page-mini-card page-mini-card-team mui-hidden">
-					<div class="headline-cont">课程</div>
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell" v-for="i in 2">
-							<img src="../image/5E0eH.png">
-							<div class="team-info">
-								<div class="team-info-top">
-									<span class="mui-ellipsis">这是很nb的课程，你应该要报名啊，不然以后就没了 可惜了，可惜了</span>
-								</div>
-								<div class="team-info-btm">
-									<span>团队：9527</span>
-									<span>讲师：西瓜达人</span>
-								</div>
-							</div>
-						</li>
-					</ul>
-				</div>
-				<!-- 商品 -->
-				<div class="page-mini-card page-mini-card-goods mui-hidden">
-					<div class="headline-cont">商品</div>
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell" v-for="i in 3">
-							<img class="goods-img" src="../image/5E0eH.png">
-							<div class="team-info">
-								<div class="team-info-top">
-									<span class="mui-ellipsis-2">这是很nb的课程，你应该要报名啊，不然以后就没以后就没以后就没以后就没了 可惜了，可惜了</span>
-								</div>
-								<div class="team-info-btm">
-									<span class="profit-sign">利润：&yen;95</span>
-									<span>团队：比克魔王</span>
-									<img class="sign-img" src="../image/discover/official-sign.png">
-								</div>
-							</div>
-						</li>
-					</ul>
-				</div>
-				<!-- 动态 -->
-				<div class="page-mini-card">
-					<div class="headline-cont">动态</div>
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell dynamic-list">
-							<div class="dynamic-title">
-								<span class="user-name">张龙飞</span>
-								<span>2019-09-17</span>
-							</div>
-							<div class="dynamic-container">
-								<p class="mui-ellipsis-2">
-									美文网汇集以爱情,亲情,友情,人生为主题的伤感情感美文网站,内含经典美文,哲理美文,伤感励志等美文欣赏,提供短篇故事,心情随笔日记,优美散文精选,现代诗歌大全,表白
-								</p>
-								<!-- 如果是图片动态 -->
-								<div class="dynamic-img mui-hidden">
-									<img class="img-item" src="../image/5E0eH.png" v-for="i in 9">
-								</div>
-								<!-- 如果是视频动态 -->
-								<div class="video-dynamic">
-									<img src="../image/5E0eH.png" >
-									<img class="player-btn" src="../image/icon/video-player.png">
-								</div>
-							</div>
-						</li>
-					</ul>
+				<div class="void-tips-cont mui-hidden" v-show="status">
+					<img src="../image/icon/void-seach-result.png">
+					没有搜索到内容吖~
 				</div>
 			</div>
 		</div>
@@ -405,7 +435,8 @@
 					keyword: '',
 					classify: '',
 					searchHistory: [],
-					// prevKeyWord: ''
+					status:false,
+					str: '美文网汇集以爱情,亲情,友情,人生为主题的伤感情感美文网站,内含经典美文,哲理美文,伤感励志等美文欣赏,提供短篇故事,心情随笔日记,优美散文精选,现代诗歌大全,表白'
 				},
 				created: function() {
 					// 初始化字体大小
@@ -419,6 +450,12 @@
 				methods: {
 					cancel: function() {
 						plus.webview.close("home_search_result", "none");
+					},
+					// 字符串匹配
+					highLight: function(str) {
+						var reg = new RegExp("(" + this.keyword + ")", "g");
+						var newstr = str.replace(reg, "<i class=\"highlight\">$1</i>");
+						return newstr;
 					}
 				},
 				mounted: function() {
@@ -435,19 +472,14 @@
 					})
 					// 监听搜索
 					document.getElementById("search").addEventListener("keypress", function(event) {
-						var keyword = app.keyword.replace(/^\s*|\s*$/g, "");
-						// if (app.prevKeyWord == keyword) {
-						// 	event.preventDefault();
-						// 	return false;
-						// }
-						// app.prevKeyWord = keyword;
+						var keywords = app.keyword.replace(/^\s*|\s*$/g, "");
 						if (event.keyCode == "13") {
-							if (keyword != '') {
+							if (keywords != '') {
 								plus.key.hideSoftKeybord();
-								var idx = app.searchHistory.indexOf(keyword);
+								var idx = app.searchHistory.indexOf(keywords);
 								//没有则返回-1
 								if (idx == -1) {
-									app.searchHistory.unshift(keyword);
+									app.searchHistory.unshift(keywords);
 									if (app.searchHistory.length > 12) {
 										app.searchHistory = app.searchHistory.splice(0, 12);
 										plus.storage.setItem('searchHistory', JSON.stringify(app.searchHistory));
@@ -469,6 +501,8 @@
 								event.preventDefault();
 							} else {
 								message("请输入关键词！");
+								// 阻止页面刷新
+								event.preventDefault();
 							}
 						} else {
 							// 点的不是搜索按钮

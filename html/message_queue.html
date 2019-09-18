@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			@font-face {
+				font-family: 'aslkdfjlsdf';
+				src: url('../fonts/iconfont.eot');
+				src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'), url('../fonts/iconfont.woff2') format('woff2'), url('../fonts/iconfont.woff') format('woff'), url('../fonts/iconfont.ttf') format('truetype'), url('../ifonts/confont.svg#iconfont') format('svg');
+			}
+
+			.iconfont {
+				font-family: 'aslkdfjlsdf' !important;
+				font-size: 24px;
+				font-style: normal;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+
+			.nav-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #333333;
+				margin-right: -5px;
+			}
+
+			.mui-bar-nav~.mui-content {
+				min-height: 100vh;
+				background-color: #FFFFFF;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #f2f2f2;
+				left: 50px;
+			}
+
+			.mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.mui-table-view-cell.msg-list {
+				padding: 10px;
+				height: auto;
+				position: relative;
+				overflow: hidden;
+				display: flex;
+			}
+
+			.user-head-cont {
+				width: 40px;
+				height: 40px;
+				border-radius: 5px;
+				margin-right: 10px;
+				overflow: hidden;
+				flex-shrink: 0;
+			}
+
+			.user-head-cont img,
+			.list-right-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.msg-list-right {
+				display: flex;
+				flex-grow: 1;
+			}
+
+			.msg-list-inside {
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+			}
+
+			.msg-list-inside p {
+				font-size: 0.24rem;
+				margin-bottom: 0;
+			}
+
+			.msg-list-inside span {
+				color: #999999;
+				font-size: 12px;
+			}
+
+			.msg-list-inside .desc {
+				padding-right: 5px;
+			}
+
+			.list-right-img {
+				flex-shrink: 0;
+				width: 52px;
+				height: 52px;
+				overflow: hidden;
+				font-size: 13px;
+				text-align: justify;
+				background-color: #DDDDDD;
+				line-height: 1.4;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-icon mui-action-back mui-icon-left-nav mui-pull-left"></span>
+				<span class="mui-pull-left mui-action-back  nav-btn">消息</span>
+				<span class="mui-pull-right nav-btn">清空</span>
+			</header>
+			<div class="mui-content">
+				<div style="padding: 10px 0;box-sizing: border-box;">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell msg-list" v-for="i in 3">
+							<div class="user-head-cont">
+								<img src="../image/5E0eH.png">
+							</div>
+							<div class="msg-list-right">
+								<div class="msg-list-inside">
+									<p>刘备备</p>
+									<!-- 如果是评论 -->
+									<p class="desc">我是评论，评论了，摔了摔了帅了摔了了摔了了摔了了摔了了摔了帅了帅了甩了</p>
+									<!-- 如果是点赞 -->
+									<!-- <span class="iconfont icon-like">&#xe601;</span> -->
+									<p>2019-09-18 10:45</p>
+								</div>
+								<div class="list-right-img">
+									<!-- 如果有文字 有蚊子尤文阿斯利康的可拉伸的萨德里克几分 -->
+									<img src="../image/5E0eH.png">
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						plus.navigator.setStatusBarStyle("dark");
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>

@@ -81,8 +81,8 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				color: #cacaca;
-				font-size: 12px;
+				color: #AAAAAA;
+				font-size: 14px;
 			}
 
 			.recommend-classify {
@@ -97,12 +97,12 @@
 
 			.classify-item {
 				width: 33.333%;
-				height: 40px;
+				height: 50px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				font-size: 12px;
-				color: #909cb6;
+				font-size: 14px;
+				color: #1d518c;
 				position: relative;
 			}
 
@@ -112,8 +112,8 @@
 				position: absolute;
 				display: block;
 				width: 1px;
-				bottom: 10px;
-				top: 10px;
+				bottom: 15px;
+				top:15px;
 				background-color: #DDDDDD;
 				transform: scaleX(0.5);
 				-webkit-transform: scaleX(0.5);
@@ -130,7 +130,7 @@
 			.search-history {
 				height: 69px;
 				color: #999999;
-				font-size: 12px;
+				font-size: 14px;
 				padding: 40px 15px 0 15px;
 				display: flex;
 				justify-content: space-between;
@@ -152,7 +152,7 @@
 				background-color: #f2f2f2;
 				margin: 5px;
 				font-size: 12px;
-				color: #666666;
+				color: #999999;
 			}
 
 			.mui-icon-trash {
@@ -180,11 +180,7 @@
 					搜索指定内容
 				</div>
 				<div class="recommend-classify">
-					<div class="classify-item">团队</div>
-					<div class="classify-item">商品</div>
-					<div class="classify-item">课程</div>
-					<div class="classify-item">头条</div>
-					<div class="classify-item">动态</div>
+					<div class="classify-item" @tap="startSearch(j.id)" v-for="(j,i) in classify">{{j.name}}</div>
 				</div>
 				<div v-show="searchHistory!=''">
 					<div class="search-history">
@@ -206,8 +202,27 @@
 				el: "#mui-content",
 				data: {
 					keyword: '',
-					classify: 1,
-					searchHistory: []
+					classify: [{
+						name: "用户",
+						id: 1
+					}, {
+						name: "动态",
+						id: 2
+					}, {
+						name: "头条",
+						id: 3
+					}, {
+						name: "团队",
+						id: 4
+					}, {
+						name: "商品",
+						id: 5
+					}, {
+						name: "课程",
+						id: 6
+					}],
+					searchHistory: [],
+					selectClassify: 0
 				},
 				created: function() {
 					// 初始化字体大小
@@ -278,10 +293,10 @@
 				}, 100)
 			})
 			// 开始搜索
-			function startSearch() {
+			function startSearch(_id) {
 				openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
 					keyword: app.keyword,
-					classify: app.classify
+					classify: _id || '0'
 				}, 'fade-in');
 			}
 			// 搜索关键词更新
