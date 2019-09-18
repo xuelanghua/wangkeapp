@@ -113,7 +113,7 @@
 				display: block;
 				width: 1px;
 				bottom: 15px;
-				top:15px;
+				top: 15px;
 				background-color: #DDDDDD;
 				transform: scaleX(0.5);
 				-webkit-transform: scaleX(0.5);
@@ -180,7 +180,7 @@
 					搜索指定内容
 				</div>
 				<div class="recommend-classify">
-					<div class="classify-item" @tap="startSearch(j.id)" v-for="(j,i) in classify">{{j.name}}</div>
+					<div class="classify-item" @tap="startSearch(j.id,j.name)" v-for="(j,i) in classify">{{j.name}}</div>
 				</div>
 				<div v-show="searchHistory!=''">
 					<div class="search-history">
@@ -293,11 +293,16 @@
 				}, 100)
 			})
 			// 开始搜索
-			function startSearch(_id) {
-				openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
-					keyword: app.keyword,
-					classify: _id || '0'
-				}, 'fade-in');
+			function startSearch(_id, desc) {
+				if (app.keyword) {
+					openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
+						keyword: app.keyword,
+						classify: _id || '0',
+						desc: desc
+					}, 'fade-in');
+				} else {
+					message("请输入关键词！");
+				}
 			}
 			// 搜索关键词更新
 			window.addEventListener('renewal', function(e) {

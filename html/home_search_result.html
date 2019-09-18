@@ -146,12 +146,18 @@
 			.team-info-top,
 			.team-info-btm {
 				display: flex;
-				flex-grow: 1;
+				/* flex-grow: 1; */
 				align-items: center;
 				justify-content: space-between;
 				position: relative;
 				overflow: hidden;
 				box-sizing: border-box;
+				width: 100%;
+			}
+
+			.team-info-btm span {
+				display: block;
+				max-width: 2.8rem;
 			}
 
 			.team-info-top {
@@ -305,7 +311,16 @@
 				font-style: normal;
 				color: #2289FF;
 			}
-
+			.mini-card-headline .team-info-btm span{
+				display: inline-flex;
+				align-items: center;
+			}
+			.mini-card-headline .team-info-btm .see-num{
+				height: 10px;
+				width: auto;
+				margin-right: 2px;
+				border-radius:0;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -317,7 +332,7 @@
 			<header class="mui-bar mui-bar-nav">
 				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 				<form onsumit="return false">
-					<input id="search" type="search" name="" value="" v-model="keyword" placeholder="搜索" />
+					<input id="search" type="search" focus="focus" name="" value="" v-model="keyword" :placeholder="'搜索'+desc" />
 				</form>
 				<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
 			</header>
@@ -351,6 +366,43 @@
 										<span>佰级别收入</span>
 										<span>排名：899</span>
 										<span>创建人：路飞大大</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- 用户 -->
+					<div class="page-mini-card page-mini-card-team">
+						<div class="headline-cont">用户</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<img src="../image/5E0eH.png">
+								<div class="team-info">
+									<div class="team-info-top">
+										<span>房东本人</span>
+									</div>
+									<div class="team-info-btm">
+										<span class="mui-ellipsis">电话：137006969691370069696913700696969</span>
+										<span class="mui-ellipsis">公司：云南万贤科技有限公司云南万贤科技有限公司云南万贤科技有限公司云南万贤科技有限公司</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- 头条 -->
+					<div class="page-mini-card page-mini-card-goods mini-card-headline">
+						<div class="headline-cont">头条</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<img src="../image/5E0eH.png">
+								<div class="team-info">
+									<div class="team-info-top">
+										<p class="mui-ellipsis-2">贤科技有限公司云南万贤科技有限公司云南万贤云南万贤科技有限公司有限公司有限有限公司有限有限公司有限公司云南万</p>
+									</div>
+									<div class="team-info-btm">
+										<span>2019-09-18 17:12</span>
+										<span><img class="see-num" src="../image/eye.png">120</span>
+										<img class="sign-img" src="../image/discover/official-sign.png">
 									</div>
 								</div>
 							</li>
@@ -435,7 +487,8 @@
 					keyword: '',
 					classify: '',
 					searchHistory: [],
-					status:false,
+					status: false,
+					desc: '',
 					str: '美文网汇集以爱情,亲情,友情,人生为主题的伤感情感美文网站,内含经典美文,哲理美文,伤感励志等美文欣赏,提供短篇故事,心情随笔日记,优美散文精选,现代诗歌大全,表白'
 				},
 				created: function() {
@@ -467,7 +520,8 @@
 						}
 						var self = plus.webview.currentWebview();
 						app.keyword = self.keyword;
-						classify = self.classify;
+						app.classify = self.classify;
+						app.desc = self.desc || '';
 						startSearch();
 					})
 					// 监听搜索
@@ -512,9 +566,10 @@
 			})
 			// 开始搜索
 			function startSearch() {
+				if (app.keyword == '') {
+					return false;
+				}
 				logs(app.keyword);
-				// logs(app.classify);
-				return false;
 				mui.post($ajaxUrl + "", {
 					token: userInfo.token,
 					keyword: app.keyword,

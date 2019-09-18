@@ -173,10 +173,12 @@
 				padding: 0 10px;
 				overflow: visible;
 			}
+
 			.subMenu .mui-scroll-three {
-				width: 100%!important;
+				width: 100% !important;
 				text-align: center;
 			}
+
 			.subMenu .mui-scroll {
 				position: absolute;
 				touch-action: pan-y;
@@ -265,7 +267,8 @@
 				height: 100%;
 				object-fit: cover;
 			}
-			.msg-tips{
+
+			.msg-tips {
 				width: 100%;
 				height: auto;
 				padding: 25px 0 20px;
@@ -273,11 +276,12 @@
 				align-items: center;
 				justify-content: center;
 			}
-			.msg-tips-inside{
+
+			.msg-tips-inside {
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				background-color: rgba(0,0,0,0.8);
+				background-color: rgba(0, 0, 0, 0.8);
 				padding: 5px;
 				padding-right: 16px;
 				border-radius: 4px;
@@ -285,7 +289,8 @@
 				color: #F2F2F2;
 				width: auto;
 			}
-			.msg-tips-user{
+
+			.msg-tips-user {
 				width: 30px;
 				height: 30px;
 				margin-right: 12px;
@@ -336,18 +341,17 @@
 					<!-- 占位 -->
 				</div>
 				<!-- 有消息提醒 -->
-				<div class="msg-tips">
+				<div class="msg-tips" v-if="trends_cont.total>0" >
 					<div class="msg-tips-inside">
-						<img class="msg-tips-user" src="../image/5E0eH.png" alt="">
-						<span>12条新消息</span>
+						<img class="msg-tips-user" :src="trends_cont.last_user.avatar" alt="">
+						<span>{{trends_cont.total}}条新消息</span>
 					</div>
 				</div>
 				<!-- 第一组菜单 -->
 				<div id="screen-menu" class="subMenu screen-menu">
 					<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
 						<div class="mui-scroll" v-if="group_id>0">
-							<span class="mui-control-item"  v-for="(menu,idx) in screen" :class="menu.selected?'active':''"
-							 @tap="selectedTj(menu.id,idx)">{{menu.title}}</span>
+							<span class="mui-control-item" v-for="(menu,idx) in screen" :class="menu.selected?'active':''" @tap="selectedTj(menu.id,idx)">{{menu.title}}</span>
 						</div>
 						<div class="mui-scroll mui-scroll-three" v-else>
 							<span class="mui-control-item" v-if="menu.id<4" v-for="(menu,idx) in screen" :class="menu.selected?'active':''"
@@ -614,7 +618,14 @@
 					void_course: false,
 					group_id: userInfo.group_id,
 					// 是否显示评论
-					iSdiscuss: true
+					iSdiscuss: true,
+					// 消息
+					trends_cont: {
+						total: 0,
+						last_user:{
+							avatar:''
+						}
+					}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -833,6 +844,7 @@
 									discoverInfo();
 									getDiscoverData();
 									getArticleClassify();
+									 getTrendsNum();
 								}
 							}
 						}
@@ -880,6 +892,7 @@
 						});
 						// 滚动到最左边
 						// mui('.mui-scroll-wrapper').scroll().scrollTo(0, 0, 100);
+						getTrendsNum();
 					})
 					// 初始化两次防止页面乱
 					// 初始化字体大小
@@ -1272,8 +1285,20 @@
 				});
 			}
 			// 点击消息提醒
-			mui('.mui-content').on('tap','.msg-tips-inside',function(){
-				openPage('message_queue.html','message_queue','#f7f7f7');
+			mui('.mui-content').on('tap', '.msg-tips-inside', function() {
+				openPage('message_queue.html', 'message_queue', '#f7f7f7');
+			})
+			// 获取消息
+			function getTrendsNum() {
+				mui.post($ajaxUrl + "timeline&action=notice", {
+					token: userInfo.token,
+				}, function(res) {
+					app.trends_cont = res.data;
+				}, 'json');
+			}
+			// 监听已读消息
+			window.addEventListener('refreshTrendsNum', function(event) {
+				app.trends_cont.total = 0;
 			})
 		</script>
 	</body>

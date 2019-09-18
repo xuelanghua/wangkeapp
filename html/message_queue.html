@@ -79,6 +79,15 @@
 				object-fit: cover;
 			}
 
+			.list-right-img p {
+				color: #AAAAAA;
+				font-size: 12px;
+				line-height: 1.3;
+				padding: 5px 0;
+				text-align: left;
+				overflow: hidden;
+			}
+
 			.msg-list-right {
 				display: flex;
 				flex-grow: 1;
@@ -111,8 +120,18 @@
 				overflow: hidden;
 				font-size: 13px;
 				text-align: justify;
-				background-color: #DDDDDD;
+				background-color: #F2F2F2;
 				line-height: 1.4;
+			}
+
+			.load-more {
+				height: 48px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				font-size: 14px;
+				color: #666666;
 			}
 
 			[v-cloak] {
@@ -126,44 +145,48 @@
 			<header class="mui-bar mui-bar-nav">
 				<span class="mui-icon mui-action-back mui-icon-left-nav mui-pull-left"></span>
 				<span class="mui-pull-left mui-action-back  nav-btn">消息</span>
-				<span class="mui-pull-right nav-btn">清空</span>
+				<span class="mui-pull-right nav-btn" @tap="clearMsg">清空</span>
 			</header>
 			<div class="mui-content">
-				<div style="padding: 10px 0;box-sizing: border-box;">
+				<div style="padding: 10px 0 0;box-sizing: border-box;">
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell msg-list" v-for="i in 3">
+						<li class="mui-table-view-cell msg-list" v-for="(l,i) in list" :key="i" @tap="goDetail(l.timeline_id)">
 							<div class="user-head-cont">
-								<img src="../image/5E0eH.png">
+								<img :src="l.user_avatar">
 							</div>
 							<div class="msg-list-right">
 								<div class="msg-list-inside">
-									<p>刘备备</p>
-									<!-- 如果是评论 -->
-									<p class="desc">我是评论，评论了，摔了摔了帅了摔了了摔了了摔了了摔了了摔了帅了帅了甩了</p>
-									<!-- 如果是点赞 -->
-									<!-- <span class="iconfont icon-like">&#xe601;</span> -->
-									<p>2019-09-18 10:45</p>
+									<p>{{l.user_name}}</p>
+									<span v-if="l.type==1" class="iconfont icon-like">&#xe601;</span>
+									<p v-else class="desc">{{l.content}}</p>
+									<p>{{l.create_time}}</p>
 								</div>
 								<div class="list-right-img">
-									<!-- 如果有文字 有蚊子尤文阿斯利康的可拉伸的萨德里克几分 -->
-									<img src="../image/5E0eH.png">
+									<p v-if="l.timeline_type=='text'">{{l.timeline_content}}</p>
+									<img v-else-if="l.timeline_type=='image'" :src="l.timeline_content">
+									<img v-else :src="l.timeline_content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
 								</div>
 							</div>
 						</li>
 					</ul>
 				</div>
-
+				<div class="load-more">
+					{{has_more?'查看更早的消息...':'已经被你看光了'}}
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo = getUserInfo();
+			var userInfo = getUserInfo(),
+				skip = 1,
+				limit = 10;
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					list: [],
+					has_more: true
 				},
 				created: function() {
 					// 初始化字体大小
@@ -186,9 +209,57 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						plus.navigator.setStatusBarStyle("dark");
+						getlist();
 					})
 				}
 			})
+
+			function getlist() {
+				mui.post($ajaxUrl + "timeline&action=record", {
+					token: userInfo.token,
+					skip: skip,
+					limit: limit
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						if (skip == 1) {
+							app.list = res.data;
+							mui.fire(plus.webview.currentWebview().opener(), 'refreshTrendsNum');
+						} else {
+							app.list = app.list.concat(res.data);
+						}
+						app.has_more = res.extra.has_more;
+					}
+				}, 'json');
+			}
+			// 查看更早的消息
+			mui('.mui-content').on('tap', '.load-more', function() {
+				if (app.has_more) {
+					skip += 1;
+					getlist();
+				}
+			})
+			// 查看详情
+			function goDetail(_id){
+				openPage('dynamics_detail.html', 'dynamics_detail', "#f7f7f7", {
+					aid: _id,
+					user_id: userInfo.id
+				})
+			}
+			function clearMsg(){
+				mui.post($ajaxUrl + "timeline&action=clear_record", {
+					token: userInfo.token,
+				}, function(res) {
+					if(res.errno==0){
+						message('已清空！');	
+						app.list=[];
+						mui.back();
+					}else{
+						message('清除失败，请稍后重试！');	
+					}
+					
+				}, 'json');
+			}
 		</script>
 	</body>
 
