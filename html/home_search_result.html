@@ -347,7 +347,7 @@
 					<div class="page-mini-card page-mini-card-team">
 						<div class="headline-cont">用户</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
+							<li class="mui-table-view-cell" @tap="openDetail('1',34)">
 								<img src="../image/5E0eH.png">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -365,7 +365,7 @@
 					<div class="page-mini-card">
 						<div class="headline-cont">动态</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell dynamic-list">
+							<li class="mui-table-view-cell dynamic-list" @tap="openDetail('2',34)">
 								<div class="dynamic-title">
 									<span class="user-name">张龙飞</span>
 									<span>2019-09-17</span>
@@ -591,24 +591,28 @@
 			}
 			// 跳转详情
 			function openDetail(typ, obj) {
-				if (typ == '') {
+				if (typ == '1') {
 					// 用户
-					openPage('', '', '', '');
-				} else if (typ == '') {
+					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+						fid:34
+					});
+				} else if (typ == '2') {
 					// 动态
-					openPage('', '', '', '');
-				} else if (typ == '') {
+					openPage('dynamics_detail.html', 'dynamics_detail', '#f7f7f7', {
+						aid:21,
+						user_id:userInfo.id
+					});
+				} else if (typ == '3') {
 					// 头条
-					openPage('', '', '', '');
-				} else if (typ == '') {
+					openPage('article.html', 'article', '#f7f7f7', '');
+				} else if (typ == '4') {
 					// 团队
 					if (obj==1) {
 						openPage('', '', '', '');
 					} else {
 						openPage('', '', '', '');
 					}
-
-				} else if (typ == '') {
+				} else if (typ == '5') {
 					// 商品
 					openPage('', '', '', '');
 				} else {
