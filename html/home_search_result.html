@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -326,6 +325,23 @@
 				border-radius: 0;
 			}
 
+			.page-mini-card .more-result-item {
+				padding-left: 0.9rem;
+				font-size: 15px;
+				color: #1e3e64;
+			}
+
+			.page-mini-card .more-result-item .mui-navigate-right:after {
+				font-size: 20px;
+				color: #1e3e64;
+			}
+
+			.page-mini-card .more-result-item .mui-icon-search {
+				font-size: 18px;
+				margin-right: 3px;
+				font-weight: 700;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -344,20 +360,23 @@
 			<div class="mui-content">
 				<div class="result-container">
 					<!-- 用户 -->
-					<div class="page-mini-card page-mini-card-team">
+					<div class="page-mini-card page-mini-card-team" v-if="user_group!=''">
 						<div class="headline-cont">用户</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" @tap="openDetail('1',34)">
-								<img src="../image/5E0eH.png">
+							<li class="mui-table-view-cell" v-for="(u,i) in user_group" :key="i" @tap="openDetail('1',u)" v-if="i<3">
+								<img :src="u.avatar">
 								<div class="team-info">
 									<div class="team-info-top">
-										<span>房东本人</span>
+										<span v-html="highLight(u.name)"></span>
 									</div>
 									<div class="team-info-btm">
-										<span class="mui-ellipsis">电话：137006969691370069696913700696969</span>
-										<span class="mui-ellipsis">公司：云南万贤科技有限公司云南万贤科技有限公司云南万贤科技有限公司云南万贤科技有限公司</span>
+										<span class="mui-ellipsis" v-html="'电话：'+ highLight(u.phone)"></span>
+										<span class="mui-ellipsis" v-html="'公司：'+ highLight(u.company)"></span>
 									</div>
 								</div>
+							</li>
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('用户',user_group)" v-if="user_group.length>3">
+								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多用户</span>
 							</li>
 						</ul>
 					</div>
@@ -365,23 +384,27 @@
 					<div class="page-mini-card">
 						<div class="headline-cont">动态</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell dynamic-list" @tap="openDetail('2',34)">
+							<li class="mui-table-view-cell dynamic-list" v-for="(d,i) in timeline_group" :key="i" @tap="openDetail('2',d.id)"
+							 v-if="i<5">
 								<div class="dynamic-title">
-									<span class="user-name">张龙飞</span>
-									<span>2019-09-17</span>
+									<span class="user-name" v-html="highLight(d.user_name)"></span>
+									<span v-html="highLight(d.create_time)"></span>
 								</div>
 								<div class="dynamic-container">
-									<p class="mui-ellipsis-2" v-html="highLight(str)"></p>
+									<p class="mui-ellipsis-2" v-html="highLight(d.content)"></p>
 									<!-- 如果是图片动态 -->
-									<div class="dynamic-img mui-hidden">
-										<img class="img-item" src="../image/5E0eH.png" v-for="i in 9">
+									<div v-if="d.is_video==0" class="dynamic-img">
+										<img class="img-item" :src="img" v-for="(img,i) in d.cover" :key="i">
 									</div>
 									<!-- 如果是视频动态 -->
-									<div class="video-dynamic">
-										<img src="../image/5E0eH.png">
+									<div v-if="d.is_video==1" class="video-dynamic">
+										<img :src="d.cover[0]+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
 										<img class="player-btn" src="../image/icon/video-player.png">
 									</div>
 								</div>
+							</li>
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('动态',timeline_group)" v-if="timeline_group.length>5">
+								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多动态</span>
 							</li>
 						</ul>
 					</div>
@@ -389,11 +412,11 @@
 					<div class="page-mini-card page-mini-card-goods mini-card-headline">
 						<div class="headline-cont">头条</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" @tap="openDetail('3',34)">
+							<li class="mui-table-view-cell" @tap="openDetail('3',34)" >
 								<img class="headline-img-sign" src="../image/5E0eH.png">
 								<div class="team-info">
 									<div class="team-info-top">
-										<p class="mui-ellipsis-2">贤科技有限公司云南万贤科技有限公司云南万贤云南万贤科技有限公司有限公司有限有限公司有限有限公司有限公司云南万</p>
+										<p class="mui-ellipsis-2" v-html="highLight(d.user_name)">贤科技有限公司云南万贤科技有限公司云南万贤云南万贤科技有限公司有限公司有限有限公司有限有限公司有限公司云南万</p>
 									</div>
 									<div class="team-info-btm">
 										<span>2019-09-18 17:12</span>
@@ -402,13 +425,16 @@
 									</div>
 								</div>
 							</li>
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('obj')">
+								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多头条</span>
+							</li>
 						</ul>
 					</div>
 					<!-- 团队 -->
 					<div class="page-mini-card page-mini-card-team">
 						<div class="headline-cont">团队</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" @tap="openDetail('4',34)">
+							<li class="mui-table-view-cell" @tap="openDetail('4',1)">
 								<img src="../image/5E0eH.png">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -436,6 +462,9 @@
 									</div>
 								</div>
 							</li>
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('obj')">
+								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多团队</span>
+							</li>
 						</ul>
 					</div>
 					<!-- 商品 -->
@@ -455,6 +484,9 @@
 									</div>
 								</div>
 							</li>
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('obj')">
+								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多商品</span>
+							</li>
 						</ul>
 					</div>
 					<!-- 课程 -->
@@ -472,6 +504,9 @@
 										<span>讲师：西瓜达人</span>
 									</div>
 								</div>
+							</li>
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('obj')">
+								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多课程</span>
 							</li>
 						</ul>
 					</div>
@@ -495,7 +530,13 @@
 					searchHistory: [],
 					status: false,
 					desc: '',
-					str: '美文网汇集以爱情,亲情,友情,人生为主题的伤感情感美文网站,内含经典美文,哲理美文,伤感励志等美文欣赏,提供短篇故事,心情随笔日记,优美散文精选,现代诗歌大全,表白'
+					str: '美文网汇集以爱情,亲情,友情,人生为主题的伤感情感美文网站,内含经典美文,哲理美文,伤感励志等美文欣赏,提供短篇故事,心情随笔日记,优美散文精选,现代诗歌大全,表白',
+					user_group: [],
+					timeline_group: [],
+					article_group: [],
+					team_group: [],
+					goods_group: [],
+					course_group: [],
 				},
 				created: function() {
 					// 初始化字体大小
@@ -515,6 +556,12 @@
 						var reg = new RegExp("(" + this.keyword + ")", "g");
 						var newstr = str.replace(reg, "<i class=\"highlight\">$1</i>");
 						return newstr;
+					},
+					openMore: function(t, arr) {
+						openPage('home_more_result.html', 'home_more_result', '#f7f7f7', {
+							arr: arr,
+							title: t
+						})
 					}
 				},
 				mounted: function() {
@@ -575,32 +622,43 @@
 				if (app.keyword == '') {
 					return false;
 				}
-				logs(app.keyword);
-				logs(app.classify);
-				mui.post($ajaxUrl + "", {
+				showload(0, 0);
+				mui.post($ajaxUrl + "search&action=all", {
 					token: userInfo.token,
 					keyword: app.keyword,
-					classify: app.classify
+					type: app.classify
 				}, function(e) {
+					logs(e);
 					if (e.errno == 0) {
-						// 搜索成功
+						app.user_group = e.data.user;
+						app.timeline_group = e.data.timeline;
+						app.article_group = e.data.article;
+						app.team_group = e.data.team;
+						app.goods_group = e.data.goods;
+						app.course_group = e.data.course;
+						setTimeout(function() {
+							showload(1);
+						}, 800);
 					} else {
 						// 搜索失败
 						app.status = true;
+						setTimeout(function() {
+							showload(1);
+						}, 1500);
 					}
-				})
+				}, 'json');
 			}
 			// 跳转详情
 			function openDetail(typ, obj) {
 				if (typ == '1') {
 					// 用户
 					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-						fid: 34
+						fid: obj.fans_id
 					});
 				} else if (typ == '2') {
 					// 动态
 					openPage('dynamics_detail.html', 'dynamics_detail', '#f7f7f7', {
-						aid: 21,
+						aid: obj,
 						user_id: userInfo.id
 					});
 				} else if (typ == '3') {
@@ -610,13 +668,14 @@
 					});
 				} else if (typ == '4') {
 					// 团队
-					if (obj) {
-						// 数据团队
-						openPage('other_team_detail.html', 'other_team_detail', '#f7f7f7', {
+					if (obj == 1) {
+						// 正式团队
+						openPage('team_detail_official.html', 'team_detail_official', '#f7f7f7', {
 							teamid: 1
 						});
 					} else {
-						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+						// 数据团队
+						openPage('team_detail_info.html', 'team_detail_info', '#f7f7f7', {
 							teamid: 1
 						});
 					}
@@ -625,17 +684,17 @@
 					openPage('', '', '', '');
 				} else {
 					// 跳转课程介绍
-					
+
 					// 如果已经加入团队
-					if(obj){
+					if (obj) {
 						// 开播和已经结束
 						openPage('live_streaming.html', 'live_streaming', '#ffffff', {
-							tid:'',
-							teacherId:'',
-							courseId:'',
-							course:''
+							tid: '',
+							teacherId: '',
+							courseId: '',
+							course: ''
 						});
-					}else{
+					} else {
 						// 未开播的
 						openPage('premiere_prompt.html', 'premiere_prompt', '#f7f7f7', '');
 					}
