@@ -253,30 +253,8 @@
 						}
 						// 监听搜索
 						document.getElementById("search").addEventListener("keypress", function(event) {
-							var keyword = app.keyword.replace(/^\s*|\s*$/g, "");
 							if (event.keyCode == "13") {
-								if (keyword != '') {
-									plus.key.hideSoftKeybord();
-									var idx = app.searchHistory.indexOf(keyword);
-									//没有则返回-1
-									if (idx == -1) {
-										app.searchHistory.unshift(keyword);
-										if (app.searchHistory.length > 12) {
-											app.searchHistory = app.searchHistory.splice(0, 12);
-											plus.storage.setItem('searchHistory', JSON.stringify(app.searchHistory));
-											startSearch();
-										} else {
-											plus.storage.setItem('searchHistory', JSON.stringify(app.searchHistory));
-											startSearch();
-										}
-									} else {
-										startSearch();
-									}
-									// 阻止页面刷新
-									event.preventDefault();
-								} else {
-									message("请输入关键词！");
-								}
+								addKeyword();
 							} else {
 								// 点的不是搜索按钮
 							}
@@ -294,12 +272,34 @@
 			})
 			// 开始搜索
 			function startSearch(_id, desc) {
-				if (app.keyword) {
-					openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
-						keyword: app.keyword,
-						classify: _id || '0',
-						desc: desc
-					}, 'fade-in');
+				openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
+					keyword: app.keyword,
+					classify: _id || '0',
+					desc: desc || ''
+				}, 'fade-in');
+			}
+			// 添加关键词到搜索记录
+			function addKeyword(_id, desc) {
+				app.keyword = app.keyword.replace(/^\s*|\s*$/g, "");
+				var idx = app.searchHistory.indexOf(app.keyword);
+				if (app.keyword != '') {
+					plus.key.hideSoftKeybord();
+					// 阻止页面刷新
+					//没有则返回-1
+					if (idx == -1) {
+						app.searchHistory.unshift(app.keyword);
+						if (app.searchHistory.length > 12) {
+							app.searchHistory = app.searchHistory.splice(0, 12);
+							plus.storage.setItem('searchHistory', JSON.stringify(app.searchHistory));
+							startSearch(_id, desc);
+						} else {
+							plus.storage.setItem('searchHistory', JSON.stringify(app.searchHistory));
+							startSearch(_id, desc);
+						}
+					} else {
+						startSearch(_id, desc);
+					}
+					event.preventDefault();
 				} else {
 					message("请输入关键词！");
 				}
