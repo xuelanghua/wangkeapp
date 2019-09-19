@@ -185,7 +185,8 @@
 					],
 					// 全部数据
 					all_datas: {},
-					is_video:0
+					is_video:0,
+					targetId:''
 				},
 				methods: {
 					// 显示菜单
@@ -307,6 +308,7 @@
 						muiCont.likes = data.thumbs_user;
 						muiCont.author = data.author;
 						muiCont.is_video=data.is_video;
+						muiCont.targetId=data.user_id; 
 						
 						// 长按保存到系统相册
 						var urls = data.cover;
@@ -430,6 +432,31 @@
 						message("评论成功");
 					} else {}
 				}, 'json');
+			})
+			// 跳转个人动态主页
+			mui('.mui-content').on('tap','.user-name',function(){
+				// openPage('dynamic_space.html', 'dynamic_space', '', {
+				// 	user_id: muiCont.targetId
+				// });
+				mui.openWindow({
+					url: "dynamic_space.html",
+					id: 'dynamic_space',
+					extras: {
+						user_id: muiCont.targetId,
+					},
+					waiting: {
+						autoShow: true, //自动显示等待框，默认为true
+						options: {
+							background: "rgba(0,0,0,0)",
+							loading: {
+								display: 'block',
+								height: '70px',
+								icon: "../image/jump.png",
+								interval: 25
+							}
+						}
+					}
+				})
 			})
 		</script>
 	</body>

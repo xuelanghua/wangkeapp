@@ -389,7 +389,7 @@
 					<div class="page-mini-card page-mini-card-goods mini-card-headline">
 						<div class="headline-cont">头条</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
+							<li class="mui-table-view-cell" @tap="openDetail('3',34)">
 								<img class="headline-img-sign" src="../image/5E0eH.png">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -408,7 +408,7 @@
 					<div class="page-mini-card page-mini-card-team">
 						<div class="headline-cont">团队</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
+							<li class="mui-table-view-cell" @tap="openDetail('4',34)">
 								<img src="../image/5E0eH.png">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -422,7 +422,8 @@
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell"><img src="../image/5E0eH.png">
+							<li class="mui-table-view-cell" @tap="openDetail('4',34)">
+								<img src="../image/5E0eH.png">
 								<div class="team-info">
 									<div class="team-info-top">
 										<span>房东的猫（20人）</span>
@@ -457,14 +458,14 @@
 						</ul>
 					</div>
 					<!-- 课程 -->
-					<div class="page-mini-card page-mini-card-goods">
+					<div class="page-mini-card">
 						<div class="headline-cont">课程</div>
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell" v-for="i in 2">
-								<img class="goods-img" src="../image/5E0eH.png">
+								<img src="../image/5E0eH.png">
 								<div class="team-info">
 									<div class="team-info-top">
-										<p class="mui-ellipsis-2">这是很nb的课程，你应该要报名啊，不然以后就没了 可惜了，可惜了</p>
+										<p class="mui-ellipsis-2">这是很nb的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程，你应该要报名啊，不然以后就没了 可惜了，可惜了</p>
 									</div>
 									<div class="team-info-btm">
 										<span>团队：9527</span>
@@ -594,30 +595,50 @@
 				if (typ == '1') {
 					// 用户
 					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-						fid:34
+						fid: 34
 					});
 				} else if (typ == '2') {
 					// 动态
 					openPage('dynamics_detail.html', 'dynamics_detail', '#f7f7f7', {
-						aid:21,
-						user_id:userInfo.id
+						aid: 21,
+						user_id: userInfo.id
 					});
 				} else if (typ == '3') {
 					// 头条
-					openPage('article.html', 'article', '#f7f7f7', '');
+					openPage('article.html', 'article', '#ffffff', {
+						article_id: 156
+					});
 				} else if (typ == '4') {
 					// 团队
-					if (obj==1) {
-						openPage('', '', '', '');
+					if (obj) {
+						// 数据团队
+						openPage('other_team_detail.html', 'other_team_detail', '#f7f7f7', {
+							teamid: 1
+						});
 					} else {
-						openPage('', '', '', '');
+						openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+							teamid: 1
+						});
 					}
 				} else if (typ == '5') {
-					// 商品
+					// 商品 个人商品 团队商品 总仓商品
 					openPage('', '', '', '');
 				} else {
-					// 课程
-					openPage('', '', '', '');
+					// 跳转课程介绍
+					
+					// 如果已经加入团队
+					if(obj){
+						// 开播和已经结束
+						openPage('live_streaming.html', 'live_streaming', '#ffffff', {
+							tid:'',
+							teacherId:'',
+							courseId:'',
+							course:''
+						});
+					}else{
+						// 未开播的
+						openPage('premiere_prompt.html', 'premiere_prompt', '#f7f7f7', '');
+					}
 				}
 			}
 		</script>
