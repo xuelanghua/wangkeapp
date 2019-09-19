@@ -394,7 +394,8 @@
 		main = null,
 		userInfo = getUserInfo();
 	mui.plusReady(function() {
-		mui.showLoading("正在加载..", "div");
+		// mui.showLoading("正在加载..", "div");
+		showload(false, false, '加载中...', "rgba(0,0,0,0.5)");
 		updateSerivces();
 		if (plus.os.name == "Android") {
 			main = plus.android.runtimeMainActivity();
@@ -641,7 +642,8 @@
 				document.getElementById('top_adv').innerHTML = str;
 				document.getElementById('bottom_adv').innerHTML = str1;
 				setTimeout(function() {
-					mui.hideLoading();
+					// mui.hideLoading();
+					showload(1);
 				}, 500);
 			}
 		}, 'json');

@@ -17,7 +17,7 @@ var getUserInfo = function() {
 }
 
 //检查是否开通会员
-function checkMember(callback) { 
+function checkMember(callback) {
 	var userInfo = getUserInfo();
 	var statusBarStyle = plus.navigator.getStatusBarStyle();
 	mui.get($ajaxUrl + 'member', {
