@@ -1,0 +1,1425 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>团队详情</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/swiper.min.css" rel="stylesheet" />
+		<style type="text/css">
+			@font-face {
+				font-family: 'aslkdfjlsdf';
+				src: url('../fonts/iconfont.eot');
+				src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'),
+					url('../fonts/iconfont.woff2') format('woff2'),
+					url('../fonts/iconfont.woff') format('woff'),
+					url('../fonts/iconfont.ttf') format('truetype'),
+					url('../ifonts/confont.svg#iconfont') format('svg');
+			}
+
+			.iconfont {
+				font-family: "aslkdfjlsdf" !important;
+				font-size: 24px;
+				font-style: normal;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+
+			.team-detail-container {
+				position: relative;
+			}
+
+			.team-detail-header {
+				height: 3.97rem;
+				/* background: #ffffff url("../image/team-detail-img01.jpg")center top no-repeat; */
+				background: #ffffff;
+				background-size: contain;
+				padding: 0.6rem 0.3rem 0;
+				color: #ffffff;
+				font-size: 0.4rem;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.team-detail-header .team-bgimg {
+				width: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 1;
+			}
+
+			.team-desc {
+				z-index: 2;
+				position: relative;
+			}
+
+			.team-number {
+				font-size: 0.24rem;
+				color: #ffffff;
+				margin-top: 0.18rem;
+				z-index: 2;
+				position: relative;
+				text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+			}
+
+			.team-name {
+				text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+			}
+
+			.team-detail-header .mui-pull-left img,
+			.title-img {
+				width: 0.28rem;
+				height: auto;
+			}
+
+
+			.title-img {
+				margin-left: 0.1rem;
+			}
+
+			.team-detail-header .mui-pull-right {
+				width: 0.42rem;
+				height: 0.42rem;
+			}
+
+			.notice-cont {
+				padding: 0 0.2rem;
+				background-color: #ffffff;
+			}
+
+			.headline {
+				font-size: 0.3rem;
+				color: #373737;
+				margin: 0;
+				line-height: 1.4;
+				font-weight: normal;
+				padding-top: 0.3rem;
+				overflow: hidden;
+			}
+
+			.headline:before {
+				content: '';
+				display: inline-block;
+				width: 4px;
+				background-color: #2889ff;
+				height: 0.3rem;
+				margin-right: 0.1rem;
+				margin-bottom: -2px;
+			}
+
+			.notice-cont p {
+				padding: 0.2rem 0 0.4rem;
+				font-size: 0.26rem;
+				color: #333333;
+				text-align: justify;
+			}
+
+			.headline p {
+				margin: 0;
+				padding: 0;
+				font-size: 0.3rem;
+				display: flex;
+				align-items: center;
+			}
+
+			.headline .mui-icon {
+				margin-top: -0.05rem;
+				font-size: 20px;
+			}
+
+			.team-members {
+				background-color: #FFFFFF;
+				padding: 0.3rem 0.2rem;
+				width: 100%;
+				display: block;
+			}
+
+			.team-members span {
+				display: flex;
+				align-items: center;
+			}
+
+			.user-head-img {
+				width: 0.82rem;
+				height: 0.82rem;
+				overflow: hidden;
+				border-radius: 50%;
+			}
+
+			.user-head-img img {
+				width: 100%;
+				height: 100%;
+			}
+
+			.team-members ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+				flex-direction: row;
+				flex-wrap: wrap;
+				width: 100%;
+				overflow: hidden;
+			}
+
+
+			.team-members li {
+				display: inline-flex;
+				position: relative;
+				padding-top: 0.1rem;
+				padding-right: 0.1rem;
+				margin-right: 0.09rem;
+				margin-top: 0.2rem;
+			}
+
+			.team-members li .mui-icon {
+				position: absolute;
+				right: 5px;
+				top: 5px;
+				color: #ffffff;
+				background-color: #f42d2d;
+				border-radius: 50%;
+				padding: 0;
+				font-size: 14px;
+			}
+
+			.validation-messages {
+				margin-top: 0.2rem;
+				background-color: #FFFFFF;
+				padding: 0.3rem 0.2rem;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				height: 0;
+			}
+
+			.mui-table-view-cell {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.58rem 0;
+			}
+
+			.validation-messages .mui-table-view-cell {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.3rem 0;
+			}
+
+			.validation-messages .mui-table-view-cell:after {
+				left: 0;
+			}
+
+			.member-left img {
+				width: 0.78rem;
+				height: 0.78rem;
+				border-radius: 50%;
+			}
+
+			.member-left {
+				display: flex;
+				align-items: center;
+				flex-shrink: 0;
+			}
+
+			.member-left p {
+				margin-left: 0.1rem;
+				font-size: 0.24rem;
+			}
+
+			.member-left p.name {
+				color: #333333;
+				font-size: 0.3rem;
+			}
+
+			.member-right {
+				display: flex;
+				flex-shrink: 0;
+			}
+
+			.member-right .mui-btn {
+				width: 0.88rem;
+				height: 0.48rem;
+				padding: 0;
+				font-size: 0.24rem;
+			}
+
+			.member-right .mui-btn:first-of-type {
+				margin-right: 0.2rem;
+			}
+
+			.member-right span {
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.join-the-team {
+				width: 7.1rem;
+				height: 0.99rem;
+				border-radius: 0.1rem;
+				background-color: #2289ff;
+				padding: 0;
+				font-size: 0.3rem;
+				margin: 1rem auto 0.5rem;
+			}
+
+			.team-setting {
+				align-items: center;
+				justify-content: center;
+				height: 44px;
+				padding: 0 12px;
+				z-index: 16;
+				position: relative;
+				font-size: 24px;
+				font-weight: bold;
+				color: #333333;
+				margin-right: -10px;
+				display: none;
+			}
+
+			.more-menu {
+				width: 90px;
+			}
+
+			.more-menu .mui-table-view-cell {
+				padding: 10px;
+				font-size: 14px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.more-menu .mui-table-view-cell::after {
+				left: 0;
+			}
+
+			.mui-backdrop.mui-active {
+				opacity: 0.5;
+			}
+
+			.team-grade-container {
+				position: relative;
+				z-index: 8;
+				height: 1.4rem;
+				background-color: #FFFFFF;
+			}
+
+			.team-grade-cont {
+				position: absolute;
+				transform: translateY(-50%);
+				width: 7.1rem;
+				background-color: #FFFFFF;
+				padding: 0.4rem 0.7rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+				left: 50%;
+				margin-left: -3.55rem;
+				border-radius: 0.1rem;
+			}
+
+			.team-grade-cont p {
+				margin-bottom: 5px;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.team-grade-cont span {
+				font-size: 0.3rem;
+				color: #373737;
+			}
+
+			.team-grade-items {
+				text-align: center;
+			}
+
+			.mui-segmented-control {
+				background-color: #FFFFFF;
+				padding-bottom: 0.1rem;
+			}
+
+			.mui-control-content {
+				background-color: #FFFFFF;
+				padding-bottom: 0.5rem;
+			}
+
+			.mui-control-item {
+				position: relative;
+				touch-action: pan-y;
+				-webkit-transition: all 0.25s ease-in-out;
+				transition: all 0.25s ease-in-out;
+			}
+
+			.mui-control-item.mui-active:after {
+				content: '';
+				display: block;
+				position: absolute;
+				height: 1px;
+				width: 48%;
+				bottom: 6px;
+				left: 26%;
+				background-color: #007aff;
+			}
+
+			.team-master {
+				padding: 0;
+				position: relative;
+			}
+
+			.team-master .swiper-slide {
+				width: 5.06rem;
+				min-height: 3.8rem;
+				background-color: #0062CC;
+				overflow: hidden;
+				box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+				border-radius: 0.1rem;
+				background-color: #FFFFFF;
+				position: relative;
+				padding: 0.2rem;
+			}
+
+			.team-master .swiper-slide .master-top {
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding-bottom: 0.2rem;
+			}
+
+			.team-master .swiper-slide .master-top::after {
+				content: '';
+				display: block;
+				position: absolute;
+				height: 1px;
+				width: 100%;
+				bottom: 0;
+				left: 0;
+				background-color: #DDDDDD;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+
+			.swiper-slide .master-headimg {
+				width: 1.58rem;
+				height: 1.58rem;
+				border-radius: 50%;
+				object-fit: cover;
+				margin-right: 0.2rem;
+				flex-shrink: 0;
+			}
+
+			.mui-ellipsis-3 {
+				display: -webkit-box;
+				overflow: hidden;
+				white-space: normal !important;
+				text-overflow: ellipsis;
+				word-wrap: break-word;
+				-webkit-line-clamp: 3;
+				-webkit-box-orient: vertical;
+			}
+
+			.swiper-slide h4 {
+				align-items: center;
+				font-size: 0.3rem;
+				color: #333333;
+				font-weight: normal;
+				overflow: hidden;
+				vertical-align: middle;
+			}
+
+			.swiper-slide .master-bottom {
+				width: 100%;
+				padding-top: 0.1rem;
+			}
+
+			.swiper-slide .master-bottom p {
+				font-size: 0.26rem;
+				color: #333333;
+				margin-bottom: 0;
+			}
+
+			.swiper-slide h4 img {
+				width: 0.3rem;
+				height: 0.3rem;
+				display: inline-flex;
+				flex-shrink: 0;
+				margin-right: 3px;
+			}
+
+			.swiper-slide .data-bank {
+				max-width: 3rem;
+			}
+
+			.swiper-slide .data-bank p {
+				font-size: 0.24rem;
+				margin-bottom: 0;
+			}
+
+			.team-master .headline,
+			.team-honor .headline {
+				padding: 0.2rem 10px;
+			}
+
+			.card-sign-cont {
+				width: 0.75rem;
+				height: 0.75rem;
+				position: absolute;
+				top: 0;
+				right: 0;
+				z-index: 8;
+			}
+
+			.swiper-container {
+				padding: 10px;
+				overflow: hidden;
+			}
+
+			.team-master .swiper-slide-prev {
+				box-shadow: none;
+			}
+
+			.team-honor-sign {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: flex-start;
+				padding: 0 0.4rem;
+			}
+
+			.team-honor-sign .sign-items {
+				width: 1.98rem;
+				height: 2.16rem;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				background: #FFFFFF url("../image/team-honor-bg.png")center center no-repeat;
+				background-size: contain;
+				padding: 0.35rem;
+				margin-bottom: 0.2rem;
+			}
+
+			.team-honor-sign .sign-items span {
+				display: inline-flex;
+				max-width: 2rem;
+				margin-top: 0.3rem;
+				font-size: 0.3rem;
+				color: #2289FF;
+				text-align: center;
+			}
+
+			.master-card {
+				width: 5.82rem !important;
+				height: 9.48rem !important;
+				position: fixed;
+				top: 50% !important;
+				left: 50% !important;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+
+			.master-card .close-btn {
+				width: 0.72rem;
+				height: 0.72rem;
+				display: block;
+				margin: 30px auto 0;
+			}
+
+			.master-card .master-card-body {
+				width: 5.82rem;
+				height: 8.73rem;
+				border-radius: 0.1rem;
+				background: #FFFFFF url("../image/master-sign-bg.png")center top no-repeat;
+				background-size: contain;
+				padding-top: 1.35rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				box-shadow: 0 0 0 300px rgba(0, 0, 0, 0.2);
+			}
+
+			.master-card .master-card-body h4 {
+				display: flex;
+				align-items: center;
+				font-size: 0.3rem;
+				color: #333333;
+				font-weight: normal;
+			}
+
+			.master-card .master-card-body h4 img {
+				width: 0.3rem;
+				height: 0.3rem;
+				margin-right: 0.05rem;
+			}
+
+			.master-card .user-head-cont {
+				width: 1.68rem;
+				height: 1.68rem;
+				border-radius: 50%;
+				margin-bottom: 0.2rem;
+				object-fit: cover;
+			}
+
+			.master-card .mui-popover-arrow.mui-bottom {
+				display: none;
+			}
+
+			.mui-control-item.mui-active {
+				font-weight: 700;
+				font-size: 0.32rem;
+			}
+
+			.master-inside {
+				width: 100%;
+				flex-grow: 1;
+				/* background-color: #0062CC; */
+				padding: 0.2rem 0.2rem 0;
+			}
+
+			.master-inside p {
+				font-size: 0.24rem;
+				color: #999999;
+				margin: 0;
+			}
+
+			.master-inside span {
+				color: #333333;
+			}
+
+			.master-inside .desc {
+				color: #333333;
+				font-size: 0.26rem;
+				margin-top: 0.1rem;
+			}
+
+			/* 主力商品 */
+			.primary-goods {
+				padding-bottom: 1.1rem;
+			}
+
+			.primary-goods .goods-list {
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding: 0.36rem 0.2rem;
+				overflow: hidden;
+			}
+
+			.primary-goods .goods-list:after {
+				left: 2.3rem;
+				background-color: #DDDDDD;
+			}
+
+			.primary-goods .goods-list:last-of-type:after {
+				height: 1px;
+			}
+
+			.goods-list .goods-right {
+				flex-grow: 1;
+			}
+
+			.goods-img {
+				width: 2rem;
+				height: 2rem;
+				display: flex;
+				overflow: hidden;
+				flex-shrink: 0;
+				margin-right: 0.28rem;
+			}
+
+			.goods-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.goods-list .goods-title {
+				color: #333333;
+				font-size: 0.3rem;
+				margin-bottom: 0.4rem;
+				min-height: 0.66rem;
+			}
+
+			.goods-list .goods-info {
+				font-size: 0.24rem;
+				color: #F52E20;
+				padding-bottom: 0.1rem;
+			}
+
+			.price-text {
+				color: #333333;
+				margin-left: 0.44rem;
+			}
+
+			.goods-right-bottom {
+				display: flex;
+				align-items: center;
+				position: relative;
+				font-size: 0.24rem;
+				color: #999999;
+			}
+
+			.goods-right-bottom span:first-of-type {
+				margin-right: 0.32rem;
+			}
+
+			.hot-sign {
+				height: 0.3rem;
+				width: auto;
+				margin-right: 0.2rem;
+			}
+
+			.goods-list .add-entrepot {
+				width: 0.38rem;
+				height: 0.38rem;
+				position: absolute;
+				right: 0.1rem;
+				z-index: 6;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+
+			/* 团队课程 */
+			.study-container {
+				padding-bottom: 1.1rem;
+			}
+
+			.study-container h4 {
+				margin: 0;
+				text-align: center;
+				font-size: 0.3rem;
+				font-weight: normal;
+				color: #333333;
+				padding: 15px 0;
+			}
+
+			.study-container h4 span {
+				color: #2289FF;
+
+				font-size: 0.3rem;
+			}
+
+			.study-container .mui-table-view-cell {
+				padding: 15px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.study-container .mui-table-view-cell .head-img {
+				width: 40px;
+				height: 40px;
+				overflow: hidden;
+				border-radius: 50%;
+				object-fit: cover;
+				margin-right: 0.3rem;
+			}
+
+			.study-container .mui-table-view-cell:after {
+				left: 60px;
+				background-color: #DDDDDD;
+			}
+
+			.study-left,
+			.study-right {
+				display: flex;
+				align-items: center;
+				font-size: 0.3rem;
+			}
+
+			.study-right {
+				color: #999999;
+			}
+
+			.rank-sign {
+				width: auto;
+				height: 26px;
+				/* margin-left: 20px; */
+				object-fit: cover;
+				margin-right: 10px;
+			}
+
+			.mui-table-view-cell.slef-ranking span {
+				color: #2289FF;
+			}
+
+			.void-tips-cont {
+				height: 1.2rem;
+				padding-left: 0.2rem;
+				display: flex;
+				align-items: center;
+				background-color: rgb(250, 250, 250);
+				color: #DDDDDD;
+			}
+
+			/* 没有学习进度的时候 */
+			.void-tips-conts {
+				width: 100%;
+				padding-top: 10%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+
+			.void-tips-conts img {
+				width: 60%;
+				height: auto;
+				margin-bottom: 10px;
+			}
+
+			.void-tips-conts p {
+				font-size: 16px;
+				color: #999999;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			/* 验证弹窗 */
+			.verift-body {
+				position: fixed;
+				width: 80%;
+				background-color: #ffffff;
+				border-radius: 0.2rem;
+				z-index: 1066;
+				padding-top: 0.1rem;
+				top: 35%;
+				left: 10%;
+			}
+
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.verift-body textarea {
+				margin-bottom: 0;
+				border-color: #fefefe;
+				margin-bottom: 1px;
+				font-size: 0.3rem;
+			}
+
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 0.3rem 0.2rem;
+			}
+
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+
+			.void-tips {
+				width: 100%;
+				padding: 2rem 0;
+				text-align: center;
+				color: #999999;
+			}
+		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">团队详情</h1>
+			<!-- <a href="#menu" class="mui-pull-right team-setting">
+				···
+			</a> -->
+		</header>
+
+		<div id="mui-content" class="mui-content team-detail-container" v-cloak>
+			<div class="team-detail-header">
+				<div class="mui-clearfix team-desc">
+					<div class="mui-pull-left">
+						<span class="team-name">{{teamName}}</span>
+					</div>
+					<img class="mui-pull-right team-qrCode" src="../image/team-detail-img04.png" alt="">
+				</div>
+				<img class="team-bgimg" :src="teamImg">
+				<p class="team-number">{{tid}}</p>
+			</div>
+			<div class="team-grade-container">
+				<div class="team-grade-cont">
+					<div class="team-grade-items">
+						<p>团队排名</p>
+						<span v-if="rla.rank!=0">第{{rla.rank}}名</span>
+						<span v-else>暂无排名</span>
+					</div>
+					<div class="team-grade-items">
+						<p>团队活跃度</p>
+						<span>{{rla.active}}</span>
+					</div>
+					<div class="team-grade-items">
+						<p>团队总收入</p>
+						<span v-if="rla.level==0">百级</span>
+						<span v-if="rla.level==1">千级</span>
+						<span v-if="rla.level==2">万级</span>
+						<span v-if="rla.level==3">十万级</span>
+						<span v-if="rla.level==4">百万级</span>
+						<span v-if="rla.level==5">千万级</span>
+					</div>
+				</div>
+			</div>
+			<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+				<a class="mui-control-item mui-active" href="#item1">
+					基本信息
+				</a>
+				<a class="mui-control-item" href="#item2">
+					主力商品
+				</a>
+				<a class="mui-control-item" href="#item3">
+					学习进度
+				</a>
+			</div>
+			<div id="item1" class="mui-control-content mui-active">
+				<div class=" notice-cont">
+					<h2 class="headline">
+						团队公告
+					</h2>
+					<p>{{desc}}</p>
+				</div>
+				<div class="team-members">
+					<h2 class="headline team-member-more">团队成员<p class="more-member mui-pull-right">共{{teamNum}}人<span class="mui-icon mui-icon-arrowright"></span></p>
+					</h2>
+					<ul>
+						<li v-for="(items,index) in teamMember" :key="index" v-if="index<7">
+							<div class="user-head-img">
+								<img :src="items.avatar||items.avatarUrl" />
+							</div>
+						</li>
+						<!-- <li>
+							<div class="user-head-img member-selection">
+								<img type="image" src="../image/team-detail-img05.png" />
+							</div>
+						</li> -->
+					</ul>
+				</div>
+				<!-- 团队大咖 -->
+				<div class="team-master">
+					<h2 class="headline team-master-more">
+						<span>团队大咖</span>
+					</h2>
+					<div v-if="person!=''" class="swiper-container">
+						<div class="swiper-wrapper">
+							<div class="swiper-slide" v-for="(h,i) in person" :key="i">
+								<div class="master-top" @tap="checkBusinessCard(i)">
+									<img class="master-headimg" :src="h.avatar">
+									<div class="data-bank">
+										<h4 class="mui-ellipsis"><img src="../image/master-sign.png"><span>{{h.name}}</span></h4>
+										<p class="mui-ellipsis">职业：{{h.job}}</p>
+										<p>行业：{{h.industry}}</p>
+										<p>职位：{{h.position}}</p>
+									</div>
+								</div>
+								<div class="master-bottom" @tap="checkBusinessCard(i)">
+									<p class="mui-ellipsis-3">{{h.introduce}}</p>
+								</div>
+								<img class="card-sign-cont" :data-ids="h.uid" src="../image/business-card-sign.png">
+							</div>
+						</div>
+					</div>
+					<div class="void-tips-cont" v-else>
+						暂无团队大咖~
+					</div>
+				</div>
+				<!-- 团队荣誉 -->
+				<div class="team-honor">
+					<!-- team_honor_edit.html -->
+					<h2 class="headline team-honor-edit">
+						<span>团队荣誉</span>
+					</h2>
+					<div v-if="honorList!=''" class="team-honor-sign">
+						<div class="sign-items" v-for="(j,i) in honorList" :key="i">
+							<span>{{j.name}}</span>
+						</div>
+					</div>
+					<div class="void-tips-cont" v-else>
+						暂无团队荣誉~
+					</div>
+				</div>
+				<button v-if="role==0" type="button" class="mui-btn mui-btn-blue mui-btn-block join-the-team" @tap="joinTeam">加入团队</button>
+			</div>
+			<!-- 主力商品 -->
+			<div id="item2" class="mui-control-content primary-goods">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell goods-list" v-for="(g, index) in goods">
+						<div class="goods-img" @tap="openGoodsDetail(g.id)">
+							<img :src="g.cover">
+						</div>
+						<div class="goods-right">
+							<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(g.id)">
+								{{g.name}}
+							</p>
+							<div class="goods-info" @tap="openGoodsDetail(g.id)">
+								<span class="wage-text">提成：&yen;{{g.commission}}</span>
+								<span class="price-text">供货价：&yen;{{g.settlement_price}}</span>
+							</div>
+							<div class="goods-right-bottom">
+								<img v-if="g.team_hot==1" class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png" @tap="openGoodsDetail(g.id)">
+								<span @tap="openGoodsDetail(g.id)">销量&nbsp;{{g.sale_count}}</span>
+							</div>
+						</div>
+					</li>
+					<div v-if="team_goods_status" class="void-tips-conts">
+						<img src="../image/icon/void-data.png">
+						<p>空空如也~</p>
+					</div>
+				</ul>
+			</div>
+			<!-- 学习进度 -->
+			<div id="item3" class="mui-control-content study-container">
+				<div v-if="lProgress!=''">
+					<h4>
+						<!-- 当前排名：<span>第{{selfrank}}名</span> -->
+					</h4>
+					<ul class="mui-table-view">
+						<!-- 自己添加slef-ranking -->
+						<li class="mui-table-view-cell" :class="l.uid==slef_id?'slef-ranking':''" v-for="(l,i) in lProgress" :key="i">
+							<div class="study-left">
+								<img class="head-img" :src="l.avatar||l.avatarUrl">
+								<span>{{l.name}}</span>
+							</div>
+							<div class="study-right">
+								<span v-if="i>2">第{{l.rank}}名</span>
+								<img v-if="l.rank<4" class="rank-sign" :src="'../image/icon/rank-sign'+l.rank+'.png'">
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div v-else class="void-tips-conts">
+					<img src="../image/self_media_tips01.png">
+					<p>空空如也~</p>
+				</div>
+			</div>
+			<!-- 弹窗 -->
+			<!-- <div id="menu" class="mui-popover more-menu">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell delete-team">解散团队</li>
+					<li class="mui-table-view-cell team-settings">团队设置</li>
+				</ul>
+			</div> -->
+			<div id="master_model" class="mui-popover master-card">
+				<div class="master-card-body">
+					<img class="user-head-cont" :src="modeldata.avatar">
+					<h4 class=""><img src="../image/master-sign.png"><span>{{modeldata.name}}</span></h4>
+					<div class="master-inside">
+						<p class="mui-ellipsis">职业：<span>{{modeldata.job}}</span></p>
+						<p>行业：<span>{{modeldata.industry}}</span></p>
+						<p>职位：<span>{{modeldata.position}}</span></p>
+						<p class="desc">
+							{{modeldata.introduce}}
+						</p>
+					</div>
+				</div>
+				<img class="close-btn" src="../image/Close.png">
+			</div>
+			<!-- 验证弹窗-->
+			<div class="verift-body" v-if="isVerify">
+				<textarea v-model="remarkMsg" rows="3" placeholder="请输入验证信息"></textarea>
+				<div class="verift-footer">
+					<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+					<button type="button" class="mui-btn mui-btn-link send-verify">发送</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/util.js"></script>
+	<script src="../js/swiper.min.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script type="text/javascript">
+		var menuidx = 0;
+		var mask = mui.createMask(function() {
+			var target = document.querySelector('.menu-cont' + menuidx);
+			if (target) {
+				target.classList.remove("active");
+			} else {
+				app.isVerify = false;
+			}
+		});
+		mui.init();
+		var userInfo = getUserInfo();
+		var app = new Vue({
+			el: "#mui-content",
+			data: {
+				midx: 0,
+				desc: '',
+				teamName: '',
+				conts: '',
+				role: 1,
+				tid: '',
+				teamMember: [],
+				applyList: [],
+				teamNum: 1,
+				captain_uid: 0,
+				data_status: false,
+				teamImg: '',
+				uperImg: '',
+				person: [],
+				honorList: [],
+				serial: 0,
+				modeldata: {},
+				rla: {},
+				data_status: 0,
+				lProgress: [],
+				slef_id: userInfo.id,
+				goods: [],
+				team_goods_status: false,
+				isVerify: false,
+				remarkMsg: ''
+			},
+			computed: {
+				selfrank: function() {
+					var ranks = '';
+					var _self = this;
+					for (var i in _self.lProgress) {
+						if (_self.lProgress[i].uid == _self.slef_id) {
+							ranks = _self.lProgress[i].rank;
+							return ranks;
+						}
+					}
+				}
+			},
+			methods: {
+				// 打开商品详情
+				openGoodsDetail: function(gid) {
+					var beforeWv = plus.webview.getWebviewById('team_goods_detail');
+					plus.webview.hide(beforeWv);
+					plus.webview.close(beforeWv);
+					setTimeout(function() {
+						openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+							gid: gid
+						})
+					}, 200);
+				},
+				examine: function(status, userId) {
+					mui.post($ajaxUrl + 'team&action=check', {
+						token: userInfo.token,
+						team_id: app.tid,
+						user_id: userId,
+						status: status
+					}, function(res) {
+						if (res.errno == 0) {
+							message(res.message);
+							getInfo();
+							getApplyList();
+							getMember();
+						} else {
+							getInfo();
+							message(res.message);
+						}
+					}, 'json');
+				},
+				// 加入团队
+				joinTeam: function() {
+					mask.show();
+					app.isVerify = true;
+				},
+				checkBusinessCard: function(i) {
+					app.serial = i;
+					app.modeldata = app.person[i];
+					mui("#master_model").popover("show", mui(".master-top")[0]);
+				},
+			},
+			mounted: function() {
+				mui.plusReady(function() {
+					plus.navigator.setStatusBarStyle("dark");
+					var self = plus.webview.currentWebview();
+					app.tid = self.teamid;
+					app.role = self.role;
+					// logs(app.tid);
+					getInfo();
+					getMember();
+					//获取团队商品
+					getTeamGoods();
+					// 获取团队大咖
+					getPerson();
+					getlists();
+					// 获取学习进度
+					getLearningProgress();
+				})
+			}
+		})
+		// 轮播初始化
+		function initSlider() {
+			// 初始化轮播
+			var mySwiper = new Swiper('.swiper-container', {
+				//可选选项，自动滑动
+				slidesPerView: 'auto',
+				spaceBetween: 20,
+				// autoplay: {
+				// 	delay: 0,
+				// 	// 用户操作之后不会停止轮播
+				// 	disableOnInteraction: false,
+				// },
+				loop: false
+			})
+		}
+		// 关闭验证弹窗
+		mui(".mui-content").on("tap", ".close-verify-window", function(e) {
+			mask.close();
+		})
+		// 发送验证
+		mui(".mui-content").on("tap", ".send-verify", function(e) {
+			if (app.remarkMsg == '') {
+				message('请输入验证消息！');
+				return false;
+			}
+			mui.post($ajaxUrl + 'team&action=apply', {
+				token: userInfo.token,
+				team_id: app.tid,
+				remark: app.remarkMsg
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					message(res.message);
+				} else {
+					message(res.message);
+				}
+			}, 'json')
+			mask.close();
+		})
+		// 团队二维码
+		mui(".mui-content").on("tap", ".team-qrCode", function() {
+			openPage('team_qr_code.html', 'team_qr_code', '#f7f7f7', {
+				teamId: app.tid,
+				teamName: app.teamName
+			});
+		})
+		// 点击名片标志
+		mui(".mui-content").on("tap", ".card-sign-cont", function() {
+			var jk = this.dataset.ids;
+			openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+				fid: jk
+			});
+			// modeldata
+		})
+		// 关闭卡片
+		mui(".master-card").on("tap", ".close-btn", function() {
+			mui("#master_model").popover("hide", mui(".master-top")[0]);
+		})
+		// 更多大咖
+		mui(".mui-content").on("tap", ".team-master-more-btn", function() {
+			openPage('more_master.html', 'more_master', '#f7f7f7', {
+				tid: app.tid
+			});
+		})
+		//团队设置
+		mui(".more-menu").on("tap", ".team-settings", function() {
+			mui('.more-menu').popover('hide');
+			// alert(app.uperImg);
+			openPage('team_setting.html', 'team_setting', '#f7f7f7', {
+				teamId: app.tid,
+				teamName: app.teamName,
+				desc: app.desc,
+				img: app.teamImg,
+				uperImg: app.uperImg,
+				data_status: app.data_status
+			});
+		})
+		// 更多成员
+		mui(".mui-content").on("tap", ".team-member-more", function() {
+			// logs(app.tid);
+			openPage('team_members.html', 'team_members', '#f7f7f7', {
+				tid: app.tid,
+				captainUid: app.captain_uid,
+				add_member: "forbid"
+			});
+		})
+
+		// 获取团队信息
+		function getInfo() {
+			mui.post($ajaxUrl + 'team&action=team_info', {
+				token: userInfo.token,
+				team_id: app.tid
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					app.teamName = res.data.name;
+					app.desc = res.data.notice;
+					app.teamNum = res.data.current_number;
+					app.captain_uid = res.data.captain_uid;
+					app.teamImg = res.data.cover_url || "https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg";
+					app.uperImg = res.data.cover || "images/6/2019/05/team_bg.jpg";
+					app.data_status = res.data.data_status;
+					app.rla = res.data;
+					if (res.data.join_status == false) {
+						app.role = 0;
+					}
+					var captainId = res.data.captain_uid;
+					if (res.data.data_status == 1) {
+						app.data_status = true;
+					} else {
+						app.data_status = false;
+					}
+				} else {
+					message(res.message);
+					mui.back();
+				}
+			}, 'json');
+		}
+
+		//获取团队商品
+		function getTeamGoods() {
+			mui.post($ajaxUrl + 'team&action=recommend_goods_list', {
+				token: userInfo.token,
+				team_id: app.tid
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					app.goods = res.data;
+					app.team_goods_status = false;
+				} else {
+					app.goods = [];
+					app.team_goods_status = true;
+					// message(res.message);
+				}
+			}, 'json');
+		}
+
+		// 获取团队成员
+		function getMember() {
+			// logs(app.tid);
+			mui.post($ajaxUrl + 'team&action=member_list', {
+				token: userInfo.token,
+				team_id: app.tid
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					app.teamMember = res.data;
+				} else {
+					app.teamMember = [];
+				}
+			}, 'json');
+		}
+		// 添加成员
+		window.addEventListener('doit', function(e) {
+			var checkedValues = e.detail.idGroup;
+			mui.post($ajaxUrl + 'team&action=add_member', {
+				token: userInfo.token,
+				team_id: app.tid,
+				uids: checkedValues.join(',')
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					getInfo();
+					getMember();
+					message("邀请信息已发送！");
+				} else {
+					message("邀请信息发送失败，请稍后重试");
+				}
+			}, 'json');
+		});
+		// 删除成员
+		window.addEventListener('remove', function(e) {
+			getInfo();
+			getMember();
+		});
+		// 修改团队信息
+		window.addEventListener('editTeamInfo', function(e) {
+			getInfo();
+		});
+		// 删除团队大咖
+		window.addEventListener('reloadList', function(e) {
+			getPerson();
+		});
+		// 添加或者删除团队荣誉
+		window.addEventListener('reloadHonor', function(e) {
+			getlists();
+		});
+		// 获取大咖列表
+		function getPerson() {
+			mui.post($ajaxUrl + 'team&action=star_list', {
+				token: userInfo.token,
+				team_id: app.tid,
+			}, function(res) {
+				logs(res);
+				if (res.errno == 0) {
+					app.modeldata = res.data[0];
+					app.person = res.data;
+					setTimeout(function() {
+						initSlider();
+					}, 100);
+				} else {
+					app.person = [];
+				}
+				// logs(app.person); 
+			}, 'json');
+		}
+		// 获取荣誉列表
+		function getlists() {
+			mui.post($ajaxUrl + 'team&action=title_list', {
+				token: userInfo.token,
+				team_id: app.tid,
+			}, function(res) {
+				// logs(res);
+				if (res.errno == 0) {
+					app.honorList = res.data;
+				} else {}
+			}, 'json');
+		}
+		// 获取学习进度
+		function getLearningProgress() {
+			mui.post($ajaxUrl + 'team&action=course_study_rank', {
+				token: userInfo.token,
+				team_id: app.tid,
+				course_id: ''
+			}, function(res) {
+				// logs(res); 
+				if (res.errno == 0) {
+					app.lProgress = res.data;
+				} else {
+
+				}
+			}, 'json');
+		}
+		// // 拣货
+		// mui(".mui-content").on("tap", ".add-entrepot-btn", function() {
+		// 	var gid = this.dataset.gid;
+		// 	openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
+		// 		gid: gid
+		// 	});
+		// })
+	</script>
+</html>

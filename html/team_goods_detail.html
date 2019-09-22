@@ -275,7 +275,7 @@
 			} */
 			.goods-detail-container {
 				line-height: 0;
-				padding: 0 0.2rem 1.2rem;
+				padding: 0 0.2rem 0.5rem;
 			}
 
 			.goods-detail-container p {
@@ -324,7 +324,8 @@
 					<span>售价：&yen;{{goods_detail.price}}</span>
 				</div>
 				<div class="top-info-cont">
-					<span>快递：{{goods_detail.express_name}}&nbsp;&yen;{{goods_detail.freight}}</span>
+					<span v-if="goods_detail.freight==0">快递：{{goods_detail.express_name}}&nbsp;&nbsp;包邮</span>
+					<span v-else>快递：{{goods_detail.express_name}}&nbsp;&yen;{{goods_detail.freight}}</span>
 					<span>销量：{{goods_detail.sale_count}}</span>
 					<span>库存：{{goods_detail.stock}}</span>
 				</div>
@@ -362,24 +363,6 @@
 				<div v-if="goods_detail.content" id="content" v-html="goods_detail.content"></div>
 				<div v-else class="void-detail-container">
 					暂无详情
-				</div>
-			</div>
-			<!-- <div class="btn-section">
-				<div class="putaway-btn">
-					添加到仓库
-				</div>
-				<div class="the-warehouse">
-					上架到商城
-				</div>
-			</div> -->
-			<div class="btn-section">
-				<!-- 不可拣货 -->
-				<div v-if="goods_detail.is_pick==1||goods_detail.check_status==0||goods_detail.check_status==2||goods_detail.status!=1||goods_detail.stock==0"
-				 class="the-gray-warehouse">
-					拣货
-				</div>
-				<div v-else class="the-warehouse">
-					拣货
 				</div>
 			</div>
 		</div>
@@ -428,23 +411,7 @@
 							plus.nativeUI.previewImage(app.images, {
 								current: index,
 								loop: true,
-								indicator: 'default',
-								onLongPress: function(event) {
-									// plus.nativeUI.confirm("保存图片到系统相册",function(e){
-									// 	if(e.index==0){
-									// 		showload('','','保存中···','rgba(0,0,0,0.5)');
-									// 		plus.gallery.save(event.url, function(){
-									// 			showload(1);
-									// 			plus.nativeUI.toast("保存成功!");
-									// 		}, function(){
-									// 			showload(1);
-									// 			plus.nativeUI.toast("保存失败!");
-									// 		} );
-									// 	}else{
-									// 		// plus.nativeUI.toast("取消");
-									// 	}
-									// });
-								}
+								indicator: 'default'
 							});
 						});
 					})
@@ -472,13 +439,12 @@
 					}
 				});
 			}
-
 			function getGoodsDetail() {
-				mui.post($ajaxUrl + 'goods&action=goods_detail', {
+				mui.post($ajaxUrl + 'search&action=goods_detail', {
 					token: userInfo.token,
 					goods_id: app.goods_id
 				}, function(res) {
-					logs(res);
+					logs(res);  
 					if (res.errno == 0) {
 						app.goods_detail = res.data;
 						app.images = res.data.images;
@@ -492,27 +458,12 @@
 					}
 				}, 'json');
 			}
-			// 添加到仓库
-			mui(".mui-content").on("tap", ".putaway-btn", function() {
-				mui.toast('添加到仓库');
-			})
-			// 拣货
-			mui(".mui-content").on("tap", ".the-warehouse", function() {
-				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
-					gid: app.goods_id
-				})
-			})
 			// 打开团队详情
 			mui(".mui-content").on("tap", ".team-name-cont", function() {
 				var team_id = this.dataset.tid;
-				openPage('team_detail.html', 'team_detail', '#f7f7f7', {
+				openPage('team_detail_official.html', 'team_detail_official', '#f7f7f7', {
 					teamid: team_id
 				})
-			})
-
-			// 监听拣货
-			window.addEventListener('reloadYourself', function() {
-				getGoodsDetail();
 			})
 		</script>
 	</body>
