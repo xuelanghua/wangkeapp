@@ -889,7 +889,7 @@ function fnLogout() {
 								plus.webview.close(wvs[i]);
 							}
 						}
-						fnOpenWin('mobile_login.html', 'mobile_login', {
+						fnOpenWin('/html/mobile_login.html', 'mobile_login', {
 							statusbar: {
 								background: '#2289FF'
 							}
@@ -905,7 +905,7 @@ function fnLogout() {
 								plus.webview.close(wvs[i]);
 							}
 						}
-						fnOpenWin('login.html', 'login', {
+						fnOpenWin('/html/login.html', 'login', {
 							statusbar: {
 								background: '#122c9a'
 							}

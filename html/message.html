@@ -443,7 +443,8 @@
 				data: {
 					systemMsg: [],
 					msgList: [],
-					voidmsg: false
+					voidmsg: false,
+					loadStatus: true
 				},
 				mounted: function() {
 					mui.init({
@@ -459,7 +460,12 @@
 						var mod = getcache('msglist');
 						var systemMsg = getcache('systemMsg');
 						if (mod) {
+							showload(0);
+							setTimeout(function() {
+								showload(1);
+							}, 500);
 							app.msgList = mod;
+							app.loadStatus = false;
 						}
 						if (systemMsg) {
 							app.systemMsg = systemMsg;
@@ -470,7 +476,7 @@
 							getSystemMsg();
 						})
 						getChatList(true);
-
+						getSystemMsg();
 						// mui('#chat_message').on('tap', '.Record_list', function() {
 						// 	var cid = this.dataset.cid;
 						// 	var chatName = this.dataset.name;
@@ -492,7 +498,6 @@
 						// 		}, 'slide-in-right');
 						// 	}
 						// })
-
 						mui('header').on('tap', 'li', function() {
 							var type = this.dataset.type;
 							this.className = 'current';
@@ -506,7 +511,6 @@
 								document.querySelector('.chat-cont').classList.add("current");
 							}
 						})
-						getSystemMsg();
 					})
 				},
 				methods: {
@@ -530,7 +534,7 @@
 									courseTitle: item.course_info.title,
 									teacherId: item.course_info.teacher_id,
 									isSilent: item.course_info.is_silent,
-									course:item.course_info
+									course: item.course_info
 								});
 							} else {
 								fnOpenWin('dialog.html', 'dialog', {
@@ -578,7 +582,7 @@
 
 			// 获取消息列表
 			function getChatList(first) {
-				if (first) {
+				if (first && app.loadStatus) {
 					showload(0);
 				}
 				mui.post($ajaxUrl + 'chat', {
