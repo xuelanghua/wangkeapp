@@ -106,6 +106,18 @@
 				position: relative;
 			}
 
+			.classify-item span {
+				display: inline-block;
+				padding: 0 12px;
+			}
+
+			.classify-item.active span {
+				background-color: #DDDDDD;
+				border-radius: 5px;
+				color: #2289ff;
+				text-shadow:0px 1px 2px rgba(255,255,255,1);
+			}
+
 			.classify-item:nth-of-type(3n+2):before,
 			.classify-item:nth-of-type(3n+2):after {
 				content: '';
@@ -171,7 +183,7 @@
 			<header class="mui-bar mui-bar-nav">
 				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 				<form onsumit="return false">
-					<input id="search" type="search" name="" value="" v-model="keyword" placeholder="搜索" />
+					<input id="search" type="search" name="" value="" v-model="keyword" :placeholder="'搜索'+serachTiele" />
 				</form>
 				<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
 			</header>
@@ -180,7 +192,9 @@
 					搜索指定内容
 				</div>
 				<div class="recommend-classify">
-					<div class="classify-item" @tap="startSearch(j.id,j.name)" v-for="(j,i) in classify">{{j.name}}</div>
+					<div class="classify-item" :class="j.id==selectClassify?'active':''" @tap="changeClassify(j.id,j.name)" v-for="(j,i) in classify">
+						<span>{{j.name}}</span>
+					</div>
 				</div>
 				<div v-show="searchHistory!=''">
 					<div class="search-history">
@@ -222,7 +236,8 @@
 						id: 6
 					}],
 					searchHistory: [],
-					selectClassify: 0
+					selectClassify: 0,
+					serachTiele: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -270,12 +285,22 @@
 					startSearch();
 				}, 100)
 			})
+			// 切换搜索分类
+			function changeClassify(_id, _nm) {
+				if (_id == app.selectClassify) {
+					app.selectClassify = 0;
+					app.serachTiele = '';
+				} else {
+					app.selectClassify = _id;
+					app.serachTiele = _nm;
+				}
+			}
 			// 开始搜索
 			function startSearch(_id, desc) {
 				openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
 					keyword: app.keyword,
-					classify: _id || '0',
-					desc: desc || ''
+					classify: app.selectClassify || '0',
+					desc: app.serachTiele || ''
 				}, 'fade-in');
 			}
 			// 添加关键词到搜索记录

@@ -463,8 +463,7 @@
 					<div class="page-mini-card page-mini-card-goods" v-if="goods_group!=''">
 						<div class="headline-cont">商品</div>
 						<ul class="mui-table-view">
-							<!-- <li class="mui-table-view-cell" @tap="openDetail('5',g)" v-for="(g,i) in goods_group" :key="i" v-if="i<5"> -->
-							<li class="mui-table-view-cell" @tap="openDetail('5',g)" v-for="(g,i) in goods_group" :key="i">
+							<li class="mui-table-view-cell" @tap="openDetail('5',g)" v-for="(g,i) in goods_group" :key="i" v-if="i<5">
 								<img class="goods-img" :src="g.cover">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -506,7 +505,7 @@
 						</ul>
 					</div>
 				</div>
-				<div class="void-tips-cont mui-hidden" v-show="status">
+				<div class="void-tips-cont" v-show="status">
 					<img src="../image/icon/void-seach-result.png">
 					没有搜索到内容吖~
 				</div>
@@ -525,7 +524,6 @@
 					searchHistory: [],
 					status: false,
 					desc: '',
-					str: '美文网汇集以爱情,亲情,友情,人生为主题的伤感情感美文网站,内含经典美文,哲理美文,伤感励志等美文欣赏,提供短篇故事,心情随笔日记,优美散文精选,现代诗歌大全,表白',
 					user_group: [],
 					timeline_group: [],
 					article_group: [],
@@ -552,8 +550,9 @@
 						var newstr = str.replace(reg, "<i class=\"highlight\">$1</i>");
 						return newstr;
 					},
+					// 更多
 					openMore: function(t, arr) {
-						openPage('home_more_result.html', 'home_more_result', '#f7f7f7', {
+						openPage('home_more_result.html', 'home_more_result', '#ffffff', {
 							arr: arr,
 							title: t
 						})
@@ -625,6 +624,7 @@
 				}, function(e) {
 					logs(e);
 					if (e.errno == 0) {
+						var d=e.data;
 						app.user_group = e.data.user;
 						app.timeline_group = e.data.timeline;
 						app.article_group = e.data.article;
@@ -634,6 +634,11 @@
 						setTimeout(function() {
 							showload(1);
 						}, 800);
+						if(d.user==''&&d.timeline==''&&d.article==''&&d.team==''&&d.goods==''&&d.course==''){
+							app.status = true;
+						}else{
+							app.status = false;
+						}
 					} else {
 						// 搜索失败
 						app.status = true;
@@ -699,22 +704,29 @@
 				} else {
 					logs(obj);
 					// 跳转课程介绍
-					return false;
 					if (obj.has_joinded_team == 1) {
 						// 如果已经加入团队
-						if (obj.state==1||obj.state==2) {
-							// 开播和已经结束
-							openPage('live_streaming.html', 'live_streaming', '#ffffff', {
-								tid: obj.team_id,
-								teacherId: obj.teacher_id,
-								courseId: obj.id,
-								course: ''
-							});
+						if (obj.is_buy == 1 || obj.price == 0 || obj.captain_uid == userInfo.id) {
+							if (obj.state == 1 || obj.state == 2) {
+								// 直播页面
+								openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+									tid: obj.team_id,
+									courseId: obj.id,
+									courseTitle: obj.title,
+									teacherId: obj.teacher_id,
+									isSilent: obj.is_silent,
+									course: obj
+								});
+							} else {
+								// 未开播提示
+								openPage("premiere_prompt.html", "premiere_prompt", "#f7f7f7", {
+									course: obj,
+									kaola: true
+								});
+							}
 						} else {
-							// 未开播的
-							openPage('premiere_prompt.html', 'premiere_prompt', '#f7f7f7', {
+							openPage("buy_team_course.html", "buy_team_course", "#f7f7f7", {
 								course: obj,
-								kaola: true
 							});
 						}
 					} else {
