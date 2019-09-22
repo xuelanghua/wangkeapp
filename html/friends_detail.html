@@ -570,11 +570,17 @@
 				}, 'json')
 			}
 
-			//小程序中打开商品
+			//打开个人商品相详情
 			function openIngMiniprogram(goodsId) {
-				launchMiniprogram(goodsId, fid);
+				var beforeWv = plus.webview.getWebviewById('team_goods_detail');
+				plus.webview.hide(beforeWv);
+				plus.webview.close(beforeWv);
+				setTimeout(function() {
+					openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+						gid: goodsId
+					})
+				}, 200);
 			}
-
 			// 音频播放
 			var timer = 0;
 			var audio = document.getElementById("audioPlay");

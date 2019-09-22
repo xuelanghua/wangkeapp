@@ -120,7 +120,7 @@
 				border-radius: 50%;
 				object-fit: cover;
 				margin-right: 10px;
-				flex-shrink: 0;
+				flex-shrink: 0; 
 			}
 
 			.page-mini-card .mui-table-view-cell {
@@ -363,25 +363,25 @@
 					<div class="page-mini-card page-mini-card-team" v-if="user_group!=''">
 						<div class="headline-cont">用户</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" v-for="(u,i) in user_group" :key="i" @tap="openDetail('1',u)" v-if="i<3">
+							<li class="mui-table-view-cell" v-for="(u,i) in user_group" :key="i" @tap="openDetail('1',u)" v-if="i<5">
 								<img :src="u.avatar">
 								<div class="team-info">
 									<div class="team-info-top">
 										<span v-html="highLight(u.name)"></span>
 									</div>
 									<div class="team-info-btm">
-										<span class="mui-ellipsis" v-html="'电话：'+ highLight(u.phone)"></span>
-										<span class="mui-ellipsis" v-html="'公司：'+ highLight(u.company)"></span>
+										<span class="mui-ellipsis" v-if="u.phone!=''" v-html="'电话：'+ highLight(u.phone)"></span>
+										<span class="mui-ellipsis" v-if="u.company!=''" v-html="'公司：'+ highLight(u.company)"></span>
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('用户',user_group)" v-if="user_group.length>3">
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('用户',user_group)" v-if="user_group.length>=5">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多用户</span>
 							</li>
 						</ul>
 					</div>
 					<!-- 动态 -->
-					<div class="page-mini-card">
+					<div class="page-mini-card" v-if="timeline_group!=''">
 						<div class="headline-cont">动态</div>
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell dynamic-list" v-for="(d,i) in timeline_group" :key="i" @tap="openDetail('2',d.id)"
@@ -403,109 +403,104 @@
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('动态',timeline_group)" v-if="timeline_group.length>5">
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('动态',timeline_group)" v-if="timeline_group.length>=5">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多动态</span>
 							</li>
 						</ul>
 					</div>
 					<!-- 头条 -->
-					<div class="page-mini-card page-mini-card-goods mini-card-headline">
+					<div class="page-mini-card page-mini-card-goods mini-card-headline" v-if="article_group!=''">
 						<div class="headline-cont">头条</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" @tap="openDetail('3',34)" >
-								<img class="headline-img-sign" src="../image/5E0eH.png">
+							<li class="mui-table-view-cell" @tap="openDetail('3',a.id)" v-if="i<5" v-for="(a,i) in article_group">
+								<img class="headline-img-sign" :src="a.thumb">
 								<div class="team-info">
 									<div class="team-info-top">
-										<p class="mui-ellipsis-2" v-html="highLight(d.user_name)">贤科技有限公司云南万贤科技有限公司云南万贤云南万贤科技有限公司有限公司有限有限公司有限有限公司有限公司云南万</p>
+										<p class="mui-ellipsis-2" v-html="highLight(a.title)"></p>
 									</div>
 									<div class="team-info-btm">
-										<span>2019-09-18 17:12</span>
-										<span><img class="see-num" src="../image/eye.png">120</span>
+										<span>{{a.add_time}}</span>
+										<span><img class="see-num" src="../image/eye.png">{{a.click}}</span>
 										<img class="sign-img" src="../image/discover/official-sign.png">
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('obj')">
+							<li class="mui-table-view-cell more-result-item" v-if="article_group.length>=5" @tap="openMore('头条',article_group)">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多头条</span>
 							</li>
 						</ul>
 					</div>
 					<!-- 团队 -->
-					<div class="page-mini-card page-mini-card-team">
+					<div class="page-mini-card page-mini-card-team" v-if="team_group!=''">
 						<div class="headline-cont">团队</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" @tap="openDetail('4',1)">
-								<img src="../image/5E0eH.png">
+							<li class="mui-table-view-cell" v-if="i<5" @tap="openDetail('4',t)" v-for="(t,i) in team_group" :key="i">
+								<img :src="t.cover">
 								<div class="team-info">
 									<div class="team-info-top">
-										<span>房东的猫（20人）</span>
-										<span class="mui-badge mui-badge-primary">正式团队</span>
+										<span>{{t.name}}</span>
+										<span v-if="t.type==2" class="mui-badge mui-badge-warning">数据团队</span>
+										<span v-else class="mui-badge mui-badge-primary">正式团队</span>
 									</div>
 									<div class="team-info-btm">
-										<span>佰级别收入</span>
-										<span>排名：899</span>
-										<span>创建人：路飞大大</span>
+										<span v-if="t.level==0">佰级别收入</span>
+										<span v-else-if="t.level==1">仟级别收入</span>
+										<span v-else-if="t.level==2">萬级别收入</span>
+										<span v-else-if="t.level==3">拾萬级别收入</span>
+										<span v-else-if="t.level==4">佰萬级别收入</span>
+										<span v-else>仟萬级别收入</span>
+										<span>排名：{{t.rank}}</span>
+										<span>创建人：{{t.captain_name}}</span>
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell" @tap="openDetail('4',34)">
-								<img src="../image/5E0eH.png">
-								<div class="team-info">
-									<div class="team-info-top">
-										<span>房东的猫（20人）</span>
-										<span class="mui-badge mui-badge-warning">数据团队</span>
-									</div>
-									<div class="team-info-btm">
-										<span>佰级别收入</span>
-										<span>排名：899</span>
-										<span>创建人：路飞大大</span>
-									</div>
-								</div>
-							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('obj')">
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('团队',team_group)" v-if="team_group.length>=5">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多团队</span>
 							</li>
 						</ul>
 					</div>
 					<!-- 商品 -->
-					<div class="page-mini-card page-mini-card-goods">
+					<div class="page-mini-card page-mini-card-goods" v-if="goods_group!=''">
 						<div class="headline-cont">商品</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" v-for="i in 3">
-								<img class="goods-img" src="../image/5E0eH.png">
+							<!-- <li class="mui-table-view-cell" @tap="openDetail('5',g)" v-for="(g,i) in goods_group" :key="i" v-if="i<5"> -->
+							<li class="mui-table-view-cell" @tap="openDetail('5',g)" v-for="(g,i) in goods_group" :key="i">
+								<img class="goods-img" :src="g.cover">
 								<div class="team-info">
 									<div class="team-info-top">
-										<p class="mui-ellipsis-2">这是很nb的课程，你应该要报名啊，不然以后就没以后就没以后就没以后就没了 可惜了，可惜了</p>
+										<p class="mui-ellipsis-2" v-html="highLight(g.name)"></p>
 									</div>
 									<div class="team-info-btm">
-										<span class="profit-sign">利润：&yen;95</span>
-										<span>团队：比克魔王</span>
-										<img class="sign-img" src="../image/discover/official-sign.png">
+										<span class="profit-sign" v-if="g.settlement_price!=0">利润：&yen;{{g.settlement_price}}</span>
+										<span class="profit-sign" v-else>&yen;{{g.price}}</span>
+										<span v-if="g.type=='person'">{{g.admin}}</span>
+										<span v-if="g.is_team_goods=='1'">团队：{{g.team_info[0].name}}</span>
+										<!-- <img class="sign-img" src="../image/discover/official-sign.png"> -->
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('obj')">
+							<li class="mui-table-view-cell more-result-item" v-if="goods_group.length>=5" @tap="openMore('商品',goods_group)">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多商品</span>
 							</li>
 						</ul>
 					</div>
 					<!-- 课程 -->
-					<div class="page-mini-card">
+					<div class="page-mini-card" v-if="course_group!=''">
 						<div class="headline-cont">课程</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" v-for="i in 2">
-								<img src="../image/5E0eH.png">
+							<li class="mui-table-view-cell" v-for="(c,i) in course_group" :key="i" v-if="i<5" @tap="openDetail('6',c)">
+								<img :src="c.cover">
 								<div class="team-info">
 									<div class="team-info-top">
-										<p class="mui-ellipsis-2">这是很nb的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程的课程，你应该要报名啊，不然以后就没了 可惜了，可惜了</p>
+										<p class="mui-ellipsis-2" v-html="highLight(c.title)"></p>
 									</div>
 									<div class="team-info-btm">
-										<span>团队：9527</span>
-										<span>讲师：西瓜达人</span>
+										<span>团队：{{c.team_name}}</span>
+										<span>讲师：{{c.teacher_name}}</span>
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('obj')">
+							<li class="mui-table-view-cell more-result-item" v-if="course_group.length>=5" @tap="openMore('课程',course_group)">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多课程</span>
 							</li>
 						</ul>
@@ -668,35 +663,65 @@
 					});
 				} else if (typ == '4') {
 					// 团队
-					if (obj == 1) {
+					if (obj.type == 1) {
 						// 正式团队
 						openPage('team_detail_official.html', 'team_detail_official', '#f7f7f7', {
-							teamid: 1
+							teamid: obj.id
 						});
 					} else {
 						// 数据团队
 						openPage('team_detail_info.html', 'team_detail_info', '#f7f7f7', {
-							teamid: 1
+							teamid: obj.id
 						});
 					}
 				} else if (typ == '5') {
+					logs(obj);
 					// 商品 个人商品 团队商品 总仓商品
-					openPage('', '', '', '');
-				} else {
-					// 跳转课程介绍
-
-					// 如果已经加入团队
-					if (obj) {
-						// 开播和已经结束
-						openPage('live_streaming.html', 'live_streaming', '#ffffff', {
-							tid: '',
-							teacherId: '',
-							courseId: '',
-							course: ''
+					if (obj.is_team_goods == 0) {
+						// 个人商品
+						openPage('personal_goods_detail.html', 'personal_goods_detail', '#f7f7f7', {
+							gid: obj.id
 						});
 					} else {
-						// 未开播的
-						openPage('premiere_prompt.html', 'premiere_prompt', '#f7f7f7', '');
+						// 是否加入团队
+						if (obj.has_joined_team == 1) {
+							// 团队商品
+							openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+								gid: obj.id
+							});
+						} else {
+							// 团队商品 未加入
+							openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+								gid: obj.id
+							});
+						}
+					}
+				} else {
+					logs(obj);
+					// 跳转课程介绍
+					return false;
+					if (obj.has_joinded_team == 1) {
+						// 如果已经加入团队
+						if (obj.state==1||obj.state==2) {
+							// 开播和已经结束
+							openPage('live_streaming.html', 'live_streaming', '#ffffff', {
+								tid: obj.team_id,
+								teacherId: obj.teacher_id,
+								courseId: obj.id,
+								course: ''
+							});
+						} else {
+							// 未开播的
+							openPage('premiere_prompt.html', 'premiere_prompt', '#f7f7f7', {
+								course: obj,
+								kaola: true
+							});
+						}
+					} else {
+						openPage('search_course_detail.html', 'search_course_detail', '#f7f7f7', {
+							course: obj,
+							kaola: true
+						});
 					}
 				}
 			}

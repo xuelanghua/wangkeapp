@@ -863,9 +863,9 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">团队详情</h1>
-			<a href="#menu" class="mui-pull-right team-setting">
+			<!-- <a href="#menu" class="mui-pull-right team-setting">
 				···
-			</a>
+			</a> -->
 		</header>
 
 		<div id="mui-content" class="mui-content team-detail-container" v-cloak>
@@ -1033,12 +1033,12 @@
 				</div>
 			</div>
 			<!-- 弹窗 -->
-			<div id="menu" class="mui-popover more-menu">
+			<!-- <div id="menu" class="mui-popover more-menu">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell delete-team">解散团队</li>
 					<li class="mui-table-view-cell team-settings">团队设置</li>
 				</ul>
-			</div>
+			</div> -->
 			<div id="master_model" class="mui-popover master-card">
 				<div class="master-card-body">
 					<img class="user-head-cont" :src="modeldata.avatar">
@@ -1054,7 +1054,7 @@
 				</div>
 				<img class="close-btn" src="../image/Close.png">
 			</div>
-			<!-- 验证弹窗 -->
+			<!-- 验证弹窗-->
 			<div class="verift-body" v-if="isVerify">
 				<textarea v-model="remarkMsg" rows="3" placeholder="请输入验证信息"></textarea>
 				<div class="verift-footer">
@@ -1075,7 +1075,7 @@
 			if (target) {
 				target.classList.remove("active");
 			} else {
-				app.isVerify=false;
+				app.isVerify = false;
 			}
 		});
 		mui.init();
@@ -1124,9 +1124,14 @@
 			methods: {
 				// 打开商品详情
 				openGoodsDetail: function(gid) {
-					openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
-						gid: gid
-					})
+					var beforeWv = plus.webview.getWebviewById('team_goods_detail');
+					plus.webview.hide(beforeWv);
+					plus.webview.close(beforeWv);
+					setTimeout(function() {
+						openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+							gid: gid
+						})
+					}, 200);
 				},
 				examine: function(status, userId) {
 					mui.post($ajaxUrl + 'team&action=check', {
@@ -1162,7 +1167,7 @@
 					plus.navigator.setStatusBarStyle("dark");
 					var self = plus.webview.currentWebview();
 					app.tid = self.teamid;
-					app.role=self.role;
+					app.role = self.role;
 					// logs(app.tid);
 					getInfo();
 					getMember();
@@ -1197,7 +1202,7 @@
 		})
 		// 发送验证
 		mui(".mui-content").on("tap", ".send-verify", function(e) {
-			if(app.remarkMsg==''){
+			if (app.remarkMsg == '') {
 				message('请输入验证消息！');
 				return false;
 			}
@@ -1269,7 +1274,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				// logs(res);
+				logs(res);
 				if (res.errno == 0) {
 					app.teamName = res.data.name;
 					app.desc = res.data.notice;
@@ -1279,17 +1284,14 @@
 					app.uperImg = res.data.cover || "images/6/2019/05/team_bg.jpg";
 					app.data_status = res.data.data_status;
 					app.rla = res.data;
+					if (res.data.join_status == false) {
+						app.role = 0;
+					}
 					var captainId = res.data.captain_uid;
 					if (res.data.data_status == 1) {
 						app.data_status = true;
 					} else {
 						app.data_status = false;
-					}
-					// 更多操作
-					if (res.data.captain_uid == userInfo.id) {
-						document.querySelector(".team-setting").style.display = "flex";
-					} else {
-						document.querySelector(".team-setting").style.display = "none";
 					}
 				} else {
 					message(res.message);
