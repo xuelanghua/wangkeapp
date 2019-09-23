@@ -105,12 +105,26 @@
 					style: "dark",
 					styles: {
 						top: "0px",
-						bottom: "51px",
+						bottom: "50px",
 						scrollIndicator: "none",
 						render: "always",
 						statusbar: {
 							background: "#FFFFFF"
 						} 
+					}
+				}, {
+					url: "html/business_pulse.html",
+					ids: "business_pulse",
+					statusBg: "#FFFFFF",
+					style: "dark",
+					styles: {
+						top: "0px",
+						bottom: "50px",
+						scrollIndicator: "none",
+						render: "always",
+						statusbar: {
+							background: "#FFFFFF"
+						}
 					}
 				}, {
 					url: "html/chat.html",
@@ -119,7 +133,7 @@
 					style: "light",
 					styles: {
 						top: "0px",
-						bottom: "51px",
+						bottom: "50px",
 						scrollIndicator: "none",
 						render: "always",
 						statusbar: {
@@ -134,7 +148,7 @@
 					style: "dark",
 					styles: {
 						top: "0px",
-						bottom: "51px",
+						bottom: "50px",
 						render: "always",
 						scrollIndicator: 'none',
 						"titleNView": {
@@ -161,7 +175,7 @@
 					// style: "dark",
 					styles: {
 						top: "0px",
-						bottom: "51px",
+						bottom: "50px",
 						render: "always",
 						scrollIndicator: "none",
 						statusbar: {
@@ -187,6 +201,12 @@
 							icon: 'icon-home-page',
 							selected: 'icon-home-page-s',
 							selected: true
+						},{
+							title: "商脉",
+							id: 'business_pulse',
+							icon: 'icon-shangmai',
+							selected: 'icon-shangmai-s',
+							selected: false
 						}, {
 							title: "人脉",
 							id: 'chat',
@@ -245,7 +265,7 @@
 
 			function initIndexPage() {
 				var self = plus.webview.currentWebview();
-				for (var i = 0; i < 4; i++) {
+				for (var i = 0; i < subpages.length; i++) {
 					var temp = {};
 					var sub = plus.webview.create(subpages[i].url, subpages[i].ids, subpages[i].styles);
 					if (i == 0) {
@@ -290,7 +310,7 @@
 					//隐藏当前;
 					plus.webview.hide(activeTab);
 					//更改当前活跃的选项卡
-					for (var i = 0; i < 4; i++) {
+					for (var i = 0; i < subpages.length; i++) {
 						app.nav[i].selected = false;
 					}
 					app.nav[idx].selected = true;

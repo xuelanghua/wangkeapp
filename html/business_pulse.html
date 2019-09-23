@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mui-bar-nav {
+				background-color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.search-cont {
+				display: flex;
+				flex-grow: 1;
+				height: 30px;
+				background-color: #F2F2F2;
+				border-radius: 15px;
+				box-sizing: border-box;
+				align-items: center;
+				padding-left: 5px;
+			}
+			.search-cont .mui-icon-search{
+				color: #333333;
+			}
+			.tips {
+				color: #999999;
+				font-size: 14px;
+				margin-left: 8px;
+				padding-left: 13px;
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+			}
+
+			.tips:before {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 2px;
+				top: 2px;
+				left: 0;
+				width: 1px;
+				background-color: #AAAAAA;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+
+			.open-message {
+				width: auto;
+				display: flex;
+				align-items: center;
+				position: relative;
+				overflow: hidden;
+				height: 44px;
+				padding: 0 10px 0 15px;
+			}
+
+			.open-message img {
+				display: inline-block;
+				z-index: 1;
+				width: 25px;
+				height: 22px;
+			}
+
+			.open-message .mui-badge-danger {
+				position: absolute;
+				right: 0px;
+				top: 5px;
+				font-size: 10px;
+				padding: 3px 5px 1px;
+				background-color: #FF0000;
+				z-index: 9;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<div class="search-cont">
+					<span class="mui-icon mui-icon-search"></span>
+					<span class="tips">输入商品名称</span>
+				</div>
+				<div class="open-message mui-hidden">
+					<img src="../image/index-message-icon.png" alt="">
+					<span class="mui-badge mui-badge-danger" v-show="message">{{message}}</span>
+				</div>
+			</header>
+			<div class="mui-content">
+				内容
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					message: 1
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>

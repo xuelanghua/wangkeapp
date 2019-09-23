@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			body,
+			html {
+				background-color: #ededed;
+			}
+
+			.mui-bar-nav {
+				display: flex;
+				align-items: center;
+				background: #ededed;
+				box-shadow: none;
+				box-sizing: border-box;
+			}
+
+			.mui-bar-nav:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.mui-bar-nav.mui-bar .mui-action-back {
+				margin-right: 5px;
+				padding-left: 5px;
+				padding-right: 5px;
+				color: #191919;
+			}
+
+			.mui-bar-nav.mui-bar .mui-icon-clear {
+				color: #aeaeae;
+				padding-left: 5px;
+				padding-right: 10px;
+				position: relative;
+				font-size: 20px;
+			}
+
+			.mui-bar-nav.mui-bar input[type=search] {
+				border: none;
+				box-shadow: none;
+				outline: none;
+				padding: 0;
+				margin: 0 10px 0 0;
+				background: transparent;
+				width: auto;
+				flex-grow: 1;
+				height: 36px;
+				text-align: left;
+				font-size: 16px;
+			}
+
+			.mui-bar-nav input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 14px;
+			}
+
+			.mui-bar-nav form {
+				flex-grow: 1;
+				display: flex;
+				align-items: center;
+			}
+
+			/* 头部完结 */
+			.headline-cont {
+				height: 69px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #AAAAAA;
+				font-size: 14px;
+			}
+
+
+			.search-history {
+				height: 69px;
+				color: #999999;
+				font-size: 14px;
+				padding: 40px 15px 0 15px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.search-history-container {
+				padding: 10px 5px 0;
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+				flex-wrap: wrap;
+			}
+
+			.search-history-container span {
+				padding: 5px 10px;
+				line-height: 1;
+				border-radius: 5px;
+				background-color: #f2f2f2;
+				margin: 5px;
+				font-size: 12px;
+				color: #999999;
+			}
+
+			.mui-icon-trash {
+				-webkit-transform: scaleY(0.8);
+				transform: scaleY(0.8);
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<form onsumit="return false">
+					<input id="search" type="search" name="" value="" v-model="keyword" :placeholder="'搜索'+serachTiele" />
+				</form>
+				<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
+			</header>
+			<div class="mui-content">
+				<div class="headline-cont">
+					搜索指定内容
+				</div>
+				<div v-show="searchHistory!=''">
+					<div class="search-history">
+						<span>搜索历史</span>
+						<span class="mui-icon mui-icon-trash" @tap="clearHistory"></span>
+					</div>
+					<div class="search-history-container">
+						<span :data-cont="j" v-for="(j,i) in searchHistory" :key="i">{{j}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					keyword: '',
+					searchHistory: [],
+					selectClassify: 0,
+					serachTiele: ''
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					clearHistory: function() {
+						app.searchHistory = [];
+						plus.storage.removeItem('buisnesHistory');
+					}
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						// 获取搜索记录
+						var searchHistory = JSON.parse(plus.storage.getItem('buisnesHistory'));
+						if (searchHistory) {
+							app.searchHistory = searchHistory;
+						}
+						// 监听搜索
+						document.getElementById("search").addEventListener("keypress", function(event) {
+							if (event.keyCode == "13") {
+								addKeyword();
+							} else {
+								// 点的不是搜索按钮
+							}
+						});
+					})
+				}
+			})
+			// 点击搜索历史
+			mui('.mui-content .search-history-container').on('tap', 'span', function() {
+				var keyword = this.dataset.cont;
+				app.keyword = keyword;
+				setTimeout(function() {
+					startSearch();
+				}, 100)
+			})
+			// 切换搜索分类
+			function changeClassify(_id, _nm) {
+				if (_id == app.selectClassify) {
+					app.selectClassify = 0;
+					app.serachTiele = '';
+				} else {
+					app.selectClassify = _id;
+					app.serachTiele = _nm;
+				}
+			}
+			// 开始搜索
+			function startSearch(_id, desc) {
+				openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
+					keyword: app.keyword,
+					classify: app.selectClassify || '0',
+					desc: app.serachTiele || ''
+				}, 'fade-in');
+			}
+			// 添加关键词到搜索记录
+			function addKeyword(_id, desc) {
+				app.keyword = app.keyword.replace(/^\s*|\s*$/g, "");
+				var idx = app.searchHistory.indexOf(app.keyword);
+				if (app.keyword != '') {
+					plus.key.hideSoftKeybord();
+					// 阻止页面刷新
+					//没有则返回-1
+					if (idx == -1) {
+						app.searchHistory.unshift(app.keyword);
+						if (app.searchHistory.length > 12) {
+							app.searchHistory = app.searchHistory.splice(0, 12);
+							plus.storage.setItem('buisnesHistory', JSON.stringify(app.searchHistory));
+							startSearch(_id, desc);
+						} else {
+							plus.storage.setItem('buisnesHistory', JSON.stringify(app.searchHistory));
+							startSearch(_id, desc);
+						}
+					} else {
+						startSearch(_id, desc);
+					}
+					event.preventDefault();
+				} else {
+					message("请输入关键词！");
+				}
+			}
+		</script>
+	</body>
+
+</html>
