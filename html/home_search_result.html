@@ -363,7 +363,7 @@
 					<div class="page-mini-card page-mini-card-team" v-if="user_group!=''">
 						<div class="headline-cont">用户</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" v-for="(u,i) in user_group" :key="i" @tap="openDetail('1',u)" v-if="i<5">
+							<li class="mui-table-view-cell" v-for="(u,i) in user_group" :key="i" @tap="openDetail('1',u)" v-if="classify||i<5">
 								<img :src="u.avatar">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -375,7 +375,7 @@
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('用户',user_group)" v-if="user_group.length>=5">
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('用户',user_group)" v-if="!classify&&user_group.length>=5">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多用户</span>
 							</li>
 						</ul>
@@ -385,7 +385,7 @@
 						<div class="headline-cont">动态</div>
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell dynamic-list" v-for="(d,i) in timeline_group" :key="i" @tap="openDetail('2',d.id)"
-							 v-if="i<5">
+							 v-if="classify||i<5">
 								<div class="dynamic-title">
 									<span class="user-name" v-html="highLight(d.user_name)"></span>
 									<span v-html="highLight(d.create_time)"></span>
@@ -403,7 +403,7 @@
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('动态',timeline_group)" v-if="timeline_group.length>=5">
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('动态',timeline_group)" v-if="!classify&&timeline_group.length>=5">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多动态</span>
 							</li>
 						</ul>
@@ -412,7 +412,7 @@
 					<div class="page-mini-card page-mini-card-goods mini-card-headline" v-if="article_group!=''">
 						<div class="headline-cont">头条</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" @tap="openDetail('3',a.id)" v-if="i<5" v-for="(a,i) in article_group">
+							<li class="mui-table-view-cell" @tap="openDetail('3',a.id)" v-if="classify||i<5" v-for="(a,i) in article_group">
 								<img class="headline-img-sign" :src="a.thumb">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -425,7 +425,7 @@
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" v-if="article_group.length>=5" @tap="openMore('头条',article_group)">
+							<li class="mui-table-view-cell more-result-item" v-if="!classify&&article_group.length>=5" @tap="openMore('头条',article_group)">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多头条</span>
 							</li>
 						</ul>
@@ -434,7 +434,7 @@
 					<div class="page-mini-card page-mini-card-team" v-if="team_group!=''">
 						<div class="headline-cont">团队</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" v-if="i<5" @tap="openDetail('4',t)" v-for="(t,i) in team_group" :key="i">
+							<li class="mui-table-view-cell" v-if="classify||i<5" @tap="openDetail('4',t)" v-for="(t,i) in team_group" :key="i">
 								<img :src="t.cover">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -454,7 +454,7 @@
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" @tap="openMore('团队',team_group)" v-if="team_group.length>=5">
+							<li class="mui-table-view-cell more-result-item" @tap="openMore('团队',team_group)" v-if="!classify&&team_group.length>=5">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多团队</span>
 							</li>
 						</ul>
@@ -463,7 +463,7 @@
 					<div class="page-mini-card page-mini-card-goods" v-if="goods_group!=''">
 						<div class="headline-cont">商品</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" @tap="openDetail('5',g)" v-for="(g,i) in goods_group" :key="i" v-if="i<5">
+							<li class="mui-table-view-cell" @tap="openDetail('5',g)" v-for="(g,i) in goods_group" :key="i" v-if="classify||i<5">
 								<img class="goods-img" :src="g.cover">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -478,7 +478,7 @@
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" v-if="goods_group.length>=5" @tap="openMore('商品',goods_group)">
+							<li class="mui-table-view-cell more-result-item" v-if="!classify&&goods_group.length>=5" @tap="openMore('商品',goods_group)">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多商品</span>
 							</li>
 						</ul>
@@ -487,7 +487,7 @@
 					<div class="page-mini-card" v-if="course_group!=''">
 						<div class="headline-cont">课程</div>
 						<ul class="mui-table-view">
-							<li class="mui-table-view-cell" v-for="(c,i) in course_group" :key="i" v-if="i<5" @tap="openDetail('6',c)">
+							<li class="mui-table-view-cell" v-for="(c,i) in course_group" :key="i" v-if="classify||i<5" @tap="openDetail('6',c)">
 								<img :src="c.cover">
 								<div class="team-info">
 									<div class="team-info-top">
@@ -499,7 +499,7 @@
 									</div>
 								</div>
 							</li>
-							<li class="mui-table-view-cell more-result-item" v-if="course_group.length>=5" @tap="openMore('课程',course_group)">
+							<li class="mui-table-view-cell more-result-item" v-if="!classify&&course_group.length>=5" @tap="openMore('课程',course_group)">
 								<span class="mui-icon mui-icon-search"></span><span class="mui-navigate-right">更多课程</span>
 							</li>
 						</ul>
