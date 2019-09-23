@@ -107,6 +107,131 @@
 			.mui-backdrop {
 				background-color: rgba(0, 0, 0, 0);
 			}
+
+			/* 搜索框 */
+			.search-cont.active .search-input {
+				border-radius: 14px;
+				flex-grow: 1;
+			}
+
+			.search-cont {
+				width: auto;
+				display: flex;
+				align-items: center;
+				position: relative;
+			}
+
+			.search-cont.active {
+				position: relative;
+				width: 100%;
+			}
+
+			.search-cont .mui-icon-search {
+				position: absolute;
+				left: 5px;
+				font-size: 22px;
+				z-index: 9;
+			}
+
+			.search-cont .search-input {
+				border-radius: 14px;
+				text-align: left;
+				width: 20px;
+				position: relative;
+				height: 28px;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+				flex-shrink: 0;
+			}
+
+			input[type=search] {
+				background-color: #e8e8e8;
+			}
+
+			.search-cont.active .search-input {
+				padding-left: 40px;
+				padding-right: 30px;
+				background-color: #e8e8e8;
+				flex-shrink: 0;
+				border-radius: 14px;
+				flex-grow: 1;
+			}
+
+			.search-cont.active:after {
+				content: '';
+				background-color: rgba(0, 0, 0, 0.1);
+				width: 1px;
+				height: auto;
+				bottom: 30%;
+				top: 30%;
+				left: 32px;
+				position: absolute;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+
+			.search-cont input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.24rem;
+			}
+
+			.search-cont form {
+				display: flex;
+				align-items: center;
+				position: relative;
+				width: 100%;
+			}
+
+			.search-cont .mui-icon-clear {
+				right: 48px;
+				position: absolute;
+				font-size: 20px;
+				color: #999999;
+			}
+
+			.mui-action-back.mui-icon.mui-icon-left-nav {
+				margin-left: 0;
+			}
+
+			.mui-bar-nav {
+				display: flex;
+				align-items: center;
+			}
+
+			.mui-bar-nav.mui-bar .mui-action-back {
+				padding-left: 0;
+				padding-right: 20px;
+			}
+
+			.mui-bar .mui-title {
+				position: relative;
+				flex-grow: 1;
+				margin: 0;
+				left: 0;
+				right: 0;
+			}
+
+			.mui-bar-nav.mui-bar .mui-icon-search {
+				margin: 0;
+				padding: 0;
+			}
+
+			.cancel-btn {
+				display: inline-flex;
+				height: 44px;
+				padding: 5px;
+				align-items: center;
+				justify-content: center;
+				font-size: 16px;
+				color: #666666;
+			}
+			.void-data-tips{
+				padding: 20%;
+				text-align: center;
+			}
+			.void-data-tips img{
+				width: 100%;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -123,9 +248,17 @@
 		<div id="mui-content" v-cloak>
 			<header class="mui-bar mui-bar-nav">
 				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-				<div class="mui-title">
+				<div class="mui-title choice-team" v-show="!isSearch">
 					<span id="team_name">{{teamName}}</span>
 					<span :class="clsName"></span>
+				</div>
+				<div class="mui-input-row search-cont" :class="[isSearch?'active':'']">
+					<form action="" onsumit="return false">
+						<span class="mui-icon mui-icon-search"></span>
+						<input class="search-input" v-model="keyword" type="search" id="search" placeholder="输入团队名称">
+						<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
+						<span v-show="isSearch" class="cancel-btn">取消</span>
+					</form>
 				</div>
 			</header>
 
@@ -216,8 +349,11 @@
 						暂未创建团队
 					</div>
 				</div>
-
-				<div class="operation-section">
+				<div class="void-data-tips" v-if="void_seach">
+					<img src="../image/icon/void-seach-result.png" >
+					<p>没有搜索到相关团队~</p>
+				</div>
+				<div class="operation-section" v-show="!isSearch">
 					<span class="create-team">创建团队</span>
 					<span class="join-team">加入团队</span>
 				</div>
@@ -255,7 +391,10 @@
 					teamLists: {},
 					userSelf: "",
 					clsName: 'mui-icon mui-icon-arrowdown',
-					teamName: '旺客'
+					teamName: '旺客',
+					keyword: '',
+					isSearch: false,
+					void_seach:false
 					// userSelf:userInfo.nickName
 				},
 				mounted: function() {
@@ -318,11 +457,13 @@
 				}
 			})
 
+			// 获取团队列表
 			function getTeamList() {
 				mui.post($ajaxUrl + 'team&action=team_list', {
-					token: userInfo.token
+					token: userInfo.token,
+					team_name: app.keyword
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						var teamList = res.data;
 						var createList = new Array();
@@ -333,11 +474,7 @@
 							} else {
 								joinList.push(item);
 							}
-							// app.createList = createList;
-							// app.joinList = joinList;
 						});
-						// logs(createList);
-						// logs(joinList);
 						app.createList = createList;
 						app.joinList = joinList;
 						if (createList.length > 0) {
@@ -350,23 +487,21 @@
 						} else {
 							app.joinFlag = false;
 						}
+						app.void_seach=false;
+					} else {
+						if(app.keyword){
+							app.createFlag=false;
+							app.joinFlag=false;
+							app.void_seach=true;
+						}else{
+							app.void_seach=false;
+						}
 					}
 				}, 'json');
 			}
 			window.addEventListener('refreshTeamList', function() {
 				getTeamList();
 			});
-			// 创建课程
-			// function creatCourse(tid, role) {
-			// 	if (role == 1) {
-			// 		openPage('create_course.html', 'create_course', '#f7f7f7', {
-			// 			tid: tid,
-			// 			title: '创建课程'
-			// 		});
-			// 	} else {
-			// 		plus.nativeUI.alert("您不是本团队的创建者，无创建课程权限，请悉知。")
-			// 	}
-			// }
 
 			// 课程列表
 			function courseList(tid, role) {
@@ -375,15 +510,13 @@
 					role: role
 				});
 			}
-			// 切换团队相关的
-			//获取团队信息
+			//获取团队名称列表
 			var teamchange = true;
 
 			function getPersonTeam() {
 				mui.post($ajaxUrl + 'team&action=personal_team_list', {
 					token: userInfo.token,
 				}, function(res) {
-					logs(res);
 					if (res.errno == 0) {
 						var data = res.data;
 						if (data.length > 1) {
@@ -399,24 +532,24 @@
 							team_type = data[0].type;
 							app.teamName = data[0].name;
 							default_team_id = data[0].team_id;
-							mui(".mui-title .mui-icon")[0].style.display = "none";
+							mui(".choice-team .mui-icon")[0].style.display = "none";
 							teamchange = false;
 						} else {
 							app.teamName = "旺客"
-							mui(".mui-title .mui-icon")[0].style.display = "none";
+							mui(".choice-team .mui-icon")[0].style.display = "none";
 							teamchange = false;
 							default_team_id = 0;
 						}
 					} else {
 						app.teamName = "旺客"
-						mui(".mui-title .mui-icon")[0].style.display = "none";
+						mui(".choice-team .mui-icon")[0].style.display = "none";
 						teamchange = false;
 						default_team_id = 0;
 					}
 				}, 'json');
 			}
 			//切换团队
-			mui('.mui-bar').on('tap', '.mui-title', function() {
+			mui('.mui-bar').on('tap', '.choice-team', function() {
 				app.clsName = 'mui-icon mui-icon-arrowup'
 				if (teamchange) {
 					mask.show();
@@ -446,6 +579,29 @@
 				app.clsName = 'mui-icon mui-icon-arrowdown';
 				mask.close();
 			})
+			// 点击搜索按钮
+			mui(".mui-bar").on('tap', ".mui-icon-search", function() {
+				app.isSearch = true;
+				mui(".search-cont input")[0].focus();
+			})
+			// 点击取消
+			mui(".mui-bar").on('tap', ".cancel-btn", function() {
+				app.keyword='';
+				getTeamList();
+				app.isSearch = false;
+				mui(".search-cont input")[0].blur();
+			})
+			// 点击键盘的搜索
+			document.getElementById("search").addEventListener("keypress", function(event) {
+				if (event.keyCode == "13" && app.keyword != '') {
+					document.activeElement.blur();
+					getTeamList();
+					event.preventDefault();
+				} else {
+					message("请输入团队名称！");
+					event.preventDefault();
+				}
+			});
 		</script>
 	</body>
 

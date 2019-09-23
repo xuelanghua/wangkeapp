@@ -58,9 +58,34 @@
 				width: 90%;
 				margin: 60px auto 0;
 				border-radius: 30px;
-				display: none;
 			}
 
+			.img-containter {
+				background: url("../image/premiere_prompt_default_normal.png")center top no-repeat;
+				background-size: 100% auto;
+				width: 100%;
+				height: 290px;
+				position: relative;
+				overflow: hidden;
+				display: flex;
+				align-items: flex-end;
+				padding-bottom: 8%;
+				justify-content: center;
+			}
+
+			.img-containter h3 {
+				color: #FFFFFF;
+				margin: 0;
+			}
+			.tips-cont{
+				color: #999999;
+				font-size: 0.2rem;
+				position:absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				text-align: center;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -82,15 +107,19 @@
 			<h1 class="mui-title">课程提示</h1>
 		</header>
 		<div id="mui-content" class="mui-content" v-cloak>
-			<img src="../image/premiere_prompt_default.png">
-			<!-- <h3>课程暂未开播，敬请期待。</h3> -->
+			<div class="img-containter">
+				<h3 v-if="cStatus==0">课程还未开播，敬请期待...</h3>
+				<h3 v-else-if="cStatus==1">课程正在直播中...</h3>
+				<h3 v-else>课程直播已结束，可回看...</h3>
+			</div>
 			<p class="title">{{title}}</p>
 			<ul>
 				<li class="items-li">主讲人：{{person}}</li>
 				<li class="items-li">直播时间：{{s_time}}</li>
 				<li class="items-li">结束时间：{{e_time}}</li>
 			</ul>
-			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" @tap="prepareLessons">备课</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" @tap="prepareLessons">了解详情</button>
+			<p class="tips-cont">Tips:加入团队即可购买课程,参与免费课程，回看课程直播。</p>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
@@ -104,12 +133,14 @@
 					s_time: '',
 					e_time: '',
 					person: '',
-					course: {}
+					course: {},
+					cStatus: '0',
+					team_id:''
 				},
 				methods: {
-					prepareLessons: function(e) {
-						openPage('prepare_lessons.html', 'prepare_lessons', '#f7f7f7', {
-							course: app.course
+					prepareLessons: function() {
+						openPage('team_detail_official.html', 'team_detail_official', '#f7f7f7', {
+							teamid: app.team_id
 						});
 					}
 				},
@@ -123,8 +154,8 @@
 						plus.navigator.setStatusBarStyle("dark");
 						var self = plus.webview.currentWebview();
 						app.course = self.course;
-						if(userInfo.id==self.course.teacher_id){
-							document.querySelector(".mui-btn-blue").style.display="block";
+						if (userInfo.id == self.course.teacher_id) {
+							document.querySelector(".mui-btn-blue").style.display = "block";
 						}
 						if (self.kaola) {
 							logs(self.course);
@@ -132,11 +163,15 @@
 							app.s_time = self.course.start_time;
 							app.e_time = self.course.end_time;
 							app.person = self.course.teacher_name;
+							app.cStatus = self.course.state;
+							app.team_id = self.course.team_id;
 						} else {
 							app.title = self.title;
 							app.s_time = self.s_time;
 							app.e_time = self.e_time;
 							app.person = self.person;
+							app.cStatus = self.state;
+							app.team_id = self.team_id;
 						}
 
 					})

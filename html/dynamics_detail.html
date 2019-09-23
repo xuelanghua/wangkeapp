@@ -38,13 +38,14 @@
 			.dynamics-detail-container .comment-cont {
 				padding-top: 0;
 			}
+
 			.video-cover {
 				width: 100%;
 				height: 3rem;
 				overflow: hidden;
 				position: relative;
 			}
-			
+
 			.video-cover .player-btn {
 				width: 60px;
 				height: auto;
@@ -54,23 +55,22 @@
 				-webkit-transform: translate(-50%, -50%);
 				transform: translate(-50%, -50%);
 			}
-			
+
 			.video-cover img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 			}
-			
+
 			/* 长按复制文本重写 */
 			.dynamics-content p {
-				-webkit-touch-callout:none;
-				-webkit-user-select:text;
-				-khtml-user-select:none;
-				-moz-user-select:text;
-				-ms-user-select:text;
-				user-select:text;
+				-webkit-touch-callout: none;
+				-webkit-user-select: text;
+				-khtml-user-select: none;
+				-moz-user-select: text;
+				-ms-user-select: text;
+				user-select: text;
 			}
-
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -139,7 +139,9 @@
 						<span class="iconfont icon-like">&#xe601;</span>
 						<span v-for="(lists,i) in likes" :key="i">{{lists}}<template v-if="i<likes.length-1">、</template></span>
 					</p>
-					<p v-if="comment.length>0" class="comment-inside" v-for="(com,index) in comment"><span class="user-name">{{com.nickName}}：</span>{{com.content}}</p>
+					<div class="comment-inside" v-if="comment.length>0">
+						<p v-for="(com,index) in comment"><span class="user-name">{{com.nickName}}：</span>{{com.content}}</p>
+					</div>
 				</div>
 			</div>
 			<div class="comment-bar-footer">
@@ -185,8 +187,8 @@
 					],
 					// 全部数据
 					all_datas: {},
-					is_video:0,
-					targetId:''
+					is_video: 0,
+					targetId: ''
 				},
 				methods: {
 					// 显示菜单
@@ -307,9 +309,9 @@
 						muiCont.comment = data.comment.data;
 						muiCont.likes = data.thumbs_user;
 						muiCont.author = data.author;
-						muiCont.is_video=data.is_video;
-						muiCont.targetId=data.user_id; 
-						
+						muiCont.is_video = data.is_video;
+						muiCont.targetId = data.user_id;
+
 						// 长按保存到系统相册
 						var urls = data.cover;
 						mui('.mui-content').on('tap', '.preview-img', function() {
@@ -318,18 +320,18 @@
 								current: index,
 								loop: true,
 								indicator: 'default',
-								onLongPress: function(event){
-									plus.nativeUI.confirm("保存图片到系统相册",function(e){
-										if(e.index==0){
-											showload('','','保存中···','rgba(0,0,0,0.5)');
-											plus.gallery.save(event.url, function(){
+								onLongPress: function(event) {
+									plus.nativeUI.confirm("保存图片到系统相册", function(e) {
+										if (e.index == 0) {
+											showload('', '', '保存中···', 'rgba(0,0,0,0.5)');
+											plus.gallery.save(event.url, function() {
 												showload(1);
 												plus.nativeUI.toast("保存成功!");
-											}, function(){
+											}, function() {
 												showload(1);
 												plus.nativeUI.toast("保存失败!");
-											} );
-										}else{
+											});
+										} else {
 											// plus.nativeUI.toast("取消");
 										}
 									});
@@ -434,7 +436,7 @@
 				}, 'json');
 			})
 			// 跳转个人动态主页
-			mui('.mui-content').on('tap','.user-name',function(){
+			mui('.mui-content').on('tap', '.user-name', function() {
 				// openPage('dynamic_space.html', 'dynamic_space', '', {
 				// 	user_id: muiCont.targetId
 				// });
