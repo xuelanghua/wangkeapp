@@ -9,6 +9,10 @@
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link href="icomoon/style.css" rel="stylesheet" />
 		<style>
+			body {
+				padding-top: constant(safe-area-inset-top);
+			}
+			div{ touch-action: pan-y; }
 			.mui-tab-label{
 				font-size: 0.22rem;
 			}
@@ -20,19 +24,17 @@
 				flex-grow: 1;
 				color: #535353;
 			}
-			 *{ touch-action: pan-y; }
-			 
-			 .mui-tab-item p{
+			.mui-tab-item p{
 				margin: 0;
 				padding: 0;
-			  }
-			  .mui-tab-item.self-active span{
-				  color: #2289ff;
-			  } 
-			  .mui-tab-item.mui-active span{
-				  color: #929292;
-			  }
-			  
+			}
+			 
+			.mui-tab-item.mui-active span{
+			  color: #929292;
+			}
+			.mui-tab-item.self-active span{
+			  color: #2289ff;
+			} 
 			.mui-tab-item .mui-badge {
 				position: absolute;
 				width: auto;
@@ -55,17 +57,11 @@
 				-webkit-box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
 				box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
 			}
-			body {
-				padding-top: constant(safe-area-inset-top);
-			}
 			.mui-bar.mui-bar-nav {
 			   top: constant(safe-area-inset-top);
 			}
 			[v-cloak] {
 				display: none;
-			}
-			#index{
-				/* display: none; */
 			}
 		</style>
 		<script type="text/javascript">
@@ -105,12 +101,26 @@
 					style: "dark",
 					styles: {
 						top: "0px",
-						bottom: "51px",
+						bottom: "50px",
 						scrollIndicator: "none",
 						render: "always",
 						statusbar: {
 							background: "#FFFFFF"
-						} 
+						}
+					}
+				}, {
+					url: "html/business_pulse.html",
+					ids: "business_pulse",
+					statusBg: "#FFFFFF",
+					style: "dark",
+					styles: {
+						top: "0px",
+						bottom: "50px",
+						scrollIndicator: "none",
+						render: "always",
+						statusbar: {
+							background: "#FFFFFF"
+						}
 					}
 				}, {
 					url: "html/chat.html",
@@ -119,7 +129,7 @@
 					style: "light",
 					styles: {
 						top: "0px",
-						bottom: "51px",
+						bottom: "50px",
 						scrollIndicator: "none",
 						render: "always",
 						statusbar: {
@@ -134,7 +144,7 @@
 					style: "dark",
 					styles: {
 						top: "0px",
-						bottom: "51px",
+						bottom: "50px",
 						render: "always",
 						scrollIndicator: 'none',
 						"titleNView": {
@@ -161,7 +171,7 @@
 					// style: "dark",
 					styles: {
 						top: "0px",
-						bottom: "51px",
+						bottom: "50px",
 						render: "always",
 						scrollIndicator: "none",
 						statusbar: {
@@ -187,6 +197,12 @@
 							icon: 'icon-home-page',
 							selected: 'icon-home-page-s',
 							selected: true
+						}, {
+							title: "商脉",
+							id: 'business_pulse',
+							icon: 'icon-shangmai',
+							selected: 'icon-shangmai-s',
+							selected: false
 						}, {
 							title: "人脉",
 							id: 'chat',
@@ -222,7 +238,7 @@
 						var loginTime = parseInt((currentTime - lastLoginTime) / 1000);
 						var isExpire = loginTime > (60 * 60 * 24 * 5) ? true : false;
 						if (lastLoginTime && isExpire) {
-							message('账号登录过期,重新登录');
+							message('账号登录过期,重新登录'); 
 						}
 						if (!userInfo || isExpire) {
 							login();
@@ -245,7 +261,7 @@
 
 			function initIndexPage() {
 				var self = plus.webview.currentWebview();
-				for (var i = 0; i < 4; i++) {
+				for (var i = 0; i < subpages.length; i++) {
 					var temp = {};
 					var sub = plus.webview.create(subpages[i].url, subpages[i].ids, subpages[i].styles);
 					if (i == 0) {
@@ -290,7 +306,7 @@
 					//隐藏当前;
 					plus.webview.hide(activeTab);
 					//更改当前活跃的选项卡
-					for (var i = 0; i < 4; i++) {
+					for (var i = 0; i < subpages.length; i++) {
 						app.nav[i].selected = false;
 					}
 					app.nav[idx].selected = true;

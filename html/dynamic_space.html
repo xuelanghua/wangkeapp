@@ -77,6 +77,7 @@
 				height: 100%;
 				object-fit: cover;
 			}
+
 			.video-cover .player-btn {
 				width: 45px;
 				height: auto;
@@ -194,9 +195,11 @@
 											{{user}}<template v-if="i<d.thumbs_user.length-1">、</template>
 										</template>
 									</p>
-									<p v-if="d.comment.length>0" v-for="(_com,idx) in d.comment" class="comment-inside">
-										<span class="user-name">{{_com.nickName}}：</span>{{_com.content}}
-									</p>
+									<div class="comment-inside" v-if="d.comment.length>0">
+										<p v-for="(_com,idx) in d.comment">
+											<span class="user-name">{{_com.nickName}}：</span>{{_com.content}}
+										</p>
+									</div>
 								</div>
 							</li>
 						</ul>
@@ -404,7 +407,7 @@
 								softinputMode: "adjustResize"
 							});
 						}
-						
+
 						// 设置渐变导航栏
 						ws.setStyle({
 							scrollIndicator: 'none',
@@ -416,7 +419,7 @@
 								autoBackButton: true
 							}
 						})
-						
+
 						// 滚动的时候动态修改状态栏颜色
 						var conts = document.getElementById("dynamic-container");
 						window.addEventListener('scroll', function() {

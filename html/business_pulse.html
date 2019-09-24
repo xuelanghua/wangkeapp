@@ -1,0 +1,360 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mui-bar-nav {
+				background-color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.search-cont {
+				display: flex;
+				flex-grow: 1;
+				height: 30px;
+				background-color: #F2F2F2;
+				border-radius: 15px;
+				box-sizing: border-box;
+				align-items: center;
+				padding-left: 5px;
+			}
+
+			.search-cont .mui-icon-search {
+				color: #333333;
+			}
+
+			.tips {
+				color: #999999;
+				font-size: 14px;
+				margin-left: 8px;
+				padding-left: 13px;
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+			}
+
+			.tips:before {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 2px;
+				top: 2px;
+				left: 0;
+				width: 1px;
+				background-color: #AAAAAA;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+
+			.open-message {
+				width: auto;
+				display: flex;
+				align-items: center;
+				position: relative;
+				overflow: hidden;
+				height: 44px;
+				padding: 0 10px 0 15px;
+			}
+
+			.open-message img {
+				display: inline-block;
+				z-index: 1;
+				width: 25px;
+				height: 22px;
+			}
+
+			.open-message .mui-badge-danger {
+				position: absolute;
+				right: 0px;
+				top: 5px;
+				font-size: 10px;
+				padding: 3px 5px 1px;
+				background-color: #FF0000;
+				z-index: 9;
+			}
+
+			.mui-row.mui-fullscreen .mui-col-xs-3,
+			.mui-row.mui-fullscreen .mui-col-xs-9 {
+				height: 100% !important;
+				padding-top: 44px;
+				background-color: #FFFFFF;
+				box-sizing: border-box;
+			}
+
+			.mui-row.mui-fullscreen .mui-col-xs-3 {
+				background-color: #F2F2F2;
+			}
+
+			.mui-col-xs-3,
+			.mui-control-content {
+				overflow-y: scroll;
+				overflow-x: hidden;
+				height: 100%;
+				-webkit-overflow-scrolling: touch;
+			}
+
+			.mui-segmented-control .mui-control-item {
+				line-height: 50px;
+				width: 100%;
+				color: #999999 !important;
+				font-size: 0.26rem;
+				border: none !important;
+			}
+
+			.mui-segmented-control .mui-control-item.mui-active {
+				color: #333333 !important;
+				background-color: #FFFFFF !important;
+			}
+
+			.mui-plus-pullrefresh .mui-pull-bottom-pocket {
+				background-color: #FFFFFF;
+			}
+
+			.mui-fullscreen .mui-col-xs-9 {
+				overflow-y: scroll;
+				overflow-x: hidden;
+				height: 100%;
+				padding-top: 56px !important;
+				-webkit-overflow-scrolling: touch;
+			}
+
+			.mui-segmented-control {
+				padding: 0;
+				border: none;
+			}
+
+			.advertising-img {
+				width: 100%;
+				padding: 0 12px;
+			}
+
+			.advertising-img img {
+				width: 100%;
+				height: auto;
+			}
+
+			.category-container {
+				display: flex;
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+				padding: 0 7px;
+			}
+
+			.category-items {
+				width: 33.333%;
+				padding: 5px 5px 20px;
+				overflow: hidden;
+				position: relative;
+			}
+
+			.category-items-inside {
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				font-size: 14px;
+				color: #333333;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			.category-img-cont img {
+				width: auto;
+				height: 100%;
+			}
+			.category-img-cont{
+				width: 100%;
+				height: 55px;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom:5px;
+			}
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<div class="search-cont">
+					<span class="mui-icon mui-icon-search"></span>
+					<span class="tips">输入商品名称</span>
+				</div>
+				<div class="open-message mui-hidden">
+					<img src="../image/index-message-icon.png" alt="">
+					<span class="mui-badge mui-badge-danger" v-show="message">{{message}}</span>
+				</div>
+			</header>
+			<div class="mui-content">
+				<!-- 内容区 -->
+				<div class="mui-content mui-row mui-fullscreen">
+					<!-- 左侧分类 -->
+					<div class="mui-col-xs-3">
+						<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+							<span class="mui-control-item mui-active" @tap="switchCls(0)">爆款</span>
+							<span class="mui-control-item" v-for="(c,i) in category" :key="i" @tap="switchCls(c.id)">
+								{{c.title}}
+							</span>
+						</div>
+					</div>
+					<!-- 右侧内容 -->
+					<div id="segmentedControlContents" class="mui-col-xs-9">
+						<div class="inside-contianer">
+							<div class="advertising-img">
+								<img src="../image/advertising.png">
+							</div>
+							<h1 class="mui-text-center">{{chooseCls}}</h1>
+							<div class="category-container">
+								<div class="category-items" v-for="(cls,i) in clsCont" :key="i">
+									<div class="category-items-inside">
+										<div class="category-img-cont">
+											<img :src="cls.img">
+										</div>
+										<span>{{cls.title}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					category: [{
+						title: '衣服',
+						id: 1
+					}, {
+						title: '裤子',
+						id: 2
+					}, {
+						title: '衬衫',
+						id: 3
+					}, {
+						title: '领带',
+						id: 4
+					}, {
+						title: 'bra',
+						id: 5
+					}, {
+						title: '皮鞋',
+						id: 6
+					}, {
+						title: '内衣',
+						id: 7
+					}, {
+						title: '运动鞋',
+						id: 8
+					}, {
+						title: '配饰',
+						id: 9
+					}, {
+						title: '箱包手袋',
+						id: 10
+					}, {
+						title: '生活旅游',
+						id: 11
+					}, {
+						title: '宠物生活',
+						id: 12
+					}, {
+						title: '礼品鲜花',
+						id: 13
+					}, {
+						title: '艺术邮币',
+						id: 14
+					}, {
+						title: '特产馆',
+						id: 15
+					}, {
+						title: '家居家装',
+						id: 16
+					}, {
+						title: '二手商品',
+						id: 17
+					}],
+					clsCont: [{
+						title: '手机',
+						img: 'https://img14.360buyimg.com/focus/s140x140_jfs/t27136/183/1628977274/31007/a6f7ed55/5be6ebd8Nb07ef492.png',
+						id: 1
+					}, {
+						title: '耳机',
+						img: 'https://img30.360buyimg.com/focus/s140x140_jfs/t1/21233/40/7634/13890/5c6d039bE8a65d667/aef9581abcc85725.png',
+						id: 2
+					}, {
+						title: '口红',
+						img: 'https://img30.360buyimg.com/focus/s140x140_jfs/t1/19730/14/9859/10199/5c8225eeE5e925911/054ccd7992f86199.png',
+						id: 3
+					}, {
+						title: '轻薄本',
+						img: 'https://img13.360buyimg.com/focus/s140x140_jfs/t11071/195/2462134264/9117/cd0688bf/5a17ba79N18b9f3d4.png',
+						id: 4
+					}, {
+						title: '文具',
+						img: 'https://img14.360buyimg.com/focus/s140x140_jfs/t16102/63/2286960292/7028/d15c6bd6/5a9fa366N889aad0f.jpg',
+						id: 5
+					}, {
+						title: '牛仔裤',
+						img: 'https://img20.360buyimg.com/focus/s140x140_jfs/t19222/87/1339548468/5738/68f3d8aa/5ac47841Nff658599.jpg',
+						id: 6
+					}, {
+						title: '单肩包',
+						img: 'https://img13.360buyimg.com/focus/s140x140_jfs/t14005/197/826940059/9087/b0768931/5a152ee0N04e9ca84.jpg',
+						id: 7
+					}, {
+						title: '不知名',
+						img: '../image/visit2.png',
+						id: 8
+					}, {
+						title: '高度一致',
+						img: '../image/administration1.png',
+						id: 9
+					}],
+					chooseCls: 0
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					switchCls: function(idx) {
+						app.chooseCls = idx;
+					}
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+					})
+				}
+			})
+			mui('#mui-content').on('tap', '.search-cont', function() {
+				openPage('business_pulse_search.html', 'business_pulse_search', '#f9f9f9');
+			})
+		</script>
+	</body>
+
+</html>

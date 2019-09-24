@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -9,6 +8,340 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
+			body,
+			html {
+				background-color: #f2f2f2;
+			}
+
+			.mui-bar-nav {
+				display: flex;
+				align-items: center;
+				background: #ffffff;
+				/* box-shadow: none; */
+				box-sizing: border-box;
+			}
+
+			/* .mui-bar-nav:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			} */
+
+			.mui-bar-nav.mui-bar .mui-action-back {
+				margin-right: 5px;
+				padding-left: 5px;
+				padding-right: 5px;
+				color: #191919;
+			}
+
+			.mui-bar-nav.mui-bar .mui-icon-clear {
+				color: #aeaeae;
+				padding-left: 5px;
+				padding-right: 10px;
+				position: relative;
+				font-size: 20px;
+			}
+
+			.mui-bar-nav.mui-bar input[type=search] {
+				border: none;
+				box-shadow: none;
+				outline: none;
+				padding: 0;
+				margin: 0 10px 0 0;
+				background: transparent;
+				width: auto;
+				flex-grow: 1;
+				height: 36px;
+				text-align: left;
+				font-size: 16px;
+			}
+
+			.mui-bar-nav input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 14px;
+			}
+
+			.mui-bar-nav form {
+				flex-grow: 1;
+				display: flex;
+				align-items: center;
+			}
+
+			/* 头部完结 */
+			.page-mini-card {
+				width: 100%;
+				margin-top: 5px;
+				background-color: #FFFFFF;
+				padding-bottom: 0;
+			}
+
+			.page-mini-card .headline-cont {
+				height: 0.78rem;
+				padding: 0 15px;
+				display: flex;
+				align-items: center;
+				font-size: 0.3rem;
+				color: #999999;
+			}
+
+			.page-mini-card .mui-table-view:before {
+				left: 15px;
+				background-color: #DDDDDD;
+			}
+
+			.page-mini-card .mui-table-view-cell {
+				padding: 15px;
+				height: auto;
+			}
+
+			.page-mini-card .mui-table-view-cell:after {
+				left: 60px;
+				background-color: #F2F2F2;
+			}
+
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell:last-child:after {
+				/* height: 1px; */
+			}
+
+			.page-mini-card img {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				object-fit: cover;
+				margin-right: 10px;
+				flex-shrink: 0;
+			}
+
+			.page-mini-card .mui-table-view-cell {
+				display: flex;
+				align-items: center;
+			}
+
+			.mui-badge {
+				border-radius: 5px;
+				background-color: #2289ff;
+				font-size: 0.2rem;
+			}
+
+			.team-info {
+				flex-grow: 1;
+			}
+
+			.mui-badge-warning {
+				background-color: #f7cb2b;
+			}
+
+			.team-info-top,
+			.team-info-btm {
+				display: flex;
+				/* flex-grow: 1; */
+				align-items: center;
+				justify-content: space-between;
+				position: relative;
+				overflow: hidden;
+				box-sizing: border-box;
+				width: 100%;
+			}
+
+			.team-info-btm span {
+				display: block;
+				max-width: 2.8rem;
+			}
+
+			.team-info-top {
+				margin-bottom: 10px;
+			}
+
+			.team-info-top span {
+				font-size: 15px;
+				color: #333333;
+			}
+
+			.team-info-top .mui-badge {
+				border-radius: 3px;
+				background-color: #2289ff;
+				font-size: 0.2rem;
+				color: #FFFFFF;
+			}
+
+			.team-info-top .mui-badge-warning {
+				background-color: #f7cb2b;
+			}
+
+			.team-info-btm span {
+				color: #999999;
+				font-size: 12px;
+			}
+
+			.team-info-top .mui-ellipsis {
+				max-width: 6.05rem;
+				color: #333333;
+			}
+
+			.page-mini-card-goods .goods-img,
+			.mini-card-headline .headline-img-sign {
+				width: 64px;
+				height: 64px;
+				border-radius: 2px;
+			}
+
+			.page-mini-card-goods .team-info-top .mui-ellipsis-2 {
+				max-width: 5.9rem;
+				color: #333333;
+			}
+
+			.page-mini-card-goods .sign-img {
+				height: 13px;
+				width: auto;
+				border-radius: 0;
+			}
+
+			.page-mini-card-goods .team-info-btm .profit-sign {
+				color: #f2422b;
+			}
+
+			.dynamic-title {
+				font-size: 0.24rem;
+				color: #999999;
+				display: flex;
+				align-items: center;
+				position: relative;
+				overflow: hidden;
+				justify-content: flex-start;
+				width: 100%;
+				padding: 10px 0;
+				line-height: 1;
+			}
+
+			.dynamic-title:before {
+				content: "";
+				display: inline-block;
+				background-color: #2289FF;
+				border-radius: 50%;
+				margin-right: 10px;
+				width: 18px;
+				height: 18px;
+				position: relative;
+			}
+
+			.page-mini-card .dynamic-list {
+				flex-direction: column;
+			}
+
+			.page-mini-card .dynamic-list .user-name {
+				margin-right: 10px;
+			}
+
+			.dynamic-container {
+				padding-left: 0.5rem;
+				width: 100%;
+			}
+
+			.dynamic-container p {
+				font-size: 0.28rem;
+				color: #333333;
+				margin-bottom: 10px;
+			}
+
+			.dynamic-container .dynamic-img {
+				line-height: 0;
+				max-width: 4.2rem;
+			}
+
+			.dynamic-container .dynamic-img .img-item {
+				width: 1.2rem;
+				height: 1.2rem;
+				object-fit: cover;
+				margin-right: 0.2rem;
+				margin-bottom: 0.2rem;
+				border-radius: 0;
+				line-height: 0;
+			}
+
+			.dynamic-container .video-dynamic {
+				width: 4rem;
+				height: 2.5rem;
+				position: relative;
+			}
+
+			.dynamic-container .video-dynamic img {
+				width: 100%;
+				height: 100%;
+				border-radius: 0;
+				margin: 0;
+			}
+
+			.dynamic-container .video-dynamic .player-btn {
+				width: 0.9rem;
+				height: 0.9rem;
+				position: absolute;
+				margin: 0;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+
+			.void-tips-cont {
+				height: auto;
+				color: #999999;
+				margin-top: 30%;
+				font-size: 14px;
+				text-align: center;
+			}
+
+			.void-tips-cont img {
+				width: 60%;
+				display: block;
+				margin-left: 20%;
+			}
+
+			.highlight {
+				font-style: normal;
+				color: #2289FF;
+			}
+
+			.mini-card-headline .team-info-btm span {
+				display: inline-flex;
+				align-items: center;
+			}
+
+
+			.mini-card-headline .team-info-btm .see-num {
+				height: 9px;
+				width: auto;
+				margin-right: 3px;
+				border-radius: 0;
+			}
+
+			.page-mini-card .more-result-item {
+				padding-left: 0.9rem;
+				font-size: 15px;
+				color: #1e3e64;
+			}
+
+			.page-mini-card .more-result-item .mui-navigate-right:after {
+				font-size: 20px;
+				color: #1e3e64;
+			}
+
+			.page-mini-card .more-result-item .mui-icon-search {
+				font-size: 18px;
+				margin-right: 3px;
+				font-weight: 700;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -22,7 +355,138 @@
 				<h1 class="mui-title">{{title}}</h1>
 			</header>
 			<div class="mui-content">
-				{{arr}}
+				<div class="result-container">
+					<!-- 用户 -->
+					<div class="page-mini-card page-mini-card-team" v-if="user_group!=''">
+						<div class="headline-cont">用户</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" v-for="(u,i) in user_group" :key="i" @tap="openDetail('1',u)" v-if="i<5">
+								<img :src="u.avatar">
+								<div class="team-info">
+									<div class="team-info-top">
+										<span>{{u.name}}</span>
+									</div>
+									<div class="team-info-btm">
+										<span class="mui-ellipsis" v-if="u.phone!=''">电话：{{u.phone}}</span>
+										<span class="mui-ellipsis" v-if="u.company!=''">公司：{{u.company}}</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- 动态 -->
+					<div class="page-mini-card" v-if="timeline_group!=''">
+						<div class="headline-cont">动态</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell dynamic-list" v-for="(d,i) in timeline_group" :key="i" @tap="openDetail('2',d.id)">
+								<div class="dynamic-title">
+									<span class="user-name">{{d.user_name}}</span>
+									<span>{{d.create_time}}</span>
+								</div>
+								<div class="dynamic-container">
+									<p class="mui-ellipsis-2">{{d.content}}</p>
+									<!-- 如果是图片动态 -->
+									<div v-if="d.is_video==0" class="dynamic-img">
+										<img class="img-item" :src="img" v-for="(img,i) in d.cover" :key="i">
+									</div>
+									<!-- 如果是视频动态 -->
+									<div v-if="d.is_video==1" class="video-dynamic">
+										<img :src="d.cover[0]+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
+										<img class="player-btn" src="../image/icon/video-player.png">
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- 头条 -->
+					<div class="page-mini-card page-mini-card-goods mini-card-headline" v-if="article_group!=''">
+						<div class="headline-cont">头条</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" @tap="openDetail('3',a.id)" v-for="(a,i) in article_group">
+								<img class="headline-img-sign" :src="a.thumb">
+								<div class="team-info">
+									<div class="team-info-top">
+										<p class="mui-ellipsis-2">{{a.title}}</p>
+									</div>
+									<div class="team-info-btm">
+										<span>{{a.add_time}}</span>
+										<span><img class="see-num" src="../image/eye.png">{{a.click}}</span>
+										<img class="sign-img" src="../image/discover/official-sign.png">
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- 团队 -->
+					<div class="page-mini-card page-mini-card-team" v-if="team_group!=''">
+						<div class="headline-cont">团队</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" @tap="openDetail('4',t)" v-for="(t,i) in team_group" :key="i">
+								<img :src="t.cover">
+								<div class="team-info">
+									<div class="team-info-top">
+										<span>{{t.name}}</span>
+										<span v-if="t.type==2" class="mui-badge mui-badge-warning">数据团队</span>
+										<span v-else class="mui-badge mui-badge-primary">正式团队</span>
+									</div>
+									<div class="team-info-btm">
+										<span v-if="t.level==0">佰级别收入</span>
+										<span v-else-if="t.level==1">仟级别收入</span>
+										<span v-else-if="t.level==2">萬级别收入</span>
+										<span v-else-if="t.level==3">拾萬级别收入</span>
+										<span v-else-if="t.level==4">佰萬级别收入</span>
+										<span v-else>仟萬级别收入</span>
+										<span>排名：{{t.rank}}</span>
+										<span>创建人：{{t.captain_name}}</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- 商品 -->
+					<div class="page-mini-card page-mini-card-goods" v-if="goods_group!=''">
+						<div class="headline-cont">商品</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" @tap="openDetail('5',g)" v-for="(g,i) in goods_group" :key="i">
+								<img class="goods-img" :src="g.cover">
+								<div class="team-info">
+									<div class="team-info-top">
+										<p class="mui-ellipsis-2">{{g.name}}</p>
+									</div>
+									<div class="team-info-btm">
+										<span class="profit-sign" v-if="g.settlement_price!=0">提成：&yen;{{g.settlement_price}}</span>
+										<span class="profit-sign" v-else>&yen;{{g.price}}</span>
+										<span v-if="g.type=='person'">{{g.admin}}</span>
+										<span v-if="g.is_team_goods=='1'">团队：{{g.team_info[0].name}}</span>
+										<!-- <img class="sign-img" src="../image/discover/official-sign.png"> -->
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- 课程 -->
+					<div class="page-mini-card" v-if="course_group!=''">
+						<div class="headline-cont">课程</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell" v-for="(c,i) in course_group" :key="i" @tap="openDetail('6',c)">
+								<img :src="c.cover">
+								<div class="team-info">
+									<div class="team-info-top">
+										<p class="mui-ellipsis-2">{{c.title}}</p>
+									</div>
+									<div class="team-info-btm">
+										<span>团队：{{c.team_name}}</span>
+										<span>讲师：{{c.teacher_name}}</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="void-tips-cont mui-hidden" v-show="status">
+					<img src="../image/icon/void-seach-result.png">
+					没有搜索到内容吖~
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -33,7 +497,17 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					arr: [],
+					keyword: '',
+					classify: '',
+					searchHistory: [],
+					status: false,
+					desc: '',
+					user_group: [],
+					timeline_group: [],
+					article_group: [],
+					team_group: [],
+					goods_group: [],
+					course_group: [],
 					title: ''
 				},
 				created: function() {
@@ -46,21 +520,124 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-
+					cancel: function() {
+						plus.webview.close("home_search_result", "none");
+					},
+					openMore: function(t, arr) {
+						openPage('home_more_result.html', 'home_more_result', '#f7f7f7', {
+							arr: arr,
+							title: t
+						})
+					}
 				},
 				mounted: function() {
-					mui.init({
-						beforeback: function() {
-							//plus.navigator.setStatusBarStyle("light");
-						}
-					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						app.arr = self.arr;
+						app.desc = self.desc || '';
 						app.title = self.title ? '更多' + self.title : '';
+						switch (self.title) {
+							case '用户':
+								app.user_group = self.arr;
+								break;
+							case '动态':
+								app.timeline_group = self.arr;
+								break;
+							case '头条':
+								app.article_group = self.arr;
+								break;
+							case '团队':
+								app.team_group = self.arr;
+								break;
+							case '商品':
+								app.goods_group = self.arr;
+								break;
+							default:
+								app.course_group = self.arr;
+						}
 					})
 				}
 			})
+			// 跳转详情
+			function openDetail(typ, obj) {
+				if (typ == '1') {
+					// 用户
+					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+						fid: obj.fans_id
+					});
+				} else if (typ == '2') {
+					// 动态
+					openPage('dynamics_detail.html', 'dynamics_detail', '#f7f7f7', {
+						aid: obj,
+						user_id: userInfo.id
+					});
+				} else if (typ == '3') {
+					// 头条
+					openPage('article.html', 'article', '#ffffff', {
+						article_id: 156
+					});
+				} else if (typ == '4') {
+					// 团队
+					if (obj.type == 1) {
+						// 正式团队
+						openPage('team_detail_official.html', 'team_detail_official', '#f7f7f7', {
+							teamid: obj.id
+						});
+					} else {
+						// 数据团队
+						openPage('team_detail_info.html', 'team_detail_info', '#f7f7f7', {
+							teamid: obj.id
+						});
+					}
+				} else if (typ == '5') {
+					logs(obj);
+					// 商品 个人商品 团队商品 总仓商品
+					if (obj.is_team_goods == 0) {
+						// 个人商品
+						openPage('personal_goods_detail.html', 'personal_goods_detail', '#f7f7f7', {
+							gid: obj.id
+						});
+					} else {
+						// 是否加入团队
+						if (obj.has_joined_team == 1) {
+							// 团队商品
+							openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+								gid: obj.id
+							});
+						} else {
+							// 团队商品 未加入
+							openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+								gid: obj.id
+							});
+						}
+					}
+				} else {
+					logs(obj);
+					// 跳转课程介绍
+					if (obj.has_joinded_team == 1) {
+						// 如果已经加入团队
+						if (obj.state == 1 || obj.state == 2) {
+							// 开播和已经结束
+							openPage('live_streaming.html', 'live_streaming', '#ffffff', {
+								tid: obj.team_id,
+								teacherId: obj.teacher_id,
+								courseId: obj.id,
+								course: ''
+							});
+						} else {
+							// 未开播的
+							openPage('premiere_prompt.html', 'premiere_prompt', '#f7f7f7', {
+								course: obj,
+								kaola: true
+							});
+						}
+					} else {
+						openPage('search_course_detail.html', 'search_course_detail', '#f7f7f7', {
+							course: obj,
+							kaola: true
+						});
+					}
+				}
+			}
 		</script>
 	</body>
 

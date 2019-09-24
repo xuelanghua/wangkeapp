@@ -11,14 +11,14 @@
 		<style type="text/css">
 			body,
 			html {
-				background-color: #ededed;
+				background-color: #f9f9f9;
 				touch-action: pan-y;
 			}
 
 			.mui-bar-nav {
 				display: flex;
 				align-items: center;
-				background: #ededed;
+				background: #f9f9f9;
 				box-shadow: none;
 				box-sizing: border-box;
 			}
@@ -77,77 +77,10 @@
 			}
 
 			/* 头部完结 */
-			.headline-cont {
-				height: 69px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: #AAAAAA;
-				font-size: 14px;
-			}
-
-			.recommend-classify {
-				width: 100%;
-				box-sizing: border-box;
-				padding: 0 5%;
-				display: flex;
-				align-items: center;
-				justify-content: flex-start;
-				flex-wrap: wrap;
-			}
-
-			.classify-item {
-				width: 33.333%;
-				height: 50px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-size: 14px;
-				color: #1d518c;
-				position: relative;
-			}
-
-			.classify-item span {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				text-align: center;
-				height: 60%;
-				width: 80%;
-			}
-
-			.classify-item.active span {
-				background-color: #2289ff;
-				border-radius: 6px;
-				color: #FFFFFF;
-			}
-
-			.classify-item:nth-of-type(3n+2):before,
-			.classify-item:nth-of-type(3n+2):after {
-				content: '';
-				position: absolute;
-				display: block;
-				width: 1px;
-				bottom: 15px;
-				top: 15px;
-				background-color: #DDDDDD;
-				transform: scaleX(0.5);
-				-webkit-transform: scaleX(0.5);
-			}
-
-			.classify-item:nth-of-type(3n+2):before {
-				left: 0;
-			}
-
-			.classify-item:nth-of-type(3n+2):after {
-				right: 0;
-			}
-
 			.search-history {
-				height: 69px;
 				color: #999999;
 				font-size: 14px;
-				padding: 40px 15px 0 15px;
+				padding: 20px 15px 0 15px;
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
@@ -187,19 +120,11 @@
 			<header class="mui-bar mui-bar-nav">
 				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 				<form onsumit="return false">
-					<input id="search" type="search" name="" value="" v-model="keyword" :placeholder="'搜索'+serachTitle" />
+					<input id="search" type="search" name="" value="" v-model="keyword" :placeholder="'搜索'+serachTiele" />
 				</form>
 				<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
 			</header>
 			<div class="mui-content">
-				<div class="headline-cont">
-					搜索指定内容
-				</div>
-				<div class="recommend-classify">
-					<div class="classify-item" :class="j.id==selectClassify?'active':''" @tap="changeClassify(j.id,j.name)" v-for="(j,i) in classify">
-						<span>{{j.name}}</span>
-					</div>
-				</div>
 				<div v-show="searchHistory!=''">
 					<div class="search-history">
 						<span>搜索历史</span>
@@ -220,28 +145,9 @@
 				el: "#mui-content",
 				data: {
 					keyword: '',
-					classify: [{
-						name: "用户",
-						id: 1
-					}, {
-						name: "动态",
-						id: 2
-					}, {
-						name: "头条",
-						id: 3
-					}, {
-						name: "团队",
-						id: 4
-					}, {
-						name: "商品",
-						id: 5
-					}, {
-						name: "课程",
-						id: 6
-					}],
 					searchHistory: [],
 					selectClassify: 0,
-					serachTitle: ''
+					serachTiele: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -255,7 +161,7 @@
 				methods: {
 					clearHistory: function() {
 						app.searchHistory = [];
-						plus.storage.removeItem('searchHistory');
+						plus.storage.removeItem('buisnesHistory');
 					}
 				},
 				mounted: function() {
@@ -266,7 +172,7 @@
 					});
 					mui.plusReady(function() {
 						// 获取搜索记录
-						var searchHistory = JSON.parse(plus.storage.getItem('searchHistory'));
+						var searchHistory = JSON.parse(plus.storage.getItem('buisnesHistory'));
 						if (searchHistory) {
 							app.searchHistory = searchHistory;
 						}
@@ -291,22 +197,11 @@
 					startSearch();
 				}, 100)
 			})
-			// 切换搜索分类
-			function changeClassify(_id, _nm) {
-				if (_id == app.selectClassify) {
-					app.selectClassify = 0;
-					app.serachTitle = '';
-				} else {
-					app.selectClassify = _id;
-					app.serachTitle = _nm;
-				}
-			}
 			// 开始搜索
 			function startSearch(_id, desc) {
-				openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
+				openPage('business_search_result.html', 'business_search_result', '#ffffff', {
 					keyword: app.keyword,
 					classify: app.selectClassify || 0,
-					desc: app.serachTitle || ''
 				}, 'fade-in');
 			}
 			// 添加关键词到搜索记录
@@ -321,10 +216,10 @@
 						app.searchHistory.unshift(app.keyword);
 						if (app.searchHistory.length > 12) {
 							app.searchHistory = app.searchHistory.splice(0, 12);
-							plus.storage.setItem('searchHistory', JSON.stringify(app.searchHistory));
+							plus.storage.setItem('buisnesHistory', JSON.stringify(app.searchHistory));
 							startSearch(_id, desc);
 						} else {
-							plus.storage.setItem('searchHistory', JSON.stringify(app.searchHistory));
+							plus.storage.setItem('buisnesHistory', JSON.stringify(app.searchHistory));
 							startSearch(_id, desc);
 						}
 					} else {
@@ -335,11 +230,6 @@
 					message("请输入关键词！");
 				}
 			}
-			// 搜索关键词更新
-			window.addEventListener('renewal', function(e) {
-				app.searchHistory = e.detail.searchHistory;
-				app.keyword = e.detail.searchHistory[0];
-			}, false);
 		</script>
 	</body>
 

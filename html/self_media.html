@@ -341,7 +341,7 @@
 					<!-- 占位 -->
 				</div>
 				<!-- 有消息提醒 -->
-				<div class="msg-tips" v-if="trends_cont.total>0" >
+				<div class="msg-tips" v-if="trends_cont.total>0">
 					<div class="msg-tips-inside">
 						<img class="msg-tips-user" :src="trends_cont.last_user.avatar" alt="">
 						<span>{{trends_cont.total}}条新消息</span>
@@ -435,9 +435,11 @@
 												{{c}}<template v-if="idx<i.info.thumbs_user.length-1">、</template>
 											</template>
 										</p>
-										<p class="comment-inside" v-for="(p,idx) in i.info.comment">
-											<span class="user-name">{{p.nickName}}：</span>{{p.content}}
-										</p>
+										<div class="comment-inside" v-if="i.info.comment!=''">
+											<p v-for="(p,idx) in i.info.comment">
+												<span class="user-name">{{p.nickName}}：</span>{{p.content}}
+											</p>
+										</div>
 									</div>
 								</div>
 							</li>
@@ -509,7 +511,7 @@
 										<span>销量： {{i.info.sale_count}}件</span>
 									</div>
 									<div class="goods-earnings">
-										<span @tap="goodsDetail(i.info.id)">利润：&yen;{{i.info.commission}}</span>
+										<span @tap="goodsDetail(i.info.id)">提成：&yen;{{i.info.commission}}</span>
 										<!-- 团队 -->
 										<div class="team-name" @tap="teamDetail(i.info.team_info[0].id)">
 											<img class="team-icon" src="../image/discover/team-icon.png">
@@ -585,27 +587,26 @@
 					team_course: [],
 					slider: ["../image/discover-default-cover.png"],
 					screen: [{
-							title: '好友动态',
-							id: '1',
-							selected: false
-						}, {
-							title: '企业总仓',
-							id: '4',
-							selected: false
-						}, {
-							title: '团队课程',
-							id: '3',
-							selected: false
-						}, {
-							title: '旺客头条',
-							id: '2',
-							selected: false
-						}, {
-							title: '旺客总仓',
-							id: '5',
-							selected: false
-						}
-					],
+						title: '好友动态',
+						id: '1',
+						selected: false
+					}, {
+						title: '企业总仓',
+						id: '4',
+						selected: false
+					}, {
+						title: '团队课程',
+						id: '3',
+						selected: false
+					}, {
+						title: '旺客头条',
+						id: '2',
+						selected: false
+					}, {
+						title: '旺客总仓',
+						id: '5',
+						selected: false
+					}],
 					like: false,
 					// 评论部分
 					menuStatus: false,
@@ -620,8 +621,8 @@
 					// 消息
 					trends_cont: {
 						total: 0,
-						last_user:{
-							avatar:''
+						last_user: {
+							avatar: ''
 						}
 					}
 				},

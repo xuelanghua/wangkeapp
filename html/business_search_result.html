@@ -250,7 +250,7 @@
 
 			.team-select {
 				position: absolute;
-				top: 40px;
+				top: 44px;
 				left: 0;
 				width: 100%;
 				background-color: #F2F2F2;
@@ -305,7 +305,7 @@
 				justify-content: center;
 				font-size: 0.3rem;
 				position: relative;
-				padding: 0.3rem 0.2rem;
+				padding: 0.2rem;
 			}
 
 			.team-list.active {
@@ -582,21 +582,21 @@
 							</form>
 						</div>
 						<div class="screen-cont">
-							<div class="screen-item active" data-stp="1">综合</div>
-							<div class="screen-item" data-stp="1">销量</div>
-							<div class="screen-item" data-stp="2">价格</div>
+							<div class="screen-item active" data-stp="1">销量</div>
+							<div class="screen-item" data-stp="1">价格</div>
+							<div class="screen-item" data-stp="2">好评度</div>
 							<!-- <div class="screen-item">好评度</div> -->
-							<div class="screen-item" data-team="team">团队<span class="mui-icon mui-icon-arrowdown"></span></div>
+							<div class="screen-item" data-team="team">全部<span class="mui-icon mui-icon-arrowdown"></span></div>
 						</div>
 					</div>
 					<!-- 下拉团队选择 -->
 					<div class="team-select">
 						<div class="mui-scroll-wrapper">
 							<div class="mui-scroll">
-								<ul class="mui-table-view" id="team_list">
-									<!-- <li class="mui-table-view-cell team-list" v-for="i in 6">
+								<ul class="mui-table-view">
+									<li class="mui-table-view-cell team-list" v-for="i in 4">
 										<span>4646587</span>
-									</li> -->
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -609,68 +609,7 @@
 			</header>
 			<!-- 内容区 -->
 			<div class="mui-content mui-row mui-fullscreen">
-				<!-- 左侧分类 -->
-				<div class="mui-col-xs-3">
-					<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
-						<span class="mui-control-item mui-active" data-type="1">爆款</span>
-						<span class="mui-control-item" :data-type="lst.value" v-for="(lst,index) in classified" :key="index">{{lst.text}}</span>
-					</div>
-				</div>
-				<!-- 右侧内容 -->
-				<div id="segmentedControlContents" class="mui-col-xs-9">
-					<div class="primary-goods">
-						<ul class="mui-table-view" id="primary-goods">
-							<li class="mui-table-view-cell goods-list" v-for="(l,index) in goods_list">
-								<div class="goods-img" @tap="openGoodsDetail(l.id)">
-									<img :src="l.cover">
-								</div>
-								<div class="goods-right">
-									<p class="goods-title mui-ellipsis-2" @tap="openGoodsDetail(l.id)">
-										{{l.name}}
-									</p>
-									<div class="goods-info">
-										<span class="wage-text" @tap="openGoodsDetail(l.id)">提成：&yen;{{l.commission}}</span>
-										<span class="price-text" @tap="openGoodsDetail(l.id)">供货价：&yen;{{l.settlement_price}}</span>
-										<img v-if="l.is_pick==0" :data-gid="l.id" class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
-										<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
-									</div>
-									<div class="goods-right-bottom">
-										<img class="hot-sign" src="../image/icon/team-detail-goods-icon-03.png">
-										<span>销量&nbsp;{{l.sale_count}}</span>
-										<!-- <span>95%&nbsp;好评</span> -->
-									</div>
-									<div class="team-name" v-if="l.team_info.length==1">
-										<span>{{l.team_info[0].name}}</span>
-										<span class="mui-icon mui-icon-arrowright"></span>
-									</div>
-									<div v-else class="team-name team-names" :class="'team-names'+l.id" :data-ids="l.id" :data-idx="index">
-										<span>货源</span>
-										<span class="mui-icon mui-icon-arrowright"></span>
-									</div>
-								</div>
-							</li>
-							<li class="loading-more" v-if="has_more">
-								<span>点击加载更多</span>
-							</li>
-							<li v-if="void_tips">
-								<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png">
-								<p style="text-align: center;color:#717171;">暂无商品</p>
-							</li>
-							<!-- <li class="void-more" v-else>
-								<span>没有更多啦~</span>
-							</li> -->
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- 团队弹窗 -->
-			<div id="bottomPopover" class="mui-popover mui-popover-bottom">
-				<div class="mui-popover-arrow"></div>
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" v-for="(t,i) in show_team_list" :key="i" @tap="teamdetail(t.id,t.captain_uid)">
-						{{t.name}}
-					</li>
-				</ul>
+				
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
@@ -692,7 +631,6 @@
 					isinput: false,
 					team: [],
 					goods_list: [],
-					show_team_list: [],
 					void_tips: false,
 					goodsName: '',
 					ltype: 1,
@@ -720,34 +658,6 @@
 					mui(".mui-scroll-wrapper").scroll().refresh();
 					mui.init({
 						swipeBack: false,
-						// pullRefresh: {
-						// container: "#segmentedControlContents",
-						// up: {
-						// 	height: 50,
-						// 	auto: false,
-						// 	contentrefresh: "正在加载...",
-						// 	contentnomore: '没有更多数据了',
-						// 	callback: function() {
-						// 		refresh = "up";
-						// 		skip += 1;
-						// 		getGoodsList();
-						// 	}
-						// },
-						// down: {
-						// 	style: 'circle',
-						// 	color: '#2289FF',
-						// 	height: '50px',
-						// 	range: '100px',
-						// 	offset: '0px',
-						// 	auto: false,
-						// 	callback: function() {
-						// 		refresh = "down";
-						// 		mui('#segmentedControlContents').pullRefresh().refresh(true);
-						// 		skip = 1;
-						// 		getGoodsList("1");
-						// 	}
-						// }
-						// }
 					});
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
@@ -760,7 +670,6 @@
 						var self = plus.webview.currentWebview();
 						plus.navigator.setStatusBarStyle("dark");
 						getGoodsType();
-						getTeamList();
 						getGoodsList(app.ltype);
 					})
 				}
@@ -839,38 +748,7 @@
 					}
 				}, 'json');
 			}
-			// 获取团队
-			function getTeamList() {
-				mui.post($ajaxUrl + 'team&action=my_team_list', {
-					token: userInfo.token,
-					type: 'all'
-				}, function(res) {
-					// logs(res);
-					if (res.errno == 0) {
-						var data = res.data;
-						var str = '';
-						if (data.length > 0 && data.length <= 2) {
-							mui(".team-select")[0].style.height = "160px";
-						} else if (data.length >= 3) {
-							mui(".team-select")[0].style.height = "200px";
-						} else if (data.length == 0) {
-							mui(".team-select")[0].style.height = "160px";
-							document.getElementById("team_list").innerHTML = '<div class="void-tips">' + '你还没有加入或者创建团队' + '</div>';
-							return false;
-						}
-						for (var i = 0; i < data.length; i++) {
-							str += '<li class="mui-table-view-cell team-list"' + 'data-tid="' + data[i].id + '">';
-							str += '<span>' + data[i].name + '</span>';
-							str += '</li>';
-						}
-						document.getElementById("team_list").innerHTML = str;
-					} else {
-						// plus.nativeUI.alert("添加商品前，请创建正式团队！", function() {
-						// 	mui.back();
-						// })
-					}
-				}, 'json');
-			}
+			
 			// 获取产品列表
 			function getGoodsList() {
 				mui.post($ajaxUrl + 'goods', {
@@ -902,11 +780,6 @@
 							app.goods_list = [];
 							app.void_tips = true;
 						}
-						// if (refresh == 'up') {
-						// 	mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(true);
-						// } else if (refresh == 'down') {
-						// 	mui('#segmentedControlContents').pullRefresh().endPulldownToRefresh();
-						// }
 					}
 				}, 'json');
 			}
@@ -914,7 +787,6 @@
 			mui(".mui-content").on("tap", ".team-names", function() {
 				var idx = this.dataset.idx;
 				var ids = this.dataset.ids;
-				app.show_team_list = app.goods_list[idx].team_info;
 				mui('#bottomPopover').popover("show", mui(".team-names" + ids)[0]);
 			})
 
@@ -928,7 +800,7 @@
 				app.team = [];
 				skip = 1;
 				app.ltype = ltp;
-				getGoodsList();
+				// getGoDodsList();
 			})
 			// 加载更多
 			mui(".mui-content").on("tap", ".loading-more", function() {
