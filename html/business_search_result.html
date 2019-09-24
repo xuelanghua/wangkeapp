@@ -9,9 +9,10 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
-			[v-cloak] {
-				display: none;
+			body {
+				touch-action: pan-y;
 			}
+
 
 			li {
 				list-style: none;
@@ -87,6 +88,8 @@
 
 			.mui-bar-nav~.mui-content {
 				padding-top: 86px;
+				background-color: #ffffff;
+				min-height: 100vh;
 			}
 
 			.mui-bar.mui-bar-nav {
@@ -100,7 +103,6 @@
 				height: 40px;
 				display: flex;
 				background-color: #FFFFFF;
-				margin-top: 44px;
 				z-index: 10;
 				box-shadow: 0 3px 3px 1px rgba(225, 225, 225, 0.6);
 				position: relative;
@@ -112,15 +114,24 @@
 				width: 100%;
 				display: flex;
 				overflow: hidden;
+				z-index: 12;
+				position: relative;
+				background-color: #FFFFFF;
 			}
 
 			.menu-cont.active .search-input {
 				border-radius: 14px;
-				width: 100%;
+				flex-grow: 1;
+			}
+
+			.menu-cont.active form {
+				display: flex;
+				align-items: center;
+				position: relative;
 			}
 
 			.search-cont {
-				margin-right: 5%;
+				margin-right: 5px;
 				width: 40px;
 			}
 
@@ -149,7 +160,7 @@
 			}
 
 			.menu-cont.active .search-input {
-				width: 100%;
+				flex-grow: 1;
 				padding-left: 40px;
 				padding-right: 30px;
 				background-color: #F2F2F2;
@@ -207,20 +218,26 @@
 
 			.screen-item {
 				margin: 0;
-				width: 22%;
+				width: 23%;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				background-color: #F2F2F2;
 				padding: 3px 0;
 				border-radius: 30px;
-				font-size: 13px;
+				font-size: 12px;
 				color: #555555;
 				position: relative;
 				overflow: visible;
 			}
 
-			.mui-bar-nav.mui-bar .mui-icon.mui-icon-arrowdown {
+			.screen-item .mui-icon {
+				position: relative;
+			}
+
+			.mui-bar-nav.mui-bar .mui-icon.mui-icon-arrowdown,
+			.mui-bar-nav.mui-bar .mui-icon.mui-icon-arrowup {
+				position: relative;
 				padding: 0;
 				padding-left: 10px;
 				font-size: 18px;
@@ -249,23 +266,23 @@
 			}
 
 			.team-select {
+				top: -180px;
 				position: absolute;
-				top: 44px;
 				left: 0;
 				width: 100%;
-				background-color: #F2F2F2;
-				height: 0;
+				background-color: #F9F9F9;
+				height: 205px;
 				padding: 0;
 				overflow: hidden;
-				display: none;
-				min-height: 160px;
+				-webkit-transition: all 0.25s ease-in-out;
+				transition: all 0.25s ease-in-out;
+				display: block;
+				z-index: 8;
+				padding-bottom: 44px;
 			}
 
 			.team-select.active {
-				display: block;
-				padding-bottom: 0;
-				max-height: 260px;
-				padding-bottom: 44px;
+				top: 40px;
 			}
 
 			.team-select .mui-table-view {
@@ -277,22 +294,18 @@
 				height: 0;
 			}
 
-			.team-select .mui-table-view-cell:last-child:after {
-				height: 1px;
-			}
-
 			.team-select .mui-table-view-cell {
 				text-align: center;
 			}
 
 			.team-select .mui-table-view-cell.mui-active {
-				background-color: #e4e4e4;
+				background-color: #f2f2f2;
 			}
 
 			.team-select .mui-table-view-cell:after {
 				left: 10px;
-				right: 10px;
-				background-color: #DDDDDD;
+				right: 0;
+				background-color: #F1F1F1;
 			}
 
 			.mui-backdrop {
@@ -303,9 +316,10 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				font-size: 0.3rem;
+				font-size: 14px;
 				position: relative;
-				padding: 0.2rem;
+				padding: 10px;
+				background-color: #F9F9F9;
 			}
 
 			.team-list.active {
@@ -315,13 +329,14 @@
 			.team-list.active span {
 				display: inline-flex;
 				position: relative;
+				font-size: 14px;
 			}
 
 			.team-list.active span:after {
 				content: '';
 				display: inline-block;
-				width: 19px;
-				height: 20px;
+				width: 18px;
+				height: 15px;
 				position: absolute;
 				background: url('../image/icon/draw-icono.png')center center no-repeat;
 				background-size: contain;
@@ -334,123 +349,14 @@
 				background-color: #FFFFFF;
 			}
 
-			.primary-goods .goods-list {
-				position: relative;
-				display: flex;
-				align-items: center;
-				padding: 0.32rem 0.2rem;
-				overflow: hidden;
-			}
-
-			.primary-goods .goods-list:after {
-				left: 2.3rem;
-				background-color: #DDDDDD;
-			}
-
-			.primary-goods .goods-list:last-of-type:after {
-				height: 1px;
-			}
-
-			.goods-list .goods-right {
-				flex-grow: 1;
-			}
-
-			.goods-img {
-				width: 1.9rem;
-				height: 1.9rem;
-				display: flex;
-				overflow: hidden;
-				flex-shrink: 0;
-				margin-right: 0.2rem;
-			}
-
 			.goods-img img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 			}
 
-			.goods-list .goods-title {
-				color: #333333;
-				font-size: 0.28rem;
-				margin-bottom: 0.16rem;
-				min-height: 0.66rem;
-				text-align: justify;
-			}
-
-			.goods-list .goods-info {
-				font-size: 0.24rem;
-				color: #F52E20;
-				/* padding-bottom: 0.1rem; */
-				display: inline-flex;
-				flex-direction: column;
-				position: relative;
-				width: 100%;
-			}
-
-			.price-text {
-				color: #333333;
-			}
-
-			.goods-right-bottom {
-				display: flex;
-				align-items: center;
-				position: relative;
-				font-size: 0.22rem;
-				color: #999999;
-			}
-
-			.goods-right-bottom span:first-of-type {
-				margin-right: 0.3rem;
-			}
-
-			.hot-sign {
-				height: 0.2rem;
-				width: auto;
-				margin-right: 0.2rem;
-			}
-
-			.goods-list .add-entrepot {
-				width: 0.4rem;
-				height: 0.4rem;
-				position: absolute;
-				right: 5px;
-				top: 50%;
-				margin-top: -0.3rem;
-				z-index: 6;
-			}
-
-			.primary-goods .mui-table-view:after {
-				height: 0;
-			}
-
-			.primary-goods .mui-table-view-cell.mui-active {
-				background-color: #FFFFFF;
-			}
-
-			.team-name {
-				display: flex;
-				position: relative;
-				align-items: center;
-				font-size: 0.24rem;
-				color: #999999;
-				margin-top: 5px;
-				line-height: 1;
-			}
-
-			.team-name .mui-icon.mui-icon-arrowright {
-				font-size: 14px;
-				position: relative;
-				margin-top: 0;
-				right: 0;
-			}
-
 			.mui-table-view-cell.mui-active {
 				background-color: #FFFFFF;
-			}
-
-			.goods-list:first-of-type {
-				padding-top: 0;
 			}
 
 			.change-list {
@@ -513,43 +419,8 @@
 				-webkit-transform: scaleX(0.5);
 			}
 
-			/* 没有团队提醒 */
-			.void-tips {
-				height: 116px;
-				width: 100%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: #999999;
-			}
-
-			.team-names {
-				width: auto;
-				display: inline-block;
-			}
-
 			.mui-backdrop {
-				background-color: rgba(0, 0, 0, 0);
-			}
-
-			.mui-popover .mui-popover-arrow:after {
-				background: #FFFFFF;
-				box-shadow: 0 0 3px 0 rgba(0, 0, 0, .3);
-				z-index: 1;
-			}
-
-			.mui-popover-bottom .mui-table-view {
-				background: #FFFFFF;
-				color: #666;
-				box-shadow: 0 0 3px 0 rgba(0, 0, 0, .3);
-				font-size: 14px;
-				color: #999;
-			}
-
-			.mui-popover-bottom .mui-table-view-cell:after {
-				left: 15px;
-				right: 15px;
-				background-color: #DDDDDD;
+				background-color: rgba(0, 0, 0, 0.3);
 			}
 
 			.loading-more,
@@ -565,37 +436,227 @@
 			.void-more {
 				font-size: 0.24rem;
 			}
+
+			.mui-bar-nav.mui-bar .mui-action-back {
+				margin-right: 5px;
+				padding-left: 5px;
+				padding-right: 5px;
+				color: #191919;
+			}
+
+			.mui-bar-nav.mui-bar .mui-icon-clear {
+				position: absolute;
+				right: 48px;
+				font-size: 20px;
+				color: #999999;
+			}
+			.cancel-btn {
+				height: 36px;
+				width: 40px;
+				line-height: 36px;
+				text-align: right;
+				font-size: 15px;
+				color: #666666;
+				flex-shrink: 0;
+			}
+
+			.goods-container {
+				padding: 0 0.2rem;
+				background-color: #ffffff;
+			}
+
+			.goods-container.active {
+				padding: 0.3rem 0.2rem 0;
+			}
+
+			.title-container {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background-color: #FFFFFF;
+				height: 44px;
+				width: 100%;
+				z-index: 99;
+				position: relative;
+				padding-right: 10px;
+			}
+
+			.change-list-cont {
+				height: 100%;
+				padding: 0 15px;
+				margin-right: -5px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+				z-index: 1045;
+			}
+
+			.change-list-style {
+				width: 19px;
+				height: auto;
+			}
+
+			.mui-table-view {
+				background-color: #ffffff;
+			}
+
+			.goods-container .mui-table-view .mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.goods-container .mui-table-view-cell:after {
+				left: 85px;
+				background-color: #DDDDDD;
+			}
+
+			.goods-container .mui-table-view:before,
+			.goods-container .mui-table-view:after {
+				height: 0;
+			}
+
+			.goods-container .mui-table-view-cell:last-child:after {
+				height: 1px;
+			}
+
+			.goods-container .mui-table-view .mui-table-view-cell {
+				padding: 15px 0;
+				display: flex;
+				align-items: center;
+			}
+
+
+			.goods-container .goods-img {
+				width: 1.62rem;
+				height: 1.62rem;
+				display: flex;
+				overflow: hidden;
+				flex-shrink: 0;
+				margin-right: 0.2rem;
+			}
+
+			.goods-container .goods-title {
+				margin-bottom: 0.1rem;
+				min-height: 0.8rem;
+				display: flex;
+				align-items: center;
+			}
+
+			.goods-container .goods-title p {
+				font-size: 0.28rem;
+				color: #333333;
+
+				line-height: 1.4;
+			}
+
+			.goods-container .price {
+				color: #F52E20;
+				font-size: 0.24rem;
+			}
+
+			.goods-container .source-cont {
+				color: #999999;
+				font-size: 0.24rem;
+				display: flex;
+				align-items: center;
+				line-height: 1;
+				padding-top: 5px;
+			}
+
+			.goods-container .mui-icon-arrowright {
+				font-size: 0.32rem;
+			}
+
+			.sign {
+				height: 0.3rem;
+				margin-top: 5px;
+			}
+
+			.goods-container.active {
+				background-color: #F2F2F2;
+			}
+
+			.goods-container.active .mui-table-view {
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				background: transparent;
+			}
+
+			.goods-container.active .mui-table-view .mui-table-view-cell {
+				display: inline-flex;
+				flex-direction: column;
+				width: 3.45rem;
+				background-color: #007AFF;
+				margin-bottom: 0.2rem;
+				border-radius: 0.2rem;
+				overflow: hidden;
+				background-color: #FFFFFF;
+				padding: 0;
+				/* box-shadow: 2px 2px 3px 0px rgba(225,225,225,.6); */
+			}
+
+			.goods-container.active .goods-img {
+				margin: 0;
+				padding: 0;
+				font-size: 0;
+				line-height: 0;
+				/* margin-bottom: 0.1rem; */
+			}
+
+			.goods-container.active .goods-info {
+				padding: 0.1rem;
+			}
+
+			.goods-container.active .mui-table-view-cell:after {
+				display: none;
+			}
+
+			.goods-container.active .goods-img {
+				width: 100%;
+				height: 3.31rem;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="mui-content" v-cloak>
 			<header class="mui-bar mui-bar-nav">
-				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
-				<h1 class="mui-title">拣货</h1>
+				<div class="title-container">
+					<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+					<h1 class="mui-title">{{pageTitle}}</h1>
+					<div class="change-list-cont">
+						<img v-show="listStyle" class="change-list-style" src="../image/icon/list-style-icon.png">
+						<img v-show="!listStyle" class="change-list-style" src="../image/icon/card-style-icon.png">
+					</div>
+				</div>
 				<div class="screen-bar">
 					<div class="menu-cont">
 						<!-- active -->
 						<div class="mui-input-row search-cont">
 							<form action="" onsumit="return false">
 								<span class="mui-icon mui-icon-search"></span>
-								<input class="search-input mui-input-clear" v-model="goodsName" type="search" id="search" placeholder="输入商品名称">
+								<input class="search-input" v-model="keyword" type="search" id="search" placeholder="输入商品名称">
+								<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
+								<span class="cancel-btn">取消</span>
 							</form>
 						</div>
 						<div class="screen-cont">
-							<div class="screen-item active" data-stp="1">销量</div>
-							<div class="screen-item" data-stp="1">价格</div>
-							<div class="screen-item" data-stp="2">好评度</div>
-							<!-- <div class="screen-item">好评度</div> -->
-							<div class="screen-item" data-team="team">全部<span class="mui-icon mui-icon-arrowdown"></span></div>
+							<div class="screen-item" :class="[currentIndex==t.id?'active':'']" v-for="(t,i) in options" @tap="filtrateGoods(i,t.id)">{{t.title}}<span
+								 v-if="t.id==4" class="mui-icon" :class="currentIndex==3?'mui-icon-arrowup':'mui-icon-arrowdown'"></span></div>
 						</div>
 					</div>
-					<!-- 下拉团队选择 -->
+					<!-- 下拉仓库选择 -->
 					<div class="team-select">
 						<div class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<ul class="mui-table-view">
-									<li class="mui-table-view-cell team-list" v-for="i in 4">
-										<span>4646587</span>
+									<li class="mui-table-view-cell team-list" :class="[c.id==currentId?'active':'']" v-for="(c,i) in category"
+									 @tap="changeCategory(c.id,c.title)" :key="i">
+										<span>{{c.title}}</span>
 									</li>
 								</ul>
 							</div>
@@ -608,8 +669,30 @@
 				</div>
 			</header>
 			<!-- 内容区 -->
-			<div class="mui-content mui-row mui-fullscreen">
-				
+			<div class="mui-content">
+				<div class="goods-container" :class="listStyle?'':'active'">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell" v-for="i in 11">
+							<div class="goods-img">
+								<img src="../image/5E0eH.png">
+							</div>
+							<div class="goods-info">
+								<div class="goods-title">
+									<p class="mui-ellipsis-2">
+										棉田园风风四件套全棉
+									</p>
+								</div>
+								<div class="price">提成：&yen;50.00</div>
+								<!-- 官方 -->
+								<!-- <img class="sign" src="../image/discover/official-sign.png"> -->
+								<!-- 个人 -->
+								<div class="source-cont">店长：马飞飞<span class="mui-icon mui-icon-arrowright"></span></div>
+								<!-- 团队 -->
+								<div class="source-cont mui-hidden">团队：蓝精灵<span class="mui-icon mui-icon-arrowright"></span></div>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
@@ -628,15 +711,43 @@
 				el: "#mui-content",
 				data: {
 					classified: [],
-					isinput: false,
-					team: [],
 					goods_list: [],
 					void_tips: false,
-					goodsName: '',
+					keyword:'',
 					ltype: 1,
 					sort_type: '',
-					c_team: [],
-					has_more: false
+					has_more: false,
+					currentIndex: 0,
+					currentId: 0,
+					pageTitle: '商脉',
+					listStyle: false,
+					searchHistory:[],
+					options: [{
+						title: "销量",
+						id: "1"
+					}, {
+						title: "价格",
+						id: "2"
+					}, {
+						title: "好评度",
+						id: "3"
+					}, {
+						title: "全部",
+						id: "4"
+					}],
+					category: [{
+						title: "全部",
+						id: "4"
+					}, {
+						title: "个人",
+						id: "5"
+					}, {
+						title: "企业仓",
+						id: "6"
+					}, {
+						title: "旺客总仓",
+						id: "7"
+					}]
 				},
 				created: function() {
 					// 初始化字体大小
@@ -652,6 +763,27 @@
 						openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
 							gid: gid
 						})
+					},
+					// 点击筛选
+					filtrateGoods: function(idx, _id) {
+						if (_id == 4) {
+							app.currentIndex = _id;
+							mask.show();
+							$('.team-select').addClass("active");
+							return false;
+						}
+						mask.close();
+						if (app.currentIndex == _id) {
+							app.currentIndex = '-1';
+						} else {
+							app.currentIndex = _id;
+							app.currentId = _id;
+						}
+
+					},
+					changeCategory: function(_id, _nm) {
+						app.currentId = _id;
+						app.options[3].title = _nm;
 					}
 				},
 				mounted: function() {
@@ -669,72 +801,71 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						plus.navigator.setStatusBarStyle("dark");
-						getGoodsType();
-						getGoodsList(app.ltype);
+						// 获取搜索记录
+						var searchHistory = JSON.parse(plus.storage.getItem('buisnesHistory'));
+						if (searchHistory) {
+							app.searchHistory = searchHistory;
+						}
 					})
+					// 监听搜索
+					document.getElementById("search").addEventListener("keypress", function(event) {
+						var keywords = app.keyword.replace(/^\s*|\s*$/g, "");
+						if (event.keyCode == "13") {
+							if (keywords != '') {
+								plus.key.hideSoftKeybord();
+								var idx = app.searchHistory.indexOf(keywords);
+								//没有则返回-1
+								if (idx == -1) {
+									app.searchHistory.unshift(keywords);
+									if (app.searchHistory.length > 12) {
+										app.searchHistory = app.searchHistory.splice(0, 12);
+										plus.storage.setItem('buisnesHistory', JSON.stringify(app.searchHistory));
+										mui.fire(plus.webview.currentWebview().opener(), 'renewal', {
+											searchHistory: app.searchHistory
+										});
+									} else {
+										plus.storage.setItem('buisnesHistory', JSON.stringify(app.searchHistory));
+										mui.fire(plus.webview.currentWebview().opener(), 'renewal', {
+											searchHistory: app.searchHistory
+										});
+									}
+								} else {
+									startSearch();
+								}
+								// 阻止页面刷新
+								event.preventDefault();
+							} else {
+								message("请输入关键词！");
+								// 阻止页面刷新
+								event.preventDefault();
+							}
+						} else {
+							// 点的不是搜索按钮
+						}
+					});
 				}
 			})
 			// 点击搜索按钮
 			mui(".mui-bar").on('tap', ".mui-icon-search", function() {
-				mui(".menu-cont")[0].classList.toggle("active");
+				mui(".menu-cont")[0].classList.add("active");
+				mui(".search-cont input")[0].focus();
+				app.currentIndex = -1;
+				mask.show();
+			})
+			// 取消搜索
+			mui(".mui-bar").on('tap', ".cancel-btn", function() {
+				mui(".menu-cont")[0].classList.remove("active");
 				mui(".search-cont input")[0].blur();
 				mask.close();
 			})
-			// 点击筛选项
-			mui(".mui-bar").on('tap', ".screen-item", function(e) {
-				var box = $(".screen-cont").children();
-				var stp = this.dataset.stp;
-				for (var i = 0; i < box.length; i++) {
-					box[i].classList.remove("active");
-				}
-				$(this).addClass("active");
-				if (this.dataset.team) {
-					mask.show();
-					$('.team-select').addClass("active");
-				} else {
-					$('.team-select').removeClass("active");
-					cancelCT();
-					if (app.sort_type == stp) {
-						return false;
-					}
-					if (stp) {
-						app.sort_type = stp;
-						getGoodsList();
-						mask.close();
-					}
-				}
-			})
-			// 点击团队
-			mui(".mui-bar").on('tap', ".team-list", function(e) {
-				var tid = this.dataset.tid;
-				var index = app.team.indexOf(tid);
-				if (index == -1) {
-					app.team.push(tid);
-					this.classList.add("active")
-					// logs(app.team);
-				} else {
-					app.team.splice(index, 1);
-					this.classList.remove("active");
-				}
-			})
-			// 取消团队选择
+			// 取消仓库选择
 			mui(".mui-bar").on('tap', ".left-btn", function(e) {
 				mask.close();
-				app.team = [];
-				cancelCT();
 			})
-			// 取消团队的选择
-			function cancelCT() {
-				var team = document.querySelectorAll(".team-list");
-				for (var i = 0; i < team.length; i++) {
-					team[i].classList.remove("active");
-				}
-			}
-			// 确认团队选择
+			// 确认仓库选择
 			mui(".mui-bar").on('tap', ".right-btn", function(e) {
-				// logs(app.team);
-				getGoodsList();
 				mask.close();
+				logs(app.currentId);
 			})
 			// 获取商品类型
 			function getGoodsType() {
@@ -748,7 +879,7 @@
 					}
 				}, 'json');
 			}
-			
+
 			// 获取产品列表
 			function getGoodsList() {
 				mui.post($ajaxUrl + 'goods', {
@@ -756,7 +887,7 @@
 					action: 'team_goods_list',
 					type: app.ltype,
 					sort_type: app.sort_type,
-					goods_name: app.goodsName,
+					goods_name: app.keyword,
 					team: app.team.join(','),
 					skip: skip,
 					limit: limit
@@ -783,55 +914,14 @@
 					}
 				}, 'json');
 			}
-			// 显示团队
-			mui(".mui-content").on("tap", ".team-names", function() {
-				var idx = this.dataset.idx;
-				var ids = this.dataset.ids;
-				mui('#bottomPopover').popover("show", mui(".team-names" + ids)[0]);
-			})
-
-			// 商品类型切换
-			mui(".mui-content").on("tap", ".mui-control-item", function() {
-				var ltp = this.dataset.type;
-				if (app.ltype == ltp) {
-					return false;
-				}
-				app.goodsName = '';
-				app.team = [];
-				skip = 1;
-				app.ltype = ltp;
-				// getGoDodsList();
-			})
 			// 加载更多
 			mui(".mui-content").on("tap", ".loading-more", function() {
 				skip += 1;
 				getGoodsList();
 			})
-			// 点击键盘的搜索
-			document.getElementById("search").addEventListener("keypress", function(event) {
-				var keyword = app.goodsName.replace(/^\s*|\s*$/g, "");
-				if (event.keyCode == "13" && keyword != '') {
-					document.activeElement.blur();
-					app.team = [];
-					skip = 1;
-					getGoodsList();
-					event.preventDefault();
-				} else {
-					// message("请输入用户名或者电话");
-				}
-			});
-			// 拣货
-			mui(".mui-content").on("tap", ".add-entrepot-btn", function() {
-				var gid = this.dataset.gid;
-				openPage('setting_distribution_goods.html', 'setting_distribution_goods', '#f7f7f7', {
-					gid: gid
-				});
+			mui('.mui-bar').on('tap', '.change-list-style', function() {
+				app.listStyle = !app.listStyle;
 			})
-
-			// 监听拣货成功
-			window.addEventListener('refreshList', function() {
-				getGoodsList();
-			}, false);
 		</script>
 	</body>
 
