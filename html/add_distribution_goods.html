@@ -244,6 +244,7 @@
 					goods_type_group: [],
 					// 产品类型
 					type_p: '',
+					type: '',
 					// 快递类型名称
 					express_text: '请选择',
 					// 快递类型
@@ -488,14 +489,19 @@
 			// 商品类型选择
 			mui(".mui-content").on("tap", ".goods-type", function() {
 				document.activeElement.blur();
-				var goods_type = new mui.PopPicker();
+				// var goods_type = new mui.PopPicker();
+				var goods_type = new mui.PopPicker({layer: 2});
 				goods_type.setData(app.goods_type_group);
 				if (app.type_p != 0) {
 					goods_type.pickers[0].setSelectedValue(app.type_p, 1000);
 				}
+				if (app.type != 0) {
+					goods_type.pickers[1].setSelectedValue(app.type, 1000);
+				}
 				goods_type.show(function(items) {
 					app.type_p = items[0].value;
-					app.goods_type_text = items[0].text;
+					app.type = items[1].value;
+					app.goods_type_text = items[0].text + '--' + items[1].text;
 					// console.log(app.type_p);
 				});
 			})
@@ -553,6 +559,7 @@
 					token: userInfo.token
 				}, function(res) {
 					if (res.errno == 0) {
+						logs(res.data);
 						app.goods_type_group = res.data;
 						// app.goods_type_text = app.goods_type_group[0].text;
 						// app.type_p = app.goods_type_group[0].value;
@@ -656,6 +663,7 @@
 					team_recommend: app.team_recommend,
 					team_hot: app.team_hot,
 					type_p: app.type_p,
+					type: app.type,
 					top: app.top,
 					settlement_price: app.settlement_price,
 					price: app.price,

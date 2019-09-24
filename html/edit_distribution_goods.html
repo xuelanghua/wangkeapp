@@ -262,6 +262,9 @@
 					goods_type_group: [],
 					// 产品类型
 					type_p: '',
+					type_p_index: 0,
+					type: '',
+					type_index: 0,
 					// 快递类型名称
 					express_text: '请选择',
 					// 快递类型
@@ -317,7 +320,7 @@
 						// 获取团队列表
 						getTeamList();
 						// 商品类型
-						getGoodsType();
+						// getGoodsType();
 						// 获取快递列表
 						getExpressList();
 						//获取商品规格
@@ -496,14 +499,20 @@
 			// 商品类型选择
 			mui(".mui-content").on("tap", ".goods-type", function() {
 				document.activeElement.blur();
-				var goods_type = new mui.PopPicker();
+				var goods_type = new mui.PopPicker({layer: 2});
 				goods_type.setData(app.goods_type_group);
 				if (app.type_p != 0) {
-					goods_type.pickers[0].setSelectedValue(app.type_p, 1000);
+					// goods_type.pickers[0].setSelectedValue(app.type_p, 1000);
+					goods_type.pickers[0].setSelectedIndex(app.type_p_index);
+				}
+				if (app.type != 0 && app.type != app.type_p) {
+					// goods_type.pickers[1].setSelectedValue(app.type, 1000);
+					goods_type.pickers[1].setSelectedIndex(app.type_index);
 				}
 				goods_type.show(function(items) {
 					app.type_p = items[0].value;
-					app.goods_type_text = items[0].text;
+					app.type = items[1].value;
+					app.goods_type_text = items[0].text + '--' + items[1].text;
 					// console.log(app.type_p);
 				});
 			})
@@ -562,6 +571,20 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						app.goods_type_group = res.data;
+						for (var index in app.goods_type_group) {
+							if (app.goods_type_group[index].value == app.type_p) {
+								app.type_p_index = index;
+							}
+							if (app.goods_type_group[index].children) {
+								var children = app.goods_type_group[index].children;
+								for (var c in children) {
+									if (children[c].value == app.type) {
+										app.type_index = c;
+										break;
+									}
+								}
+							}
+						}
 						// app.goods_type_text = app.goods_type_group[0].text;
 						// app.type_p = app.goods_type_group[0].value;
 					}
@@ -665,6 +688,7 @@
 					team_recommend: app.team_recommend,
 					team_hot: app.team_hot,
 					type_p: app.type_p,
+					type: app.type,
 					top: app.top,
 					settlement_price: app.settlement_price,
 					price: app.price,
@@ -736,7 +760,7 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(res) {
-						// logs(res);
+						logs(res);
 						var datas = res.data;
 						app.remark=datas.remark;
 						app.images = datas.images;
@@ -751,6 +775,7 @@
 						app.top = datas.top;
 						// 为了拿到上次选择的商品类型
 						app.type_p = datas.type_p;
+						app.type = datas.type;
 						app.goods_type_text = datas.type_name;
 						app.settlement_price = datas.settlement_price;
 						app.price = datas.price;
@@ -760,6 +785,7 @@
 						app.default_express = datas.default_express;
 						app.express_text = datas.express_name;
 						app.team_ids = datas.team_ids.split(","); //上次选的团队
+						getGoodsType();
 					},
 					error: function(xhr, type, errorThrown) {
 						console.log(JSON.stringify('失败'));

@@ -1,12 +1,12 @@
-$ajaxUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
-$uploadUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
-$videoUrl = 'https://app.wangkeapp.cn//app/index.php?i=6&c=utility&a=file&do=upload&type=video'; //视频上传接口
-$voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
+// $ajaxUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
+// $uploadUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
+// $videoUrl = 'https://app.wangkeapp.cn//app/index.php?i=6&c=utility&a=file&do=upload&type=video'; //视频上传接口
+// $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
 
-// $ajaxUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
-// $uploadUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
-// $videoUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=video'; //视频上传接口
-// $voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
+$ajaxUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do='; //服务器数据请求接口
+$uploadUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=image'; //图片上传接口
+$videoUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=video'; //视频上传接口
+$voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
 
 $debug = true;
 $videoMaxSize = 10 * 1024 * 1024;
@@ -657,6 +657,7 @@ function pushInit() {
 			if (typeof(msg.payload) == 'string') {
 				msg.payload = JSON.parse(msg.payload);
 			}
+			logs(msg.payload);
 			pushCallback(msg.payload, 'receive');
 		} catch (e) {
 			var imei = plus.device.imei;
@@ -694,8 +695,8 @@ function pushCallback(data, event) {
 	var type = data.type;
 	var url = data.url;
 	var extra = data.extra;
-	// logs(type);
-	// logs(url);
+	logs(type);
+	logs(url);
 	// logs(extra);
 	// logs(event);
 	// logs(data);
@@ -739,6 +740,8 @@ function pushCallback(data, event) {
 				mui.fire(plus.webview.getWebviewById('media'), 'activationSuccess');
 			} else if (url == 'logout') {
 				fnLogout();
+			} else if (url == 'timelineNotice') {
+				mui.fire(plus.webview.getWebviewById('media'), 'timelineNoticeRefresh');
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
@@ -791,6 +794,8 @@ function pushCallback(data, event) {
 				data.times++;
 				pushMessage(data.content, data);
 			}
+		} else if (url == 'timelineNotice') {
+			mui.fire(plus.webview.getWebviewById('media'), 'timelineNoticeRefresh');
 		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}

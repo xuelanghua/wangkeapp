@@ -842,7 +842,7 @@
 									discoverInfo();
 									getDiscoverData();
 									getArticleClassify();
-									 getTrendsNum();
+									getTrendsNum();
 								}
 							}
 						}
@@ -1294,9 +1294,16 @@
 					app.trends_cont = res.data;
 				}, 'json');
 			}
+			
 			// 监听已读消息
 			window.addEventListener('refreshTrendsNum', function(event) {
 				app.trends_cont.total = 0;
+			})
+			
+			// 监听动态消息
+			window.addEventListener('timelineNoticeRefresh', function(event) {
+				console.log('收到消息');
+				getTrendsNum();
 			})
 		</script>
 	</body>
