@@ -12,6 +12,7 @@
 			body,
 			html {
 				background-color: #ededed;
+				touch-action: pan-y;
 			}
 
 			.mui-bar-nav {
@@ -186,7 +187,7 @@
 			<header class="mui-bar mui-bar-nav">
 				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 				<form onsumit="return false">
-					<input id="search" type="search" name="" value="" v-model="keyword" :placeholder="'搜索'+serachTiele" />
+					<input id="search" type="search" name="" value="" v-model="keyword" :placeholder="'搜索'+serachTitle" />
 				</form>
 				<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
 			</header>
@@ -240,7 +241,7 @@
 					}],
 					searchHistory: [],
 					selectClassify: 0,
-					serachTiele: ''
+					serachTitle: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -277,6 +278,8 @@
 								// 点的不是搜索按钮
 							}
 						});
+						document.getElementById("search").focus();
+						plus.key.showSoftKeybord();
 					})
 				}
 			})
@@ -292,18 +295,18 @@
 			function changeClassify(_id, _nm) {
 				if (_id == app.selectClassify) {
 					app.selectClassify = 0;
-					app.serachTiele = '';
+					app.serachTitle = '';
 				} else {
 					app.selectClassify = _id;
-					app.serachTiele = _nm;
+					app.serachTitle = _nm;
 				}
 			}
 			// 开始搜索
 			function startSearch(_id, desc) {
 				openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
 					keyword: app.keyword,
-					classify: app.selectClassify || '0',
-					desc: app.serachTiele || ''
+					classify: app.selectClassify || 0,
+					desc: app.serachTitle || ''
 				}, 'fade-in');
 			}
 			// 添加关键词到搜索记录

@@ -11,13 +11,14 @@
 		<style type="text/css">
 			body,
 			html {
-				background-color: #ededed;
+				background-color: #f9f9f9;
+				touch-action: pan-y;
 			}
 
 			.mui-bar-nav {
 				display: flex;
 				align-items: center;
-				background: #ededed;
+				background: #f9f9f9;
 				box-shadow: none;
 				box-sizing: border-box;
 			}
@@ -76,21 +77,10 @@
 			}
 
 			/* 头部完结 */
-			.headline-cont {
-				height: 69px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: #AAAAAA;
-				font-size: 14px;
-			}
-
-
 			.search-history {
-				height: 69px;
 				color: #999999;
 				font-size: 14px;
-				padding: 40px 15px 0 15px;
+				padding: 20px 15px 0 15px;
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
@@ -135,9 +125,6 @@
 				<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
 			</header>
 			<div class="mui-content">
-				<div class="headline-cont">
-					搜索指定内容
-				</div>
 				<div v-show="searchHistory!=''">
 					<div class="search-history">
 						<span>搜索历史</span>
@@ -197,6 +184,8 @@
 								// 点的不是搜索按钮
 							}
 						});
+						document.getElementById("search").focus();
+						plus.key.showSoftKeybord();
 					})
 				}
 			})
@@ -208,22 +197,11 @@
 					startSearch();
 				}, 100)
 			})
-			// 切换搜索分类
-			function changeClassify(_id, _nm) {
-				if (_id == app.selectClassify) {
-					app.selectClassify = 0;
-					app.serachTiele = '';
-				} else {
-					app.selectClassify = _id;
-					app.serachTiele = _nm;
-				}
-			}
 			// 开始搜索
 			function startSearch(_id, desc) {
-				openPage('home_search_result.html', 'home_search_result', '#f2f2f2', {
+				openPage('business_search_result.html', 'business_search_result', '#ffffff', {
 					keyword: app.keyword,
-					classify: app.selectClassify || '0',
-					desc: app.serachTiele || ''
+					classify: app.selectClassify || 0,
 				}, 'fade-in');
 			}
 			// 添加关键词到搜索记录

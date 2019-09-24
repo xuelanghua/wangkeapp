@@ -11,6 +11,7 @@
 			body,
 			html {
 				background-color: #f2f2f2;
+				touch-action: pan-y;
 			}
 
 			.mui-bar-nav {
@@ -224,7 +225,7 @@
 				line-height: 1;
 			}
 
-			.dynamic-title:before {
+			/* .dynamic-title:before {
 				content: "";
 				display: inline-block;
 				background-color: #2289FF;
@@ -233,7 +234,7 @@
 				width: 18px;
 				height: 18px;
 				position: relative;
-			}
+			} */
 
 			.page-mini-card .dynamic-list {
 				flex-direction: column;
@@ -341,7 +342,12 @@
 				margin-right: 3px;
 				font-weight: 700;
 			}
-
+			.page-mini-card .dynamic-list .dynamic-title .dynamic-header{
+				width: 26px;
+				height: 26px;
+				border-radius: 3px;
+				margin-right: 5px;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -387,6 +393,7 @@
 							<li class="mui-table-view-cell dynamic-list" v-for="(d,i) in timeline_group" :key="i" @tap="openDetail('2',d.id)"
 							 v-if="classify||i<5">
 								<div class="dynamic-title">
+									<img class="dynamic-header" :src="d.user_avatar" >
 									<span class="user-name" v-html="highLight(d.user_name)"></span>
 									<span v-html="highLight(d.create_time)"></span>
 								</div>

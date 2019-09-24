@@ -9,6 +9,10 @@
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link href="icomoon/style.css" rel="stylesheet" />
 		<style>
+			body {
+				padding-top: constant(safe-area-inset-top);
+			}
+			div{ touch-action: pan-y; }
 			.mui-tab-label{
 				font-size: 0.22rem;
 			}
@@ -20,19 +24,17 @@
 				flex-grow: 1;
 				color: #535353;
 			}
-			 *{ touch-action: pan-y; }
-			 
-			 .mui-tab-item p{
+			.mui-tab-item p{
 				margin: 0;
 				padding: 0;
-			  }
-			  .mui-tab-item.self-active span{
-				  color: #2289ff;
-			  } 
-			  .mui-tab-item.mui-active span{
-				  color: #929292;
-			  }
-			  
+			}
+			 
+			.mui-tab-item.mui-active span{
+			  color: #929292;
+			}
+			.mui-tab-item.self-active span{
+			  color: #2289ff;
+			} 
 			.mui-tab-item .mui-badge {
 				position: absolute;
 				width: auto;
@@ -55,17 +57,11 @@
 				-webkit-box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
 				box-shadow: 0 0 0 0.5px rgba(0,0,0,0.2) inset;
 			}
-			body {
-				padding-top: constant(safe-area-inset-top);
-			}
 			.mui-bar.mui-bar-nav {
 			   top: constant(safe-area-inset-top);
 			}
 			[v-cloak] {
 				display: none;
-			}
-			#index{
-				/* display: none; */
 			}
 		</style>
 		<script type="text/javascript">
@@ -110,7 +106,7 @@
 						render: "always",
 						statusbar: {
 							background: "#FFFFFF"
-						} 
+						}
 					}
 				}, {
 					url: "html/business_pulse.html",
@@ -201,7 +197,7 @@
 							icon: 'icon-home-page',
 							selected: 'icon-home-page-s',
 							selected: true
-						},{
+						}, {
 							title: "商脉",
 							id: 'business_pulse',
 							icon: 'icon-shangmai',
@@ -242,7 +238,7 @@
 						var loginTime = parseInt((currentTime - lastLoginTime) / 1000);
 						var isExpire = loginTime > (60 * 60 * 24 * 5) ? true : false;
 						if (lastLoginTime && isExpire) {
-							message('账号登录过期,重新登录');
+							message('账号登录过期,重新登录'); 
 						}
 						if (!userInfo || isExpire) {
 							login();
