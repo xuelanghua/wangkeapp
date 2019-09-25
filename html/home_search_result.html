@@ -689,12 +689,25 @@
 				} else if (typ == '5') {
 					logs(obj);
 					// 商品 个人商品 团队商品 总仓商品
-					if (obj.is_team_goods == 0) {
+					if (obj.uid > 0 && obj.is_team_goods == 0) {
 						// 个人商品
 						openPage('personal_goods_detail.html', 'personal_goods_detail', '#f7f7f7', {
 							gid: obj.id
 						});
-					} else {
+					} else if (obj.uid > 0 && obj.is_team_goods == 1) {
+						// 是否加入团队
+						if (obj.has_joined_team == 1) {
+							// 团队商品
+							openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+								gid: obj.id
+							});
+						} else {
+							// 团队商品 未加入
+							openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+								gid: obj.id
+							});
+						}
+					} else if (obj.uid == 0) {
 						// 是否加入团队
 						if (obj.has_joined_team == 1) {
 							// 团队商品

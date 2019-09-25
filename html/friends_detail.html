@@ -313,7 +313,7 @@
 			<h5 class="personality-desc">主推商品</h5>
 			<div class="goods-window">
 				<ul class="goods-lists" v-if="friendData.goods !== undefined && friendData.goods.length >0 ">
-					<li class="goods-item" v-for="(goods,index) in friendData.goods" :key="index" @tap="openIngMiniprogram(goods.id)">
+					<li class="goods-item" v-for="(goods,index) in friendData.goods" :key="index" @tap="openIngMiniprogram(goods.id, goods.uid, goods.is_team_goods)">
 						<div class="goods-img">
 							<img :src="goods.cover">
 						</div>
@@ -571,14 +571,14 @@
 			}
 
 			//打开个人商品相详情
-			function openIngMiniprogram(goodsId) {
-				var beforeWv = plus.webview.getWebviewById('team_goods_detail');
+			function openIngMiniprogram(goodsId, uid, isTeamGoods) {
+				var beforeWv = plus.webview.getWebviewById('goods_details');
 				plus.webview.hide(beforeWv);
 				plus.webview.close(beforeWv);
 				setTimeout(function() {
-					openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+					openPage('goods_details.html', 'goods_details', '#f7f7f7', {
 						gid: goodsId
-					})
+					});
 				}, 200);
 			}
 			// 音频播放
