@@ -89,7 +89,7 @@
 			.mui-bar-nav~.mui-content {
 				padding-top: 86px;
 				background-color: #ffffff;
-				min-height: 100vh;
+				/* min-height: 100vh; */
 			}
 
 			.mui-bar.mui-bar-nav {
@@ -607,6 +607,7 @@
 
 			.goods-container.active .goods-info {
 				padding: 0.1rem;
+				width: 100%;
 			}
 
 			.goods-container.active .mui-table-view-cell:after {
@@ -617,10 +618,26 @@
 				width: 100%;
 				height: 3.31rem;
 			}
-			.mui-plus-pullrefresh .mui-pull-bottom-pocket{
-				background-color: #f2f2f2;
+
+			.mui-plus-pullrefresh .mui-pull-bottom-pocket {
+				background-color: transparent;
 				font-weight: 400;
 			}
+			.void-data-tips{
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				overflow: hidden;
+				padding-top: 20%;
+				background-color: #efeff4;
+			}
+			.void-data-tips img{
+				width: 50%;
+				height: auto;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -674,28 +691,33 @@
 			</header>
 			<!-- 内容区 -->
 			<div class="mui-content">
-				<div class="goods-container" :class="listStyle?'':'active'">
+				<div v-show="!isVoid" class="goods-container" :class="listStyle?'':'active'">
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell" v-for="i in 11">
+						<li class="mui-table-view-cell" v-for="(g,i) in goods_list" @tap="openGoodsDetail(g)">
 							<div class="goods-img">
-								<img src="../image/5E0eH.png">
+								<img :src="g.cover">
 							</div>
 							<div class="goods-info">
 								<div class="goods-title">
 									<p class="mui-ellipsis-2">
-										棉田园风风四件套全棉
+										{{g.name}}
 									</p>
 								</div>
-								<div class="price">提成：&yen;50.00</div>
+								<div class="price" v-if="g.commission">提成：&yen;{{g.commission}}</div>
+								<div class="price" v-else>&yen;{{g.price}}</div>
 								<!-- 官方 -->
-								<!-- <img class="sign" src="../image/discover/official-sign.png"> -->
+								<img v-if="g.type=='wangke'" class="sign" src="../image/discover/official-sign.png">
 								<!-- 个人 -->
-								<div class="source-cont">店长：马飞飞<span class="mui-icon mui-icon-arrowright"></span></div>
+								<div v-else-if="g.type=='person'" class="source-cont">店长：{{g.admin}}<span class="mui-icon mui-icon-arrowright"></span></div>
 								<!-- 团队 -->
-								<div class="source-cont mui-hidden">团队：蓝精灵<span class="mui-icon mui-icon-arrowright"></span></div>
+								<div v-else class="source-cont">团队：{{g.team_info[0].name}}<span class="mui-icon mui-icon-arrowright"></span></div>
 							</div>
 						</li>
 					</ul>
+				</div>
+				<div class="void-data-tips" v-show="isVoid">
+					<img src="../image/icon/void-seach-result.png" >
+					<p>没有找到内容哟~</p>
 				</div>
 			</div>
 		</div>
@@ -706,32 +728,34 @@
 		<script type="text/javascript">
 			var userInfo = getUserInfo(),
 				skip = 1,
-				limit = 6,
-				refresh = "";
+				limit = 10,
+				refresh = "",
+				buffer = [];
 			var mask = mui.createMask(function() {
 				app.isCategory = false;
 			});
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
+					isVoid: false,
 					goods_list: [],
 					keyword: '',
-					has_more: false,
-					currentId: '',
+					currentId: 1,
 					currentCategory: 1,
 					currentTitle: '全部',
 					pageTitle: '商脉',
 					listStyle: true,
 					searchHistory: [],
 					isCategory: false,
+					types: '',
 					options: [{
-						title: "销量",
+						title: "综合",
 						id: "1"
 					}, {
-						title: "价格",
+						title: "销量",
 						id: "2"
 					}, {
-						title: "好评度",
+						title: "价格",
 						id: "3"
 					}],
 					category: [{
@@ -758,18 +782,52 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-					openGoodsDetail: function(gid) {
-						openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
-							gid: gid
-						})
+					// 打开产品详情
+					openGoodsDetail: function(e) {
+						// 商品 个人商品  团队商品 旺客总仓
+						if (e.uid > 0 && e.is_team_goods == 0) {
+							// 个人商品
+							openPage('personal_goods_detail.html', 'personal_goods_detail', '#f7f7f7', {
+								gid: e.id
+							}); 
+						} else if (e.uid > 0 && e.is_team_goods == 1) {
+							// 是否加入团队
+							if (e.has_joined_team == 1) {
+								// 团队商品
+								openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+									gid: e.id
+								});
+							} else {
+								// 团队商品 未加入
+								openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+									gid: e.id
+								});
+							}
+						} else if (e.uid == 0) {
+							// 是否加入团队
+							if (e.has_joined_team == 1) {
+								// 团队商品
+								openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+									gid: e.id
+								});
+							} else {
+								// 团队商品 未加入
+								openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+									gid: e.id
+								});
+							}
+						}
 					},
 					// 点击筛选
 					filtrateGoods: function(_id) {
 						if (app.currentId == _id) {
-							app.currentId = '';
-						} else {
-							app.currentId = _id;
+							return false;
 						}
+						skip = 1;
+						mui('#mui-content').pullRefresh().refresh(true);
+						refresh = 'down';
+						app.currentId = _id;
+						getGoodsList();
 					},
 					changeCategory: function(_id, _nm) {
 						app.currentCategory = _id;
@@ -818,6 +876,15 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						plus.navigator.setStatusBarStyle("dark");
+						if (self.detail) {
+							app.pageTitle = self.detail.title;
+							app.types = self.detail.id;
+						}
+						if(self.keyword){
+							app.keyword=self.keyword;
+							mui(".menu-cont")[0].classList.add("active");
+						}
+						getGoodsList();
 						// 获取搜索记录
 						var searchHistory = JSON.parse(plus.storage.getItem('buisnesHistory'));
 						if (searchHistory) {
@@ -840,14 +907,16 @@
 										mui.fire(plus.webview.currentWebview().opener(), 'renewal', {
 											searchHistory: app.searchHistory
 										});
+										getGoodsList();
 									} else {
 										plus.storage.setItem('buisnesHistory', JSON.stringify(app.searchHistory));
 										mui.fire(plus.webview.currentWebview().opener(), 'renewal', {
 											searchHistory: app.searchHistory
 										});
+										getGoodsList();
 									}
 								} else {
-									startSearch();
+									getGoodsList();
 								}
 								// 阻止页面刷新
 								event.preventDefault();
@@ -866,13 +935,14 @@
 			mui(".mui-bar").on('tap', ".mui-icon-search", function() {
 				mui(".menu-cont")[0].classList.add("active");
 				mui(".search-cont input")[0].focus();
-				app.isCategory = false;
-				mask.show();
+				mask.close();
 			})
 			// 取消搜索
 			mui(".mui-bar").on('tap', ".cancel-btn", function() {
+				app.keyword = '';
 				mui(".menu-cont")[0].classList.remove("active");
 				mui(".search-cont input")[0].blur();
+				getGoodsList();
 				mask.close();
 			})
 			// 显示仓库选择
@@ -886,37 +956,51 @@
 			})
 			// 确认仓库选择
 			mui(".mui-bar").on('tap', ".right-btn", function(e) {
+				skip = 1;
+				mui('#mui-content').pullRefresh().refresh(true);
+				refresh = 'down';
+				getGoodsList();
 				mask.close();
-				logs(app.currentId);
-				logs(app.currentCategory);
 			})
 			// 获取产品列表
 			function getGoodsList() {
-				setTimeout(function() {
-					if(refresh=='up'){
-						mui('#mui-content').pullRefresh().endPullupToRefresh(false);
-						// mui('#mui-content').pullRefresh().endPullupToRefresh(true);
-					}else if(refresh=='down'){
-						mui('#mui-content').pullRefresh().endPulldownToRefresh();
-					}
-				}, 1500);
-				return false;
-				mui.post($ajaxUrl + 'goods', {
+				mui.post($ajaxUrl + 'business', {
+					action: 'type_goods_list',
+					type: app.types,
+					goods_type: app.currentCategory,
 					token: userInfo.token,
-					action: 'team_goods_list',
-					goods_name: app.keyword,
+					sort_type: app.currentId,
+					keyword: app.keyword,
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					// logs(res);
-					if (res.errno == 0) {} else {}
+					logs(res);
+					if (res.errno == 0) {
+						if (refresh == '') {
+							app.goods_list = res.data;
+						} else if (refresh == 'down') {
+							app.goods_list = res.data;
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						} else if (refresh == 'up') {
+							app.goods_list = app.goods_list.concat(res.data);
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						}
+						app.isVoid = false;
+					} else {
+						if (skip == 1) {
+							app.isVoid = true;
+						}
+						// 加载失败
+						if (refresh == 'down') {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						} else if (refresh == 'up') {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else {
+							// 加载失败
+						}
+					}
 				}, 'json');
 			}
-			// 加载更多
-			mui(".mui-content").on("tap", ".loading-more", function() {
-				skip += 1;
-				getGoodsList();
-			})
 		</script>
 	</body>
 

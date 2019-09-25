@@ -348,6 +348,13 @@
 				border-radius: 3px;
 				margin-right: 5px;
 			}
+			.page-mini-card-goods .team-info .team-info-btm .blue-btn{
+				background-color: #2289FF;
+				color: #FFFFFF;
+				padding: 0 5px;
+				border-radius: 20px;
+				line-height: 1.4;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -479,10 +486,10 @@
 									<div class="team-info-btm">
 										<span class="profit-sign" v-if="g.settlement_price!=0">提成：&yen;{{g.settlement_price}}</span>
 										<span class="profit-sign" v-else>&yen;{{g.price}}</span>
-										<span v-if="g.type=='person'">{{g.admin}}</span>
-										<span v-if="g.is_team_goods=='1'">团队：{{g.team_info[0].name}}</span>
-										<!-- <img class="sign-img" src="../image/discover/official-sign.png"> -->
+										<span class="blue-btn mui-ellipsis" v-if="g.type=='person'">店长：{{g.admin}}</span>
+										<span class="blue-btn mui-ellipsis" v-if="g.is_team_goods=='1'">团队：{{g.team_info[0].name}}</span>
 									</div>
+									<img v-if="g.type=='wangke'" class="sign-img" src="../image/discover/official-sign.png">
 								</div>
 							</li>
 							<li class="mui-table-view-cell more-result-item" v-if="!classify&&goods_group.length>=5" @tap="openMore('商品',goods_group)">
