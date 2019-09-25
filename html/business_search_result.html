@@ -450,6 +450,7 @@
 				font-size: 20px;
 				color: #999999;
 			}
+
 			.cancel-btn {
 				height: 36px;
 				width: 40px;
@@ -484,7 +485,7 @@
 			.change-list-cont {
 				height: 100%;
 				padding: 0 15px;
-				margin-right: -5px;
+				margin-right: -10px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -616,7 +617,10 @@
 				width: 100%;
 				height: 3.31rem;
 			}
-
+			.mui-plus-pullrefresh .mui-pull-bottom-pocket{
+				background-color: #f2f2f2;
+				font-weight: 400;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -628,7 +632,7 @@
 				<div class="title-container">
 					<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 					<h1 class="mui-title">{{pageTitle}}</h1>
-					<div class="change-list-cont">
+					<div class="change-list-cont" @tap="listStyle = !listStyle">
 						<img v-show="listStyle" class="change-list-style" src="../image/icon/list-style-icon.png">
 						<img v-show="!listStyle" class="change-list-style" src="../image/icon/card-style-icon.png">
 					</div>
@@ -645,16 +649,16 @@
 							</form>
 						</div>
 						<div class="screen-cont">
-							<div class="screen-item" :class="[currentIndex==t.id?'active':'']" v-for="(t,i) in options" @tap="filtrateGoods(i,t.id)">{{t.title}}<span
-								 v-if="t.id==4" class="mui-icon" :class="currentIndex==3?'mui-icon-arrowup':'mui-icon-arrowdown'"></span></div>
+							<div class="screen-item" :class="[currentId==t.id?'active':'']" v-for="(t,i) in options" @tap="filtrateGoods(t.id)">{{t.title}}</div>
+							<div class="screen-item last-options">{{currentTitle}}<span class="mui-icon" :class="isCategory?'mui-icon-arrowdown':'mui-icon-arrowup'"></span></div>
 						</div>
 					</div>
 					<!-- 下拉仓库选择 -->
-					<div class="team-select">
+					<div class="team-select" :class="isCategory?'active':''">
 						<div class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<ul class="mui-table-view">
-									<li class="mui-table-view-cell team-list" :class="[c.id==currentId?'active':'']" v-for="(c,i) in category"
+									<li class="mui-table-view-cell team-list" :class="[c.id==currentCategory?'active':'']" v-for="(c,i) in category"
 									 @tap="changeCategory(c.id,c.title)" :key="i">
 										<span>{{c.title}}</span>
 									</li>
@@ -705,23 +709,21 @@
 				limit = 6,
 				refresh = "";
 			var mask = mui.createMask(function() {
-				$('.team-select').removeClass("active");
+				app.isCategory = false;
 			});
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					classified: [],
 					goods_list: [],
-					void_tips: false,
-					keyword:'',
-					ltype: 1,
-					sort_type: '',
+					keyword: '',
 					has_more: false,
-					currentIndex: 0,
-					currentId: 0,
+					currentId: '',
+					currentCategory: 1,
+					currentTitle: '全部',
 					pageTitle: '商脉',
-					listStyle: false,
-					searchHistory:[],
+					listStyle: true,
+					searchHistory: [],
+					isCategory: false,
 					options: [{
 						title: "销量",
 						id: "1"
@@ -731,22 +733,19 @@
 					}, {
 						title: "好评度",
 						id: "3"
-					}, {
-						title: "全部",
-						id: "4"
 					}],
 					category: [{
 						title: "全部",
-						id: "4"
+						id: "1"
 					}, {
 						title: "个人",
-						id: "5"
+						id: "2"
 					}, {
 						title: "企业仓",
-						id: "6"
+						id: "3"
 					}, {
 						title: "旺客总仓",
-						id: "7"
+						id: "4"
 					}]
 				},
 				created: function() {
@@ -765,32 +764,50 @@
 						})
 					},
 					// 点击筛选
-					filtrateGoods: function(idx, _id) {
-						if (_id == 4) {
-							app.currentIndex = _id;
-							mask.show();
-							$('.team-select').addClass("active");
-							return false;
-						}
-						mask.close();
-						if (app.currentIndex == _id) {
-							app.currentIndex = '-1';
+					filtrateGoods: function(_id) {
+						if (app.currentId == _id) {
+							app.currentId = '';
 						} else {
-							app.currentIndex = _id;
 							app.currentId = _id;
 						}
-
 					},
 					changeCategory: function(_id, _nm) {
-						app.currentId = _id;
-						app.options[3].title = _nm;
+						app.currentCategory = _id;
+						app.currentTitle = _nm;
 					}
 				},
 				mounted: function() {
-					mui(".mui-scroll-wrapper").scroll().refresh();
 					mui.init({
 						swipeBack: false,
+						keyEventBind: {
+							menubutton: false,
+						},
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									refresh = "up";
+									skip += 1;
+									getGoodsList();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									refresh = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getGoodsList();
+								}
+							}
+						}
 					});
+					mui(".mui-scroll-wrapper").scroll().refresh();
 					// 初始化两次防止页面乱
 					var viewport = document.documentElement.clientWidth;
 					if (viewport > 750) {
@@ -849,7 +866,7 @@
 			mui(".mui-bar").on('tap', ".mui-icon-search", function() {
 				mui(".menu-cont")[0].classList.add("active");
 				mui(".search-cont input")[0].focus();
-				app.currentIndex = -1;
+				app.isCategory = false;
 				mask.show();
 			})
 			// 取消搜索
@@ -857,6 +874,11 @@
 				mui(".menu-cont")[0].classList.remove("active");
 				mui(".search-cont input")[0].blur();
 				mask.close();
+			})
+			// 显示仓库选择
+			mui(".mui-bar").on('tap', ".last-options", function(e) {
+				app.isCategory = true;
+				mask.show();
 			})
 			// 取消仓库选择
 			mui(".mui-bar").on('tap', ".left-btn", function(e) {
@@ -866,61 +888,34 @@
 			mui(".mui-bar").on('tap', ".right-btn", function(e) {
 				mask.close();
 				logs(app.currentId);
+				logs(app.currentCategory);
 			})
-			// 获取商品类型
-			function getGoodsType() {
-				mui.post($ajaxUrl + 'goods', {
-					action: 'goods_category',
-					token: userInfo.token
-				}, function(res) {
-					// logs(res);
-					if (res.errno == 0) {
-						app.classified = res.data;
-					}
-				}, 'json');
-			}
-
 			// 获取产品列表
 			function getGoodsList() {
+				setTimeout(function() {
+					if(refresh=='up'){
+						mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						// mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+					}else if(refresh=='down'){
+						mui('#mui-content').pullRefresh().endPulldownToRefresh();
+					}
+				}, 1500);
+				return false;
 				mui.post($ajaxUrl + 'goods', {
 					token: userInfo.token,
 					action: 'team_goods_list',
-					type: app.ltype,
-					sort_type: app.sort_type,
 					goods_name: app.keyword,
-					team: app.team.join(','),
 					skip: skip,
 					limit: limit
 				}, function(res) {
 					// logs(res);
-					if (res.errno == 0) {
-						if (skip == 1) {
-							app.goods_list = res.data;
-							// if (refresh == 'down') {
-							// 	mui('#segmentedControlContents').pullRefresh().endPulldownToRefresh();
-							// }
-						} else {
-							app.goods_list = app.goods_list.concat(res.data);
-							// mui('#segmentedControlContents').pullRefresh().endPullupToRefresh(false);
-						}
-						app.void_tips = false;
-						app.has_more = res.extra.has_more;
-					} else {
-						app.has_more = false;
-						if (skip == 1) {
-							app.goods_list = [];
-							app.void_tips = true;
-						}
-					}
+					if (res.errno == 0) {} else {}
 				}, 'json');
 			}
 			// 加载更多
 			mui(".mui-content").on("tap", ".loading-more", function() {
 				skip += 1;
 				getGoodsList();
-			})
-			mui('.mui-bar').on('tap', '.change-list-style', function() {
-				app.listStyle = !app.listStyle;
 			})
 		</script>
 	</body>

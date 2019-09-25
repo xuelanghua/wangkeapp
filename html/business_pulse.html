@@ -104,14 +104,16 @@
 			.mui-segmented-control .mui-control-item {
 				line-height: 50px;
 				width: 100%;
-				color: #999999 !important;
+				color: #666666 !important;
 				font-size: 0.26rem;
 				border: none !important;
+				position: relative;
 			}
 
 			.mui-segmented-control .mui-control-item.mui-active {
-				color: #333333 !important;
+				color: #000000 !important;
 				background-color: #FFFFFF !important;
+				font-weight: 700;
 			}
 
 			.mui-plus-pullrefresh .mui-pull-bottom-pocket {
@@ -170,15 +172,48 @@
 				width: auto;
 				height: 100%;
 			}
-			.category-img-cont{
+
+			.category-img-cont {
 				width: 100%;
 				height: 55px;
 				overflow: hidden;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin-bottom:5px;
+				margin-bottom: 5px;
 			}
+
+			.mui-segmented-control .mui-control-item {
+				overflow: hidden;
+			}
+
+			.mui-segmented-control .mui-control-item:before {
+				content: '';
+				width: 4px;
+				background-color: #FF0000;
+				display: inline-block;
+				position: absolute;
+				height: 0;
+				-webkit-transition: all 0.25s ease-in-out;
+				transition: all 0.25s ease-in-out;
+				left: -8px;
+				height: 50%;
+				top: 25%;
+				z-index: 1;
+				border-top-right-radius: 6px;
+				border-bottom-right-radius: 6px;
+				box-shadow: 0 0 1px 1px #f2f2f2;
+			}
+
+			.mui-segmented-control .mui-control-item.mui-active:before {
+				left: -1px;
+			}
+
+			.mui-segmented-control .mui-control-item span {
+				position: relative;
+				z-index: 5;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -203,10 +238,11 @@
 					<!-- 左侧分类 -->
 					<div class="mui-col-xs-3">
 						<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
-							<span class="mui-control-item mui-active" @tap="switchCls(0)">爆款</span>
-							<span class="mui-control-item" v-for="(c,i) in category" :key="i" @tap="switchCls(c.id)">
-								{{c.title}}
-							</span>
+							<div class="mui-control-item" :class="chooseCls==c.id?'mui-active':''" v-for="(c,i) in category" :key="i" @tap="switchCls(c.id)">
+								<span>
+									{{c.title}}
+								</span>
+							</div>
 						</div>
 					</div>
 					<!-- 右侧内容 -->
@@ -328,7 +364,7 @@
 						img: '../image/administration1.png',
 						id: 9
 					}],
-					chooseCls: 0
+					chooseCls: 1
 				},
 				created: function() {
 					// 初始化字体大小
@@ -340,8 +376,8 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-					switchCls: function(idx) {
-						app.chooseCls = idx;
+					switchCls: function(_id) {
+						app.chooseCls = _id;
 					}
 				},
 				mounted: function() {
@@ -354,6 +390,7 @@
 			mui('#mui-content').on('tap', '.search-cont', function() {
 				openPage('business_pulse_search.html', 'business_pulse_search', '#f9f9f9');
 			})
+			// 获取分类以及广告
 		</script>
 	</body>
 
