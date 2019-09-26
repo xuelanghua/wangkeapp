@@ -177,9 +177,9 @@
 				font-size: 0.24rem;
 			}
 
-			.search-cont form {
+			.search-cont .form-container {
+				height: 100%;
 				display: flex;
-				align-items: center;
 				position: relative;
 				width: 100%;
 				justify-content: flex-end;
@@ -191,6 +191,7 @@
 				position: absolute;
 				font-size: 20px;
 				color: #999999;
+				margin-top: 1px;
 			}
 
 			.mui-action-back.mui-icon.mui-icon-left-nav {
@@ -228,7 +229,7 @@
 			}
 
 			.mui-bar-nav.mui-bar .mui-icon-search {
-				margin: 0;
+				margin: 10px 0 0;
 				padding: 0;
 			}
 
@@ -242,7 +243,6 @@
 				height: 0;
 				width: 0;
 				flex-shrink: 0;
-
 			}
 
 			.search-cont.active .cancel-btn {
@@ -448,8 +448,8 @@
 						<span id="team_name">{{teamName}}</span>
 						<span class="mui-icon" :class="clsName"></span>
 					</div>
-					<div class="mui-input-row search-cont" :class="[isSearch?'active':'']">
-						<form action="" onsumit="return false">
+					<div class="mui-input-row search-cont" :class="[isSearch?'active':'']"> 
+						<form class="form-container" action="" onsumit="return false" >
 							<span class="mui-icon mui-icon-search"></span>
 							<input class="search-input" v-model="keyword" type="search" id="search" placeholder="输入团队名称">
 							<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
