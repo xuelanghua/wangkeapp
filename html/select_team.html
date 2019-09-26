@@ -10,35 +10,33 @@
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
 			body {
-				background-color: rgba(0,0,0,0) !important;
+				background-color: transparent;
 				height: 100%;
 				width: 100%;
 			}
 
 			.mui-content {
-				background-color: rgba(0,0,0,0) !important;
-				padding-bottom: 44px;
-				margin-top: 44px;
-				position: absolute;
+				background-color: transparent;
+				padding-top: 44px;
+				position: relative;
 				width: 100%;
-				height: 100%;
+				height: 260px;
 				box-sizing: border-box;
 			}
 
 			.team-list {
+				position: absolute;
 				width: 100%;
 				height: 100%;
 				background-color: #FFFFFF;
 				border-bottom-left-radius: 10px;
 				border-bottom-right-radius: 10px;
-				overflow-y: scroll;
-				overflow-x: hidden;
+				overflow: hidden;
 				padding: 0 10px;
-				box-shadow: 0 3px 3px 0 rgba(0, 0, 0, .2);
+				/* box-shadow: 0 3px 3px 0 rgba(0, 0, 0, .2); */
 			}
 
 			.team-list ul {
-				overflow-y: scroll;
 				background-color: transparent !important;
 			}
 
@@ -69,7 +67,10 @@
 				background-color: #f9f9f9;
 				color: #2289FF;
 			}
-
+			.mui-bar.mui-bar-nav{
+				/* background-color: transparent; */
+				background-color: #FFFFFF;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -77,14 +78,21 @@
 	</head>
 
 	<body>
-		<div id="mui-content" v-cloak>
-			<div class="mui-content">
-				<div class="team-list">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell" :class="t.is_default==1?'active':''" v-for="(t,i) in teamList" @tap="choiceThis(t,i)">
-							{{t.name}}
-						</li>
-					</ul>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title"></h1>
+		</header>
+		<div class="mui-content" id="mui-content" v-cloak>
+			<div class="team-list">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<!-- <li class="mui-table-view-cell" :class="t.is_default==1?'active':''" v-for="(t,i) in teamList" @tap="choiceThis(t,i)"> -->
+							<li class="mui-table-view-cell" :class="t.is_default==1?'active':''" v-for="(t,i) in 20" @tap="choiceThis(t,i)">
+								<!-- {{t.name}} -->
+								数据中心
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -131,16 +139,19 @@
 					// 重写返回咯
 					mui.back = function() {
 						mui.fire(plus.webview.getWebviewById('team_list'), 'choiceName', {
-							names:null
+							names: null
 						});
 					}
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.teamList = self.team_list;
+						mui('.mui-scroll-wrapper').scroll({
+							deceleration: 0.0006,
+							indicators: false,
+						});
 					})
 				}
 			})
-			
 		</script>
 	</body>
 
