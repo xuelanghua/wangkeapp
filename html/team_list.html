@@ -101,11 +101,7 @@
 			}
 
 			.team-list-container .operation-section {
-				z-index: 10;
-			}
-
-			.mui-backdrop {
-				background-color: rgba(0, 0, 0, 0);
+				z-index: 6;
 			}
 
 			/* 搜索框 */
@@ -181,9 +177,9 @@
 				font-size: 0.24rem;
 			}
 
-			.search-cont form {
+			.search-cont .form-container {
+				height: 100%;
 				display: flex;
-				align-items: center;
 				position: relative;
 				width: 100%;
 				justify-content: flex-end;
@@ -195,6 +191,7 @@
 				position: absolute;
 				font-size: 20px;
 				color: #999999;
+				margin-top: 1px;
 			}
 
 			.mui-action-back.mui-icon.mui-icon-left-nav {
@@ -232,7 +229,7 @@
 			}
 
 			.mui-bar-nav.mui-bar .mui-icon-search {
-				margin: 0;
+				margin: 10px 0 0;
 				padding: 0;
 			}
 
@@ -246,7 +243,6 @@
 				height: 0;
 				width: 0;
 				flex-shrink: 0;
-				
 			}
 
 			.search-cont.active .cancel-btn {
@@ -264,6 +260,173 @@
 			.void-data-tips img {
 				width: 100%;
 			}
+
+			.mui-backdrop {
+				position: fixed;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				z-index: 998;
+				background-color: rgba(0, 0, 0, .3);
+			}
+
+			/* 新的 */
+			.team-select {
+				top: -280px;
+				position: absolute;
+				left: 0;
+				width: 100%;
+				background-color: #F9F9F9;
+				height: 210px;
+				padding: 0;
+				overflow: hidden;
+				-webkit-transition: all 0.25s ease-in-out;
+				transition: all 0.25s ease-in-out;
+				display: block;
+				padding-bottom: 44px;
+				z-index: 9;
+				border-bottom-left-radius: 10px;
+				border-bottom-right-radius: 10px;
+			}
+
+			.team-select.active {
+				top: 44px;
+				padding-top: 5px;
+			}
+
+			.team-select:before {
+				content: '';
+				width: 100%;
+				/* box-shadow: 0 1px 5px 1px rgba(0, 0, 0, .2); */
+				-webkit-box-shadow: 0 1px 6px 1px #ccc;
+				box-shadow: 0 1px 6px 1px #ccc;
+				height: 0;
+				display: block;
+				background: #0062CC;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 9;
+			}
+
+			.team-select .mui-table-view {
+				background: transparent;
+			}
+
+			.mui-table-view:before,
+			.team-select .mui-table-view:after {
+				height: 0;
+			}
+
+			.team-select .mui-table-view-cell {
+				text-align: center;
+			}
+
+			.team-select .mui-table-view-cell.mui-active {
+				background-color: #f2f2f2;
+			}
+
+			.team-select .mui-table-view-cell:after {
+				left: 10px;
+				right: 0;
+				background-color: #F1F1F1;
+			}
+
+			.mui-backdrop {
+				z-index: 9;
+			}
+
+			.team-list {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 14px;
+				position: relative;
+				padding: 10px;
+				background-color: #F9F9F9;
+			}
+
+			.team-list.active {
+				color: #F5CA3A;
+			}
+
+			.team-list.active span {
+				display: inline-flex;
+				position: relative;
+				font-size: 14px;
+			}
+
+			.team-list.active span:after {
+				content: '';
+				display: inline-block;
+				width: 18px;
+				height: 15px;
+				position: absolute;
+				background: url('../image/icon/draw-icono.png')center center no-repeat;
+				background-size: contain;
+				right: -25px;
+			}
+
+			.bottom-btn {
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				height: 44px;
+				background-color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				z-index: 10;
+			}
+
+			.bottom-btn:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				width: 100%;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.bottom-btn div {
+				width: 50%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+				color: #333333;
+				font-size: 0.3rem;
+			}
+
+			.mui-scroll-wrapper {
+				bottom: 44px;
+			}
+
+			.bottom-btn .right-btn {
+				color: #F5CA3A;
+			}
+
+			.bottom-btn .right-btn:before {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				left: 0;
+				width: 1px;
+				height: 80%;
+				background-color: #DDDDDD;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+
+			.mui-bar {
+				z-index: 1045;
+				padding: 0;
+			}
 		</style>
 		<script>
 			// 初始化字体大小
@@ -279,18 +442,37 @@
 	<body>
 		<div id="mui-content" v-cloak>
 			<header class="mui-bar mui-bar-nav">
-				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-				<div class="mui-title choice-team" :class="[isSearch?'active':'']">
-					<span id="team_name">{{teamName}}</span>
-					<span :class="clsName"></span>
+				<div style="display: flex;position: relative; padding: 0 10px; z-index: 1045; background: #F7F7F7; align-items: center ;height: 44px; width: 100%;justify-content: space-between;">
+					<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+					<div class="mui-title choice-team" :class="[isSearch?'active':'']">
+						<span id="team_name">{{teamName}}</span>
+						<span class="mui-icon" :class="clsName"></span>
+					</div>
+					<div class="mui-input-row search-cont" :class="[isSearch?'active':'']"> 
+						<form class="form-container" action="" onsumit="return false" >
+							<span class="mui-icon mui-icon-search"></span>
+							<input class="search-input" v-model="keyword" type="search" id="search" placeholder="输入团队名称">
+							<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
+							<span class="cancel-btn">取消</span>
+						</form>
+					</div>
 				</div>
-				<div class="mui-input-row search-cont" :class="[isSearch?'active':'']">
-					<form action="" onsumit="return false">
-						<span class="mui-icon mui-icon-search"></span>
-						<input class="search-input" v-model="keyword" type="search" id="search" placeholder="输入团队名称">
-						<span class="mui-icon mui-icon-clear" v-show="keyword" @tap="keyword=''"></span>
-						<span class="cancel-btn">取消</span>
-					</form>
+				<!-- 下拉仓库选择 -->
+				<div class="team-select" :class="teamShow?'active':''">
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell team-list" :class="c.is_default==1?'active':''" v-for="(c,i) in allTeam"
+								 @tap="changeTeam(c,i)">
+									<span>{{c.name}}</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="bottom-btn">
+						<div class="left-btn">取消</div>
+						<div class="right-btn">确定</div>
+					</div>
 				</div>
 			</header>
 
@@ -398,9 +580,9 @@
 			var team_list = [],
 				teams = null,
 				team_type = "",
+				selsctName = '',
 				mask = mui.createMask(function() {
-					teams.hide("slide-out-top");
-					plus.navigator.setStatusBarStyle('dark');
+					app.teamShow = false;
 				});
 			mui.init({
 				swipeBack: true,
@@ -426,8 +608,11 @@
 					teamName: '旺客',
 					keyword: '',
 					isSearch: false,
-					void_seach: false
+					void_seach: false,
 					// userSelf:userInfo.nickName
+					teamShow: false,
+					allTeam: [],
+					currentId: '',
 				},
 				mounted: function() {
 					mui.plusReady(function() {
@@ -446,6 +631,7 @@
 							openPage('join_team.html', 'join_team', '#f7f7f7', '')
 						})
 					})
+					mui(".mui-scroll-wrapper").scroll().refresh();
 				},
 				methods: {
 					// 团队详情
@@ -485,6 +671,18 @@
 							teamName: name,
 							teamType: type
 						});
+					},
+					// 切换团队
+					changeTeam: function(t,idx) {
+						for(var i=0; i<app.allTeam.length;i++){
+							if(app.allTeam[i].is_default==1){
+								app.allTeam[i].is_default=0;
+								break;
+							}
+						}
+						app.allTeam[idx].is_default=1;
+						app.currentId = t.team_id;
+						selsctName = t.name;
 					}
 				}
 			})
@@ -549,59 +747,43 @@
 				mui.post($ajaxUrl + 'team&action=personal_team_list', {
 					token: userInfo.token,
 				}, function(res) {
+					logs(res); 
 					if (res.errno == 0) {
 						var data = res.data;
 						if (data.length > 1) {
-							team_list = data;
+							app.allTeam = res.data;
 							teamchange = true;
 							for (var i = 0; i < data.length; i++) {
 								if (data[i].is_default == 1) {
 									app.teamName = data[i].name;
+									app.currentId=data[i].team_id;
 									break;
 								}
 							}
 						} else if (data.length == 1 && data != "") {
-							team_type = data[0].type;
+							app.currentId=data[0].team_id;
 							app.teamName = data[0].name;
-							default_team_id = data[0].team_id;
 							mui(".choice-team .mui-icon")[0].style.display = "none";
 							teamchange = false;
 						} else {
 							app.teamName = "旺客"
 							mui(".choice-team .mui-icon")[0].style.display = "none";
 							teamchange = false;
-							default_team_id = 0;
 						}
 					} else {
 						app.teamName = "旺客"
 						mui(".choice-team .mui-icon")[0].style.display = "none";
 						teamchange = false;
-						default_team_id = 0;
 					}
 				}, 'json');
 			}
 			//切换团队
 			mui('.mui-bar').on('tap', '.choice-team', function() {
-				app.clsName = 'mui-icon mui-icon-arrowup'
-				if (teamchange) {
+				if (!app.teamShow&&teamchange) {
+					app.teamShow = true;
 					mask.show();
-					if (teams) {
-						teams.show('slide-in-top');
-					} else {
-						teams = plus.webview.create('select_team.html', 'select_team', {
-							background: "transparent",
-							dock: 'top',
-							hardwareAccelerated: true,
-							height: '40%',
-							statusbar: {
-								background: '#FFFFFF',
-								color: '#000000'
-							}
-						}, {
-							team_list: team_list
-						});
-						teams.show('slide-in-top');
-					}
+				} else {
+					mask.close();
 				}
 			})
 			window.addEventListener('choiceName', function(e) {
@@ -634,6 +816,32 @@
 					event.preventDefault();
 				}
 			});
+			// 切换团队
+			function changeTeams(tid) {
+				mui.post($ajaxUrl + 'team&action=set_default_team', {
+					token: userInfo.token,
+					team_id: app.currentId
+				}, function(res) {
+					if (res.errno == 0) {
+						app.teamName = selsctName;
+						logs("切换成功！");
+					} else {
+						message("切换失败，请稍后重试");
+					}
+				}, 'json');
+			}
+			// 取消团队选择
+			mui(".mui-bar").on('tap', ".left-btn", function(e) {
+				mask.close();
+			})
+			// 确认团队选择
+			mui(".mui-bar").on('tap', ".right-btn", function(e) {
+				mask.close();
+				if(app.teamName == selsctName){
+					return;
+				}
+				changeTeams();
+			})
 		</script>
 	</body>
 

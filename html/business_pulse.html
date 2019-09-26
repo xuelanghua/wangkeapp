@@ -104,14 +104,16 @@
 			.mui-segmented-control .mui-control-item {
 				line-height: 50px;
 				width: 100%;
-				color: #999999 !important;
+				color: #666666 !important;
 				font-size: 0.26rem;
 				border: none !important;
+				position: relative;
 			}
 
 			.mui-segmented-control .mui-control-item.mui-active {
-				color: #333333 !important;
+				color: #000000 !important;
 				background-color: #FFFFFF !important;
+				font-weight: 700;
 			}
 
 			.mui-plus-pullrefresh .mui-pull-bottom-pocket {
@@ -170,15 +172,48 @@
 				width: auto;
 				height: 100%;
 			}
-			.category-img-cont{
+
+			.category-img-cont {
 				width: 100%;
 				height: 55px;
 				overflow: hidden;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin-bottom:5px;
+				margin-bottom: 5px;
 			}
+
+			.mui-segmented-control .mui-control-item {
+				overflow: hidden;
+			}
+
+			.mui-segmented-control .mui-control-item:before {
+				content: '';
+				width: 4px;
+				background-color: #FF0000;
+				display: inline-block;
+				position: absolute;
+				height: 0;
+				-webkit-transition: all 0.25s ease-in-out;
+				transition: all 0.25s ease-in-out;
+				left: -8px;
+				height: 50%;
+				top: 25%;
+				z-index: 1;
+				border-top-right-radius: 6px;
+				border-bottom-right-radius: 6px;
+				box-shadow: 0 0 1px 1px #f2f2f2;
+			}
+
+			.mui-segmented-control .mui-control-item.mui-active:before {
+				left: -1px;
+			}
+
+			.mui-segmented-control .mui-control-item span {
+				position: relative;
+				z-index: 5;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -203,24 +238,26 @@
 					<!-- 左侧分类 -->
 					<div class="mui-col-xs-3">
 						<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
-							<span class="mui-control-item mui-active" @tap="switchCls(0)">爆款</span>
-							<span class="mui-control-item" v-for="(c,i) in category" :key="i" @tap="switchCls(c.id)">
-								{{c.title}}
-							</span>
+							<div class="mui-control-item" :class="chooseCls==c.id?'mui-active':''" v-for="(c,i) in clsContLeft" :key="i"
+							 @tap="switchCls(i,c.id)">
+								<span>
+									{{c.title}}
+								</span>
+							</div>
 						</div>
 					</div>
 					<!-- 右侧内容 -->
 					<div id="segmentedControlContents" class="mui-col-xs-9">
 						<div class="inside-contianer">
-							<div class="advertising-img">
-								<img src="../image/advertising.png">
+							<div class="advertising-img" v-if="currentClassify.adv_image" @tap="openAD(currentClassify)">
+								<img :src="currentClassify.adv_image">
 							</div>
-							<h1 class="mui-text-center">{{chooseCls}}</h1>
+							<!-- <h1 class="mui-text-center">{{chooseCls}}</h1> -->
 							<div class="category-container">
-								<div class="category-items" v-for="(cls,i) in clsCont" :key="i">
+								<div class="category-items" v-for="(cls,i) in clsCont" :key="i" @tap="openClassifyDetail(cls)">
 									<div class="category-items-inside">
 										<div class="category-img-cont">
-											<img :src="cls.img">
+											<img :src="cls.cover">
 										</div>
 										<span>{{cls.title}}</span>
 									</div>
@@ -239,96 +276,11 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					category: [{
-						title: '衣服',
-						id: 1
-					}, {
-						title: '裤子',
-						id: 2
-					}, {
-						title: '衬衫',
-						id: 3
-					}, {
-						title: '领带',
-						id: 4
-					}, {
-						title: 'bra',
-						id: 5
-					}, {
-						title: '皮鞋',
-						id: 6
-					}, {
-						title: '内衣',
-						id: 7
-					}, {
-						title: '运动鞋',
-						id: 8
-					}, {
-						title: '配饰',
-						id: 9
-					}, {
-						title: '箱包手袋',
-						id: 10
-					}, {
-						title: '生活旅游',
-						id: 11
-					}, {
-						title: '宠物生活',
-						id: 12
-					}, {
-						title: '礼品鲜花',
-						id: 13
-					}, {
-						title: '艺术邮币',
-						id: 14
-					}, {
-						title: '特产馆',
-						id: 15
-					}, {
-						title: '家居家装',
-						id: 16
-					}, {
-						title: '二手商品',
-						id: 17
-					}],
-					clsCont: [{
-						title: '手机',
-						img: 'https://img14.360buyimg.com/focus/s140x140_jfs/t27136/183/1628977274/31007/a6f7ed55/5be6ebd8Nb07ef492.png',
-						id: 1
-					}, {
-						title: '耳机',
-						img: 'https://img30.360buyimg.com/focus/s140x140_jfs/t1/21233/40/7634/13890/5c6d039bE8a65d667/aef9581abcc85725.png',
-						id: 2
-					}, {
-						title: '口红',
-						img: 'https://img30.360buyimg.com/focus/s140x140_jfs/t1/19730/14/9859/10199/5c8225eeE5e925911/054ccd7992f86199.png',
-						id: 3
-					}, {
-						title: '轻薄本',
-						img: 'https://img13.360buyimg.com/focus/s140x140_jfs/t11071/195/2462134264/9117/cd0688bf/5a17ba79N18b9f3d4.png',
-						id: 4
-					}, {
-						title: '文具',
-						img: 'https://img14.360buyimg.com/focus/s140x140_jfs/t16102/63/2286960292/7028/d15c6bd6/5a9fa366N889aad0f.jpg',
-						id: 5
-					}, {
-						title: '牛仔裤',
-						img: 'https://img20.360buyimg.com/focus/s140x140_jfs/t19222/87/1339548468/5738/68f3d8aa/5ac47841Nff658599.jpg',
-						id: 6
-					}, {
-						title: '单肩包',
-						img: 'https://img13.360buyimg.com/focus/s140x140_jfs/t14005/197/826940059/9087/b0768931/5a152ee0N04e9ca84.jpg',
-						id: 7
-					}, {
-						title: '不知名',
-						img: '../image/visit2.png',
-						id: 8
-					}, {
-						title: '高度一致',
-						img: '../image/administration1.png',
-						id: 9
-					}],
-					chooseCls: 0
+					category: {},
+					chooseCls: '',
+					clsContLeft: [],
+					clsCont: [],
+					currentClassify: {}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -340,20 +292,112 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-					switchCls: function(idx) {
-						app.chooseCls = idx;
+					// 切换一级分类
+					switchCls: function(idx, _id) {
+						app.chooseCls = _id;
+						app.clsCont = app.category[_id];
+						app.currentClassify = app.clsContLeft[idx];
+					},
+					// 点击二级分类
+					openClassifyDetail: function(e) {
+						openPage('business_search_result.html', 'business_search_result', '#ffffff', {
+							detail: e
+						})
+					},
+					// 点击广告
+					openAD: function(e) {
+						if (e.adv_url == '') {
+							logs("不可以跳转哟~");
+							return false;
+						}
+						if (e.adv_type == 1) {
+							// 商品 个人商品  团队商品 旺客总仓
+							if (e.adv_goods.uid > 0 && e.adv_goods.is_team_goods == 0) {
+								// 个人商品
+								openPage('personal_goods_detail.html', 'personal_goods_detail', '#f7f7f7', {
+									gid: e.id
+								});
+							} else if (e.adv_goods.uid > 0 && e.adv_goods.is_team_goods == 1) {
+								// 是否加入团队
+								if (e.adv_goods.has_joined_team == 1) {
+									// 团队商品
+									openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+										gid: e.id
+									});
+								} else {
+									// 团队商品 未加入
+									openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+										gid: e.id
+									});
+								}
+							} else if (e.adv_goods.uid == 0) {
+								// 是否加入团队
+								if (e.adv_goods.has_joined_team == 1) {
+									// 团队商品
+									openPage('distributor_goods_detail.html', 'distributor_goods_detail', '#f7f7f7', {
+										gid: e.id
+									});
+								} else {
+									// 团队商品 未加入
+									openPage('team_goods_detail.html', 'team_goods_detail', '#f7f7f7', {
+										gid: e.id
+									});
+								}
+							}
+						} else if (e.adv_type == 2) {
+							//外链
+							mui.get($ajaxUrl + 'util', {
+								action: 'url_title',
+								url: e.adv_url
+							}, function(res) {
+								fnOpenWin('webview.html', 'webview', {
+									statusbar: {
+										background: '#FFFFFF'
+									}
+								}, {
+									title: res.data,
+									statusBarStyle: 'dark',
+									url: e.adv_url
+								}, 'slide-in-right');
+							}, 'json');
+						}
 					}
 				},
 				mounted: function() {
+					mui.init({
+						keyEventBind: {
+							backbutton: false,
+							menubutton: false,
+						}
+					})
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						//plus.navigator.setStatusBarStyle("dark");
+						getDatas();
 					})
 				}
 			})
+			// 跳转搜索
 			mui('#mui-content').on('tap', '.search-cont', function() {
 				openPage('business_pulse_search.html', 'business_pulse_search', '#f9f9f9');
 			})
+			// 获取分类以及广告
+			function getDatas() {
+				mui.post($ajaxUrl + 'business', {
+					token: userInfo.token,
+					action: 'type_list'
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.category = res.data;
+						app.clsContLeft = res.data[0];
+						app.chooseCls = res.data[0][0].id;
+						app.clsCont =res.data[res.data[0][0].id];
+						app.currentClassify = res.data[0][0];
+					} else {
+						logs("已经请求！");
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 
