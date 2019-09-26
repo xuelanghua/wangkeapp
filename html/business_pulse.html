@@ -368,10 +368,28 @@
 						keyEventBind: {
 							backbutton: false,
 							menubutton: false,
+						},
+						pullRefresh: {
+							container: "#mui-content",
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									getDatas("pull");
+								}
+							}
 						}
 					})
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
+						var categorys = getcache('category');
+						if (categorys != '' && categorys != null) {
+							app.category = categorys;
+							app.clsContLeft = categorys[0];
+							app.chooseCls = categorys[0][0].id;
+							app.clsCont = categorys[categorys[0][0].id];
+							app.currentClassify = categorys[0][0];
+						}
 						getDatas();
 					})
 				}
@@ -381,7 +399,7 @@
 				openPage('business_pulse_search.html', 'business_pulse_search', '#f9f9f9');
 			})
 			// 获取分类以及广告
-			function getDatas() {
+			function getDatas(pull) {
 				mui.post($ajaxUrl + 'business', {
 					token: userInfo.token,
 					action: 'type_list'
@@ -391,9 +409,16 @@
 						app.category = res.data;
 						app.clsContLeft = res.data[0];
 						app.chooseCls = res.data[0][0].id;
-						app.clsCont =res.data[res.data[0][0].id];
+						app.clsCont = res.data[res.data[0][0].id];
 						app.currentClassify = res.data[0][0];
+						cacheData("category", res.data);
+						if(pull=="pull"){
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
 					} else {
+						if(pull=="pull"){
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
 						logs("已经请求！");
 					}
 				}, 'json');

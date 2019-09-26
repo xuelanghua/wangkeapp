@@ -382,11 +382,31 @@
 			});
 			if (mui.os.ios) {
 				mui.init({
-					swipeBack: true
+					swipeBack: true,
+					pullRefresh: {
+						container: "#mui-content",
+						down: {
+							style: 'circle',
+							color: '#2289FF',
+							callback: function() {
+								getFriendsInfo("pull");
+							}
+						}
+					}
 				});
 			} else {
 				mui.init({
-					swipeBack: false
+					swipeBack: false,
+					pullRefresh: {
+						container: "#mui-content",
+						down: {
+							style: 'circle',
+							color: '#2289FF',
+							callback: function() {
+								getFriendsInfo("pull");
+							}
+						}
+					}
 				});
 			}
 			var fid = "";
@@ -482,7 +502,7 @@
 				}
 			});
 			// 获取资料
-			function getFriendsInfo() {
+			function getFriendsInfo(pull) {
 				mui.post($ajaxUrl + 'customer&action=detail&type=friend', {
 					token: userInfo.token,
 					user_id: fid
@@ -561,7 +581,13 @@
 								}
 							});
 						});
+						if(pull=="pull"){
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
 					} else {
+						if(pull=="pull"){
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
 						message(res.message);
 						setTimeout(function() {
 							mui.back();

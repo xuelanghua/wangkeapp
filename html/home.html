@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<title>首页</title>
+		<title> </title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link href="../css/index.css" rel="stylesheet" />
 		<link href="../icomoon/style.css" rel="stylesheet" />
@@ -357,7 +357,7 @@
 				-webkit-transition: .4s;
 				-o-transition: .4s;
 				transition: .4s;
-				-webkit-transform: translate3d(0, 0, 0);
+				-webkit-trans: translate3d(0, 0, 0);
 				transform: translate3d(0, 0, 0);
 				background: url(../Images/notice.png) left 10px center no-repeat;
 			}
@@ -607,7 +607,6 @@
 
 			.Notice .swiper-container {
 				height: 40px;
-				/* background-color: #0062CC; */
 				flex-grow: 1;
 			}
 
@@ -622,10 +621,31 @@
 			.Notice .notice-cont {
 				width: 100%;
 			}
+
+			.banner-container {
+				position: relative;
+				width: 100%;
+				height: 200px;
+				overflow: hidden;
+			}
+
+			.banner-container .swiper-wrapper,
+			.banner-container .swiper-slide {
+				height: 100%;
+			}
+
+			.banner-container .swiper-slide img {
+				width: 100%;
+				height: auto;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 	<body>
-		<div style="margin-bottom: 50px;">
+		<div style="margin-bottom: 50px;" id="mui-content" v-cloak>
 			<header class="mui-bar mui-bar-nav" style="height:120px; background-color: #fff;box-shadow: 0 0 0 #fff;">
 				<div class="bar-top">
 					<div class="mui-title">
@@ -683,49 +703,28 @@
 				</div>
 			</header>
 			<div class="mui-content">
-				<!-- <div class="Notice">
-					<div class="Notice-title"><img src="../image/notice4.png" style="width:18px" alt=""></div>
-					<span id="notice_container"></span>
-					<img src="../image/iconrighth.png">
-					<div class="clearfix"></div>
-				</div> -->
 				<div class="Notice">
 					<div class="Notice-title">
 						<img src="../image/notice4.png" style="width:18px" alt="">
 					</div>
 					<div id="notice_container" class="notice-cont">
-						<div class="swiper-container">
-							<div class="swiper-wrapper">
-
-							</div>
+						<div class="swiper-container" id="notice_swiper">
+							<div class="swiper-wrapper"></div>
 						</div>
 					</div>
 					<div class="notice-more">
 						<img src="../image/iconrighth.png">
 					</div>
 				</div>
-				<div class="mui-slider" id="slider_container">
-					<!-- <div class="mui-slider-group">
-						<div class="mui-slider-item">
-							<a href="javascript: void(0);">
-								<img src="../image/home_adv.jpg" />
-								<p class="mui-slider-title"></p>
-							</a>
+				<!-- 轮播 -->
+				<div class="swiper-container banner-container" id="banner_swiper">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" v-for="(b,i) in banner" :key="i">
+							<img :src="b.pic">
 						</div>
-					</div> -->
-					<!-- <div class="swiper-container">
-						<div class="swiper-wrapper">
-							<img src="../image/home_adv.jpg" />
-						</div>
-					</div> -->
-					<div class="mui-slider-item mui-active">
-						<a href=""><img src="../image/home_adv.jpg">
-							<p class="mui-slider-title"></p>
-						</a>
 					</div>
 				</div>
-
-				<div class="function" style="z-index: 1;">
+				<div class="function mui-clearfix" style="z-index: 1;">
 					<div class="functionL" id="qrcode_setting">
 						<div class="functionLc">
 							<img src="../image/idnex-message.png">
@@ -742,45 +741,38 @@
 							</div>
 						</a>
 					</div>
-					<div class="clearfix"></div>
 				</div>
-
-				<div class="functional_selection">
-					<div class="business_card" id="card">
+				<div class="functional_selection mui-clearfix">
+					<div class="business_card mui-clearfix" id="card">
 						<img src="../image/business-card.png">
 						<div style="float: left;margin-left: 10px;">
 							<p>V名片</p>
 							<span style="color: #000;">科技范介绍</span>
 						</div>
-						<!-- <div class="heitiao">雷达</div> -->
-						<div class="clearfix"></div>
+						<!-- <div class="heitiao">主题</div> -->
 					</div>
-					<div class="business_cardR" id="new_customer">
+					<div class="business_cardR mui-clearfix" id="new_customer">
 						<img src="../image/customers.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>团队</p>
 							<span style="color: #000;">团队的力量</span>
 						</div>
-						<div class="clearfix"></div>
 					</div>
-					<div class="business_card" id="shop">
+					<div class="business_card mui-clearfix" id="shop">
 						<img src="../image/Shopping-Mall.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>商城</p>
 							<span style="color: #000;">多渠道资源</span>
 						</div>
-						<div class="clearfix"></div>
 					</div>
-					<div class="business_cardR" id="target">
+					<div class="business_cardR mui-clearfix" id="target">
 						<img src="../image/target.png">
 						<div style="float: left;margin-left: 15px;">
 							<p>目标&任务</p>
 							<span style="color: #000;">释放小宇宙</span>
 						</div>
 						<!-- <div class="heitiao" style="background-color: #05D6DF;">设置</div> -->
-						<div class="clearfix"></div>
 					</div>
-					<div class="clearfix"></div>
 				</div>
 			</div>
 		</div>
@@ -820,255 +812,237 @@
 	<script src="../js/util.js"></script>
 	<script src="../js/swiper.min.js"></script>
 	<script src="../js/Zepto.min.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script>
 		var mask = mui.createMask(function() {
 				plus.navigator.setStatusBarStyle('dark');
 			}),
-			default_team_id = '';
-		mui.init({
-			swipeBack: false,
-			keyEventBind: {
-				backbutton: false,
-				menubutton: true
+			default_team_id = '',
+			noticeLen = 0,
+			noticeIndex = 0,
+			notice = {},
+			qrType = 'card',
+			userInfo = getUserInfo();
+
+		var app = new Vue({
+			el: "#mui-content",
+			data: {
+				banner: []
 			},
-			pullRefresh: {
-				container: ".mui-content",
-				down: {
-					style: 'circle',
-					color: '#2289FF',
-					callback: function() {
-						getNotice();
-						weatherInit(); //天气初始化
-						slideInit(true); //幻灯片初始化 
-					}
-				}
-			}
-		});
+			methods: {
 
-		var noticeLen = 0;
-		var noticeIndex = 0;
-		var notice = {};
-		var qrType = 'card';
-		var userInfo = getUserInfo();
-		mui.plusReady(function() {
-			if (plus.device.model === 'iPhoneX') {
-				logs("运行在iphoneX上");
-			}
-			plus.navigator.setStatusBarStyle('dark');
-			// var self = plus.webview.currentWebview();
-			// self.setStyle({
-			// 	bottom: 51
-			// })
-			getNotice();
-			weatherInit(); //天气初始化
-			slideInit(false); //幻灯片初始化
-			//监听消息数量 首页广播
-			window.addEventListener('messgeNumber', function(e) {
-				var tipObj = document.getElementById('unread_message');
-				if (e.detail.number) {
-					tipObj.innerText = e.detail.number;
-					tipObj.style.display = 'block';
-				} else {
-					tipObj.style.display = 'none';
-				}
-				// alert(e.detail.number);
-			})
-
-			//自定义事件监听-首页新增客户点击
-			// window.addEventListener('refreshTeamList', function() {
-			// 	getTeamList();
-			// })
-
-			//打开扫一扫
-			var scan = document.getElementById('scan');
-			scan.addEventListener('tap', function() {
-				var paymentPage = plus.webview.create('scan.html', 'scan', {
-					top: '0',
-					bottom: '0',
-					scrollIndicator: 'none',
-					statusbar: {
-						background: '#000'
+			},
+			mounted: function() {
+				mui.init({
+					swipeBack: false,
+					keyEventBind: {
+						backbutton: false,
+						menubutton: true
+					},
+					pullRefresh: {
+						container: ".mui-content",
+						down: {
+							style: 'circle',
+							color: '#2289FF',
+							callback: function() {
+								getNotice();
+								weatherInit(); //天气初始化
+								slideInit(true); //幻灯片初始化 
+							}
+						}
 					}
 				});
-				paymentPage.show('slide-in-right');
-				setStatusBar('#2289FF', 'light');
-			});
 
-			//打开收款码页面
-			var payment_code = document.getElementById('payment_code');
-			payment_code.addEventListener('tap', function() {
-				var paymentPage = plus.webview.create('payment_code.html', 'payment_code', {
-					top: '0',
-					bottom: '0',
-					scrollIndicator: 'none',
-					statusbar: {
-						background: '#2289FF'
+				mui.plusReady(function() {
+					if (plus.device.model === 'iPhoneX') {
+						logs("运行在iphoneX上");
 					}
-				});
-				paymentPage.show('slide-in-right');
-				setStatusBar('#2289FF', 'light');
-			});
-
-			//打开设置界面
-			document.getElementById('qrcode_setting').addEventListener('tap', function() {
-				var settingPage = plus.webview.create('qrcode_setting.html', 'qrcode_setting', {
-					top: '0',
-					bottom: '0',
-					scrollIndicator: 'none',
-					statusbar: {
-						background: '#2289FF'
+					var banner=getcache('banner');
+					if(banner.length>0){
+						app.banner=banner;
+						setTimeout(function(){
+							sliderPlay();
+						},1000)
 					}
-				});
-				settingPage.show('slide-in-right');
-				setStatusBar('#2289FF', 'light');
-			})
+					plus.navigator.setStatusBarStyle('dark');
+					getNotice();
+					weatherInit(); //天气初始化
+					slideInit(false); //幻灯片初始化
+					//监听消息数量 首页广播
+					window.addEventListener('messgeNumber', function(e) {
+						var tipObj = document.getElementById('unread_message');
+						if (e.detail.number) {
+							tipObj.innerText = e.detail.number;
+							tipObj.style.display = 'block';
+						} else {
+							tipObj.style.display = 'none';
+						}
+					})
 
-			//打开设置界面
-			document.getElementById('redpack_setting').addEventListener('tap', function() {
-				fnOpenWin('redpacket_setting.html', 'redpacket_setting', {
-					statusbar: {
-						background: '#FFF'
-					}
-				}, {
-					from: 'home'
-				}, 'slide-in-right');
-			})
-
-			//打开二维码
-			mui('.mui-content').on('tap', '#card', function() {
-				// var type = this.dataset.type;
-				// showQrcode('card');
-				// message(userInfo.id);
-				mui.get($ajaxUrl + 'member', {
-					action: 'check_user_info',
-					token: userInfo.token
-				}, function(res) {
-					if (res.errno == 0) {
-						openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-							fid: userInfo.id
-						})
-					} else {
-						openPage('card_setting.html', 'card_setting', '#FFF', {
-							fid: userInfo.id
-						})
-					}
-				}, 'json');
-			})
-
-			//打开商城
-			mui('.mui-content').on('tap', '#shop', function() {
-				checkMember(function(e) {
-					if (e) {
-						fnOpenWin('shop_index.html', 'shop_index', {
+					//打开扫一扫
+					document.getElementById('scan').addEventListener('tap', function() {
+						var paymentPage = plus.webview.create('scan.html', 'scan', {
+							top: '0',
+							bottom: '0',
+							scrollIndicator: 'none',
 							statusbar: {
-								background: '#F7F7F7'
+								background: '#000'
+							}
+						});
+						paymentPage.show('slide-in-right');
+						setStatusBar('#2289FF', 'light');
+					});
+
+					//打开收款码页面
+					document.getElementById('payment_code').addEventListener('tap', function() {
+						var paymentPage = plus.webview.create('payment_code.html', 'payment_code', {
+							top: '0',
+							bottom: '0',
+							scrollIndicator: 'none',
+							statusbar: {
+								background: '#2289FF'
+							}
+						});
+						paymentPage.show('slide-in-right');
+						setStatusBar('#2289FF', 'light');
+					});
+
+					//打开设置界面
+					document.getElementById('qrcode_setting').addEventListener('tap', function() {
+						var settingPage = plus.webview.create('qrcode_setting.html', 'qrcode_setting', {
+							top: '0',
+							bottom: '0',
+							scrollIndicator: 'none',
+							statusbar: {
+								background: '#2289FF'
+							}
+						});
+						settingPage.show('slide-in-right');
+						setStatusBar('#2289FF', 'light');
+					})
+
+					//打开设置界面
+					document.getElementById('redpack_setting').addEventListener('tap', function() {
+						fnOpenWin('redpacket_setting.html', 'redpacket_setting', {
+							statusbar: {
+								background: '#FFF'
+							}
+						}, {
+							from: 'home'
+						}, 'slide-in-right');
+					})
+
+					//打开二维码
+					mui('.mui-content').on('tap', '#card', function() {
+						mui.get($ajaxUrl + 'member', {
+							action: 'check_user_info',
+							token: userInfo.token
+						}, function(res) {
+							if (res.errno == 0) {
+								openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
+									fid: userInfo.id
+								})
+							} else {
+								openPage('card_setting.html', 'card_setting', '#FFF', {
+									fid: userInfo.id
+								})
+							}
+						}, 'json');
+					})
+
+					//打开商城
+					mui('.mui-content').on('tap', '#shop', function() {
+						checkMember(function(e) {
+							if (e) {
+								fnOpenWin('shop_index.html', 'shop_index', {
+									statusbar: {
+										background: '#F7F7F7'
+									}
+								}, {
+									page: 'home'
+								}, 'slide-in-right');
+								setStatusBar('', 'dark');
+							}
+						})
+					})
+
+					//打开目标
+					mui('.mui-content').on('tap', '#target', function() {
+						fnOpenWin('target.html', 'target', {
+							statusbar: {
+								background: '#FFF'
 							}
 						}, {
 							page: 'home'
 						}, 'slide-in-right');
-						setStatusBar('', 'dark');
-					}
-				})
-			})
+					})
+					//关闭二维码
+					document.getElementById('hide_qrcode').addEventListener('tap', function() {
+						hideQrcode();
+					})
 
-			//打开目标
-			mui('.mui-content').on('tap', '#target', function() {
-				fnOpenWin('target.html', 'target', {
-					statusbar: {
-						background: '#FFF'
-					}
-				}, {
-					page: 'home'
-				}, 'slide-in-right');
-			})
-			//关闭二维码
-			document.getElementById('hide_qrcode').addEventListener('tap', function() {
-				hideQrcode();
-			})
+					//跳转团队详情
+					document.getElementById('new_customer').addEventListener('tap', function() {
+						openPage('team_list.html', 'team_list', '#f7f7f7');
+					})
+					//查看公告
+					mui('.Notice').on('tap', '.swiper-slide', function() {
+						var idx = this.dataset.idx;
+						noticeDeail(idx);
+					})
 
-			//查看新增客户
-			// document.getElementById('new_customer').addEventListener('tap', function() {
-			// 	mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'newCustomer');
-			// 	mui.fire(plus.webview.getWebviewById('chat'), 'newCustomer');
-			// })
+					// 设置二维码
+					document.getElementById('card_setting').addEventListener('tap', function() {
+						qrcodeTypeSetting(qrType);
+					})
 
-			//跳转团队详情
-			document.getElementById('new_customer').addEventListener('tap', function() {
-				// logs(team_type);
-				// if (default_team_id) {
-				// 	// 正式
-				// 	if (team_type == 1) {
-				// 		openPage('team_detail.html', 'team_detail', '#f7f7f7', {
-				// 			teamid: default_team_id
-				// 		});
-				// 	} else {
-				// 		// 数据
-				// 		openPage('other_team_detail.html', 'other_team_detail', '#f7f7f7', {
-				// 			teamid: default_team_id
-				// 		});
-				// 	}
-				// } else {
-				// 	openPage('join_team.html', 'join_team.html', '#f7f7f7');
-				// }
-				openPage('team_list.html', 'team_list', '#f7f7f7');
-			})
-			//查看公告
-			mui('.Notice').on('tap', '.swiper-slide', function() {
-				var idx = this.dataset.idx;
-				noticeDeail(idx);
-			})
+					//查看消息
+					document.getElementById('message').addEventListener('tap', function() {
+						fnOpenWin('message.html', 'message', {
+							statusbar: {
+								background: '#FFF'
+							}
+						}, {
+							prePage: 'home'
+						}, 'slide-in-right');
+					})
 
-			// 设置二维码
-			document.getElementById('card_setting').addEventListener('tap', function() {
-				qrcodeTypeSetting(qrType);
-			})
+					//快捷分享
+					document.getElementById('quik_sharing').addEventListener('tap', function() {
+						share({
+							title: '旺客',
+							content: '旺天下之客,让营销更简单!',
+							thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
+							href: $ajaxUrl + 'download'
+						}, 'web');
+						mui('#popover').popover('hide');
+					})
 
-			//查看消息
-			document.getElementById('message').addEventListener('tap', function() {
-				fnOpenWin('message.html', 'message', {
-					statusbar: {
-						background: '#FFF'
-					}
-				}, {
-					prePage: 'home'
-				}, 'slide-in-right');
-			})
+					//快捷扫一扫
+					document.getElementById('quik_scan').addEventListener('tap', function() {
+						fnOpenWin('scan.html', 'scan', {
+							statusbar: {
+								background: '#000'
+							}
+						}, '', 'slide-in-right')
+						setStatusBar('#2289FF', 'light');
+						mui('#popover').popover('hide');
+					})
 
-			//快捷分享
-			document.getElementById('quik_sharing').addEventListener('tap', function() {
-				share({
-					title: '旺客',
-					content: '旺天下之客,让营销更简单!',
-					thumbs: ['https://app.wangkeapp.cn/attachment/headimg_6.jpg'],
-					href: $ajaxUrl + 'download'
-				}, 'web');
-				mui('#popover').popover('hide');
-			})
+					//快捷收款
+					document.getElementById('quik_receipt').addEventListener('tap', function() {
+						fnOpenWin('payment_code.html', 'payment_code', {
+							statusbar: {
+								background: '#2289FF'
+							}
+						}, '', 'slide-in-right');
+						setStatusBar('#2289FF', 'light');
+						mui('#popover').popover('hide');
+					})
+				});
+			}
+		})
 
-			//快捷扫一扫
-			document.getElementById('quik_scan').addEventListener('tap', function() {
-				fnOpenWin('scan.html', 'scan', {
-					statusbar: {
-						background: '#000'
-					}
-				}, '', 'slide-in-right')
-				setStatusBar('#2289FF', 'light');
-				mui('#popover').popover('hide');
-				// document.getElementById('popover').classList.add('mui-hidden'); 
-			})
-
-			//快捷收款
-			document.getElementById('quik_receipt').addEventListener('tap', function() {
-				fnOpenWin('payment_code.html', 'payment_code', {
-					statusbar: {
-						background: '#2289FF'
-					}
-				}, '', 'slide-in-right');
-				setStatusBar('#2289FF', 'light');
-				mui('#popover').popover('hide');
-				// document.getElementById('popover').classList.add('mui-hidden');
-			})
-		});
 
 		//获取地理位置
 		function weatherInit() {
@@ -1085,46 +1059,24 @@
 		function slideInit(refresh) {
 			if (!refresh) {
 				setTimeout(function() {
-					// showload(1);
 					showload(1);
 				}, 100)
-				// showload(0);
 				showload(0);
 			}
 			mui.post($ajaxUrl + 'carousel', {
 				position: 1
 			}, function(res) {
-				// logs(res);
 				if (res.errno == 0) {
 					var carousel = res.data;
-					var len = carousel.length;
-					var str = '';
-					if (len == 1) {
-						str += '<div class="mui-slider-group">';
-						str += '<div class="mui-slider-item"><a href="' + carousel[0].link + '"><img src="' + carousel[0].pic +
-							'" /><p class="mui-slider-title">' + carousel[0].title + '</p></a></div>';
-						str += '</div>';
-					} else {
-						str += '<div class="mui-slider-group mui-slider-loop">';
-						str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="' + carousel[len - 1].link +
-							'"><img src="' + carousel[len - 1].pic + '" /><p class="mui-slider-title">' + carousel[len - 1].title +
-							'</p></a></div>';
-						for (var i = 0; i < len; i++) {
-							str += '<div class="mui-slider-item"><a href="' + carousel[i].link + '"><img src="' + carousel[i].pic +
-								'" /><p class="mui-slider-title">' + carousel[i].title + '</p></a></div>';
-						}
-						str += '<div class="mui-slider-item mui-slider-item-duplicate"><a href="' + carousel[0].link + '"><img src="' +
-							carousel[0].pic + '" /><p class="mui-slider-title">' + carousel[0].title + '</p></a></div>';
-						str += '</div>';
-					}
-					document.getElementById('slider_container').innerHTML = str;
-
+					app.banner = res.data;
+					cacheData("banner",app.banner);
 					setTimeout(function() {
 						sliderPlay();
-					}, 2000)
+					}, 1000)
 				} else {
 					console.log(res.message);
 				}
+
 				if (refresh) {
 					setTimeout(function() {
 						mui('.mui-content').pullRefresh().endPulldownToRefresh();
@@ -1132,7 +1084,6 @@
 				}
 				if (!refresh) {
 					setTimeout(function() {
-						// showload(1);
 						showload(1);
 					}, 2000)
 				}
@@ -1149,13 +1100,8 @@
 				type: 'get',
 				timeout: 10000,
 				success: function(data) {
-					// logs(data);
 					if (data.status == "success") {
 						var city = data.results[0].currentCity;
-						// var city = "红河哈尼族自治州天气不错";
-						// if (city.length > 3) {
-						// 	city = city.substr(0, 3) + '...';
-						// }
 						document.getElementById('city').innerHTML = city;
 						document.getElementById('temperature').innerHTML = data.results[0].weather_data[0].temperature;
 						document.getElementById('weather').innerHTML = data.results[0].weather_data[0].weather;
@@ -1182,7 +1128,6 @@
 							}
 						} else if (weather.indexOf("雨") != -1) {
 							str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
-							// str += '<div class="icon rainy"><div class="cloud"></div><div class="rain"></div></div>';
 						} else if (weather.indexOf("雪") != -1) {
 							str +=
 								'<div class="icon flurries"><div class="cloud"></div><div class="snow"><div class="flake"></div><div class="flake"></div></div></div>';
@@ -1196,58 +1141,6 @@
 			});
 		}
 
-		//轮播图轮播设置
-		function sliderPlay() {
-			mui('.mui-slider').slider({
-				interval: 2500 //自动轮播周期，若为0则不自动播放，默认为0；
-			});
-		}
-		//展示二维码
-		function showQrcode(type) {
-			mui.post($ajaxUrl + 'userqrcode&action=make_url', {
-				type: type,
-				token: userInfo.token
-			}, function(res) {
-				if (res.errno == 0) {
-					var qrcodeType = {
-						'redpacket': '红包',
-						'card': '名片',
-						'link': '自定义',
-						'pic': '图片',
-						'article': '文章红包',
-						'shop': '商城'
-					};
-					if (res.data.type != 'shop') {
-						document.getElementById('qrcode_setting').style.display = 'block';
-						qrType = res.data.type;
-					} else {
-						document.getElementById('qrcode_setting').style.display = 'none';
-					}
-					var url = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-					document.getElementById('qrcode_type').innerHTML = qrcodeType[res.data.type];
-					document.getElementById('qrcode_pic').setAttribute('src', url);
-					document.getElementsByClassName('code_container')[0].style.display = 'block';
-				} else if (res.errno == 1) {
-					plus.nativeUI.toast(res.msg);
-				} else if (res.errno == 2) {
-					var settingPage = plus.webview.create('qrcode_setting.html', 'qrcode_setting', {
-						top: '0',
-						bottom: '0',
-						scrollIndicator: 'none',
-						statusbar: {
-							background: '#2289FF'
-						}
-					});
-					settingPage.show('slide-in-bottom');
-					setStatusBar('#2289FF', 'light');
-				}
-			}, 'json');
-		}
-
-		//隐藏二维码
-		function hideQrcode() {
-			document.getElementsByClassName('code_container')[0].style.display = 'none';
-		}
 
 		//获取公告
 		function getNotice() {
@@ -1273,7 +1166,7 @@
 
 		//公告滚动初始化
 		function scrollInit() {
-			var mySwiper = new Swiper('.swiper-container', {
+			var mySwiper = new Swiper('#notice_swiper', {
 				direction: 'vertical',
 				loop: true,
 				autoplay: {
@@ -1281,6 +1174,18 @@
 					stopOnLastSlide: false,
 					disableOnInteraction: false,
 				},
+			})
+		}
+
+		//轮播滚动初始化
+		function sliderPlay() {
+			var mySwiper = new Swiper('#banner_swiper', {
+				loop: true,
+				autoplay: {
+					delay: 5000,
+					stopOnLastSlide: false,
+					disableOnInteraction: false,
+				}
 			})
 		}
 
@@ -1301,21 +1206,6 @@
 			setStatusBar('', 'dark');
 		}
 
-		//设置二维码类型
-		function qrcodeTypeSetting(type) {
-			var newPage = plus.webview.create(type + '_setting.html', type + '_setting', {
-				top: '0',
-				bottom: '0',
-				scrollIndicator: 'none',
-				statusbar: {
-					background: '#FFF'
-				}
-			}, {
-				'from': 'home'
-			});
-			newPage.show('slide-in-bottom');
-			hideQrcode();
-		}
 		// 跳转搜索
 		mui('.mui-bar').on('tap', '.mui-title', function() {
 			openPage('home_search.html', 'home_search', '#ededed');
