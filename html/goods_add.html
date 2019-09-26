@@ -399,7 +399,7 @@
 				<div class="choice" style="padding: 10px 0;padding-bottom" id="goods_type_pick">
 					<div class="mui-table-view-cell">
 						<span>商品类型</span>
-						<span class="fenli" id="goods_type">未分类</span>
+						<span class="fenli" id="goods_type">请选择</span>
 						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
 					</div>
 				</div>
@@ -795,18 +795,17 @@
 				}, function(res) {
 					console.log(JSON.stringify(res));
 					if (res.errno == 0) {
-						console.log(1);
 						goodsType = res.data;
-						goodsTypeTitle = goodsType[0].text;
-						type_p = goodsType[0].value;
-						if (!goodsType[0].children) {
-							type = goodsType[0].value;
-						} else {
-							goodsTypeTitle += '--' + goodsType[0].children[0].text;
-							type = goodsType[0].children[0].value;
-						}
+						// goodsTypeTitle = goodsType[0].text;
+						// type_p = goodsType[0].value;
+						// if (!goodsType[0].children) {
+						// 	type = goodsType[0].value;
+						// } else {
+						// 	goodsTypeTitle += '--' + goodsType[0].children[0].text;
+						// 	type = goodsType[0].children[0].value;
+						// }
 					}
-					document.getElementById('goods_type').innerText = goodsTypeTitle;
+					// document.getElementById('goods_type').innerText = goodsTypeTitle;
 				}, 'json');
 			}
 
