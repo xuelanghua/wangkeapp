@@ -87,7 +87,7 @@
 				display: flex;
 				align-items: center;
 				background-color: #FFFFFF;
-				justify-content: space-between;
+				/* justify-content: space-between; */
 				box-sizing: border-box;
 				padding: 0 5px;
 			}
@@ -101,7 +101,7 @@
 				justify-content: center;
 				box-sizing: border-box;
 				border-radius: 5px;
-				/* overflow: visible; */
+				overflow: visible;
 			}
 
 			.chat-container .mui-segmented-control.mui-segmented-control-inverted a {
@@ -111,6 +111,7 @@
 				align-items: center;
 				margin: 0 5px;
 			}
+
 			.chat-container .mui-control-item.mui-active::before {
 				content: '';
 				left: 0;
@@ -160,7 +161,7 @@
 				<div class="trapezium2"></div>
 				<div class="trapezium-tips">成交数量:<span class="customer_total">{{customercount.deal}}</span></div>
 			</div>
-			<div id="segmentedControl" class=" mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+			<div id="segmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
 				<div class="mui-scroll">
 					<a class="mui-control-item mui-active" href="#item1" data-type="new_customer">新增客户</a>
 					<a class="mui-control-item" href="#item2" data-type="recommend">推荐锁定</a>
@@ -391,11 +392,20 @@
 									// alert(typer);
 								}
 							}
-						}
+						}						
 					});
 					mui.plusReady(function() {
 						getCustomerList(typer);
 						getnum();
+						mui('.mui-scroll-wrapper').scroll({
+							scrollY: false,
+							scrollX: true,
+							startX: 0,
+							startY: 0,
+							indicators: true,
+							deceleration: 0.0006,
+							bounce: true
+						});
 					})
 					var tab = document.getElementById("segmentedControl"),
 						list = document.getElementById("list-container");
