@@ -61,31 +61,39 @@
 			}
 
 			.img-containter {
-				background: url("../image/premiere_prompt_default_normal.png")center top no-repeat;
-				background-size: 100% auto;
+				/* background: url("../image/premiere_prompt_default_normal.png")center top no-repeat; */
+				/* background-size: 100% auto; */
 				width: 100%;
-				height: 290px;
+				height: auto;
 				position: relative;
-				overflow: hidden;
 				display: flex;
-				align-items: flex-end;
-				padding-bottom: 8%;
+				align-items: center;
 				justify-content: center;
+				flex-direction: column;
+			}
+
+			.img-containter img {
+				width: 100%;
+				height: auto;
 			}
 
 			.img-containter h3 {
 				color: #FFFFFF;
 				margin: 0;
+				-webkit-transform: translateY(-260%);
+				transform: translateY(-260%);
 			}
-			.tips-cont{
+
+			.tips-cont {
 				color: #AEAEAE;
 				font-size: 0.2rem;
-				position:absolute;
+				position: absolute;
 				bottom: 10px;
 				left: 0;
 				right: 0;
 				text-align: center;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -108,6 +116,7 @@
 		</header>
 		<div id="mui-content" class="mui-content" v-cloak>
 			<div class="img-containter">
+				<img src="../image/premiere_prompt_default_normal.png" alt="">
 				<h3 v-if="cStatus==0">课程还未开播，敬请期待...</h3>
 				<h3 v-else-if="cStatus==1">课程正在直播中...</h3>
 				<h3 v-else>课程直播已结束，可回看...</h3>
@@ -135,7 +144,7 @@
 					person: '',
 					course: {},
 					cStatus: '0',
-					team_id:''
+					team_id: ''
 				},
 				methods: {
 					prepareLessons: function() {
