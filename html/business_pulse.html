@@ -190,7 +190,8 @@
 			.mui-segmented-control .mui-control-item:before {
 				content: '';
 				width: 4px;
-				background-color: #FF0000;
+				/* background-color: #FF0000; */
+				background-color: #2289FF;
 				display: inline-block;
 				position: absolute;
 				height: 0;
@@ -407,9 +408,9 @@
 					logs(res);
 					if (res.errno == 0) {
 						app.category = res.data;
-						app.clsContLeft = res.data[0];
-						app.chooseCls = res.data[0][0].id;
-						app.clsCont = res.data[res.data[0][0].id];
+						app.clsContLeft = app.category[0];
+						app.chooseCls = app.clsContLeft[0].id;
+						app.clsCont = app.category[app.clsContLeft[0].id];
 						app.currentClassify = res.data[0][0];
 						cacheData("category", res.data);
 						if(pull=="pull"){
