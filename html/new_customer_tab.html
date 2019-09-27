@@ -463,6 +463,7 @@
 			// 获取客户列表
 			function getCustomerList(typer) {
 				if (!userInfo) return;
+				showload(0);
 				mui.post($ajaxUrl + 'customer', {
 					action: 'customer_list',
 					token: userInfo.token,
@@ -494,7 +495,7 @@
 						}
 						refresh == '';
 					}
-					// showload(1);
+					showload(1);
 				}, 'json')
 			}
 			//好友新增客户 添加客户页面广播
