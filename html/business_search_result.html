@@ -605,9 +605,13 @@
 				/* margin-bottom: 0.1rem; */
 			}
 
+			.goods-container .goods-info {
+				flex-grow: 1;
+			}
+
 			.goods-container.active .goods-info {
 				padding: 0.1rem;
-				width: 100%;
+				flex-grow: 1;
 			}
 
 			.goods-container.active .mui-table-view-cell:after {
@@ -623,7 +627,8 @@
 				background-color: transparent;
 				font-weight: 400;
 			}
-			.void-data-tips{
+
+			.void-data-tips {
 				width: 100%;
 				display: flex;
 				align-items: center;
@@ -633,9 +638,21 @@
 				padding-top: 20%;
 				background-color: #efeff4;
 			}
-			.void-data-tips img{
+
+			.void-data-tips img {
 				width: 50%;
 				height: auto;
+			}
+
+			.middle-cont {
+				display: flex;
+				justify-content: space-between;
+				width: 100%;
+				padding-right: 10px;
+			}
+
+			.middle-cont .num-cont {
+				font-size: 11px;
 			}
 
 			[v-cloak] {
@@ -705,18 +722,21 @@
 								</div>
 								<div class="price" v-if="g.commission">提成：&yen;{{g.commission}}</div>
 								<div class="price" v-else>&yen;{{g.price}}</div>
-								<!-- 官方 -->
-								<img v-if="g.type=='wangke'" class="sign" src="../image/discover/official-sign.png">
-								<!-- 个人 -->
-								<div v-else-if="g.type=='person'" class="source-cont">店长：{{g.admin}}<span class="mui-icon mui-icon-arrowright"></span></div>
-								<!-- 团队 -->
-								<div v-else class="source-cont">团队：{{g.team_info[0].name}}<span class="mui-icon mui-icon-arrowright"></span></div>
+								<div class="middle-cont">
+									<!-- 官方 -->
+									<img v-if="g.type=='wangke'" class="sign" src="../image/discover/official-sign.png">
+									<!-- 个人 -->
+									<div v-else-if="g.type=='person'" class="source-cont">店长：{{g.admin}}<span class="mui-icon mui-icon-arrowright"></span></div>
+									<!-- 团队 -->
+									<div v-else class="source-cont">团队：{{g.team_info[0].name}}<span class="mui-icon mui-icon-arrowright"></span></div>
+									<div class="num-cont">销量：{{g.sale_count}}</div>
+								</div>
 							</div>
 						</li>
 					</ul>
 				</div>
 				<div class="void-data-tips" v-show="isVoid">
-					<img src="../image/icon/void-seach-result.png" >
+					<img src="../image/icon/void-seach-result.png">
 					<p>没有找到内容哟~</p>
 				</div>
 			</div>
@@ -789,7 +809,7 @@
 							// 个人商品
 							openPage('personal_goods_detail.html', 'personal_goods_detail', '#f7f7f7', {
 								gid: e.id
-							}); 
+							});
 						} else if (e.uid > 0 && e.is_team_goods == 1) {
 							// 是否加入团队
 							if (e.has_joined_team == 1) {
@@ -883,8 +903,8 @@
 							app.pageTitle = self.detail.title;
 							app.types = self.detail.id;
 						}
-						if(self.keyword){
-							app.keyword=self.keyword;
+						if (self.keyword) {
+							app.keyword = self.keyword;
 							mui(".menu-cont")[0].classList.add("active");
 						}
 						getGoodsList();

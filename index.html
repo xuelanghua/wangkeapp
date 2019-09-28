@@ -107,7 +107,8 @@
 				 v-for="(nav,index) in subpages" :key="index">
 					<p>
 						<span :class="nav.selectes?nav.selected:nav.icon" style="font-size: 18px;margin-top: 2px;"></span>
-						<span v-if="nav.id=='chat'&&numbers!=0" class="mui-badge">{{numbers}}</span>
+						<span v-if="nav.ids=='chat'&&numbers!=0" class="mui-badge">{{numbers}}</span>
+						<span v-if="nav.ids=='media'&&trends_cont!=0" class="mui-badge">{{trends_cont}}</span>
 					</p>
 					<span class="mui-tab-label">{{nav.title}}</span>
 				</div>
@@ -117,7 +118,6 @@
 		<script src="js/util.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
-			
 			//当前激活选项
 			var current = '';
 			var activeTab = 0;
@@ -129,6 +129,7 @@
 				data: {
 					numbers: 0,
 					number: 0,
+					trends_cont: 0,
 					subpages: [{
 							title: '首页',
 							url: "html/home.html",
@@ -268,6 +269,7 @@
 						} else {
 							var timer = setInterval(function() {
 								getUnreadMessage();
+								getTrendsNum()
 							}, 3000)
 							// plus.nativeUI.showWaiting();
 							showload(0);
@@ -324,6 +326,7 @@
 					bindClientId();
 					initIndexPage();
 					getUnreadMessage();
+					getTrendsNum();
 					var timer = setInterval(function() {
 						getUnreadMessage();
 					}, 2000);
@@ -351,7 +354,6 @@
 						}
 					}, '', 'slide-in-bottom');
 				}
-
 				plus.screen.lockOrientation("portrait-primary");
 			}
 
@@ -495,6 +497,22 @@
 							}
 						}
 					})
+				}, 'json');
+			}
+			// 监听动态消息
+			window.addEventListener('trendsContRefresh', function(event) {
+				console.log('首页接收到通知！');
+				// 获取消息
+				getTrendsNum();
+			})
+			// 获取消息
+			function getTrendsNum() {
+				mui.post($ajaxUrl + "timeline&action=notice", {
+					token: userInfo.token,
+				}, function(res) {
+					if (res.errno == 0) {
+						app.trends_cont = res.data.total;
+					}
 				}, 'json');
 			}
 		</script>
