@@ -742,6 +742,7 @@ function pushCallback(data, event) {
 				fnLogout();
 			} else if (url == 'timelineNotice') {
 				mui.fire(plus.webview.getWebviewById('media'), 'timelineNoticeRefresh');
+				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'trendsContRefresh');
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
@@ -796,6 +797,7 @@ function pushCallback(data, event) {
 			}
 		} else if (url == 'timelineNotice') {
 			mui.fire(plus.webview.getWebviewById('media'), 'timelineNoticeRefresh');
+			mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'trendsContRefresh');
 		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}
