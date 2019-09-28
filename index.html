@@ -129,7 +129,7 @@
 				data: {
 					numbers: 0,
 					number: 0,
-					trends_cont:0,
+					trends_cont: 0,
 					subpages: [{
 							title: '首页',
 							url: "html/home.html",
@@ -257,7 +257,6 @@
 						// plus.navigator.closeSplashscreen();	//主动关闭启动页
 						pushInit();
 						eventInit();
-						getTrendsNum();
 						var lastLoginTime = localStorage.getItem('lastLoginTime');
 						var currentTime = new Date().getTime();
 						var loginTime = parseInt((currentTime - lastLoginTime) / 1000);
@@ -272,6 +271,7 @@
 						} else {
 							var timer = setInterval(function() {
 								getUnreadMessage();
+								getTrendsNum()
 							}, 3000)
 							// plus.nativeUI.showWaiting();
 							showload(0);
@@ -325,6 +325,7 @@
 					bindClientId();
 					initIndexPage();
 					getUnreadMessage();
+					getTrendsNum();
 					var timer = setInterval(function() {
 						getUnreadMessage();
 					}, 2000);
@@ -352,7 +353,6 @@
 						}
 					}, '', 'slide-in-bottom');
 				}
-
 				plus.screen.lockOrientation("portrait-primary");
 			}
 
@@ -500,7 +500,7 @@
 			}
 			// 监听动态消息
 			window.addEventListener('trendsContRefresh', function(event) {
-				// console.log('首页接收到通知！');
+				console.log('首页接收到通知！');
 				// 获取消息
 				getTrendsNum();
 			})
@@ -509,7 +509,7 @@
 				mui.post($ajaxUrl + "timeline&action=notice", {
 					token: userInfo.token,
 				}, function(res) {
-					if(res.errno==0){
+					if (res.errno == 0) {
 						app.trends_cont = res.data.total;
 					}
 				}, 'json');
