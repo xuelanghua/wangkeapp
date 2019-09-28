@@ -224,7 +224,8 @@
 		<script src="../js/mui.js"></script>
 		<script src="../js/mui.picker.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/upload.js"></script>
+		<!-- <script src="../js/upload.js"></script> -->
+		<script src="../js/choosemedia.js"></script>
 		<script src="../js/Zepto.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
@@ -305,9 +306,17 @@
 						// 添加主图
 						mui(".mui-content").on("tap", ".add-goods-img", function() {
 							document.activeElement.blur();
-							imageUpload(function(event) {
-								app.images.push(event.url);
-							});
+							wangke.init({type: 'image', multiple: true});
+							wangke.chooseMedia(function(res) {
+								app.images.push(res.url);
+							}, function(e) {
+								if (e.code > 100) {
+									message(e.message);
+								}
+							})
+							// imageUpload(function(event) {
+							// 	app.images.push(event.url);
+							// });
 							// var editButtons = new Array();
 							// editButtons.push({
 							// 	title: "拍照上传",

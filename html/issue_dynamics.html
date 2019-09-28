@@ -8,6 +8,14 @@
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
 		<style type="text/css">
+			.issue-dynamics-container .picture_display .picture_display_chear:nth-child(4n) {
+			  margin-right: 0!important;
+			}
+			
+			.issue-dynamics-container .picture_display .picture_display_chear:nth-last-child(4),.picture_display_chear:nth-last-child(3),.picture_display_chear:nth-last-child(2),.picture_display_chear:nth-last-child(1) {
+			  margin-bottom: 0!important;
+			}
+			
 			.picture_display_chear img {
 				object-fit: cover;
 			}
@@ -81,7 +89,7 @@
 				<textarea class="issue-desc" v-model="issue_desc" id="issue-desc" rows="5" maxlength="1000" name="desc" placeholder="填写动态内容(1000字)"></textarea>
 			</div>
 			<div class="picture_display" v-if="video_src==''">
-				<div id="pic-container">
+				<div id="pic-container" style="line-height: 0;">
 					<div v-if="images" class="picture_display_chear" v-for="(img,i) in images" :key="i">
 						<img :src="img" data-preview-src="" @tap="previewImage(i)" />
 						<span class="mui-close" @tap="delImg(i)">
@@ -101,7 +109,8 @@
 		</div>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/media.js"></script>
+		<!-- <script src="../js/media.js"></script> -->
+		<script src="../js/choosemedia.js"></script>
 		<script type="text/javascript" src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
@@ -153,8 +162,8 @@
 						plus.navigator.setStatusBarStyle("dark");
 						//上传图片
 						mui(".mui-content").on("tap", "#add_pic", function() {
-							chooseMedia('none', function(res) {
-								logs(res);
+							wangke.init({type: 'none', multiple: true, separate: true});
+							wangke.chooseMedia(function(res) {
 								if (res.type == 'video') {
 									app.is_video = 1;
 									app.video_src = res.url;
@@ -169,6 +178,24 @@
 									message(e.message);
 								}
 							})
+							
+							
+							// chooseMedia('none', function(res) {
+							// 	logs(res);
+							// 	if (res.type == 'video') {
+							// 		app.is_video = 1;
+							// 		app.video_src = res.url;
+							// 		app.images = [];
+							// 		app.images.push(res.url);
+							// 	} else {
+							// 		app.is_video = 0;
+							// 		app.images.push(res.url);
+							// 	}
+							// }, function(e) {
+							// 	if (e.code > 100) {
+							// 		message(e.message);
+							// 	}
+							// })
 						})
 					})
 

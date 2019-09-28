@@ -173,8 +173,8 @@
 			
 			.picture_display_chear {
 				position: relative;
-				width: 5rem;
-				height: 5rem;
+				width: 4.8rem;
+				height: 4.8rem;
 				margin-right: 10px;
 				margin-bottom: 10px;
 			}
@@ -513,14 +513,14 @@
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/upload.js"></script>
+		<!-- <script src="../js/upload.js"></script> -->
+		<script src="../js/choosemedia.js"></script>
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: true
 			})
 
 			var flag = true;
-			var imageId = 0;
 			var images = new Array();
 			var specId = 0;
 			var spec = new Array();
@@ -577,18 +577,34 @@
 
 				//上传主图
 				document.getElementById('add_pic').addEventListener('tap', function() {
-					imageUpload(function(res) {
-						images[imageId] = res.url;
-						imageId++;
+					wangke.init({type: 'image', multiple: true});
+					wangke.chooseMedia(function(res) {
+						images.push(res.url);
 						var newImgDiv = document.createElement('div');
-						newImgDiv.setAttribute('data-id', imageId);
 						newImgDiv.classList.add('picture_display_chear');
-						var html = '<img src="' + res.url +
-							'" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+						var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close" data-iamge="' + res.url + '"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 						newImgDiv.innerHTML = html;
 						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-					});
-				})
+						});
+					}, function(e) {
+						if (e.code > 100) {
+							message(e.message);
+						}
+					})
+					
+					
+					// imageUpload(function(res) {
+					// 	images[imageId] = res.url;
+					// 	imageId++;
+					// 	var newImgDiv = document.createElement('div');
+					// 	newImgDiv.setAttribute('data-id', imageId);
+					// 	newImgDiv.classList.add('picture_display_chear');
+					// 	var html = '<img src="' + res.url +
+					// 		'" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					// 	newImgDiv.innerHTML = html;
+					// 	document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+					// });
+				// })
 				// var ratio = 1 / 1;
 				// document.getElementById('add_pic').addEventListener('tap', function() {
 				// 	document.activeElement.blur();
@@ -663,15 +679,16 @@
 				// })
 				//删除主图 
 				mui('#pic-container').on('tap', '.mui-close', function() {
+					document.activeElement.blur();
 					var parentDiv = this.parentElement;
-					var imgId = parentDiv.dataset.id;
+					var image = this.dataset.image;
+					var imageIndex = images.indexOf(image);
+					images.splice(imageIndex, 1);
 					parentDiv.remove();
-					delete images[imgId];
 				})
 
 				document.getElementById('add_spec').addEventListener('tap', function() {
 					var newImgDiv = document.createElement('div');
-					newImgDiv.setAttribute('data-id', imageId);
 					newImgDiv.classList.add('add_choice');
 					newImgDiv.dataset.specid = specId;
 					var html = '<div class="choice" style="padding: 10px 0;">';

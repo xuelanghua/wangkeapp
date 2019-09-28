@@ -171,8 +171,8 @@
 			
 			.picture_display_chear {
 				position: relative;
-				width: 5rem;
-				height: 5rem;
+				width: 4.8rem;
+				height: 4.8rem;
 				margin-right: 10px;
 				margin-bottom: 10px;
 			}
@@ -499,13 +499,13 @@
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/upload.js"></script>
+		<!-- <script src="../js/upload.js"></script> -->
+		<script src="../js/choosemedia.js"></script>
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: true
 			})
 			var flag = true;
-			var imageId = 0;
 			var images = new Array(); //存储图片的数组
 			var specId = 0;
 			var spec = new Array();
@@ -549,6 +549,7 @@
 			})
 			//获取商品的信息
 			function getGoodInfo() {
+				showload(0);
 				var ajax_url = $ajaxUrl + 'goods';
 				mui.ajax(ajax_url, {
 					data: {
@@ -560,6 +561,14 @@
 					type: 'post',
 					timeout: 10000,
 					success: function(ret) {
+						setTimeout(function() {
+							showload(1);
+						}, 500)
+						if (ret.errno) {
+							plus.nativeUI.alert(ret.message, function() {
+								mui.back();
+							})
+						}
 						logs(ret);
 						if (ret.data.check_status == 2) {
 							mui("#cause_info")[0].innerText = ret.data.remark;
@@ -584,7 +593,6 @@
 						//获取规格
 						for (var i = 0; i < good_spec_container.length; i++) {
 							var newImgDiv = document.createElement('div');
-							newImgDiv.setAttribute('data-id', imageId);
 							newImgDiv.classList.add('add_choice');
 							newImgDiv.dataset.specid = specId;
 							var html = '<div class="choice" style="padding: 10px 0;">';
@@ -615,22 +623,20 @@
 						//获取图片链接 并读取原图片
 						// var img_url_str = ret.data.images;
 						images = ret.data.images;
-						imageId = ret.data.images.length - 1;
 						for (var i = 0; i < images.length; i++) {
 							//js新建一个div 用于展示刚刚添加的图片
 							var newImgDiv = document.createElement('div');
 							//设置该div的id
-							newImgDiv.setAttribute('data-id', imageId);
 							//为该div设置相关的类
 							newImgDiv.classList.add('picture_display_chear');
 							//拼装一个图片标签展示图片
-							var html = '<img src="' + images[i] +
-								'" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+							var html = '<img src="' + images[i] + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close" data-image="' + images[i] + '"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 							//插入html
 							newImgDiv.innerHTML = html;
 							//在照片容器之前插入一个元素
 							document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
 						}
+						logs(images);
 						//获取商品类型
 						//设置商品类型id
 						type = ret.data.type;
@@ -651,6 +657,7 @@
 						getGoodsType();
 					},
 					error: function(xhr, type, errorThrown) {
+						showload(1);
 						console.log(JSON.stringify('失败'));
 						console.log(JSON.stringify(errorThrown));
 					}
@@ -717,21 +724,33 @@
 					}, 'slide-in-right');
 				})
 				//上传主图
-				var ratio = 1 / 1;
 				document.getElementById('add_pic').addEventListener('tap', function() {
 					document.activeElement.blur();
-					imageUpload(function(event) {
-						var img = event.filename;
-						images.push(img);
-						imgId = images.indexOf(img);
+					wangke.init({type: 'image', multiple: true});
+					wangke.chooseMedia(function(res) {
+						images.push(res.url);
 						var newImgDiv = document.createElement('div');
-						newImgDiv.setAttribute('data-id', imageId);
 						newImgDiv.classList.add('picture_display_chear');
-						var html = '<img src="' + event.url +
-							'" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+						var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close" data-image="' + res.url + '"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 						newImgDiv.innerHTML = html;
 						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-					});
+						});
+					}, function(e) {
+						if (e.code > 100) {
+							message(e.message);
+						}
+					})
+					// imageUpload(function(event) {
+					// 	var img = event.filename;
+					// 	images.push(img);
+					// 	imgId = images.indexOf(img);
+					// 	var newImgDiv = document.createElement('div');
+					// 	newImgDiv.setAttribute('data-id', imageId);
+					// 	newImgDiv.classList.add('picture_display_chear');
+					// 	var html = '<img src="' + event.url + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					// 	newImgDiv.innerHTML = html;
+					// 	document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+					// });
 					// var editButtons = new Array();
 					// editButtons.push({
 					// 	title: "拍照上传",
@@ -755,7 +774,7 @@
 					// 			break;
 					// 	}
 					// });
-				})
+				// })
 				// 拍照获取图片
 				// function getImage() {
 				// 	var camera = plus.camera.getCamera();
@@ -804,14 +823,16 @@
 				// })
 				//删除主图 
 				mui('#pic-container').on('tap', '.mui-close', function() {
+					document.activeElement.blur();
 					var parentDiv = this.parentElement;
-					var imgId = parentDiv.dataset.id;
+					var image = this.dataset.image;
+					var imageIndex = images.indexOf(image);
+					images.splice(imageIndex, 1);
 					parentDiv.remove();
-					delete images[imgId];
 				})
+				
 				document.getElementById('add_spec').addEventListener('tap', function() {
 					var newImgDiv = document.createElement('div');
-					newImgDiv.setAttribute('data-id', imageId);
 					newImgDiv.classList.add('add_choice');
 					newImgDiv.dataset.specid = specId;
 					var html = '<div class="choice" style="padding: 10px 0;">';
@@ -898,7 +919,7 @@
 						}
 						console.log(specStock);
 						if (parseInt(specStock) <= 0) {
-							message('商品库存填写有误111!');
+							message('商品库存填写有误!');
 							return;
 						}
 						var temp = {

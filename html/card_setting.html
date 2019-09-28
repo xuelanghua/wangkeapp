@@ -754,7 +754,7 @@
 	<script src="../js/mui.zoom.js"></script>
 	<script src="../js/mui.previewimage.js"></script>
 	<script src="../js/util.js"></script>
-	<script src="../js/upload.js"></script>
+	<script src="../js/choosemedia.js"></script>
 	<script type="text/javascript">
 		mui.init({
 			swipeBack: false,
@@ -766,7 +766,6 @@
 		var video_path='';
 		var cardType = 'cardType1';
 		var voiceTime = 0;
-		var timer = null;
 		var r = null;
 		var play = null;
 		var imageId = 0;
@@ -777,7 +776,6 @@
 			userInfo = getUserInfo();
 			getMemberInfo();
 			eventInit();
-			// initializeVideoPoster('video', true);
 			mui.previewImage();
 		})
 
@@ -806,7 +804,6 @@
 				}
 			})
 
-			// document.getElementById("headimgurl").addEventListener("tap", function() {
 			mui('.mui-content').on('tap', '#headimgurl, .title_chart, .transverse_title_header_right', function() {
 				var editButtons = new Array();
 				editButtons.push({
@@ -900,7 +897,6 @@
 			document.getElementById('voice_record').addEventListener('release', function() {
 				document.querySelector('.showArea').style.display = 'none';
 				stopRecord();
-				// setTimeout('stopRecord()', 2000);
 			})
 
 			//播放录音
@@ -919,63 +915,36 @@
 
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
-				imageUpload(function(res) {
+				wangke.init({type: 'image', multiple: true});
+				wangke.chooseMedia(function(res) {
 					images[imageId] = res.url;
 					imageId++;
 					var newImgDiv = document.createElement('div');
 					newImgDiv.setAttribute('data-id', imageId);
 					newImgDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + res.url +
-						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+					var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 					newImgDiv.innerHTML = html;
 					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-				});
+				}, function(e) {
+					if (e.code > 100) {
+						message(e.message);
+					}
+				})
 			})
 
 			// 上传视频
 			mui('.mui-content').on('tap', '.choose-video', function() {
-				plus.gallery.pick(function(path) {
-					var vpath = path;
-					showload(false, false, '视频上传中...', "rgba(0,0,0,0.5)");
-					var task = plus.uploader.createUpload($videoUrl, {
-							method: "POST",
-							blocksize: 614400,
-							priority: 100
-						},
-						function(t, status) { //上传完成
-							if (status == 200) {
-								var res = JSON.parse(t.responseText);
-								if (res.error) {
-									plus.nativeUI.alert(res.error.message, showload(1), '提示', 'OK');
-								} else {
-									logs(res);
-									video_path=res.url;
-									document.querySelector('.video-container').style.display = 'block';
-									document.querySelector('input[name=my_video]').value = res.filename;
-									document.getElementById("video_cover").src = res.url+ '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast';
-									// document.querySelector('.video-container video').setAttribute('poster', res.url + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast');
-									document.getElementById("again-updata").innerText = "重新选择";
-									showload(1);
-								}
-							} else {
-								console.log("上传失败：" + status);
-								plus.nativeUI.alert('上传失败!', showload(1), '提示', 'OK');
-							}
-						}
-					);
-					// 页面中要上传的 视频路径
-					task.addFile(vpath, {
-						key: 'file'
-					});
-					task.start();
-					setTimeout(function() {
-						showload(1);
-					}, 30000);
+				wangke.galleryImg('video', function(res) {
+					video_path = res.url;
+					document.querySelector('.video-container').style.display = 'block';
+					document.querySelector('input[name=my_video]').value = res.filename;
+					document.getElementById("video_cover").src = res.url+ '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast';
+					document.getElementById("again-updata").innerText = "重新选择";
 				}, function(e) {
-					message("选择出错！")
-				}, {
-					filter: "video"
-				});
+					if (e.code > 100) {
+						message(e.message);
+					}
+				})
 			})
 
 			//删除图片
@@ -1026,13 +995,12 @@
 				if (res.errno == 0) {
 					logs(res.data);
 					loadInfo(res.data);
+				} else {
+					message(res.message);
+					setTimeout(function() {
+						fnCloseWin('card_setting');
+					}, 2000);
 				}
-				// else {
-				// 	message(res.message);
-				// 	setTimeout(function() {
-				// 		fnCloseWin('card_setting');
-				// 	}, 2000);
-				// }
 				setTimeout(function() {
 					showload(1);
 				}, 1000)
@@ -1107,9 +1075,7 @@
 			if (data.my_video.length != 0) {
 				document.querySelector('.video-container').style.display = 'block';
 				video_path=data.my_video;
-				// document.querySelector('.video-container video').src = data.my_video;
 				document.getElementById("video_cover").src = data.my_video+ '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast';
-				// document.querySelector('.video-container video').setAttribute('poster', data.my_video + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast');
 				document.querySelector('input[name=my_video]').value = data.my_video;
 				document.getElementById("again-updata").innerText = "重新选择";
 			}
@@ -1135,8 +1101,6 @@
 			camera.captureImage(function(e) {
 				plus.io.resolveLocalFileSystemURL(e, function(entry) {
 					cropperImg(entry.toLocalURL(), 'card_setting');
-					// imageResize(entry.toLocalURL());
-					// 其他操作,比如预览展示
 				}, function(e) {
 					console.log("读取拍照文件错误：" + e.message);
 				});
@@ -1163,13 +1127,6 @@
 					plus.nativeUI.alert('最多只能选择1张图片');
 				}
 			});
-		}
-
-		//创建计时器记录录音时长
-		function timeInterval() {
-			timer = setInterval(function() {
-				// voiceTime++;
-			}, 1000)
 		}
 
 		//开始录音
@@ -1213,18 +1170,6 @@
 		//结束录音
 		function stopRecord() {
 			r.stop();
-			clearInterval(timer);
-		}
-
-		//播放录音
-		function playRecord(path) {
-			play = plus.audio.createPlayer(
-				'https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3');
-			play.play(function() {
-				document.querySelector('.play').src = '../image/bofang.png';
-			}, function(e) {
-				message("Audio play error: " + e.message);
-			});
 		}
 
 		//文件上传
@@ -1284,20 +1229,5 @@
 				showload(1);
 			}, 'json')
 		}
-
-		//图片转base64
-		function canvasGen(image) {
-			var canvas = document.createElement('canvas');
-			canvas.width = image.width;
-			canvas.height = image.height;
-			var ctx = canvas.getContext('2d');
-			ctx.drawImage(image, 0, 0, image.width, image.height);
-			var data = canvas.toDataUrl("image/jpeg", 1);
-		}
-		mui('.mui-content').on('tap',".video-container",function(){
-			openPage('player_model.html', 'player_model', '#000000', {
-				url: video_path
-			}, 'zoom-fade-out');
-		})
 	</script>
 </html>
