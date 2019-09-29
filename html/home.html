@@ -9,9 +9,10 @@
 		<link href="../icomoon/style.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../css/swiper.min.css">
 		<style>
-			body{
+			body {
 				background-color: #FFFFFF;
 			}
+
 			.clearfix {
 				clear: both;
 			}
@@ -847,6 +848,7 @@
 						down: {
 							style: 'circle',
 							color: '#2289FF',
+							offset: '-50px',
 							callback: function() {
 								getNotice();
 								weatherInit(); //天气初始化
@@ -860,12 +862,12 @@
 					if (plus.device.model === 'iPhoneX') {
 						logs("运行在iphoneX上");
 					}
-					var banner=getcache('banner');
-					if(banner!=null){
-						app.banner=banner;
-						setTimeout(function(){
+					var banner = getcache('banner');
+					if (banner != null) {
+						app.banner = banner;
+						setTimeout(function() {
 							sliderPlay();
-						},1000)
+						}, 1000)
 					}
 					plus.navigator.setStatusBarStyle('dark');
 					getNotice();
@@ -1072,7 +1074,7 @@
 				if (res.errno == 0) {
 					var carousel = res.data;
 					app.banner = res.data;
-					cacheData("banner",app.banner);
+					cacheData("banner", app.banner);
 					setTimeout(function() {
 						sliderPlay();
 					}, 1000)
@@ -1085,7 +1087,7 @@
 						mui('.mui-content').pullRefresh().endPulldownToRefresh();
 					}, 1000)
 				}
-				if (!refresh) { 
+				if (!refresh) {
 					setTimeout(function() {
 						showload(1);
 					}, 2000)

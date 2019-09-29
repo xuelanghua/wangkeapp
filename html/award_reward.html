@@ -35,7 +35,7 @@
 
 		<div id="mui-content" class="mui-content service-award-container" v-cloak>
 			<ul id="fans-list" class="mui-table-view" v-if="fansList.length>0">
-				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key='index'>
+				<li class="mui-table-view-cell" v-for="(list,index) in fansList" :key="index">
 					<img class="header-img" :data-fid="list.id" :src="list.avatarUrl" alt="">
 					<div class="right-cont" :data-cid="list.id" :data-chatname="list.nickName" :data-avatar="list.avatarUrl">
 						<div class="top mui-clearfix">
@@ -62,7 +62,7 @@
 		<script type="text/javascript">
 			mui.init();
 			var userInfo = getUserInfo(),
-				skip = 1,
+				skip = 1, 
 				limit = 15;
 			var refresh = '';
 			
@@ -93,6 +93,7 @@
 							down: {
 								style: 'circle',
 								color: '#2289FF',
+								offset: '-50px',
 								callback: function() {
 									skip = 1;
 									refresh = 'down';
