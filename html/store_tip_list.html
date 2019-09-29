@@ -86,8 +86,12 @@
 				position: absolute;
 				margin-left: 5px;
 				transform: rotate(45deg) translateY(96%);
-			}.list-title {
+				z-index: 1;
+			}
+			.list-title {
+				position: relative;
 				margin-bottom: 5px;
+				z-index: 2;
 			}
 			.list-title span{
 				font-size: 15px;
@@ -143,6 +147,15 @@
 				border-radius: 0.29rem;
 				margin: 0.2rem  0 0;
 			}
+			.goods-info {
+				flex-grow: 1;
+				padding-left: 10px;
+			}
+			
+			.goods-info .mui-badge {
+				background-color: #FFFFFF;
+				font-size: 10px;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -157,50 +170,37 @@
 			</header>
 			<div class="mui-content">
 				<div class="list-groups">
-					<div class="list flx-sb" v-for="i in 6">
+					<div class="list flx-sb" v-for="(list, index) in msgList">
 						<div class="user-head-image">
-							<img src="../image/5E0eH.png">
+							<img :src="list.target_info.buyer.avatar">
 						</div>
 						<div class="list-info">
-							<h3>尔小康</h3>
+							<h3>{{list.target_info.buyer.name}}</h3>
 							<div class="arrows"></div>
-							<div class="list-info-inside">
+							<div class="list-info-inside" @tap="goodsDetail(list.target_info)">
 								<div class="list-title flx-sb">
-									<span>下单提示</span>
-									<span>分销订单</span>
+									<span v-if="list.target_1==1">下单提示</span>
+									<span v-else>收货提示</span>
+									<span v-if="list.target_info.team_order==0||(list.target_info.team_order>0 && list.target_info.captain_uid==userInfo.uid)">供货订单</span>
+									<span v-else>分销订单</span>
 								</div>
 								<div class="goods-list-cont">
-									<div class="goods-list flx-sb">
+									<div class="goods-list flx-sb" v-for="(goods, index) in list.target_info.goods">
 										<div class="goods-img">
-											<img src="../image/5E0eH.png" alt="">
-											<span>分销商品</span>
+											<img :src="goods.cover" alt="">
+											<span v-if="list.target_info.team_order>0">分销商品</span>
 										</div>
 										<div class="goods-info">
-											<p class="goods-title mui-ellipsis ">原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃</p>
+											<p class="goods-title mui-ellipsis">{{goods.name}}</p>
 											<div class="size-info flx-sb">
-												<span>默认规格</span>
-												<span>&yen;20.00</span>
-												<span>x2</span>
-											</div>
-										</div>
-									</div>
-									<div class="goods-list flx-sb">
-										<div class="goods-img">
-											<img src="../image/5E0eH.png" alt="">
-											<span>分销商品</span>
-										</div>
-										<div class="goods-info">
-											<p class="goods-title mui-ellipsis ">原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃原味耳糠，又香又脆，好吃</p>
-											<div class="size-info flx-sb">
-												<span>默认规格</span>
-												<span>&yen;20.00</span>
-												<span>x2</span>
+												<span class="mui-badge">{{goods.content||'默认'}}</span>
+												<span>&yen;{{goods.price}}&nbsp;&nbsp;&nbsp;&nbsp;x{{goods.number}}</span>
 											</div>
 										</div>
 									</div>
 									<div class="flx-sb total-cont">
-										<span>共两件商品</span>
-										<span>待付款：&yen;40.00</span>
+										<span>共{{list.target_info.goods_number}}件商品</span>
+										<span>实付款：&yen;{{list.target_info.total_price}}</span>
 									</div>
 									<div class="mui-clearfix">
 										<div class="mui-pull-right check-cont">查看详情</div>
@@ -216,11 +216,16 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
-			var userInfo = getUserInfo();
+			var userInfo = getUserInfo(),
+				genre = '',
+				limit = 5,
+				skip = 1,
+				refresh = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					msgList: [],
+					userInfo: userInfo
 				},
 				created: function() {
 					// 初始化字体大小
@@ -237,15 +242,102 @@
 				mounted: function() {
 					mui.init({
 						beforeback: function() {
-							//plus.navigator.setStatusBarStyle("light");
+							mui.fire(plus.webview.getWebviewById('message'), 'refreshNotice');
+							mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'refreshNotice');
+						},
+						pullRefresh: {
+							container: "#mui-content", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									refresh = "up";
+									skip++;
+									getMsgList();
+								}
+							},
+							down: {
+								style: 'circle', //单webview模式的下拉刷新 
+								color: '#2289FF', //可选，默认“#2BD009” 下拉刷新控件
+								offset: '26px',
+								callback: function() {
+									mui('#mui-content').pullRefresh().refresh(true);
+									refresh = "down";
+									skip = 1;
+									getMsgList();
+								}
+							}
 						}
 					});
 					mui.plusReady(function() {
+						plus.webview.currentWebview().setStyle({
+							scrollIndicator: 'none'
+						})
 						var self = plus.webview.currentWebview();
-						//plus.navigator.setStatusBarStyle("dark");
+						genre = self.genre;
+						
+						getMsgList();
+						readNotice();
 					})
 				}
 			})
+			
+			// 获取消息列表
+			function getMsgList() {
+				mui.post($ajaxUrl + 'chat&action=notice_list_by_type', {
+					token: userInfo.token,
+					type: genre,
+					skip: skip,
+					limit: limit
+				}, function(res) {
+					logs(res); 
+					if (res.errno == 0) {
+						if (refresh == 'up') {
+							app.msgList = app.msgList.concat(res.data);
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						} else if (refresh == 'down') {
+							app.msgList = res.data;
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						} else {
+							app.msgList = res.data;
+						}
+					} else {
+						if (refresh == 'up') {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					}
+				}, 'json')
+			}
+			
+			// 阅读消息
+			function readNotice() {
+				mui.post($ajaxUrl + 'chat&action=read_notice', {
+					token: userInfo.token,
+					type: genre
+				}, function(res) {
+					logs(res);
+				}, 'json')
+			}
+			
+			//跳转商品详情
+			function goodsDetail(gd) {
+				var sales = (gd.team_order==0||gd.team_order>0&&gd.captain_uid==userInfo.id) ? 1 : 2;
+				if (gd.order_status == 0) {
+					openPage('order_details_await_sgoods.html', 'order_details_await_sgoods', '#f7f7f7', {
+						orderId: gd.id,
+						sales: sales
+					}, "zoom-fade-out")
+				} else {
+					openPage('order_details_finish.html', 'order_details_finish', '#f7f7f7', {
+						orderId: gd.id,
+						sales: app.sales
+					}, "zoom-fade-out")
+				}
+			}
 		</script>
 	</body>
 
