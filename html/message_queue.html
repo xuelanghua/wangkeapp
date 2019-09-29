@@ -181,7 +181,7 @@
 		<script type="text/javascript">
 			var userInfo = getUserInfo(),
 				skip = 1,
-				limit = 10;
+				limit = 8;
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -224,8 +224,7 @@
 					if (res.errno == 0) {
 						if (skip == 1) {
 							app.list = res.data;
-							mui.fire(plus.webview.currentWebview().opener(), 'refreshTrendsNum');
-							mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'trendsContRefresh');
+							mui.fire(plus.webview.currentWebview().opener(), 'timelineNoticeRefresh');
 						} else {
 							app.list = app.list.concat(res.data);
 						}

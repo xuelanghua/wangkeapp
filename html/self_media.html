@@ -1161,6 +1161,7 @@
 					}
 				})
 			})
+			
 			// 分享
 			function shareBtn(id, cont, img, toUid) {
 				app.isComment = true;
@@ -1303,23 +1304,22 @@
 					}
 				});
 			}
+			
 			// 点击消息提醒
 			mui('.mui-content').on('tap', '.msg-tips-inside', function() {
 				openPage('message_queue.html', 'message_queue', '#f7f7f7');
 			})
+			
 			// 获取消息
 			function getTrendsNum() {
 				mui.post($ajaxUrl + "timeline&action=notice", {
 					token: userInfo.token,
 				}, function(res) {
+					logs(res);
 					app.trends_cont = res.data;
+					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'trendsContRefresh', {total: res.data.total});
 				}, 'json');
 			}
-			
-			// 监听已读消息
-			window.addEventListener('refreshTrendsNum', function(event) {
-				app.trends_cont.total = 0;
-			})
 			
 			// 监听动态消息
 			window.addEventListener('timelineNoticeRefresh', function(event) {

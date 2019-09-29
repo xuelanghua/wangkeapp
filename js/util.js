@@ -8,7 +8,7 @@ $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&
 // $videoUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=video'; //视频上传接口
 // $voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
 
-$debug = true;
+$debug = false;
 $videoMaxSize = 10 * 1024 * 1024;
 $noticeNumber = 0;
 //获取用户信息
@@ -742,7 +742,8 @@ function pushCallback(data, event) {
 				fnLogout();
 			} else if (url == 'timelineNotice') {
 				mui.fire(plus.webview.getWebviewById('media'), 'timelineNoticeRefresh');
-				mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'trendsContRefresh');
+			} else if (url == 'shop') {
+				
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
@@ -797,7 +798,8 @@ function pushCallback(data, event) {
 			}
 		} else if (url == 'timelineNotice') {
 			mui.fire(plus.webview.getWebviewById('media'), 'timelineNoticeRefresh');
-			mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'trendsContRefresh');
+		} else if (url == 'shop') {
+			
 		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}

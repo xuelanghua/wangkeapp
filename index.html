@@ -269,7 +269,6 @@
 						} else {
 							var timer = setInterval(function() {
 								getUnreadMessage();
-								getTrendsNum()
 							}, 3000)
 							// plus.nativeUI.showWaiting();
 							showload(0);
@@ -326,7 +325,6 @@
 					bindClientId();
 					initIndexPage();
 					getUnreadMessage();
-					getTrendsNum();
 					var timer = setInterval(function() {
 						getUnreadMessage();
 					}, 2000);
@@ -502,19 +500,9 @@
 			// 监听动态消息
 			window.addEventListener('trendsContRefresh', function(event) {
 				console.log('首页接收到通知！');
-				// 获取消息
-				getTrendsNum();
+				logs(event.detail);
+				app.trends_cont = event.detail.total;
 			})
-			// 获取消息
-			function getTrendsNum() {
-				mui.post($ajaxUrl + "timeline&action=notice", {
-					token: userInfo.token,
-				}, function(res) {
-					if (res.errno == 0) {
-						app.trends_cont = res.data.total;
-					}
-				}, 'json');
-			}
 		</script>
 	</body>
 </html>
