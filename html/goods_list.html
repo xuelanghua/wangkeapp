@@ -636,7 +636,7 @@
 				<button id="stock_goods">拣货</button>
 			</div>
 			<div class="share-container">
-				<div class="share-items">
+				<div class="share-items" @tap="shareUser">
 					<img src="../image/icon/good-list-share02.jpg" alt="">
 					<span>好友</span>
 				</div>
@@ -1002,7 +1002,7 @@
 			paddeds.style.display = 'flex';
 		}
 	}
-	// 分享给好友
+	// 分享给微信好友
 	function shareFriend() {
 		mask.close();
 		var obj = app.on_sale_list[currentIdx];
@@ -1068,5 +1068,10 @@
 			});
 			imgDtask.start()
 		});
+	}
+	// 分享给我旺客用户
+	function shareUser(){
+		mask.close();
+		openPage("share_friend_list.html","share_friend_list","#F7F7F7");
 	}
 </script>

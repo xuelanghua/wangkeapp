@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.indexedlist.css" rel="stylesheet" />
+		<link href="../iconfont/iconfont.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/chat.css" />
+		<style type="text/css">
+			.mui-content {
+				padding-top: 0;
+			}
+
+			.chat-container .mui-indexed-list-bar a {
+				height: 3.2% !important;
+				display: inline-block;
+				width: 100%;
+				touch-action: pan-y;
+			}
+
+			.chat-container .mui-indexed-list-bar {
+				top: 20px;
+				width: 32px;
+				padding: 0;
+				border-radius: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				touch-action: pan-y;
+				box-sizing: border-box;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">好友选择</h1>
+		</header>
+		<div id="mui-content" class="mui-content chat-container" v-cloak>
+			<div id="list" class="mui-indexed-list-cont">
+				<div class="mui-indexed-list-search mui-input-row mui-search mui-hidden">
+					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="serach">
+				</div>
+				<div class="mui-indexed-list-bar" id="list_bar">
+					<a>#</a>
+					<a>A</a>
+					<a>B</a>
+					<a>C</a>
+					<a>D</a>
+					<a>E</a>
+					<a>F</a>
+					<a>G</a>
+					<a>H</a>
+					<a>I</a>
+					<a>J</a>
+					<a>K</a>
+					<a>L</a>
+					<a>M</a>
+					<a>N</a>
+					<a>O</a>
+					<a>P</a>
+					<a>Q</a>
+					<a>R</a>
+					<a>S</a>
+					<a>T</a>
+					<a>U</a>
+					<a>V</a>
+					<a>W</a>
+					<a>X</a>
+					<a>Y</a>
+					<a>Z</a>
+				</div>
+				<div class="mui-indexed-list-alert"></div>
+				<div class="mui-indexed-list-inner">
+					<ul class="mui-table-view friend-scroll-cont">
+						<template v-for="(vel,key,idx) in friendList" :key="idx">
+							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
+							<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
+								<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
+									<img :src="list.avatarUrl||'../image/user_default.png'">
+								</div>
+								<div class="customer-left">
+									<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
+										{{list.name||list.nickName}}
+									</div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
+								<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
+									<img :src="list.avatarUrl||'../image/user_default.png'">
+								</div>
+								<div class="customer-left">
+									<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
+										{{list.name||list.nickName}}
+									</div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
+								<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
+									<img :src="list.avatarUrl||'../image/user_default.png'">
+								</div>
+								<div class="customer-left">
+									<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
+										{{list.name||list.nickName}}
+									</div>
+								</div>
+							</li>
+						</template>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/mui.indexedlist.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var refresh = '';
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					newcustomerData: {},
+					rendererList: [],
+					crmList: {},
+					friendList: {},
+					newfriendNum: '0',
+					messageNum: '0'
+				},
+				methods: {
+					// 跳转聊天
+					goChat: function(cid, chatName, avatar) {
+						openPage('dialog.html', 'dialog', '#F7F7F7', {
+							cid: cid,
+							chatName: chatName,
+							avatar: avatar,
+							barStyle: 'light'
+						}, 'slide-in-right');
+						plus.navigator.setStatusBarStyle('dark');
+					},
+				},
+				mounted: function() {
+					var pageHeight = 0;
+					mui.plusReady(function() {
+						getCustomerList();
+
+						// 关闭和开启下拉刷新 日志标记flag  
+						var flag = true;
+						//进入时开启下拉刷新  
+						var selfpage = plus.webview.currentWebview();
+						selfpage.setPullToRefresh({
+							support: false,
+							style: 'circle',
+							color: '#2289FF',
+							bounce: false
+						}, onRefresh);
+						//监听滚动事件  
+						var list = document.getElementById('list');
+						pageHeight = plus.display.resolutionHeight;
+						list.style.height = pageHeight - 44 + 'px';
+						window.indexedList = new mui.IndexedList(list);
+						document.querySelector('.mui-indexed-list-inner').addEventListener('scroll', function(e) {
+							if (this.scrollTop < 0 || this.scrollTop == 0) {
+								flag = true;
+								selfpage.setPullToRefresh({
+									support: true,
+									style: 'circle',
+									color: '#2289FF',
+									offset: '-50px',
+									bounce: false
+								});
+							} else if (flag) {
+								flag = false;
+								selfpage.setPullToRefresh({
+									support: false
+								});
+							}
+						});
+						// 具体执行刷新的方法
+						function onRefresh() {
+							refresh = 'down';
+							getCustomerList();
+						}
+					})
+				}
+			})
+			// 获取客户列表
+			function getCustomerList() {
+				if (!userInfo) return;
+				mui.post($ajaxUrl + 'customer', {
+					action: 'friend_list',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						app.friendList = res.data;
+						if (refresh == 'down') {
+							plus.webview.currentWebview().endPullToRefresh();
+						}
+					} else {
+
+					}
+				}, 'json')
+			}
+		</script>
+	</body>
+
+</html>
