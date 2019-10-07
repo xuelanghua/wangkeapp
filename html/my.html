@@ -545,6 +545,7 @@
 							updateUserInfo();
 							getMemberInfo();
 							getNotice();
+							getLoginType();
 						}
 					}
 				}
@@ -581,7 +582,8 @@
 				// };
 				eventInit();
 				getMemberInfo();
-				getNotice(); 
+				getNotice();
+				getLoginType();
 			})
 
 			//事件初始化
@@ -902,6 +904,22 @@
 				});
 				detailPage.show('slide-in-right');
 				setStatusBar('', 'dark');
+			}
+			
+			//根据登录类型隐藏充值界面
+			function getLoginType() {
+				if (plus.os.name == "iOS") {
+					mui.get($ajaxUrl + 'member', {
+						action: 'login_setting',
+					}, function(res) {
+						//审核时使线上的res.data.login_type和升级包中的不一致
+						if (res.data.login_type == 3) {
+							document.getElementById('recharge').classList.add('mui-hidden');
+						} else {
+							document.getElementById('recharge').classList.remove('mui-hidden');
+						}
+					}, 'json');
+				}
 			}
 		</script>
 	</body>

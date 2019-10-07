@@ -133,7 +133,7 @@
 			<div class="mui-control-content mui-active">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll" id="pull-refresh">
-						<ul class="mui-table-view" v-if="recordList.length>0">
+						<ul class="mui-table-view" v-if="!empty">
 							<li class="mui-table-view-cell" v-for="(item, index) in recordList" :key="index">
 								<img class="mui-pull-left" :src="item.avatarUrl">
 								<div class="mui-pull-left none">
@@ -162,6 +162,7 @@
 			var skip = 1;
 			var limit = 10;
 			var type = '1,2';
+			var refresh = '';
 			var userInfo = getUserInfo();
 			var vm = new Vue({
 				el: ".mui-content",
@@ -170,6 +171,8 @@
 					promote: '0.00',
 					chat: '0.00',
 					recordList: [],
+					recordLen: 0,
+					empty: false
 				},
 				mounted: function() {
 					mui.init({
@@ -185,22 +188,24 @@
 								contentrefresh: "正在加载...",
 								contentnomore: '没有更多数据了',
 								callback: function() {
+									refresh = 'up';
 									skip++;
 									getRedpackInfo();
-									mui("#pull-refresh").pullRefresh().endPullupToRefresh();
 								}
-								// style: 'circle',
-								// color: '#2289FF',
-								// height: '50px',
-								// auto: false,
-								// contentrefresh: "正在加载...",
-								// contentnomore: '没有更多数据了',
-								// callback: function() {
-								// 	skip++;
-								// 	getRedpackInfo();
-								// 	mui("#pull-refresh").pullRefresh().endPullupToRefresh();
-								// }
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								offset: '-50px',
+								auto: false,
+								callback: function() {
+									mui('#pull-refresh').pullRefresh().refresh(true);
+									refresh = 'down';
+									skip = 1;
+									getRedpackInfo();
+								}
 							}
+							
 						}
 					})
 					mui.plusReady(function() {
@@ -231,20 +236,37 @@
 					limit: limit
 				}, function(res) {
 					logs(res);
-					var data = res.data;
-					if (data.record.length == 0) {
-						mui("#pull-refresh").pullRefresh().endPullupToRefresh(true);
-					} else {
+					if (res.errno == 0) {
+						var data = res.data;
 						vm.balance = data.balance;
 						vm.promote = data.promote;
 						vm.chat = data.chat;
-						if (skip == 1) {
-							vm.recordList = data.record;
-							mui('#article_container').pullRefresh().endPulldownToRefresh();
+						vm.recordLen = data.record.length;
+						if (vm.recordLen > 0) {
+							if (skip == 1) {
+								vm.recordList = data.record;
+								if (refresh == 'down') {
+									mui('#pull-refresh').pullRefresh().endPulldownToRefresh();
+								}
+							} else {
+								vm.recordList = vm.recordList.concat(data.record);
+								mui('#pull-refresh').pullRefresh().endPullupToRefresh(false);
+							}
 						} else {
-							vm.recordList = vm.recordList.concat(data.record);
-							mui('#article_container').pullRefresh().endPulldownToRefresh();
+							if (skip == 1) {
+								vm.empty = true;
+								mui('#pull-refresh').pullRefresh().disablePullupToRefresh();
+							}
+							if (refresh == 'up') {
+								mui('#pull-refresh').pullRefresh().endPullupToRefresh(true);
+							} else if (refresh == 'down') {
+								mui('#pull-refresh').pullRefresh().endPulldownToRefresh();
+							}
 						}
+					} else {
+						plus.nativeUI.alert('请求出错啦!', function() {
+							mui.back();
+						})
 					}
 				}, 'json');
 			}
