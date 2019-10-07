@@ -248,12 +248,6 @@
 											{{c.title}}
 										</span>
 									</div>
-									<div class="mui-control-item" :class="chooseCls==c.id?'mui-active':''" v-for="(c,i) in clsContLeft" :key="i"
-									 @tap="switchCls(i,c.id)">
-										<span>
-											{{c.title}}
-										</span>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -414,7 +408,7 @@
 						var scroll = mui('.mui-scroll-wrapper').scroll();
 						document.querySelector('.mui-scroll-wrapper').addEventListener('scroll', function(e) {
 							var scrolly=scroll.y;
-							if (scrolly > 0 || scrolly == 0) {
+							if (scrolly >= 0) {
 								flag = true;
 								selfpage.setPullToRefresh({
 									support: true,
@@ -431,13 +425,11 @@
 						});
 						// 具体执行刷新的方法  
 						function onRefresh() {
-							console.log("onRefresh");
 							getDatas("pull");
 						}
 
 						// 获取分类以及广告
 						function getDatas(pull) {
-							console.log("onRefresh-------------------------------");
 							mui.post($ajaxUrl + 'business', {
 								token: userInfo.token,
 								action: 'type_list'
@@ -461,7 +453,6 @@
 											plus.webview.currentWebview().endPullToRefresh();
 										}, 2000);
 									}
-									logs("已经请求！");
 								}
 								setTimeout(function() {
 									if (pull == "pull") {

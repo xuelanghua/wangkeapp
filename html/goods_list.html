@@ -380,7 +380,41 @@
 				text-align: center;
 				border-radius: 0.45rem;
 			}
-			
+			.share-container{
+				display: flex;
+				position: fixed;
+				background-color: #FFFFFF;
+				height: 120px;
+				width: 100%;
+				bottom: -140px;
+				left: 0;
+				z-index: 1045;
+				box-shadow: 0 0 5px 3px rgba(0,0,0,.2);
+				padding: 20px 0;
+				transition: all 0.25s ease-in-out;
+				-webkit-transition: all 0.25s ease-in-out;
+			}
+			.share-container.active{
+				bottom:0;
+			}
+			.share-container .share-items{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				flex-grow: 1;
+				overflow: visible;
+			}
+			.share-container .share-items img{
+				width: 42px;
+				border-radius: 22px;
+				margin-bottom: 10px; 
+				box-shadow: 1px 1px 3px 1px rgba(220,220,220,.8);
+			}
+			.share-container .share-items span{
+				font-size: 14px;
+				color: #333333;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -437,8 +471,10 @@
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
-											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/qiyec-icon.png" alt="">企业仓</span>
-											<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
+											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/qiyec-icon.png"
+												 alt="">企业仓</span>
+											<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png"
+												 alt="">旺客总仓</span>
 
 											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
@@ -453,7 +489,7 @@
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
 											</div>
-											<div v-if="lst.check_status==1" class="play" data-type="share" :data-gtype="lst.is_team_goods" :data-title = "lst.name" :data-cover = "lst.cover" :data-goodsid = "lst.id">
+											<div v-if="lst.check_status==1" class="play" data-type="share" :data-idx="i">
 												<img src="../image/extension.png" />
 												<div>推广</div>
 											</div>
@@ -498,8 +534,10 @@
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(slo.id,slo.is_team_goods)">库存：{{slo.stock}}</span>
-											<span v-if="slo.is_team_goods==1" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/qiyec-icon.png" alt="">企业仓</span>
-											<span v-if="slo.is_team_goods==9" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
+											<span v-if="slo.is_team_goods==1" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/qiyec-icon.png"
+												 alt="">企业仓</span>
+											<span v-if="slo.is_team_goods==9" @tap="openGoodsDetail(slo.id,slo.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png"
+												 alt="">旺客总仓</span>
 
 											<span class="genduo" :data-ids="slo.id">...</span>
 										</div>
@@ -559,8 +597,10 @@
 										<div class="right-bottom-cont">
 											<!-- <span>销量：{{lst.sale_count}}</span> -->
 											<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
-											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">企业仓</span>
-											<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
+											<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png"
+												 alt="">企业仓</span>
+											<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png"
+												 alt="">旺客总仓</span>
 
 											<span class="genduo" :data-ids="lst.id">...</span>
 										</div>
@@ -595,6 +635,20 @@
 				<button id="add_goods">添加商品</button>
 				<button id="stock_goods">拣货</button>
 			</div>
+			<div class="share-container">
+				<div class="share-items">
+					<img src="../image/icon/good-list-share02.jpg" alt="">
+					<span>好友</span>
+				</div>
+				<div class="share-items" @tap="shareFriend">
+					<img src="../image/icon/good-list-share01.jpg" alt="">
+					<span>微信好友</span>
+				</div>
+				<div class="share-items">
+					<img src="../image/icon/good-list-share03.jpg" alt="">
+					<span>朋友圈</span>
+				</div>
+			</div>
 		</div>
 		<div class="mask-cont mui-hidden">
 			<div class="tips-cont">
@@ -612,8 +666,10 @@
 <script src="../js/vue.min.js"></script>
 <script type="text/javascript">
 	var userInfo = getUserInfo();
+	// 当前产品对象
+	var currentIdx = -1;
 	var mask = mui.createMask(function() {
-		document.querySelector(".playb" + currentId).style.display = 'none';
+		document.querySelector(".share-container").classList.remove("active");
 	});
 	var g_type = 'on_sale',
 		skip = 1,
@@ -737,7 +793,7 @@
 			var type = this.dataset.type;
 			// 是否团队商品
 			var gtype = this.dataset.gtype;
-			mask.close();
+			document.querySelector(".playb" + currentId).style.display = 'none';
 			if (type == 'off') {
 				//下架按钮
 				// "team_goods"
@@ -806,68 +862,9 @@
 					// });
 				}
 			} else if (type == 'share') {
-				var cont = this.dataset.title;
-				var img = this.dataset.cover;
-				var goodsid=this.dataset.goodsid;
-				var imgs = img.substring(img.lastIndexOf("/"));
-				var sd_path = "_downloads" + imgs;
-				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
-					shareToMiniprogram({
-						title: cont,
-						content: cont,
-						thumbs: [sd_path],
-						miniProgram: {
-							id: 'gh_9fa5f42ab939',
-							path: '/longbing_card/pages/shop/detail/detail?id=' + goodsid + '&to_uid=' + userInfo.id,
-							webUrl: 'https://app.wangkeapp.cn/'
-						}
-					}, 'miniProgram');
-				}, function(e) {
-					showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
-					var imgpath = '';
-					var imgDtask = plus.downloader.createDownload(img, {
-						method: 'GET'
-					}, function(d, status) {
-						if (status == 200) {
-							plus.zip.compressImage({
-									src: d.filename,
-									dst: d.filename,
-									overwrite: true,
-									width: '500px',
-									height: 'auto',
-									format: 'jpg',
-									quality: 90,
-									clip: {
-										width: "500px",
-										height: "400px"
-									}
-								},
-								function(e) {
-									imgpath = e.target;
-									if (imgpath) {
-										showload(1);
-										shareToMiniprogram({
-											title: cont,
-											content: cont,
-											thumbs: [imgpath],
-											miniProgram: {
-												id: 'gh_9fa5f42ab939',
-												path: '/longbing_card/pages/shop/detail/detail?id=' + goodsid + '&to_uid=' + userInfo.id,
-												webUrl: 'https://app.wangkeapp.cn/'
-											}
-										}, 'miniProgram');
-									}
-								},
-								function(error) {
-									showload(1);
-									message("图片压缩失败！");
-								});
-						} else {
-							message('保存失败')
-						}
-					});
-					imgDtask.start()
-				});
+				currentIdx = this.dataset.idx;
+				document.querySelector(".share-container").classList.add("active");
+				mask.show();
 			}
 		})
 		//添加商品
@@ -909,17 +906,16 @@
 			token: userInfo.token,
 			type: g_type,
 			skip: skip,
-			limit: 8,
+			limit: 8, 
 			goods_name: app.goodsName
 		}, function(res) {
-			logs(res);
+			// logs(res);
 			if (res.errno == 0) {
 				if (skip == 1) {
 					app[g_type + '_list'] = res.data;
 				} else {
 					app[g_type + '_list'] = app[g_type + '_list'].concat(res.data);
 				}
-
 				if (res.extra.has_more) {
 					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
 				} else {
@@ -1005,5 +1001,72 @@
 		} else {
 			paddeds.style.display = 'flex';
 		}
+	}
+	// 分享给好友
+	function shareFriend() {
+		mask.close();
+		var obj = app.on_sale_list[currentIdx];
+		var cont = obj.name;
+		var img = obj.cover;
+		var goodsid = obj.id;
+		var imgs = img.substring(img.lastIndexOf("/"));
+		var sd_path = "_downloads" + imgs;
+		plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+			shareToMiniprogram({
+				title: cont,
+				content: cont,
+				thumbs: [sd_path],
+				miniProgram: {
+					id: 'gh_9fa5f42ab939',
+					path: '/longbing_card/pages/shop/detail/detail?id=' + goodsid + '&to_uid=' + userInfo.id,
+					webUrl: 'https://app.wangkeapp.cn/'
+				}
+			}, 'miniProgram');
+		}, function(e) {
+			showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
+			var imgpath = '';
+			var imgDtask = plus.downloader.createDownload(img, {
+				method: 'GET'
+			}, function(d, status) {
+				if (status == 200) {
+					plus.zip.compressImage({
+							src: d.filename,
+							dst: d.filename,
+							overwrite: true,
+							width: '500px',
+							height: 'auto',
+							format: 'jpg',
+							quality: 90,
+							clip: {
+								width: "500px",
+								height: "400px"
+							}
+						},
+						function(e) {
+							imgpath = e.target;
+							if (imgpath) {
+								showload(1);
+								shareToMiniprogram({
+									title: cont,
+									content: cont,
+									thumbs: [imgpath],
+									miniProgram: {
+										id: 'gh_9fa5f42ab939',
+										path: '/longbing_card/pages/shop/detail/detail?id=' + goodsid + '&to_uid=' + userInfo.id,
+										webUrl: 'https://app.wangkeapp.cn/'
+									}
+								}, 'miniProgram');
+							}
+						},
+						function(error) {
+							showload(1);
+							message("图片压缩失败！");
+						});
+				} else {
+					message('保存失败')
+				}
+			});
+			imgDtask.start()
+		});
 	}
 </script>
