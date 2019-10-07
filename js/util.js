@@ -888,7 +888,7 @@ function fnLogout() {
 			mui.get($ajaxUrl + 'member', {
 				action: 'login_setting',
 			}, function(res) {
-				getAppInfo(function(e) {
+				// getAppInfo(function(e) {
 					if (res.data.login_type == 3) {
 						for (var i = 0; i < wvs.length; i++) {
 							// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
@@ -922,7 +922,7 @@ function fnLogout() {
 						// curr.hide();
 						// curr.close();
 					}
-				})
+				// })
 			}, 'json');
 		} else {
 			// plus.runtime.restart();
