@@ -15,7 +15,6 @@
 				align-items: center;
 				justify-content: space-between;
 			}
-
 			.search-cont {
 				display: flex;
 				flex-grow: 1;
@@ -214,7 +213,9 @@
 				position: relative;
 				z-index: 5;
 			}
-
+			.mui-scroll-wrapper{
+				padding-top: 50px;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -238,12 +239,22 @@
 				<div class="mui-content mui-row mui-fullscreen">
 					<!-- 左侧分类 -->
 					<div class="mui-col-xs-3">
-						<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
-							<div class="mui-control-item" :class="chooseCls==c.id?'mui-active':''" v-for="(c,i) in clsContLeft" :key="i"
-							 @tap="switchCls(i,c.id)">
-								<span>
-									{{c.title}}
-								</span>
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+									<div class="mui-control-item" :class="chooseCls==c.id?'mui-active':''" v-for="(c,i) in clsContLeft" :key="i"
+									 @tap="switchCls(i,c.id)">
+										<span>
+											{{c.title}}
+										</span>
+									</div>
+									<div class="mui-control-item" :class="chooseCls==c.id?'mui-active':''" v-for="(c,i) in clsContLeft" :key="i"
+									 @tap="switchCls(i,c.id)">
+										<span>
+											{{c.title}}
+										</span>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -372,17 +383,6 @@
 						keyEventBind: {
 							backbutton: false,
 							menubutton: false,
-						},
-						pullRefresh: {
-							container: "#mui-content",
-							down: {
-								style: 'circle',
-								color: '#2289FF',
-								offset: '-50px',
-								callback: function() {
-									getDatas("pull");
-								}
-							}
 						}
 					})
 					mui.plusReady(function() {
@@ -396,6 +396,82 @@
 							app.currentClassify = categorys[0][0];
 						}
 						getDatas();
+						mui('.mui-scroll-wrapper').scroll({
+							indicators: false,
+						});
+						// 关闭和开启下拉刷新
+						//日志标记flag  
+						var flag = true;
+						//进入时开启刷新  
+						var selfpage = plus.webview.currentWebview();
+						selfpage.setPullToRefresh({
+							support: true,
+							style: 'circle',
+							color: '#2289FF',
+							bounce: false
+						}, onRefresh);
+						//监听滚动事件  
+						var scroll = mui('.mui-scroll-wrapper').scroll();
+						document.querySelector('.mui-scroll-wrapper').addEventListener('scroll', function(e) {
+							var scrolly=scroll.y;
+							if (scrolly > 0 || scrolly == 0) {
+								flag = true;
+								selfpage.setPullToRefresh({
+									support: true,
+									style: 'circle',
+									color: '#2289FF',
+									bounce: false
+								});
+							} else if (flag) {
+								flag = false;
+								selfpage.setPullToRefresh({
+									support: false
+								});
+							}
+						});
+						// 具体执行刷新的方法  
+						function onRefresh() {
+							console.log("onRefresh");
+							getDatas("pull");
+						}
+
+						// 获取分类以及广告
+						function getDatas(pull) {
+							console.log("onRefresh-------------------------------");
+							mui.post($ajaxUrl + 'business', {
+								token: userInfo.token,
+								action: 'type_list'
+							}, function(res) {
+								logs(res);
+								if (res.errno == 0) {
+									app.category = res.data;
+									app.clsContLeft = app.category[0];
+									app.chooseCls = app.clsContLeft[0].id;
+									app.clsCont = app.category[app.clsContLeft[0].id];
+									app.currentClassify = res.data[0][0];
+									cacheData("category", res.data);
+									if (pull == "pull") {
+										setTimeout(function() {
+											plus.webview.currentWebview().endPullToRefresh();
+										}, 2000);
+									}
+								} else {
+									if (pull == "pull") {
+										setTimeout(function() {
+											plus.webview.currentWebview().endPullToRefresh();
+										}, 2000);
+									}
+									logs("已经请求！");
+								}
+								setTimeout(function() {
+									if (pull == "pull") {
+										setTimeout(function() {
+											plus.webview.currentWebview().endPullToRefresh();
+										}, 2000);
+									}
+								}, 10000);
+							}, 'json');
+						}
 					})
 				}
 			})
@@ -403,36 +479,6 @@
 			mui('#mui-content').on('tap', '.search-cont', function() {
 				openPage('business_pulse_search.html', 'business_pulse_search', '#f9f9f9');
 			})
-			// 获取分类以及广告
-			function getDatas(pull) {
-				mui.post($ajaxUrl + 'business', {
-					token: userInfo.token,
-					action: 'type_list'
-				}, function(res) {
-					logs(res);
-					if (res.errno == 0) {
-						app.category = res.data;
-						app.clsContLeft = app.category[0];
-						app.chooseCls = app.clsContLeft[0].id;
-						app.clsCont = app.category[app.clsContLeft[0].id];
-						app.currentClassify = res.data[0][0];
-						cacheData("category", res.data);
-						if(pull=="pull"){
-							mui('#mui-content').pullRefresh().endPulldownToRefresh();
-						}
-					} else {
-						if(pull=="pull"){
-							mui('#mui-content').pullRefresh().endPulldownToRefresh();
-						}
-						logs("已经请求！");
-					}
-					setTimeout(function() {
-						if(pull=="pull"){
-							mui('#mui-content').pullRefresh().endPulldownToRefresh();
-						}
-					}, 10000);
-				}, 'json');
-			}
 		</script>
 	</body>
 
