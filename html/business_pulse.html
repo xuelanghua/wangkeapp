@@ -194,8 +194,8 @@
 				display: inline-block;
 				position: absolute;
 				height: 0;
-				-webkit-transition: all 0.25s ease-in-out;
-				transition: all 0.25s ease-in-out;
+				/* -webkit-transition: all 0.5s ease-in-out; */
+				/* transition: all 0.5s ease-in-out; */
 				left: -8px;
 				height: 50%;
 				top: 25%;
@@ -395,38 +395,38 @@
 						});
 						// 关闭和开启下拉刷新
 						//日志标记flag  
-						var flag = true;
+						// var flag = true;
 						//进入时开启刷新  
-						var selfpage = plus.webview.currentWebview();
-						selfpage.setPullToRefresh({
-							support: true,
-							style: 'circle',
-							color: '#2289FF',
-							bounce: false
-						}, onRefresh);
+						// var selfpage = plus.webview.currentWebview();
+						// selfpage.setPullToRefresh({
+						// 	support: true,
+						// 	style: 'circle',
+						// 	color: '#2289FF',
+						// 	bounce: false
+						// }, onRefresh);
 						//监听滚动事件  
-						var scroll = mui('.mui-scroll-wrapper').scroll();
-						document.querySelector('.mui-scroll-wrapper').addEventListener('scroll', function(e) {
-							var scrolly=scroll.y;
-							if (scrolly >= 0) {
-								flag = true;
-								selfpage.setPullToRefresh({
-									support: true,
-									style: 'circle',
-									color: '#2289FF',
-									bounce: false
-								});
-							} else if (flag) {
-								flag = false;
-								selfpage.setPullToRefresh({
-									support: false
-								});
-							}
-						});
+						// var scroll = mui('.mui-scroll-wrapper').scroll();
+						// document.querySelector('.mui-scroll-wrapper').addEventListener('scroll', function(e) {
+						// 	var scrolly=scroll.y;
+						// 	if (scrolly >= 0) {
+						// 		flag = true;
+						// 		selfpage.setPullToRefresh({
+						// 			support: true,
+						// 			style: 'circle',
+						// 			color: '#2289FF',
+						// 			bounce: false
+						// 		});
+						// 	} else if (flag) {
+						// 		flag = false;
+						// 		selfpage.setPullToRefresh({
+						// 			support: false
+						// 		});
+						// 	}
+						// });
 						// 具体执行刷新的方法  
-						function onRefresh() {
-							getDatas("pull");
-						}
+						// function onRefresh() {
+						// 	getDatas("pull");
+						// }
 
 						// 获取分类以及广告
 						function getDatas(pull) {
