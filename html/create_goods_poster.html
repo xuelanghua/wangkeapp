@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mui-bar-nav~.mui-content {
+				padding-top: 44px;
+				padding-left: 20px;
+				padding-right: 20px;
+				box-sizing: border-box;
+			}
+
+			.save-section {
+				width: 100%;
+				background-color: #FFFFFF;
+				height: auto;
+				color: #666666;
+				text-align: center;
+				padding: 10px;
+				border-radius: 3px;
+				margin: 30px 0;
+			}
+
+			.save-section img {
+				max-width: 100%;
+			}
+
+			.save-section p {
+				position: relative;
+				font-size: 14px;
+				color: #333333;
+				text-align: left;
+			}
+
+			.save-section .qr-img {
+				width: 30%;
+			}
+
+			.poster-bottom {
+				position: relative;
+				display: flex;
+				align-items: center;
+			}
+
+			.poster-bottom .info {
+				padding-left: 15px;
+			}
+			.poster-bottom .info h3{
+				font-size: 22px;
+				color: #333333; 
+				margin-left: -3px;
+				padding-bottom: 5px;
+				-webkit-text-shadow: 1px 1px 0 rgba(0,0,0,.2);
+				text-shadow: 1px 1px 1px rgba(0,0,0,.2);
+			}
+
+			.mui-btn-blue {
+				height: 44px;
+				padding: 0;
+				font-size: 15px;
+			}
+
+			.poster-top {
+				padding-top: 10px;
+				display: flex;
+				align-items: center;
+				/* justify-content: space-between; */
+				margin-bottom: 20px;
+				box-sizing: border-box;
+			}
+
+			.poster-top span {
+				display: inline-flex;
+				color: #FF0000;
+				position: relative;
+				flex-grow: 1;
+				padding-left: 10px;
+				justify-content: flex-start;
+			}
+
+			.poster-top span:before {
+				content: "";
+				display: block;
+				width: 1px;
+				height: 100%;
+				background-color: #AAAAAA;
+				position: absolute;
+				top: 0;
+				left: 0;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+
+			.title {
+				max-width: 70%;
+				padding-right: 10px;
+				margin-bottom: 0;
+			}
+			.tips{
+				font-size: 12px;
+				text-align: center;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">保存海报</h1>
+			</header>
+			<div class="mui-content">
+				<div id="save" class="save-section">
+					<div class="poster-top">
+						<p class="title" v-if="goods.name">{{overflowHide(goods.name,30)}}</p>
+						<span>&yen;{{goods.price}}</span>
+					</div>
+					<img :src="goods.cover">
+					<div class="poster-bottom">
+						<img class="qr-img" :src="goods.qr">
+						<div class="info">
+							<h3>长按识别小程序码</h3>
+							<p>超值好货一起购！</p>
+						</div>
+					</div>
+				</div>
+				<button class="mui-btn-blue mui-btn-block" @tap="generateImg">保存海报</button>
+				<p class="tips">保存海报之后再分享到朋友圈。</p>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/Zepto.min.js"></script>
+		<script src="../js/html2canvas.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					goodsId: '',
+					goods:{}
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.goodsId = self.goodsId || '';
+						
+						mui.post($ajaxUrl + 'goods&action=goods_detail', {
+							token: userInfo.token,
+							goods_id:app.goodsId,
+							is_share:1
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								app.goods=res.data;
+							} else {
+								message("请求错误，请稍后重试！")
+								setTimeout(function() {
+									mui.back();
+								}, 800);
+							}
+						}, 'json');
+					})
+				}
+			})
+
+			// 生成二维码图片
+			function generateImg(tips) {
+				showload(0, 0, "保存中…", "rgba(0,0,0,0.3)");
+				var _self = document.getElementById("save"),
+					canvas = document.createElement("canvas"),
+					context = canvas.getContext("2d"),
+					scale = 4;
+				canvas.width = _self.offsetWidth * scale;
+				canvas.height = _self.offsetHeight * scale;
+				canvas.getContext("2d").scale(scale, scale);
+
+				html2canvas(_self, {
+					dpi: window.devicePixelRatio * scale,
+					scale: scale,
+					canvas: canvas,
+					width: _self.offsetWidth,
+					height: _self.offsetHeight,
+					useCORS: true,
+					allowTaint: true,
+				}).then(function(s) {
+					var imgUrl = s.toDataURL("image/jpeg", 1);
+					baseImgFile(app.goods.id + 'goodsPoster', imgUrl, 100, function(i) {
+						plus.gallery.save(i.target);
+						message("保存成功！");
+						showload(1);
+					})
+				});
+			}
+		</script>
+	</body>
+
+</html>

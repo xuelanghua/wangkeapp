@@ -743,7 +743,7 @@ function pushCallback(data, event) {
 			} else if (url == 'timelineNotice') {
 				mui.fire(plus.webview.getWebviewById('media'), 'timelineNoticeRefresh');
 			} else if (url == 'shop') {
-				
+
 			} else {
 				mui.fire(plus.webview.getWebviewById(url), 'refresh');
 			}
@@ -799,7 +799,7 @@ function pushCallback(data, event) {
 		} else if (url == 'timelineNotice') {
 			mui.fire(plus.webview.getWebviewById('media'), 'timelineNoticeRefresh');
 		} else if (url == 'shop') {
-			
+
 		} else {
 			mui.fire(plus.webview.getWebviewById(url), 'refresh');
 		}
@@ -850,10 +850,10 @@ function clearBadge() {
 	}
 }
 
-//将BASE 64保存为文件
+//将BASE 64保存为文件 quality图片质量默认50最高100
 function baseImgFile(imgname, base64, quality, callback) {
 	quality = quality || 100;
-	callback = callback || $.noop;
+	callback = callback || $.noop; //无操作
 	var bitmap = new plus.nativeObj.Bitmap();
 	// 从本地加载Bitmap图片
 	bitmap.loadBase64Data(base64, function() {
@@ -889,39 +889,39 @@ function fnLogout() {
 				action: 'login_setting',
 			}, function(res) {
 				// getAppInfo(function(e) {
-					if (res.data.login_type == 3) {
-						for (var i = 0; i < wvs.length; i++) {
-							// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
-							if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
-								continue;
-							} else {
-								plus.webview.close(wvs[i]);
-							}
+				if (res.data.login_type == 3) {
+					for (var i = 0; i < wvs.length; i++) {
+						// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+						if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
+							continue;
+						} else {
+							plus.webview.close(wvs[i]);
 						}
-						fnOpenWin('/html/mobile_login.html', 'mobile_login', {
-							statusbar: {
-								background: '#2289FF'
-							}
-						}, '', 'slide-in-bottom');
-						// curr.hide();
-						// curr.close();
-					} else {
-						for (var i = 0; i < wvs.length; i++) {
-							// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
-							if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
-								continue;
-							} else {
-								plus.webview.close(wvs[i]);
-							}
-						}
-						fnOpenWin('/html/login.html', 'login', {
-							statusbar: {
-								background: '#122c9a'
-							}
-						}, '', 'slide-in-bottom');
-						// curr.hide();
-						// curr.close();
 					}
+					fnOpenWin('/html/mobile_login.html', 'mobile_login', {
+						statusbar: {
+							background: '#2289FF'
+						}
+					}, '', 'slide-in-bottom');
+					// curr.hide();
+					// curr.close();
+				} else {
+					for (var i = 0; i < wvs.length; i++) {
+						// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+						if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
+							continue;
+						} else {
+							plus.webview.close(wvs[i]);
+						}
+					}
+					fnOpenWin('/html/login.html', 'login', {
+						statusbar: {
+							background: '#122c9a'
+						}
+					}, '', 'slide-in-bottom');
+					// curr.hide();
+					// curr.close();
+				}
 				// })
 			}, 'json');
 		} else {
@@ -1025,7 +1025,9 @@ function downWgt() {
 // 更新应用资源  
 function installWgt(path) {
 	// showload(0, 0, "文件安装中...", "rgba(0,0,0,0.5)");
-	plus.runtime.install(path, {force: true}, function() {
+	plus.runtime.install(path, {
+		force: true
+	}, function() {
 		showload(1, 1000);
 		console.log("安装文件成功！");
 		plus.nativeUI.alert("应用资源更新成功！", function() {
@@ -1168,4 +1170,13 @@ function videoPlayer(url) {
 	openPage('player_model.html', 'player_model', '#000000', {
 		url: url
 	}, 'zoom-fade-out');
+}
+
+// 文字超出隐藏
+function overflowHide(e, num) {
+	var str = e;
+	if (str.length > num) {
+		str = str.substring(0, num) + "...";
+	}
+	return str;
 }
