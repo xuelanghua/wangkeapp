@@ -225,6 +225,43 @@
 				color: #999999;
 				font-size: 12px;
 			}
+			/* 分享产品 */
+			.goods-card{
+				max-width: 200px;
+				max-height: 300px;
+				overflow: hidden;
+				line-height: 0;
+			}
+			.goods-card .goods-card-title{
+				max-width: 100%;
+				font-size: 12px;
+				color: #666;
+				display: flex;
+				align-items: center;
+				padding-bottom: 10px;
+			}
+			.goods-card .goods-card-title img{
+				width: 20px;
+				margin-right: 10px;
+			}
+			.goods-title{
+				max-width: 100%;
+				font-size: 14px;
+				color: #333333;
+				line-height: 1.2;
+			}
+			.goods-card .goods-images{
+				width: 100%;
+				height: auto;
+				padding: 0;
+				margin: 0;
+			}
+			.msg-item-self.goods-container .msg-content,
+			.msg-item-self.goods-container .msg-content .msg-content-arrow {
+				color: #333333;
+				/* border-color: #d3d3d3; */
+				background-color: #FFFFFF;
+			}
 		</style>
 	</head>
 
@@ -245,8 +282,7 @@
 				<template v-for="(item, index) in chatList" :key="index">
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;">{{index}}</div>
 					<template v-for="(list, key) in item" :key="key">
-						<div class="msg-item mui-clearfix" :class="uid==list.uid?'msg-item-self':''" :msg-type="list.message_type"
-						 :msg-content="list.content">
+						<div class="msg-item mui-clearfix" :class="[uid==list.uid?'msg-item-self':'',uid==list.uid&&list.message_type=='goods'?'goods-container':'']" :msg-type="list.message_type">
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
 							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)" alt="" />
 							<div class="msg-content">
@@ -269,6 +305,11 @@
 									<img :src="list.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" style="max-width: 100px;" />
 									<img class="player-btn" src="../image/icon/video-player.png">
 								</div>
+								<div  v-else-if="list.message_type=='goods'" class="goods-card">
+									<div class="goods-card-title"><img src="../image/user_default.png" >旺客软件</div>
+									<p class="goods-title mui-ellipsis-2">产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称</p>
+									<img class="goods-images" src="https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/CHPlpL3GziSIYyMSnYmz8Iuuif4YSg.png" >
+								</div>								
 								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
 									<span class="play-state" :class="'play-state'+list.id">点击播放</span>

@@ -120,7 +120,7 @@
 			.msg-item .msg-content {
 				display: inline-block;
 				border-radius: 5px;
-				border: solid 1px #d3d3d3;
+				/* border: solid 1px #d3d3d3; */
 				background-color: #FFFFFF;
 				color: #333;
 				padding: 8px;
@@ -141,7 +141,7 @@
 			}
 			.msg-item .msg-content .msg-content-arrow {
 				position: absolute;
-				border: solid 1px #d3d3d3;
+				/* border: solid 1px #d3d3d3; */
 				border-right: none;
 				border-top: none;
 				background-color: #FFFFFF;
@@ -594,6 +594,43 @@
 				-webkit-transform: translate(-50%, -50%);
 				transform: translate(-50%, -50%);
 			}
+			/* 分享产品 */
+			.goods-card{
+				max-width: 200px;
+				max-height: 300px;
+				overflow: hidden;
+				line-height: 0;
+			}
+			.goods-card .goods-card-title{
+				max-width: 100%;
+				font-size: 12px;
+				color: #666;
+				display: flex;
+				align-items: center;
+				padding-bottom: 10px;
+			}
+			.goods-card .goods-card-title img{
+				width: 20px;
+				margin-right: 10px;
+			}
+			.goods-title{
+				max-width: 100%;
+				font-size: 14px;
+				color: #333333;
+				line-height: 1.2;
+			}
+			.goods-card .goods-images{
+				width: 100%;
+				height: auto;
+				padding: 0;
+				margin: 0;
+			}
+			.msg-item-self.goods-container .msg-content,
+			.msg-item-self.goods-container .msg-content .msg-content-arrow {
+				color: #333333;
+				/* border-color: #d3d3d3; */
+				background-color: #FFFFFF;
+			}
 		</style>
 	</head>
 
@@ -611,17 +648,17 @@
 				<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
 					<% for (var i in record[index]) { var item = record[index][i]; %>
-					<div id="<%= ('parent'+item.message_id) %>" class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>'>
+					<div id="<%= ('parent'+item.message_id) %>" goods-uid="<%=(item.uid)%>" goods-id="<%=(item.goods_id)%>"   class="msg-item <%= (item.sender=='self'?'msg-item-self':'') %> <%= (item.sender=='self'&&item.type=='goods'?' msg-item-self goods-container':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>'>
 						<% if(item.sender=='self' ) { %>
 							<img class="msg-user-img msg-user my-chat-header"  src="<%= (avatar.user) %>" alt="" />
 						<% } else { %>
 							<img class="msg-user-img target-chat-header" src="<%= (avatar.target) %>"  alt="" />
 						<% } %>
-						<div class="msg-content"   msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>' data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
+						<div class="msg-content" goods-uid="<%=(item.uid)%>" goods-id="<%=(item.goods_id)%>"  msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>' data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
 							<% if(item.type=='audio'&&item.is_read==0&&item.sender!='self') { %>
 								<i class="<%=('red-dot red-dot'+item.message_id)%>"></i>
 							<% } %>
-							<% if(item.type=='text' || item.type=='audio') { %>
+							<% if(item.type=='goods'||item.type=='audio') { %>
 								<div class="msg-content-inner">
 									<% if(item.type=='text' ) { %>
 										<%=( item.content|| '&nbsp;&nbsp;') %>
@@ -630,7 +667,13 @@
 										<span class="<%=('play-state play-state'+item.message_id)%>">点击播放</span>
 									<% } %>
 								</div>
-							<% } else { %>
+							<% } else if (item.type=='goods'){%>
+								<div class="goods-card">
+									<div class="goods-card-title"><img src="../image/user_default.png" >旺客软件</div>
+									<p class="goods-title mui-ellipsis-2">产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称</p>
+									<img class="goods-images" src="https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/CHPlpL3GziSIYyMSnYmz8Iuuif4YSg.png" >
+								</div>
+							<% } else{ %>
 								<div class="img-content-inner">
 									<% if(item.type=='image' ) { %>
 										<img data-preview-src="" data-preview-group="1" class="msg-content-image" src="<%=(item.content)%>" style="max-width: 100px;" />
@@ -907,6 +950,10 @@
 						}
 					} else if (msgType == 'video') {
 						videoPlayer(msgContent);
+					}else if(msgType == 'goods'){
+						var goodsId=msgItem.getAttribute('goods-id');
+						var uid=msgItem.getAttribute('uid');
+						launchMiniprogram(goodsId, uid);
 					}
 				};
 
@@ -1452,7 +1499,7 @@
 						}
 					}, 'json');
 				}
-				
+
 				// 长按保存图片咯
 				mui(".mui-preview-image").on("longtap", "img", function() {
 					var urls = this.src;

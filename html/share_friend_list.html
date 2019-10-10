@@ -34,6 +34,19 @@
 				box-sizing: border-box;
 			}
 
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0);
+			}
+
+			.team-sign {
+				position: absolute;
+				right: 32px;
+				font-size: 14px;
+				text-align: center;
+				line-height: 1.4;
+				color: #999;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -84,34 +97,17 @@
 					<ul class="mui-table-view friend-scroll-cont">
 						<template v-for="(vel,key,idx) in friendList" :key="idx">
 							<li :data-group="key" class="mui-table-view-divider mui-indexed-list-group letter-serial">{{key}}</li>
-							<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
+							<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index"
+							 @tap="goChat(list.id,list.type)">
 								<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
-									<img :src="list.avatarUrl||'../image/user_default.png'">
+									<img :src="list.avatar">
+
 								</div>
 								<div class="customer-left">
-									<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
+									<div class="mui-ellipsis user-name">
 										{{list.name||list.nickName}}
 									</div>
-								</div>
-							</li>
-							<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
-								<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
-									<img :src="list.avatarUrl||'../image/user_default.png'">
-								</div>
-								<div class="customer-left">
-									<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
-										{{list.name||list.nickName}}
-									</div>
-								</div>
-							</li>
-							<li class="mui-table-view-cell customer-list" v-for="(list,index) in vel" :data-tags="list.pinyin" :key="index">
-								<div class="user-head-img crm-user-head" :data-id="list.fid" data-type="friend">
-									<img :src="list.avatarUrl||'../image/user_default.png'">
-								</div>
-								<div class="customer-left">
-									<div class="mui-ellipsis user-name" v-on:click.stop="goChat(list.fid,list.name,list.avatarUrl)">
-										{{list.name||list.nickName}}
-									</div>
+									<img v-if="list.type==2" style="width: 20px;" src="../image/icon-spread-cur.png" >
 								</div>
 							</li>
 						</template>
@@ -125,6 +121,9 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var mask = mui.createMask(function() {
+				return false;
+			});
 			var refresh = '';
 			var app = new Vue({
 				el: "#mui-content",
@@ -134,18 +133,34 @@
 					crmList: {},
 					friendList: {},
 					newfriendNum: '0',
-					messageNum: '0'
+					messageNum: '0',
+					goods_id: ''
 				},
 				methods: {
 					// 跳转聊天
-					goChat: function(cid, chatName, avatar) {
-						openPage('dialog.html', 'dialog', '#F7F7F7', {
-							cid: cid,
-							chatName: chatName,
-							avatar: avatar,
-							barStyle: 'light'
-						}, 'slide-in-right');
-						plus.navigator.setStatusBarStyle('dark');
+					goChat: function(cid, typ) {
+						mui.post($ajaxUrl + 'goods&action=share_goods', {
+							token: userInfo.token,
+							goods_id: app.goods_id,
+							share_id: cid,
+							type: typ
+						}, function(res) {
+							logs(res);
+							if (res.errno == 0) {
+								mask.show();
+								message("分享成功！", "center");
+								mui.later(function() {
+									mui.back();
+								}, 2000)
+							} else {
+								mask.show();
+								message(res.message, "center");
+								mui.later(function() {
+									mui.back();
+								}, 2000)
+							}
+						}, 'json');
+
 					},
 				},
 				mounted: function() {
@@ -157,6 +172,8 @@
 						var flag = true;
 						//进入时开启下拉刷新  
 						var selfpage = plus.webview.currentWebview();
+						app.goods_id = selfpage.goodsId;
+						// logs(app.goods_id);
 						selfpage.setPullToRefresh({
 							support: false,
 							style: 'circle',
@@ -196,10 +213,11 @@
 			// 获取客户列表
 			function getCustomerList() {
 				if (!userInfo) return;
-				mui.post($ajaxUrl + 'customer', {
-					action: 'friend_list',
-					token: userInfo.token
+				mui.post($ajaxUrl + 'goods', {
+					action: 'share_list',
+					token: userInfo.token,
 				}, function(res) {
+					// logs(res);
 					if (res.errno == 0) {
 						app.friendList = res.data;
 						if (refresh == 'down') {
