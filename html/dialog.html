@@ -766,7 +766,7 @@
 			var ws = null;
 			var chatData = null;
 			var skip = 1;
-			var limit = 15;
+			var limit = 25;
 			var recordData = {
 				avatar: null,
 				data: null
@@ -963,7 +963,7 @@
 				// 	dbl: false
 				// });
 
-				var bindMsgList = function() {
+				var bindMsgList = function(scroll) {
 					ui.areaMsgList.innerHTML = template('msg-template', {
 						"recordData": recordData
 					});
@@ -975,7 +975,9 @@
 					});
 					// imageViewer.findAllImage();
 					setTimeout(function() {
-						ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
+						if (scroll != 1) {
+							ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
+						}
 					}, 300)
 					// mui('.mui-scroll-wrapper').scroll().scrollToBottom();
 					mui.previewImage();
@@ -1314,10 +1316,10 @@
 				function getRecordList(loadMore) {
 					if (loadMore) {
 						skip++;
-						limit = 6;
+						limit = 25;
 					} else {
 						skip = 1;
-						limit = 15;
+						limit = 25;
 					}
 					mui.post($ajaxUrl + 'chat', {
 						action: 'record_list',
@@ -1335,7 +1337,7 @@
 								var temp = recordData.data;
 								Object.assign(moreData, temp);
 								recordData.data = moreData;
-								bindMsgList();
+								bindMsgList(1);
 								ui.areaMsgList.scrollTop = 300;
 							} else {
 								recordData.data = [];
