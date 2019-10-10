@@ -171,7 +171,7 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.goodsId = self.goodsId || '';
-						
+						showload(0);
 						mui.post($ajaxUrl + 'goods&action=goods_detail', {
 							token: userInfo.token,
 							goods_id:app.goodsId,
@@ -186,6 +186,9 @@
 									mui.back();
 								}, 800);
 							}
+							setTimeout(function() {
+								showload(1);
+							}, 500)
 						}, 'json');
 					})
 				}

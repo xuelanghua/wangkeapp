@@ -139,12 +139,14 @@
 				methods: {
 					// 跳转聊天
 					goChat: function(cid, typ) {
+						showload(0, 0, "发送中…", "rgba(0,0,0,0.3)");
 						mui.post($ajaxUrl + 'goods&action=share_goods', {
 							token: userInfo.token,
 							goods_id: app.goods_id,
 							share_id: cid,
 							type: typ
 						}, function(res) {
+							showload(1);
 							logs(res);
 							if (res.errno == 0) {
 								mask.show();

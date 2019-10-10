@@ -648,17 +648,17 @@
 				<% var avatar = recordData.avatar, record = recordData.data; for(var index in record){ %>
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;"><%= (index) %></div>
 					<% for (var i in record[index]) { var item = record[index][i]; %>
-					<div id="<%= ('parent'+item.message_id) %>" goods-uid="<%=(item.uid)%>" goods-id="<%=(item.goods_id)%>"   class="msg-item <%= (item.sender=='self'?'msg-item-self':'') %> <%= (item.sender=='self'&&item.type=='goods'?' msg-item-self goods-container':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>'>
+					<div id="<%= ('parent'+item.message_id) %>" goods-uid="<%=(item.user_id)%>" goods-id="<%=(item.content.id)%>"   class="msg-item <%= (item.sender=='self'?'msg-item-self':'') %> <%= (item.sender=='self'&&item.type=='goods'?' msg-item-self goods-container':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>'>
 						<% if(item.sender=='self' ) { %>
 							<img class="msg-user-img msg-user my-chat-header"  src="<%= (avatar.user) %>" alt="" />
 						<% } else { %>
 							<img class="msg-user-img target-chat-header" src="<%= (avatar.target) %>"  alt="" />
 						<% } %>
-						<div class="msg-content" goods-uid="<%=(item.uid)%>" goods-id="<%=(item.goods_id)%>"  msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>' data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
+						<div class="msg-content" goods-uid="<%=(item.user_id)%>" goods-id="<%=(item.content.id)%>"  msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>' msg-index='<%=(index)%>' msg-idx='<%=(i)%>' msg-id='<%=(item.message_id)%>' msg-status='<%=(item.is_read)%>' data-sender="<%=(item.sender) %>" data-types="<%=(item.type) %>" data-copytext="<%=( item.content|| '&nbsp;&nbsp;') %>" id="<%= ('message'+item.message_id) %>" data-tag="<%= (item.message_id) %>">
 							<% if(item.type=='audio'&&item.is_read==0&&item.sender!='self') { %>
 								<i class="<%=('red-dot red-dot'+item.message_id)%>"></i>
 							<% } %>
-							<% if(item.type=='goods'||item.type=='audio') { %>
+							<% if(item.type=='text'||item.type=='audio') { %>
 								<div class="msg-content-inner">
 									<% if(item.type=='text' ) { %>
 										<%=( item.content|| '&nbsp;&nbsp;') %>
@@ -670,8 +670,8 @@
 							<% } else if (item.type=='goods'){%>
 								<div class="goods-card">
 									<div class="goods-card-title"><img src="../image/user_default.png" >旺客软件</div>
-									<p class="goods-title mui-ellipsis-2">产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称</p>
-									<img class="goods-images" src="https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/CHPlpL3GziSIYyMSnYmz8Iuuif4YSg.png" >
+									<p class="goods-title mui-ellipsis-2"><%=(item.content.name) %></p>
+									<img class="goods-images" src="<%=(item.content.cover) %>" >
 								</div>
 							<% } else{ %>
 								<div class="img-content-inner">
@@ -951,8 +951,10 @@
 					} else if (msgType == 'video') {
 						videoPlayer(msgContent);
 					}else if(msgType == 'goods'){
-						var goodsId=msgItem.getAttribute('goods-id');
-						var uid=msgItem.getAttribute('uid');
+						var goodsId = msgItem.getAttribute('goods-id');
+						var uid = msgItem.getAttribute('goods-uid');
+						console.log(goodsId);
+						console.log(uid);
 						launchMiniprogram(goodsId, uid);
 					}
 				};
@@ -972,7 +974,9 @@
 						}, false);
 					});
 					// imageViewer.findAllImage();
-					ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
+					setTimeout(function() {
+						ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
+					}, 300)
 					// mui('.mui-scroll-wrapper').scroll().scrollToBottom();
 					mui.previewImage();
 				};
@@ -1323,7 +1327,7 @@
 						skip: skip,
 						limit: limit
 					}, function(res) {
-						// logs(res);
+						logs(res);
 						cacheData('recorddata' + chatId, res.data);
 						if (res.errno == 0) {
 							if (loadMore) {

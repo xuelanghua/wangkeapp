@@ -282,7 +282,7 @@
 				<template v-for="(item, index) in chatList" :key="index">
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;">{{index}}</div>
 					<template v-for="(list, key) in item" :key="key">
-						<div class="msg-item mui-clearfix" :class="[uid==list.uid?'msg-item-self':'',uid==list.uid&&list.message_type=='goods'?'goods-container':'']" :msg-type="list.message_type">
+						<div class="msg-item mui-clearfix" :class="[uid==list.uid?'msg-item-self':'',uid==list.uid&&(list.message_type=='goods'||list.message_type=='course')?'goods-container':'']" :msg-type="list.message_type">
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
 							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)" alt="" />
 							<div class="msg-content">
@@ -305,10 +305,10 @@
 									<img :src="list.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" style="max-width: 100px;" />
 									<img class="player-btn" src="../image/icon/video-player.png">
 								</div>
-								<div  v-else-if="list.message_type=='goods'" class="goods-card">
+								<div  v-else-if="list.message_type=='goods'" class="goods-card"  @tap="goBuy(list.content.id,list.uid)">
 									<div class="goods-card-title"><img src="../image/user_default.png" >旺客软件</div>
-									<p class="goods-title mui-ellipsis-2">产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称产品名称</p>
-									<img class="goods-images" src="https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/CHPlpL3GziSIYyMSnYmz8Iuuif4YSg.png" >
+									<p class="goods-title mui-ellipsis-2">{{list.content.name}}</p>
+									<img class="goods-images" :src="list.content.cover" >
 								</div>								
 								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
@@ -1033,6 +1033,10 @@
 						course: courseInfo,
 					});
 				}
+			}
+			
+			function goBuy(goodsId,uid) {
+				launchMiniprogram(goodsId, uid);
 			}
 			
 			function toUserDetail(uid) {
