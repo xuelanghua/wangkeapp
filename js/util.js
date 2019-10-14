@@ -1180,3 +1180,30 @@ function overflowHide(e, num) {
 	}
 	return str;
 }
+// 长按复制
+mui('body').on('longtap', '.copy-text', function() {
+	var copy_content = this.innerText;
+	plus.nativeUI.confirm('确认要复制内容吗？', function(e) {
+		if (!e.index) {
+			if (mui.os.ios) {
+				var generalPasteboard = UIPasteboard.generalPasteboard();
+				generalPasteboard.plusCallMethod({
+					setValue: copy_content,
+					forPasteboardType: "public.utf8-plain-text"
+				});
+				generalPasteboard.plusCallMethod({
+					valueForPasteboardType: "public.utf8-plain-text"
+				});
+				mui.toast('复制成功')
+			} else {
+				var context = plus.android.importClass("android.content.Context");
+				var main = plus.android.runtimeMainActivity();
+				var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
+				plus.android.invoke(clip, "setText", copy_content);
+				mui.toast('复制成功')
+			}
+			return false;
+		}
+		logs("取消复制");
+	})
+})

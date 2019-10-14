@@ -10,10 +10,6 @@
 		<link rel="stylesheet" href="../css/animate.min.css">
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
-			[v-cloak] {
-				display: none;
-			}
-
 			.notice-container {
 				height: 39px;
 				width: 100%;
@@ -389,6 +385,9 @@
 				font-size: 0.3rem;
 				color: #CC9C2D;
 			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -504,16 +503,16 @@
 						</div>
 					</div>
 				</div>
-				<div class="menu-card mui-hidden">
+				<div class="menu-card">
 					<div class="headline">
 						营销活动
 					</div>
 					<div class="menu-body">
-						<div class="menu-items">
+						<div class="menu-items group-booking">
 							<img src="../image/icon/store-management-icon-09.png">
 							<span>拼团</span>
 						</div>
-						<div class="menu-items">
+						<div class="menu-items mui-hidden">
 							<img src="../image/icon/store-management-icon-10.png">
 							<span>砍价</span>
 						</div>
@@ -823,6 +822,10 @@
 				var idx = this.dataset.idx;
 				app.team_list = app.hot_goods[idx].team_info;
 				mui('#bottomPopover').popover("show", this);
+			})
+			// 拼团
+			mui(".mui-content").on("tap", ".group-booking", function() {
+				openPage('group_booking.html', 'group_booking', '#ffffff');
 			})
 			// 拣货
 			mui(".mui-content").on("tap", ".add-entrepot-btn", function() {
