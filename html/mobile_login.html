@@ -146,13 +146,13 @@
 	        	console.log(JSON.stringify(res));
 	        	if (res.errno == 0) {
 	        		message('登录成功!');
-	        		mui.fire(plus.webview.getWebviewById('chat'), 'loginSuccess');
+	        		// mui.fire(plus.webview.getWebviewById('chat'), 'loginSuccess');
 	        		mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'loginSuccess');
 	        		localStorage.setItem('user', JSON.stringify(res.data));
 					setTimeout(function() {
 						plus.navigator.setStatusBarStyle('dark');
-						fnCloseWin('mobile_login');
-					}, 2000)
+						plus.webview.close('mobile_login', 'none');
+					}, 1500)
 	        	} else {
 	        		message(res.message);
 	        	}

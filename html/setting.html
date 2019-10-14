@@ -191,15 +191,8 @@
 						case 1:
 							//注销所有登录授权认证服务
 							authLogout();
-							
 							//注销账号
 							localStorage.removeItem("user");
-							var login = plus.webview.create("login.html", "login", {
-								statusbar: {
-									background: '#122c9a'
-								}
-							}, '');
-
 							// 获取所有Webview窗口
 							var curr = plus.webview.currentWebview();
 							var wvs = plus.webview.all();
@@ -251,18 +244,13 @@
 										plus.webview.close(wvs[i]);
 									}
 								}
+								fnOpenWin('login.html', 'login', {
+									statusbar: {
+										background: '#122c9a'
+									}
+								}, '', 'slide-in-bottom');
 								curr.hide();
 								curr.close();
-								var loginPage = plus.webview.getWebviewById("login");
-								if (loginPage) {
-									loginPage.show();
-								} else {
-									fnOpenWin('login.html', 'login', {
-										statusbar: {
-											background: '#122c9a'
-										}
-									}, '', 'slide-in-bottom');
-								}
 							}
 							break;
 						case 2:

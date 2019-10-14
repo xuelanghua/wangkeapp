@@ -166,25 +166,27 @@
 									background: "#2289FF"
 								}
 							}
-						}, {
-							title: '商脉',
-							url: "html/business_pulse.html",
-							ids: "business_pulse",
-							statusBg: "#FFFFFF",
-							icon: 'icon-shangmai',
-							selected: 'icon-shangmai-s',
-							selectes: false,
-							style: "dark",
-							styles: {
-								top: "0px",
-								bottom: "50px",
-								scrollIndicator: "none",
-								render: "always",
-								statusbar: {
-									background: "#FFFFFF"
-								}
-							}
-						}, {
+						}, 
+						// {
+						// 	title: '商脉',
+						// 	url: "html/business_pulse.html",
+						// 	ids: "business_pulse",
+						// 	statusBg: "#FFFFFF",
+						// 	icon: 'icon-shangmai',
+						// 	selected: 'icon-shangmai-s',
+						// 	selectes: false,
+						// 	style: "dark",
+						// 	styles: {
+						// 		top: "0px",
+						// 		bottom: "50px",
+						// 		scrollIndicator: "none",
+						// 		render: "always",
+						// 		statusbar: {
+						// 			background: "#FFFFFF"
+						// 		}
+						// 	}
+						// }, 
+						{
 							title: '发现',
 							url: "html/self_media.html",
 							ids: "media",
@@ -253,7 +255,6 @@
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
 						checkUpdate();
-						// plus.navigator.closeSplashscreen();	//主动关闭启动页
 						pushInit();
 						eventInit();
 						var lastLoginTime = localStorage.getItem('lastLoginTime');
@@ -290,6 +291,28 @@
 					plus.webview.create(app.subpages[i].url, app.subpages[i].ids, app.subpages[i].styles);
 				}
 				plus.webview.show('home', 'none', 200);
+				// mui.get($ajaxUrl + 'util', {
+				// 	action: 'business_setting',
+				// }, function(res) {
+				// 	if (res.data.business_status == 0) {
+				// 		mui.each(app.subpages, function(index, item) {
+				// 			if (item.ids == 'business_pulse') {
+				// 				app.subpages.splice(index, 1);
+				// 			}
+				// 		})
+				// 		setTimeout(function() {
+				// 			for (var i = 0; i < app.subpages.length; i++) {
+				// 				plus.webview.create(app.subpages[i].url, app.subpages[i].ids, app.subpages[i].styles);
+				// 			}
+				// 			plus.webview.show('home', 'none', 200);
+				// 		}, 200)
+				// 	} else {
+				// 		for (var i = 0; i < app.subpages.length; i++) {
+				// 			plus.webview.create(app.subpages[i].url, app.subpages[i].ids, app.subpages[i].styles);
+				// 		}
+				// 		plus.webview.show('home', 'none', 200);
+				// 	}
+				// }, 'json');
 			}
 
 			function eventInit() {
@@ -321,7 +344,7 @@
 
 				//自定义事件-登录成功
 				window.addEventListener('loginSuccess', function() {
-					mui.trigger(document.getElementById('home'), 'tap')
+					mui.trigger(document.getElementById('home'), 'tap');
 					userInfo = getUserInfo();
 					bindClientId();
 					initIndexPage();

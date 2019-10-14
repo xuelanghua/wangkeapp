@@ -1,7 +1,8 @@
 //判断是否是特殊手机,特殊手机视频和图片分开选择
 function checkSpecialModel() {
 	var deviceModel = plus.device.model.toLocaleLowerCase();
-	var specialModel = ['vivo'];
+	console.log(deviceModel);
+	var specialModel = ['vivo', 'oppo r9km'];
 	
 	var flag = false;
 	for (var i in specialModel) {

@@ -539,7 +539,7 @@
 					down: {
 						style: 'circle',
 						color: '#2289FF',
-						offset: '-50px',
+						offset: mui.os.ios ? '0px' : '-50px',
 						callback: function() {
 							downRefresh = true;
 							updateUserInfo();
@@ -915,8 +915,10 @@
 						//审核时使线上的res.data.login_type和升级包中的不一致
 						if (res.data.login_type == 3) {
 							document.getElementById('recharge').classList.add('mui-hidden');
+							document.getElementById('bought_course').classList.add('mui-hidden');
 						} else {
 							document.getElementById('recharge').classList.remove('mui-hidden');
+							document.getElementById('bought_course').classList.remove('mui-hidden');
 						}
 					}, 'json');
 				}
