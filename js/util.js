@@ -8,7 +8,7 @@ $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&
 // $videoUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=video'; //视频上传接口
 // $voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=longbing_card&do=upload'; //音频上传接口
 
-$debug = true;
+$debug = false;
 $videoMaxSize = 10 * 1024 * 1024;
 $noticeNumber = 0;
 //获取用户信息
@@ -409,7 +409,7 @@ function shareAction(sb, param, type) {
  * @param {plus.share.ShareService}
  */
 function shareMessage(msg, s) {
-	console.log(JSON.stringify(msg));
+	// console.log(JSON.stringify(msg));
 	s.send(msg, function() {
 		message("分享到\"" + s.description + "\"成功", 'center');
 	}, function(e) {
@@ -649,7 +649,7 @@ function pushInit() {
 	// 	plus.push.clear();
 	// }
 	plus.push.addEventListener('receive', function(msg) {
-		console.log(JSON.stringify(msg));
+		// console.log(JSON.stringify(msg));
 		try {
 			if (!msg.payload) {
 				return;

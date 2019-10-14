@@ -161,7 +161,6 @@
 				if (isWeixinInstalled) {
 					showload(0);
 					plus.oauth.getServices(function(services) {
-						// console.log(JSON.stringify(services));
 						for (var i in services) {
 							var service = services[i];
 							service.login(function(e) {
@@ -183,19 +182,18 @@
 									}, function(res) {
 										if (res.errno == 0) {
 											mui.toast('登录成功!');
-											// mui.fire(plus.webview.getWebviewById('chat'), 'loginSuccess');
-											mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'loginSuccess');
 											localStorage.setItem('user', JSON.stringify(res.data));
 											localStorage.setItem('lastLoginTime', new Date().getTime());
-											// if (res.data.mobile!='') {
+											mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'loginSuccess');
 											if (res.data.mobile.length == 0) {
-												fnOpenWin('mobile_bind.html', 'mobile_bind', {
-													background: '#2289ff'
-												}, '', 'slide-in-bottom');
+												setTimeout(function() {
+													fnOpenWin('mobile_bind.html', 'mobile_bind', {
+														background: '#2289ff'
+													}, '', 'slide-in-bottom');
+												}, 200)
 											} else {
 												var curr = plus.webview.currentWebview();
 												plus.navigator.setStatusBarStyle('dark');
-												// fnOpenWin('../index.html', 'index', '', '', 'slide-in-bottom');
 												setTimeout(function() {
 													curr.hide();
 													curr.close();
