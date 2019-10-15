@@ -51,26 +51,17 @@
 			}
 			.customer_information{
 				font-size: 14px;
-				width: 5rem;
+				width: 4.2rem;
 			}
 			.customer-content{
 				flex-grow: 1;
-				padding-left: 0.36rem;
+				padding-left: 0.3rem;
 				line-height: 1.5;
+				box-sizing: border-box;
 			}
-			.genduo{
-				background-color: #EAEBED;
-				font-size: 20px;
-				color: #8F8F8F;
-				line-height: 5px;
-				padding: 0 8px 10px 8px;
-				border-radius: 10px;
-				position: absolute;
-				right: 0;
-				z-index: 8;
-			}
+			
 			.mui-table-view-cell{
-				padding: 15px;
+				padding: 15px 10px 15px 15px ;
 				position: relative;
 			}
 			.playb{
@@ -109,10 +100,10 @@
 				content: '';
 				position: absolute;
 				width: 1px;
-				height: 50%;
-				top: 20%;
+				height: 30%;
+				top: 35%;
 				right: 0;
-				background-color: #F9F9F9;
+				background-color: #DDDDDD;
 				-webkit-transform: scaleX(0.5);
 				transform: scaleX(0.5);
 				opacity: 0.2;
@@ -170,10 +161,18 @@
 			.mui-table-view{
 				background: transparent;
 			}
-			.mui-table-view-cell{
+			.mui-table-view-cell,.mui-input-row.mui-radio{
+				width: 100%;
+			}
+			.mui-table-view-cell,.mui-input-row.mui-radio label{
+				width: 100%;
 				background-color: #FFFFFF;
 				display: flex;
 				align-items: center;
+				justify-content: space-between;
+			}
+			.mui-table-view-cell .mui-input-row.mui-radio label{
+				padding: 0;
 			}
 			.mui-bar-nav~.mui-content{
 				padding-top: 98px;
@@ -234,6 +233,21 @@
 			}
 			.mui-badge.mui-badge-blue:last-of-type{
 				margin-left: 5px;
+			} 
+			.radio-cont{
+				width: 30px;
+				height: 50px;
+				flex-shrink: 0;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.mui-radio input[type='radio']{
+				right: 3px;
+			}
+			.mui-radio input[type='radio']:checked:before{
+				color:#f5ca3a;
 			}
 			[v-cloak] {
 				display: none;
@@ -250,7 +264,7 @@
 	<body id="body_tap">
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">拼团</h1>
+			<h1 class="mui-title">商品选择</h1>
 		</header>
 		<div class="mui-content mui-clearfix" id="mui-content" v-cloak>
 			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
@@ -262,45 +276,45 @@
 				<ul class="mui-table-view" id="item1_list">
 					<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,i) in on_sale_list"
 					 :key="i">
-						<div class="chart" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
-							<div v-if="lst.check_status==0" class="status-mask">
-								审核中
-							</div>
-							<div v-else-if="lst.check_status==2" class="status-mask defeated">
-								审核失败
-							</div>
-							<img :src="lst.cover">
-						</div>
-						<div class="customer-content">
-							<div class="customer_information mui-ellipsis" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
-								{{lst.name}}
-							</div>
-							<div class="price-container" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
-								<span>&yen;{{lst.price}}</span>
-							</div>
-							<div class="right-bottom-cont">
-								<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
-								<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/qiyec-icon.png"
-									 alt="">企业仓</span>
-								<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png"
-									 alt="">旺客总仓</span>
-								<span class="genduo" :data-ids="lst.id">...</span>
-							</div>
-							<div>
-								<span class="mui-badge mui-badge-blue">6种规格</span>
-								<span class="mui-badge mui-badge-blue">已拼：3单</span>
-							</div>
-							<div class="playb" :class="'playb'+lst.id">
-								<div class="jiao"></div>
-								<div class="play" data-type="off" :data-gtype="lst.is_team_goods">
-									<img src="../image/icon/bottom-section-05-white.png" />
-									<div>添加规则</div>
+						<div class="mui-input-row mui-radio">
+							<label>
+								<div class="chart">
+									<div v-if="lst.check_status==0" class="status-mask">
+										审核中
+									</div>
+									<div v-else-if="lst.check_status==2" class="status-mask defeated">
+										审核失败
+									</div>
+									<img :src="lst.cover">
 								</div>
-								<div class="play" data-type="share" :data-idx="i">
-									<img src="../image/icon/bottom-section-04-white.png" />
-									<div>删除拼团</div>
+								<div class="customer-content">
+									<div class="customer_information mui-ellipsis-2">
+										{{lst.name}}
+									</div>
+									<div class="price-container">
+										<span>&yen;{{lst.price}}</span>
+									</div>
+									<div class="right-bottom-cont">
+										<span>库存：{{lst.stock}}</span>
+										<span v-if="lst.is_team_goods==1"><img src="../image/icon/qiyec-icon.png" alt="">企业仓</span>
+										<span v-if="lst.is_team_goods==9"><img src="../image/icon/wagnkezc-icon.png" alt="">旺客总仓</span>
+									</div>
+									<div class="playb" :class="'playb'+lst.id">
+										<div class="jiao"></div>
+										<div class="play" data-type="off" :data-gtype="lst.is_team_goods">
+											<img src="../image/lower_shelf.png" />
+											<div>添加规则</div>
+										</div>
+										<div v-if="lst.check_status==1" class="play" data-type="share" :data-idx="i">
+											<img src="../image/extension.png" />
+											<div>删除拼团</div>
+										</div>
+									</div>
 								</div>
-							</div>
+								<div class="radio-cont">
+									<input name="radio1" :value="i" v-model="goodsIdx" type="radio" :checked="goodsIdx==i">
+								</div>
+							</label>
 						</div>
 					</li>
 					<div v-if="on_sale_status">
@@ -309,8 +323,8 @@
 					</div>
 				</ul>
 			</div>
-			<div class="add_merchandise" id="group_booking_select">
-				<button>创建拼团</button>
+			<div class="add_merchandise" id="add_merchandise">
+				<button id="add_goods">下一步</button>
 			</div>
 		</div>
 	</body>
@@ -334,11 +348,8 @@
 		data: {
 			goodsName: '',
 			on_sale_list: [],
-			sale_out_list: [],
-			off_sale_list: [],
 			on_sale_status: false,
-			sale_out_status: false,
-			off_sale_status: false,
+			goodsIdx: 0
 		},
 		created: function() {
 			// 初始化字体大小
@@ -350,25 +361,7 @@
 			// 初始化字体大小结束	
 		},
 		methods: {
-			openGoodsDetail: function(gid, type) {
-				openPage('group_booking_detail.html', 'group_booking_detail', '#f7f7f7', {
-					gid: gid
-				})
-				return false;
-				if (type == 0) {
-					openPage('distributor_goods_detail_bio.html', 'distributor_goods_detail_bio', '#f7f7f7', {
-						gid: gid
-					})
-				} else if (type == 1) {
-					openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
-						gid: gid
-					})
-				} else {
-					openPage('wangke_distributor_goods_detail_mine.html', 'wangke_distributor_goods_detail_mine', '#f7f7f7', {
-						gid: gid
-					})
-				}
-			}
+
 		},
 		mounted: function() {
 			mui.init({
@@ -424,21 +417,6 @@
 				getGoodsList();
 			}
 		};
-		//展示商品弹窗
-		mui(".mui-table-view").on('tap', '.genduo', function(e) {
-			var glist = document.querySelectorAll(".playb");
-			for (i = 0; i < glist.length; i++) {
-				glist[i].style.display = "none";
-			}
-			currentId = this.dataset.ids;
-			document.querySelector(".playb" + currentId).style.display = 'block';
-			if (mui.os.ios) {
-				//不采取操作
-			} else {
-				mask.show();
-			}
-			e.stopPropagation();
-		})
 	}
 	//获取商品列表
 	function getGoodsList(refresh) {
@@ -480,16 +458,22 @@
 		app.goodsName = '';
 		getGoodsList();
 	})
-	// 创建拼团
-	mui('.mui-content').on('tap', '#group_booking_select', function() {
-		openPage("group_booking_select.html","group_booking_select","#FFFFFF")
+	// 切换产品id
+	mui('.mui-content').on('tap', '.mui-table-view-cell', function() {
+		console.log(app.goodsId);
+	})
+	// 下一步
+	mui('.mui-content').on('tap', '.add_merchandise', function() {
+		openPage("group_booking_create.html", "group_booking_create", "#ffffff", {
+			goods: app.on_sale_list[app.goodsIdx],
+		})
 	})
 	// 判断软键盘是否弹起
 	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
 	window.onresize = function() {
 		//软键盘弹起与隐藏  都会引起窗口的高度发生变化
 		var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-		var paddeds = document.querySelector(".add_merchandise");
+		var paddeds = document.getElementById("add_merchandise");
 		var focus = document.querySelector('input:focus');
 		if (resizeHeight * 1 < originalHeight * 1 && focus) {
 			paddeds.style.display = 'none';

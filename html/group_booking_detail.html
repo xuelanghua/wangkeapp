@@ -1,0 +1,800 @@
+<!doctype html>
+<html>
+	<!-- 个人拣货后的分销商品详情 -->
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<style type="text/css">
+			.goods-images {
+				width: 7.5rem;
+				height: 7.5rem;
+				background-color: #FFFFFF;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.swiper-pagination {
+				position: absolute;
+				left: auto;
+				right: 10px;
+				bottom: 10px;
+				background-color: rgba(0, 0, 0, 0.5);
+				width: auto;
+				display: inline-flex;
+				align-items: baseline;
+				justify-content: center;
+				border-radius: 0.6rem;
+				padding: 0 8px;
+				color: #DDDDDD;
+				z-index: 9;
+				line-height: 1.2;
+				font-size: 0.24rem;
+			}
+
+			.swiper-pagination-current {
+				font-size: 16px;
+			}
+
+			.goods-images img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.goods-title {
+				padding-top: 0.2rem;
+				overflow: hidden;
+			}
+
+			.goods-title p {
+				margin-bottom: 0.2rem;
+				font-size: 0.32rem;
+				color: #333333;
+				line-height: 1.4;
+				text-align: justify;
+			}
+
+			.main-container {
+				padding: 0.2rem;
+				margin-bottom: 0.2rem;
+				background-color: #FFFFFF;
+			}
+
+			.hot-sign {
+				height: 0.28rem;
+				width: auto;
+				margin-right: 0.2rem;
+			}
+
+			.profit-cont {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				color: #F52E20;
+				font-size: 0.3rem;
+			}
+
+			.price-cont {
+				font-size: 0.24rem;
+				color: #333333;
+				padding: 0.2rem 0;
+			}
+
+			.price-cont span:last-of-type {
+				color: #F4CA3A;
+				margin-left: 1.03rem;
+			}
+
+			.top-info-cont {
+				padding-top: 0.2rem;
+				font-size: 0.24rem;
+				color: #999999;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				position: relative;
+			}
+
+			.parameter-cont {
+				margin-bottom: 10px;
+				background-color: #FFFFFF;
+			}
+
+			.parameter-cont .mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.parameter-cont .mui-table-view:after,
+			.parameter-cont .mui-table-view:before {
+				height: 0;
+			}
+
+			.parameter-cont a {
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.parameter-cont .mui-table-view-cell.mui-collapse.mui-active a:before {
+				position: absolute;
+				right: 0.3rem;
+				bottom: 0;
+				left: 0.3rem;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #DDDDDD;
+			}
+
+			.parameter-list {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.1rem 0;
+			}
+
+			.mui-table-view-cell.mui-collapse .mui-collapse-content {
+				padding: 0;
+			}
+
+			.parameter-list:nth-of-type(even) {
+				background-color: #f9f9f9;
+			}
+
+			.parameter-items {
+				width: 17.5%;
+				font-size: 0.24rem;
+				color: #333333;
+				text-align: center;
+			}
+
+			.parameter-items:first-of-type {
+				width: 30%;
+			}
+
+			.team-name-cont {
+				background-color: #FFFFFF;
+				padding: 0.2rem;
+				display: flex;
+				align-items: center;
+				margin: 0.2rem 0;
+			}
+
+			.team-name-cont img {
+				width: 0.88rem;
+				height: 0.88rem;
+				border-radius: 0.1rem;
+				object-fit: cover;
+				margin-right: 0.4rem;
+			}
+
+			.team-name-cont .mui-icon {
+				position: absolute;
+				right: 0.2rem;
+				color: #999999;
+			}
+
+			.goods-detail-container {
+				background-color: #FFFFFF;
+				padding: 0.2rem;
+			}
+
+			.goods-detail-container h4.title {
+				font-size: 0.32rem;
+				color: #333333;
+				padding: 0.4rem 0 0.2rem;
+				font-weight: normal;
+				position: relative;
+				display: flex;
+				align-items: center;
+			}
+
+			.goods-detail-container h4.title:before {
+				content: '';
+				display: inline-block;
+				position: relative;
+				bottom: 0;
+				left: 0;
+				height: 0.3rem;
+				width: 4px;
+				margin-right: 5px;
+				background-color: #333333;
+			}
+
+			.goods-detail-container img {
+				max-width: 100% !important;
+				height: auto;
+			}
+
+			.bottom-section {
+				position: fixed;
+				display: flex;
+				align-items: center;
+				z-index: 199;
+				background-color: #FFFFFF;
+				height: 1.09rem;
+				bottom: 0;
+				width: 100%;
+				box-shadow: 1px 0 2px 0 rgba(220, 220, 220, .5);
+			}
+
+			.bottom-section .option-btn {
+				color: #333333;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				position: relative;
+				flex-grow: 1;
+				font-size: 0.3rem;
+				justify-content: center;
+			}
+
+			.bottom-section .option-btn:last-of-type:before {
+				content: "";
+				width: 1px;
+				height: 0.5rem;
+				background-color: #F2F2F2;
+				position: absolute;
+				left: 0;
+				top: 0.255rem;
+			}
+
+			.bottom-section .option-btn img {
+				height: 0.36rem;
+				margin-right: 0.1rem;
+				width: auto;
+			}
+
+			.btn-section {
+				position: fixed;
+				display: flex;
+				align-items: center;
+				z-index: 199;
+				background-color: #FFFFFF;
+				height: 1.09rem;
+				bottom: 0;
+				width: 100%;
+				box-shadow: 1px 0 2px 0 rgba(220, 220, 220, .5);
+			}
+
+			.btn-section div {
+				color: #333333;
+				width: 100%;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+			}
+
+			.btn-section .the-warehouse {
+				color: #CC9C2D;
+			}
+
+			.btn-section .the-gray-warehouse {
+				color: #a7a7a7;
+			}
+
+			.goods-detail-container img {
+				line-height: 0;
+				margin: -4px 0;
+				padding: 0;
+				max-width: 100% !important;
+				height: auto;
+			}
+
+			.goods-detail-container img:first-of-type {
+				margin-top: 0;
+			}
+
+			.goods-detail-container {
+				padding-bottom: 1.3rem;
+			}
+
+			.goods-detail-container p {
+				line-height: 1.4;
+			}
+
+			.goods-detail-container div {
+				line-height: 1.8;
+			}
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 0.2rem;
+				z-index: 16;
+				font-size: 14px;
+				color: #999999;
+				margin-right: -10px;
+			}
+
+			.group-booking-rules {
+				width: 100%;
+				padding: 0 10px;
+			}
+
+			.group-booking-rules h4 {
+				font-size: 0.3rem;
+				margin: 0;
+				font-weight: normal;
+			}
+
+			.group-booking-rules .mini-card {
+				width: 100%;
+				padding: 10px;
+				box-sizing: border-box;
+				background-color: #ffffff;
+				border-radius: 10px;
+				margin: 10px 0;
+				overflow: hidden;
+			}
+
+			.mini-card-head {
+				justify-content: space-between;
+				font-size: 0.3rem;
+				padding: 5px 0;
+			}
+
+			.mini-card-head img {
+				height: 0.3rem;
+				width: auto;
+				margin-right: 3px;
+			}
+
+			.flex-center {
+				display: flex;
+				align-items: center;
+			}
+
+			.del-btn {
+				margin-right: 0.3rem;
+				padding-right: 0.3rem;
+				position: relative;
+			}
+
+			.del-btn:after {
+				content: "";
+				width: 1px;
+				height: 70%;
+				background-color: #eaeaea;
+				position: absolute;
+				right: 0;
+				top: 15%;
+			}
+
+			.mini-card-body {
+				padding: 5px 0;
+			}
+
+			.mini-card-body .mui-badge {
+				background-color: #bdbdbd;
+				color: #FFFFFF;
+				margin-right: 5px;
+				font-size: 0.24rem;
+			}
+
+			.mini-card-head .price {
+				color: #f52e20;
+				margin-left: 10px;
+			}
+
+			.change-container {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 100%;
+				-webkit-transition: display 0.5s ease-in-out;
+				transition: display 0.5s ease-in-out;
+			}
+
+			.order-type {
+				width: 6.56rem;
+				height: 1.1rem;
+				border: 1px solid #000000;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border-radius: 0.2rem;
+				-webkit-transform: scale(0.5);
+				transform: scale(0.5);
+				overflow: hidden;
+				margin: 0 auto;
+				position: relative;
+			}
+
+			.order-type span {
+				width: 50%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.56rem;
+				color: #333333;
+				height: 100%;
+				background: rgba(0, 0, 0, 0);
+				z-index: 3;
+				-webkit-transition: all 0.0.3 s ease-in-out;
+				transition: all 0.0.3 s ease-in-out;
+			}
+
+			.order-type .bg-full {
+				position: absolute;
+				left: 0;
+				top: 0;
+				height: 100%;
+				width: 50%;
+				background-color: #333333;
+				z-index: 1;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+			}
+
+			.order-type.active .bg-full {
+				left: 50%;
+			}
+
+			.order-type .order-type-item:first-of-type,
+			.order-type.active .order-type-item:last-of-type {
+				color: #FFFFFF;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+			}
+
+			.order-type.active .order-type-item:first-of-type {
+				color: #333333;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+			}
+
+			.mui-bar.mui-bar-nav {
+				display: flex;
+				align-items: center;
+			}
+
+			/* 选项卡二 */
+			.last-container .goods-img {
+				width: 0.96rem;
+				height: 0.96rem;
+				overflow: hidden;
+				border-radius: 50%;
+				margin-right: 10px;
+				flex-shrink: 0;
+			}
+			.last-container .goods-img  img{
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			.last-container .group-booking-rules{
+				padding: 0;
+			}
+			.last-container {
+				min-height: 100vh;
+				background-color: #FFFFFF;
+			}
+			.last-container .group-booking-rules .mini-card{
+				border-radius: 0;
+				background-color: #ffffff;
+				position: relative;
+				padding: 0.3rem 0 0.3rem 0.15rem;
+				margin: 0;
+			}
+			.last-container .group-booking-rules .mini-card:after{
+				content: "";
+				width: 80%;
+				height: 1px;
+				background-color: #F2F2F2;
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+			.last-container .group-status p{
+				margin-bottom: 0;
+				font-size: 0.3rem;
+				padding-right: 0.15rem;
+				box-sizing: border-box;
+			}
+			.last-container .group-status span{
+				color:#f5ca3a;
+			}
+			.last-container .count-down{
+				font-size: 0.24rem;
+				color: #999999;
+				margin-right: 0.1rem;
+			}
+			.last-container .mini-card-body {
+				justify-content: space-between;
+				line-height: 1;
+			}
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="position: absolute;"></span>
+				<div class="change-container">
+					<div class="order-type" :class="sales==2?'active':''">
+						<i id="bg_full" class="bg-full"></i>
+						<span class="order-type-item" data-order="1">产品详情</span>
+						<span class="order-type-item" data-order="2">拼团情况</span>
+					</div>
+				</div>
+			</header>
+			<div class="mui-content ">
+				<div v-show="sales==1">
+					<div class="swiper-container goods-images">
+						<div class="swiper-wrapper">
+							<div class="swiper-slide" v-for="(img,i) in images">
+								<img :data-idx="i" :src="img">
+							</div>
+						</div>
+						<!-- Add Pagination -->
+						<div class="swiper-pagination"></div>
+					</div>
+					<div class="top-container main-container">
+						<div class="goods-title">
+							<p>{{goods_detail.name}}</p>
+						</div>
+						<div class="profit-cont">
+							<span>&yen;{{goods_detail.commission}}</span>
+							<img class="hot-sign" src="../image/icon/distributor_goods_detail_mine_sign.png">
+						</div>
+						<div class="top-info-cont">
+							<span>快递：{{goods_detail.express_name}}&nbsp;&nbsp;&yen;{{goods_detail.freight}}</span>
+							<span>销量：{{goods_detail.sale_count}}</span>
+							<span>浏览：{{goods_detail.view_count}}</span>
+						</div>
+					</div>
+					<!-- 拼团规则 -->
+					<div class="group-booking-rules">
+						<h4 class="title">拼团规则</h4>
+						<div class="mini-card" v-for="i in 3">
+							<div class="mini-card-head flex-center">
+								<div class="flex-center">
+									<span>红色</span>
+									<span class="price">&yen;298.00</span>
+								</div>
+								<div class="flex-center">
+									<div class="flex-center del-btn">
+										<img src="../image/icon/bottom-section-05.png" />
+										<span>删除</span>
+									</div>
+									<div class="flex-center">
+										<img src="../image/icon/bottom-section-01.png" />
+										<pan>编辑</pan>
+									</div>
+								</div>
+							</div>
+							<div class="mini-card-body">
+								<span class="mui-badge">每人1件起</span>
+								<span class="mui-badge">6人拼团</span>
+								<span class="mui-badge">25h</span>
+							</div>
+						</div>
+					</div>
+					<div class="parameter-cont">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell mui-collapse">
+								<a class="mui-navigate-right" href="#">查看规格</a>
+								<div class="mui-collapse-content">
+									<div class="parameter-list">
+										<div class="parameter-items">规格</div>
+										<div class="parameter-items">库存</div>
+										<div class="parameter-items">供货价</div>
+										<div class="parameter-items">售价</div>
+										<div class="parameter-items">提成</div>
+									</div>
+									<div class="parameter-list" v-for="(c,idx) in spec">
+										<div class="parameter-items">{{c.title}}</div>
+										<div class="parameter-items">{{c.stock}}</div>
+										<div class="parameter-items">{{c.settlement_price}}</div>
+										<div class="parameter-items">{{c.price}}</div>
+										<div class="parameter-items">{{c.commission}}</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="goods-detail-container">
+						<h4 class="title">商品详情</h4>
+						<div id="content" v-html="goods_detail.content"></div>
+					</div>
+					<div class="bottom-section">
+						<div class="option-btn" data-type="edit">
+							<img src="../image/icon/bottom-section-05.png" />
+							<span>添加规则</span>
+						</div>
+						<div class="option-btn" data-type="del">
+							<img src="../image/icon/bottom-section-04.png" />
+							<span>删除拼团</span>
+						</div>
+					</div>
+				</div>
+				<div v-show="sales==2" class="last-container">
+					<!-- 拼团规则 -->
+					<div class="group-booking-rules">
+						<div class="mini-card  flex-center" v-for="i in 3" @tap="groupBooking(123)">
+							<div class="goods-img">
+								<img src="../image/5E0eH.png">
+							</div>
+							<div style="display: flex;flex-grow: 1;flex-direction: column;">
+								<div class="mini-card-head flex-center">
+									<div class="flex-center">
+										<span>红色</span>
+										<span class="price">&yen;298.00</span>
+									</div>
+									<div class="flex-center group-status">
+										<p>还差<span>1人</span>成团</p>
+										<!-- <p><span>已成团</span></p> -->
+									</div>
+								</div>
+								<div class="mini-card-body flex-center">
+									<div>
+										<span class="mui-badge">每人1件起</span>
+										<span class="mui-badge">6人拼团</span>
+										<span class="mui-badge">25h</span>
+									</div>
+									<span class="count-down">剩余 1天07:58</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					goods_id: '',
+					goods_detail: {
+						name: ''
+					},
+					images: [],
+					spec: [],
+					sales: 1
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					// 拼团详情
+					groupBooking:function(id){
+						openPage('group_booking_detail_card.html','group_booking_detail_card','#ffffff',{
+							id:id
+						})
+					}
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.goods_id = self.gid;
+						mui.post($ajaxUrl + 'goods&action=goods_detail', {
+							token: userInfo.token,
+							goods_id: app.goods_id
+						}, function(res) {
+							if (res.errno == 0) {
+								app.goods_detail = res.data;
+								app.images = res.data.images;
+								app.spec = res.data.spec;
+								if (app.images.length > 1) {
+									setTimeout(function() {
+										swiperInint();
+									}, 500);
+								}
+							} else {
+
+							}
+						}, 'json');
+
+						// 预览图片
+						// 长按保存到系统相册
+						mui('.mui-content').on('tap', '.swiper-slide img', function() {
+							var index = this.dataset.idx;
+							plus.nativeUI.previewImage(app.images, {
+								current: index,
+								loop: true,
+								indicator: 'default',
+								onLongPress: function(event) {
+
+								}
+							});
+						});
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+				}
+			})
+
+			function swiperInint() {
+				var swiper = new Swiper('.swiper-container', {
+					loop: true,
+					autoplay: {
+						delay: 3000,
+						stopOnLastSlide: false,
+						disableOnInteraction: false,
+					},
+					pagination: {
+						el: '.swiper-pagination',
+						type: 'fraction',
+					}
+				});
+			}
+			// 编辑  删除
+			mui(".mui-content").on("tap", ".option-btn", function() {
+				var sign = this.dataset.type;
+				if (sign == 'edit') {
+					// 编辑
+					openPage('group_booking_create.html', 'group_booking_create', '#ffffff', {
+						goods: app.goods_detail
+					})
+				} else {
+					// 删除
+					plus.nativeUI.confirm('确认删除该商品?', function(e) {
+						if (e.index == 0) {}
+					})
+				}
+			})
+			//改变商品状态
+			function changeGoodsStatus(status) {
+				mui.post($ajaxUrl + 'goods', {
+					action: 'change_status',
+					token: userInfo.token,
+					status: status,
+					goods_id: app.goods_id,
+					type: "team_goods"
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+
+						mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
+					} else {
+						message('操作失败!');
+					}
+				}, 'json');
+			}
+			// 切换订单类型
+			mui('.mui-bar').on('tap', '.order-type-item', function() {
+				if (app.sales == 1) {
+					app.sales = 2;
+				} else {
+					app.sales = 1;
+				}
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,466 +1,315 @@
 <!doctype html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<link href="../css/mui.css" rel="stylesheet" />
-		<link href="../css/showLoading.css" rel="stylesheet" />
-		<style>
-			p{
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<style type="text/css">
+			.section-one {
+				background-color: #FFFFFF;
+				margin-top: 0.2rem;
+			}
+
+			.good-title {
+				position: relative;
+				padding: 0.2rem 0.15rem 0.3rem;
+				margin-bottom: 0.1rem;
+			}
+
+			.good-title p {
+				margin: 0;
+				font-size: 0.3rem;
 				color: #333333;
 			}
-			.mui-bar{
-				background-color: #FFFFFF;
-			}
-			.nr{
-				background: #333333;
-				color: #FFFFFF;
-			}
-			.search{
-				margin: 0.625rem;
-				padding: 0 10px;
-				border-radius: 0.3125rem;
-				border: 1px solid #DDDDDD;
-				background-color: #FFFFFF;
-			}
-			.mui-icon{
-				font-size: 20px;
-			}
-			.search input{
-				width: 90%;
-				margin: 0;
-				border: none;
-				padding: 3px;
-				font-size: 0.875rem;
-			}
-			
-			.mui-card .mui-control-content {
-				padding: 10px;
-			}
-			.chart{
-				width: 1.6rem;
-				height: 1.6rem;
-				flex-shrink: 0;
-				position: relative;
-			}
-			.chart img{
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-			.customer_information{
-				font-size: 14px;
-				width: 5rem;
-			}
-			.customer-content{
-				flex-grow: 1;
-				padding-left: 0.36rem;
-				line-height: 1.5;
-			}
-			
-			.mui-table-view-cell{
-				padding: 15px;
-				position: relative;
-			}
-			.playb{
-				width: auto;
-				position: absolute;
-				padding: 10px 0 5px 0;
-				right: 15%;
-				border-radius: 5px;
-				background-color: rgba(51,51,51,0.85);
-				display: none;
-				bottom: 25px;
-				z-index: 1045;
-			}
-			.jiao{
-				width: 0;
-				height: 0;
-				border-top: 10px solid transparent;
-				border-bottom: 7px solid transparent;
-				border-left: 10px solid #515151;
-				float: right;
-				margin-top: 10px;
-				margin-right: -9px;
-			}
-			.play{
-				width: auto;
-				color: #FFFFFF;
-				font-size: 12px;
-				float: left;
-				margin-left: 5px;
-				text-align: center;
-				padding: 0 0.2rem;
-				line-height: 1.6;
-				position: relative;
-			}
-			.play:after{
-				content: '';
-				position: absolute;
-				width: 1px;
-				height: 30%;
-				top: 35%;
-				right: 0;
-				background-color: #DDDDDD;
-				-webkit-transform: scaleX(0.5);
-				transform: scaleX(0.5);
-				opacity: 0.2;
-			}
-			.play:last-of-type:after{
-				display: none;
-			}
-			.play img{
-				width: 16px;
-				margin: 0;
-			}
-			.add_merchandise{
-				width: 100%;
-				position: fixed;
-				bottom: 0;
-				padding: 0;
-				height: 1rem;
-				border: none;
-				border-radius: 0;
-				font-size: 16px;
-				background-color: #F4CA3A;
-				color: #ffffff;
-				z-index: 12;
-				display: flex;
-			}
-			.add_merchandise button{
-				background-color: transparent;
-				border: none;
-				color: #FFFFFF;
-				width: 100%;
-				margin: 0;
-				padding: 0;
-				display: inline-flex;
-				height: 100%;
-				font-size: 0.3rem;
-				justify-content: center;
-				position: relative;
-			}
-			.add_merchandise button:active{
-				background-color: transparent;
-			}
-			.mui-table-view-cell.mui-active{
-				background: #FFFFFF;
-			}
-			
-			.mui-search input {
-				background-color: #fff;
-				border-radius: 0.3125rem;
-				border: 1px solid #DDD;
-			}
-			
-			.mui-table-view::before,.mui-table-view::after{
-				height: 0;
-			}
-			.mui-table-view{
-				background: transparent;
-			}
-			.mui-table-view-cell{
-				background-color: #FFFFFF;
-				display: flex;
-				align-items: center;
-			}
-			.mui-bar-nav~.mui-content{
-				padding-top: 98px;
-				padding-bottom: 60px;
-			}
-			
-			.right-bottom-cont{
-				display: flex;
-				align-items: center;
-				position: relative;
-				color: #999999;
-				font-size: 0.24rem;
-			}
-			.price-container{
-				font-size: 0.24rem;
-				padding: 0.1rem 0;
-			}
-			.right-bottom-cont span:first-of-type,
-			.price-container span:first-of-type{
-				margin-right: 0.44rem;
-			}
-			.price-container span:first-of-type{
-				color: #F52E20;
-			}
-			.right-bottom-cont span{
-						display: inline-flex;
-						align-items: center;
-			}
-			.right-bottom-cont span img{
-				width: 13px;
+			.del-container {
+				width: 0.5rem;
 				height: auto;
-				margin-right: 2px;
-			}
-			.status-mask{
 				position: absolute;
-				top: 0;
-				bottom: 0;
-				width: 100%;
-				background-color: rgba(0,0,0,0.6);
+				top: 50%;
+				z-index: 6;
+				margin-top: -0.25rem;
+				right: -0.25rem;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			input::-webkit-input-placeholder {
+				color: #DDDDDD;
+				font-size: 0.26rem;
+			}
+
+			.mui-table-view:after,
+			.mui-table-view:before {
+				height: 0;
+			}
+
+			.last-opction .mui-table-view-cell {
+				padding: 0.35rem 0.2rem;
 				display: flex;
 				align-items: center;
-				justify-content: center;
+			}
+
+			.last-opction .mui-table-view-cell input[type=number] {
+				width: 50%;
+				border-radius: 0;
+				margin: 0;
+				height: 20px;
+				padding: 0;
+				font-size: 0.3rem;
+				border: none;
+			}
+
+			.last-opction .last-title {
+				margin-right: 0.4rem;
+			}
+
+			.last-opction .mui-table-view-cell .mui-icon.mui-icon-clear {
+				position: absolute;
+				right: 3%;
+				font-size: 0.48rem;
+				color: #DDDDDD;
+			}
+
+			.btn-section {
+				position: fixed;
+				display: flex;
+				align-items: center;
+				z-index: 199;
+				background-color: #F5CA3A;
+				height: 1.09rem;
+				bottom: 0;
+				width: 100%;
+			}
+
+			.btn-section div {
 				color: #FFFFFF;
-				font-size: 14px;
+				width: 100%;
+				height: 100%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
 			}
-			.status-mask.defeated{
-				color: #FF0000;
+
+			.mui-bar-nav~.mui-content {
+				padding-top: 44px;
+				padding-bottom: 1.09rem;
 			}
-			.mui-backdrop {
-				 background-color: rgba(0,0,0,0);
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
 			}
-			body{
-				-webkit-overflow-scrolling: touch;
+
+			.team-list.active span {
+				display: inline-flex;
+				position: relative;
 			}
-			.mui-badge.mui-badge-blue{
-				background-color: #fff7dd;
-				color: #f5ca3a;
+
+			.team-list.active span:after {
+				content: '';
+				display: inline-block;
+				width: 19px;
+				height: 20px;
+				position: absolute;
+				background: url('../image/icon/draw-icono.png')center center no-repeat;
+				background-size: contain;
+				right: -0.8rem;
 			}
-			.mui-badge.mui-badge-blue:last-of-type{
-				margin-left: 5px;
+			.mui-bar.mui-bar-nav{
+				background-color: #FFFFFF;
+			}
+			.size-opstion{
+				font-size: 15px;
+				color: #AAAAAA;
+			}
+			.size-opstion:after{
+				font-size: 24px;
 			}
 			[v-cloak] {
 				display: none;
 			}
 		</style>
-		<script type="text/javascript">
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-		</script>
 	</head>
-	<body id="body_tap">
+
+	<body>
 		<header class="mui-bar mui-bar-nav">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">商品选择</h1>
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">创建拼团</h1>
 		</header>
-		<div class="mui-content mui-clearfix" id="mui-content" v-cloak>
-			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
-				<div class="mui-input-row mui-search" style="margin: 10px 10px -5px 10px;">
-					<input type="search" class="mui-input-clear" v-model="goodsName" name="goods_name" placeholder="搜索商品名称">
+		<div id="mui-content" class="mui-content " v-cloak>
+			<div class="section-one">
+				<div class="good-title">
+					<p>{{goods_detail.name}}</p>
 				</div>
 			</div>
-			<div id="goods_container" class="goods-container">
-				<ul class="mui-table-view" id="item1_list">
-					<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,i) in on_sale_list"
-					 :key="i">
-						<div class="chart">
-							<div v-if="lst.check_status==0" class="status-mask">
-								审核中
-							</div>
-							<div v-else-if="lst.check_status==2" class="status-mask defeated">
-								审核失败
-							</div>
-							<img :src="lst.cover">
-						</div>
-						<div class="customer-content">
-							<div class="customer_information mui-ellipsis">
-								{{lst.name}}
-							</div>
-							<div class="price-container">
-								<span>&yen;{{lst.price}}</span>
-							</div>
-							<div class="right-bottom-cont">
-								
-								<div class="mui-input-row mui-radio">
-									<label> <span>库存：{{lst.stock}}</span>
-								<span v-if="lst.is_team_goods==1"><img src="../image/icon/qiyec-icon.png"
-									 alt="">企业仓</span>
-								<span v-if="lst.is_team_goods==9"><img src="../image/icon/wagnkezc-icon.png"
-									 alt="">旺客总仓</span></label>
-									<input name="radio1" type="radio">
-								</div>
-							</div>
-							<div class="playb" :class="'playb'+lst.id">
-								<div class="jiao"></div>
-								<div class="play" data-type="off" :data-gtype="lst.is_team_goods">
-									<img src="../image/lower_shelf.png" />
-									<div>添加规则</div>
-								</div>
-								<div v-if="lst.check_status==1" class="play" data-type="share" :data-idx="i">
-									<img src="../image/extension.png" />
-									<div>删除拼团</div>
-								</div>
-							</div>
-						</div>
+			<div class="last-opction">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" id="showUserPicker">
+						<span class="last-title">规格</span>
+						<p class="mui-navigate-right size-opstion">{{size}}</p>
 					</li>
-					<div v-if="on_sale_status">
-						<img style="width: 60%;display: block;margin: 20% auto 0;" class="no-friends" src="../image/icon/void-goods.png">
-						<p style="text-align: center;color:#717171;">暂无商品</p>
-					</div>
+					<li class="mui-table-view-cell">
+						<span class="last-title">成团人数</span>
+						<input type="number" v-model="t_number" placeholder="达到数量拼团成功">
+						<span  v-show="t_number" @tap="clearInput('t_number')" class="mui-icon mui-icon-clear"></span>
+					</li>
+					<li class="mui-table-view-cell">
+						<span class="last-title">起购数量</span>
+						<input type="number" v-model="quantity" placeholder="一人最少购买数量">
+						<span v-show="quantity"  @tap="clearInput('quantity')" class="mui-icon mui-icon-clear"></span>
+					</li>
+					<li class="mui-table-view-cell">
+						<span class="last-title">单价</span>
+						<input type="number" v-model="unit_cost " placeholder="设置拼团价格">
+						<span v-show="unit_cost"  @tap="clearInput('unit_cost')" class="mui-icon mui-icon-clear"></span>
+					</li>
+					<li class="mui-table-view-cell">
+						<span class="last-title">时间（小时）</span>
+						<input type="number" v-model="timer" placeholder="超过时间拼团失败">
+						<span v-show="timer"  @tap="clearInput('timer')" class="mui-icon mui-icon-clear"></span>
+					</li>
 				</ul>
 			</div>
-			<div class="add_merchandise" id="add_merchandise">
-				<button id="add_goods">下一步</button>
+			<div class="btn-section">
+				<div class="putaway-btn option-btn" data-status="1">
+					保存
+				</div>
 			</div>
 		</div>
-	</body>
-</html>
-<script src="../js/mui.js"></script>
-<script src="../js/util.js"></script>
-<script src="../js/vue.min.js"></script>
-<script type="text/javascript">
-	var userInfo = getUserInfo();
-	// 当前产品对象
-	var currentIdx = -1;
-	var mask = mui.createMask(function() {
-		document.querySelector(".playb" + currentId).style.display = 'none';
-	});
-	var g_type = 'on_sale',
-		skip = 1,
-		limit = 8,
-		currentId = '';
-	var app = new Vue({
-		el: "#mui-content",
-		data: {
-			goodsName: '',
-			on_sale_list: [],
-			sale_out_list: [],
-			off_sale_list: [],
-			on_sale_status: false,
-			sale_out_status: false,
-			off_sale_status: false,
-		},
-		created: function() {
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束	
-		},
-		methods: {
-			openGoodsDetail: function(gid, type) {
-				if (type == 0) {
-					openPage('distributor_goods_detail_bio.html', 'distributor_goods_detail_bio', '#f7f7f7', {
-						gid: gid
-					})
-				} else if (type == 1) {
-					openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
-						gid: gid
-					})
-				} else {
-					openPage('wangke_distributor_goods_detail_mine.html', 'wangke_distributor_goods_detail_mine', '#f7f7f7', {
-						gid: gid
-					})
-				}
-			}
-		},
-		mounted: function() {
-			mui.init({
-				swipeBack: false,
-				pullRefresh: {
-					container: "#goods_container",
-					up: {
-						height: 50,
-						auto: false,
-						contentrefresh: "正在加载...",
-						contentnomore: '没有更多数据了',
-						callback: function() {
-							skip += 1;
-							getGoodsList('up');
-						}
-					},
-					down: {
-						style: 'circle',
-						color: '#2289FF',
-						height: '50px',
-						range: '100px',
-						offset: '-50px',
-						auto: false,
-						callback: function() {
-							skip = 1;
-							getGoodsList('down');
-						}
+		<script src="../js/mui.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					goods_detail: {},
+					size:'请选择...',
+					t_number:'',
+					quantity:'',
+					unit_cost:'',
+					timer:'',
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
 					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods:{
+					clearInput:function(e){
+						app[e]='';
+					}
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.goods_detail = self.goods;
+					})
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
 				}
-			});
-			eventInit();
-			mui.plusReady(function() {
-				window.addEventListener('goodsAddSuccess', function() {
-					getGoodsList(false);
-				})
-				getGoodsList(false);
 			})
-			if (mui.os.ios) {
-				document.addEventListener('tap', function() {
-					document.querySelector(".playb" + currentId).style.display = 'none';
+			// 提交
+			mui(".mui-content").on("tap", ".option-btn", function() {
+				document.activeElement.blur();
+				if (app.size == '') {
+					message("请选择规格！")
+					return false;
+				}
+				if (app.t_number == '') {
+					message("请填写成团人数！")
+					return false;
+				}
+				if (app.quantity == '') {
+					message("强填写起购数量！")
+					return false;
+				}
+				 if(app.unit_cost == '') {
+					message("请填写单价！")
+					return false;
+				}
+				if(app.timer == '') {
+					message("强填写超时时间！")
+					return false;
+				}
+				plus.nativeUI.alert("创建成功！",function(){
+					mui.back();
 				})
-			} else {
-				// 不采取操作
-			}
-		}
-	})
+				return false;
+				mui.post($ajaxUrl + 'goods&action=pick_goods', {
+					token: userInfo.token,
+					goods_id: app.goods_detail.id,
+				}, function(res) {
+					if (res.errno == 0) {
+						// success
+						plus.nativeUI.alert("创建成功！",function(){
+							mui.back();
+						})
+					} else {
+						// loser
+						message(res.message);
+					}
+				}, 'json');
+			})
+			// 选择参数
+			var userPicker = new mui.PopPicker();
+			userPicker.setData([{
+				value: 'ywj',
+				text: '董事长 叶文洁'
+			}, {
+				value: 'aaa',
+				text: '总经理 艾AA'
+			}, {
+				value: 'lj',
+				text: '罗辑'
+			}, {
+				value: 'ymt',
+				text: '云天明'
+			}, {
+				value: 'shq',
+				text: '史强'
+			}, {
+				value: 'zhbh',
+				text: '章北海'
+			}, {
+				value: 'zhy',
+				text: '庄颜'
+			}, {
+				value: 'gyf',
+				text: '关一帆'
+			}, {
+				value: 'zhz',
+				text: '智子'
+			}, {
+				value: 'gezh', 
+				text: '歌者'
+			}]);
+			mui(".mui-content").on("tap", "#showUserPicker", function() {
+				userPicker.show(function(items) {
+					app.size= items[0].text;
+				});
+			})
+		</script>
+	</body>
 
-	function eventInit() {
-		// 搜索
-		document.onkeydown = function(event) {
-			var e = event || window.event || arguments.callee.caller.arguments[0];
-			if (e && e.keyCode == 13) { // enter 键
-				getGoodsList();
-			}
-		};
-	}
-	//获取商品列表
-	function getGoodsList(refresh) {
-		mui.post($ajaxUrl + 'goods', {
-			action: 'all_goods_list',
-			token: userInfo.token,
-			type: g_type,
-			skip: skip,
-			limit: 8,
-			goods_name: app.goodsName
-		}, function(res) {
-			// logs(res);
-			if (res.errno == 0) {
-				if (skip == 1) {
-					app.on_sale_list = res.data;
-				} else {
-					app.on_sale_list = app.on_sale_list.concat(res.data);
-				}
-				if (res.extra.has_more) {
-					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
-				} else {
-					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
-				}
-				app[g_type + '_status'] = false;
-			} else {
-				if (skip == 1) {
-					app.on_sale_list = [];
-					app.on_sale_status = true;
-				}
-				mui('#goods_container').pullRefresh().endPullupToRefresh(true);
-			}
-			if (refresh == "down") {
-				mui('#goods_container').pullRefresh().endPulldownToRefresh();
-			}
-		}, 'json');
-	}
-	// 取消搜索
-	mui('.mui-content').on('tap', '.mui-icon-clear', function() {
-		app.goodsName = '';
-		getGoodsList();
-	})
-	// 判断软键盘是否弹起
-	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-	window.onresize = function() {
-		//软键盘弹起与隐藏  都会引起窗口的高度发生变化
-		var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-		var paddeds = document.getElementById("add_merchandise");
-		var focus = document.querySelector('input:focus');
-		if (resizeHeight * 1 < originalHeight * 1 && focus) {
-			paddeds.style.display = 'none';
-		} else {
-			paddeds.style.display = 'flex';
-		}
-	}
-</script>
+</html>
