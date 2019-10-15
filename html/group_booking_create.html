@@ -58,17 +58,7 @@
 				padding-left: 0.36rem;
 				line-height: 1.5;
 			}
-			.genduo{
-				background-color: #EAEBED;
-				font-size: 20px;
-				color: #8F8F8F;
-				line-height: 5px;
-				padding: 0 8px 10px 8px;
-				border-radius: 10px;
-				position: absolute;
-				right: 0;
-				z-index: 8;
-			}
+			
 			.mui-table-view-cell{
 				padding: 15px;
 				position: relative;
@@ -250,7 +240,7 @@
 	<body id="body_tap">
 		<header class="mui-bar mui-bar-nav">
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">拼团</h1>
+			<h1 class="mui-title">商品选择</h1>
 		</header>
 		<div class="mui-content mui-clearfix" id="mui-content" v-cloak>
 			<div style="position: fixed;top:44px;z-index: 12;background-color: #F5F6F8;width: 100%;">
@@ -262,7 +252,7 @@
 				<ul class="mui-table-view" id="item1_list">
 					<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,i) in on_sale_list"
 					 :key="i">
-						<div class="chart" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
+						<div class="chart">
 							<div v-if="lst.check_status==0" class="status-mask">
 								审核中
 							</div>
@@ -272,23 +262,22 @@
 							<img :src="lst.cover">
 						</div>
 						<div class="customer-content">
-							<div class="customer_information mui-ellipsis" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
+							<div class="customer_information mui-ellipsis">
 								{{lst.name}}
 							</div>
-							<div class="price-container" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
+							<div class="price-container">
 								<span>&yen;{{lst.price}}</span>
 							</div>
 							<div class="right-bottom-cont">
-								<span @tap="openGoodsDetail(lst.id,lst.is_team_goods)">库存：{{lst.stock}}</span>
-								<span v-if="lst.is_team_goods==1" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/qiyec-icon.png"
+								
+								<div class="mui-input-row mui-radio">
+									<label> <span>库存：{{lst.stock}}</span>
+								<span v-if="lst.is_team_goods==1"><img src="../image/icon/qiyec-icon.png"
 									 alt="">企业仓</span>
-								<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png"
-									 alt="">旺客总仓</span>
-								<span class="genduo" :data-ids="lst.id">...</span>
-							</div>
-							<div>
-								<span class="mui-badge mui-badge-blue">6种规格</span>
-								<span class="mui-badge mui-badge-blue">已拼：3单</span>
+								<span v-if="lst.is_team_goods==9"><img src="../image/icon/wagnkezc-icon.png"
+									 alt="">旺客总仓</span></label>
+									<input name="radio1" type="radio">
+								</div>
 							</div>
 							<div class="playb" :class="'playb'+lst.id">
 								<div class="jiao"></div>
@@ -310,7 +299,7 @@
 				</ul>
 			</div>
 			<div class="add_merchandise" id="add_merchandise">
-				<button id="group_booking_create">创建拼团</button>
+				<button id="add_goods">下一步</button>
 			</div>
 		</div>
 	</body>
@@ -420,21 +409,6 @@
 				getGoodsList();
 			}
 		};
-		//展示商品弹窗
-		mui(".mui-table-view").on('tap', '.genduo', function(e) {
-			var glist = document.querySelectorAll(".playb");
-			for (i = 0; i < glist.length; i++) {
-				glist[i].style.display = "none";
-			}
-			currentId = this.dataset.ids;
-			document.querySelector(".playb" + currentId).style.display = 'block';
-			if (mui.os.ios) {
-				//不采取操作
-			} else {
-				mask.show();
-			}
-			e.stopPropagation();
-		})
 	}
 	//获取商品列表
 	function getGoodsList(refresh) {
@@ -475,10 +449,6 @@
 	mui('.mui-content').on('tap', '.mui-icon-clear', function() {
 		app.goodsName = '';
 		getGoodsList();
-	})
-	// 取消搜索
-	mui('.mui-content').on('tap', '#group_booking_create', function() {
-		openPage("group_booking_create.html","group_booking_create","#FFFFFF")
 	})
 	// 判断软键盘是否弹起
 	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
