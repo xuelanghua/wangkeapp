@@ -437,7 +437,7 @@
 					<img src="../image/icon/order_details_shipped_02.png">
 					<div class="logistics-info-right mui-navigate-right">
 						<p>{{detail.express_info}}</p>
-						<p>运送单号：{{detail.courier_number}}</p>
+						<p class="copy-text">运送单号：{{detail.courier_number}}</p>
 						<p class="timer-cont">{{detail.express_time}}</p>
 					</div>
 				</div>
@@ -450,7 +450,7 @@
 								<a :href="'tel:'+phone">{{phone}}</a>
 							</p>
 						</div>
-						<p>{{address}}{{address_detail}}</p>
+						<p class="copy-text">{{address}}{{address_detail}}</p>
 					</div>
 				</div>
 				<div class="customer-info">
@@ -639,8 +639,8 @@
 				},
 				mounted: function() {
 					mui.init({
-						beforeback: function() {
-							//plus.navigator.setStatusBarStyle("light");
+						gestureConfig: {
+							longtap: true, 
 						}
 					});
 					mui.plusReady(function() {
