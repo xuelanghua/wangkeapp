@@ -279,12 +279,6 @@
 						<div class="mui-input-row mui-radio">
 							<label>
 								<div class="chart">
-									<div v-if="lst.check_status==0" class="status-mask">
-										审核中
-									</div>
-									<div v-else-if="lst.check_status==2" class="status-mask defeated">
-										审核失败
-									</div>
 									<img :src="lst.cover">
 								</div>
 								<div class="customer-content">
@@ -420,8 +414,8 @@
 	}
 	//获取商品列表
 	function getGoodsList(refresh) {
-		mui.post($ajaxUrl + 'goods', {
-			action: 'all_goods_list',
+		mui.post($ajaxUrl + 'marketing', {
+			action: 'goods_list',
 			token: userInfo.token,
 			type: g_type,
 			skip: skip,
@@ -458,9 +452,9 @@
 		app.goodsName = '';
 		getGoodsList();
 	})
-	// 切换产品id
+	// 切换产品index
 	mui('.mui-content').on('tap', '.mui-table-view-cell', function() {
-		console.log(app.goodsId);
+		console.log(app.on_sale_list[app.goodsIdx].id);
 	})
 	// 下一步
 	mui('.mui-content').on('tap', '.add_merchandise', function() {

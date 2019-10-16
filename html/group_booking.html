@@ -232,9 +232,9 @@
 				background-color: #fff7dd;
 				color: #f5ca3a;
 			}
-			.mui-badge.mui-badge-blue:last-of-type{
+			/* .mui-badge.mui-badge-blue:last-of-type{
 				margin-left: 5px;
-			}
+			} */
 			[v-cloak] {
 				display: none;
 			}
@@ -263,12 +263,6 @@
 					<li class="mui-table-view-cell" :class="lst.check_status==1?'':'lucid-active'" v-for="(lst,i) in on_sale_list"
 					 :key="i">
 						<div class="chart" @tap="openGoodsDetail(lst.id,lst.is_team_goods)">
-							<div v-if="lst.check_status==0" class="status-mask">
-								审核中
-							</div>
-							<div v-else-if="lst.check_status==2" class="status-mask defeated">
-								审核失败
-							</div>
 							<img :src="lst.cover">
 						</div>
 						<div class="customer-content">
@@ -287,16 +281,15 @@
 								<span class="genduo" :data-ids="lst.id">...</span>
 							</div>
 							<div>
-								<span class="mui-badge mui-badge-blue">6种规格</span>
-								<span class="mui-badge mui-badge-blue">已拼：3单</span>
+								<span class="mui-badge mui-badge-blue">已拼：{{lst.collage_order}}单</span>
 							</div>
 							<div class="playb" :class="'playb'+lst.id">
 								<div class="jiao"></div>
-								<div class="play" data-type="off" :data-gtype="lst.is_team_goods">
+								<div class="play" @tap="editGroupBooking(lst)">
 									<img src="../image/icon/bottom-section-05-white.png" />
 									<div>添加规则</div>
 								</div>
-								<div class="play" data-type="share" :data-idx="i">
+								<div class="play" @tap="delGroupBooking(i,lst.id)">
 									<img src="../image/icon/bottom-section-04-white.png" />
 									<div>删除拼团</div>
 								</div>
@@ -321,12 +314,12 @@
 <script type="text/javascript">
 	var userInfo = getUserInfo();
 	// 当前产品对象
+	var fresh = '';
 	var currentIdx = -1;
 	var mask = mui.createMask(function() {
 		document.querySelector(".playb" + currentId).style.display = 'none';
 	});
-	var g_type = 'on_sale',
-		skip = 1,
+	var skip = 1,
 		limit = 8,
 		currentId = '';
 	var app = new Vue({
@@ -334,11 +327,7 @@
 		data: {
 			goodsName: '',
 			on_sale_list: [],
-			sale_out_list: [],
-			off_sale_list: [],
 			on_sale_status: false,
-			sale_out_status: false,
-			off_sale_status: false,
 		},
 		created: function() {
 			// 初始化字体大小
@@ -354,20 +343,36 @@
 				openPage('group_booking_detail.html', 'group_booking_detail', '#f7f7f7', {
 					gid: gid
 				})
-				return false;
-				if (type == 0) {
-					openPage('distributor_goods_detail_bio.html', 'distributor_goods_detail_bio', '#f7f7f7', {
-						gid: gid
-					})
-				} else if (type == 1) {
-					openPage('distributor_goods_detail_mine.html', 'distributor_goods_detail_mine', '#f7f7f7', {
-						gid: gid
-					})
-				} else {
-					openPage('wangke_distributor_goods_detail_mine.html', 'wangke_distributor_goods_detail_mine', '#f7f7f7', {
-						gid: gid
-					})
-				}
+			},
+			delGroupBooking: function(i, gid) {
+				mask.close();
+				plus.nativeUI.confirm("确认删除该拼团？", function(e) {
+					if (e.index == 1) {
+						return false;
+					}
+					mui.post($ajaxUrl + 'marketing', {
+						action: 'delete_collage_all',
+						token: userInfo.token,
+						goods_id: gid
+					}, function(res) {
+						// logs(res);
+						if (res.errno == 0) {
+							app.on_sale_list.splice(i, 1);
+							if(app.on_sale_list.length==0){
+								app.on_sale_status = true;
+							}
+							message("删除成功！");
+						} else {
+							message(res.message);
+						}
+					}, 'json');
+				})
+			},
+			editGroupBooking: function(e) {
+				mask.close();
+				openPage("group_booking_create.html", "group_booking_create", "#ffffff", {
+					goods: e,
+				})
 			}
 		},
 		mounted: function() {
@@ -381,6 +386,7 @@
 						contentrefresh: "正在加载...",
 						contentnomore: '没有更多数据了',
 						callback: function() {
+							fresh = "up";
 							skip += 1;
 							getGoodsList('up');
 						}
@@ -393,6 +399,7 @@
 						offset: '-50px',
 						auto: false,
 						callback: function() {
+							fresh = "down";
 							skip = 1;
 							getGoodsList('down');
 						}
@@ -441,13 +448,12 @@
 		})
 	}
 	//获取商品列表
-	function getGoodsList(refresh) {
-		mui.post($ajaxUrl + 'goods', {
-			action: 'all_goods_list',
+	function getGoodsList() {
+		mui.post($ajaxUrl + 'marketing', {
+			action: 'collage_list',
 			token: userInfo.token,
-			type: g_type,
 			skip: skip,
-			limit: 8,
+			limit: 10,
 			goods_name: app.goodsName
 		}, function(res) {
 			// logs(res);
@@ -457,12 +463,12 @@
 				} else {
 					app.on_sale_list = app.on_sale_list.concat(res.data);
 				}
-				if (res.extra.has_more) {
+				if (fresh == "down") {
+					mui('#goods_container').pullRefresh().endPulldownToRefresh();
+				} else if (fresh == "up") {
 					mui('#goods_container').pullRefresh().endPullupToRefresh(false);
-				} else {
-					mui('#goods_container').pullRefresh().endPullupToRefresh(true);
 				}
-				app[g_type + '_status'] = false;
+				app.on_sale_status = false;
 			} else {
 				if (skip == 1) {
 					app.on_sale_list = [];
@@ -470,7 +476,7 @@
 				}
 				mui('#goods_container').pullRefresh().endPullupToRefresh(true);
 			}
-			if (refresh == "down") {
+			if (fresh == "down") {
 				mui('#goods_container').pullRefresh().endPulldownToRefresh();
 			}
 		}, 'json');
@@ -482,7 +488,7 @@
 	})
 	// 创建拼团
 	mui('.mui-content').on('tap', '#group_booking_select', function() {
-		openPage("group_booking_select.html","group_booking_select","#FFFFFF")
+		openPage("group_booking_select.html", "group_booking_select", "#FFFFFF")
 	})
 	// 判断软键盘是否弹起
 	var originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -497,4 +503,8 @@
 			paddeds.style.display = 'flex';
 		}
 	}
+	window.addEventListener('reloadMyself', function() {
+		getGoodsList();
+		// logs("刷新成功！");
+	})
 </script>

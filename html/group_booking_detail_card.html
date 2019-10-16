@@ -171,22 +171,22 @@
 					<div class="mini-card top-card">
 						<div class="color-bar"></div>
 						<div class="mini-card-head">
-							<p>还差<span>2人</span>成团</p>
-							<!-- <span>已成团</span> -->
-							<!-- <p class="loser">拼团失败</p> -->
+							<p v-if="goods_detail.collage_status==1">还差<span>{{goods_detail.left_number}}人</span>成团</p>
+							<span v-else-if="goods_detail.collage_status==3||goods_detail.collage_status==2">已成团</span>
+							<p class="loser" v-else-if="goods_detail.collage_status==4">拼团失败</p>
 						</div>
 						<div class="mini-card-inside">
-							<img src="../image/5E0eH.png" >
+							<img :src="goods_detail.cover" >
 							<div class="mini-card-inside-right">
-								<p class="title mui-ellipsis">四件套全棉纯棉田园风小清新清新四件套全棉纯棉田园风小清新清新四件套全棉纯棉田园风纯棉田园风纯棉田园风小清新清新...</p>
+								<p class="title mui-ellipsis">{{goods_detail.name}}</p>
 								<div class="price-cont">
-									<span>红色</span>
-									<span class="price">&yen;250.00</span>
+									<span>{{spe.title}}</span>
+									<span class="price">&yen;{{goods_detail.price}}</span>
 								</div>
 								<div>
-									<span class="mui-badge">每人1件起</span>
-									<span class="mui-badge">6人拼团</span>
-									<span class="mui-badge">25h</span>
+									<span class="mui-badge">每人{{goods_detail.number}}件起</span>
+									<span class="mui-badge">{{goods_detail.people}}人拼团</span>
+									<span class="mui-badge">{{goods_detail.expire_time}}h</span>
 								</div>
 							</div>
 						</div>
@@ -195,7 +195,7 @@
 						<div class="count-down">
 							<i></i>
 							<div class="count-down-inside">
-								剩余 <span>1天07:58:21</span>
+								剩余 <span>{{count_down}}</span>
 							</div>
 						</div>
 						<div class="flex-center person-head-container">
@@ -212,7 +212,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="lists">
+				<div class="lists mui-hidden">
 					<div class="mini-card top-card">
 						<div class="color-bar"></div>
 						<div class="mini-card-head">
@@ -257,7 +257,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="lists">
+				<div class="lists  mui-hidden">
 					<div class="mini-card top-card loser">
 						<div class="color-bar"></div>
 						<div class="mini-card-head">
@@ -311,7 +311,10 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					collage_id:'',
+					goods_detail:{},
+					count_down:'',
+					spe:''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -333,10 +336,58 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						//plus.navigator.setStatusBarStyle("dark");
+						app.collage_id=self.collage_id;
+						logs(app.collage_id);
+						logs("1233333333");
+						getDetail();
 					})
 				}
 			})
+			// 获取详情
+			function getDetail(){
+				mui.post($ajaxUrl + 'marketing&action=collage_order_detail', {
+					token: userInfo.token,
+					collage_id: app.collage_id
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.goods_detail = res.data;
+						app.spe=res.data.spe.title;
+						// clock(res.data.end_time);
+						// clock(1572600810000);
+					} else {
+				
+					}
+				}, 'json');
+			}
+			// 倒计时
+			function clock(endtimer) {
+				var today = new Date(), //当前时间
+					h = today.getHours(),
+					m = today.getMinutes(),
+					s = today.getSeconds();
+				var stopTime = new Date(endtimer), //结束时间
+					stopH = stopTime.getHours(),
+					stopM = stopTime.getMinutes(),
+					stopS = stopTime.getSeconds();
+				var shenyu = stopTime.getTime() - today.getTime(),
+					shengyuD = parseInt(shenyu / (60 * 60 * 24 * 1000)),
+					D = parseInt(shenyu) - parseInt(shengyuD * 60 * 60 * 24 * 1000),
+					shengyuH = parseInt(D / (60 * 60 * 1000)),
+					H = D - shengyuH * 60 * 60 * 1000,
+					shengyuM = parseInt(H / (60 * 1000)),
+					M = H - shengyuM * 60 * 1000;
+				S = parseInt((shenyu - shengyuD * 60 * 60 * 24 * 1000 - shengyuH * 60 * 60 * 1000 - shengyuM * 60 * 1000) /
+					1000);
+				if (shengyuH > 0 || shengyuM > 0 || S > 0) {
+					setTimeout(clock, 500);
+					console.log("撒旦法")
+				} else {
+					// 倒计时结束
+					console.log("789798789798")
+				}
+			}
+			clock(1572600810000); 
 		</script>
 	</body>
 

@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-	<!-- 个人拣货后的分销商品详情 -->
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -468,26 +467,30 @@
 				margin-right: 10px;
 				flex-shrink: 0;
 			}
-			.last-container .goods-img  img{
+
+			.last-container .goods-img img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 			}
-			.last-container .group-booking-rules{
+
+			.last-container .group-booking-rules {
 				padding: 0;
 			}
+
 			.last-container {
-				min-height: 100vh;
 				background-color: #FFFFFF;
 			}
-			.last-container .group-booking-rules .mini-card{
+
+			.last-container .group-booking-rules .mini-card {
 				border-radius: 0;
 				background-color: #ffffff;
 				position: relative;
 				padding: 0.3rem 0 0.3rem 0.15rem;
 				margin: 0;
 			}
-			.last-container .group-booking-rules .mini-card:after{
+
+			.last-container .group-booking-rules .mini-card:after {
 				content: "";
 				width: 80%;
 				height: 1px;
@@ -496,24 +499,36 @@
 				bottom: 0;
 				right: 0;
 			}
-			.last-container .group-status p{
+
+			.last-container .group-status p {
 				margin-bottom: 0;
 				font-size: 0.3rem;
 				padding-right: 0.15rem;
 				box-sizing: border-box;
 			}
-			.last-container .group-status span{
-				color:#f5ca3a;
+
+			.last-container .group-status span {
+				color: #f5ca3a;
 			}
-			.last-container .count-down{
+
+			.last-container .count-down {
 				font-size: 0.24rem;
 				color: #999999;
 				margin-right: 0.1rem;
 			}
+
 			.last-container .mini-card-body {
 				justify-content: space-between;
 				line-height: 1;
 			}
+
+			.mui-bar-nav~.mui-content.white {
+				min-height: 100vh;
+				background-color: #FFFFFF;
+				box-sizing: border-box;
+				margin: 0;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -521,7 +536,7 @@
 	</head>
 
 	<body>
-		<div id="mui-content" class="mui-content " v-cloak>
+		<div id="mui-content" v-cloak>
 			<header class="mui-bar mui-bar-nav">
 				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="position: absolute;"></span>
 				<div class="change-container">
@@ -532,7 +547,7 @@
 					</div>
 				</div>
 			</header>
-			<div class="mui-content ">
+			<div class="mui-content" :class="sales==2?'white':''">
 				<div v-show="sales==1">
 					<div class="swiper-container goods-images">
 						<div class="swiper-wrapper">
@@ -548,43 +563,43 @@
 							<p>{{goods_detail.name}}</p>
 						</div>
 						<div class="profit-cont">
-							<span>&yen;{{goods_detail.commission}}</span>
-							<img class="hot-sign" src="../image/icon/distributor_goods_detail_mine_sign.png">
+							<span>&yen;{{goods_detail.price}}</span>
+							<img v-if="goods_detail.is_team_goods>0" class="hot-sign" src="../image/icon/distributor_goods_detail_mine_sign.png">
 						</div>
 						<div class="top-info-cont">
-							<span>快递：{{goods_detail.express_name}}&nbsp;&nbsp;&yen;{{goods_detail.freight}}</span>
+							<span v-if="goods_detail.is_team_goods>0">快递：{{goods_detail.express_name}}&nbsp;&nbsp;&yen;{{goods_detail.freight}}</span>
 							<span>销量：{{goods_detail.sale_count}}</span>
 							<span>浏览：{{goods_detail.view_count}}</span>
 						</div>
 					</div>
 					<!-- 拼团规则 -->
-					<div class="group-booking-rules">
+					<div class="group-booking-rules" v-if="collage_list.length>0">
 						<h4 class="title">拼团规则</h4>
-						<div class="mini-card" v-for="i in 3">
+						<div class="mini-card" v-for="(g,idx) in collage_list">
 							<div class="mini-card-head flex-center">
 								<div class="flex-center">
-									<span>红色</span>
-									<span class="price">&yen;298.00</span>
+									<span>{{g.spe_title}}</span>
+									<span class="price">&yen;{{g.price}}</span>
 								</div>
 								<div class="flex-center">
-									<div class="flex-center del-btn">
-										<img src="../image/icon/bottom-section-05.png" />
+									<div class="flex-center del-btn" @tap="add_rule(g.id,'del',idx)">
+										<img src="../image/icon/bottom-section-04.png" />
 										<span>删除</span>
 									</div>
-									<div class="flex-center">
+									<div class="flex-center" @tap="add_rule(g)">
 										<img src="../image/icon/bottom-section-01.png" />
 										<pan>编辑</pan>
 									</div>
 								</div>
 							</div>
 							<div class="mini-card-body">
-								<span class="mui-badge">每人1件起</span>
-								<span class="mui-badge">6人拼团</span>
-								<span class="mui-badge">25h</span>
+								<span class="mui-badge">每人{{g.number}}件起</span>
+								<span class="mui-badge">{{g.people}}人拼团</span>
+								<span class="mui-badge">{{g.expire_time}}h</span>
 							</div>
 						</div>
 					</div>
-					<div class="parameter-cont">
+					<div class="parameter-cont" v-if="spec.length>0">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell mui-collapse">
 								<a class="mui-navigate-right" href="#">查看规格</a>
@@ -612,11 +627,11 @@
 						<div id="content" v-html="goods_detail.content"></div>
 					</div>
 					<div class="bottom-section">
-						<div class="option-btn" data-type="edit">
+						<div class="option-btn" @tap="add_rule">
 							<img src="../image/icon/bottom-section-05.png" />
 							<span>添加规则</span>
 						</div>
-						<div class="option-btn" data-type="del">
+						<div class="option-btn" @tap="delGroupBooking">
 							<img src="../image/icon/bottom-section-04.png" />
 							<span>删除拼团</span>
 						</div>
@@ -624,32 +639,37 @@
 				</div>
 				<div v-show="sales==2" class="last-container">
 					<!-- 拼团规则 -->
-					<div class="group-booking-rules">
-						<div class="mini-card  flex-center" v-for="i in 3" @tap="groupBooking(123)">
+					<div v-if="!order_status" class="group-booking-rules">
+						<div class="mini-card  flex-center" v-for="(o,ix) in order_list" @tap="groupBooking(o.id)">
 							<div class="goods-img">
-								<img src="../image/5E0eH.png">
+								<img :src="o.initiator.avatar">
 							</div>
 							<div style="display: flex;flex-grow: 1;flex-direction: column;">
 								<div class="mini-card-head flex-center">
 									<div class="flex-center">
-										<span>红色</span>
-										<span class="price">&yen;298.00</span>
+										<span>{{o.spe.title}}</span>
+										<span class="price">&yen;{{o.price}}</span>
 									</div>
 									<div class="flex-center group-status">
-										<p>还差<span>1人</span>成团</p>
-										<!-- <p><span>已成团</span></p> -->
+										<p v-if="o.collage_status==1">还差<span>{{o.left_number}}人</span>成团</p>
+										<p v-else-if="o.collage_status==2||o.collage_status==3"><span>已成团</span></p>
+										<p v-else-if="o.collage_status==4">拼团失败</p>
 									</div>
 								</div>
 								<div class="mini-card-body flex-center">
 									<div>
-										<span class="mui-badge">每人1件起</span>
-										<span class="mui-badge">6人拼团</span>
-										<span class="mui-badge">25h</span>
+										<span class="mui-badge">每人{{o.number}}件起</span>
+										<span class="mui-badge">{{o.people}}人拼团</span>
 									</div>
-									<span class="count-down">剩余 1天07:58</span>
+									<!-- <span class="count-down" v-if="o.collage_status==1">剩余 1天07:58</span> -->
+									<span class="count-down">{{clock(ix,1572600810000)}}</span>
 								</div>
 							</div>
 						</div>
+					</div>
+					<div v-else class="mui-text-center">
+						<img src="../image/icon/void-data.png" alt="" style="width: 50%;padding-top: 20%;">
+						<p>暂无拼团~</p>
 					</div>
 				</div>
 			</div>
@@ -669,7 +689,10 @@
 					},
 					images: [],
 					spec: [],
-					sales: 1
+					sales: 2,
+					collage_list: [],
+					order_list: [],
+					order_status: false
 				},
 				created: function() {
 					// 初始化字体大小
@@ -682,41 +705,19 @@
 				},
 				methods: {
 					// 拼团详情
-					groupBooking:function(id){
-						openPage('group_booking_detail_card.html','group_booking_detail_card','#ffffff',{
-							id:id
+					groupBooking: function(id) {
+						openPage('group_booking_detail_card.html', 'group_booking_detail_card', '#f7f7f7', {
+							collage_id: id
 						})
 					}
 				},
 				mounted: function() {
-					mui.init({
-						beforeback: function() {
-							//plus.navigator.setStatusBarStyle("light");
-						}
-					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
-						mui.post($ajaxUrl + 'goods&action=goods_detail', {
-							token: userInfo.token,
-							goods_id: app.goods_id
-						}, function(res) {
-							if (res.errno == 0) {
-								app.goods_detail = res.data;
-								app.images = res.data.images;
-								app.spec = res.data.spec;
-								if (app.images.length > 1) {
-									setTimeout(function() {
-										swiperInint();
-									}, 500);
-								}
-							} else {
-
-							}
-						}, 'json');
-
+						getData();
+						getOrderList();
 						// 预览图片
-						// 长按保存到系统相册
 						mui('.mui-content').on('tap', '.swiper-slide img', function() {
 							var index = this.dataset.idx;
 							plus.nativeUI.previewImage(app.images, {
@@ -738,7 +739,7 @@
 					// 初始化字体大小结束
 				}
 			})
-
+			// 初始化轮播
 			function swiperInint() {
 				var swiper = new Swiper('.swiper-container', {
 					loop: true,
@@ -753,40 +754,66 @@
 					}
 				});
 			}
-			// 编辑  删除
-			mui(".mui-content").on("tap", ".option-btn", function() {
-				var sign = this.dataset.type;
-				if (sign == 'edit') {
-					// 编辑
-					openPage('group_booking_create.html', 'group_booking_create', '#ffffff', {
-						goods: app.goods_detail
+			// 添加规则 编辑规则
+			function add_rule(rule, del, idx) {
+				logs(rule);
+				if (del) {
+					plus.nativeUI.confirm("确认删除该规则？", function(e) {
+						if (e.index == 1) {
+							return false;
+						}
+						mui.post($ajaxUrl + 'marketing', {
+							action: 'delete_collage',
+							token: userInfo.token,
+							collage_id: rule
+						}, function(res) {
+							// logs(res);
+							if (res.errno == 0) {
+								app.collage_list.splice(idx, 1);
+								message("删除成功！");
+								if (app.collage_list.length == 0) {
+									mui.fire(plus.webview.getWebviewById('group_booking'), 'reloadMyself');
+									mui.later(function() {
+										mui.back();
+									}, 1000);
+								}
+							} else {
+								message(res.message);
+							}
+						}, 'json');
 					})
-				} else {
-					// 删除
-					plus.nativeUI.confirm('确认删除该商品?', function(e) {
-						if (e.index == 0) {}
-					})
+					return false;
 				}
-			})
-			//改变商品状态
-			function changeGoodsStatus(status) {
-				mui.post($ajaxUrl + 'goods', {
-					action: 'change_status',
-					token: userInfo.token,
-					status: status,
-					goods_id: app.goods_id,
-					type: "team_goods"
-				}, function(res) {
-					// logs(res);
-					if (res.errno == 0) {
-
-						mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
-					} else {
-						message('操作失败!');
-					}
-				}, 'json');
+				openPage('group_booking_create.html', 'group_booking_create', '#ffffff', {
+					goods: app.goods_detail,
+					rule: rule || false
+				})
 			}
-			// 切换订单类型
+			// 删除拼团
+			function delGroupBooking() {
+				plus.nativeUI.confirm("确认删除该拼团？", function(e) {
+					if (e.index == 1) {
+						return false;
+					}
+					mui.post($ajaxUrl + 'marketing', {
+						action: 'delete_collage_all',
+						token: userInfo.token,
+						goods_id: app.goods_id
+					}, function(res) {
+						// logs(res);
+						if (res.errno == 0) {
+							message("删除成功！");
+							mui.fire(plus.webview.getWebviewById('group_booking'), 'reloadMyself');
+							mui.later(function() {
+								mui.back();
+							}, 1000)
+						} else {
+							message(res.message);
+						}
+					}, 'json');
+				})
+			}
+			// 切换详情和拼团情况
 			mui('.mui-bar').on('tap', '.order-type-item', function() {
 				if (app.sales == 1) {
 					app.sales = 2;
@@ -794,6 +821,72 @@
 					app.sales = 1;
 				}
 			})
+			// 获取数据
+			function getData() {
+				mui.post($ajaxUrl + 'marketing&action=collage_goods_detail', {
+					token: userInfo.token,
+					goods_id: app.goods_id
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						app.goods_detail = res.data;
+						app.images = res.data.images;
+						app.collage_list = res.data.collage_list;
+						// logs(app.collage_list);
+						if (app.images.length > 1) {
+							setTimeout(function() {
+								swiperInint();
+							}, 500);
+						}
+					} else {
+
+					}
+				}, 'json');
+			}
+			// 拼团订单列表
+			function getOrderList() {
+				mui.post($ajaxUrl + 'marketing&action=collage_goods_order', {
+					token: userInfo.token,
+					goods_id: app.goods_id
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.order_list = res.data;
+					} else {
+						// loser
+						app.order_status = true;
+					}
+				}, 'json');
+			}
+			window.addEventListener('reloadMyself', function() {
+				getData();
+			})
+			// 倒计时
+			function clock(idx, endtimer) {
+				var today = new Date(), //当前时间
+					h = today.getHours(),
+					m = today.getMinutes(),
+					s = today.getSeconds();
+				var stopTime = new Date(endtimer), //结束时间
+					stopH = stopTime.getHours(),
+					stopM = stopTime.getMinutes(),
+					stopS = stopTime.getSeconds();
+				var shenyu = stopTime.getTime() - today.getTime(),
+					shengyuD = parseInt(shenyu / (60 * 60 * 24 * 1000)),
+					D = parseInt(shenyu) - parseInt(shengyuD * 60 * 60 * 24 * 1000),
+					shengyuH = parseInt(D / (60 * 60 * 1000)),
+					H = D - shengyuH * 60 * 60 * 1000,
+					shengyuM = parseInt(H / (60 * 1000)),
+					M = H - shengyuM * 60 * 1000;
+				S = parseInt((shenyu - shengyuD * 60 * 60 * 24 * 1000 - shengyuH * 60 * 60 * 1000 - shengyuM * 60 * 1000) /
+					1000);
+				if (shengyuH > 0 || shengyuM > 0 || S > 0) {
+					setTimeout(clock, 500);
+					return ("剩余 " + shengyuD + "天" + shengyuH + "小时" + shengyuM + "分" + S + "秒");
+				} else {
+					app.order_list[idx].collage_status = 4;
+				}
+			}
 		</script>
 	</body>
 
