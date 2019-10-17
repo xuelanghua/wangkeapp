@@ -575,16 +575,14 @@
 					html2canvas(document.getElementById("code-body"), {
 						useCORS: true,
 					}).then(function(canvas) {
-						console.log(232323);
 						var imgUrl = canvas.toDataURL("image/jpeg", 1);
-						console.log(imgUrl);
 						baseImgFile(app.serial + 'codeImg', imgUrl, 100, function(i) {
 							imgPath = i.target;
 							if (tips) {
 								plus.gallery.save(i.target);
 								message(tips);
 							} else {
-								shareQrImg()
+								shareQrImg();
 							}
 							showload(1);
 						})

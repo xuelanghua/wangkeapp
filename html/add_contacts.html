@@ -105,7 +105,7 @@
 				},
 				created: function() {
 					// 不要在created中使用plus相关接口,基座还未加载完成
-					createlist();
+					// createlist();
 				},
 				methods: {
 					toDetail: function(fid) {
@@ -113,6 +113,40 @@
 							fid: fid
 						});
 					}
+				},
+				mounted: function() {
+					// 搜索好友
+					mui.plusReady(function() {
+						createlist();
+						document.getElementById("search").addEventListener("keypress", function(event) {
+							var search = document.querySelector('input[name=cont]').value;
+							var keyword = search.replace(/^\s*|\s*$/g, "");
+							if (event.keyCode == "13" && keyword != '') {
+								plus.key.hideSoftKeybord();
+								openPage('friend_search_result.html', 'friend_search_result', '#F7F7F7', {
+									keyword: keyword
+								})
+								// 阻止默认事件---阻止页面刷新
+								event.preventDefault();
+							} else {
+								// message("请输入用户名或者电话");
+							}
+						});
+						//打开扫一扫
+						var scan = document.getElementById('scan');
+						scan.addEventListener('tap', function() {
+							var paymentPage = plus.webview.create('scan.html', 'scan', {
+								top: '0',
+								bottom: '0',
+								scrollIndicator: 'none',
+								statusbar: {
+									background: '#000'
+								}
+							});
+							paymentPage.show('slide-in-right');
+							setStatusBar('#2289FF', 'light');
+						});
+					})
 				}
 			})
 			document.getElementById('myQrCode').addEventListener('tap', function(e) {
@@ -165,37 +199,6 @@
 					}
 				}, 'json')
 			}
-			// 搜索好友
-			mui.plusReady(function() {
-				document.getElementById("search").addEventListener("keypress", function(event) {
-					var search = document.querySelector('input[name=cont]').value;
-					var keyword = search.replace(/^\s*|\s*$/g, "");
-					if (event.keyCode == "13" && keyword != '') {
-						plus.key.hideSoftKeybord();
-						openPage('friend_search_result.html', 'friend_search_result', '#F7F7F7', {
-							keyword: keyword
-						})
-						// 阻止默认事件---阻止页面刷新
-						event.preventDefault();
-					} else {
-						// message("请输入用户名或者电话");
-					}
-				});
-				//打开扫一扫
-				var scan = document.getElementById('scan');
-				scan.addEventListener('tap', function() {
-					var paymentPage = plus.webview.create('scan.html', 'scan', {
-						top: '0',
-						bottom: '0',
-						scrollIndicator: 'none',
-						statusbar: {
-							background: '#000'
-						}
-					});
-					paymentPage.show('slide-in-right');
-					setStatusBar('#2289FF', 'light');
-				});
-			})
 		</script>
 	</body>
 </html>
