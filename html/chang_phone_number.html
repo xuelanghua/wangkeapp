@@ -103,7 +103,7 @@
 				viewport = 750
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			 
+
 			// 初始化字体大小结束
 		</script>
 	</head>
@@ -134,95 +134,102 @@
 	<script src="../js/util.js"></script>
 	<script type="text/javascript">
 		mui.init();
-		
-		var flag = false;
-		var phoneNumber = /^[1][\d]{10}$/;
-		var userInfo = null;
-		var timer = null;
-		var num = 60;
-		var userInfo = getUserInfo();
-		mui.plusReady(function(){
+
+		var flag = false,
+			phoneNumber = /^[1][\d]{10}$/,
+			userInfo = null,
+			timer = null,
+			num = 60,
+			userInfo = getUserInfo();
+		mui.plusReady(function() {
 			userInfo = getUserInfo();
 			mui('.mui-content').on('tap', '.get-code', function() {
 				getVerifyCode();
 			})
-			
+
 			mui('.mui-content').on('tap', '.confirm-btn', function() {
 				mobileBind();
 			})
 		})
-		
+
 		function getVerifyCode() {
 			//获取短信验证
-		    if (flag) {
-		        return;
-		    }
-		    var mobile = mui('.mobile')[0].value;
-		    if (mobile.length == 0) {
-		        mui.toast('请输入手机号码!');
-		        return;
-		    } else if (!phoneNumber.test(mobile)) {
-		        mui.toast('手机号码格式错误!');
-		        return;
-		    }
-			
-			mui.post($ajaxUrl + 'verifycode', {receiver: mobile, token: userInfo.token}, function(res) {
+			if (flag) {
+				return;
+			}
+			var mobile = mui('.mobile')[0].value;
+			if (mobile.length == 0) {
+				mui.toast('请输入手机号码!');
+				return;
+			} else if (!phoneNumber.test(mobile)) {
+				mui.toast('手机号码格式错误!');
+				return;
+			}
+
+			mui.post($ajaxUrl + 'verifycode', {
+				receiver: mobile,
+				token: userInfo.token
+			}, function(res) {
 				if (res.errno == 1) {
 					mui.toast(res.message);
 					return;
 				} else {
 					mui.toast(res.message);
 					clearInterval(timer);
-		            timer = setInterval(function() {
-		                flag = true;
-		                if (num > 0) {
-		                    num--;
-		                    mui('.get-code')[0].innerHTML = num + '重新获取';
-		                    mui('.get-code')[0].style.color = '#999';
-		                } else if (num <= 1) {
-		                    clearInterval(timer);
-		                    mui('.get-code')[0].innerHTML = '重新获取';
-		                    mui('.get-code')[0].style.color = '#2289FF';
-		                    num = 60;
-		                    flag = false;
-		                }
-		            }, 1000);
+					timer = setInterval(function() {
+						flag = true;
+						if (num > 0) {
+							num--;
+							mui('.get-code')[0].innerHTML = num + '重新获取';
+							mui('.get-code')[0].style.color = '#999';
+						} else if (num <= 1) {
+							clearInterval(timer);
+							mui('.get-code')[0].innerHTML = '重新获取';
+							mui('.get-code')[0].style.color = '#2289FF';
+							num = 60;
+							flag = false;
+						}
+					}, 1000);
 				}
 			}, 'json');
 		}
-		
+
 		function mobileBind() {
 			var vmobile = mui('.mobile')[0].value;
 			var vcode = mui('.verification-code')[0].value;
 			if (vmobile.length == 0) {
-		        mui.toast('请输入手机号码!');
-		        return;
-		    } else if (!phoneNumber.test(vmobile)) {
-		        mui.toast('手机号码格式错误!');
-		        return;
-		    }
-		    if (vcode.length == 0) {
-		    	mui.toast('请输入验证码!');
-		    	return;
-		    } else if (vcode.length != 6) {
-		    	mui.toast('验证码位数输入错误!');
-		    	return;
-		    }
-		    
-		    mui.post($ajaxUrl + 'member&action=bind', {mobile: vmobile, code: vcode, token: userInfo.token}, function(res) {
-		    	if (res.errno == 0) { 
-		    		mui.toast(res.message);
+				mui.toast('请输入手机号码!');
+				return;
+			} else if (!phoneNumber.test(vmobile)) {
+				mui.toast('手机号码格式错误!');
+				return;
+			}
+			if (vcode.length == 0) {
+				mui.toast('请输入验证码!');
+				return;
+			} else if (vcode.length != 6) {
+				mui.toast('验证码位数输入错误!');
+				return;
+			}
+
+			mui.post($ajaxUrl + 'member&action=bind', {
+				mobile: vmobile,
+				code: vcode,
+				token: userInfo.token
+			}, function(res) {
+				if (res.errno == 0) {
+					mui.toast(res.message);
 					userInfo.mobile = vmobile;
 					localStorage.setItem('user', JSON.stringify(userInfo));
 					mui.fire(plus.webview.getWebviewById('setting'), 'changeMobileSuccess');
 					setTimeout(function() {
 						mui.back();
 					}, 1000)
-		    	} else {
-		    		mui.toast(res.message);
-		    		return;
-		    	}
-		    }, 'json');
+				} else {
+					mui.toast(res.message);
+					return;
+				}
+			}, 'json');
 		}
 	</script>
 </html>

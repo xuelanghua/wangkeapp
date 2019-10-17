@@ -74,7 +74,6 @@
 			}
 			document.documentElement.style.fontSize = viewport / 7.5 + "px";
 			// 初始化字体大小结束
-			
 		</script>
 	</head>
 
@@ -152,8 +151,8 @@
 						<li id="area-select" class="mui-table-view-cell recommend-person">
 							<span>推荐人手机号码</span>
 							<span style="font-weight: normal;" id="area-desc" class="area-desc">
-									<input type="number" v-model="recommendPhone" class="mui-input-clear">
-									<i v-show="recommendPhone" class="mui-icon mui-icon-clear" @tap="recommendPhone=''"></i>
+								<input type="number" v-model="recommendPhone" class="mui-input-clear">
+								<i v-show="recommendPhone" class="mui-icon mui-icon-clear" @tap="recommendPhone=''"></i>
 							</span>
 						</li>
 					</ul>
@@ -161,7 +160,8 @@
 			</form>
 			<div class="mui-content-padded" style="padding-bottom: 25px;">
 				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="submit">确定</button>
-				<p style="text-align: center;" class="mui-input-row mui-checkbox"><input id="agree" name="checkbox" value="" type="checkbox">开通即视为同意<span id="agreement">《旺客-用户协议》</span></p>
+				<p style="text-align: center;" class="mui-input-row mui-checkbox"><input id="agree" name="checkbox" value="" type="checkbox">开通即视为同意<span
+					 id="agreement">《旺客-用户协议》</span></p>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -171,119 +171,105 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script src="../js/city.data-3.js"></script>
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: true,
-				beforeback: function() {
-					plus.navigator.setStatusBarStyle('light');
-				}
-			});
-
-			var userInfo = getUserInfo();
+			var provinceId = 0,
+				cityId = 0,
+				areaId = 0,
+				self = null,
+				groupData = null,
+				groupId = 0,
+				userInfo = getUserInfo();
 			//vue初始化
 			var vm = new Vue({
 				el: '#form',
-				data:{
-						recommendId: 0,
-						recommendPhone: '',
-						group: []
+				data: {
+					recommendId: 0,
+					recommendPhone: '',
+					group: []
 				},
-				created:function(){
-					getRecommendUser();
+				mounted: function() {
+					mui.init({
+						swipeBack: true,
+						beforeback: function() {
+							plus.navigator.setStatusBarStyle('light');
+						}
+					});
+					mui.plusReady(function() {
+						getRecommendUser();
+						var _getParam = function(obj, param) {
+							return obj[param] || '';
+						};
+
+						self = plus.webview.currentWebview();
+						groupData = self.groupData;
+						vm.group = [groupData[2], groupData[3], groupData[4]];
+
+						//选择代理级别
+						mui('.mui-content').on('tap', '.mui-radio', function() {
+							groupId = this.dataset.id;
+						})
+
+						mui('.mui-content').on('tap', '#submit', function() {
+							var cheackd = document.getElementById('agree').checked;
+							document.activeElement.blur();
+							if (groupId == 0) {
+								message('请选择要申请的代理!', 'center');
+								return;
+							}
+
+							if (vm.recommendId == 0) {
+								if (vm.recommendPhone.length == 0) {
+									message('请输入推荐人手机号码!');
+									return;
+								}
+								if (!/1[\d]{10}/.test(vm.recommendPhone)) {
+									message('推荐人手机号码输入有误!');
+									return;
+								}
+							}
+							if (!cheackd) {
+								message('需要同意旺客用户协议');
+								return;
+							}
+
+							// if (provinceId == 0 || cityId == 0) {
+							// 	message('请选择地区!', 'center');
+							// 	return;
+							// }
+							// showload(0, 0, '数据处理中...', "rgba(0,0,0,0.5)");
+							showload(0, 0, '数据处理中...', "rgba(0,0,0,0.5)");
+							mui.post($ajaxUrl + 'member', {
+								action: 'agent_apply',
+								token: userInfo.token,
+								group_id: groupId, //2345
+								type: 1,
+								province_id: provinceId, //0
+								city_id: cityId, //0
+								area_id: areaId, //0
+								recommend_phone: vm.recommendPhone //推荐人手机号
+							}, function(res) {
+								logs(res);
+								if (res.errno == 0) {
+									plus.nativeUI.alert('申请成功, 等待审核!', function() {
+										plus.webview.close('agent_apply');
+										plus.webview.close('activation');
+									})
+								} else {
+									plus.nativeUI.alert(res.message, function() {
+										window.location.reload();
+									})
+								}
+								showload(1);
+							}, 'json');
+						})
+						mui('.mui-content').on('tap', '#agreement', function() {
+							openPage('user_agreement.html', 'user_agreement', '#ffffff', '');
+						})
+					})
 				}
 			})
 
-			var provinceId = 0;
-			var cityId = 0;
-			var areaId = 0;
-			var self = null;
-			var groupData = null;
-			var groupId = 0;
-			mui.plusReady(function() {
-				var _getParam = function(obj, param) {
-					return obj[param] || '';
-				};
-				// var showCityPickerButton = document.getElementById('area-select');
-				// var cityResult = document.getElementById('area-desc');
-				// showCityPickerButton.addEventListener('tap', function(event) {
-				// 	var cityPicker = new mui.PopPicker({
-				// 		layer: 3
-				// 	});
-				// 	cityPicker.setData(cityData3);
-				// 	cityPicker.show(function(items) {
-				// 		provinceId = _getParam(items[0], 'value');
-				// 		cityId = _getParam(items[1], 'value');
-				// 		areaId = _getParam(items[2], 'value');
-				// 		cityResult.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(
-				// 			items[2], 'text');
-				// 	});
-				// }, false);
 
-				self = plus.webview.currentWebview();
-				groupData = self.groupData;
-				vm.group = [groupData[2], groupData[3], groupData[4]];
 
-				//选择代理级别
-				mui('.mui-content').on('tap', '.mui-radio', function() {
-					groupId = this.dataset.id;
-				})
-
-				mui('.mui-content').on('tap', '#submit', function() {
-					var cheackd=document.getElementById('agree').checked;
-					document.activeElement.blur();
-					if (groupId == 0) {
-						message('请选择要申请的代理!', 'center');
-						return;
-					}
-
-					if (vm.recommendId == 0) {
-						if (vm.recommendPhone.length == 0) {
-							message('请输入推荐人手机号码!');
-							return;
-						}
-						if (!/1[\d]{10}/.test(vm.recommendPhone)) {
-							message('推荐人手机号码输入有误!');
-							return;
-						}
-					}
-					if (!cheackd) {
-						message('需要同意旺客用户协议');
-						return;
-					}
-
-					// if (provinceId == 0 || cityId == 0) {
-					// 	message('请选择地区!', 'center');
-					// 	return;
-					// }
-					// showload(0, 0, '数据处理中...', "rgba(0,0,0,0.5)");
-					showload(0, 0, '数据处理中...', "rgba(0,0,0,0.5)");
-					mui.post($ajaxUrl + 'member', {
-						action: 'agent_apply',
-						token: userInfo.token,
-						group_id: groupId,//2345
-						type: 1,
-						province_id: provinceId,//0
-						city_id: cityId, //0
-						area_id: areaId, //0
-						recommend_phone: vm.recommendPhone //推荐人手机号
-					}, function(res) {
-						logs(res);
-						if (res.errno == 0) {
-							plus.nativeUI.alert('申请成功, 等待审核!', function() {
-								plus.webview.close('agent_apply');
-								plus.webview.close('activation');
-							})
-						} else {
-							plus.nativeUI.alert(res.message, function() {
-								window.location.reload();
-							})
-						}
-						showload(1);
-					}, 'json');
-				})
-				mui('.mui-content').on('tap', '#agreement', function() {
-					openPage('user_agreement.html','user_agreement','#ffffff','');
-				})
-			})
 
 			//获取上级推荐id
 			function getRecommendUser() {

@@ -11,6 +11,7 @@
 			.mui-content {
 				height: 100vh;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -94,12 +95,10 @@
 					},
 					group: []
 				},
-				created: function() {
-					getMemberInfo();
-					getGroupList();
-				},
 				mounted: function() {
 					mui.plusReady(function() {
+						getMemberInfo();
+						getGroupList();
 						getMemberInfo();
 						mui(".mui-content").on('tap', '.next', function() {
 							document.activeElement.blur();

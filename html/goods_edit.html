@@ -505,22 +505,22 @@
 			mui.init({
 				swipeBack: true
 			})
-			var flag = true;
-			var images = new Array(); //存储图片的数组
-			var specId = 0;
-			var spec = new Array();
-			var content = '';
-			var recommend = 1;
-			var type = 0;
-			var type_index = 0;
-			var type_p = 0;
-			var type_p_index = 0;
-			var status = 0;
-			var goodsTypeTitle = '';
-			var userInfo = getUserInfo();
-			var good_type_container = ''; //分类数组容器
-			var good_spec_container = ''; //商品规格容器
-			var goodsId = 0;
+			var flag = true,
+				images = new Array(), //存储图片的数组
+				specId = 0,
+				spec = new Array(),
+				content = '',
+				recommend = 1,
+				type = 0,
+				type_index = 0,
+				type_p = 0,
+				type_p_index = 0,
+				status = 0,
+				goodsTypeTitle = '',
+				userInfo = getUserInfo(),
+				good_type_container = '', //分类数组容器
+				good_spec_container = '', //商品规格容器
+				goodsId = 0;
 
 			mui.plusReady(function() {
 				var wv = plus.webview.currentWebview();
@@ -630,7 +630,9 @@
 							//为该div设置相关的类
 							newImgDiv.classList.add('picture_display_chear');
 							//拼装一个图片标签展示图片
-							var html = '<img src="' + images[i] + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close" data-image="' + images[i] + '"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+							var html = '<img src="' + images[i] +
+								'" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close" data-image="' +
+								images[i] + '"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 							//插入html
 							newImgDiv.innerHTML = html;
 							//在照片容器之前插入一个元素
@@ -726,54 +728,59 @@
 				//上传主图
 				document.getElementById('add_pic').addEventListener('tap', function() {
 					document.activeElement.blur();
-					wangke.init({type: 'image', multiple: true});
+					wangke.init({
+						type: 'image',
+						multiple: true
+					});
 					wangke.chooseMedia(function(res) {
 						images.push(res.url);
 						var newImgDiv = document.createElement('div');
 						newImgDiv.classList.add('picture_display_chear');
-						var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close" data-image="' + res.url + '"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+						var html = '<img src="' + res.url +
+							'" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close" data-image="' +
+							res.url + '"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
 						newImgDiv.innerHTML = html;
 						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-						});
-					}, function(e) {
-						if (e.code > 100) {
-							message(e.message);
-						}
-					})
-					// imageUpload(function(event) {
-					// 	var img = event.filename;
-					// 	images.push(img);
-					// 	imgId = images.indexOf(img);
-					// 	var newImgDiv = document.createElement('div');
-					// 	newImgDiv.setAttribute('data-id', imageId);
-					// 	newImgDiv.classList.add('picture_display_chear');
-					// 	var html = '<img src="' + event.url + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-					// 	newImgDiv.innerHTML = html;
-					// 	document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-					// });
-					// var editButtons = new Array();
-					// editButtons.push({
-					// 	title: "拍照上传",
-					// 	style: "default"
-					// });
-					// editButtons.push({
-					// 	title: "从相册选择",
-					// 	style: "default"
-					// });
-					// plus.nativeUI.actionSheet({
-					// 	cancel: "取消",
-					// 	buttons: editButtons
-					// }, function(e) {
-					// 	var index = e.index;
-					// 	switch (index) {
-					// 		case 1:
-					// 			getImage(ratio); //拍照
-					// 			break;
-					// 		case 2:
-					// 			galleryImage(ratio); //相册选择
-					// 			break;
-					// 	}
-					// });
+					});
+				}, function(e) {
+					if (e.code > 100) {
+						message(e.message);
+					}
+				})
+				// imageUpload(function(event) {
+				// 	var img = event.filename;
+				// 	images.push(img);
+				// 	imgId = images.indexOf(img);
+				// 	var newImgDiv = document.createElement('div');
+				// 	newImgDiv.setAttribute('data-id', imageId);
+				// 	newImgDiv.classList.add('picture_display_chear');
+				// 	var html = '<img src="' + event.url + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
+				// 	newImgDiv.innerHTML = html;
+				// 	document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+				// });
+				// var editButtons = new Array();
+				// editButtons.push({
+				// 	title: "拍照上传",
+				// 	style: "default"
+				// });
+				// editButtons.push({
+				// 	title: "从相册选择",
+				// 	style: "default"
+				// });
+				// plus.nativeUI.actionSheet({
+				// 	cancel: "取消",
+				// 	buttons: editButtons
+				// }, function(e) {
+				// 	var index = e.index;
+				// 	switch (index) {
+				// 		case 1:
+				// 			getImage(ratio); //拍照
+				// 			break;
+				// 		case 2:
+				// 			galleryImage(ratio); //相册选择
+				// 			break;
+				// 	}
+				// });
 				// })
 				// 拍照获取图片
 				// function getImage() {
@@ -830,7 +837,7 @@
 					images.splice(imageIndex, 1);
 					parentDiv.remove();
 				})
-				
+
 				document.getElementById('add_spec').addEventListener('tap', function() {
 					var newImgDiv = document.createElement('div');
 					newImgDiv.classList.add('add_choice');
@@ -1000,7 +1007,7 @@
 					// picker.pickers[1].setSelectedValue(type, 2000);
 					picker.pickers[1].setSelectedIndex(type_index);
 				}
-				picker.show(function(selectItems) { 
+				picker.show(function(selectItems) {
 					goodsTypeTitle = '';
 					goodsTypeTitle += selectItems[0].text;
 					type_p = selectItems[0].value;

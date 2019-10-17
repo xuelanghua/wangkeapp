@@ -299,9 +299,6 @@
 					groupId: userInfo.group_id,
 					currentId: 0
 				},
-				created: function() {
-					getGroupList();
-				},
 				mounted: function() {
 					setTimeout(function() {
 						var galleryThumbs = new Swiper('.gallery-thumbs', {
@@ -319,6 +316,7 @@
 						galleryTop.controller.control = galleryThumbs;
 					}, 300)
 					mui.plusReady(function() {
+						getGroupList();
 						// 升级
 						mui(".inside1").on("tap", ".upgrade-btn", function() {
 							openPage('vt_renew.html', 'vt_renew', '#f7f7f7', '');

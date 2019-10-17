@@ -71,9 +71,6 @@
 				data: {
 					fansList: []
 				},
-				created: function() {
-					getFansList();
-				},
 				mounted: function() {
 					mui.init({
 						swipeBack: false,
@@ -103,6 +100,7 @@
 						}
 					});
 					mui.plusReady(function() {
+						getFansList();
 						mui(".mui-content").on('tap', '.header-img', function() {
 							var fid = this.dataset.fid;
 							openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {

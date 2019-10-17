@@ -208,6 +208,7 @@
 			#item2 .mui-table-view-cell .vip4 {
 				background: linear-gradient(to right, #f4dec6, #e3a472);
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -286,6 +287,7 @@
 				pageNum = 1,
 				selectId = 1,
 				status = 1,
+				ishow = true,
 				codeId = 0;
 			// groupInfo = null;
 			mui.init({
@@ -339,15 +341,14 @@
 						{
 							name: '企业版激活码',
 							id: 2
-						}, 
+						},
 						{
 							name: '个人版激活码',
 							id: 1
 						}
 					]
 				},
-				created: function() {
-					var ishow = true;
+				mounted: function() {
 					mui.plusReady(function() {
 						plus.webview.currentWebview().setStyle({
 							statusbar: {
@@ -357,10 +358,8 @@
 							bottom: 0
 						});
 						// getGroupInfo();
+						getlist(0);
 					});
-					getlist(0);
-				},
-				mounted: function() {
 					mui('#middlePopover').on('tap', 'li', function() {
 						mui('#middlePopover').popover('hide');
 						var btn = mui("#action-btn");
@@ -416,7 +415,7 @@
 					logs(res);
 					var data = res.data.list;
 					logs(data);
-					if (data.length<1) {
+					if (data.length < 1) {
 						if (pageNum == 1) {
 							app.keylist = [];
 							app.userlist = [];

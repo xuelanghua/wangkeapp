@@ -212,22 +212,22 @@
 			}
 		});
 
-		var userInfo = getUserInfo();
-		var currentType = '';
-		var timer = null;
-		var qrType = {
-			'redpacket': '红包码',
-			'card': '名片码',
-			'link': '链接码',
-			'pic': '图片码'
-		};
+		var userInfo = getUserInfo(),
+			currentType = '',
+			timer = null,
+			qrType = {
+				'redpacket': '红包码',
+				'card': '名片码',
+				'link': '链接码',
+				'pic': '图片码'
+			};
 		mui.plusReady(function() {
 			// initQrcode();
 			document.getElementById('back').addEventListener('tap', function() {
 				setStatusBar('#FFF', 'dark');
 				mui.back();
 			})
-			
+
 			mui.post($ajaxUrl + 'userqrcode', {
 				action: 'redpacket_check',
 				token: userInfo.token
@@ -310,7 +310,7 @@
 			newPage.show('slide-in-right');
 			setStatusBar('', 'dark');
 		}
-		
+
 		//刷新二维码
 		function refreshQrcode() {
 			mui.post($ajaxUrl + 'userqrcode', {

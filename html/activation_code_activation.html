@@ -179,11 +179,9 @@
 					fee: 0,
 					balance: 0
 				},
-				created: function() {
-					getMemberInfo();
-				},
 				mounted: function() {
 					mui.plusReady(function() {
+						getMemberInfo();
 						plus.payment.getChannels(function(channels) {
 							for (var i in channels) {
 								if (channels[i].id == "wxpay") {
@@ -195,7 +193,6 @@
 						}, function(e) {
 							plus.nativeUI.alert("获取支付通道失败：" + e.message, null, '提示');
 						});
-
 						var self = plus.webview.currentWebview();
 						app.codeList = self.codeList;
 						app.totalWang = self.totalWang;
