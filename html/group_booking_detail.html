@@ -661,8 +661,8 @@
 										<span class="mui-badge">每人{{o.number}}件起</span>
 										<span class="mui-badge">{{o.people}}人拼团</span>
 									</div>
-									<!-- <span class="count-down" v-if="o.collage_status==1">剩余 1天07:58</span> -->
-									<span class="count-down">{{clock(ix,1572600810000)}}</span>
+									<span class="count-down" v-if="o.collage_status==1">剩余 {{o.timer }}</span>
+									<span class="count-down" v-else-if="o.collage_status==4">剩余 00:00</span>
 								</div>
 							</div>
 						</div>
@@ -689,7 +689,7 @@
 					},
 					images: [],
 					spec: [],
-					sales: 2,
+					sales: 1,
 					collage_list: [],
 					order_list: [],
 					order_status: false
@@ -712,6 +712,7 @@
 					}
 				},
 				mounted: function() {
+					var _self = this;
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
@@ -737,7 +738,7 @@
 					}
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束
-				}
+				},
 			})
 			// 初始化轮播
 			function swiperInint() {
@@ -849,45 +850,64 @@
 					token: userInfo.token,
 					goods_id: app.goods_id
 				}, function(res) {
-					logs(res);
+					// logs(res);
 					if (res.errno == 0) {
-						app.order_list = res.data;
+						var lists=res.data;
+						lists.map(function(obj, index) {
+							app.$set(
+								obj, "timer", InitTime(obj.end_time)
+							);
+						})
+						app.order_list = lists;
+						setInterval(function() {
+							for (var key in app.order_list) {
+								var aaa = parseInt(app.order_list[key]["end_time"]);
+								var bbb = new Date().getTime();
+								var rightTime = aaa - bbb;
+								if (rightTime > 0) {
+									var dd = fmt(Math.floor(rightTime / 1000 / 60 / 60 / 24));
+									var hh = fmt(Math.floor((rightTime / 1000 / 60 / 60) % 24));
+									var mm = fmt(Math.floor((rightTime / 1000 / 60) % 60));
+									var ss = fmt(Math.floor((rightTime / 1000) % 60));
+									var current_time = dd + "天" + hh + "小时" + mm + "分" + ss + "秒";
+									app.order_list[key]["timer"] = current_time;
+								} else {
+
+								}
+							}
+						}, 1000);
 					} else {
 						// loser
 						app.order_status = true;
 					}
 				}, 'json');
 			}
+			// 倒计时
+			function InitTime(endtime) {
+				var dd, hh, mm, ss = null;
+				var time = parseInt(endtime) - new Date().getTime();
+				if (time <= 0) {
+					return '剩余 00:00'
+				} else {
+					var dd = fmt(Math.floor(time / 1000 / 60 / 60 / 24));
+					var hh = fmt(Math.floor((time / 1000 / 60 / 60) % 24));
+					var mm = fmt(Math.floor((time / 1000 / 60) % 60));
+					var ss = fmt(Math.floor((time / 1000) % 60));
+					var str = dd + "天" + hh + "小时" + mm + "分" + ss + "秒";
+					return str;
+				}
+			}
+			// 补位
+			function fmt(n) {
+				if (n < 10) {
+					return '0' + n;
+				} else {
+					return n;
+				}
+			}
 			window.addEventListener('reloadMyself', function() {
 				getData();
 			})
-			// 倒计时
-			function clock(idx, endtimer) {
-				var today = new Date(), //当前时间
-					h = today.getHours(),
-					m = today.getMinutes(),
-					s = today.getSeconds();
-				var stopTime = new Date(endtimer), //结束时间
-					stopH = stopTime.getHours(),
-					stopM = stopTime.getMinutes(),
-					stopS = stopTime.getSeconds();
-				var shenyu = stopTime.getTime() - today.getTime(),
-					shengyuD = parseInt(shenyu / (60 * 60 * 24 * 1000)),
-					D = parseInt(shenyu) - parseInt(shengyuD * 60 * 60 * 24 * 1000),
-					shengyuH = parseInt(D / (60 * 60 * 1000)),
-					H = D - shengyuH * 60 * 60 * 1000,
-					shengyuM = parseInt(H / (60 * 1000)),
-					M = H - shengyuM * 60 * 1000;
-				S = parseInt((shenyu - shengyuD * 60 * 60 * 24 * 1000 - shengyuH * 60 * 60 * 1000 - shengyuM * 60 * 1000) /
-					1000);
-				if (shengyuH > 0 || shengyuM > 0 || S > 0) {
-					setTimeout(clock, 500);
-					return ("剩余 " + shengyuD + "天" + shengyuH + "小时" + shengyuM + "分" + S + "秒");
-				} else {
-					app.order_list[idx].collage_status = 4;
-				}
-			}
 		</script>
 	</body>
-
 </html>

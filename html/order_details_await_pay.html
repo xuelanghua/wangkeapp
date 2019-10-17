@@ -539,14 +539,8 @@
 			
 			// 倒计时
 			function clock() {
-				var today = new Date(), //当前时间
-					h = today.getHours(),
-					m = today.getMinutes(),
-					s = today.getSeconds();
-				var stopTime = new Date(endtimer), //结束时间
-					stopH = stopTime.getHours(),
-					stopM = stopTime.getMinutes(),
-					stopS = stopTime.getSeconds();
+				var today = new Date(); //当前时间
+				var stopTime = new Date(endtimer); //结束时间
 				var shenyu = stopTime.getTime() - today.getTime(),
 					shengyuD = parseInt(shenyu / (60 * 60 * 24 * 1000)),
 					D = parseInt(shenyu) - parseInt(shengyuD * 60 * 60 * 24 * 1000),
@@ -557,7 +551,7 @@
 				S = parseInt((shenyu - shengyuD * 60 * 60 * 24 * 1000 - shengyuH * 60 * 60 * 1000 - shengyuM * 60 * 1000) /
 					1000);
 				if (shengyuH > 0 || shengyuM > 0 || S > 0) {
-					setTimeout(clock, 500);
+					setTimeout(clock, 1000);
 					document.getElementById("count_down").innerText = (shengyuH + "小时" + shengyuM + "分" + S + "秒" + " " + "后自动取消");
 				} else {
 					// 倒计时结束
