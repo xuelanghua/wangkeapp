@@ -150,11 +150,11 @@
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
 			<h1 class="mui-title">订单详情</h1>
 		</header>
-		
+
 		<div class="mui-content" style="padding-bottom: 25px;">
 			<div class="address">
 				<div class="mui-pull-left">
-					<img src="../image/bosi3.png" >
+					<img src="../image/bosi3.png">
 				</div>
 				<div>
 					<div class="address_contacts">
@@ -164,14 +164,14 @@
 					<div class="address_name" id="order_address">昌宏西路高原明珠商务中心</div>
 				</div>
 			</div>
-			
+
 			<div class="detailed">
 				<div class="detailed_content">
 					<div class="detailed_title">购物清单</div>
 					<div class="commodity_information">
 						<div>
 							<div class="commodity_information_chart mui-pull-left">
-								<img src="../image/user_default.png" >
+								<img src="../image/user_default.png">
 							</div>
 							<div class="jianshu">
 								<div class="font">
@@ -205,7 +205,7 @@
 					<div class="clearfix"></div>
 				</div>
 			</div>
-			
+
 			<div class="order">
 				<!-- <div class="order_content">
 					<span class="mui-pull-left"style="margin-top: 3px;">订单编号:</span>
@@ -222,7 +222,7 @@
 					<span class="state" id="order_create_time">2018-02-27 09:15:59</span>
 				</div>
 			</div>
-			
+
 			<div class="logistics">
 				<div class="odd_numbers">
 					<div>运送单号：<span id="courier_number">53021358841</span></div>
@@ -230,11 +230,11 @@
 				<div id="courier_info" style="width: 90%;">商品正在出库中</div>
 				<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
 			</div>
-			
+
 			<div class="order_contacts" data-id="" data-name="" data-avatar="">
 				<div class="mui-pull-left">
 					<div class="order_contacts_chart mui-pull-left">
-						<img id="avatar" src="../image/bj.jpg" >
+						<img id="avatar" src="../image/bj.jpg">
 					</div>
 					<span class="mui-pull-left" style="margin-top: 10px;" id="nickname">微信昵称</span>
 					<div class="clearfix"></div>
@@ -252,17 +252,17 @@
 			mui.init({
 				swipeBack: true
 			})
-			
-			var orderId = 0;
-			var self = null;
-			userInfo = getUserInfo();
-			mui.plusReady(function () {
-			    self = plus.webview.currentWebview();
+
+			var orderId = 0,
+				self = null,
+				userInfo = getUserInfo();
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
 				orderId = self.orderId;
 				orderDetail();
 				eventInit();
 			})
-			
+
 			//事件初始化
 			function eventInit() {
 				//联系
@@ -270,22 +270,31 @@
 					var userId = this.dataset.id;
 					var nickname = this.dataset.name;
 					var avatar = this.dataset.avatar;
-					fnOpenWin('dialog.html', 'dialog', {statusbar: {background: '#F7F7F7'}}, {cid: userId, chatName: nickname, avatar: avatar, barStyle: 'dark'}, 'slide-in-right');
+					fnOpenWin('dialog.html', 'dialog', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						cid: userId,
+						chatName: nickname,
+						avatar: avatar,
+						barStyle: 'dark'
+					}, 'slide-in-right');
 				})
-				
+
 				//发货
 				mui('.mui-content').on('tap', '.deliver_goods', function() {
 					this.style.display = 'block';
 					document.querySelector('.tanchu').style.display = 'block';
 					document.querySelector('#cover').style.display = 'block';
 				})
-				
+
 				//发货弹窗
 				mui('.mui-content').on('tap', '#cover', function() {
 					this.style.display = 'none';
 					document.querySelector('.tanchu').style.display = 'none';
 				})
-				
+
 				//发货
 				mui('.mui-content').on('tap', '.tanchu_button', function() {
 					var expressCompany = document.querySelector('input[name=express_company]').value;
@@ -302,98 +311,102 @@
 					document.querySelector('.tanchu').style.display = 'none';
 					fnExpress(expressCompany, courierNumber);
 				})
-				
+
 				//查看物流
 				mui('.mui-content').on('tap', '.logistics', function(e) {
-					fnOpenWin('logistics.html', 'logistics', {statusbar: {background: '#F7F7F7'}}, {orderId: orderId}, 'slide-in-right');
+					fnOpenWin('logistics.html', 'logistics', {
+						statusbar: {
+							background: '#F7F7F7'
+						}
+					}, {
+						orderId: orderId
+					}, 'slide-in-right');
 				})
 			}
-			
+
 			//获取订单详情
 			function orderDetail() {
 				mui.post($ajaxUrl + 'order', {
-						action: 'detail',
-						token: userInfo.token,
-						order_id: orderId
-					}, function(res){
-						if (res.errno == 0) {
-							var detail = res.data;
-							document.getElementById('order_name').innerText = detail.name;
-							document.getElementById('order_mobile').innerText = detail.phone;
-							document.getElementById('order_address').innerText = detail.address + detail.address_detail;
-							document.getElementById('order_price').innerText = '￥' + detail.price;
-							document.getElementById('order_freight').innerText = '￥' + detail.freight;
-							document.getElementById('order_total_price').innerText = '￥' + detail.total_price;
-							document.getElementById('order_create_time').innerText = detail.create_time;
-							document.getElementById('nickname').innerText = detail.buyer.nickName;
-							document.getElementById('avatar').src = detail.buyer.avatarUrl;
-							document.querySelector('.order_contacts').dataset.id = detail.user_id;
-							document.querySelector('.order_contacts').dataset.name = detail.buyer.nickName;
-							document.querySelector('.order_contacts').dataset.avatar = detail.buyer.avatarUrl;
-							if (detail.courier_number.length > 0) {
-								document.getElementById('courier_number').innerText = detail.courier_number;
-								document.getElementById('courier_info').innerText = detail.express_info;
-							}
-							var goods = detail.goods;
-							var html = '';
-							for (var i in goods) {
-								if (i == 0) {
-									html += '<div>';
-								} else {
-									html += '<div style="padding-top: 12px;">';
-								}
-									html += '<div class="commodity_information_chart mui-pull-left">';
-										html += '<img src="' + goods[i].cover + '" >';
-									html += '</div>';
-									html += '<div class="jianshu">';
-										html += '<div class="font">';
-											html += '<span>' + goods[i].name + '</span>';
-											html += '<span class="mui-pull-right">￥' + goods[i].price + '/件</span>';
-										html += '</div>';
-										html += '<div>';
-										if (goods[i].content.length == 0) {
-											html += '<span>规格：默认</span>';
-										} else {
-											html += '<span>规格：' + goods[i].content + '</span>';
-										}
-											html += '<span class="mui-pull-right">x' + goods[i].number + '</span>';
-										html += '</div>';
-									html += '</div>';
-									html += '<div class="clearfix"></div>';
-								html += '</div>';
-							}
-							document.querySelector('.commodity_information').innerHTML = html;
-						} else {
-							message(res.message);
-							setTimeout(function() {
-								fnCloseWin('order_details_1');
-							}, 2000)
+					action: 'detail',
+					token: userInfo.token,
+					order_id: orderId
+				}, function(res) {
+					if (res.errno == 0) {
+						var detail = res.data;
+						document.getElementById('order_name').innerText = detail.name;
+						document.getElementById('order_mobile').innerText = detail.phone;
+						document.getElementById('order_address').innerText = detail.address + detail.address_detail;
+						document.getElementById('order_price').innerText = '￥' + detail.price;
+						document.getElementById('order_freight').innerText = '￥' + detail.freight;
+						document.getElementById('order_total_price').innerText = '￥' + detail.total_price;
+						document.getElementById('order_create_time').innerText = detail.create_time;
+						document.getElementById('nickname').innerText = detail.buyer.nickName;
+						document.getElementById('avatar').src = detail.buyer.avatarUrl;
+						document.querySelector('.order_contacts').dataset.id = detail.user_id;
+						document.querySelector('.order_contacts').dataset.name = detail.buyer.nickName;
+						document.querySelector('.order_contacts').dataset.avatar = detail.buyer.avatarUrl;
+						if (detail.courier_number.length > 0) {
+							document.getElementById('courier_number').innerText = detail.courier_number;
+							document.getElementById('courier_info').innerText = detail.express_info;
 						}
-					}, 'json'
-				);
+						var goods = detail.goods;
+						var html = '';
+						for (var i in goods) {
+							if (i == 0) {
+								html += '<div>';
+							} else {
+								html += '<div style="padding-top: 12px;">';
+							}
+							html += '<div class="commodity_information_chart mui-pull-left">';
+							html += '<img src="' + goods[i].cover + '" >';
+							html += '</div>';
+							html += '<div class="jianshu">';
+							html += '<div class="font">';
+							html += '<span>' + goods[i].name + '</span>';
+							html += '<span class="mui-pull-right">￥' + goods[i].price + '/件</span>';
+							html += '</div>';
+							html += '<div>';
+							if (goods[i].content.length == 0) {
+								html += '<span>规格：默认</span>';
+							} else {
+								html += '<span>规格：' + goods[i].content + '</span>';
+							}
+							html += '<span class="mui-pull-right">x' + goods[i].number + '</span>';
+							html += '</div>';
+							html += '</div>';
+							html += '<div class="clearfix"></div>';
+							html += '</div>';
+						}
+						document.querySelector('.commodity_information').innerHTML = html;
+					} else {
+						message(res.message);
+						setTimeout(function() {
+							fnCloseWin('order_details_1');
+						}, 2000)
+					}
+				}, 'json');
 			}
-			
+
 			//发货
 			function fnExpress(expressCompany, courierNumber) {
 				mui.post($ajaxUrl + 'order', {
-						action: 'express',
-						token: userInfo.token,
-						order_id: orderId,
-						express_company: expressCompany,
-						courier_number: courierNumber
-					}, function(res){
-						logs(res);
-						if (res.errno == 0) {
-							message('发货成功!');
-							mui.fire(plus.webview.getWebviewById('order_list'), 'expressSuccess');
-							setTimeout(function() {
-								plus.webview.close('order_details_2');
-							}, 2000)
-						} else {
-							message(res.message);
-						}
-					}, 'json'
-				);
+					action: 'express',
+					token: userInfo.token,
+					order_id: orderId,
+					express_company: expressCompany,
+					courier_number: courierNumber
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						message('发货成功!');
+						mui.fire(plus.webview.getWebviewById('order_list'), 'expressSuccess');
+						setTimeout(function() {
+							plus.webview.close('order_details_2');
+						}, 2000)
+					} else {
+						message(res.message);
+					}
+				}, 'json');
 			}
 		</script>
 	</body>

@@ -139,10 +139,10 @@
 			<div class="title">类型选择</div>
 			<div class="tips-body">
 				<ul id="filtrate-type">
-					<li data-type='' class="active">全部</li>
-					<li data-type='12'>会员续费</li>
-					<li data-type='13'>商品位购买</li>
-					<li data-type='14'>知识付费</li>
+					<li data-type="" class="active">全部</li>
+					<li data-type="12">会员续费</li>
+					<li data-type="13">商品位购买</li>
+					<li data-type="14">知识付费</li>
 				</ul>
 			</div>
 		</div>
@@ -174,9 +174,6 @@
 					currentTime: formatDate('y-m', ''),
 					showTime: formatDate('y', '') + '年' + formatDate('m', '') + '月'
 				},
-				created: function() {
-					getServiceAward();
-				},
 				mounted: function() {
 					mui.init({
 						swipeBack: false,
@@ -207,6 +204,7 @@
 						}
 					});
 					mui.plusReady(function() {
+						getServiceAward();
 						// 重新开启滚动
 						mui("body").on('tap', '.mui-btn', function() {
 							mui('#pullrefresh').pullRefresh().setStopped(false);

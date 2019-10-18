@@ -517,13 +517,11 @@
 					},
 					fansLists: []
 				},
-				created: function() {
-					getFans();
-					this.group_id = userInfo.group_id;
-				},
 				mounted: function() {
 					mui.init();
 					mui.plusReady(function() {
+						getFans();
+						this.group_id = userInfo.group_id;
 						window.addEventListener('activateSuccess', function() {
 							setTimeout(function() {
 								getMemberInfo();

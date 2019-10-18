@@ -138,27 +138,22 @@
 	<script type="text/javascript">
 		mui.init({
 			swipeBack: true,
-			// 			beforeback: function() {
-			// 				return false;
-			// 			}
 		})
-
-		var userInfo = null;
-		var payType = 'wxpay';
-		var payYear = 1;
-		var price = 199;
-		var fee = 199;
-
-		//支付相关变量
-		var wxChannel = null; // 微信支付
-		var aliChannel = null; // 支付宝支付
-		var channel = null; //支付通道
-		var ALIPAYSERVER = $ajaxUrl + 'member&action=activation';
-		var WXPAYSERVER = $ajaxUrl + 'member&action=activation';;
+		var userInfo = null,
+			payType = 'wxpay',
+			payYear = 1,
+			price = 199,
+			fee = 199,
+			userInfo = getUserInfo(),
+			//支付相关变量
+			wxChannel = null, // 微信支付
+			aliChannel = null, // 支付宝支付
+			channel = null, //支付通道
+			ALIPAYSERVER = $ajaxUrl + 'member&action=activation',
+			WXPAYSERVER = $ajaxUrl + 'member&action=activation';
 		mui.plusReady(function() {
 			//			var webviews = plus.webview.all();
 			//			console.log(JSON.stringify(webviews));
-			userInfo = getUserInfo();
 			// 获取支付通道  
 			plus.payment.getChannels(function(channels) {
 				for (var i in channels) {
@@ -223,7 +218,7 @@
 			mui('.button').on('tap', '.pay', function() {
 				pay(payType);
 			})
-			
+
 			mui('.mui-content').on('tap', '.close-button', function() {
 				mui.back();
 			})

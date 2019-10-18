@@ -85,21 +85,26 @@
 				color: #DDDDDD;
 				background-color: #FFFFFF;
 			}
+
 			h5 {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 			}
+
 			.send-ing img {
 				width: 30px;
 				height: 30px;
 				margin-left: -5px;
 				margin-top: -3px;
 			}
-			.send-success,.send-ing {
+
+			.send-success,
+			.send-ing {
 				color: #2289ff;
 				font-size: 14px;
 			}
+
 			.send-ing {
 				display: inline-flex;
 				align-items: center;
@@ -122,7 +127,7 @@
 					<h5>
 						{{d.create_time}}
 						<span class="send-success" v-if="d.status==1">发送成功</span>
-						<span  v-else class="send-ing">发送中<img src="../image/icon/ellipse-1.5s-200px.svg"></span>
+						<span v-else class="send-ing">发送中<img src="../image/icon/ellipse-1.5s-200px.svg"></span>
 					</h5>
 					<p v-if="d.message_type=='text'" class="mui-ellipsis-2 mass-desc">
 						{{d.content}}
@@ -148,17 +153,9 @@
 					lists: [],
 					iSvoid: false
 				},
-				methods: {
-
-				},
 				mounted: function() {
-					mui.init({
-						beforeback: function() {
-							// plus.navigator.setStatusBarStyle("light");
-						}
-					})
-					getMassList();
 					mui.plusReady(function() {})
+					getMassList();
 					mui(".mui-content").on('tap', '.mui-table-view-cell', function() {
 						var title = this.dataset.title;
 						var mass_id = this.dataset.mass_id;

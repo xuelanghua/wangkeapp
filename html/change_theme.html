@@ -206,29 +206,30 @@
 				var self = plus.webview.currentWebview();
 				plus.navigator.setStatusBarStyle("light");
 				mui('.arrows-left')[0].style.opacity = "0.3";
-			})
-			mui.post($ajaxUrl + 'staff&action=card_theme', {
-				token: userInfo.token,
-			}, function(res) {
-				// logs(res);
-				if (res.errno == 0) {
-					if (res.data == 'gold') {
-						current_idx = 2;
-						mui('.arrows-right')[0].style.opacity = "0.3";
-					} else if (res.data == 'dark') {
-						current_idx = 1;
-						mui('.arrows-left')[0].style.opacity = "0.3";
+				mui.post($ajaxUrl + 'staff&action=card_theme', {
+					token: userInfo.token,
+				}, function(res) {
+					// logs(res);
+					if (res.errno == 0) {
+						if (res.data == 'gold') {
+							current_idx = 2;
+							mui('.arrows-right')[0].style.opacity = "0.3";
+						} else if (res.data == 'dark') {
+							current_idx = 1;
+							mui('.arrows-left')[0].style.opacity = "0.3";
+						} else {
+							current_idx = 0;
+							mui('.arrows-left')[0].style.opacity = "1";
+							mui('.arrows-right')[0].style.opacity = "1";
+						}
+						swiperInit();
 					} else {
-						current_idx = 0;
-						mui('.arrows-left')[0].style.opacity = "1";
-						mui('.arrows-right')[0].style.opacity = "1";
+						swiperInit();
+						// 主题获取失败
 					}
-					swiperInit();
-				} else {
-					swiperInit();
-					// 主题获取失败
-				}
-			}, 'json');
+				}, 'json');
+			})
+
 
 			function swiperInit() {
 				swiper = new Swiper('.swiper-container', {

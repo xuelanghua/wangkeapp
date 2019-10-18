@@ -721,12 +721,10 @@
 					enough: true,
 					rate: 0
 				},
-				created: function() {
-					getMemberInfo();
-					getWithdrawalRate();
-				},
 				mounted: function() {
 					mui.plusReady(function() {
+						getMemberInfo();
+						getWithdrawalRate();
 						// mask.show();
 						mui('.mui-content').on('tap', '.quan', function() {
 							// vm.fee = (vm.balance / 1.1).toFixed(2);
@@ -782,7 +780,7 @@
 					}
 				}, 'json');
 			}
-			
+
 			//获取提现费率
 			function getWithdrawalRate() {
 				mui.post($ajaxUrl + 'member', {
