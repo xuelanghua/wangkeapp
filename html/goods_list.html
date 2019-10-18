@@ -480,11 +480,11 @@
 										</div>
 										<div class="playb" :class="'playb'+lst.id">
 											<div class="jiao"></div>
-											<div v-if="(lst.is_team_goods>0&&lst.check_status==1)||lst.is_team_goods==0" class="play" data-type="edit"
+											<!-- <div v-if="(lst.is_team_goods>0&&lst.check_status==1)||lst.is_team_goods==0" class="play" data-type="edit"
 											 :data-gtype="lst.is_team_goods">
 												<img src="../image/edit.png" />
 												<div>编辑</div>
-											</div>
+											</div> -->
 											<div class="play" data-type="off" :data-gtype="lst.is_team_goods">
 												<img src="../image/lower_shelf.png" />
 												<div>下架</div>
@@ -670,7 +670,7 @@
 	var currentIdx = -1;
 	var mask = mui.createMask(function() {
 		document.querySelector(".share-container").classList.remove("active");
-		document.querySelector(".playb"+currentId).style.display="none";
+		document.querySelector(".playb" + currentId).style.display = "none";
 	});
 	var g_type = 'on_sale',
 		skip = 1,
@@ -796,6 +796,7 @@
 			var gtype = this.dataset.gtype;
 			document.querySelector(".playb" + currentId).style.display = 'none';
 			if (type == 'off') {
+				mask.close();
 				//下架按钮
 				// "team_goods"
 				if (gtype == 1) {
@@ -806,6 +807,7 @@
 					changeGoodsStatus(0, currentId);
 				}
 			} else if (type == 'on') {
+				mask.close();
 				//上架按钮
 				if (gtype == 1) {
 					changeGoodsStatus(1, currentId, "team_goods");
@@ -815,6 +817,7 @@
 					changeGoodsStatus(1, currentId);
 				}
 			} else if (type == 'del') {
+				mask.close();
 				//删除框
 				plus.nativeUI.confirm('确认删除该商品?', function(e) {
 					if (e.index == 0) {
@@ -831,6 +834,7 @@
 					}
 				})
 			} else if (type == 'edit') {
+				mask.close();
 				if (gtype == 1) {
 					//打开编辑页面
 					openPage('edit_distribution_goods_again.html', 'edit_distribution_goods_again', '#f7f7f7', {
@@ -846,21 +850,6 @@
 					openPage('goods_edit.html', 'goods_edit', '#f7f7f7', {
 						goods_id: currentId
 					})
-					// mui.openWindow({
-					// 	id: 'goods_edit',
-					// 	url: 'goods_edit.html',
-					// 	show: {
-					// 		aniShow: 'slide-in-right'
-					// 	},
-					// 	extras: { //extras里面的就是参数了
-					// 		goods_id: currentId
-					// 	},
-					// 	styles: {
-					// 		statusbar: {
-					// 			background: '#FFF',
-					// 		},
-					// 	}
-					// });
 				}
 			} else if (type == 'share') {
 				currentIdx = this.dataset.idx;
