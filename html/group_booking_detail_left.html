@@ -723,7 +723,7 @@
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
 						getData();
-						getOrderList();
+						// getOrderList();
 						// 预览图片
 						mui('.mui-content').on('tap', '.swiper-slide img', function() {
 							var index = this.dataset.idx;
@@ -781,7 +781,9 @@
 								if (app.collage_list.length == 0) {
 									mui.fire(plus.webview.getWebviewById('group_booking'), 'reloadMyself');
 									mui.later(function() {
+										var lastPage = plus.webview.currentWebview().opener();
 										mui.back();
+										plus.webview.close(lastPage);
 									}, 1000);
 								}
 							} else {
@@ -812,7 +814,9 @@
 							message("删除成功！");
 							mui.fire(plus.webview.getWebviewById('group_booking'), 'reloadMyself');
 							mui.later(function() {
+								var lastPage = plus.webview.currentWebview().opener();
 								mui.back();
+								plus.webview.close(lastPage);
 							}, 1000)
 						} else {
 							message(res.message);
@@ -834,10 +838,11 @@
 					token: userInfo.token,
 					goods_id: app.goods_id
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						app.goods_detail = res.data;
 						app.images = res.data.images;
+						app.spec = res.data.spec;
 						app.collage_list = res.data.collage_list;
 						// logs(app.collage_list);
 						if (app.images.length > 1) {

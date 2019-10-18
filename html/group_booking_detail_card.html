@@ -150,6 +150,7 @@
 				margin-right: 10px;
 				line-height: 0;
 				font-size: 0;
+				margin-bottom: 0.1rem;
 			}
 
 			.head-img {
@@ -163,11 +164,13 @@
 				width: 0.55rem;
 				position: absolute;
 				right: -5px;
-				bottom: 0;
+				top: -0.05rem;
+				right: 0.21rem;
 			}
 
 			.person-head-container {
-				padding: 0.6rem 0;
+				padding: 0.6rem 0.1rem;
+				flex-wrap: wrap;
 			}
 
 			.mui-btn.mui-btn-yellow {
@@ -231,24 +234,18 @@
 							</div>
 						</div>
 						<div class="flex-center person-head-container">
-							<div class="person-head">
-								<img class="head-img" :src="goods_detail.initiator.avatar" alt="">
+							<div class="person-head" @tap="goChat(initiator)">
+								<img class="head-img" :src="initiator.avatar" alt="">
 								<img class="sign" src="../image/icon/team-king-sign.png">
 							</div>
-							<div class="person-head" v-for="(a,i) in goods_detail.users" v-if="goods_detail.users.length>=1&&i<2">
+							<div class="person-head" v-for="(a,i) in goods_detail.users" v-if="goods_detail.users.length>0" @tap="goChat(a)">
 								<img class="head-img" :src="a.avatar">
 							</div>
-							<div class="person-head" v-if="goods_detail.users.length==1||goods_detail.users.length==0">
+							<div class="person-head" v-if="goods_detail.left_number>0" v-for="i in goods_detail.left_number">
 								<img class="head-img" src="../image/icon/group-booking-detail-card-icon.png">
-							</div>
-							<div class="person-head" v-if="goods_detail.users.length==0">
-								<img class="head-img" src="../image/icon/group-booking-detail-card-icon.png">
-							</div>
-							<div class="person-head" v-if="goods_detail.users.length>2">
-								<img class="head-img" src="../image/icon/group-booking-detail-card-icon-omit.png">
 							</div>
 						</div>
-						<button v-if="goods_detail.collage_status==3||goods_detail.collage_status==2" type="button" class="mui-btn mui-btn-yellow mui-btn-block">查看详情</button>
+						<button v-if="goods_detail.collage_status==3||goods_detail.collage_status==2" type="button" class="mui-btn mui-btn-yellow mui-btn-block">查看订单</button>
 					</div>
 				</div>
 			</div>
@@ -265,7 +262,8 @@
 					collage_id: '',
 					goods_detail: {},
 					count_down: '',
-					spe: {}
+					spe: {},
+					initiator: {}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -277,7 +275,14 @@
 					// 初始化字体大小结束	
 				},
 				methods: {
-
+					goChat: function(user) {
+						openPage('dialog.html', 'dialog', '#f7f7f7', {
+							cid: user.id,
+							chatName: user.name,
+							avatar: user.avatar,
+							barStyle: 'dark'
+						});
+					}
 				},
 				mounted: function() {
 					mui.init({
@@ -302,6 +307,7 @@
 					if (res.errno == 0) {
 						var data = res.data
 						app.goods_detail = data;
+						app.initiator = data.initiator;
 						app.spe = data.spe;
 						end_time = data.end_time;
 						if (data.collage_status == 0 || data.collage_status == 1) {
@@ -314,9 +320,7 @@
 			}
 			// 查看详情
 			mui(".mui-content").on("tap", ".mui-btn-block", function() {
-				openPage("order_details_await_sgoods.html", "order_details_await_sgoods", "#f7f7f7", {
-					orderId: 1
-				});
+				openPage("order_list.html", "order_list", "#f7f7f7");
 			})
 			// 倒计时
 			function clock() {

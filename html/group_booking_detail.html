@@ -476,7 +476,7 @@
 				<div class="order-type" :class="sign=='rightpage'?'active':''">
 					<i id="bg_full" class="bg-full"></i>
 					<span class="order-type-item" data-page="leftpage">产品详情</span>
-					<span class="order-type-item" data-page="rightpage">拼团情况</span>
+					<span class="order-type-item" data-page="rightpage">拼团列表</span>
 				</div>
 			</div>
 		</header>
@@ -502,7 +502,9 @@
 						}, {
 							gid: app.goods_id
 						});
-						leftpage.show();
+						setTimeout(function() {
+							leftpage.show();
+						}, 100)
 						var rightpage = plus.webview.create("group_booking_detail_right.html", "group_booking_detail_right", {
 							top: '70px',
 							bottom: '0',
