@@ -158,7 +158,7 @@
 			<div class="last-opction">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell" id="showUserPicker">
-						<span class="last-title">规格</span>
+						<span class="last-title">拼团规格</span>
 						<p class="mui-navigate-right size-opstion">{{size_text}}</p>
 					</li>
 					<li class="mui-table-view-cell">
@@ -168,18 +168,18 @@
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="last-title">起购数量</span>
-						<input type="number" v-model="quantity" placeholder="一人最少购买数量">
+						<input type="number" v-model="quantity" placeholder="每人最少购买数量">
 						<span v-show="quantity" @tap="clearInput('quantity')" class="mui-icon mui-icon-clear"></span>
+					</li>
+					<li class="mui-table-view-cell">
+						<span class="last-title">拼团时间</span>
+						<input type="number" v-model="timer" placeholder="超过时间(小时)拼团失败">
+						<span v-show="timer" @tap="clearInput('timer')" class="mui-icon mui-icon-clear"></span>
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="last-title">单价</span>
 						<input type="number" v-model="unit_cost " placeholder="设置拼团价格">
 						<span v-show="unit_cost" @tap="clearInput('unit_cost')" class="mui-icon mui-icon-clear"></span>
-					</li>
-					<li class="mui-table-view-cell">
-						<span class="last-title">时间（小时）</span>
-						<input type="number" v-model="timer" placeholder="超过时间拼团失败">
-						<span v-show="timer" @tap="clearInput('timer')" class="mui-icon mui-icon-clear"></span>
 					</li>
 				</ul>
 			</div>
@@ -229,6 +229,7 @@
 						app.goods_detail = self.goods;
 						getQuantity();
 						if(self.rule){
+							app.rule = self.rule;
 							app.quantity=self.rule.number;
 							app.t_number=self.rule.people;
 							app.unit_cost=self.rule.price;
@@ -308,6 +309,15 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						userPicker.setData(res.data);
+						if (app.rule) {
+							userPicker.pickers[0].setSelectedValue(app.rule.spe_price_id, 500);
+							mui.each(res.data, function(index, item) {
+								if (item.value == app.rule.spe_price_id) {
+									app.size_text = item.text;
+									app.size = item.value;
+								}
+							})
+						}
 					} else {
 						// loser
 						message(res.message);
