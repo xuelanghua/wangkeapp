@@ -408,6 +408,12 @@
 				height: auto;
 				margin-right: 8px;
 			}
+			.pt-sign {
+				width: 80px;
+				position: absolute;
+				top: -10px;
+				right: -10px;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -423,6 +429,7 @@
 			<div class="order-detail-head">
 				<div class="detail-head">
 					<h3>交易成功</h3>
+					<img v-if="collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
 				</div>
 				<div class="logistics-container">
 					<img src="../image/icon/order_details_shipped_02.png">
@@ -579,7 +586,8 @@
 					address: '',
 					goods_item: '',
 					endtimer: '',
-					c:{}
+					c:{},
+					collage_id: 0
 				},
 				created: function() {
 					// 初始化字体大小
@@ -666,6 +674,7 @@
 						app.address_detail = data.address_detail;
 						app.goods_item = data.item;
 						app.c=data.item[0].team_info;
+						app.collage_id=data.collage_id;
 					} else {}
 				}, 'json');
 			}

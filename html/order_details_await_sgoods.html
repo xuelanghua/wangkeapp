@@ -478,8 +478,13 @@
 				width: 20px !important;
 				height: auto;
 				margin-right: 8px;
+			}
 
-
+			.pt-sign {
+				width: 80px;
+				position: absolute;
+				top: -10px;
+				right: -10px;
 			}
 
 			[v-cloak] {
@@ -500,6 +505,7 @@
 						<h3>买家已付款</h3>
 						<p>请尽快发货</p>
 					</div>
+					<img v-if="collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
 				</div>
 				<div class="address-info">
 					<img src="../image/icon/order-details-icon-02.png">
@@ -675,7 +681,8 @@
 					sales: '',
 					goods_item: [],
 					detail: {},
-					c: {}
+					c: {},
+					collage_id: 0
 				},
 				created: function() {
 					// 初始化字体大小
@@ -729,7 +736,7 @@
 				mounted: function() {
 					mui.init({
 						gestureConfig: {
-							longtap: true, 
+							longtap: true,
 						}
 					});
 					mui.plusReady(function() {
@@ -869,6 +876,7 @@
 						app.address_detail = data.address_detail;
 						app.goods_item = data.item;
 						app.c = data.item[0].team_info;
+						app.collage_id = data.collage_id;
 					} else {}
 				}, 'json');
 			}

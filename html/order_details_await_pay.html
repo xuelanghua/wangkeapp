@@ -24,6 +24,7 @@
 				align-items: center;
 				padding-left: 0.45rem;
 				position: relative;
+				overflow: hidden;
 			}
 
 			.detail-head h3 {
@@ -306,7 +307,12 @@
 				font-size: 0.24rem;
 				color: #333333;
 			}
-
+			.pt-sign{
+				width: 80px;
+				position: absolute;
+				top: -10px;
+				right: -10px;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -325,6 +331,7 @@
 						<h3>等待买家付款</h3>
 						<p><span id="count_down">00小时00分00秒后自动取消</span></p>
 					</div>
+					<img v-if="collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png" >
 				</div>
 				<div class="address-info">
 					<img src="../image/icon/order-details-icon-02.png">
@@ -446,7 +453,8 @@
 					order_id: '',
 					sales: '',
 					goods_item: [],
-					detail: {}
+					detail: {},
+					collage_id:0
 				},
 				created: function() {
 					// 初始化字体大小
@@ -573,6 +581,7 @@
 						app.address = data.address;
 						app.address_detail = data.address_detail;
 						app.goods_item = data.item;
+						app.collage_id=data.collage_id;
 						endtimer = data.over_time;
 						// 开始倒计时
 						clock();
