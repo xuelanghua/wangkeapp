@@ -327,7 +327,7 @@
 				touch-action: pan-y;
 			}
 			.mui-backdrop {
-				 background-color: rgba(0,0,0,0);
+				 background-color: rgba(0,0,0,0.6);
 			}
 			/* 弹窗样式 */
 			
@@ -670,6 +670,7 @@
 	var currentIdx = -1;
 	var mask = mui.createMask(function() {
 		document.querySelector(".share-container").classList.remove("active");
+		document.querySelector(".playb"+currentId).style.display="none";
 	});
 	var g_type = 'on_sale',
 		skip = 1,
@@ -744,7 +745,7 @@
 			});
 			mui.plusReady(function() {
 				getGoodsCount();
-			eventInit();
+				eventInit();
 				window.addEventListener('goodsAddSuccess', function() {
 					getGoodsList(false);
 				})
@@ -906,7 +907,7 @@
 			token: userInfo.token,
 			type: g_type,
 			skip: skip,
-			limit: 8, 
+			limit: 8,
 			goods_name: app.goodsName
 		}, function(res) {
 			// logs(res);
@@ -1070,18 +1071,18 @@
 		});
 	}
 	// 分享给旺客用户
-	function shareUser(){
+	function shareUser() {
 		mask.close();
-		openPage("share_friend_list.html","share_friend_list","#F7F7F7",{
-			goodsId:app.on_sale_list[currentIdx].id
+		openPage("share_friend_list.html", "share_friend_list", "#F7F7F7", {
+			goodsId: app.on_sale_list[currentIdx].id
 		});
 	}
 	// 创建海报
-	function createPoster(){
+	function createPoster() {
 		mask.close();
 		// logs(app.on_sale_list[currentIdx]);
-		openPage("create_goods_poster.html","create_goods_poster","#F7F7F7",{
-			goodsId:app.on_sale_list[currentIdx].id
+		openPage("create_goods_poster.html", "create_goods_poster", "#F7F7F7", {
+			goodsId: app.on_sale_list[currentIdx].id
 		});
 	}
 </script>
