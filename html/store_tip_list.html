@@ -286,13 +286,15 @@
 			
 			// 获取消息列表
 			function getMsgList() {
+				console.log(genre);
 				mui.post($ajaxUrl + 'chat&action=notice_list_by_type', {
 					token: userInfo.token,
 					type: genre,
 					skip: skip,
 					limit: limit
 				}, function(res) {
-					logs(res);
+					console.log(JSON.stringify(res));
+					// logs(res);
 					if (res.errno == 0) {
 						if (refresh == 'up') {
 							app.msgList = app.msgList.concat(res.data);
@@ -331,11 +333,14 @@
 						orderId: gd.id,
 						sales: sales
 					}, "zoom-fade-out")
+				} else if (gd.order_status == 1) {
+					message('订单已取消!');
 				} else {
 					openPage('order_details_finish.html', 'order_details_finish', '#f7f7f7', {
 						orderId: gd.id,
 						sales: app.sales
-					}, "zoom-fade-out")
+					}, "zoom-fade-out") 
+					
 				}
 			}
 		</script>

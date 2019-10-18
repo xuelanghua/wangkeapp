@@ -729,8 +729,11 @@
 									<div v-show="sales==2" class="net-yield">
 										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
 									</div>
-									<div v-if="sales==1" class="deliver-goods">
+									<div v-if="sales==1&&(al.type==0||al.type==1&&al.collage_status!=1)" class="deliver-goods">
 										<button type="button" :data-ids="al.id" class="mui-btn mui-btn-outlined deliver-goods-btn">发货</button>
+									</div>
+									<div v-if="al.type==1&&al.collage_status==1" class="deliver-goods">
+										<button type="button" :data-ids="al.id" class="mui-btn mui-btn-outlined">拼团中</button>
 									</div>
 								</div>
 							</div>

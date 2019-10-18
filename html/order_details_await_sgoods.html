@@ -596,7 +596,8 @@
 						<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun(detail.out_trade_no)">复制</button>
 					</li>
 					<li>
-						<span>订单状态：已付款</span>
+						<span v-if="detail.type==1&&detail.collage_status==1">订单状态：拼团中</span>
+						<span v-else>订单状态：已付款</span>
 					</li>
 					<li>
 						<span>下单时间：{{detail.create_time}}</span>
@@ -644,7 +645,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="deliver-goods-btn" v-if="detail.team_order==0||(detail.team_order==1&&sales==1)">
+			<div class="deliver-goods-btn" v-if="(detail.team_order==0||(detail.team_order==1&&sales==1))&&(detail.type==0||detail.type==1&&detail.collage_status!=1)">
 				发货
 			</div>
 		</div>
