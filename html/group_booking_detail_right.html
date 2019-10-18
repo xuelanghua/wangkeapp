@@ -457,72 +457,310 @@
 				display: flex;
 				align-items: center;
 			}
-		</style>
-		<script type="text/javascript">
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
+
+			/* 选项卡二 */
+			.last-container .goods-img {
+				width: 0.96rem;
+				height: 0.96rem;
+				overflow: hidden;
+				border-radius: 50%;
+				margin-right: 10px;
+				flex-shrink: 0;
 			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
-		</script>
+
+			.last-container .goods-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.last-container .group-booking-rules {
+				padding: 0;
+			}
+
+			.last-container {
+				background-color: #FFFFFF;
+			}
+
+			.last-container .group-booking-rules .mini-card {
+				border-radius: 0;
+				background-color: #ffffff;
+				position: relative;
+				padding: 0.3rem 0 0.3rem 0.15rem;
+				margin: 0;
+			}
+
+			.last-container .group-booking-rules .mini-card:after {
+				content: "";
+				width: 80%;
+				height: 1px;
+				background-color: #F2F2F2;
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+
+			.last-container .group-status p {
+				margin-bottom: 0;
+				font-size: 0.3rem;
+				padding-right: 0.15rem;
+				box-sizing: border-box;
+			}
+
+			.last-container .group-status span {
+				color: #f5ca3a;
+			}
+
+			.last-container .count-down {
+				font-size: 0.24rem;
+				color: #999999;
+				margin-right: 0.1rem;
+			}
+
+			.last-container .mini-card-body {
+				justify-content: space-between;
+				line-height: 1;
+			}
+
+			.mui-bar-nav~.mui-content.white {
+				min-height: 100vh;
+				background-color: #FFFFFF;
+				box-sizing: border-box;
+				margin: 0;
+			}
+
+			body {
+				background-color: #FFFFFF;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="position: absolute;"></span>
-			<div class="change-container">
-				<div class="order-type" :class="sign=='rightpage'?'active':''">
-					<i id="bg_full" class="bg-full"></i>
-					<span class="order-type-item" data-page="leftpage">产品详情</span>
-					<span class="order-type-item" data-page="rightpage">拼团情况</span>
+		<div id="mui-content" v-cloak>
+			<div class="mui-content white">
+				<div class="last-container">
+					<!-- 拼团规则 -->
+					<div v-if="!order_status" class="group-booking-rules">
+						<div class="mini-card  flex-center" v-for="(o,ix) in order_list" @tap="groupBooking(o.id)">
+							<div class="goods-img">
+								<img :src="o.initiator.avatar">
+							</div>
+							<div style="display: flex;flex-grow: 1;flex-direction: column;">
+								<div class="mini-card-head flex-center">
+									<div class="flex-center">
+										<span>{{o.spe.title}}</span>
+										<span class="price">&yen;{{o.price}}</span>
+									</div>
+									<div class="flex-center group-status">
+										<p v-if="o.collage_status==1">还差<span>{{o.left_number}}人</span>成团</p>
+										<p v-else-if="o.collage_status==2||o.collage_status==3"><span>已成团</span></p>
+										<p v-else-if="o.collage_status==4">拼团失败</p>
+									</div>
+								</div>
+								<div class="mini-card-body flex-center">
+									<div>
+										<span class="mui-badge">每人{{o.number}}件起</span>
+										<span class="mui-badge">{{o.people}}人拼团</span>
+									</div>
+									<span class="count-down" v-if="o.collage_status==1">剩余 {{o.timer }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div v-else class="mui-text-center" style="margin-bottom: 10%;">
+						<img src="../image/icon/void-data.png" alt="" style="width: 50%;padding-top: 20%;">
+						<p>暂无拼团~</p>
+					</div>
 				</div>
 			</div>
-		</header>
+		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/swiper.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var skip = 1,
+				userInfo = getUserInfo(),
+				pullDirection = '';
 			var app = new Vue({
-				el: ".mui-bar",
+				el: "#mui-content",
 				data: {
-					sign: "leftpage",
-					goods_id: ''
+					goods_id: '',
+					order_list: [],
+					order_status: false
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					// 拼团详情
+					groupBooking: function(id) {
+						openPage('group_booking_detail_card.html', 'group_booking_detail_card', '#f7f7f7', {
+							collage_id: id
+						})
+					}
 				},
 				mounted: function() {
+					mui.init({
+						keyEventBind: {
+							backbutton: false,
+							menubutton: false
+						},
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									getOrderList()
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								callback: function() {
+									pullDirection = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getOrderList()
+								}
+							}
+						}
+					});
+					var _self = this;
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
-						var leftpage = plus.webview.create("group_booking_detail_left.html", "group_booking_detail_left", {
-							top: '70px',
-							bottom: '0',
-							render: "always",
-							scrollIndicator: "none",
-						}, {
-							gid: app.goods_id
-						});
-						leftpage.show();
-						var rightpage = plus.webview.create("group_booking_detail_right.html", "group_booking_detail_right", {
-							top: '70px',
-							bottom: '0',
-							render: "always",
-							scrollIndicator: "none",
-						}, {
-							gid: app.goods_id
-						});
-						mui(".mui-bar").on("tap", ".order-type-item", function() {
-							app.sign = this.dataset.page;
-							if (app.sign == "leftpage") {
-								leftpage.show();
-							} else {
-								rightpage.show();
-							}
-							// logs(app.sign);
-						})
+						getOrderList();
 					})
-				}
+					// 初始化两次防止页面乱
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束
+				},
 			})
+			// 初始化轮播
+			function swiperInint() {
+				var swiper = new Swiper('.swiper-container', {
+					loop: true,
+					autoplay: {
+						delay: 3000,
+						stopOnLastSlide: false,
+						disableOnInteraction: false,
+					},
+					pagination: {
+						el: '.swiper-pagination',
+						type: 'fraction',
+					}
+				});
+			}
+			// 拼团订单列表
+			function getOrderList() {
+				mui.post($ajaxUrl + 'marketing&action=collage_goods_order', {
+					token: userInfo.token,
+					skip: skip,
+					limit: 10,
+					goods_id: app.goods_id
+				}, function(res) {
+					if (res.errno == 0) {
+						if (skip == 1) {
+							var lists = res.data;
+							// var lists = tempdata;
+							lists.map(function(obj, index) {
+								app.$set(
+									obj, "timer", InitTime(obj.end_time)
+								);
+							})
+							app.order_list = lists;
+							setInterval(function() {
+								start_count_down();
+							}, 1000);
+						} else {
+							var lists = res.data;
+							lists.map(function(obj, index) {
+								app.$set(
+									obj, "timer", InitTime(obj.end_time)
+								);
+							})
+							app.order_list = app.order_list.concat(lists);
+							setInterval(function() {
+								start_count_down();
+							}, 1000);
+						}
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+					} else {
+						// loser
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+						app.order_status = true;
+					}
+				}, 'json');
+			}
+			// 倒计时
+			function InitTime(endtime) {
+				var dd, hh, mm, ss = null;
+				var time = parseInt(endtime) - new Date().getTime();
+				if (time <= 0) {
+					return '剩余 00:00'
+				} else {
+					var dd = fmt(Math.floor(time / 1000 / 60 / 60 / 24));
+					var hh = fmt(Math.floor((time / 1000 / 60 / 60) % 24));
+					var mm = fmt(Math.floor((time / 1000 / 60) % 60));
+					var ss = fmt(Math.floor((time / 1000) % 60));
+					var str = dd + "天" + hh + "小时" + mm + "分" + ss + "秒";
+					return str;
+				}
+			}
+			// 倒计时开始
+			function start_count_down() {
+				for (var key in app.order_list) {
+					var aaa = parseInt(app.order_list[key]["end_time"]);
+					var bbb = new Date().getTime();
+					var rightTime = aaa - bbb;
+					if (rightTime > 0) {
+						var dd = fmt(Math.floor(rightTime / 1000 / 60 / 60 / 24));
+						var hh = fmt(Math.floor((rightTime / 1000 / 60 / 60) % 24));
+						var mm = fmt(Math.floor((rightTime / 1000 / 60) % 60));
+						var ss = fmt(Math.floor((rightTime / 1000) % 60));
+						var current_time = dd + "天" + hh + "小时" + mm + "分" + ss + "秒";
+						app.order_list[key]["timer"] = current_time;
+					} else {
+
+					}
+				}
+			}
+			// 补位
+			function fmt(n) {
+				if (n < 10) {
+					return '0' + n;
+				} else {
+					return n;
+				}
+			}
 		</script>
 	</body>
 </html>

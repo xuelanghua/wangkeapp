@@ -321,11 +321,9 @@
 				width: 3.4rem;
 				color: #FFFFFF;
 			}
-
-			.theme4 .theme4-qrimg-cont {
+			.theme4 .theme4-qrimg-cont{
 				margin-bottom: 10px;
 			}
-
 			[v-cloak] {
 				display: none;
 				transition: all 0.25 ease-in-out;
@@ -344,13 +342,6 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">二维码名片</h1>
-			<div class="mui-pull-right setting-card">
-				<span>编辑样式</span>
-			</div>
-		</header>
 		<div class="mui-content" id="mui-content" v-cloak>
 			<div class="change" style="position: absolute;top: 60px;left: 44%;color: #FFFFFF;">
 				点击切换
@@ -464,10 +455,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="operation-section mui-clearfix">
+				<!-- <div class="operation-section mui-clearfix">
 					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
 					<button type="button" id="shareImg" class="mui-btn">分享二维码</button>
-				</div>
+				</div> -->
 			</div>
 			<!-- <img src="" id="#down1"> -->
 		</div>
@@ -542,23 +533,10 @@
 				});
 				var imgPath = "";
 				mui.plusReady(function() {
-					// var subpage = null;
-					// if (subpage) {
-					// 	subpage.show();
-					// } else {
-					// 	var subpage = plus.webview.create("business_card_sub_page.html", "business_card_sub_page", {
-					// 		backButtonAutoControl: "none",
-					// 		background: "#ffffff",
-					// 		top: "130px",
-					// 		bottom:"120px"
-					// 	});
-					// 	subpage.show();
-					// }
-						
 					var ws = plus.webview.currentWebview();
-					if (!ws.toUid || ws.toUid == userInfo.id) {
-						document.querySelector(".setting-card").style.display = "flex";
-					}
+					// if (!ws.toUid || ws.toUid == userInfo.id) {
+					// 	document.querySelector(".setting-card").style.display = "flex";
+					// }
 					if (ws.toUid) {
 						toUid = ws.toUid;
 						getToUserInfo();
@@ -567,29 +545,21 @@
 						app.username = userInfo.nickName;
 					}
 					// 获取二维码
-					getQrcodePic(); 
+					getQrcodePic();
 					// 获取名片样式
 					getCardStyle();
 					// 保存图片
-					document.getElementById('saveImage').addEventListener('tap', function() {
-						// generateImg('图片保存成功！');
-						subpage.draw( "", function(){
-							message("success");
-						}, function(err){
-							logs(err);
-							message("loser");
-						}, {
-							
-						} );
-					})
+					// document.getElementById('saveImage').addEventListener('tap', function() {
+					// 	generateImg('图片保存成功！');
+					// })
 					// 设置名片样式
-					mui(".mui-bar").on('tap', '.setting-card', function() {
-						openPage('setting_share_card.html', 'setting_share_card', '#f7f7f7', '');
-					})
+					// mui(".mui-bar").on('tap', '.setting-card', function() {
+					// 	openPage('setting_share_card.html', 'setting_share_card', '#f7f7f7', '');
+					// })
 					// 分享
-					document.getElementById('shareImg').addEventListener('tap', function() {
-						generateImg(false);
-					})
+					// document.getElementById('shareImg').addEventListener('tap', function() {
+					// 	generateImg(false);
+					// })
 				})
 				// 生成二维码图片
 				function generateImg(tips) {
@@ -650,6 +620,8 @@
 							var type = res.data.type;
 							qrurl = res.data.url;
 							app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+							// app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
+							// document.getElementById('qr-img').setAttribute('src', url);
 							if (type == 'redpacket') {
 								app.description = '扫二维码领红包';
 								if (res.data.share_status == 1 && toUid != userInfo.id) {
@@ -666,6 +638,7 @@
 								showload(1);
 							}, 500)
 						} else {
+							// message(res.message);
 							setTimeout(function() {
 								mui.back();
 							}, 2000)
@@ -706,11 +679,13 @@
 				token: userInfo.token,
 				user_id: toUid
 			}, function(res) {
+				// logs(res);
 				if (res.errno == 0) {
 					app.resultStyle = res.data;
 					app.serial = parseInt(res.data.card_type, 10);
 					app.card_text = res.data['card_text_' + res.data.card_type];
 					app.bgimg = res.data['background_image_' + res.data.card_type + '_url'];
+					// app['bgimg'+app.serial]=app['bgimg'+app.serial];
 					if (res.data.background_image_1_url.length > 6) {
 						app.bgimg1 = res.data.background_image_1_url;
 					}
@@ -736,6 +711,7 @@
 				token: userInfo.token,
 				to_uid: toUid
 			}, function(res) {
+				// logs(res);
 				if (res.errno == 0) {
 					app.userhead = res.data.avatar;
 					app.username = res.data.name;
