@@ -223,7 +223,7 @@
 				color: #FF0000;
 			}
 			.mui-backdrop {
-				 background-color: rgba(0,0,0,0);
+				 background-color: rgba(0,0,0,0.6);
 			}
 			body{
 				-webkit-overflow-scrolling: touch;
@@ -232,9 +232,41 @@
 				background-color: #fff7dd;
 				color: #f5ca3a;
 			}
-			/* .mui-badge.mui-badge-blue:last-of-type{
-				margin-left: 5px;
-			} */
+			.share-container{
+				display: flex;
+				position: fixed;
+				background-color: #FFFFFF;
+				height: 120px;
+				width: 100%;
+				bottom: -140px;
+				left: 0;
+				z-index: 1045;
+				box-shadow: 0 0 5px 3px rgba(0,0,0,.2);
+				padding: 20px 0;
+				transition: all 0.25s ease-in-out;
+				-webkit-transition: all 0.25s ease-in-out;
+			}
+			.share-container.active{
+				bottom:0;
+			}
+			.share-container .share-items{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				flex-grow: 1;
+				overflow: visible;
+			}
+			.share-container .share-items img{
+				width: 42px;
+				border-radius: 22px;
+				margin-bottom: 10px; 
+				box-shadow: 1px 1px 3px 1px rgba(220,220,220,.8);
+			}
+			.share-container .share-items span{
+				font-size: 14px;
+				color: #333333;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -278,7 +310,7 @@
 									 alt="">企业仓</span>
 								<span v-if="lst.is_team_goods==9" @tap="openGoodsDetail(lst.id,lst.is_team_goods)"><img src="../image/icon/wagnkezc-icon.png"
 									 alt="">旺客总仓</span>
-								<span class="genduo" :data-ids="lst.id">...</span>
+								<span class="genduo" :data-idx="i" :data-ids="lst.id">...</span>
 							</div>
 							<div>
 								<span class="mui-badge mui-badge-blue">已拼：{{lst.collage_order}}单</span>
@@ -293,6 +325,10 @@
 									<img src="../image/icon/bottom-section-04-white.png" />
 									<div>删除拼团</div>
 								</div>
+								<div class="play" @tap="shareGroupBooking(i,lst.id)">
+									<img src="../image/extension.png" />
+									<div>分享</div>
+								</div>
 							</div>
 						</div>
 					</li>
@@ -304,6 +340,20 @@
 			</div>
 			<div class="add_merchandise" id="group_booking_select">
 				<button>创建拼团</button>
+			</div>
+			<div class="share-container" :class="isShow?'active':''">
+				<div class="share-items" @tap="shareUser">
+					<img src="../image/icon/good-list-share02.jpg" alt="">
+					<span>好友</span>
+				</div>
+				<div class="share-items" @tap="shareFriend">
+					<img src="../image/icon/good-list-share01.jpg" alt="">
+					<span>微信好友</span>
+				</div>
+				<div class="share-items" @tap="createPoster">
+					<img src="../image/icon/good-list-share03.jpg" alt="">
+					<span>朋友圈</span>
+				</div>
 			</div>
 		</div>
 	</body>
@@ -317,6 +367,7 @@
 	var fresh = '';
 	var currentIdx = -1;
 	var mask = mui.createMask(function() {
+		app.isShow = false;
 		document.querySelector(".playb" + currentId).style.display = 'none';
 	});
 	var skip = 1,
@@ -328,6 +379,7 @@
 			goodsName: '',
 			on_sale_list: [],
 			on_sale_status: false,
+			isShow: false
 		},
 		created: function() {
 			// 初始化字体大小
@@ -373,6 +425,11 @@
 				openPage("group_booking_create.html", "group_booking_create", "#ffffff", {
 					goods: e,
 				})
+			},
+			shareGroupBooking: function() {
+				document.querySelector(".playb" + currentId).style.display = 'none';
+				this.isShow = true;
+				mask.show();
 			}
 		},
 		mounted: function() {
@@ -438,6 +495,8 @@
 				glist[i].style.display = "none";
 			}
 			currentId = this.dataset.ids;
+			currentIdx = this.dataset.idx;
+			console.log(currentIdx);
 			document.querySelector(".playb" + currentId).style.display = 'block';
 			if (mui.os.ios) {
 				//不采取操作
@@ -503,6 +562,89 @@
 			paddeds.style.display = 'flex';
 		}
 	}
+	// 分享给微信好友
+	function shareFriend() {
+		mask.close();
+		var obj = app.on_sale_list[currentIdx];
+		var cont = obj.name;
+		var img = obj.cover;
+		var goodsid = obj.id;
+		var imgs = img.substring(img.lastIndexOf("/"));
+		var sd_path = "_downloads" + imgs;
+		plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
+			shareToMiniprogram({
+				title: cont,
+				content: cont,
+				thumbs: [sd_path],
+				miniProgram: {
+					id: 'gh_9fa5f42ab939',
+					path: '/longbing_card/pages/shop/detail/detail?id=' + goodsid + '&to_uid=' + userInfo.id,
+					webUrl: 'https://app.wangkeapp.cn/'
+				}
+			}, 'miniProgram');
+		}, function(e) {
+			showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
+			var imgpath = '';
+			var imgDtask = plus.downloader.createDownload(img, {
+				method: 'GET'
+			}, function(d, status) {
+				if (status == 200) {
+					plus.zip.compressImage({
+							src: d.filename,
+							dst: d.filename,
+							overwrite: true,
+							width: '500px',
+							height: 'auto',
+							format: 'jpg',
+							quality: 90,
+							clip: {
+								width: "500px",
+								height: "400px"
+							}
+						},
+						function(e) {
+							imgpath = e.target;
+							if (imgpath) {
+								showload(1);
+								shareToMiniprogram({
+									title: cont,
+									content: cont,
+									thumbs: [imgpath],
+									miniProgram: {
+										id: 'gh_9fa5f42ab939',
+										path: '/longbing_card/pages/shop/detail/detail?id=' + goodsid + '&to_uid=' + userInfo.id,
+										webUrl: 'https://app.wangkeapp.cn/'
+									}
+								}, 'miniProgram');
+							}
+						},
+						function(error) {
+							showload(1);
+							message("图片压缩失败！");
+						});
+				} else {
+					message('保存失败')
+				}
+			});
+			imgDtask.start()
+		});
+	}
+	// 分享给旺客用户
+	function shareUser() {
+		mask.close();
+		openPage("share_friend_list.html", "share_friend_list", "#F7F7F7", {
+			goodsId: app.on_sale_list[currentIdx].id
+		});
+	}
+	// 创建海报
+	function createPoster() {
+		mask.close();
+		// logs(app.on_sale_list[currentIdx]);
+		openPage("create_goods_poster.html", "create_goods_poster", "#F7F7F7", {
+			goodsId: app.on_sale_list[currentIdx].id
+		});
+	}
+
 	window.addEventListener('reloadMyself', function() {
 		getGoodsList();
 		// logs("刷新成功！");
