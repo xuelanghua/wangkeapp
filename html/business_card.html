@@ -560,6 +560,7 @@
 						if (mui.os.android) {
 							generateImg('图片保存成功！');
 						} else {
+							showload(0);
 							var tg = document.getElementById("code-body");
 							var tgw = tg.clientWidth + 10 + 'px';
 							var tgh = tg.clientHeight + 120 + 'px';
@@ -577,7 +578,8 @@
 								}, function(i) {
 									plus.gallery.save(i.target);
 									bitmap.clear();
-									message("Success");
+									showload(1,1500);
+									message("保存成功！");
 								}, function(e) {
 									message("保存失败！");
 									console.log('保存图片失败：' + JSON.stringify(e));
@@ -593,7 +595,7 @@
 									height: tgh
 								}
 							});
-						}
+						 }
 
 					})
 
