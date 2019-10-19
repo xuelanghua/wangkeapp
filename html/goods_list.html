@@ -736,6 +736,7 @@
 						offset: mui.os.ios ? '0px' : '-50px', 
 						auto: false,
 						callback: function() {
+							mui('#goods_container').pullRefresh().refresh(true);
 							skip = 1;
 							getGoodsCount();
 							getGoodsList('down');
@@ -927,6 +928,7 @@
 	}
 	// 切换选项卡
 	mui(".mui-content").on("tap", ".mui-control-item", function() {
+		mui('#goods_container').pullRefresh().refresh(true);
 		g_type = this.dataset.type;
 		skip = 1;
 		// getGoodsCount();
