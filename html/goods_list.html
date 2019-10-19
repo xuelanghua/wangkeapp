@@ -931,7 +931,7 @@
 		mui('#goods_container').pullRefresh().refresh(true);
 		g_type = this.dataset.type;
 		skip = 1;
-		// getGoodsCount();
+		getGoodsCount();
 		getGoodsList();
 	})
 	//改变商品状态
@@ -941,9 +941,8 @@
 			token: userInfo.token,
 			status: status,
 			goods_id: goods_id,
-			type: type //是否团队商品 
+			type: type 
 		}, function(res) {
-			// logs(res);
 			if (res.errno == 0) {
 				skip = 1;
 				getGoodsCount();
