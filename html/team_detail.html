@@ -485,9 +485,19 @@
 
 			.team-honor-sign {
 				display: flex;
+				width: 100%;
 				flex-wrap: wrap;
 				justify-content: flex-start;
-				padding: 0 0.4rem;
+				padding: 0 0.2rem;
+			}
+
+			.team-honor-sign .content-col-3 {
+				display: flex;
+				width: 33.3333%;
+				padding: 0;
+				margin: 0;
+				align-items: center;
+				justify-content: center;
 			}
 
 			.team-honor-sign .sign-items {
@@ -499,7 +509,7 @@
 				background: #FFFFFF url("../image/team-honor-bg.png")center center no-repeat;
 				background-size: contain;
 				padding: 0.35rem;
-				margin-bottom: 0.2rem;
+				margin-bottom: 0.15rem;
 			}
 
 			.team-honor-sign .sign-items span {
@@ -906,8 +916,10 @@
 						<p v-if="role" class="more-member mui-pull-right honor-edit-btn">编辑<span class="mui-icon mui-icon-arrowright"></span></p>
 					</h2>
 					<div v-if="honorList!=''" class="team-honor-sign">
-						<div class="sign-items" v-for="(j,i) in honorList" :key="i">
-							<span>{{j.name}}</span>
+						<div class="content-col-3" v-for="(j,i) in honorList" :key="i">
+							<div class="sign-items">
+								<span>{{j.name}}</span>
+							</div>
 						</div>
 					</div>
 					<div class="void-tips-cont" v-else>
@@ -1055,7 +1067,7 @@
 				lProgress: [],
 				slef_id: userInfo.id,
 				goods: [],
-				team_goods_status:false
+				team_goods_status: false
 			},
 			computed: {
 				selfrank: function() {
@@ -1291,13 +1303,13 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(res); 
+				// logs(res);
 				if (res.errno == 0) {
 					app.goods = res.data;
-					app.team_goods_status=false;
+					app.team_goods_status = false;
 				} else {
 					app.goods = [];
-					app.team_goods_status=true;
+					app.team_goods_status = true;
 					// message(res.message);
 				}
 			}, 'json');
@@ -1309,7 +1321,7 @@
 				token: userInfo.token,
 				team_id: app.tid
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.applyList = res.data;
 				} else {
@@ -1374,7 +1386,7 @@
 				token: userInfo.token,
 				team_id: app.tid,
 			}, function(res) {
-				logs(res);
+				// logs(res);
 				if (res.errno == 0) {
 					app.modeldata = res.data[0];
 					app.person = res.data;

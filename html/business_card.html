@@ -542,46 +542,65 @@
 				});
 				var imgPath = "";
 				mui.plusReady(function() {
-					// var subpage = null;
-					// if (subpage) {
-					// 	subpage.show();
-					// } else {
-					// 	var subpage = plus.webview.create("business_card_sub_page.html", "business_card_sub_page", {
-					// 		backButtonAutoControl: "none",
-					// 		background: "#ffffff",
-					// 		top: "130px",
-					// 		bottom:"120px"
-					// 	});
-					// 	subpage.show();
-					// }
-						
-					var ws = plus.webview.currentWebview();
-					if (!ws.toUid || ws.toUid == userInfo.id) {
+					var _self = plus.webview.currentWebview();
+					if (!_self.toUid || _self.toUid == userInfo.id) {
 						document.querySelector(".setting-card").style.display = "flex";
 					}
-					if (ws.toUid) {
-						toUid = ws.toUid;
+					if (_self.toUid) {
+						toUid = _self.toUid;
 						getToUserInfo();
 					} else {
 						app.userhead = userInfo.avatarUrl;
 						app.username = userInfo.nickName;
 					}
-					// 获取二维码
-					getQrcodePic(); 
-					// 获取名片样式
-					getCardStyle();
+
+					var bitmap = null;
 					// 保存图片
 					document.getElementById('saveImage').addEventListener('tap', function() {
-						// generateImg('图片保存成功！');
-						subpage.draw( "", function(){
-							message("success");
-						}, function(err){
-							logs(err);
-							message("loser");
-						}, {
-							
-						} );
+						if (mui.os.android) {
+							generateImg('图片保存成功！');
+						} else {
+							var tg = document.getElementById("code-body");
+							var tgw = tg.clientWidth + 10 + 'px';
+							var tgh = tg.clientHeight + 120 + 'px';
+							// logs(tgw);
+							// logs(tgh);
+							// logs(tghtop);
+							// return false;
+							bitmap = new plus.nativeObj.Bitmap('test');
+							// 将webview内容绘制到Bitmap对象中
+							_self.draw(bitmap, function(e) {
+								logs('截屏绘制图片成功');
+								bitmap.save("_doc/" + "imgname" + app.serial + ".jpg", {
+									overwrite: true,
+									quality: 100
+								}, function(i) {
+									plus.gallery.save(i.target);
+									bitmap.clear();
+									message("Success");
+								}, function(e) {
+									message("保存失败！");
+									console.log('保存图片失败：' + JSON.stringify(e));
+								});
+							}, function(e) {
+								console.log('截屏绘制图片失败：' + JSON.stringify(e));
+								message("loser");
+							}, {
+								clip: {
+									top: '132px',
+									left: '28px',
+									width: tgw,
+									height: tgh
+								}
+							});
+						}
+
 					})
+
+					// 获取二维码
+					getQrcodePic();
+					// 获取名片样式
+					getCardStyle();
 					// 设置名片样式
 					mui(".mui-bar").on('tap', '.setting-card', function() {
 						openPage('setting_share_card.html', 'setting_share_card', '#f7f7f7', '');
