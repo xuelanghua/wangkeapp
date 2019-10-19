@@ -10,7 +10,6 @@
 		<link rel="stylesheet" href="../css/dynamics_detail.css">
 		<link rel="stylesheet" href="../css/animate.min.css">
 		<style type="text/css">
-
 			.menu-list,
 			.dynamic-lists-issue {
 				width: 100%;
@@ -68,15 +67,18 @@
 				-ms-user-select: text;
 				user-select: text;
 			}
-			.dynamics-detail-container .dynamics-content ul{
+
+			.dynamics-detail-container .dynamics-content ul {
 				justify-content: flex-start;
 			}
-			.dynamics-detail-container .dynamics-content li{
+
+			.dynamics-detail-container .dynamics-content li {
 				width: 32%;
 				margin-left: 1%;
 				margin-bottom: 0.075rem;
 				background: transparent;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -156,7 +158,7 @@
 			<div class="comment-bar-footer">
 				<!-- 评论 -->
 				<div class="comment-container">
-					<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
+					<textarea id="comment_matter" rows="" v-model="container" cols="" maxlength="200"></textarea>
 					<span class="send-comment">发送</span>
 				</div>
 			</div>
@@ -197,7 +199,8 @@
 					// 全部数据
 					all_datas: {},
 					is_video: 0,
-					targetId: ''
+					targetId: '',
+					container: ''
 				},
 				methods: {
 					// 显示菜单
@@ -320,7 +323,6 @@
 						muiCont.author = data.author;
 						muiCont.is_video = data.is_video;
 						muiCont.targetId = data.user_id;
-
 						// 长按保存到系统相册
 						var urls = data.cover;
 						mui('.mui-content').on('tap', '.preview-img', function() {
@@ -418,31 +420,13 @@
 			}
 			// 发送评论
 			mui(".comment-bar-footer").on("tap", ".send-comment", function() {
-				var conts = document.getElementById("comment_matter").value;
+				var conts = muiCont.container;
 				if (conts == " " || conts.length < 1) {
 					message("评论内容不能为空!");
-					return;
+					return false;
 				}
-				mui.post($ajaxUrl + 'timeline&action=comment', {
-					token: userInfo.token,
-					timeline_id: _tmline_id,
-					content: conts
-				}, function(res) {
-					logs(res);
-					if (res.errno == 0) {
-						var self_comment = {
-							user_id: userInfo.id,
-							content: conts,
-							nickName: userInfo.nickName
-						}
-						document.getElementById("comment_matter").value = "";
-						document.activeElement.blur();
-						muiCont.comment.unshift(self_comment);
-						mask.close();
-						mui('.comment-bar-footer')[0].style.display = "none";
-						message("评论成功");
-					} else {}
-				}, 'json');
+				muiCont.container='';
+				critic(conts);
 			})
 			// 跳转个人动态主页
 			mui('.mui-content').on('tap', '.user-name', function() {
@@ -469,6 +453,28 @@
 					}
 				})
 			})
+			// 评论方法
+			function critic(conts) {
+				mui.post($ajaxUrl + 'timeline&action=comment', {
+					token: userInfo.token,
+					timeline_id: _tmline_id,
+					content: conts
+				}, function(res) {
+					if (res.errno == 0) {
+						var self_comment = {
+							user_id: userInfo.id,
+							content: conts,
+							nickName: userInfo.nickName
+						}
+						muiCont.container = '';
+						document.activeElement.blur();
+						muiCont.comment.unshift(self_comment);
+						mask.close();
+						mui('.comment-bar-footer')[0].style.display = "none";
+						message("评论成功");
+					} else {}
+				}, 'json');
+			}
 		</script>
 	</body>
 

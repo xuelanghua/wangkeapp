@@ -566,7 +566,7 @@
 			<div class="comment-bar-footer">
 				<!-- 评论 -->
 				<div class="comment-container">
-					<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
+					<textarea id="comment_matter" rows="" v-model="container" cols="" maxlength="200"></textarea>
 					<span class="send-comment">评论</span>
 				</div>
 			</div>
@@ -644,7 +644,8 @@
 						last_user: {
 							avatar: ''
 						}
-					}
+					},
+					container:''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -1231,29 +1232,13 @@
 			}
 			// 评论
 			mui(".comment-bar-footer").on("tap", ".send-comment", function() {
-				var conts = document.getElementById("comment_matter").value;
+				var conts = app.container;
 				if (conts == " " || conts.length < 1) {
 					message("评论内容不能为空!");
 					return;
 				}
-				mui.post($ajaxUrl + 'timeline&action=comment', {
-					token: userInfo.token,
-					timeline_id: timeline_id,
-					content: conts
-				}, function(res) {
-					if (res.errno == 0) {
-						var self_comment = {
-							user_id: userInfo.id,
-							content: conts,
-							nickName: userInfo.nickName
-						}
-						app.dynamic[_idx].info.comment.unshift(self_comment)
-						document.getElementById("comment_matter").value = "";
-						document.activeElement.blur();
-						mask.close();
-						mui('.comment-bar-footer')[0].style.display = "none";
-					} else {}
-				}, 'json');
+				app.container="";
+				critic(conts);
 			})
 			// 获取文章分类
 			function getArticleClassify() {
@@ -1326,6 +1311,27 @@
 				console.log('收到消息');
 				getTrendsNum();
 			})
+			// 评论方法
+			function critic(conts) {
+				mui.post($ajaxUrl + 'timeline&action=comment', {
+					token: userInfo.token,
+					timeline_id: timeline_id,
+					content: conts
+				}, function(res) {
+					if (res.errno == 0) {
+						var self_comment = {
+							user_id: userInfo.id,
+							content: conts,
+							nickName: userInfo.nickName
+						}
+						app.dynamic[_idx].info.comment.unshift(self_comment)
+						document.getElementById("comment_matter").value = "";
+						document.activeElement.blur();
+						mask.close();
+						mui('.comment-bar-footer')[0].style.display = "none";
+					} else {}
+				}, 'json');
+			}
 		</script>
 	</body>
 

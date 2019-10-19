@@ -100,14 +100,14 @@
 	</head>
 
 	<body>
-		<footer class="footer mui-bar mui-bar-footer">
-			<!-- 评论 -->
-			<div class="comment-container">
-				<textarea id="comment_matter" rows="" cols="" maxlength="200"></textarea>
-				<span class="send-comment">评论</span>
-			</div>
-		</footer>
 		<div id="mui-content" class="mui-content" v-cloak>
+			<footer class="footer mui-bar mui-bar-footer">
+				<!-- 评论 -->
+				<div class="comment-container">
+					<textarea id="comment_matter" v-model="container" rows="" cols="" maxlength="200"></textarea>
+					<span class="send-comment">评论</span>
+				</div>
+			</footer>
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
 					<div class="swiper-slide" v-for="(banner,index) in slider" :key="index">
@@ -257,7 +257,8 @@
 					current_year: '',
 					// 是否自己
 					is_self: false,
-					void_list: false
+					void_list: false,
+					container:''
 				},
 				methods: {
 					// 显示菜单
@@ -432,28 +433,13 @@
 						});
 						// 评论
 						mui(".mui-bar-footer").on("tap", ".send-comment", function() {
-							var conts = document.getElementById("comment_matter").value;
+							var conts = app.container;
 							if (conts == " " || conts.length < 1) {
 								message("评论内容不能为空!");
 								return;
 							}
-							mui.post($ajaxUrl + 'timeline&action=comment', {
-								token: userInfo.token,
-								timeline_id: timeline_id,
-								content: conts
-							}, function(res) {
-								if (res.errno == 0) {
-									var self_comment = {
-										user_id: userInfo.id,
-										content: conts,
-										nickName: userInfo.nickName
-									}
-									app.spaceList[list_idx].list[_idx].comment.unshift(self_comment);
-									document.getElementById("comment_matter").value = "";
-									document.activeElement.blur();
-									mui('.mui-bar-footer')[0].style.display = "none";
-								} else {}
-							}, 'json');
+							app.container='';
+							critic(conts);
 						})
 
 					})
@@ -671,6 +657,26 @@
 			window.addEventListener("swipedown", function(event) {
 				mask.close();
 			})
+			// 评论方法
+			function critic(conts){
+				mui.post($ajaxUrl + 'timeline&action=comment', {
+					token: userInfo.token,
+					timeline_id: timeline_id,
+					content: conts
+				}, function(res) {
+					if (res.errno == 0) {
+						var self_comment = {
+							user_id: userInfo.id,
+							content: conts,
+							nickName: userInfo.nickName
+						}
+						app.spaceList[list_idx].list[_idx].comment.unshift(self_comment);
+						document.getElementById("comment_matter").value = "";
+						document.activeElement.blur();
+						mui('.mui-bar-footer')[0].style.display = "none";
+					} else {}
+				}, 'json');
+			}
 		</script>
 	</body>
 
