@@ -524,6 +524,7 @@
 						app.username = userInfo.nickName;
 					}
 					// 获取二维码
+					getCardStyle();
 					getQrcodePic();
 					// 设置名片样式
 					if (_self.resultStyle) {
@@ -638,7 +639,38 @@
 				this.months = this.month[idx];
 			}
 		})
-
+		
+		//获取二维码图片
+		// 获取名片样式
+		function getCardStyle() {
+			mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
+				token: userInfo.token,
+				user_id: toUid
+			}, function(res) {
+				if (res.errno == 0) {
+					app.resultStyle = res.data;
+					app.serial = parseInt(res.data.card_type, 10);
+					app.card_text = res.data['card_text_' + res.data.card_type];
+					app.bgimg = res.data['background_image_' + res.data.card_type + '_url'];
+					if (res.data.background_image_1_url.length > 6) {
+						app.bgimg1 = res.data.background_image_1_url;
+					}
+					if (res.data.background_image_2_url.length > 6) {
+						app.bgimg2 = res.data.background_image_2_url;
+					}
+					if (res.data.background_image_3_url.length > 6) {
+						app.bgimg3 = res.data.background_image_3_url;
+					}
+					if (res.data.background_image_4_url.length > 6) {
+						app.bgimg4 = res.data.background_image_4_url;
+					}
+					if (res.data.background_image_5_url.length > 6) {
+						app.bgimg5 = res.data.background_image_5_url;
+					}
+				}
+			}, 'json');
+		}
+		
 		function getToUserInfo() {
 			mui.get($ajaxUrl + 'member', {
 				action: 'get_userinfo_by_id',
