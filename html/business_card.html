@@ -26,18 +26,18 @@
 			}
 
 			.qr-code-body {
-				width: 6.8rem;
+				width: 90%;
 				height: auto;
 				position: relative;
-				border-radius: 0.1rem;
-				margin: 1rem auto 0.5rem;
+				border-radius: 5px;
+				margin: 60px auto 25px;
 				background-size: contain;
 				overflow: hidden;
 				display: flex;
 				flex-direction: column;
 				box-sizing: border-box;
 				background-color: #FFFFFF;
-				padding: 0.15rem;
+				padding: 8px;
 			}
 
 			.operation-section {
@@ -555,47 +555,43 @@
 					}
 
 					var bitmap = null;
+					var save_area = null;
 					// 保存图片
-					document.getElementById('saveImage').addEventListener('tap', function() {
-						if (mui.os.android) {
-							generateImg('图片保存成功！');
-						} else {
-							showload(0);
-							var tg = document.getElementById("code-body");
-							var tgw = tg.clientWidth + 10 + 'px';
-							var tgh = tg.clientHeight + 120 + 'px';
-							// logs(tgw);
-							// logs(tgh);
-							// logs(tghtop);
-							// return false;
-							bitmap = new plus.nativeObj.Bitmap('test');
-							// 将webview内容绘制到Bitmap对象中
-							_self.draw(bitmap, function(e) {
-								logs('截屏绘制图片成功!');
-								bitmap.save("_doc/" + "imgname" + app.serial + ".jpg", {
-									overwrite: true,
-									quality: 100
-								}, function(i) {
-									plus.gallery.save(i.target);
-									bitmap.clear();
-									showload(1,1500);
-									message("图片保存成功！");
-								}, function(e) {
-									message("图片保存失败！");
-									console.log('图片保存失败：' + JSON.stringify(e));
+					mui(".mui-content").on("tap", "#saveImage", function() {
+						var img = document.getElementById("code-body");
+						console.log(img.clientHeight);
+						var wht = img.clientHeight + "px";
+						var save_area = plus.webview.create("business_card_sub_page.html", "business_card_sub_page", {
+							backButtonAutoControl: "close",
+							background: "transparent",
+							left: "5%",
+							top: "132px",
+							width: "90%",
+							height: wht,
+							scrollIndicator: "none"
+						}, {
+							serial: app.serial,
+							resultStyle: app.resultStyle
+						});
+						save_area.show("none", 300, function() {
+							mui.later(function() {
+								mui.fire(plus.webview.getWebviewById('business_card_sub_page'), 'clip', {
+									serial: app.serial,
+									resultStyle: app.resultStyle
 								});
-							}, function(e) {
-								console.log('截屏绘制图片失败：' + JSON.stringify(e));
-								message("loser");
-							}, {
-								clip: {
-									top: '132px',
-									left: '28px',
-									width: tgw,
-									height: tgh
-								}
-							});
-						}
+							}, 1000)
+						}, {
+
+						});
+						// if (mui.os.android) {
+						// 	generateImg('图片保存成功！');
+						// } else {
+						// 	// 搬这里
+						// 	}, function(e) {
+						// 		console.log('截屏绘制图片失败：' + JSON.stringify(e));
+						// 		message("loser");
+						// 	});
+						// }
 					})
 
 					// 获取二维码

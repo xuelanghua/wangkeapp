@@ -14,30 +14,28 @@
 			body {
 				height: 100%;
 				width: 100%;
-				background-color: #2889FF;
-				padding-bottom: 0.5rem;
+				background-color: #FFFFFF;
 			}
 
 			.mui-content {
 				padding: 0;
 				min-height: 100%;
 				box-sizing: border-box;
-				background-color: #2889FF;
 			}
 
 			.qr-code-body {
-				width: 6.8rem;
+				width: 100%;
 				height: auto;
 				position: relative;
-				border-radius: 0.1rem;
-				margin: 1rem auto 0.5rem;
+				border-radius: 5px;
+				margin: 0;
 				background-size: contain;
 				overflow: hidden;
 				display: flex;
 				flex-direction: column;
 				box-sizing: border-box;
 				background-color: #FFFFFF;
-				padding: 0.15rem;
+				padding: 8px;
 			}
 
 			.operation-section {
@@ -321,9 +319,11 @@
 				width: 3.4rem;
 				color: #FFFFFF;
 			}
-			.theme4 .theme4-qrimg-cont{
+
+			.theme4 .theme4-qrimg-cont {
 				margin-bottom: 10px;
 			}
+
 			[v-cloak] {
 				display: none;
 				transition: all 0.25 ease-in-out;
@@ -341,11 +341,8 @@
 		</script>
 	</head>
 
-	<body>
+	<body class="main-container">
 		<div class="mui-content" id="mui-content" v-cloak>
-			<div class="change" style="position: absolute;top: 60px;left: 44%;color: #FFFFFF;">
-				点击切换
-			</div>
 			<div class="team-qr-code">
 				<div id="code-body" class="qr-code-body">
 					<!-- 默认主题 -->
@@ -455,12 +452,7 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="operation-section mui-clearfix">
-					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
-					<button type="button" id="shareImg" class="mui-btn">分享二维码</button>
-				</div> -->
 			</div>
-			<!-- <img src="" id="#down1"> -->
 		</div>
 	</body>
 	<script src="../js/mui.js"></script>
@@ -510,35 +502,11 @@
 				years: ''
 			},
 			mounted: function() {
-				mui('.mui-content').on('tap', '.change', function() {
-					if (app.serial < 5) {
-						app.serial += 1;
-						app.card_text = app.resultStyle['card_text_' + app.serial];
-						app.bgimg = app.resultStyle['background_image_' + app.serial + '_url'];
-					} else {
-						app.serial = 0;
-					}
-					// message(app.serial);
-					// this.innerText = app.changetext[app.serial];
-					app.bgimg = app['bgimg' + app.serial];
-				})
-				mui.init({
-					swipeBack: true,
-					beforeback: function() {
-						var view = plus.webview.currentWebview().opener();
-						if (view.id == "qrcode_setting") {
-							setStatusBar('#2289ff', 'light');
-						}
-					}
-				});
 				var imgPath = "";
 				mui.plusReady(function() {
-					var ws = plus.webview.currentWebview();
-					// if (!ws.toUid || ws.toUid == userInfo.id) {
-					// 	document.querySelector(".setting-card").style.display = "flex";
-					// }
-					if (ws.toUid) {
-						toUid = ws.toUid;
+					var _self = plus.webview.currentWebview();
+					if (_self.toUid) {
+						toUid = _self.toUid;
 						getToUserInfo();
 					} else {
 						app.userhead = userInfo.avatarUrl;
@@ -546,68 +514,59 @@
 					}
 					// 获取二维码
 					getQrcodePic();
-					// 获取名片样式
-					getCardStyle();
-					// 保存图片
-					// document.getElementById('saveImage').addEventListener('tap', function() {
-					// 	generateImg('图片保存成功！');
-					// })
 					// 设置名片样式
-					// mui(".mui-bar").on('tap', '.setting-card', function() {
-					// 	openPage('setting_share_card.html', 'setting_share_card', '#f7f7f7', '');
-					// })
-					// 分享
-					// document.getElementById('shareImg').addEventListener('tap', function() {
-					// 	generateImg(false);
-					// })
+					if(_self.resultStyle){
+						var res=_self.resultStyle;
+						app.serial = _self.serial;
+						app.card_text = res['card_text_' + app.serial];
+						app.bgimg = res['background_image_' + app.serial + '_url'];
+						if (res.background_image_1_url.length > 6) {
+							app.bgimg1 = res.background_image_1_url;
+						}
+						if (res.background_image_2_url.length > 6) {
+							app.bgimg2 = res.background_image_2_url;
+						}
+						if (res.background_image_3_url.length > 6) {
+							app.bgimg3 = res.background_image_3_url;
+						}
+						if (res.background_image_4_url.length > 6) {
+							app.bgimg4 = res.background_image_4_url;
+						}
+						if (res.background_image_5_url.length > 6) {
+							app.bgimg5 = res.background_image_5_url;
+						}
+					}
+					// 截图方法
+					var bitmap = null;
+					window.addEventListener('clip', function(e) {
+						showload(0);
+						app.serial = e.detail.serial;
+						bitmap = new plus.nativeObj.Bitmap('test');
+						// 将webview内容绘制到Bitmap对象中
+						mui.later(function(){
+							_self.draw(bitmap, function(e) {
+								bitmap.save("_doc/" + "imgname" + app.serial + ".jpg", {
+									overwrite: true,
+									quality: 100
+								}, function(i) {
+									plus.gallery.save(i.target);
+									bitmap.clear(); 
+									message("图片保存成功！");
+									showload(1);
+									_self.close();
+								}, function(e) {
+									message("图片保存失败！");
+									showload(1);
+									_self.close();
+								});
+							}, function(e) {
+								message("loser");
+								showload(1);
+								_self.close();
+							}); 
+						},1000)
+					})
 				})
-				// 生成二维码图片
-				function generateImg(tips) {
-					showload(0);
-					html2canvas(document.getElementById("code-body"), {
-						useCORS: true,
-					}).then(function(canvas) {
-						var imgUrl = canvas.toDataURL("image/jpeg", 1);
-						baseImgFile(app.serial + 'codeImg', imgUrl, 100, function(i) {
-							imgPath = i.target;
-							if (tips) {
-								plus.gallery.save(i.target);
-								message(tips);
-							} else {
-								shareQrImg();
-							}
-							showload(1);
-						})
-					});
-				}
-				// 分享二维码
-				function shareQrImg() {
-					plus.share.getServices(function(list) {
-						for (var i = 0; i < list.length; i++) {
-							if (list[i].authenticated) {
-								shares = list[i];
-							}
-						}
-						if (shares != undefined) {
-							var msg = {
-								type: 'image',
-								pictures: [imgPath], //这里的pictures是要分享的图片 该图片放在项目根目录下
-								extra: {
-									scene: "WXSceneSession"
-								}
-							};
-							shares.send(msg, function(success) {
-								message("分享成功!");
-								imgPath = '';
-							}, function(error) {
-								imgPath = '';
-								console.log(JSON.stringify(error))
-							});
-						}
-					}, function(e) {
-						alert("获取分享服务列表失败：" + e.message);
-					});
-				}
 				//获取二维码图片
 				function getQrcodePic() {
 					showload(0);
@@ -620,8 +579,6 @@
 							var type = res.data.type;
 							qrurl = res.data.url;
 							app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-							// app.qrpath = $ajaxUrl + 'userqrcode&action=make_qrcode&token=' + userInfo.token + '&url=' + res.data.url;
-							// document.getElementById('qr-img').setAttribute('src', url);
 							if (type == 'redpacket') {
 								app.description = '扫二维码领红包';
 								if (res.data.share_status == 1 && toUid != userInfo.id) {
@@ -638,7 +595,6 @@
 								showload(1);
 							}, 500)
 						} else {
-							// message(res.message);
 							setTimeout(function() {
 								mui.back();
 							}, 2000)
@@ -661,10 +617,6 @@
 						}
 					}, 'json');
 				}
-				// 监听名片更改
-				window.addEventListener('changeCard', function() {
-					getCardStyle();
-				}, false);
 				// 获取当前时间给样式五
 				this.days = formatDate('d', '');
 				this.years = formatDate('y', '');
@@ -674,37 +626,35 @@
 			}
 		})
 		// 获取名片样式
-		function getCardStyle() {
-			mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
-				token: userInfo.token,
-				user_id: toUid
-			}, function(res) {
-				// logs(res);
-				if (res.errno == 0) {
-					app.resultStyle = res.data;
-					app.serial = parseInt(res.data.card_type, 10);
-					app.card_text = res.data['card_text_' + res.data.card_type];
-					app.bgimg = res.data['background_image_' + res.data.card_type + '_url'];
-					// app['bgimg'+app.serial]=app['bgimg'+app.serial];
-					if (res.data.background_image_1_url.length > 6) {
-						app.bgimg1 = res.data.background_image_1_url;
-					}
-					if (res.data.background_image_2_url.length > 6) {
-						app.bgimg2 = res.data.background_image_2_url;
-					}
-					if (res.data.background_image_3_url.length > 6) {
-						app.bgimg3 = res.data.background_image_3_url;
-					}
-					if (res.data.background_image_4_url.length > 6) {
-						app.bgimg4 = res.data.background_image_4_url;
-					}
-					if (res.data.background_image_5_url.length > 6) {
-						app.bgimg5 = res.data.background_image_5_url;
-					}
-				}
-			}, 'json');
-		}
-
+		// function getCardStyle(idx) {
+		// 	mui.post($ajaxUrl + 'userqrcode&action=setting_info', {
+		// 		token: userInfo.token,
+		// 		user_id: toUid
+		// 	}, function(res) {
+		// 		// logs(res);
+		// 		if (res.errno == 0) {
+		// 			app.resultStyle = res.data;
+		// 			app.serial = parseInt(res.data.card_type, 10);
+		// 			app.card_text = res.data['card_text_' + res.data.card_type];
+		// 			app.bgimg = res.data['background_image_' + res.data.card_type + '_url'];
+		// 			if (res.data.background_image_1_url.length > 6) {
+		// 				app.bgimg1 = res.data.background_image_1_url;
+		// 			}
+		// 			if (res.data.background_image_2_url.length > 6) {
+		// 				app.bgimg2 = res.data.background_image_2_url;
+		// 			}
+		// 			if (res.data.background_image_3_url.length > 6) {
+		// 				app.bgimg3 = res.data.background_image_3_url;
+		// 			}
+		// 			if (res.data.background_image_4_url.length > 6) {
+		// 				app.bgimg4 = res.data.background_image_4_url;
+		// 			}
+		// 			if (res.data.background_image_5_url.length > 6) {
+		// 				app.bgimg5 = res.data.background_image_5_url;
+		// 			}
+		// 		}
+		// 	}, 'json');
+		// }
 		function getToUserInfo() {
 			mui.get($ajaxUrl + 'member', {
 				action: 'get_userinfo_by_id',
