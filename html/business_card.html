@@ -556,39 +556,34 @@
 					var save_area = null;
 					// 保存图片
 					mui(".mui-content").on("tap", "#saveImage", function() {
-						var img = document.getElementById("code-body");
-						var wht = img.clientHeight + "px";
-						save_area = plus.webview.create("business_card_sub_page.html", "business_card_sub_page", {
-							backButtonAutoControl: "close",
-							background: "transparent",
-							left: "5%",
-							top: "132px",
-							width: "90%",
-							height: wht,
-							scrollIndicator: "none"
-						}, {
-							serial: app.serial,
-							resultStyle: app.resultStyle
-						});
-						save_area.show("none", 300, function() {
-							mui.later(function() {
-								mui.fire(plus.webview.getWebviewById('business_card_sub_page'), 'clip', {
-									serial: app.serial,
-									resultStyle: app.resultStyle
-								});
-							}, 1000)
-						}, {
+						if (mui.os.android) {
+							generateImg('图片保存成功！');
+						} else {
+							var img = document.getElementById("code-body");
+							var wht = img.clientHeight + "px";
+							save_area = plus.webview.create("business_card_sub_page.html", "business_card_sub_page", {
+								backButtonAutoControl: "close",
+								background: "transparent",
+								left: "5%",
+								top: "132px",
+								width: "90%",
+								height: wht,
+								scrollIndicator: "none"
+							}, {
+								serial: app.serial,
+								resultStyle: app.resultStyle
+							});
+							save_area.show("none", 300, function() {
+								mui.later(function() {
+									mui.fire(plus.webview.getWebviewById('business_card_sub_page'), 'clip', {
+										serial: app.serial,
+										resultStyle: app.resultStyle
+									});
+								}, 1000)
+							}, {
 
-						});
-						// if (mui.os.android) {
-						// 	generateImg('图片保存成功！');
-						// } else {
-						// 	// 搬这里
-						// 	}, function(e) {
-						// 		console.log('截屏绘制图片失败：' + JSON.stringify(e));
-						// 		message("loser");
-						// 	});
-						// }
+							});
+						}
 					})
 					// 获取二维码
 					getQrcodePic();
