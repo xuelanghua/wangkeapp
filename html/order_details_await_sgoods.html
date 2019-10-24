@@ -640,7 +640,7 @@
 							</li>
 							<li class="second-section">
 								<span>快递单号</span>
-								<input placeholder="请填写快递单号" v-model="express_num" type="number">
+								<input placeholder="请填写快递单号" v-model="express_num" type="text">
 								<div class="scan-btn">
 									<img src="../image/icon/order_details_await_sgoods_02.png">
 								</div>
@@ -846,13 +846,8 @@
 
 			// 监听扫码内容
 			window.addEventListener('doit', function(e) {
-				// 转数字
-				var cont = parseInt(e.detail.content);
-				// 判断是否为数字
-				function myIsNaN(value) {
-					return typeof value === 'number' && !isNaN(value);
-				}
-				if (myIsNaN(cont)) {
+				var cont = e.detail.content;
+				if (cont != '') {
 					app.express_num = cont;
 					message("扫码成功！");
 				} else {
@@ -860,6 +855,20 @@
 						plus.nativeUI.alert("扫码有误，请重新扫码！");
 					}, 500);
 				}
+				// // 转数字
+				// var cont = parseInt(e.detail.content);
+				// // 判断是否为数字
+				// function myIsNaN(value) {
+				// 	return typeof value === 'number' && !isNaN(value);
+				// }
+				// if (myIsNaN(cont)) {
+				// 	app.express_num = cont;
+				// 	message("扫码成功！");
+				// } else {
+				// 	setTimeout(function() {
+				// 		plus.nativeUI.alert("扫码有误，请重新扫码！");
+				// 	}, 500);
+				// }
 			}, false);
 			// 详情资料
 			function getDetailData() {
