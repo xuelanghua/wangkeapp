@@ -751,27 +751,96 @@
 			})
 			// 确认分享
 			mui(".mui-content").on("tap", "#affirm_btn", function() {
+				// if (!muiCont.share_title) {
+				// 	message("请输入分享标题！");
+				// 	return false;
+				// }
+				// mask.close();
+				// var avatar = muiCont.friendData.avatar || '../image/user_default.jpg'
+				// if (muiCont.contName == '') {
+				// 	message('用户名为空，暂时无法分享');
+				// } else {
+				// 	shareToMiniprogram({
+				// 		title: muiCont.share_title,
+				// 		content: '旺天下之客,让营销更简单!',
+				// 		thumbs: [avatar],
+				// 		miniProgram: {
+				// 			id: 'gh_9fa5f42ab939',
+				// 			path: '/longbing_card/pages/index/index?to_uid=' + fid + '&is_qr=1&currentTabBar=toCard',
+				// 			webUrl: 'https://app.wangkeapp.cn/'
+				// 		}
+				// 	}, 'miniProgram');
+				// }
+				shareFriend();
+			})
+			function shareFriend() {
 				if (!muiCont.share_title) {
 					message("请输入分享标题！");
 					return false;
 				}
 				mask.close();
-				var avatar = muiCont.friendData.avatar || '../image/user_default.jpg'
-				if (muiCont.contName == '') {
-					message('用户名为空，暂时无法分享');
-				} else {
+				// var img=muiCont.friendData.avatar || '../image/user_default.jpg'; 
+				var img="https://cdn.wangkeapp.cn/images/6/2019/10/HDpujSUS788pS2U8YyUssjruPJjsl3.jpg";
+				var imgs = img.substring(img.lastIndexOf("/")); 
+				var sd_path = "_downloads" + imgs;
+				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
 					shareToMiniprogram({
 						title: muiCont.share_title,
 						content: '旺天下之客,让营销更简单!',
-						thumbs: [avatar],
+						thumbs: [sd_path],
 						miniProgram: {
 							id: 'gh_9fa5f42ab939',
 							path: '/longbing_card/pages/index/index?to_uid=' + fid + '&is_qr=1&currentTabBar=toCard',
 							webUrl: 'https://app.wangkeapp.cn/'
 						}
 					}, 'miniProgram');
-				}
-			})
+				}, function(e) {
+					showload(0, 0, '图片处理中...', "rgba(0,0,0,0.5)");
+					var imgpath = '';
+					var imgDtask = plus.downloader.createDownload(img, {
+						method: 'GET'
+					}, function(d, status) {
+						if (status == 200) {
+							plus.zip.compressImage({
+									src: d.filename,
+									dst: d.filename,
+									overwrite: true,
+									width: '500px',
+									height: 'auto',
+									format: 'jpg',
+									quality: 90,
+									clip: {
+										width: "500px",
+										height: "400px"
+									}
+								},
+								function(e) {
+									imgpath = e.target;
+									if (imgpath) {
+										showload(1);
+										shareToMiniprogram({
+											title: muiCont.share_title,
+											content: '旺天下之客,让营销更简单!',
+											thumbs: [imgpath],
+											miniProgram: {
+												id: 'gh_9fa5f42ab939',
+												path: '/longbing_card/pages/index/index?to_uid=' + fid + '&is_qr=1&currentTabBar=toCard',
+												webUrl: 'https://app.wangkeapp.cn/'
+											}
+										}, 'miniProgram');
+									}
+								},
+								function(error) {
+									showload(1);
+									logs("图片压缩失败！");
+								});
+						} else {
+							logs('保存失败')
+						}
+					});
+					imgDtask.start()
+				});
+			}
 			mui(".affirm-share-card")[0].addEventListener("touchmove", mui.preventDefault);
 		</script>
 	</body>

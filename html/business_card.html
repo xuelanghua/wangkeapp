@@ -556,38 +556,38 @@
 					// 保存图片
 					mui(".mui-content").on("tap", "#saveImage", function() {
 						// if (mui.os.android) {
-						// 	generateImg('图片保存成功！');
+							generateImg('图片保存成功！');
 						// } else {
-							var qrbody=document.getElementById("code-body");
-							var qrleft=qrbody.offsetLeft;
-							var qrtop=qrbody.scrollTop;
-							var qrheight=qrbody.offsetHeight;
-							console.log(qrtop); 
+							// var qrbody=document.getElementById("code-body");
+							// var qrleft=qrbody.offsetLeft;
+							// var qrtop=qrbody.scrollTop;
+							// var qrheight=qrbody.offsetHeight;
+							// console.log(qrtop); 
 							// return false;
-							bitmap = new plus.nativeObj.Bitmap('test');
-							_self.draw(bitmap, function(e) {
-								bitmap.save("_doc/" + "imgname" + app.serial + ".jpg", {
-									overwrite: true,
-									quality: 100,
-									clip:{
-										top:"131px", 
-										left:qrleft, 
-										width:"90%",
-										height:qrheight 
-									}
-								}, function(i) {
-									plus.gallery.save(i.target);
-									bitmap.clear();
-									message("图片保存成功！");
-									showload(1);
-								}, function(e) {
-									message("图片保存失败！");
-									showload(1);
-								});
-							}, function(e) {
-								message("loser");
-								showload(1);
-							});
+							// bitmap = new plus.nativeObj.Bitmap('test');
+							// _self.draw(bitmap, function(e) {
+							// 	bitmap.save("_doc/" + "imgname" + app.serial + ".jpg", {
+							// 		overwrite: true,
+							// 		quality: 100,
+							// 		clip:{
+							// 			top:"131px", 
+							// 			left:qrleft, 
+							// 			width:"90%",
+							// 			height:qrheight 
+							// 		}
+							// 	}, function(i) {
+							// 		plus.gallery.save(i.target);
+							// 		bitmap.clear();
+							// 		message("图片保存成功！");
+							// 		showload(1);
+							// 	}, function(e) {
+							// 		message("图片保存失败！");
+							// 		showload(1);
+							// 	});
+							// }, function(e) {
+							// 	message("loser");
+							// 	showload(1);
+							// });
 						// }
 					})
 					// 获取二维码
@@ -608,18 +608,28 @@
 					showload(0);
 					html2canvas(document.getElementById("code-body"), {
 						useCORS: true,
-					}).then(function(canvas) {
-						var imgUrl = canvas.toDataURL("image/jpeg", 1);
-						baseImgFile(app.serial + 'codeImg', imgUrl, 100, function(i) {
-							imgPath = i.target;
-							if (tips) {
-								plus.gallery.save(i.target);
-								message(tips);
-							} else {
-								shareQrImg();
-							}
+					}).then(function(canvas) { 
+						logs(canvas);
+						// var imgUrl = s.toDataURL("image/jpeg", 1);
+						var imgUrls  = canvas.toBase64Data();
+						var imgUrl  = new plus.nativeObj.Bitmap();
+						logs(imgUrl);
+						imgUrl.loadBase64Data(imgUrls, function() {
+							imgUrl.save("_doc/" + "imgname" + ".jpg", {
+								overwrite: true,
+								quality: quality
+							}, function(i) {
+								imgUrl.clear();
+								showload(1);
+							}, function(e) {
+								showload(1);
+								message("保存失败！");
+								console.log('保存图片失败：' + JSON.stringify(e));
+							});
+						}, function(e) {
 							showload(1);
-						})
+							console.log('加载图片失败：' + JSON.stringify(e));
+						});
 					});
 				}
 				// 分享二维码
