@@ -30,7 +30,7 @@
 				height: auto;
 				position: relative;
 				border-radius: 5px;
-				margin: 60px auto 25px;
+				margin: 30px auto 25px;
 				background-size: contain;
 				overflow: hidden;
 				display: flex;
@@ -42,7 +42,7 @@
 
 			.operation-section {
 				width: 100%;
-				padding: 0 0.53rem 0.5rem;
+				padding: 0 0.53rem;
 				display: flex;
 			}
 
@@ -325,7 +325,11 @@
 			.theme4 .theme4-qrimg-cont {
 				margin-bottom: 10px;
 			}
-
+			.tips-container{
+				color: #FFFFFF;
+				font-size: 12px;
+				padding-top: 12%;
+			}
 			[v-cloak] {
 				display: none;
 				transition: all 0.25 ease-in-out;
@@ -352,11 +356,11 @@
 			</div>
 		</header>
 		<div class="mui-content" id="mui-content" v-cloak>
-			<div class="change" style="position: absolute;top: 60px;left: 44%;color: #FFFFFF;">
+			<!-- <div class="change" style="position: absolute;top: 60px;left: 44%;color: #FFFFFF;">
 				点击切换
-			</div>
+			</div> -->
 			<div class="team-qr-code">
-				<div id="code-body" class="qr-code-body">
+				<div id="code-body" class="qr-code-body" @tap="changeTheme">
 					<!-- 默认主题 -->
 					<div v-show="serial==0" class="default-theme-container">
 						<div class="qrcode-section">
@@ -468,6 +472,7 @@
 					<button type="button" id="saveImage" class="mui-btn mui-btn-outlined">保存到手机</button>
 					<button type="button" id="shareImg" class="mui-btn">分享二维码</button>
 				</div>
+				<p class="tips-container mui-text-center">Tips：点击主题进行切换。</p>
 			</div>
 			<!-- <img src="" id="#down1"> -->
 		</div>
@@ -519,16 +524,16 @@
 				years: ''
 			},
 			mounted: function() {
-				mui('.mui-content').on('tap', '.change', function() {
-					if (app.serial < 5) {
-						app.serial += 1;
-						app.card_text = app.resultStyle['card_text_' + app.serial];
-						app.bgimg = app.resultStyle['background_image_' + app.serial + '_url'];
-					} else {
-						app.serial = 0;
-					}
-					app.bgimg = app['bgimg' + app.serial];
-				})
+				// mui('.mui-content').on('tap', '.change', function() {
+				// 	if (app.serial < 5) {
+				// 		app.serial += 1;
+				// 		app.card_text = app.resultStyle['card_text_' + app.serial];
+				// 		app.bgimg = app.resultStyle['background_image_' + app.serial + '_url'];
+				// 	} else {
+				// 		app.serial = 0;
+				// 	}
+				// 	app.bgimg = app['bgimg' + app.serial];
+				// })
 				mui.init({
 					swipeBack: true,
 					beforeback: function() {
@@ -757,6 +762,16 @@
 					})
 				}
 			}, 'json');
+		}
+		function changeTheme(){
+			if (app.serial < 5) {
+				app.serial += 1;
+				app.card_text = app.resultStyle['card_text_' + app.serial];
+				app.bgimg = app.resultStyle['background_image_' + app.serial + '_url'];
+			} else {
+				app.serial = 0;
+			}
+			app.bgimg = app['bgimg' + app.serial];
 		}
 	</script>
 </html>
