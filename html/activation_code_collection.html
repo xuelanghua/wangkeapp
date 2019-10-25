@@ -11,7 +11,6 @@
 			.mui-content {
 				height: 100vh;
 			}
-
 			[v-cloak] {
 				display: none;
 			}
@@ -35,19 +34,16 @@
 		<div id="collections" class="mui-content" v-cloak>
 			<div class="collection-code-container">
 				<h3>旺旺</h3>
-				<h2>{{ wang }}</h2>
+				<h2>{{wang}}</h2>
 				<ul class="mui-table-view">
-					<!-- <li class="mui-table-view-cell" v-if="groupId>4">
-						<span>服务中心（个）</span><input type="number" placeholder="0" v-model="codeList[4].number">
+					<li class="mui-table-view-cell" v-if="groupInfo.activation_code_level>=1">
+						<span>创客版（个）</span><input type="number" placeholder="0" v-model="codeList[1].number">
 					</li>
-					<li class="mui-table-view-cell" v-if="groupId>3">
-						<span>服务站（个）</span><input type="number" placeholder="0" v-model="codeList[3].number">
-					</li> -->
-					<li class="mui-table-view-cell" v-if="groupId>2">
+					<li class="mui-table-view-cell" v-if="groupInfo.activation_code_level>=2">
 						<span>企业版（个）</span><input type="number" placeholder="0" v-model="codeList[2].number">
 					</li>
-					<li class="mui-table-view-cell" v-if="groupId>1">
-						<span>个人版（个）</span><input type="number" placeholder="0" v-model="codeList[1].number">
+					<li class="mui-table-view-cell" v-if="groupInfo.activation_code_level>=3">
+						<span>运营商（个）</span><input type="number" placeholder="0" v-model="codeList[3].number">
 					</li>
 				</ul>
 				<span class="next">下一步</span>
@@ -65,8 +61,9 @@
 			var app = new Vue({
 				el: "#collections",
 				data: {
-					wang: 0,
-					groupId: '',
+					wang: '',
+					memberInfo: {},
+					groupInfo: {},
 					codeList: {
 						"1": {
 							id: 1,
@@ -85,21 +82,18 @@
 							number: '',
 							wang: 0,
 							name: ''
-						},
-						"4": {
-							id: 4,
-							number: '',
-							wang: 0,
-							name: '',
 						}
-					},
-					group: []
+					}
 				},
 				mounted: function() {
 					mui.plusReady(function() {
 						getMemberInfo();
 						getGroupList();
-						getMemberInfo();
+						
+						window.addEventListener('activateSuccess', function() {
+							getMemberInfo();
+						})
+						
 						mui(".mui-content").on('tap', '.next', function() {
 							document.activeElement.blur();
 							var flag = false;
@@ -109,21 +103,17 @@
 								}
 							})
 							if (!flag) {
-								message('无效兑换', 'center');
+								message('无效兑换!', 'center');
 								return;
 							}
 							if (app.wang < app.totalWang) {
-								message('旺旺不足', 'center');
+								message('旺旺不足!', 'center');
 								return;
 							}
 							openPage('activation_code_activation.html', 'activation_code_activation', '#f7f7f7', {
 								codeList: app.codeList,
 								totalWang: app.totalWang
 							});
-						})
-
-						window.addEventListener('activateSuccess', function() {
-							getMemberInfo();
 						})
 					});
 				},
@@ -143,7 +133,8 @@
 					action: 'detail',
 					token: userInfo.token
 				}, function(res) {
-					app.groupId = res.data.group_id;
+					app.gmemberInfo = res.data;
+					app.groupInfo = res.data.group;
 					app.wang = res.data.wang;
 				}, 'json');
 			}
@@ -151,32 +142,19 @@
 			//获取会员等级列表
 			function getGroupList() {
 				mui.post($ajaxUrl + 'member', {
-					action: 'group_info',
+					action: 'group_list',
 					token: userInfo.token
 				}, function(res) {
-					// logs(res);
-					app.groupList = res.data
-					mui.each(app.groupList, function(index, item) {
-						if (item.id < 5) {
+					logs(res);
+					var groupList = res.data;
+					mui.each(groupList, function(index, item) {
+						if (item.id < 4) {
 							app.codeList[item.id]["wang"] = item.activation_fee;
 							app.codeList[item.id]["name"] = item.name;
 						}
 					})
 				}, 'json');
 			}
-
-			// mui.post($ajaxUrl + 'member&action=get_code', {
-			// 	token: userInfo.token,
-			// 	code: lists
-			// }, function(res) {
-			// 	logs(res);
-			// 	if (res.errno) {
-			// 		message(res.message);
-			// 	} else {
-			// 		message('领取成功！');
-			// 		mui.back();
-			// 	}
-			// }, 'json');
 		</script>
 	</body>
 </html>

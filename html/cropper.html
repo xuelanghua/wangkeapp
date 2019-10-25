@@ -51,9 +51,9 @@
 	<body>
 		<div class="mui-content">
 			<div id="imgBox">
-				<img id="userImage_id" src="../image/cropper_bg.png" />
+				<img id="image_container" src="../image/cropper_bg.png" />
 			</div>
-			<div class='image-select'>
+			<div class="image-select">
 				<div id="cancel">取消</div>
 				<div id="confirm">完成</div>
 			</div>
@@ -92,7 +92,7 @@
 
 				//确定裁切
 				document.getElementById("confirm").addEventListener("tap", function(e) {
-					var dataURL = $("#userImage_id").cropper("getCroppedCanvas", {
+					var dataURL = $("#image_container").cropper("getCroppedCanvas", {
 						width: imgw,
 						height: imgh,
 						minWidth: 600,
@@ -121,7 +121,7 @@
 			function initImageCropper() {
 				var clientWidth = document.body.clientWidth;
 				clientWidth = clientWidth || 300;
-				$("#userImage_id").cropper({
+				$("#image_container").cropper({
 					viewMode: 2, //暂不清楚什么功能
 					dragMode: "move", //设置移动图片、重新绘制选图区域(crop:在裁剪框外拖动鼠标会生成一个新的裁剪框, move:在裁剪框外拖动鼠标会移动原图, none:什么也不做)
 					aspectRatio: ratio, //裁剪框的纵横比，默认是不限制的。例如1:1的头像就写1,16:9可写成16 / 9。,
@@ -178,12 +178,12 @@
 
 			//确定选择图片
 			function loadImage(path) {
-				var img = document.getElementById("userImage_id");
+				var img = document.getElementById("image_container");
 				img.src = path;
 				// 				if (window.imageDisable == true) {
-				// 					$("#userImage_id").cropper("enable");
+				// 					$("#image_container").cropper("enable");
 				// 				}
-				// 				$("#userImage_id").cropper("replace", path);
+				// 				$("#image_container").cropper("replace", path);
 			}
 
 			function uploadFile(file) {

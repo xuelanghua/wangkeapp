@@ -181,6 +181,9 @@
 				box-shadow: 0 0 5px rgba(0, 0, 0, .36);
 				
 			}
+			.friends-detail-container .first-card-container .user-qr-code-red {
+				background-color: rgba(0, 0, 0, 0.4)!important;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -207,7 +210,7 @@
 			<div v-if="cardType=='cardType2'" class="first-card-container">
 				<div class="card">
 					<img class="user-head-img" :src="friendData.avatar||'../image/user_default.jpg'">
-					<div class="user-qr-code mui-pull-right">
+					<div class="user-qr-code mui-pull-right" :class="friendData.redpacket_status ? 'user-qr-code-red' : ''">
 						<img v-if="friendData.redpacket_status" src="../image/redpacket_code.png">
 						<img v-else src="../image/Marketing-code-01.png">
 					</div>

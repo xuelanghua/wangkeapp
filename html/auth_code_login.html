@@ -215,11 +215,11 @@
 					loginPage.close();
 					localStorage.setItem('user', JSON.stringify(res.data));
 					localStorage.setItem('lastLoginTime', new Date().getTime());
-					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'loginSuccess');
 					var curr = plus.webview.currentWebview();
+					curr.hide();
+					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'loginSuccess');
 					plus.navigator.setStatusBarStyle('dark');
 					setTimeout(function() {
-						curr.hide();
 						curr.close();
 					}, 1200);
 				} else {

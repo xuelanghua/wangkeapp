@@ -255,7 +255,6 @@
 					}, function(res) {
 						logs(res);
 						if (res.errno == 0) {
-							// message('申请成功');
 							document.querySelector('.pop-title').innerHTML = '申请成功, 等待打款确认!';
 							document.querySelector('.pop-button').innerHTML = '返回!';
 							mui('.mui-popover').popover('show', document.getElementById("openPopover"));
@@ -296,13 +295,8 @@
 							mui.fire(plus.webview.getWebviewById('maker'), 'activateSuccess');
 							mui.fire(plus.webview.getWebviewById('agent'), 'activateSuccess');
 							mui('.mui-popover').popover('show', document.getElementById("openPopover"));
-							// plus.nativeUI.alert("兑换成功！", function() {
-							// 	plus.navigator.setStatusBarStyle('dark');
-							// 	mui.back();
-							// });
 						}, function(error) {
 							console.log(JSON.stringify(error));
-							// plus.nativeUI.alert("支付失败：" + error.code);
 							var message = error.message;
 							var regexp = /(\-)?\d+/;
 							var code = message.match(regexp);
