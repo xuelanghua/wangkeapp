@@ -128,8 +128,9 @@
 				font-size: 0.3rem;
 			}
 			.mui-input-group .mui-input-row{
-				padding: 0.26rem 0;
 				height: auto;
+				padding: 0.26rem 0;
+				padding-right: 3px;
 			}
 			.mui-radio input[type=radio]{
 				position: relative;
@@ -170,40 +171,28 @@
 				<h1 class="mui-title">成为代理</h1>
 			</header>
 			<div class="mui-content">
-				<div class="mini-card" v-if="rank==1">
-					<div class="mini-card-header">
+				<div class="mini-card">
+					<div class="mini-card-header" v-if="groupId==1">
 						<img src="../image/icon/maker-price-sign-1.png">
 						<h2>代理权益</h2>
 						<div class="equity-items">赠送10个创客版×399元/个=3990元</div>
-						<div class="equity-items  last">注：以上方式可自由组合</div>
+						<div class="equity-items  last">注：赠送名额将以旺旺的形式发放</div>
 					</div>
-					<div class="mini-card-body">
-						<p class="mui-text-center">代理费</p>
-						<h3 class="mui-text-center">&yen;100</h3>
-						<form class="mui-input-group">
-							<div class="mui-input-row mui-radio">
-								<label><img src="../image/WeChat.png"><span>微信</span></label>
-								<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
-							</div>
-							<button type="button" class="confirm-pay">确认支付</button>
-						</form>
-					</div>
-				</div>
-				<div class="mini-card" v-else>
-					<div class="mini-card-header">
+					<div class="mini-card-header" v-else>
 						<img src="../image/icon/maker-price-sign-2.png">
 						<h2>代理权益</h2>
 						<div class="equity-items">赠送50个创客版×399元/个=19950元</div>
 						<div class="equity-items">赠送10个企业版×9999元/个=99990元</div>
-						<div class="equity-items  last">注：以上方式可自由组合</div>
+						<div class="equity-items  last">注：兑换时可创客版和企业版可自由组合</div>
+						<div class="equity-items  last">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;赠送名额将以旺旺的形式发放</div>
 					</div>
 					<div class="mini-card-body">
 						<p class="mui-text-center">代理费</p>
-						<h3 class="mui-text-center">&yen;1000</h3>
+						<h3 class="mui-text-center">&yen;{{fee}}</h3>
 						<form class="mui-input-group">
 							<div class="mui-input-row mui-radio">
 								<label><img src="../image/WeChat.png"><span>微信</span></label>
-								<input class="choice-tag" name="radio1" type="radio" checked="checked" value="wxpay">
+								<input class="choice-tag" name="pay_type" type="radio" checked="checked" value="wxpay">
 							</div>
 							<button type="button" class="confirm-pay">确认支付</button>
 						</form>
@@ -219,7 +208,8 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					rank: 2
+					groupId: 1,
+					fee: 100
 				},
 				created: function() {
 					// 初始化字体大小
@@ -234,10 +224,10 @@
 
 				},
 				mounted: function() {
-					var _self = this;
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						// _self.rank = self.rank;
+						app.groupId = self.groupId;
+						app.fee = self.fee;
 					})
 				}
 			})

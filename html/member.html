@@ -25,6 +25,11 @@
 				margin: -250px auto 0;
 				text-align: center;
 			}
+			.member_chart .member-card{
+				width: 331px;
+				height: auto;
+				margin: 0 auto;
+			}
 			.member_chart img{
 				width: 350px;
 			}
@@ -235,7 +240,33 @@
 				font-size: 26px;
 				color: #DDDDDD;
 			}
+			
+			.as-agent-section{
+				display: flex;
+				width: 2.26rem;
+				height: 0.4rem;
+				margin-top: 30px;
+				margin-bottom: 10px;
+				align-items: center;
+				background: url("../image/icon/maker-price-bg.jpg")center center no-repeat;
+				background-size: 100% 100%;
+				justify-content: space-between;
+				color: #FFFFFF;
+				border-radius: 0.2rem;
+				padding: 0 0.12rem 0 0.2rem;
+				font-size: 10px;
+			}
 		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+		
+			// 初始化字体大小结束
+		</script>
 	</head>
 
 	<body>
@@ -248,9 +279,17 @@
 		<div id="mui-content" class="mui-content" v-cloak>
 			<div class="member"></div>
 			<div class="member_chart">
-				<div style="width: 331px;height: auto;margin: 0 auto;">
+				<div class="member-card">
 					<div class="member_title">{{memberInfo.group_name}}
 						<span v-if="memberInfo.recommend_name!=''" class="referrers">推荐人：{{memberInfo.recommend_name}}</span>
+					</div>
+					<div v-if="memberInfo.is_agency==0" class="as-agent-section">
+						<span>
+							&yen;100
+						</span>
+						<span>
+							成为代理
+						</span>
 					</div>
 					<div class="member_time">
 						<span>到期：</span>

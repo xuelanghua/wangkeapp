@@ -71,7 +71,7 @@
 				display: inline-flex;
 				border-radius: 0.17rem;
 				background-color: #f0dba2;
-				width: 1rem;
+				width: 0.7rem;
 				height: 0.35rem;
 				border:0.01rem solid #856c22;
 				margin-left: 0.2rem;
@@ -319,6 +319,8 @@
 				width: 2.26rem;
 				height: 0.4rem;
 				display: flex;
+				margin-top: 30px;
+				margin-bottom: 10px;
 				align-items: center;
 				background: url("../image/icon/maker-price-bg.jpg")center center no-repeat;
 				background-size: 100% 100%;
@@ -352,11 +354,11 @@
 			<div class="maker-head">
 				<div class="first-section">
 					<h2>{{memberInfo.group_name}}<span v-if="memberInfo.recommend_name!=''" class="referrers">推荐人：{{memberInfo.recommend_name}}</span></h2>
-					<div class="wangwang">
+					<div v-if="memberInfo.is_agency==1" class="wangwang">
 						<span class="icon-wangwang"></span>
 						<span>旺旺</span>{{memberInfo.wang || 0}}
 					</div>
-					<div class="as-agent-section">
+					<div v-if="memberInfo.is_agency==0" class="as-agent-section">
 						<span>
 							&yen;1000
 						</span>
@@ -366,10 +368,10 @@
 					</div>
 					<div class="card-bottom">
 						<div>
-							<span>到期：{{memberInfo.expire_time}}</span><span class="left-btn" id="renew">续费/升级</span>
+							<span>到期：{{memberInfo.expire_time}}</span><span class="left-btn" id="renew">续费</span>
 						</div>
-						<span class="right-btn" v-if="memberInfo.activation_code!='0/0'" @tap="goCodeList">激活码:{{memberInfo.activation_code}}</span>
-						<span class="right-btn" v-else @tap="exchangeCode">激活码</span>
+						<span class="right-btn" v-if="memberInfo.activation_code!='0/0'&&memberInfo.is_agency==1" @tap="goCodeList">激活码:{{memberInfo.activation_code}}</span>
+						<span class="right-btn" v-if="memberInfo.activation_code=='0/0'&&memberInfo.is_agency==1" @tap="exchangeCode">激活码</span>
 					</div>
 				</div>
 				<div class="bonus-section">
@@ -521,7 +523,8 @@
 						activation_code: '',
 						service_award: 0,
 						recommended_award: 0,
-						wang: '0'
+						wang: '0',
+						is_agency: 1
 					},
 					fansLists: []
 				},
@@ -602,6 +605,7 @@
 				mui.post($ajaxUrl + 'member&action=member_info', {
 					token: userInfo.token
 				}, function(res) {
+					logs(res);
 					if (res.errno) {
 						logs(res.message);
 					} else {
@@ -616,7 +620,7 @@
 					token: userInfo.token,
 				}, function(res) {
 					if (res.errno == 0) {
-						logs(res);
+						// logs(res);
 						app.fans_info = res.data;
 					} else {
 						// 请求成功
@@ -625,7 +629,7 @@
 			}
 			
 			mui(".mui-content").on("tap",".as-agent-section",function(){
-				openPage("as_agent.html","as_agent","#f7f7f7");
+				openPage("as_agent.html","as_agent","#f7f7f7", {groupId: 2, fee: 1000});
 			})
 		</script>
 	</body>
