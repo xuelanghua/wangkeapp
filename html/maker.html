@@ -315,6 +315,19 @@
 				font-size: 26px;
 				color: #DDDDDD;
 			}
+			.as-agent-section{
+				width: 2.26rem;
+				height: 0.4rem;
+				display: flex;
+				align-items: center;
+				background: url("../image/icon/maker-price-bg.jpg")center center no-repeat;
+				background-size: 100% 100%;
+				justify-content: space-between;
+				color: #FFFFFF;
+				border-radius: 0.2rem;
+				padding: 0 0.12rem 0 0.2rem;
+				font-size: 10px;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -339,10 +352,21 @@
 			<div class="maker-head">
 				<div class="first-section">
 					<h2>{{memberInfo.group_name}}<span v-if="memberInfo.recommend_name!=''" class="referrers">推荐人：{{memberInfo.recommend_name}}</span></h2>
-					<div class="wangwang"><span class="icon-wangwang"></span><span>旺旺</span>{{memberInfo.wang || 0}}</div>
+					<div class="wangwang">
+						<span class="icon-wangwang"></span>
+						<span>旺旺</span>{{memberInfo.wang || 0}}
+					</div>
+					<div class="as-agent-section">
+						<span>
+							&yen;1000
+						</span>
+						<span>
+							成为代理
+						</span>
+					</div>
 					<div class="card-bottom">
 						<div>
-							<span>到期：{{memberInfo.expire_time}}</span><span class="left-btn" id="renew">续费</span>
+							<span>到期：{{memberInfo.expire_time}}</span><span class="left-btn" id="renew">续费/升级</span>
 						</div>
 						<span class="right-btn" v-if="memberInfo.activation_code!='0/0'" @tap="goCodeList">激活码:{{memberInfo.activation_code}}</span>
 						<span class="right-btn" v-else @tap="exchangeCode">激活码</span>
@@ -599,6 +623,10 @@
 					}
 				}, 'json');
 			}
+			
+			mui(".mui-content").on("tap",".as-agent-section",function(){
+				openPage("as_agent.html","as_agent","#f7f7f7");
+			})
 		</script>
 	</body>
 
