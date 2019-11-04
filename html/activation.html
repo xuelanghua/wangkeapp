@@ -532,11 +532,11 @@
 							}, function(res) {
 								logs(res);
 								if (res.errno == 0) {
-									plus.nativeUI.alert('申请成功, 等待审核!', function() {
+									mui.alert('申请成功, 等待审核!', '', '', function() {
 										plus.webview.close('activation');
-									})
+									}, 'div');
 								} else {
-									plus.nativeUI.alert(res.message);
+									mui.alert(res.message, '', '', '', 'div')
 								}
 								showload(1);
 							}, 'json');
@@ -638,10 +638,10 @@
 								mui.fire(plus.webview.getWebviewById('user'), 'activationSuccess');
 								mui.fire(plus.webview.getWebviewById('media'), 'activationSuccess');
 							}, 3000)
-							plus.nativeUI.alert("激活成功！", function() {
+							mui.alert("激活成功！", '', '', function() {
 								plus.navigator.setStatusBarStyle('dark');
-								mui.back();
-							});
+								plus.webview.currentWebview().close();
+							}, 'div');
 						}, function(error) {
 							console.log(JSON.stringify(error));
 							// plus.nativeUI.alert("支付失败：" + error.code);
@@ -653,10 +653,10 @@
 							} else {
 								code = "-9";
 							}
-							plus.nativeUI.alert("支付失败：" + wxpayErrorMessage(code));
+							mui.alert("支付失败：" + wxpayErrorMessage(code), '', '', '', 'div');
 						});
 					} else {
-						plus.nativeUI.alert(res.message, null, '提示');
+						mui.alert(res.message, '', '', '', 'div');
 					}
 				}, 'json')
 			}

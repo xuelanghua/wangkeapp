@@ -723,7 +723,7 @@
 				<!-- 轮播 -->
 				<div class="swiper-container banner-container" id="banner_swiper">
 					<div class="swiper-wrapper">
-						<div class="swiper-slide" v-for="(b,i) in banner" :key="i">
+						<div class="swiper-slide" v-for="(b,i) in banner" :key="i" @tap="openLinkPage(b.link)">
 							<img :src="b.pic">
 						</div>
 					</div>
@@ -815,7 +815,7 @@
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/swiper.min.js"></script>
-	<script src="../js/Zepto.min.js"></script>
+	<!-- <script src="../js/Zepto.min.js"></script> -->
 	<script src="../js/vue.min.js"></script>
 	<script>
 		var mask = mui.createMask(function() {
@@ -1212,5 +1212,25 @@
 		mui('.mui-bar').on('tap', '.mui-title', function() {
 			openPage('home_search.html', 'home_search', '#ededed');
 		})
+		
+		function openLinkPage(link) {
+			if (link != '') {
+				mui.get($ajaxUrl + 'util', {
+					action: 'url_title',
+					url: link
+				}, function(res) {
+					plus.webview.close('scan', 'none');
+					fnOpenWin('webview.html', 'webview', {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, {
+						title: res.data,
+						statusBarStyle: 'light',
+						url: link
+					}, 'slide-in-right');
+				}, 'json');
+			}
+		}
 	</script>
 </html>

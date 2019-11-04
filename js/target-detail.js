@@ -80,7 +80,7 @@ $(function() {
 //获取歌曲链接并插入dom中
 function getSong() {
 	var audio = document.getElementById("audio");
-	audio.src = "https://wangke.ynhost.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3";
+	audio.src = "https://app.wangkeapp.cn/attachment/images/longbing_card_upload/2/5810912501639961.mp3";
 	// audio.loop = true;
 	playCotrol();
 }

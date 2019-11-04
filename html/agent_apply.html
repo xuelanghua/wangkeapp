@@ -160,8 +160,7 @@
 			</form>
 			<div class="mui-content-padded" style="padding-bottom: 25px;">
 				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="submit">确定</button>
-				<p style="text-align: center;" class="mui-input-row mui-checkbox"><input id="agree" name="checkbox" value="" type="checkbox">开通即视为同意<span
-					 id="agreement">《旺客-用户协议》</span></p>
+				<p style="text-align: center;" class="mui-input-row mui-checkbox"><input id="agree" name="checkbox" value="" type="checkbox">开通即视为同意<span id="agreement">《旺客-用户协议》</span></p>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -247,16 +246,15 @@
 								area_id: areaId, //0
 								recommend_phone: vm.recommendPhone //推荐人手机号
 							}, function(res) {
-								logs(res);
 								if (res.errno == 0) {
-									plus.nativeUI.alert('申请成功, 等待审核!', function() {
+									mui.alert('申请成功, 等待审核!', '', '', function() {
 										plus.webview.close('agent_apply');
 										plus.webview.close('activation');
-									})
+									}, 'div');
 								} else {
-									plus.nativeUI.alert(res.message, function() {
+									mui.alert(res.message, '', '', function() {
 										window.location.reload();
-									})
+									}, 'div');
 								}
 								showload(1);
 							}, 'json');
