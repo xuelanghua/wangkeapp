@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mui-content {
+				position: relative;
+				width: 100%;
+				min-height: 100vh;
+				padding: 0;
+				margin: 0;
+				display: flex;
+				flex-direction: column;
+				background-color: #FFFFFF;
+			}
+
+			.skip-btn {
+				position: absolute;
+				right: 20px;
+				top: 50px;
+				height: auto;
+				border-radius: 36px;
+				background-color: #000;
+				border: none;
+				line-height: 1;
+				font-size: 12px;
+				margin: 0;
+				padding: 5px 12px 3px;
+				opacity: 0.6;
+			}
+
+			.skip-btn:enabled:active {
+				background-color: #000;
+				border: none;
+			}
+
+			.ad-img {
+				width: 100%;
+				max-height: 100%;
+				object-fit: cover;
+			}
+
+			.copy-right {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-grow: 1;
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				padding-bottom: 10px;
+			}
+
+			.copy-right img {
+				width: 160px;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<div class="mui-content">
+				<img class="ad-img" :src="image">
+				<div class="copy-right">
+					<img src="../image/sakhja.png">
+				</div>
+				<button type="button" class="mui-btn mui-btn-blue skip-btn">跳过{{timmer||''}}</button>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					timmer: 10,
+					image: "",
+					link_type: 1,
+					pageTitle:""
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				mounted: function() {
+					var _this = this;
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						_this.image = self.data.image;
+						_this.link_type = self.data.link_type;
+						_this.path=self.data.link;
+						_this.pageTitle=self.data.title;
+						// logs(self.data);
+						mui(".mui-content").on("tap", ".skip-btn", function() {
+							closeSelf();
+						})
+
+						function closeSelf() {
+							self.close("fade-out");
+						}
+						var countDown = setInterval(function() {
+							_this.timmer -= 1;
+							if (_this.timmer <= 0) {
+								_this.timmer = 0;
+								clearInterval(countDown);
+								closeSelf();
+							}
+						}, 1000);
+						// 广告跳转
+						mui(".mui-content").on("tap", ".ad-img", function() {
+							var path=_this.data
+							if (_this.link_type == 1) {
+								closeSelf();
+								fnOpenWin('webview.html', 'webview', {
+									statusbar: {
+										background: '#FFFFFF'
+									}
+								}, {
+									title: _this.pageTitle,
+									statusBarStyle: 'dark',
+									url: _this.path
+								}, 'slide-in-right');
+							} else {
+								plus.share.getServices(function(s) {
+									var shareService = {};
+									for (var i in s) {
+										var t = s[i];
+										shareService[t.id] = t;
+									}
+									// 更新分享列表
+									var ss = shareService['weixin'];
+									ss ? ss.launchMiniProgram({
+										id: 'gh_9fa5f42ab939',
+										path: _this.path,
+										type: '0', //0-正式版； 1-测试版； 2-体验版
+										webUrl: 'https://app.wangkeapp.cn'
+									}) : message('打开小程序失败!');
+								}, function(e) {
+									message('当前环境不支持打开小程序!')
+								});
+								launchMiniprogram("1214", "45");
+							}
+						})
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>

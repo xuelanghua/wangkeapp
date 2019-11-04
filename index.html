@@ -119,11 +119,11 @@
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			//当前激活选项
-			var current = '';
-			var activeTab = 0;
-			var activeName = 'home';
-
-			var userInfo = getUserInfo();
+			var current = '',
+				activeTab = 0,
+				activeName = 'home',
+				_ad = {},
+				userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#index",
 				data: {
@@ -166,7 +166,7 @@
 									background: "#2289FF"
 								}
 							}
-						}, 
+						},
 						{
 							title: '商脉',
 							url: "html/business_pulse.html",
@@ -185,7 +185,7 @@
 									background: "#FFFFFF"
 								}
 							}
-						}, 
+						},
 						{
 							title: '发现',
 							url: "html/self_media.html",
@@ -236,6 +236,10 @@
 						}
 					]
 				},
+				created() {
+					var oad = localStorage.getItem('ad');
+					_ad = JSON.parse(oad)||"";
+				},
 				methods: {
 					changeTab: function(idx, _nm) {
 						if (idx == activeTab) {
@@ -254,6 +258,22 @@
 					mui.init();
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
+						if (_ad.image) {
+							var advertising = plus.webview.create("./html/advertising.html", "advertising", {
+								background: "#ffffff",
+								top: "0px",
+								bottom: "0px",
+								width: "100%",
+								height: "100%",
+								zindex: 1045,
+							}, {
+								data: _ad
+							});
+							advertising.addEventListener('loaded', function() {
+								advertising.show('none', 100);
+							}, false);
+						}
+
 						checkUpdate();
 						pushInit();
 						eventInit();
@@ -282,6 +302,15 @@
 						}
 						plus.navigator.setStatusBarStyle("dark");
 						plus.navigator.setStatusBarBackground('#FFFFFF');
+						mui.post($ajaxUrl + 'appadv', {
+							token: userInfo.token,
+							user_id: ''
+						}, function(res) {
+							// logs(res);
+							if (res.errno == 0) {
+								localStorage.setItem('ad', JSON.stringify(res.data));
+							}
+						}, 'json');
 					});
 				}
 			})
@@ -521,8 +550,8 @@
 			}
 			// 监听动态消息
 			window.addEventListener('trendsContRefresh', function(event) {
-				console.log('首页接收到通知！');
-				logs(event.detail);
+				// console.log('首页接收到通知！');
+				// logs(event.detail);
 				app.trends_cont = event.detail.total;
 			})
 		</script>
