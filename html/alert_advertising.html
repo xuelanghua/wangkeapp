@@ -103,15 +103,21 @@
 								return false;
 							}
 							if (_this.link_type == 1) {
-								fnOpenWin('webview.html', 'webview', {
-									statusbar: {
-										background: '#FFFFFF'
-									}
-								}, {
-									title: _this.pageTitle,
-									statusBarStyle: 'dark',
+								mui.get($ajaxUrl + 'util', {
+									action: 'url_title',
 									url: _this.path
-								}, 'slide-in-right');
+								}, function(res) {
+									closeSelf();
+									fnOpenWin('webview.html', 'webview', {
+										statusbar: {
+											background: '#FFF'
+										}
+									}, {
+										title: res.data,
+										statusBarStyle: 'dark',
+										url: _this.path
+									}, 'fade-in');
+								}, 'json');
 							} else {
 								plus.share.getServices(function(s) {
 									var shareService = {};

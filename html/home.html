@@ -629,7 +629,7 @@
 			.banner-container {
 				position: relative;
 				width: 100%;
-				height: 200px;
+				height: 220px;
 				overflow: hidden;
 			}
 
@@ -723,7 +723,7 @@
 				<!-- 轮播 -->
 				<div class="swiper-container banner-container" id="banner_swiper">
 					<div class="swiper-wrapper">
-						<div class="swiper-slide" v-for="(b,i) in banner" :key="i" @tap="openLinkPage(b.link)">
+						<div class="swiper-slide" v-for="(b,i) in banner" :key="i" @tap="openLinkPage(b)">
 							<img :src="b.pic">
 						</div>
 					</div>
@@ -1172,7 +1172,6 @@
 			mui.post($ajaxUrl + 'notice', {
 				action: 'list'
 			}, function(res) {
-				logs(res);
 				if (res.errno == 0) {
 					notice = res.data;
 					noticeLen = notice.length;
@@ -1183,10 +1182,10 @@
 					document.querySelector(".Notice .swiper-wrapper").innerHTML = str;
 					if (noticeLen > 1) {
 						scrollInit();
-					} 
+					}
 				} else {
-					document.querySelector(".Notice").style.background="#FF0000";
-					document.querySelector(".Notice").style.display="none";// !important
+					document.querySelector(".Notice").style.background = "#FF0000";
+					document.querySelector(".Notice").style.display = "none"; // !important
 				}
 			}, 'json')
 		}
@@ -1238,23 +1237,49 @@
 			openPage('home_search.html', 'home_search', '#ededed');
 		})
 
-		function openLinkPage(link) {
-			if (link != '') {
+		function openLinkPage(o) {
+			var link = o.link,
+				link_type = o.link_type;
+			logs("触发了方法");
+			logs(link);
+			if (link == '') {
+				logs("没有链接")
+				return false;
+			}
+			if (link_type == 1) {
 				mui.get($ajaxUrl + 'util', {
 					action: 'url_title',
 					url: link
 				}, function(res) {
-					plus.webview.close('scan', 'none');
 					fnOpenWin('webview.html', 'webview', {
 						statusbar: {
 							background: '#FFF'
 						}
 					}, {
 						title: res.data,
-						statusBarStyle: 'light',
+						statusBarStyle: 'dark',
 						url: link
-					}, 'slide-in-right');
+					}, 'fade-in');
 				}, 'json');
+			} else {
+				plus.share.getServices(function(s) {
+					var shareService = {};
+					for (var i in s) {
+						var t = s[i];
+						shareService[t.id] = t;
+					}
+					// 更新分享列表
+					var ss = shareService['weixin'];
+					closeSelf();
+					ss ? ss.launchMiniProgram({
+						id: 'gh_9fa5f42ab939',
+						path: link,
+						type: '0', //0-正式版； 1-测试版； 2-体验版
+						webUrl: 'https://app.wangkeapp.cn'
+					}) : message('打开小程序失败!');
+				}, function(e) {
+					message('当前环境不支持打开小程序!')
+				});
 			}
 		}
 	</script>
