@@ -254,30 +254,8 @@
 					mui.init();
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
-						mui.post($ajaxUrl + 'appadv', {
-							position: 1
-						}, function(res) {
-							_ad = res.data;
-							if (_ad.image) {
-								var advertising = plus.webview.create("./html/advertising.html", "advertising", {
-									background: "#ffffff",
-									top: "0px",
-									bottom: "0px",
-									width: "100%",
-									height: "100%",
-									zindex: 1045,
-								}, {
-									data: _ad
-								});
-								advertising.show('none');
-								// advertising.addEventListener('loaded', function() {
-								// 	advertising.show('none', 100);
-								// }, false);
-							}
-						}, 'json');
-						
-						checkUpdate();
 						pushInit();
+						checkUpdate();
 						eventInit();
 						var lastLoginTime = localStorage.getItem('lastLoginTime');
 						var currentTime = new Date().getTime();
@@ -294,12 +272,12 @@
 							var timer = setInterval(function() {
 								getUnreadMessage();
 							}, 3000)
-							showload(0);
+							// showload(0);
 							initIndexPage();
 							bindClientId();
-							setTimeout(function() {
-								showload(1);
-							}, 20000)
+							// setTimeout(function() {
+							// 	showload(1);
+							// }, 20000)
 						}
 						plus.navigator.setStatusBarStyle("dark");
 						plus.navigator.setStatusBarBackground('#FFFFFF');
@@ -312,51 +290,9 @@
 					plus.webview.create(app.subpages[i].url, app.subpages[i].ids, app.subpages[i].styles);
 				}
 				plus.webview.show('home', 'none', 200);
-				// mui.get($ajaxUrl + 'util', {
-				// 	action: 'business_setting',
-				// }, function(res) {
-				// 	if (res.data.business_status == 0) {
-				// 		mui.each(app.subpages, function(index, item) {
-				// 			if (item.ids == 'business_pulse') {
-				// 				app.subpages.splice(index, 1);
-				// 			}
-				// 		})
-				// 		setTimeout(function() {
-				// 			for (var i = 0; i < app.subpages.length; i++) {
-				// 				plus.webview.create(app.subpages[i].url, app.subpages[i].ids, app.subpages[i].styles);
-				// 			}
-				// 			plus.webview.show('home', 'none', 200);
-				// 		}, 200)
-				// 	} else {
-				// 		for (var i = 0; i < app.subpages.length; i++) {
-				// 			plus.webview.create(app.subpages[i].url, app.subpages[i].ids, app.subpages[i].styles);
-				// 		}
-				// 		plus.webview.show('home', 'none', 200);
-				// 	}
-				// }, 'json');
 			}
 
 			function eventInit() {
-				//自定义事件，模拟点击“首页选项卡”
-				// document.addEventListener('gohome', function() {
-				// 	var defaultTab = document.getElementById("home");
-				// 	//模拟首页点击
-				// 	mui.trigger(defaultTab, 'tap');
-				// 	//切换选项卡高亮 
-				// 	current = document.querySelector(".mui-bar-tab>.mui-tab-item.self-active");
-				// 	if (defaultTab !== current) {
-				// 		current.classList.remove('self-active');
-				// 		defaultTab.classList.add('self-active');
-				// 	}
-				// });
-
-				//自定义事件监听-首页新增客户点击
-				// window.addEventListener('newCustomer', function() {
-				// 	mui.trigger(document.getElementById('chat'), 'tap');
-				// 	document.getElementById('home').classList.remove('self-active');
-				// 	document.getElementById('chat').classList.add('self-active');
-				// })
-
 				window.addEventListener('changeMy', function() {
 					mui.trigger(document.getElementById('user.html'), 'tap');
 				})
@@ -514,36 +450,103 @@
 			//检查APP更新
 			function checkUpdate() {
 				//获取系统设置
-				mui.get($ajaxUrl + 'util', {
-					action: 'system_setting',
-				}, function(res) {
-					var systemSetting = res.data;
-					getAppInfo(function(e) {
-						var currentVersion = parseInt(e.version.split('.').join(''));
-						var newVersion = parseInt(systemSetting.app_version.split('.').join(''));
-						if (currentVersion < newVersion && systemSetting.prompt_update == 1) {
-							if (systemSetting.forced_updating == 1) {
-								// plus.nativeUI.alert('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content +
-								// '.此版本为有重要升级或向下不兼容,必须升级!',
-								// function(e) {
-								downWgt();
-								// })
+				mui.ajax($ajaxUrl + 'util',{
+					data: {
+						action: 'system_setting',
+					},
+					async: false,
+					dataType: 'json',//服务器返回json格式数据
+					type: 'get',//HTTP请求类型
+					timeout: 10000,//超时时间设置为10秒；
+					success: function(res){
+						var systemSetting = res.data;
+						getAppInfo(function(e) {
+							var currentVersion = parseInt(e.version.split('.').join(''));
+							var newVersion = parseInt(systemSetting.app_version.split('.').join(''));
+							if (currentVersion < newVersion && systemSetting.prompt_update == 1) {
+								if (systemSetting.forced_updating == 1) {
+									// plus.nativeUI.alert('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content +
+									// '.此版本为有重要升级或向下不兼容,必须升级!',
+									// function(e) {
+									downWgt();
+									// })
+								} else {
+									plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?',
+										function(e) {
+											if (e.index == 0) {
+												downWgt();
+											}
+										})
+								}
 							} else {
-								plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?',
-									function(e) {
-										if (e.index == 0) {
-											downWgt();
-										}
-									})
+								getAdvList();
 							}
-						}
-					})
-				}, 'json');
+						})
+					},
+					error: function(xhr,type,errorThrown){
+						console.log(type);
+					}
+				});
+				// mui.get($ajaxUrl + 'util', {
+				// 	action: 'system_setting',
+				// }, function(res) {
+				// 	var systemSetting = res.data;
+				// 	getAppInfo(function(e) {
+				// 		var currentVersion = parseInt(e.version.split('.').join(''));
+				// 		var newVersion = parseInt(systemSetting.app_version.split('.').join(''));
+				// 		if (currentVersion < newVersion && systemSetting.prompt_update == 1) {
+				// 			if (systemSetting.forced_updating == 1) {
+				// 				// plus.nativeUI.alert('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content +
+				// 				// '.此版本为有重要升级或向下不兼容,必须升级!',
+				// 				// function(e) {
+				// 				downWgt();
+				// 				// })
+				// 			} else {
+				// 				plus.nativeUI.confirm('APP有更新:版本号' + newVersion + ';更新内容:' + systemSetting.app_update_content + ',是否更新?',
+				// 					function(e) {
+				// 						if (e.index == 0) {
+				// 							downWgt();
+				// 						}
+				// 					})
+				// 			}
+				// 		}
+				// 	})
+				// }, 'json');
 			}
+			
+			function getAdvList() {
+				mui.ajax($ajaxUrl + 'appadv',{
+					data: {
+						position: 1,
+					},
+					async: false,
+					dataType: 'json',//服务器返回json格式数据
+					type: 'get',//HTTP请求类型
+					timeout: 10000,//超时时间设置为10秒；
+					success: function(res){
+						_ad = res.data;
+						if (_ad.image) {
+							var advertising = plus.webview.create("./html/advertising.html", "advertising", {
+								background: "#ffffff",
+								top: "0px",
+								bottom: "0px",
+								width: "100%",
+								height: "100%",
+								zindex: 1045,
+							}, {
+								data: _ad
+							});
+							advertising.show('none');
+						}
+					},
+					error: function(xhr,type,errorThrown){
+						console.log(type);
+					}
+				});
+			}
+			
 			// 监听动态消息
 			window.addEventListener('trendsContRefresh', function(event) {
-				// console.log('首页接收到通知！');
-				// logs(event.detail);
 				app.trends_cont = event.detail.total;
 			})
 		</script>
