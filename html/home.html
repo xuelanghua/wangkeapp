@@ -611,19 +611,22 @@
 
 			.Notice .swiper-container {
 				height: 40px;
+				max-width: 300px;
 				flex-grow: 1;
 			}
 
 			.Notice .swiper-container .swiper-slide {
 				height: 40px;
-				display: flex;
 				align-items: center;
 				font-size: 12px;
 				color: #333333;
+				width: 100%;
+				line-height: 40px;
 			}
 
 			.Notice .notice-cont {
 				width: 100%;
+				overflow: hidden;
 			}
 
 			.banner-container {
@@ -713,7 +716,7 @@
 					</div>
 					<div id="notice_container" class="notice-cont">
 						<div class="swiper-container" id="notice_swiper">
-							<div class="swiper-wrapper mui-ellipsis"></div>
+							<div class="swiper-wrapper"></div>
 						</div>
 					</div>
 					<div class="notice-more">
@@ -1177,7 +1180,7 @@
 					noticeLen = notice.length;
 					var str = '';
 					for (var i = 0; i < noticeLen; i++) {
-						str += '<div class="swiper-slide" data-idx=' + i + '>' + notice[i].title + '</div>';
+						str += '<div class="swiper-slide mui-ellipsis" data-idx=' + i + '>' + notice[i].title + '</div>';
 					}
 					document.querySelector(".Notice .swiper-wrapper").innerHTML = str;
 					if (noticeLen > 1) {
