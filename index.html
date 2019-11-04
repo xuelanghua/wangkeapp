@@ -236,10 +236,6 @@
 						}
 					]
 				},
-				created() {
-					var oad = localStorage.getItem('ad');
-					_ad = JSON.parse(oad)||"";
-				},
 				methods: {
 					changeTab: function(idx, _nm) {
 						if (idx == activeTab) {
@@ -258,22 +254,28 @@
 					mui.init();
 					//创建子页面，首个选项卡页面显示，其它均隐藏；
 					mui.plusReady(function() {
-						if (_ad.image) {
-							var advertising = plus.webview.create("./html/advertising.html", "advertising", {
-								background: "#ffffff",
-								top: "0px",
-								bottom: "0px",
-								width: "100%",
-								height: "100%",
-								zindex: 1045,
-							}, {
-								data: _ad
-							});
-							advertising.addEventListener('loaded', function() {
-								advertising.show('none', 100);
-							}, false);
-						}
-
+						mui.post($ajaxUrl + 'appadv', {
+							position: 1
+						}, function(res) {
+							_ad = res.data;
+							if (_ad.image) {
+								var advertising = plus.webview.create("./html/advertising.html", "advertising", {
+									background: "#ffffff",
+									top: "0px",
+									bottom: "0px",
+									width: "100%",
+									height: "100%",
+									zindex: 1045,
+								}, {
+									data: _ad
+								});
+								advertising.show('none');
+								// advertising.addEventListener('loaded', function() {
+								// 	advertising.show('none', 100);
+								// }, false);
+							}
+						}, 'json');
+						
 						checkUpdate();
 						pushInit();
 						eventInit();
@@ -292,7 +294,6 @@
 							var timer = setInterval(function() {
 								getUnreadMessage();
 							}, 3000)
-							// plus.nativeUI.showWaiting();
 							showload(0);
 							initIndexPage();
 							bindClientId();
@@ -302,15 +303,6 @@
 						}
 						plus.navigator.setStatusBarStyle("dark");
 						plus.navigator.setStatusBarBackground('#FFFFFF');
-						mui.post($ajaxUrl + 'appadv', {
-							token: userInfo.token,
-							user_id: ''
-						}, function(res) {
-							// logs(res);
-							if (res.errno == 0) {
-								localStorage.setItem('ad', JSON.stringify(res.data));
-							}
-						}, 'json');
 					});
 				}
 			})

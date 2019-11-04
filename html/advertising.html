@@ -85,10 +85,10 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					timmer: 10,
+					timmer: 3,
 					image: "",
 					link_type: 1,
-					pageTitle:""
+					pageTitle: ""
 				},
 				created: function() {
 					// 初始化字体大小
@@ -105,8 +105,8 @@
 						var self = plus.webview.currentWebview();
 						_this.image = self.data.image;
 						_this.link_type = self.data.link_type;
-						_this.path=self.data.link;
-						_this.pageTitle=self.data.title;
+						_this.pageTitle = self.data.title;
+						_this.path = self.data.link;
 						// logs(self.data);
 						mui(".mui-content").on("tap", ".skip-btn", function() {
 							closeSelf();
@@ -117,30 +117,35 @@
 						}
 						var countDown = setInterval(function() {
 							_this.timmer -= 1;
-							if (_this.timmer <= 0) {
+							if (_this.timmer < 0) {
 								_this.timmer = 0;
 								clearInterval(countDown);
 								closeSelf();
 							}
-						}, 1000);
+						}, 1500);
 						// 广告跳转
 						mui(".mui-content").on("tap", ".ad-img", function() {
-							plus.webview.hide( "alert_advertising");
-							plus.webview.close( "alert_advertising");
-							closeSelf();
-							if(_this.path==''){
+							if (_this.path == '') {
 								return false;
 							}
+							plus.webview.hide("alert_advertising");
+							plus.webview.close("alert_advertising");
 							if (_this.link_type == 1) {
-								fnOpenWin('webview.html', 'webview', {
-									statusbar: {
-										background: '#FFFFFF'
-									}
-								}, {
-									title: _this.pageTitle,
-									statusBarStyle: 'dark',
+								mui.get($ajaxUrl + 'util', {
+									action: 'url_title',
 									url: _this.path
-								}, 'slide-in-right');
+								}, function(res) {
+									closeSelf();
+									fnOpenWin('webview.html', 'webview', {
+										statusbar: {
+											background: '#FFF'
+										}
+									}, {
+										title: res.data,
+										statusBarStyle: 'light',
+										url:_this.path
+									}, 'fade-in');
+								}, 'json');
 							} else {
 								plus.share.getServices(function(s) {
 									var shareService = {};
@@ -150,6 +155,7 @@
 									}
 									// 更新分享列表
 									var ss = shareService['weixin'];
+									closeSelf();
 									ss ? ss.launchMiniProgram({
 										id: 'gh_9fa5f42ab939',
 										path: _this.path,
@@ -159,7 +165,6 @@
 								}, function(e) {
 									message('当前环境不支持打开小程序!')
 								});
-								launchMiniprogram("1214", "45");
 							}
 						})
 					})
