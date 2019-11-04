@@ -9,6 +9,9 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
+			body{
+				height: 100%;
+			}
 			.mui-content {
 				position: relative;
 				width: 100%;
@@ -18,6 +21,7 @@
 				display: flex;
 				flex-direction: column;
 				background-color: #FFFFFF;
+				overflow: hidden;
 			}
 
 			.skip-btn {
@@ -42,22 +46,25 @@
 
 			.ad-img {
 				width: 100%;
-				max-height: 100%;
+				height: 80vh;
+				overflow: hidden;
+			}
+
+			.ad-img img {
+				width: 100%;
+				height: auto;
 				object-fit: cover;
 			}
 
 			.copy-right {
+				height: 20vh;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				flex-grow: 1;
-				position: absolute;
-				bottom: 0;
-				width: 100%;
-				padding-bottom: 10px;
 			}
 
 			.copy-right img {
+				height: auto;
 				width: 160px;
 			}
 
@@ -70,7 +77,9 @@
 	<body>
 		<div id="mui-content" v-cloak>
 			<div class="mui-content">
-				<img class="ad-img" :src="image">
+				<div class="ad-img">
+					<img :src="image">
+				</div>
 				<div class="copy-right">
 					<img src="../image/sakhja.png">
 				</div>
@@ -115,58 +124,58 @@
 						function closeSelf() {
 							self.close("fade-out");
 						}
-						var countDown = setInterval(function() {
-							_this.timmer -= 1;
-							if (_this.timmer < 0) {
-								_this.timmer = 0;
-								clearInterval(countDown);
-								closeSelf();
-							}
-						}, 1500);
+						// var countDown = setInterval(function() {
+						// 	_this.timmer -= 1;
+						// 	if (_this.timmer <= 0) {
+						// 		_this.timmer = 0;
+						// 		clearInterval(countDown);
+						// 		closeSelf();
+						// 	}
+						// }, 1500);
 						// 广告跳转
-						mui(".mui-content").on("tap", ".ad-img", function() {
-							if (_this.path == '') {
-								return false;
-							}
-							plus.webview.hide("alert_advertising");
-							plus.webview.close("alert_advertising");
-							if (_this.link_type == 1) {
-								mui.get($ajaxUrl + 'util', {
-									action: 'url_title',
-									url: _this.path
-								}, function(res) {
-									closeSelf();
-									fnOpenWin('webview.html', 'webview', {
-										statusbar: {
-											background: '#FFF'
-										}
-									}, {
-										title: res.data,
-										statusBarStyle: 'light',
-										url:_this.path
-									}, 'fade-in');
-								}, 'json');
-							} else {
-								plus.share.getServices(function(s) {
-									var shareService = {};
-									for (var i in s) {
-										var t = s[i];
-										shareService[t.id] = t;
-									}
-									// 更新分享列表
-									var ss = shareService['weixin'];
-									closeSelf();
-									ss ? ss.launchMiniProgram({
-										id: 'gh_9fa5f42ab939',
-										path: _this.path,
-										type: '0', //0-正式版； 1-测试版； 2-体验版
-										webUrl: 'https://app.wangkeapp.cn'
-									}) : message('打开小程序失败!');
-								}, function(e) {
-									message('当前环境不支持打开小程序!')
-								});
-							}
-						})
+						// mui(".mui-content").on("tap", ".ad-img", function() {
+						// 	if (_this.path == '') {
+						// 		return false;
+						// 	}
+						// 	plus.webview.hide("alert_advertising");
+						// 	plus.webview.close("alert_advertising");
+						// 	if (_this.link_type == 1) {
+						// 		mui.get($ajaxUrl + 'util', {
+						// 			action: 'url_title',
+						// 			url: _this.path
+						// 		}, function(res) {
+						// 			closeSelf();
+						// 			fnOpenWin('webview.html', 'webview', {
+						// 				statusbar: {
+						// 					background: '#FFF'
+						// 				}
+						// 			}, {
+						// 				title: res.data,
+						// 				statusBarStyle: 'light',
+						// 				url: _this.path
+						// 			}, 'fade-in');
+						// 		}, 'json');
+						// 	} else {
+						// 		plus.share.getServices(function(s) {
+						// 			var shareService = {};
+						// 			for (var i in s) {
+						// 				var t = s[i];
+						// 				shareService[t.id] = t;
+						// 			}
+						// 			// 更新分享列表
+						// 			var ss = shareService['weixin'];
+						// 			closeSelf();
+						// 			ss ? ss.launchMiniProgram({
+						// 				id: 'gh_9fa5f42ab939',
+						// 				path: _this.path,
+						// 				type: '0', //0-正式版； 1-测试版； 2-体验版
+						// 				webUrl: 'https://app.wangkeapp.cn'
+						// 			}) : message('打开小程序失败!');
+						// 		}, function(e) {
+						// 			message('当前环境不支持打开小程序!')
+						// 		});
+						// 	}
+						// })
 					})
 				}
 			})

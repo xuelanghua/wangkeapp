@@ -86,7 +86,7 @@
 				font-size: 12px;
 				background-color: #f2f2f2;
 				overflow: hidden;
-				display: flex !important;
+				display: flex;
 				align-items: center;
 				padding-right: 30px;
 			}
@@ -859,7 +859,7 @@
 					mui.post($ajaxUrl + 'appadv', {
 						position: 2,
 					}, function(res) {
-						var datas=res.data;
+						var datas = res.data;
 						// logs(res);
 						if (res.errno == 0) {
 							var alert_advertising = plus.webview.create("alert_advertising.html", "alert_advertising", {
@@ -877,8 +877,8 @@
 							}, false);
 						}
 					}, 'json');
-					
-					
+
+
 					if (plus.device.model === 'iPhoneX') {
 						logs("运行在iphoneX上");
 					}
@@ -1097,7 +1097,7 @@
 					cacheData("banner", app.banner);
 					setTimeout(function() {
 						sliderPlay();
-					}, 1000) 
+					}, 1000)
 				} else {
 					console.log(res.message);
 				}
@@ -1172,6 +1172,7 @@
 			mui.post($ajaxUrl + 'notice', {
 				action: 'list'
 			}, function(res) {
+				logs(res);
 				if (res.errno == 0) {
 					notice = res.data;
 					noticeLen = notice.length;
@@ -1182,9 +1183,10 @@
 					document.querySelector(".Notice .swiper-wrapper").innerHTML = str;
 					if (noticeLen > 1) {
 						scrollInit();
-					}
+					} 
 				} else {
-					// console.log(res.message);
+					document.querySelector(".Notice").style.background="#FF0000";
+					document.querySelector(".Notice").style.display="none";// !important
 				}
 			}, 'json')
 		}
@@ -1221,7 +1223,7 @@
 				bottom: '0',
 				scrollIndicator: 'none',
 				statusbar: {
-					background: '#FFF'
+					background: '#FFFFFF'
 				}
 			}, {
 				notice: notice[idx],
@@ -1235,7 +1237,7 @@
 		mui('.mui-bar').on('tap', '.mui-title', function() {
 			openPage('home_search.html', 'home_search', '#ededed');
 		})
-		
+
 		function openLinkPage(link) {
 			if (link != '') {
 				mui.get($ajaxUrl + 'util', {

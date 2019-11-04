@@ -25,19 +25,28 @@
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
-				background-color: rgba(0,0,0,0.6);
+				background-color: rgba(0, 0, 0, 0.6);
 				overflow: hidden;
 			}
-			.mui-content .ad-img{
-				max-width: 90%;
-				max-height: 500px;
+
+			.mui-content .ad-img {
+				width: 75%;
+				max-height:50%;
 				margin-bottom: 20px;
+				overflow: hidden;
+			}
+
+			.mui-content .ad-img img {
+				width: 100%;
+				height: auto;
 				object-fit: cover;
 			}
-			.mui-content .close-ad{
+
+			.mui-content .close-ad {
 				max-width: 36px;
 				height: auto;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -47,7 +56,9 @@
 	<body>
 		<div id="mui-content" v-cloak>
 			<div class="mui-content">
-				<img class="ad-img" :src="img" alt="">
+				<div class="ad-img">
+					<img :src="img" alt="">
+				</div>
 				<img class="close-ad" src="../image/icon/alert_advertising_close.png" alt="">
 			</div>
 		</div>
@@ -59,10 +70,11 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					img:'',
-					path:'',
-					link_type:1,
-					pageTitle:''
+					// img: '../image/alert_advertising_ad.png',
+					img: '',
+					path: '',
+					link_type: 1,
+					pageTitle: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -77,17 +89,17 @@
 
 				},
 				mounted: function() {
-					var _this=this;
+					var _this = this;
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						_this.img = self.data.image;
 						_this.link_type = self.data.link_type;
-						_this.path=self.data.link;
-						_this.pageTitle=self.data.title;
+						_this.path = self.data.link;
+						_this.pageTitle = self.data.title;
 						// logs(self.data);
-						mui(".mui-content").on("tap",".ad-img",function(){
+						mui(".mui-content").on("tap", ".ad-img", function() {
 							self.close("fade-out");
-							if(_this.path==''){
+							if (_this.path == '') {
 								return false;
 							}
 							if (_this.link_type == 1) {
@@ -121,7 +133,7 @@
 								launchMiniprogram("1214", "45");
 							}
 						})
-						mui(".mui-content").on("tap",".close-ad",function(){
+						mui(".mui-content").on("tap", ".close-ad", function() {
 							self.close("fade-out");
 						})
 					})
