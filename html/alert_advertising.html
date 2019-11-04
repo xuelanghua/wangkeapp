@@ -9,58 +9,35 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
+			body,
+			html,
 			.mui-content {
-				position: relative;
 				width: 100%;
-				min-height: 100vh;
+				background-color: transparent;
+			}
+
+			.mui-content {
+				height: 100vh;
+				width: 100%;
 				padding: 0;
 				margin: 0;
 				display: flex;
 				flex-direction: column;
-				background-color: #FFFFFF;
-			}
-
-			.skip-btn {
-				position: absolute;
-				right: 20px;
-				top: 50px;
-				height: auto;
-				border-radius: 36px;
-				background-color: #000;
-				border: none;
-				line-height: 1;
-				font-size: 12px;
-				margin: 0;
-				padding: 5px 12px 3px;
-				opacity: 0.6;
-			}
-
-			.skip-btn:enabled:active {
-				background-color: #000;
-				border: none;
-			}
-
-			.ad-img {
-				width: 100%;
-				max-height: 100%;
-				object-fit: cover;
-			}
-
-			.copy-right {
-				display: flex;
 				align-items: center;
 				justify-content: center;
-				flex-grow: 1;
-				position: absolute;
-				bottom: 0;
-				width: 100%;
-				padding-bottom: 10px;
+				background-color: rgba(0,0,0,0.6);
+				overflow: hidden;
 			}
-
-			.copy-right img {
-				width: 160px;
+			.mui-content .ad-img{
+				max-width: 90%;
+				max-height: 500px;
+				margin-bottom: 20px;
+				object-fit: cover;
 			}
-
+			.mui-content .close-ad{
+				max-width: 36px;
+				height: auto;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -70,11 +47,8 @@
 	<body>
 		<div id="mui-content" v-cloak>
 			<div class="mui-content">
-				<img class="ad-img" :src="image">
-				<div class="copy-right">
-					<img src="../image/sakhja.png">
-				</div>
-				<button type="button" class="mui-btn mui-btn-blue skip-btn">跳过{{timmer||''}}</button>
+				<img class="ad-img" :src="img" alt="">
+				<img class="close-ad" src="../image/icon/alert_advertising_close.png" alt="">
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -85,10 +59,10 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					timmer: 10,
-					image: "",
-					link_type: 1,
-					pageTitle:""
+					img:'../image/alert_advertising_ad.png',
+					path:'',
+					link_type:1,
+					pageTitle:''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -99,35 +73,20 @@
 					document.documentElement.style.fontSize = viewport / 7.5 + "px";
 					// 初始化字体大小结束	
 				},
+				methods: {
+
+				},
 				mounted: function() {
-					var _this = this;
+					var _this=this;
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						_this.image = self.data.image;
+						_this.img = self.data.image;
 						_this.link_type = self.data.link_type;
 						_this.path=self.data.link;
 						_this.pageTitle=self.data.title;
 						// logs(self.data);
-						mui(".mui-content").on("tap", ".skip-btn", function() {
-							closeSelf();
-						})
-
-						function closeSelf() {
+						mui(".mui-content").on("tap",".ad-img",function(){
 							self.close("fade-out");
-						}
-						var countDown = setInterval(function() {
-							_this.timmer -= 1;
-							if (_this.timmer <= 0) {
-								_this.timmer = 0;
-								clearInterval(countDown);
-								closeSelf();
-							}
-						}, 1000);
-						// 广告跳转
-						mui(".mui-content").on("tap", ".ad-img", function() {
-							plus.webview.hide( "alert_advertising");
-							plus.webview.close( "alert_advertising");
-							closeSelf();
 							if(_this.path==''){
 								return false;
 							}
@@ -161,6 +120,9 @@
 								});
 								launchMiniprogram("1214", "45");
 							}
+						})
+						mui(".mui-content").on("tap",".close-ad",function(){
+							self.close("fade-out");
 						})
 					})
 				}
