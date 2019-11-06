@@ -301,7 +301,7 @@
 					msgList: [],
 					voidmsg: false,
 					loadStatus: true,
-					len: 50
+					len: 100
 				},
 				mounted: function() {
 					mui.init({
@@ -320,6 +320,10 @@
 								callback: function() {
 									pullDir = "up";
 									setTimeout(function() {
+										if (app.len >= app.msgList.length) {
+											mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+											return false;
+										}
 										app.len += 20;
 										mui('#mui-content').pullRefresh().endPullupToRefresh(false);
 									}, 200)
@@ -407,7 +411,7 @@
 					if (res.errno == 0) {
 						app.msgList = res.data;
 						var msg = res.data,
-							msglast = msg.slice(0, 6);
+							msglast = msg.slice(0, 100);
 						cacheData('msglist', msglast);
 						mui.fire(plus.webview.getWebviewById('message'), 'reloadMssage', {
 							chat_number: res.data.length,
