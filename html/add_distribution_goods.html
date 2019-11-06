@@ -126,6 +126,13 @@
 							<span class="mui-icon mui-icon-clear" v-show="stock" @tap="stock=''"></span>
 						</div>
 					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>销量</label>
+							<input type="number" v-model="sale_count" placeholder="设置虚拟销量">
+							<span class="mui-icon mui-icon-clear" v-show="sale_count" @tap="sale_count=''"></span>
+						</div>
+					</li>
 					<li class="mui-table-view-cell option-group-list" v-for="(ls,index) in spec" :key="index">
 						<div class="option-group">
 							<ul class="mui-table-view">
@@ -270,7 +277,8 @@
 					team_list: [],
 					description: '',
 					edit_status: '未添加',
-					status: ''
+					status: '',
+					sale_count: '',
 				},
 				created: function() {
 					// 初始化字体大小
@@ -603,6 +611,7 @@
 					content: app.description,
 					team_ids: app.team_ids.join(','),
 					status: app.status,
+					sale_count: app.sale_count
 				}
 				mui.post($ajaxUrl + 'goods', {
 					action: 'add_team_goods',
