@@ -234,7 +234,6 @@
 		<header class="mui-bar mui-bar-nav">
 			<h1 class="mui-title">消息</h1>
 			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<!-- <img id="back_chat" class="mui-pull-right" src="../image/newsh.png"> -->
 			<div class="hd mui-clearfix">
 				<li class="current" data-type="chat">
 					<span>
@@ -322,98 +321,6 @@
 									</div>
 								</div>
 							</li>
-							<!-- <li class="Record_list mui-table-view-cell">
-								<div class="Record_listL mui-pull-left">
-									<img src="../image/news1.png">
-								</div>
-								<div class="Record_listR mui-pull-right">
-									<div>
-										<span class="mui-pull-left">
-											<span style="font-size: 15px;">新的好友</span>
-										</span>
-										<span class="mui-pull-right date">19:10</span>
-										<div class="clearfix"></div>
-									</div>
-									<div class="tishi" style="margin-top: 5px;">
-										<span class="mui-pull-left">[小飞飞]添加你为好友</span>
-										<p class="mui-badge mui-pull-right">1</p>
-										<div class="clearfix"></div>
-									</div>
-								</div>
-							</li> -->
-							<!-- <li class="Record_list mui-table-view-cell">
-								<div class="Record_listL mui-pull-left">
-									<img src="../image/news2.png">
-								</div>
-								<div class="Record_listR mui-pull-right">
-									<div>
-										<span class="mui-pull-left">
-											<span style="font-size: 15px;">商城提醒</span>
-										</span>
-										<span class="mui-pull-right date">19:10</span>
-										<div class="clearfix"></div>
-									</div>
-									<div class="tishi" style="margin-top: 5px;">
-										<span class="mui-pull-left">你的客户[头强光]下单成功（未支付）</span>
-										<p class="mui-badge mui-pull-right">1</p>
-										<div class="clearfix"></div>
-									</div>
-								</div>
-							</li> -->
-							<!-- <li class="Record_list mui-table-view-cell">
-								<div class="Record_listL mui-pull-left">
-									<img src="../image/news3.png">
-								</div>
-								<div class="Record_listR mui-pull-right">
-									<div>
-										<span class="mui-pull-left">
-											<span style="font-size: 15px;">客情关怀</span>
-										</span>
-										<span class="mui-pull-right date">18/12/25</span>
-										<div class="clearfix"></div>
-									</div>
-									<div class="tishi" style="margin-top: 5px;">
-										<span class="mui-pull-left">你的客户[强光头]后天生日，送个祝福吧</span>
-									</div>
-								</div>
-							</li> -->
-							<!-- <li class="Record_list mui-table-view-cell">
-								<div class="Record_listL mui-pull-left">
-									<img src="../image/news4.png">
-								</div>
-								<div class="Record_listR mui-pull-right">
-									<div>
-										<span class="mui-pull-left">
-											<span style="font-size: 15px;">升级</span>
-										</span>
-										<span class="mui-pull-right date">18/12/25</span>
-										<div class="clearfix"></div>
-									</div>
-									<div class="tishi" style="margin-top: 5px;">
-										<span class="mui-pull-left">旺客2.1版本升级提醒</span>
-
-										<div class="clearfix"></div>
-									</div>
-								</div>
-							</li> -->
-							<!-- <li class="Record_list mui-table-view-cell">
-								<div class="Record_listL mui-pull-left">
-									<img src="../image/news5.png">
-								</div>
-								<div class="Record_listR mui-pull-right">
-									<div>
-										<span class="mui-pull-left">
-											<span style="font-size: 15px;">余额提现</span>
-										</span>
-										<span class="mui-pull-right date">18/12/25</span>
-										<div class="clearfix"></div>
-									</div>
-									<div class="tishi" style="margin-top: 5px;">
-										<span class="mui-pull-left">你的余额提现已到账</span>
-										<div class="clearfix"></div>
-									</div>
-								</div> 
-							</li> -->
 						</ul>
 						<div v-if="systemMsg==undefined||systemMsg==''" style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>
 					</div>
@@ -462,14 +369,17 @@
 						var mod = getcache('msglist');
 						var systemMsg = getcache('systemMsg');
 						if (mod) {
+							logs(mod);
 							showload(0);
+							document.getElementById('chat_total').innerText = '(' + mod.length + ')';
+							app.msgList = mod.slice(0, 100);
+							app.loadStatus = false;
 							setTimeout(function() {
 								showload(1);
 							}, 500);
-							app.msgList = mod;
-							app.loadStatus = false;
 						}
 						if (systemMsg) {
+							document.getElementById("systemMsg_total").innerText = '(' + systemMsg.length + ')';
 							app.systemMsg = systemMsg;
 						}
 						window.addEventListener('refreshNotice', function(e) {

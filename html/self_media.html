@@ -314,6 +314,18 @@
 				border-radius: 3px;
 				object-fit: cover;
 			}
+			
+			.discover-list-container .goods-list .goods-nature {
+				padding: 10px 0 0;
+			}
+			
+			.discover-list-container .goods-list .goods-nature:nth-of-type(2) {
+				padding-top: 0;
+			}
+			
+			.mui-ellipsis-2 {
+				min-height: 45px;
+			}
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -527,7 +539,10 @@
 									<!-- 官方加stick-sign -->
 									<p class="mui-ellipsis-2" @tap="goodsDetail(i.info.id)">{{i.info.name}}</p>
 									<div class="goods-nature" @tap="goodsDetail(i.info.id)">
-										<span>供货价：&yen;{{i.info.price}}</span>
+										<span>零售价：&yen;{{i.info.price}}</span>
+									</div>
+									<div class="goods-nature" @tap="goodsDetail(i.info.id)">
+										<span>供货价：&yen;{{i.info.settlement_price}}</span>
 										<span>销量： {{i.info.sale_count}}件</span>
 									</div>
 									<div class="goods-earnings">
@@ -548,8 +563,11 @@
 								<div class="goods-list-right">
 									<!-- 官方加stick-sign stick-sign-->
 									<p class="mui-ellipsis-2 stick-sign" @tap="wangkeGoodsDetail(i.info.id)">{{i.info.name}}</p>
+									<div class="goods-nature" @tap="goodsDetail(i.info.id)">
+										<span>零售价：&yen;{{i.info.price}}</span>
+									</div>
 									<div class="goods-nature" @tap="wangkeGoodsDetail(i.info.id)">
-										<span>供货价：&yen;{{i.info.price}}</span>
+										<span>供货价：&yen;{{i.info.settlement_price}}</span>
 										<span>销量： {{i.info.sale_count}}件</span>
 									</div>
 									<div class="goods-earnings">
@@ -623,7 +641,7 @@
 						id: '2',
 						selected: false
 					}, {
-						title: '旺客总仓',
+						title: '爆品仓',
 						id: '5',
 						selected: false
 					}],
