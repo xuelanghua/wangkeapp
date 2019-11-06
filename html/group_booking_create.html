@@ -248,7 +248,7 @@
 
 			.btn-cont {
 				height: 100%;
-				padding:0.2rem;
+				padding: 0.2rem;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -388,9 +388,9 @@
 					collage_id: '',
 					size_text: '请选择...',
 					rule: {},
-					sort:'',
-					captain_price:'',
-					priceTips:''
+					sort: '',
+					captain_price: '',
+					priceTips: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -438,9 +438,9 @@
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("dark");
 						var self = plus.webview.currentWebview();
+						var parentLevel = plus.webview.currentWebview().opener();
 						_this.goods_detail = self.goods;
-						// logs(_this.goods_detail);
-						_this.priceTips="拼团价格不得低于"+self.goods.protect_price;
+						_this.priceTips = "拼团价格不得低于" + self.goods.protect_price;
 						getQuantity();
 						if (self.rule) {
 							_this.rule = self.rule;
@@ -449,8 +449,8 @@
 							_this.unit_cost = self.rule.price;
 							_this.timer = self.rule.expire_time;
 							_this.collage_id = self.rule.id;
-							_this.captain_price=self.rule.captain_price;
-							_this.sort=self.rule.sort;
+							_this.captain_price = self.rule.captain_price;
+							_this.sort = self.rule.sort;
 						}
 						// 提交
 						mui(".mui-content").on("tap", ".option-btn", function() {
@@ -499,9 +499,15 @@
 									// success
 									mui.fire(plus.webview.getWebviewById('group_booking'), 'reloadMyself');
 									mui.fire(plus.webview.getWebviewById('group_booking_detail_left'), 'reloadMyself');
-									plus.nativeUI.alert("创建成功！", function() {
-										mui.back();
-									})
+									if (_this.rule.price) {
+										plus.nativeUI.alert("修改成功！", function() {
+											mui.back();
+										})
+									} else {
+										plus.nativeUI.alert("创建成功！", function() {
+											parentLevel.hide();parentLevel.close();mui.back();
+										})
+									}
 								} else {
 									// loser
 									message(res.message);
