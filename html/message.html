@@ -8,337 +8,68 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.css" rel="stylesheet" />
 		<style>
-			.clearfix{
-				clear: both;
-			}
-			header img{
-				height: 17px;
-				margin-top: 13px;
-				margin-right: 10px;
-			}
 			.mui-bar{
-				height: 80px;
-				padding: 0;
+				height: 90px;
 				background-color: #FFFFFF;
 			}
-			
-			.example{
-				width: 100%;
-				padding-top: 42px;
-				background-color: #FFFFFF;
+			.nav-section{
+				height: 45px;
 			}
-			.hd{
-				font-size: 15px;
-				margin-top: 38px;
+			.tab-container{
+				display: flex;
+				align-items: center;
+				height: 45px;
 			}
-			.hd li{
-				display: block;
-				width: 45%;
-				float: left;
-				padding: 10px 0;
+			.tab-item{
+				width: 50%;
 				text-align: center;
-				position: relative;
-				overflow: hidden;
+				height: 45px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 16px;
 			}
-			
-			.hd li.current{
+			.tab-item.active{
 				color: #2289FF;
-				border-bottom: 2px solid #2289FF;
+				border-bottom: 1px solid #2289FF;
 			}
-			.bd{
-				position: relative;
-			}
-			.bd .tab-container{
-				display: none;
-			}
-			.bd .tab-container.current{
-				display: block;
-			}
-			.Record_listL{
-				width: 48px;
-				height: 48px;
-				border-radius: 50%;
-				margin-right: 10px;
-				flex-shrink: 0;
-				overflow: hidden;
-			}
-			.Record_listL img{
-				width: 48px;
-				height: 48px;
-				object-fit: cover;
-			}
-			.Record_listR{
-				flex-grow: 1;
-				height: auto;
-				max-width: 82%;
-			}
-			.Label img{
-				position: relative;
-				top: 2px;
-				width: 15px;
-				margin-right:4px;
-			}
-			.tishi{
-				font-size: 12px;
-				color: #999999;
-				margin-top: 5px;
-			}
-			.mui-badge{
-				color: #FFFFFF;
-				background-color: #F93B2E;
-			}
-			
-			.date{
-				font-size: 14px;
-				color: #999999;
-			}
-			
-			.mui-badge{
-				margin-bottom: 0px;
-			}
-			.user-name{
-				max-width: 85%;
-				overflow: hidden;
-			}
-			li{
-				list-style-type: none;
-			}
-			.mui-table-view-cell.mui-active{
-				background: #FFFFFF;
-			}
-			.mui-table-view-cell{
-				padding: 10px;
-			}
-			.mui-table-view-cell:after{
-				right: 0;
-				left: 70px;
-				bottom: 0; 
-				height: 1px;
-				background-color: #f2f2f2;
-			}
-			.mui-table-view-cell:last-child:after{
-				height: 1px;
-			}
-			.last-message{
-				max-width: 86%;
-			}
-			.mui-slider-handle{
-				display: flex;
-				align-items: center;
-				width: 100%;
-			}
-			/* 清除聊天记录 */
-			.join-team-verify {
-				position: fixed;
-				z-index: 996;
-				top: 0;
-				bottom: 0;
-				width: 100%;
-				background: rgba(0, 0, 0, 0);
-				display: none;
-				/* display: flex; */
-				align-items: center;
-				justify-content: center;
-				flex-direction: column;
-			}
-			.verift-body {
-				width: 80%;
-				background-color: #ffffff;
-				border-radius: 10px;
-				position: relative;
-				overflow: hidden;
-				padding-top: 5px;
-				box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
-			}
-			
-			.verift-body .tips {
-				width: 100%;
-				padding: 20px 10px 15px;
-				text-align: justify;
-			}
-			
-			.verift-footer:before {
-				content: '';
-				display: block;
-				height: 1px;
-				width: 100%;
-				top: 0;
-				left: 0;
-				position: absolute;
-				background-color: #dddddd;
-				transform: scaleY(0.5);
-				-webkit-transform: scaleY(0.5);
-			}
-			
-			.verift-footer {
-				position: relative;
-				display: flex;
-				justify-content: center;
-			}
-			
-			.verift-footer .mui-btn {
-				width: 100%;
-				height: 100%;
-				padding: 15px 10px;
-			}
-			
-			.close-verify-window:before {
-				content: '';
-				display: block;
-				height: 100%;
-				width: 1PX;
-				top: 0;
-				bottom: 0;
-				right: 0;
-				position: absolute;
-				background-color: #dddddd;
-				transform: scaleX(0.5);
-				-webkit-transform: scaleX(0.5);
-			}
-			.mui-table-view:before,.mui-table-view:after{
-				height: 0;
-			}
-			.mui-table-view-cell:last-child:after{
-				height: 1px;
-			}
-			.Record_list{
-				display: flex;
-			}
-			.chat-red-tips,.system-red-tips{
+			.chat-red-tips,
+			.system-red-tips{
 				position: relative;
 				width: 6px;
 				height: 6px;
 				background-color: #FF0000;
 				border-radius: 50%;
-				top: -2px;
-				display: none;
+				display: inline-block;
+				margin-right: 1px;
+				display: inline-block;
 			}
 			[v-cloak] {
 				display: none;
-			}
-			.void-data-tips {
-			  font-size: 16px;
-			  color: #d6d6d6;
-			  padding-top: 40px;
-			  text-align: center;
-			  padding-bottom: 30px;
-			}
-			.void-data-tips img {
-			  max-width: 140px;
-			  margin: 0 auto;
 			}
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<h1 class="mui-title">消息</h1>
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<div class="hd mui-clearfix">
-				<li class="current" data-type="chat">
-					<span>
-						<span class="chat-red-tips"></span>
-						<span>聊天</span>
-						<span id="chat_total">(0)</span>
-					</span>
-				</li>
-				<li data-type="system">
-					<span>
-						<span class="system-red-tips"></span>
-						<span>通知消息</span>
-						<span id="systemMsg_total">(0)</span>
-					</span>
-				</li>
+		<header class="mui-bar mui-bar-nav" v-cloak>
+			<div class="nav-section">
+				<h1 class="mui-title">消息</h1>
+				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			</div>
+			<div class="tab-container mui-clearfix">
+				<div :class="desc=='message_list'?'tab-item active':'tab-item'" data-type="message_list">
+					<span v-show="chatNew" class="chat-red-tips"></span>
+					<span>聊天</span>
+					<span id="chat_total">({{chat_number}})</span>
+				</div>
+				<div :class="desc=='message_inform'?'tab-item active':'tab-item'" data-type="message_inform">
+					<span v-show="systemNew" class="system-red-tips"></span>
+					<span>通知消息</span>
+					<span id="systemMsg_total">({{inform_number}})</span>
+				</div>
 			</div>
 		</header>
 
-		<div class="mui-content" id="mui-content" v-cloak>
-			<div class="example">
-				<div class="bd">
-					<div class="current tab-container chat-cont" id="chat_message" data-type="chat">
-						<ul class="mui-table-view">
-							<div v-if="voidmsg" class="void-data-tips">
-								<img src="../image/icon/void-data.png">
-							</div>
-							<template v-for="(lists,idx) in msgList" :key="idx">
-								<li class="Record_list mui-table-view-cell mui-transitioning" @tap="goChat(lists)">
-									<div class="mui-slider-right mui-disabled">
-										<span class="mui-btn mui-btn-red" :data-chatid="lists.id" :data-type="lists.type">删除</span>
-									</div>
-									<div class="mui-slider-handle mui-clearfix">
-										<div class="Record_listL mui-pull-left">
-											<img v-if="lists.type=='newbie'||lists.type=='customer'||lists.type=='friend'" :src="lists.user.avatarUrl">
-											<img v-else-if="lists.type=='team_chat'" :src="lists.team_info.cover || 'https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg'">
-											<img v-else-if="lists.type=='course_train'" :src="lists.course_info.cover || 'https://cdn.wangkeapp.cn/images/6/2019/05/course_bg.png'">
-										</div>
-										<div class="Record_listR mui-pull-right">
-											<div class="mui-clearfix">
-												<span class="mui-pull-left user-name  mui-ellipsis">
-													<span class="Label">
-														<img v-if="lists.type=='newbie'" src="../image/newsb1.png">
-														<img v-else-if="lists.type=='customer'" src="../image/newsb2.png">
-														<img v-else-if="lists.type=='friend'" src="../image/newsb3.png">
-														<img v-else-if="lists.type=='team_chat'" src="../image/newsb4.png">
-														<img v-else-if="lists.type=='course_train'" src="../image/newsb5.png">
-													</span>
-													<span v-if="lists.type=='newbie'||lists.type=='customer'||lists.type=='friend'" style="font-size: 15px;">{{lists.user.nickName}}</span>
-													<span v-else-if="lists.type=='team_chat'" style="font-size: 15px;">{{lists.team_info.name}}</span>
-													<span v-else-if="lists.type=='course_train'" style="font-size: 15px;">{{lists.course_info.title}}</span>
-												</span>
-												<span class="mui-pull-right date">{{lists.time}}</span>
-											</div>
-											<div class="tishi mui-clearfix">
-												<span class="mui-pull-left mui-ellipsis last-message">{{lists.message.content}}</span>
-												<p v-show="lists.message.count>0" class="mui-badge mui-pull-right">{{lists.message.count}}</p>
-											</div>
-										</div>
-									</div>
-								</li>
-							</template>
-						</ul>
-					</div>
-					<div class="tab-container system-cont" id="system_message" data-type="system">
-						<ul class="mui-table-view">
-							<li class="Record_list mui-table-view-cell target-assistant" :data-genre="list.type" v-for="(list,index) in systemMsg"
-							 :key="index">
-								<div class="Record_listL mui-pull-left">
-									<img v-if="list.type==1" src="../image/target-icon.png">
-									<img v-if="list.type==2" :src="'../image/team-icon.png'">
-									<img v-if="list.type==3" :src="'../image/news6.png'">
-								</div>
-								<div class="Record_listR mui-pull-right">
-									<div class="mui-clearfix">
-										<span class="mui-pull-left">
-											<span v-if="list.type==1" style="font-size: 15px;">目标助理</span>
-											<span v-else-if="list.type==2" style="font-size: 15px;">团队助理</span>
-											<span v-else-if="list.type==3" style="font-size: 15px;">店铺助理</span>
-										</span>
-										<span class="mui-pull-right date">{{list.time}}</span>
-									</div>
-									<div class="tishi mui-clearfix" style="margin-top: 5px;">
-										<span class="mui-pull-left mui-ellipsis last-message">{{list.title}}</span>
-										<p v-if="list.count>0" class="mui-badge mui-pull-right">{{list.count}}</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-						<div v-if="systemMsg==undefined||systemMsg==''" style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- <!-- 删除聊天记录确认弹窗 -->
-		<div class="join-team-verify">
-			<div class="verift-body">
-				<div class="tips">
-					<span>删除聊天记录后将无法找回，是否继续？</span>
-				</div>
-				<div class="verift-footer">
-					<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
-					<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
-				</div>
-			</div>
-		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
@@ -348,246 +79,57 @@
 			var chatType = '';
 			var refresh = false;
 			var app = new Vue({
-				el: "#mui-content",
+				el: ".mui-bar",
 				data: {
-					systemMsg: [],
-					msgList: [],
-					voidmsg: false,
-					loadStatus: true
+					chatNew: false,
+					systemNew: false,
+					desc: 'message_list',
+					chat_number: 0,
+					inform_number: 0,
 				},
 				mounted: function() {
-					mui.init({
-						swipeBack: true,
-						beforeback: function() {
-							var self = plus.webview.currentWebview();
-							if (self.prePage == 'chat' || self.prePage == 'member') {
-								plus.navigator.setStatusBarStyle(plus.webview.barStyle);
-							}
-						}
-					})
+					var styles = {
+						backButtonAutoControl: "none",
+						bottom: "0px",
+						top: "118px",
+						width: "100%",
+						hardwareAccelerated: true,
+						popGesture: "none",
+						scrollIndicator: "none"
+					}
 					mui.plusReady(function() {
-						var mod = getcache('msglist');
-						var systemMsg = getcache('systemMsg');
-						if (mod) {
-							logs(mod);
-							showload(0);
-							document.getElementById('chat_total').innerText = '(' + mod.length + ')';
-							app.msgList = mod.slice(0, 100);
-							app.loadStatus = false;
-							setTimeout(function() {
-								showload(1);
-							}, 500);
-						}
-						if (systemMsg) {
-							document.getElementById("systemMsg_total").innerText = '(' + systemMsg.length + ')';
-							app.systemMsg = systemMsg;
-						}
-						window.addEventListener('refreshNotice', function(e) {
-							refresh = true;
-							getChatList(false);
-							getSystemMsg();
-						})
-						getChatList(true);
-						getSystemMsg();
-						// mui('#chat_message').on('tap', '.Record_list', function() {
-						// 	var cid = this.dataset.cid;
-						// 	var chatName = this.dataset.name;
-						// 	var avatar = this.dataset.avatar;
-						// 	var swipemenu = mui('.mui-selected')[0];
-						// 	// 关闭左滑菜单才能跳转
-						// 	if (swipemenu) {
-						// 		mui.swipeoutClose(swipemenu);
-						// 	} else {
-						// 		fnOpenWin('dialog.html', 'dialog', {
-						// 			statusbar: {
-						// 				background: '#F7F7F7'
-						// 			}
-						// 		}, {
-						// 			cid: cid,
-						// 			chatName: chatName,
-						// 			barStyle: 'dark',
-						// 			avatar: avatar
-						// 		}, 'slide-in-right');
-						// 	}
-						// })
-						mui('header').on('tap', 'li', function() {
-							var type = this.dataset.type;
-							this.className = 'current';
-							if (type == 'system') {
-								document.querySelector('.hd li[data-type=chat]').className = '';
-								document.querySelector('.chat-cont').classList.remove('current');
-								document.querySelector('.system-cont').classList.add("current");
-							} else {
-								document.querySelector('.hd li[data-type=system]').className = '';
-								document.querySelector('.system-cont').classList.remove('current');
-								document.querySelector('.chat-cont').classList.add("current");
+						mui.init({
+							gestureConfig: {
+								doubletap: true,
 							}
+						});
+						var message_list = plus.webview.create("message_list.html", "message_list", styles);
+						var message_inform = plus.webview.create("message_inform.html", "message_inform", styles);
+						message_list.addEventListener("loaded", function() {
+							message_list.show("none", 300);
+						})
+						// 切换页面显示 
+						mui('.mui-bar').on('tap', '.tab-item', function() {
+							var type = this.dataset.type;
+							app.desc = type;
+							plus.webview.show(type);
 						})
 					})
-				},
-				methods: {
-					goChat: function(item) {
-						var swipemenu = mui('.mui-selected')[0];
-						// 关闭左滑菜单才能跳转
-						if (swipemenu) {
-							mui.swipeoutClose(swipemenu);
-						} else {
-							if (item.type == 'team_chat') {
-								// logs(item);
-								openPage('team_chat.html', 'team_chat', '#f7f7f7', {
-									tid: item.team_id,
-									teamName: item.team_info.name,
-									teamType: item.team_info.type
-								});
-							} else if (item.type == 'course_train') {
-								openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
-									tid: item.team_id,
-									courseId: item.course_id,
-									courseTitle: item.course_info.title,
-									teacherId: item.course_info.teacher_id,
-									isSilent: item.course_info.is_silent,
-									course: item.course_info
-								});
-							} else {
-								fnOpenWin('dialog.html', 'dialog', {
-									statusbar: {
-										background: '#F7F7F7'
-									}
-								}, {
-									cid: item.user.id,
-									chatName: item.user.nickName,
-									barStyle: 'dark',
-									avatar: item.user.avatarUrl
-								}, 'slide-in-right');
-							}
-						}
-					}
 				}
 			})
-
-			// 获取系统消息
-			function getSystemMsg() {
-				mui.post($ajaxUrl + 'chat&action=notice_list', {
-					token: userInfo.token
-				}, function(res) {
-					logs(res);
-					if (res.errno == 0) {
-						app.systemMsg = res.data;
-						cacheData('systemMsg', res.data);
-						var flag = false;
-						for (var i = 0; i < res.data.length; i++) {
-							if (res.data[i].count > 0) {
-								flag = true;
-							}
-						}
-						if (flag) {
-							document.querySelector('.system-red-tips').style.display = "inline-block";
-						} else {
-							document.querySelector('.system-red-tips').style.display = "none";
-						}
-						document.getElementById("systemMsg_total").innerText = '(' + res.data.length + ')';
-					} else {
-						// message(res.message, "center");
-					}
-				}, 'json')
-			}
-
-			// 获取消息列表
-			function getChatList(first) {
-				if (first && app.loadStatus) {
-					showload(0);
-				}
-				mui.post($ajaxUrl + 'chat', {
-					action: 'list',
-					token: userInfo.token
-				}, function(res) {
-					logs(res);
-					if (res.errno == 0) {
-						document.getElementById('chat_total').innerText = '(' + res.data.length + ')';
-						app.msgList = res.data;
-						if (res.message) {
-							document.querySelector('.chat-red-tips').style.display = "inline-block";
-						} else {
-							document.querySelector('.chat-red-tips').style.display = "none";
-						}
-						cacheData('msglist', res.data);
-					} else {
-						app.voidmsg = true;
-					}
-					if (first) {
-						showload(1, 1000);
-					}
-				}, 'json')
-			}
-			var listel = '';
-			// 删除聊天
-			mui(".mui-content").on("tap", ".mui-btn-red", function() {
-				mui('.join-team-verify')[0].style.display = "flex";
-				chatId = this.dataset.chatid;
-				chatType = this.dataset.type;
-				listel = this.parentNode.parentNode;
+			// 双击导航返回顶部
+			mui(".mui-bar").on("doubletap", ".mui-title", function() {
+				mui.fire(plus.webview.getWebviewById('message_list'), 'backTop');
 			})
-			// 跳转目标助理
-			mui(".mui-content").on("tap", ".target-assistant", function() {
-				var genre = this.dataset.genre;
-				if (genre == 1) {
-					openPage('target_assistant.html', 'target_assistant', '#f7f7f7', {
-						genre: genre
-					});
-				} else if (genre == 2) {
-					openPage('team_aid_detail.html', 'team_aid_detail', '#f7f7f7', {
-						genre: genre
-					});
-				} else if (genre == 3) {
-					openPage('store_tip_list.html', 'store_tip_list', '#f7f7f7', {
-						genre: genre
-					});
-				}
+			// 监听消息
+			window.addEventListener('reloadMssage', function(e) {
+				app.chat_number = e.detail.chat_number || 0;
+				app.chatNew = e.detail.chatNew || false;
 			})
-
-			// 确认删除聊天
-			mui('.join-team-verify').on("tap", ".send-verify", function() {
-				var swipemenu = mui('.mui-selected')[0];
-				if (chatType == 'team_chat' || chatType == 'course_train') {
-					mui.post($ajaxUrl + 'team&action=delete_chat', {
-						token: userInfo.token,
-						chat_id: chatId
-					}, function(res) {
-						mui('.join-team-verify')[0].style.display = "none";
-						if (res.errno == 0) {
-							if (swipemenu) {
-								mui.swipeoutClose(swipemenu);
-							}
-							getChatList(false);
-							message('已删除');
-						} else {
-							message('删除失败，请稍后重试');
-						}
-					}, 'json');
-				} else {
-					mui.post($ajaxUrl + 'chat&action=delete_chat', {
-						token: userInfo.token,
-						chat_id: chatId
-					}, function(res) {
-						mui('.join-team-verify')[0].style.display = "none";
-						if (res.errno == 0) {
-							if (swipemenu) {
-								mui.swipeoutClose(swipemenu);
-							}
-							getChatList(false);
-							message('已删除');
-						} else {
-							message('删除失败，请稍后重试');
-						}
-					}, 'json');
-				}
-			})
-
-			// 取消删除聊天记录
-			mui('.join-team-verify').on("tap", ".close-verify-window", function() {
-				mui('.join-team-verify')[0].style.display = "none";
-				// var li=document.getElementById
-				mui.swipeoutClose(listel);
+			// 监听通知
+			window.addEventListener('reloadMyself', function(e) {
+				app.systemNew = e.detail.systemNew || false;
+				app.inform_number = e.detail.inform_number || 0;
 			})
 		</script>
 	</body>
