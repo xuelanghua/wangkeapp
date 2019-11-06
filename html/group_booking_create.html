@@ -438,6 +438,7 @@
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("dark");
 						var self = plus.webview.currentWebview();
+						var parentLevel = plus.webview.currentWebview().opener();
 						_this.goods_detail = self.goods;
 						// logs(_this.goods_detail);
 						_this.priceTips="拼团价格不得低于"+self.goods.protect_price;
@@ -499,9 +500,15 @@
 									// success
 									mui.fire(plus.webview.getWebviewById('group_booking'), 'reloadMyself');
 									mui.fire(plus.webview.getWebviewById('group_booking_detail_left'), 'reloadMyself');
-									plus.nativeUI.alert("创建成功！", function() {
-										mui.back();
-									})
+									if (_this.rule.price) {
+										plus.nativeUI.alert("修改成功！", function() {
+											mui.back();
+										})
+									} else {
+										plus.nativeUI.alert("创建成功！", function() {
+											parentLevel.hide();parentLevel.close();mui.back();
+										})
+									}
 								} else {
 									// loser
 									message(res.message);

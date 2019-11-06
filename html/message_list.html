@@ -320,6 +320,10 @@
 								callback: function() {
 									pullDir = "up";
 									setTimeout(function() {
+										if (app.len >= app.msgList.length) {
+											mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+											return false;
+										}
 										app.len += 20;
 										mui('#mui-content').pullRefresh().endPullupToRefresh(false);
 									}, 200)
