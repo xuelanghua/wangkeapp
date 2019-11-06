@@ -301,7 +301,7 @@
 					msgList: [],
 					voidmsg: false,
 					loadStatus: true,
-					len: 50
+					len: 100
 				},
 				mounted: function() {
 					mui.init({
@@ -341,6 +341,7 @@
 					})
 					mui.plusReady(function() {
 						var mod = getcache('msglist');
+						var msgCount = getcache('msgCount');
 						if (mod) {
 							showload(0);
 							app.msgList = mod;
@@ -348,6 +349,10 @@
 							setTimeout(function() {
 								showload(1);
 							}, 500);
+							mui.fire(plus.webview.getWebviewById('message'), 'reloadMssage', {
+								chat_number: msgCount,
+								chatNew: false
+							});
 						}
 						window.addEventListener('refreshNotice', function(e) {
 							refresh = true;
@@ -407,8 +412,9 @@
 					if (res.errno == 0) {
 						app.msgList = res.data;
 						var msg = res.data,
-							msglast = msg.slice(0, 6);
-						cacheData('msglist', msgglast);
+							msglast = msg.slice(0, 100);
+						cacheData('msglist', msglast);
+						cacheData('msgCount', msg.length);
 						mui.fire(plus.webview.getWebviewById('message'), 'reloadMssage', {
 							chat_number: res.data.length,
 							chatNew: res.message || false

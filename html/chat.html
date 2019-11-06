@@ -115,6 +115,7 @@
 							mui.extend(aniShow, temp);
 							plus.webview.show(tid, "fade-in");
 						}
+						
 						//隐藏当前;
 						plus.webview.hide(activeTab);
 						for (var i = 0; i < 3; i++) {
@@ -141,13 +142,13 @@
 						for (var i = 0; i < 3; i++) {
 							var temp = {};
 							var sub = plus.webview.create(app.tabs[i].url, app.tabs[i].id, styles);
+							self.append(sub);
 							if (i > 0) {
 								sub.hide();
 							} else {
 								temp[app.tabs[i].id] = "true";
 								mui.extend(aniShow, temp);
 							}
-							self.append(sub);
 						}
 					})
 				}
