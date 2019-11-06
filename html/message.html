@@ -88,16 +88,18 @@
 					inform_number: 0,
 				},
 				mounted: function() {
-					var styles = {
-						backButtonAutoControl: "none",
-						bottom: "0px",
-						top: "118px",
-						width: "100%",
-						hardwareAccelerated: true,
-						popGesture: "none",
-						scrollIndicator: "none"
-					}
 					mui.plusReady(function() {
+						var statusBarHeight = plus.navigator.getStatusbarHeight();
+						var offsetTop = statusBarHeight + 91;
+						var styles = {
+							backButtonAutoControl: "none",
+							bottom: "0px",
+							top: offsetTop,
+							width: "100%",
+							hardwareAccelerated: true,
+							popGesture: "none",
+							scrollIndicator: "none"
+						}
 						mui.init({
 							gestureConfig: {
 								doubletap: true,

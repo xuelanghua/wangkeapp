@@ -492,10 +492,12 @@
 				},
 				mounted: function() {
 					mui.plusReady(function() {
+						var statusBarHeight = plus.navigator.getStatusbarHeight();
+						var offsetTop = statusBarHeight + 45;
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
 						var leftpage = plus.webview.create("group_booking_detail_left.html", "group_booking_detail_left", {
-							top: '70px',
+							top: offsetTop,
 							bottom: '0',
 							render: "always",
 							scrollIndicator: "none",
@@ -506,7 +508,7 @@
 							leftpage.show();
 						}, 100)
 						var rightpage = plus.webview.create("group_booking_detail_right.html", "group_booking_detail_right", {
-							top: '70px',
+							top: offsetTop,
 							bottom: '0',
 							render: "always",
 							scrollIndicator: "none",
