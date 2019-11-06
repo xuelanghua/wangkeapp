@@ -406,12 +406,10 @@
 								flag = true;
 							}
 						}
-						if (flag) {
-							// document.querySelector('.system-red-tips').style.display = "inline-block";
-						} else {
-							// document.querySelector('.system-red-tips').style.display = "none";
-						}
-						// document.getElementById("systemMsg_total").innerText = '(' + res.data.length + ')';
+						mui.fire(plus.webview.getWebviewById('message'), 'reloadMyself',{
+							 inform_number:res.data.length,
+							 systemNew:flag||false
+						});
 					} else {
 						// message(res.message, "center");
 					}

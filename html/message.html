@@ -51,7 +51,7 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
+		<header class="mui-bar mui-bar-nav" v-cloak>
 			<div class="nav-section">
 				<h1 class="mui-title">消息</h1>
 				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
@@ -60,12 +60,12 @@
 				<div :class="desc=='message_list'?'tab-item active':'tab-item'" data-type="message_list">
 					<span v-show="chatNew" class="chat-red-tips"></span>
 					<span>聊天</span>
-					<span id="chat_total">(0)</span>
+					<span id="chat_total">({{chat_number}})</span>
 				</div>
 				<div :class="desc=='message_inform'?'tab-item active':'tab-item'" data-type="message_inform">
 					<span v-show="systemNew" class="system-red-tips"></span>
 					<span>通知消息</span>
-					<span id="systemMsg_total">(0)</span>
+					<span id="systemMsg_total">({{inform_number}})</span>
 				</div>
 			</div>
 		</header>
@@ -83,7 +83,9 @@
 				data: {
 					chatNew: false,
 					systemNew: false,
-					desc: 'message_list'
+					desc: 'message_list',
+					chat_number: 0,
+					inform_number: 0,
 				},
 				mounted: function() {
 					var styles = {
@@ -103,75 +105,31 @@
 						});
 						var message_list = plus.webview.create("message_list.html", "message_list", styles);
 						var message_inform = plus.webview.create("message_inform.html", "message_inform", styles);
-						message_list.show();
-						getChatList();
-						getSystemMsg();
-						window.addEventListener('refreshNotice', function(e) {
-							refresh = true;
-							getChatList(false);
-							getSystemMsg();
+						message_list.addEventListener("loaded", function() {
+							message_list.show("none", 300);
 						})
-
+						// 切换页面显示 
 						mui('.mui-bar').on('tap', '.tab-item', function() {
 							var type = this.dataset.type;
 							app.desc = type;
 							plus.webview.show(type);
 						})
 					})
-				},
-				methods: {
-
 				}
 			})
-
-			// 获取系统消息
-			function getSystemMsg() {
-				mui.post($ajaxUrl + 'chat&action=notice_list', {
-					token: userInfo.token
-				}, function(res) {
-					if (res.errno == 0) {
-						app.systemMsg = res.data;
-						cacheData('systemMsg', res.data);
-						var flag = false;
-						for (var i = 0; i < res.data.length; i++) {
-							if (res.data[i].count > 0) {
-								flag = true;
-							}
-						}
-						if (flag) {
-							document.querySelector('.system-red-tips').style.display = "inline-block";
-						} else {
-							document.querySelector('.system-red-tips').style.display = "none";
-						}
-						document.getElementById("systemMsg_total").innerText = '(' + res.data.length + ')';
-					} else {
-						// message(res.message, "center");
-					}
-				}, 'json')
-			}
-
-			// 获取消息列表
-			function getChatList() {
-				mui.post($ajaxUrl + 'chat', {
-					action: 'list',
-					token: userInfo.token
-				}, function(res) {
-					if (res.errno == 0) {
-						document.getElementById('chat_total').innerText = '(' + res.data.length + ')';
-						if (res.message) {
-							document.querySelector('.chat-red-tips').style.display = "inline-block";
-						} else {
-							document.querySelector('.chat-red-tips').style.display = "none";
-						}
-						cacheData('msglist', res.data);
-					} else {
-						app.voidmsg = true;
-					}
-				}, 'json')
-			}
 			// 双击导航返回顶部
 			mui(".mui-bar").on("doubletap", ".mui-title", function() {
-				mui.fire(plus.webview.getWebviewById('message_list'),'backTop');
+				mui.fire(plus.webview.getWebviewById('message_list'), 'backTop');
+			})
+			// 监听消息
+			window.addEventListener('reloadMssage', function(e) {
+				app.chat_number = e.detail.chat_number || 0;
+				app.chatNew = e.detail.chatNew || false;
+			})
+			// 监听通知
+			window.addEventListener('reloadMyself', function(e) {
+				app.systemNew = e.detail.systemNew || false;
+				app.inform_number = e.detail.inform_number || 0;
 			})
 		</script>
 	</body>

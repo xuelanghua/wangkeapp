@@ -232,8 +232,8 @@
 							<div v-if="voidmsg" class="void-data-tips">
 								<img src="../image/icon/void-data.png">
 							</div>
-							<li class="Record_list mui-table-view-cell mui-transitioning" v-for="(lists,idx) in msgList" :key="idx" v-if="idx<len"
-							 @tap="goChat(lists)">
+							<li class="Record_list mui-table-view-cell mui-transitioning" v-for="(lists,idx) in msgList" :key="lists.id"
+							 v-if="idx<len" @tap="goChat(lists)">
 								<div class="mui-slider-right mui-disabled">
 									<span class="mui-btn mui-btn-red" :data-chatid="lists.id" :data-type="lists.type">删除</span>
 								</div>
@@ -301,7 +301,7 @@
 					msgList: [],
 					voidmsg: false,
 					loadStatus: true,
-					len: 30
+					len: 50
 				},
 				mounted: function() {
 					mui.init({
@@ -343,18 +343,17 @@
 						var mod = getcache('msglist');
 						if (mod) {
 							showload(0);
+							app.msgList = mod;
+							app.loadStatus = false;
 							setTimeout(function() {
 								showload(1);
 							}, 500);
-							app.msgList = mod;
-							app.loadStatus = false;
 						}
 						window.addEventListener('refreshNotice', function(e) {
 							refresh = true;
 							getChatList(false);
 						})
 						getChatList(true);
-						var list = document.getElementById("chat_message");
 					})
 				},
 				methods: {
@@ -365,7 +364,6 @@
 							mui.swipeoutClose(swipemenu);
 						} else {
 							if (item.type == 'team_chat') {
-								// logs(item);
 								openPage('team_chat.html', 'team_chat', '#f7f7f7', {
 									tid: item.team_id,
 									teamName: item.team_info.name,
@@ -408,7 +406,13 @@
 				}, function(res) {
 					if (res.errno == 0) {
 						app.msgList = res.data;
-						cacheData('msglist', res.data);
+						var msg = res.data,
+							msglast = msg.slice(0, 6);
+						cacheData('msglist', msgglast);
+						mui.fire(plus.webview.getWebviewById('message'), 'reloadMssage', {
+							chat_number: res.data.length,
+							chatNew: res.message || false
+						});
 					} else {
 						app.voidmsg = true;
 					}
