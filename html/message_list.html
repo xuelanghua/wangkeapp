@@ -1,0 +1,484 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="referrer" content="no-referrer">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			header img{
+				height: 17px;
+				margin-top: 13px;
+				margin-right: 10px;
+			}
+			.mui-bar{
+				height: 80px;
+				padding: 0;
+				background-color: #FFFFFF;
+			}
+			
+			.example{
+				width: 100%;
+				background-color: #FFFFFF;
+			}
+			.hd{
+				font-size: 15px;
+				margin-top: 38px;
+			}
+			.hd li{
+				display: block;
+				width: 45%;
+				float: left;
+				padding: 10px 0;
+				text-align: center;
+				position: relative;
+				overflow: hidden;
+			}
+			
+			.hd li.current{
+				color: #2289FF;
+				border-bottom: 2px solid #2289FF;
+			}
+			.Record_listL{
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				margin-right: 10px;
+				flex-shrink: 0;
+				overflow: hidden;
+			}
+			.Record_listL img{
+				width: 48px;
+				height: 48px;
+				object-fit: cover;
+			}
+			.Record_listR{
+				flex-grow: 1;
+				height: auto;
+				max-width: 82%;
+			}
+			.Label img{
+				position: relative;
+				top: 2px;
+				width: 15px;
+				margin-right:4px;
+			}
+			.tishi{
+				font-size: 12px;
+				color: #999999;
+				margin-top: 5px;
+			}
+			.mui-badge{
+				color: #FFFFFF;
+				background-color: #F93B2E;
+			}
+			
+			.date{
+				font-size: 14px;
+				color: #999999;
+			}
+			
+			.mui-badge{
+				margin-bottom: 0px;
+			}
+			.user-name{
+				max-width: 85%;
+				overflow: hidden;
+			}
+			li{
+				list-style-type: none;
+			}
+			.mui-table-view-cell.mui-active{
+				background: #FFFFFF;
+			}
+			.mui-table-view-cell{
+				padding: 10px;
+			}
+			.mui-table-view-cell:after{
+				right: 0;
+				left: 70px;
+				bottom: 0; 
+				height: 1px;
+				background-color: #f2f2f2;
+			}
+			.mui-table-view-cell:last-child:after{
+				height: 1px;
+			}
+			.last-message{
+				max-width: 86%;
+			}
+			.mui-slider-handle{
+				display: flex;
+				align-items: center;
+				width: 100%;
+			}
+			/* 清除聊天记录 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 996;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				background: rgba(0, 0, 0, 0);
+				display: none;
+				/* display: flex; */
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			.verift-body {
+				width: 80%;
+				background-color: #ffffff;
+				border-radius: 10px;
+				position: relative;
+				overflow: hidden;
+				padding-top: 5px;
+				box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
+			}
+			
+			.verift-body .tips {
+				width: 100%;
+				padding: 20px 10px 15px;
+				text-align: justify;
+			}
+			
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+			
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 15px 10px;
+			}
+			
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+			.mui-table-view:before,.mui-table-view:after{
+				height: 0;
+			}
+			.mui-table-view-cell:last-child:after{
+				height: 1px;
+			}
+			.Record_list{
+				display: flex;
+			}
+			.chat-red-tips,.system-red-tips{
+				position: relative;
+				width: 6px;
+				height: 6px;
+				background-color: #FF0000;
+				border-radius: 50%;
+				top: -2px;
+				display: none;
+			}
+			[v-cloak] {
+				display: none;
+			}
+			.void-data-tips {
+			  font-size: 16px;
+			  color: #d6d6d6;
+			  padding-top: 40px;
+			  text-align: center;
+			  padding-bottom: 30px;
+			}
+			.void-data-tips img {
+			  max-width: 140px;
+			  margin: 0 auto;
+			}
+			/* .mui-pull-bottom-pocket.mui-block.mui-visibility{
+				display: none !important;
+			} */
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content" id="mui-content" v-cloak>
+			<div class="example">
+				<div class="bd">
+					<div class="tab-container chat-cont" id="chat_message" data-type="chat">
+						<ul class="mui-table-view">
+							<div v-if="voidmsg" class="void-data-tips">
+								<img src="../image/icon/void-data.png">
+							</div>
+							<li class="Record_list mui-table-view-cell mui-transitioning" v-for="(lists,idx) in msgList" :key="idx" v-if="idx<len"
+							 @tap="goChat(lists)">
+								<div class="mui-slider-right mui-disabled">
+									<span class="mui-btn mui-btn-red" :data-chatid="lists.id" :data-type="lists.type">删除</span>
+								</div>
+								<div class="mui-slider-handle mui-clearfix">
+									<div class="Record_listL mui-pull-left">
+										<img v-if="lists.type=='newbie'||lists.type=='customer'||lists.type=='friend'" :src="lists.user.avatarUrl">
+										<img v-else-if="lists.type=='team_chat'" :src="lists.team_info.cover || 'https://cdn.wangkeapp.cn/images/6/2019/05/team_bg.jpg'">
+										<img v-else-if="lists.type=='course_train'" :src="lists.course_info.cover || 'https://cdn.wangkeapp.cn/images/6/2019/05/course_bg.png'">
+									</div>
+									<div class="Record_listR mui-pull-right">
+										<div class="mui-clearfix">
+											<span class="mui-pull-left user-name  mui-ellipsis">
+												<span class="Label">
+													<img v-if="lists.type=='newbie'" src="../image/newsb1.png">
+													<img v-else-if="lists.type=='customer'" src="../image/newsb2.png">
+													<img v-else-if="lists.type=='friend'" src="../image/newsb3.png">
+													<img v-else-if="lists.type=='team_chat'" src="../image/newsb4.png">
+													<img v-else-if="lists.type=='course_train'" src="../image/newsb5.png">
+												</span>
+												<span v-if="lists.type=='newbie'||lists.type=='customer'||lists.type=='friend'" style="font-size: 15px;">{{lists.user.nickName}}</span>
+												<span v-else-if="lists.type=='team_chat'" style="font-size: 15px;">{{lists.team_info.name}}</span>
+												<span v-else-if="lists.type=='course_train'" style="font-size: 15px;">{{lists.course_info.title}}</span>
+											</span>
+											<span class="mui-pull-right date">{{lists.time}}</span>
+										</div>
+										<div class="tishi mui-clearfix">
+											<span class="mui-pull-left mui-ellipsis last-message">{{lists.message.content}}</span>
+											<p v-show="lists.message.count>0" class="mui-badge mui-pull-right">{{lists.message.count}}</p>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <!-- 删除聊天记录确认弹窗 -->
+		<div class="join-team-verify">
+			<div class="verift-body">
+				<div class="tips">
+					<span>删除聊天记录后将无法找回，是否继续？</span>
+				</div>
+				<div class="verift-footer">
+					<button type="button" class="mui-btn mui-btn-link close-verify-window">取消</button>
+					<button type="button" class="mui-btn mui-btn-link send-verify">确定</button>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/datas.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo(),
+				chatId = '',
+				chatType = '',
+				msg = [],
+				pullDir = '',
+				refresh = false;
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					systemMsg: [],
+					msgList: [],
+					voidmsg: false,
+					loadStatus: true,
+					len: 30
+				},
+				mounted: function() {
+					mui.init({
+						keyEventBind: {
+							backbutton: false,
+							menubutton: false
+						},
+						swipeBack: false,
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDir = "up";
+									setTimeout(function() {
+										app.len += 20;
+										mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+									}, 200)
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								height: 50,
+								callback: function() {
+									app.len = 20;
+									setTimeout(function() {
+										getChatList();
+										mui('#mui-content').pullRefresh().endPulldownToRefresh();
+									}, 500)
+								}
+							}
+						}
+					})
+					mui.plusReady(function() {
+						var mod = getcache('msglist');
+						if (mod) {
+							showload(0);
+							setTimeout(function() {
+								showload(1);
+							}, 500);
+							app.msgList = mod;
+							app.loadStatus = false;
+						}
+						window.addEventListener('refreshNotice', function(e) {
+							refresh = true;
+							getChatList(false);
+						})
+						getChatList(true);
+						var list = document.getElementById("chat_message");
+					})
+				},
+				methods: {
+					goChat: function(item) {
+						var swipemenu = mui('.mui-selected')[0];
+						// 关闭左滑菜单才能跳转
+						if (swipemenu) {
+							mui.swipeoutClose(swipemenu);
+						} else {
+							if (item.type == 'team_chat') {
+								// logs(item);
+								openPage('team_chat.html', 'team_chat', '#f7f7f7', {
+									tid: item.team_id,
+									teamName: item.team_info.name,
+									teamType: item.team_info.type
+								});
+							} else if (item.type == 'course_train') {
+								openPage("live_streaming.html", "live_streaming", "#f7f7f7", {
+									tid: item.team_id,
+									courseId: item.course_id,
+									courseTitle: item.course_info.title,
+									teacherId: item.course_info.teacher_id,
+									isSilent: item.course_info.is_silent,
+									course: item.course_info
+								});
+							} else {
+								fnOpenWin('dialog.html', 'dialog', {
+									statusbar: {
+										background: '#F7F7F7'
+									}
+								}, {
+									cid: item.user.id,
+									chatName: item.user.nickName,
+									barStyle: 'dark',
+									avatar: item.user.avatarUrl
+								}, 'slide-in-right');
+							}
+						}
+					}
+				}
+			})
+
+			// 获取消息列表
+			function getChatList(first) {
+				if (first && app.loadStatus) {
+					showload(0);
+				}
+				mui.post($ajaxUrl + 'chat', {
+					action: 'list',
+					token: userInfo.token
+				}, function(res) {
+					if (res.errno == 0) {
+						app.msgList = res.data;
+						cacheData('msglist', res.data);
+					} else {
+						app.voidmsg = true;
+					}
+					if (first) {
+						showload(1, 1000);
+					}
+				}, 'json')
+			}
+			var listel = '';
+			// 删除聊天
+			mui(".mui-content").on("tap", ".mui-btn-red", function() {
+				mui('.join-team-verify')[0].style.display = "flex";
+				chatId = this.dataset.chatid;
+				chatType = this.dataset.type;
+				listel = this.parentNode.parentNode;
+			})
+			// 确认删除聊天
+			mui('.join-team-verify').on("tap", ".send-verify", function() {
+				var swipemenu = mui('.mui-selected')[0];
+				if (chatType == 'team_chat' || chatType == 'course_train') {
+					mui.post($ajaxUrl + 'team&action=delete_chat', {
+						token: userInfo.token,
+						chat_id: chatId
+					}, function(res) {
+						mui('.join-team-verify')[0].style.display = "none";
+						if (res.errno == 0) {
+							if (swipemenu) {
+								mui.swipeoutClose(swipemenu);
+							}
+							getChatList(false);
+							message('已删除');
+						} else {
+							message('删除失败，请稍后重试');
+						}
+					}, 'json');
+				} else {
+					mui.post($ajaxUrl + 'chat&action=delete_chat', {
+						token: userInfo.token,
+						chat_id: chatId
+					}, function(res) {
+						mui('.join-team-verify')[0].style.display = "none";
+						if (res.errno == 0) {
+							if (swipemenu) {
+								mui.swipeoutClose(swipemenu);
+							}
+							getChatList(false);
+							message('已删除');
+						} else {
+							message('删除失败，请稍后重试');
+						}
+					}, 'json');
+				}
+			})
+
+			// 取消删除聊天记录
+			mui('.join-team-verify').on("tap", ".close-verify-window", function() {
+				mui('.join-team-verify')[0].style.display = "none";
+				mui.swipeoutClose(listel);
+			})
+			window.addEventListener("backTop", function(e) {
+				var list = document.getElementById("chat_message"),
+					top = list.getBoundingClientRect().top;
+				if (top != 0) {
+					window.scrollTo({
+						top: 0,
+						left: 0,
+						behavior: "instant" //smooth
+					});
+				}
+			})
+		</script>
+	</body>
+</html>

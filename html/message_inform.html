@@ -1,0 +1,440 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="referrer" content="no-referrer">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.css" rel="stylesheet" />
+		<style>
+			.clearfix{
+				clear: both;
+			}
+			header img{
+				height: 17px;
+				margin-top: 13px;
+				margin-right: 10px;
+			}
+			.mui-bar{
+				height: 80px;
+				padding: 0;
+				background-color: #FFFFFF;
+			}
+			
+			.example{
+				width: 100%;
+				background-color: #FFFFFF;
+			}
+			.hd{
+				font-size: 15px;
+				margin-top: 38px;
+			}
+			.hd li{
+				display: block;
+				width: 45%;
+				float: left;
+				padding: 10px 0;
+				text-align: center;
+				position: relative;
+				overflow: hidden;
+			}
+			
+			.hd li.current{
+				color: #2289FF;
+				border-bottom: 2px solid #2289FF;
+			}
+			.bd{
+				position: relative;
+			}
+			
+			.Record_listL{
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				margin-right: 10px;
+				flex-shrink: 0;
+				overflow: hidden;
+			}
+			.Record_listL img{
+				width: 48px;
+				height: 48px;
+				object-fit: cover;
+			}
+			.Record_listR{
+				flex-grow: 1;
+				height: auto;
+				max-width: 82%;
+			}
+			.Label img{
+				position: relative;
+				top: 2px;
+				width: 15px;
+				margin-right:4px;
+			}
+			.tishi{
+				font-size: 12px;
+				color: #999999;
+				margin-top: 5px;
+			}
+			.mui-badge{
+				color: #FFFFFF;
+				background-color: #F93B2E;
+			}
+			
+			.date{
+				font-size: 14px;
+				color: #999999;
+			}
+			
+			.mui-badge{
+				margin-bottom: 0px;
+			}
+			.user-name{
+				max-width: 85%;
+				overflow: hidden;
+			}
+			li{
+				list-style-type: none;
+			}
+			.mui-table-view-cell.mui-active{
+				background: #FFFFFF;
+			}
+			.mui-table-view-cell{
+				padding: 10px;
+			}
+			.mui-table-view-cell:after{
+				right: 0;
+				left: 70px;
+				bottom: 0; 
+				height: 1px;
+				background-color: #f2f2f2;
+			}
+			.mui-table-view-cell:last-child:after{
+				height: 1px;
+			}
+			.last-message{
+				max-width: 86%;
+			}
+			.mui-slider-handle{
+				display: flex;
+				align-items: center;
+				width: 100%;
+			}
+			/* 清除聊天记录 */
+			.join-team-verify {
+				position: fixed;
+				z-index: 996;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				background: rgba(0, 0, 0, 0);
+				display: none;
+				/* display: flex; */
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			.verift-body {
+				width: 80%;
+				background-color: #ffffff;
+				border-radius: 10px;
+				position: relative;
+				overflow: hidden;
+				padding-top: 5px;
+				box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
+			}
+			
+			.verift-body .tips {
+				width: 100%;
+				padding: 20px 10px 15px;
+				text-align: justify;
+			}
+			
+			.verift-footer:before {
+				content: '';
+				display: block;
+				height: 1px;
+				width: 100%;
+				top: 0;
+				left: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+			
+			.verift-footer {
+				position: relative;
+				display: flex;
+				justify-content: center;
+			}
+			
+			.verift-footer .mui-btn {
+				width: 100%;
+				height: 100%;
+				padding: 15px 10px;
+			}
+			
+			.close-verify-window:before {
+				content: '';
+				display: block;
+				height: 100%;
+				width: 1PX;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				position: absolute;
+				background-color: #dddddd;
+				transform: scaleX(0.5);
+				-webkit-transform: scaleX(0.5);
+			}
+			.mui-table-view:before,.mui-table-view:after{
+				height: 0;
+			}
+			.mui-table-view-cell:last-child:after{
+				height: 1px;
+			}
+			.Record_list{
+				display: flex;
+			}
+			.chat-red-tips,.system-red-tips{
+				position: relative;
+				width: 6px;
+				height: 6px;
+				background-color: #FF0000;
+				border-radius: 50%;
+				top: -2px;
+				display: none;
+			}
+			[v-cloak] {
+				display: none;
+			}
+			.void-data-tips {
+			  font-size: 16px;
+			  color: #d6d6d6;
+			  padding-top: 40px;
+			  text-align: center;
+			  padding-bottom: 30px;
+			}
+			.void-data-tips img {
+			  max-width: 140px;
+			  margin: 0 auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content" id="mui-content" v-cloak>
+			<div class="example">
+				<div class="bd">
+					<div class="tab-container system-cont" id="system_message" data-type="system">
+						<ul class="mui-table-view">
+							<li class="Record_list mui-table-view-cell target-assistant" :data-genre="list.type" v-for="(list,index) in systemMsg"
+							 :key="index">
+								<div class="Record_listL mui-pull-left">
+									<img v-if="list.type==1" src="../image/target-icon.png">
+									<img v-if="list.type==2" :src="'../image/team-icon.png'">
+									<img v-if="list.type==3" :src="'../image/news6.png'">
+								</div>
+								<div class="Record_listR mui-pull-right">
+									<div class="mui-clearfix">
+										<span class="mui-pull-left">
+											<span v-if="list.type==1" style="font-size: 15px;">目标助理</span>
+											<span v-else-if="list.type==2" style="font-size: 15px;">团队助理</span>
+											<span v-else-if="list.type==3" style="font-size: 15px;">店铺助理</span>
+										</span>
+										<span class="mui-pull-right date">{{list.time}}</span>
+									</div>
+									<div class="tishi mui-clearfix" style="margin-top: 5px;">
+										<span class="mui-pull-left mui-ellipsis last-message">{{list.title}}</span>
+										<p v-if="list.count>0" class="mui-badge mui-pull-right">{{list.count}}</p>
+									</div>
+								</div>
+							</li>
+							<!-- <li class="Record_list mui-table-view-cell">
+								<div class="Record_listL mui-pull-left">
+									<img src="../image/news1.png">
+								</div>
+								<div class="Record_listR mui-pull-right">
+									<div>
+										<span class="mui-pull-left">
+											<span style="font-size: 15px;">新的好友</span>
+										</span>
+										<span class="mui-pull-right date">19:10</span>
+										<div class="clearfix"></div>
+									</div>
+									<div class="tishi" style="margin-top: 5px;">
+										<span class="mui-pull-left">[小飞飞]添加你为好友</span>
+										<p class="mui-badge mui-pull-right">1</p>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</li> -->
+							<!-- <li class="Record_list mui-table-view-cell">
+								<div class="Record_listL mui-pull-left">
+									<img src="../image/news2.png">
+								</div>
+								<div class="Record_listR mui-pull-right">
+									<div>
+										<span class="mui-pull-left">
+											<span style="font-size: 15px;">商城提醒</span>
+										</span>
+										<span class="mui-pull-right date">19:10</span>
+										<div class="clearfix"></div>
+									</div>
+									<div class="tishi" style="margin-top: 5px;">
+										<span class="mui-pull-left">你的客户[头强光]下单成功（未支付）</span>
+										<p class="mui-badge mui-pull-right">1</p>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</li> -->
+							<!-- <li class="Record_list mui-table-view-cell">
+								<div class="Record_listL mui-pull-left">
+									<img src="../image/news3.png">
+								</div>
+								<div class="Record_listR mui-pull-right">
+									<div>
+										<span class="mui-pull-left">
+											<span style="font-size: 15px;">客情关怀</span>
+										</span>
+										<span class="mui-pull-right date">18/12/25</span>
+										<div class="clearfix"></div>
+									</div>
+									<div class="tishi" style="margin-top: 5px;">
+										<span class="mui-pull-left">你的客户[强光头]后天生日，送个祝福吧</span>
+									</div>
+								</div>
+							</li> -->
+							<!-- <li class="Record_list mui-table-view-cell">
+								<div class="Record_listL mui-pull-left">
+									<img src="../image/news4.png">
+								</div>
+								<div class="Record_listR mui-pull-right">
+									<div>
+										<span class="mui-pull-left">
+											<span style="font-size: 15px;">升级</span>
+										</span>
+										<span class="mui-pull-right date">18/12/25</span>
+										<div class="clearfix"></div>
+									</div>
+									<div class="tishi" style="margin-top: 5px;">
+										<span class="mui-pull-left">旺客2.1版本升级提醒</span>
+
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</li> -->
+							<!-- <li class="Record_list mui-table-view-cell">
+								<div class="Record_listL mui-pull-left">
+									<img src="../image/news5.png">
+								</div>
+								<div class="Record_listR mui-pull-right">
+									<div>
+										<span class="mui-pull-left">
+											<span style="font-size: 15px;">余额提现</span>
+										</span>
+										<span class="mui-pull-right date">18/12/25</span>
+										<div class="clearfix"></div>
+									</div>
+									<div class="tishi" style="margin-top: 5px;">
+										<span class="mui-pull-left">你的余额提现已到账</span>
+										<div class="clearfix"></div>
+									</div>
+								</div> 
+							</li> -->
+						</ul>
+						<div v-if="systemMsg==undefined||systemMsg==''" style="padding: 15px;text-align: center;color: #ccc;padding-right: 45px;">没有数据</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var chatId = '';
+			var chatType = '';
+			var refresh = false;
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					systemMsg: [],
+					msgList: [],
+					voidmsg: false,
+					loadStatus: true
+				},
+				mounted: function() {
+					mui.init({
+						keyEventBind: {
+							backbutton: false, 
+							menubutton: false 
+						},
+						swipeBack: false,
+					})
+					mui.plusReady(function() {
+						var systemMsg = getcache('systemMsg');
+						if (systemMsg) {
+							app.systemMsg = systemMsg;
+						}
+						window.addEventListener('refreshNotice', function(e) {
+							refresh = true;
+							getSystemMsg();
+						})
+						getSystemMsg();
+					})
+				},
+				methods: {
+
+				}
+			})
+
+			// 获取系统消息
+			function getSystemMsg() {
+				mui.post($ajaxUrl + 'chat&action=notice_list', {
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.systemMsg = res.data;
+						cacheData('systemMsg', res.data);
+						var flag = false;
+						for (var i = 0; i < res.data.length; i++) {
+							if (res.data[i].count > 0) {
+								flag = true;
+							}
+						}
+						if (flag) {
+							// document.querySelector('.system-red-tips').style.display = "inline-block";
+						} else {
+							// document.querySelector('.system-red-tips').style.display = "none";
+						}
+						// document.getElementById("systemMsg_total").innerText = '(' + res.data.length + ')';
+					} else {
+						// message(res.message, "center");
+					}
+				}, 'json')
+			}
+
+			// 跳转目标助理
+			mui(".mui-content").on("tap", ".target-assistant", function() {
+				var genre = this.dataset.genre;
+				if (genre == 1) {
+					openPage('target_assistant.html', 'target_assistant', '#f7f7f7', {
+						genre: genre
+					});
+				} else if (genre == 2) {
+					openPage('team_aid_detail.html', 'team_aid_detail', '#f7f7f7', {
+						genre: genre
+					});
+				} else if (genre == 3) {
+					openPage('store_tip_list.html', 'store_tip_list', '#f7f7f7', {
+						genre: genre
+					});
+				}
+			})
+		</script>
+	</body>
+</html>
