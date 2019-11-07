@@ -876,7 +876,7 @@
 									data: datas
 								});
 								alert_advertising.addEventListener('loaded', function() {
-									alert_advertising.show('none', 100);
+									alert_advertising.show('none', 300);
 								}, false);
 							}
 						}, 'json');
@@ -914,7 +914,7 @@
 							bottom: '0',
 							scrollIndicator: 'none',
 							statusbar: {
-								background: '#000'
+								background: '#000000'
 							}
 						});
 						paymentPage.show('slide-in-right');
@@ -953,7 +953,7 @@
 					document.getElementById('redpack_setting').addEventListener('tap', function() {
 						fnOpenWin('redpacket_setting.html', 'redpacket_setting', {
 							statusbar: {
-								background: '#FFF'
+								background: '#FFFFFF'
 							}
 						}, {
 							from: 'home'
@@ -984,8 +984,8 @@
 							if (e) {
 								fnOpenWin('shop_index.html', 'shop_index', {
 									statusbar: {
-										background: '#F7F7F7'
-									}
+										background: '#ffffff'
+									},
 								}, {
 									page: 'home'
 								}, 'slide-in-right');
@@ -998,12 +998,12 @@
 					mui('.mui-content').on('tap', '#target', function() {
 						fnOpenWin('target.html', 'target', {
 							statusbar: {
-								background: '#FFF'
+								background: '#FFFFFF'
 							}
 						}, {
 							page: 'home'
 						}, 'slide-in-right');
-					})
+					}) 
 					//关闭二维码
 					document.getElementById('hide_qrcode').addEventListener('tap', function() {
 						hideQrcode();
@@ -1089,7 +1089,7 @@
 			// 	setTimeout(function() {
 			// 		showload(1);
 			// 	}, 100)
-			// 	showload(0);
+			// 	showload(0);  
 			// }
 			mui.post($ajaxUrl + 'carousel', {
 				position: 1
@@ -1243,8 +1243,6 @@
 		function openLinkPage(o) {
 			var link = o.link,
 				link_type = o.link_type;
-			logs("触发了方法");
-			logs(link);
 			if (link == '') {
 				logs("没有链接")
 				return false;
@@ -1284,11 +1282,11 @@
 				});
 			} else if (link_type == 3) {
 				if ($authPage.indexOf(link) != -1) {
-					checkMember(function(e){
+					checkMember(function(e) {
 						if (e) {
 							fnOpenWin(link + '.html', link, {
 								statusbar: {
-									background: '#FFF'
+									background: '#FFFFFF'
 								}
 							}, '', 'slide-in-right');
 						}
@@ -1296,7 +1294,7 @@
 				} else {
 					fnOpenWin(link + '.html', link, {
 						statusbar: {
-							background: '#FFF'
+							background: '#FFFFFF'
 						}
 					}, '', 'slide-in-right');
 				}

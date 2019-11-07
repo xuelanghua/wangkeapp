@@ -385,6 +385,11 @@
 				font-size: 0.3rem;
 				color: #CC9C2D;
 			}
+
+			.mui-bar {
+				background-color: #ffffff;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -541,7 +546,8 @@
 									<div class="goods-right-bottom">
 										<span @tap="openGoodsDetail(goods.id,goods.uid)">销量&nbsp;{{goods.sale_count}}</span>
 										<!-- <span @tap="openGoodsDetail(goods.id,goods.uid)">95%&nbsp;好评</span> -->
-										<img v-if="goods.is_pick==0" :data-gid="goods.id" :data-type="goods.type" class="add-entrepot add-entrepot-btn" src="../image/icon/jianhuo-active.png">
+										<img v-if="goods.is_pick==0" :data-gid="goods.id" :data-type="goods.type" class="add-entrepot add-entrepot-btn"
+										 src="../image/icon/jianhuo-active.png">
 										<img v-else class="add-entrepot" src="../image/icon/jianhuo.png">
 									</div>
 									<div v-if="goods.type=='team'" class="team-name" :data-idx="index">
@@ -631,7 +637,14 @@
 				mounted: function() {
 					mui.init({
 						beforeback: function() {
-							plus.navigator.setStatusBarStyle("light");
+							var per = plus.webview.currentWebview().opener();
+							if (per) {
+								if (per.id == "home") {
+									plus.navigator.setStatusBarStyle("dark");
+								} else if (per.id == "user") {
+									plus.navigator.setStatusBarStyle("light");
+								}
+							}
 						},
 						pullRefresh: {
 							container: ".mui-content",

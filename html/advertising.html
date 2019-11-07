@@ -9,9 +9,10 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
-			body{
+			body {
 				height: 100%;
 			}
+
 			.mui-content {
 				position: relative;
 				width: 100%;
@@ -116,7 +117,6 @@
 						_this.link_type = self.data.link_type;
 						_this.pageTitle = self.data.title;
 						_this.path = self.data.link;
-						// logs(self.data);
 						mui(".mui-content").on("tap", ".skip-btn", function() {
 							closeSelf();
 						})
@@ -144,16 +144,16 @@
 									action: 'url_title',
 									url: _this.path
 								}, function(res) {
-									closeSelf();
 									fnOpenWin('webview.html', 'webview', {
 										statusbar: {
-											background: '#FFF'
+											background: '#FFFFFF'
 										}
 									}, {
 										title: res.data,
 										statusBarStyle: 'light',
 										url: _this.path
 									}, 'fade-in');
+									closeSelf();
 								}, 'json');
 							} else if (_this.link_type == 2) {
 								plus.share.getServices(function(s) {
@@ -176,7 +176,7 @@
 								});
 							} else if (_this.link_type == 3) {
 								if ($authPage.indexOf(_this.path) != -1) {
-									checkMember(function(e){
+									checkMember(function(e) {
 										if (e) {
 											fnOpenWin(_this.path + '.html', _this.path, {
 												statusbar: {
@@ -192,6 +192,9 @@
 										}
 									}, '', 'slide-in-right');
 								}
+								setTimeout(function() {
+									closeSelf();
+								}, 800);
 							}
 						})
 					})

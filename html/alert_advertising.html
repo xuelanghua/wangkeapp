@@ -31,7 +31,7 @@
 
 			.mui-content .ad-img {
 				width: 75%;
-				max-height:50%;
+				max-height: 50%;
 				margin-bottom: 20px;
 				overflow: hidden;
 			}
@@ -96,9 +96,8 @@
 						_this.link_type = self.data.link_type;
 						_this.path = self.data.link;
 						_this.pageTitle = self.data.title;
-						// logs(self.data);
+						logs(self.data);
 						mui(".mui-content").on("tap", ".ad-img", function() {
-							self.close("fade-out");
 							if (_this.path == '') {
 								return false;
 							}
@@ -138,11 +137,12 @@
 								});
 							} else if (_this.link_type == 3) {
 								if ($authPage.indexOf(_this.path) != -1) {
-									checkMember(function(e){
+									// 包含
+									checkMember(function(e) {
 										if (e) {
 											fnOpenWin(_this.path + '.html', _this.path, {
 												statusbar: {
-													background: '#FFF'
+													background: '#f7f7f7'
 												}
 											}, '', 'slide-in-right');
 										}
@@ -150,11 +150,15 @@
 								} else {
 									fnOpenWin(_this.path + '.html', _this.path, {
 										statusbar: {
-											background: '#FFF'
+											background: '#f7f7f7',
 										}
 									}, '', 'slide-in-right');
 								}
 							}
+							// setTimeout(function() {
+							// 	self.hide();
+							// 	self.close();
+							// }, 800)
 						})
 						mui(".mui-content").on("tap", ".close-ad", function() {
 							self.close("fade-out");
