@@ -11,7 +11,7 @@ $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&
 $debug = true;
 $videoMaxSize = 10 * 1024 * 1024;
 $noticeNumber = 0;
-$authPage = ['shop_index', 'member', 'maker', 'agent'];
+$authPage = ['shop_index', 'member', 'maker', 'agent','choose_wang_goods'];
 //获取用户信息
 var getUserInfo = function() {
 	return JSON.parse(localStorage.getItem('user'));
