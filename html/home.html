@@ -1264,7 +1264,7 @@
 						url: link
 					}, 'fade-in');
 				}, 'json');
-			} else {
+			} else if (link_type == 2) {
 				plus.share.getServices(function(s) {
 					var shareService = {};
 					for (var i in s) {
@@ -1282,6 +1282,24 @@
 				}, function(e) {
 					message('当前环境不支持打开小程序!')
 				});
+			} else if (link_type == 3) {
+				if ($authPage.indexOf(link) != -1) {
+					checkMember(function(e){
+						if (e) {
+							fnOpenWin(link + '.html', link, {
+								statusbar: {
+									background: '#FFF'
+								}
+							}, '', 'slide-in-right');
+						}
+					});
+				} else {
+					fnOpenWin(link + '.html', link, {
+						statusbar: {
+							background: '#FFF'
+						}
+					}, '', 'slide-in-right');
+				}
 			}
 		}
 	</script>

@@ -8,9 +8,10 @@ $voiceUrl = 'https://app.wangkeapp.cn/app/index.php?i=6&c=entry&m=longbing_card&
 // $videoUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=utility&a=file&do=upload&type=video'; //视频上传接口
 // $voiceUrl = 'http://app.ynhost.cn/app/index.php?i=6&c=entry&m=wangke&do=upload'; //音频上传接口
 
-$debug = false;
+$debug = true;
 $videoMaxSize = 10 * 1024 * 1024;
 $noticeNumber = 0;
+$authPage = ['shop_index', 'member', 'maker', 'agent'];
 //获取用户信息
 var getUserInfo = function() {
 	return JSON.parse(localStorage.getItem('user'));
