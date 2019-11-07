@@ -12,7 +12,9 @@ var wangke = {
 		message: '最多只能选择9张图片',
 		separate: false
 	},
-	files: []
+	files: [],
+	total:0,
+	current:1
 };
 
 (function(w) {
@@ -94,6 +96,7 @@ var wangke = {
 		camera.captureImage(function(e) {
 			plus.io.resolveLocalFileSystemURL(e, function(entry) {
 				w.files.push(e);
+				w.total++;
 				showload(false, false, '图片上传中...', "rgba(0,0,0,0.5)");
 				w.resizeImage(entry.toLocalURL(), success, fail);
 			}, function(e) {
@@ -116,6 +119,7 @@ var wangke = {
 			var imageExt = ["jpg", "jgeg", "png", "gif", "bmp", "webp"];
 			if (!w.options.multiple || w.options.type == "video" || (w.options.type == "none" && !w.options.separate)) {
 				w.files.push(e);
+				w.total++;
 				var ext = e.substring(e.lastIndexOf(".") + 1).toLocaleLowerCase();
 				if (imageExt.indexOf(ext) != -1) {
 					showload(false, false, '图片上传中...', "rgba(0,0,0,0.5)");
@@ -129,6 +133,7 @@ var wangke = {
 				showload(false, false, '图片上传中...', "rgba(0,0,0,0.5)");
 				for (var i in filesList) {
 					w.files.push(e);
+					w.total++;
 					w.resizeImage(filesList[i], success, fail);
 				}
 			}
@@ -219,6 +224,7 @@ var wangke = {
 					fail({code: 103, message: "上传失败"})
 				}
 				w.files.shift();
+				++w.current;
 				if (w.files.length == 0) {
 					showload(1);
 				}
