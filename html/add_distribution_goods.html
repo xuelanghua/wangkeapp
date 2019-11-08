@@ -24,7 +24,32 @@
 			.goods-img-contianer .add-goods-img {
 				margin-bottom: 0.2rem;
 			}
-
+			.choice-team-content .team-list::before {
+			  content: '';
+			  display: inline-block;
+			  width: 0.40rem;
+			  height: 0.34rem;
+			  position: absolute;
+			  background: url('../image/icon/draw-icon02.png') center center no-repeat;
+			  background-size: contain;
+			  right: 15px;
+			  top: 50%;
+			  margin-top: -10px;
+			}
+			.choice-team-content .team-list.active::before {
+				width: 0.40rem;
+				height: 0.34rem;
+			}
+			.team-header-img{
+				width: 0.56rem;
+				height: 0.56rem;
+				object-fit: cover;
+				margin-right: 10px;
+				border-radius: 3px;
+			}
+			.choice-team-content {
+			  padding-left: 0.2rem;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -215,7 +240,7 @@
 				</div>
 				<ul class="mui-table-view choice-team-content">
 					<li class="mui-table-view-cell team-list" :data-ids="t.id" v-for="(t,i) in team_list">
-						<span>{{t.name}}</span>
+						<img class="team-header-img" :src="t.cover" alt=""><span>{{t.name}}</span>
 					</li>
 				</ul>
 			</div>
@@ -328,6 +353,7 @@
 							mui.post($ajaxUrl + 'team&action=my_team_list', {
 								token: userInfo.token
 							}, function(res) {
+								console.log(res);
 								if (res.errno == 0) {
 									app.team_list = res.data;
 								} else {

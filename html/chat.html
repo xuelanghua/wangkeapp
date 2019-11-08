@@ -56,12 +56,6 @@
 			var userInfo = getUserInfo(),
 				refresh = '',
 				aniShow = {},
-				styles = {
-					top: '140px',
-					bottom: '0',
-					render: "always",
-					scrollIndicator: "none",
-				},
 				activeTab = 'customer';
 			var app = new Vue({
 				el: "#mui-content",
@@ -115,7 +109,7 @@
 							mui.extend(aniShow, temp);
 							plus.webview.show(tid, "fade-in");
 						}
-						
+
 						//隐藏当前;
 						plus.webview.hide(activeTab);
 						for (var i = 0; i < 3; i++) {
@@ -134,6 +128,14 @@
 					});
 					var pageHeight = 0;
 					mui.plusReady(function() {
+						var statusBarHeight = plus.navigator.getStatusbarHeight();
+						var offsetTop = statusBarHeight + 126
+						var styles = {
+							top: offsetTop,
+							bottom: '0',
+							render: "always",
+							scrollIndicator: "none",
+						};
 						pageinit();
 						pageHeight = plus.display.resolutionHeight;
 						app.viewHeight = 'height:' + (pageHeight - 400) + 'px';
