@@ -162,9 +162,11 @@
 				/* background-color: #2289ff; */
 				line-height: 1;
 			}
-			.mui-icon-more{
+
+			.mui-icon-more {
 				color: #000000;
 			}
+
 			.tips-cont {
 				background-color: #f7f7f7;
 				border-radius: 5px;
@@ -175,17 +177,24 @@
 				text-align: justify;
 				box-shadow: 0 0 5px rgba(0, 0, 0, .6);
 			}
-			
+
 			.mui-backdrop {
 				background-color: rgba(0, 0, 0, 0);
 			}
-			.mui-popover .mui-popover-arrow:after{
+
+			.mui-popover .mui-popover-arrow:after {
 				box-shadow: 0 0 5px rgba(0, 0, 0, .36);
-				
+
 			}
+
 			.friends-detail-container .first-card-container .user-qr-code-red {
-				background-color: rgba(0, 0, 0, 0.4)!important;
+				background-color: rgba(0, 0, 0, 0.4) !important;
 			}
+
+			.friends-detail-container .goods-window .goods-item .goods-img {
+				object-fit: cover;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -481,7 +490,7 @@
 							mui('#topPopover').popover('hide', document.querySelector(".change-theme"));
 							videoPlayer(muiCont.demoUrl);
 						})
-						
+
 						mui(".mui-content").on("tap", ".share-card", function() {
 							muiCont.share_title = muiCont.contName + '的旺客名片!';
 							mask.show();
@@ -500,7 +509,7 @@
 					},
 					monitorl: function() {
 						var _self = this;
-						if (_self.share_title.length >= 30) { 
+						if (_self.share_title.length >= 30) {
 							message("自定义标题不能大于30字！")
 							_self.share_title = _self.share_title.substring(0, 30);
 						}
@@ -532,10 +541,10 @@
 						}
 						if (fid != selfid && muiCont.is_friend == 1) {
 							document.querySelector('.edit-remark').style.display = 'block';
-						} else if(fid == selfid){
+						} else if (fid == selfid) {
 							document.querySelector('.change-theme').classList.remove('mui-hidden');
 						}
-						
+
 						if (data.card_guide != '') {
 							muiCont.demoUrl = data.card_guide;
 							document.querySelector('.operation-demo-btn').classList.remove('mui-hidden');
@@ -586,11 +595,11 @@
 								}
 							});
 						});
-						if(pull=="pull"){
+						if (pull == "pull") {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
 					} else {
-						if(pull=="pull"){
+						if (pull == "pull") {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
 						message(res.message);
@@ -611,7 +620,7 @@
 						gid: goodsId
 					});
 				}, 200);
-			} 
+			}
 			// 音频播放
 			var timer = 0;
 			var audio = document.getElementById("audioPlay");
@@ -776,15 +785,16 @@
 				// }
 				shareFriend();
 			})
+
 			function shareFriend() {
 				if (!muiCont.share_title) {
 					message("请输入分享标题！");
 					return false;
 				}
 				mask.close();
-				var img=muiCont.friendData.avatar || '../image/user_default.jpg'; 
+				var img = muiCont.friendData.avatar || '../image/user_default.jpg';
 				// var img="https://cdn.wangkeapp.cn/images/6/2019/10/HDpujSUS788pS2U8YyUssjruPJjsl3.jpg";
-				var imgs = img.substring(img.lastIndexOf("/")); 
+				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;
 				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
 					shareToMiniprogram({

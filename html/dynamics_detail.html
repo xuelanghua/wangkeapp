@@ -125,7 +125,8 @@
 						<div class="menu-body" :class="menuStatus?'active':''">
 							<!-- 箭头 -->
 							<div class="menu-arrow"></div>
-							<div class="item" @tap="shareBtn(all_datas.id,all_datas.content,all_datas.cover[0],all_datas.user_id)">
+							<!-- <div class="item" @tap="shareBtn(all_datas.id,all_datas.content,all_datas.cover[0],all_datas.user_id)"> -->
+							<div class="item" @tap="shareBtn(all_datas)">
 								<span class="iconfont icon-share">&#xe604;</span>
 								<span>分享</span>
 							</div>
@@ -356,7 +357,21 @@
 				}, 'json')
 			}
 			// 分享
-			function shareBtn(id, cont, img, touid) {
+			function shareBtn(all_datas) {
+				var img = '';
+				var id = all_datas.id,
+					cont = all_datas.content,
+					is_video = all_datas.is_video,
+					touid = all_datas.user_id;
+				if (is_video == 1) {
+					img = all_datas.cover[0] + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast';
+				} else {
+					if (all_datas.cover != "") {
+						img = all_datas.cover[0];
+					} else {
+						img = "https://bfwangke.oss-cn-shenzhen.aliyuncs.com/headimg_6.jpg"; 
+					}
+				}
 				mask.close();
 				if (typeof(img) == "undefined" || img.length < 6) {
 					img = "https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/6/2019/05/miniprogram_share.jpg"
@@ -425,7 +440,7 @@
 					message("评论内容不能为空!");
 					return false;
 				}
-				muiCont.container='';
+				muiCont.container = '';
 				critic(conts);
 			})
 			// 跳转个人动态主页

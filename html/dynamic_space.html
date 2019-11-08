@@ -10,10 +10,6 @@
 		<link rel="stylesheet" href="../css/animate.min.css">
 		<link rel="stylesheet" href="../css/dynamic.css">
 		<style type="text/css">
-			[v-cloak] {
-				display: none;
-			}
-
 			.vip0 {
 				padding: 0 0.16rem;
 				height: 0.3rem;
@@ -87,6 +83,10 @@
 				-webkit-transform: translate(-50%, -50%);
 				transform: translate(-50%, -50%);
 			}
+			[v-cloak] {
+				display: none;
+			}
+			
 		</style>
 		<script type="text/javascript">
 			// 初始化字体大小
@@ -176,7 +176,7 @@
 											<div v-if="is_self" class="item" @tap="delList(d.id,l,i)">
 												<span class="iconfont icon-delete">&#xe603;</span>删除
 											</div>
-											<div class="item" @tap="shareBtn(d.id,d.title,d.cover[0])"><span class="iconfont icon-share">&#xe604;</span>分享</div>
+											<div class="item" @tap="shareBtn(d)"><span class="iconfont icon-share">&#xe604;</span>分享</div>
 											<div class="item" @tap="likeThis(d.id,l,i)" :class="'icon-like'+d.id">
 												<span class="iconfont icon-like">&#xe601;</span>{{d.is_thumbs==1?'取消':'点赞'}}
 											</div>
@@ -557,12 +557,25 @@
 				})
 			}
 			// 分享
-			function shareBtn(id, cont, img) {
+			function shareBtn(all_datas) {
 				app.isComment = true;
-				document.querySelector(".menu-body" + _com_id).classList.remove("active");
 				mask.close();
-				var imgs = img.substring(img.lastIndexOf("/"));
-				var sd_path = "_downloads" + imgs;
+				document.querySelector(".menu-body" + _com_id).classList.remove("active");
+				var img = '';
+				var id = all_datas.id,
+					cont = all_datas.content,
+					is_video = all_datas.is_video,
+					touid = all_datas.user_id;
+				if (is_video == 1) {
+					img = all_datas.cover[0] + '?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast';
+				} else {
+					if (all_datas.cover != "") {
+						img = all_datas.cover[0];
+					} else {
+						img = "https://bfwangke.oss-cn-shenzhen.aliyuncs.com/headimg_6.jpg"; 
+					}
+				}
+				var sd_path = "_downloads" + img;
 				plus.io.resolveLocalFileSystemURL(sd_path, function(e) {
 					shareToMiniprogram({
 						title: cont,
@@ -600,8 +613,8 @@
 											thumbs: [imgpath],
 											miniProgram: {
 												id: 'gh_9fa5f42ab939',
-												// path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
-												path: '/longbing_card/pages/index/index?currentTabBar=toNews&to_uid=' + userInfo.id,
+												// path: '/longbing_card/pages/index/index?currentTabBar=toNews&to_uid=' + userInfo.id,
+												path: '/longbing_card/pages/news/detail/detail?id=' + id + '&isStaff=true',
 												webUrl: 'https://app.wangkeapp.cn/'
 											}
 										}, 'miniProgram');
