@@ -6,7 +6,6 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title></title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<!-- <link href="../css/mui.imageviewer.css" rel="stylesheet" /> -->
 		<link href="../css/team_chat.css" rel="stylesheet" />
 		<style>
 			.msg-item .msg-content{
@@ -268,7 +267,8 @@
 					<template v-for="(list, key) in item" :key="key">
 						<div class="msg-item" :class="uid==list.uid?'msg-item-self':''" :msg-type="list.message_type" :msg-content="list.content">
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
-							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)" alt="" />
+							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)"
+							 alt="" />
 							<div class="msg-content">
 								<i v-if="list.read_status==0&&list.message_type=='audio'" class="red-dot"></i>
 								<div v-if="list.message_type=='text'" class="msg-content-inner" v-html="list.content">
@@ -326,7 +326,6 @@
 			<div id="audio_tips" class="rsalert">手指上滑，取消发送</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
-		<!-- <script src="../js/mui.imageViewer.js"></script> -->
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/arttmpl.js"></script>
@@ -475,24 +474,10 @@
 						};
 
 						ui.h.style.width = ui.boxMsgText.offsetWidth + 'px';
-						//alert(ui.boxMsgText.offsetWidth );
 						var footerPadding = ui.footer.offsetHeight - ui.boxMsgText.offsetHeight;
-						// var imageViewer = new mui.ImageViewer('.msg-content-image', {
-						// 	dbl: false
-						// });
 						var bindMsgList = function() {
 							var areaMsgList = document.querySelector('#msg-list');
-							// var msgItems = areaMsgList.querySelectorAll('.msg-item');
-							// [].forEach.call(msgItems, function(item, index) {
-							// 	item.addEventListener('tap', function(event) {
-							// 		msgItemTap(item, event);
-							// 	}, false);
-							// });
-							// imageViewer.findAllImage();
-							// console.log(areaMsgList.scrollHeigh);
-							// console.log(areaMsgList.offsetHeight);
 							areaMsgList.scrollTop = areaMsgList.scrollHeight + areaMsgList.offsetHeight;
-							// areaMsgList.scrollTop = areaMsgList.offsetHeight + 1000;
 							mui.previewImage();
 						};
 
@@ -520,7 +505,7 @@
 								ui.boxMsgText.focus();
 							}, 150);
 						}
-						
+
 						//解决长按“发送”按钮，导致键盘关闭的问题；
 						ui.footerRight.addEventListener('touchstart', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -536,34 +521,13 @@
 								event.preventDefault();
 							}
 						});
-
-						// ui.footerRight.addEventListener('touchcancel', function(event) {
-						// 	if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
-						// 		msgTextFocus();
-						// 		event.preventDefault();
-						// 	}
-						// });
-						// ui.footerRight.addEventListener('touchend', function(event) {
-						// 	if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
-						// 		msgTextFocus();
-						// 		event.preventDefault();
-						// 	}
-						// });
-
 						ui.footerRight.addEventListener('release', function(event) {
 							logs(222222);
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
-								//showKeyboard();
 								ui.boxMsgText.focus();
 								setTimeout(function() {
 									ui.boxMsgText.focus();
 								}, 150);
-								//event.detail.gesture.preventDefault();
-								// send({
-								// 	sender: 'self',
-								// 	type: 'text',
-								// 	content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
-								// });
 								var msgContent = ui.boxMsgText.value.replace(/(\s*$)/g, "");
 								if (msgContent == '') {
 									ui.boxMsgText.value = '';
@@ -572,7 +536,6 @@
 								}
 								chatData['message_type'] = 'text';
 								chatData['content'] = msgContent.replace(new RegExp('\n', 'gm'), '<br/>');
-								// logs(chatData);
 								ws.send(JSON.stringify(chatData)); //向服务器发送消息
 								ui.boxMsgText.value = '';
 								mui.trigger(ui.boxMsgText, 'input', null);
@@ -588,8 +551,6 @@
 								ui.btnMsgType.classList.remove('mui-icon-compose');
 								ui.boxMsgSound.style.display = 'none';
 								ui.boxMsgText.style.display = 'block';
-								//--
-								//showKeyboard();
 								ui.boxMsgText.focus();
 								setTimeout(function() {
 									ui.boxMsgText.focus();
@@ -607,46 +568,6 @@
 									message(e.message);
 								}
 							})
-							// imageUpload(function(res) {
-							// 	chatData.message_type = 'image';
-							// 	chatData.content = res.url;
-							// 	ws.send(JSON.stringify(chatData));
-							// })
-							// var btnArray = [{
-							// 	title: "拍照"
-							// }, {
-							// 	title: "从相册选择"
-							// }];
-							// plus.nativeUI.actionSheet({
-							// 	title: "选择照片",
-							// 	cancel: "取消",
-							// 	buttons: btnArray
-							// }, function(e) {
-							// 	var index = e.index;
-							// 	switch (index) {
-							// 		case 0:
-							// 			break;
-							// 		case 1:
-							// 			var cmr = plus.camera.getCamera();
-							// 			cmr.captureImage(function(path) {
-							// 				send({
-							// 					sender: 'self',
-							// 					type: 'image',
-							// 					content: "file://" + plus.io.convertLocalFileSystemURL(path)
-							// 				});
-							// 			}, function(err) {});
-							// 			break;
-							// 		case 2:
-							// 			plus.gallery.pick(function(path) {
-							// 				send({
-							// 					sender: 'self',
-							// 					type: 'image',
-							// 					content: path
-							// 				});
-							// 			}, function(err) {}, null);
-							// 			break;
-							// 	}
-							// });
 						}, false);
 
 						var setSoundAlertVisable = function(show) {
@@ -685,20 +606,28 @@
 								filename: "_doc/audio/",
 								format: "mp3"
 							}, function(path) {
-								if (recordCancel) return;
-								// send({
-								// 	sender: 'self',
-								// 	type: 'sound',
-								// 	content: path
-								// });
-								voiceUpload(path);
+								var file = path;
+								plus.io.getAudioInfo({
+									filePath: file,
+									success: function(res) {
+										voiceTime = Math.round(res.duration);
+										if (voiceTime < 2) {
+											message('录音小于2秒,请重新录制');
+											return;
+										}
+										voiceUpload(file);
+									},
+									fail: function(error) {
+										message(error.message);
+										return;
+									}
+								});
 							}, function(e) {
 								plus.nativeUI.toast("录音时出现异常: " + e.message);
 							});
 						}, false);
 
 						ui.body.addEventListener('drag', function(event) {
-							//console.log('drag');
 							if (Math.abs(event.detail.deltaY) > 50) {
 								if (!recordCancel) {
 									recordCancel = true;
@@ -719,7 +648,6 @@
 						}, false);
 
 						ui.boxMsgSound.addEventListener('release', function(event) {
-							//console.log('release');
 							if (audio_tips.classList.contains("cancel")) {
 								audio_tips.classList.remove("cancel");
 								audio_tips.innerHTML = "手指上划，取消发送";
@@ -740,7 +668,6 @@
 						}, false);
 
 						ui.boxMsgSound.addEventListener("touchstart", function(e) {
-							//console.log("start....");
 							e.preventDefault();
 						});
 
@@ -752,26 +679,6 @@
 							ui.content.style.paddingBottom = ui.footer.style.height;
 						});
 
-						// var focus = false;
-						// ui.boxMsgText.addEventListener('tap', function(event) {
-						// 	ui.boxMsgText.focus();
-						// 	setTimeout(function() {
-						// 		ui.boxMsgText.focus();
-						// 	}, 0);
-						// 	focus = true;
-						// 	setTimeout(function() {
-						// 		focus = false;
-						// 	}, 1000);
-						// 	event.detail.gesture.preventDefault();
-						// }, false);
-
-						//点击消息列表，关闭键盘
-						// ui.areaMsgList.addEventListener('click', function(event) {
-						// 	if (!focus) {
-						// 		ui.boxMsgText.blur();
-						// 	}
-						// })
-
 						var timer = 0
 						//websocket 心跳检测
 						var heartCheck = {
@@ -782,7 +689,6 @@
 								clearTimeout(timer);
 								clearTimeout(this.serverTimeoutObj);
 								clearTimeout(this.timeoutObj);
-								// console.log("heartCheck.reset.timer");
 								return;
 							},
 							start: function() {
@@ -898,7 +804,7 @@
 							skip = 1;
 							getChatList();
 						})
-						
+
 						// 长按保存图片咯
 						mui("body").on('longtap', ".mui-preview-image img", function() {
 							var urls = this.src;
@@ -923,12 +829,14 @@
 
 			//文件上传
 			function voiceUpload(file) {
+				showload(0, 0, "发送中···", "rgba(0,0,0,0.5)")
 				var task = plus.uploader.createUpload($voiceUrl, {
 						method: "POST",
 						blocksize: 614400,
 						priority: 100
 					},
 					function(t, status) { //上传完成
+						// showload(1);
 						if (status == 200) {
 							var res = JSON.parse(t.responseText);
 							if (res.errno == 1) {
@@ -941,7 +849,6 @@
 							}
 						} else {
 							message('发送失败!');
-							// console.log("上传失败：" + status);
 						}
 					}
 				);
@@ -954,12 +861,10 @@
 			// 禁言
 			mui(".option-menu").on("tap", ".banned-say", function() {
 				if (vm.teacher_id == userInfo.id) {
-					// if (12 == userInfo.id) {
 					mui.post($ajaxUrl + 'team&action=set_course_silent', {
 						token: userInfo.token,
 						course_id: vm.courseId
 					}, function(res) {
-						// logs(res);
 						if (res.errno == 0) {
 							vm.say = !vm.say;
 							if (vm.say) {
@@ -993,14 +898,12 @@
 							player.stop();
 							player.close();
 							player = null;
-							// logs(player);
 						}
 					} else {
 						if (player) {
 							player.stop();
 							player.close();
 							player = null;
-							// logs(player);
 						}
 						player = plus.audio.createPlayer(msgContent);
 						playState.innerText = '正在播放...';
@@ -1032,13 +935,13 @@
 					}, 'json');
 				}
 			}
-			
+
 			function toUserDetail(uid) {
 				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
 					fid: uid
 				});
 			}
-			
+
 			// 打开团队统计
 			mui(".mui-bar").on("tap", ".statistics-btn", function() {
 				openPage('course_statistics.html', 'course_statistics', '#f7f7f7', {

@@ -261,19 +261,24 @@
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
 						<i>手机</i><span>{{friendData.phone||"还未填写"}}</span>
-						<a v-if="friendData.phone" :href="'tel:'+friendData.phone">拨打</a></li>
+						<a v-if="friendData.phone" :href="'tel:'+friendData.phone">拨打</a>
+					</li>
 					<li class="mui-table-view-cell" v-if="cardType=='cardType1'">
 						<i>座机</i><span>{{friendData.telephone||"还未填写"}}</span>
-						<a v-if="friendData.telephone" href="tel:13700696591">拨打</a></li>
+						<a v-if="friendData.telephone" href="tel:13700696591">拨打</a>
+					</li>
 					<li class="mui-table-view-cell">
 						<i>微信</i><span>{{friendData.wechat||"还未填写"}}</span>
-						<a v-if="friendData.wechat" href="javascript:void(0)" @tap="copy_fun(friendData.wechat)">复制</a></li>
+						<a v-if="friendData.wechat" href="javascript:void(0)" @tap="copy_fun(friendData.wechat)">复制</a>
+					</li>
 					<li class="mui-table-view-cell" v-if="cardType=='cardType1'">
 						<i>邮箱</i><span>{{friendData.email||"还未填写"}}</span>
-						<a v-if="friendData.email" href="javascript:void(0)" @tap="copy_fun(friendData.email)">复制</a></li>
+						<a v-if="friendData.email" href="javascript:void(0)" @tap="copy_fun(friendData.email)">复制</a>
+					</li>
 					<li class="mui-table-view-cell">
 						<i>公司</i><span>{{friendData.company||"还未填写"}}</span>
-						<a v-if="friendData.company" href="javascript:void(0)" @tap="copy_fun(friendData.company)">复制</a></li>
+						<a v-if="friendData.company" href="javascript:void(0)" @tap="copy_fun(friendData.company)">复制</a>
+					</li>
 					<li class="mui-table-view-cell">
 						<i>地址</i><span>{{friendData.company_address||"还未填写"}}</span>
 					</li>
@@ -792,7 +797,7 @@
 					return false;
 				}
 				mask.close();
-				var img = muiCont.friendData.avatar || '../image/user_default.jpg';
+				var img = muiCont.friendData.avatar || 'https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/global/user_default.jpg';
 				// var img="https://cdn.wangkeapp.cn/images/6/2019/10/HDpujSUS788pS2U8YyUssjruPJjsl3.jpg";
 				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;
