@@ -285,9 +285,11 @@
 				<template v-for="(item, index) in chatList" :key="index">
 					<div class="data-time" style="padding: 5px 0;text-align: center;font-size: 14px;color: #999;">{{index}}</div>
 					<template v-for="(list, key) in item" :key="key">
-						<div class="msg-item mui-clearfix" :class="[uid==list.uid?'msg-item-self':'',uid==list.uid&&(list.message_type=='goods'||list.message_type=='course')?'goods-container':'']" :msg-type="list.message_type">
+						<div class="msg-item mui-clearfix" :class="[uid==list.uid?'msg-item-self':'',uid==list.uid&&(list.message_type=='goods'||list.message_type=='course')?'goods-container':'']"
+						 :msg-type="list.message_type">
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
-							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)" alt="" />
+							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)"
+							 alt="" />
 							<div class="msg-content">
 								<div class="msg-content-arrow"></div>
 								<i v-if="list.message_type=='audio' && list.read_status==0&&uid!=list.uid" class="red-dot"></i>
@@ -305,14 +307,15 @@
 									<img data-preview-src="" data-preview-group="1" :src="list.content" style="max-width: 100px;" />
 								</div>
 								<div v-else-if="list.message_type=='video'" class="img-content-inner" @tap="videoPlayer(list.content)">
-									<img :src="list.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" style="max-width: 100px;" />
+									<img :src="list.content+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'"
+									 style="max-width: 100px;" />
 									<img class="player-btn" src="../image/icon/video-player.png">
 								</div>
-								<div  v-else-if="list.message_type=='goods'" class="goods-card"  @tap="goBuy(list.content.id,list.uid)">
-									<div class="goods-card-title"><img src="../image/user_default.png" >旺客软件</div>
+								<div v-else-if="list.message_type=='goods'" class="goods-card" @tap="goBuy(list.content.id,list.uid)">
+									<div class="goods-card-title"><img src="../image/user_default.png">旺客软件</div>
 									<p class="goods-title mui-ellipsis-2">{{list.content.name}}</p>
-									<img class="goods-images" :src="list.content.cover" >
-								</div>								
+									<img class="goods-images" :src="list.content.cover">
+								</div>
 								<div v-else class="msg-content-inner" @tap="readAudio(list.id,index,key,list.read_status,list.message_type,list.content)">
 									<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
 									<span class="play-state" :class="'play-state'+list.id">点击播放</span>
@@ -512,7 +515,7 @@
 								ui.boxMsgText.focus();
 							}, 150);
 						}
-						
+
 						//解决长按“发送”按钮，导致键盘关闭的问题；
 						ui.footerRight.addEventListener('touchstart', function(event) {
 							if (ui.btnMsgType.classList.contains('mui-icon-paperplane')) {
@@ -597,46 +600,6 @@
 									message(e.message);
 								}
 							})
-							// imageUpload(function(res) {
-							// 	chatData.message_type = 'image';
-							// 	chatData.content = res.url;
-							// 	ws.send(JSON.stringify(chatData));
-							// })
-							// var btnArray = [{
-							// 	title: "拍照"
-							// }, {
-							// 	title: "从相册选择"
-							// }];
-							// plus.nativeUI.actionSheet({
-							// 	title: "选择照片",
-							// 	cancel: "取消",
-							// 	buttons: btnArray
-							// }, function(e) {
-							// 	var index = e.index;
-							// 	switch (index) {
-							// 		case 0:
-							// 			break;
-							// 		case 1:
-							// 			var cmr = plus.camera.getCamera();
-							// 			cmr.captureImage(function(path) {
-							// 				send({
-							// 					sender: 'self',
-							// 					type: 'image',
-							// 					content: "file://" + plus.io.convertLocalFileSystemURL(path)
-							// 				});
-							// 			}, function(err) {});
-							// 			break;
-							// 		case 2:
-							// 			plus.gallery.pick(function(path) {
-							// 				send({
-							// 					sender: 'self',
-							// 					type: 'image',
-							// 					content: path
-							// 				});
-							// 			}, function(err) {}, null);
-							// 			break;
-							// 	}
-							// });
 						}, false);
 
 						var setSoundAlertVisable = function(show) {
@@ -675,13 +638,36 @@
 								filename: "_doc/audio/",
 								format: "mp3"
 							}, function(path) {
-								if (recordCancel) return;
-								// send({
-								// 	sender: 'self',
-								// 	type: 'sound',
-								// 	content: path
-								// });
-								voiceUpload(path);
+								var file = path;
+								plus.io.getAudioInfo({
+									filePath: file,
+									success: function(res) {
+										var voiceTime = Math.round(res.duration);
+										if (voiceTime < 2 && !recordCancel) {
+											audio_tips.innerHTML = "录音时间太短";
+											ui.boxSoundAlert.classList.add('rprogress-sigh');
+											stopTimer=setTimeout(function() {
+												setSoundAlertVisable(false);
+											}, 800);
+											return false;
+										}
+										if (recordCancel) {
+											setSoundAlertVisable(false);
+											return false;
+										}
+										setSoundAlertVisable(false);
+										voiceUpload(file);
+									},
+									fail: function(error) {
+										if (!recordCancel) {
+											audio_tips.innerHTML = "录音时间太短";
+											ui.boxSoundAlert.classList.add('rprogress-sigh');
+											stopTimer=setTimeout(function() {
+												setSoundAlertVisable(false);
+											}, 800);
+										}
+									}
+								})
 							}, function(e) {
 								plus.nativeUI.toast("录音时出现异常: " + e.message);
 							});
@@ -707,30 +693,31 @@
 								}
 							}
 						}, false);
-
+						var startTime = 0;
 						ui.boxMsgSound.addEventListener('release', function(event) {
-							//console.log('release');
 							if (audio_tips.classList.contains("cancel")) {
 								audio_tips.classList.remove("cancel");
 								audio_tips.innerHTML = "手指上划，取消发送";
 							}
-							//
-							stopTimestamp = (new Date()).getTime();
-							if (stopTimestamp - startTimestamp < MIN_SOUND_TIME) {
-								audio_tips.innerHTML = "录音时间太短";
-								ui.boxSoundAlert.classList.add('rprogress-sigh');
-								recordCancel = true;
-								stopTimer = setTimeout(function() {
-									setSoundAlertVisable(false);
-								}, 800);
-							} else {
-								setSoundAlertVisable(false);
-							}
+							// stopTimestamp = (new Date()).getTime();
+							// if (stopTimestamp - startTimestamp < MIN_SOUND_TIME) {
+							// 	audio_tips.innerHTML = "录音时间太短";
+							// 	ui.boxSoundAlert.classList.add('rprogress-sigh');
+							// 	recordCancel = true;
+							// 	stopTimer = setTimeout(function() {
+							// 		setSoundAlertVisable(false);
+							// 	}, 800);
+							// } else {
+							// 	setSoundAlertVisable(false);
+							// }
 							recorder.stop();
 						}, false);
 
+						ui.boxMsgSound.addEventListener("tap", function(e) {
+							e.preventDefault();
+						});
+
 						ui.boxMsgSound.addEventListener("touchstart", function(e) {
-							//console.log("start....");
 							e.preventDefault();
 						});
 
@@ -958,6 +945,7 @@
 
 			//文件上传
 			function voiceUpload(file) {
+				showload(0, 0, "发送中···", "rgba(0,0,0,0.5)")
 				var task = plus.uploader.createUpload($voiceUrl, {
 						method: "POST",
 						blocksize: 614400,
@@ -965,6 +953,7 @@
 					},
 					function(t, status) { //上传完成
 						if (status == 200) {
+							showload(1);
 							var res = JSON.parse(t.responseText);
 							if (res.errno == 1) {
 								message(res.message);
@@ -1007,7 +996,7 @@
 					});
 				}
 			})
-			
+
 			function goStreaming(courseInfo) {
 				// 直播页面
 				if (courseInfo.is_buy == 1 || courseInfo.price == 0 || courseInfo.captain_uid == userInfo.id) {
@@ -1019,7 +1008,7 @@
 							courseTitle: courseInfo.title,
 							teacherId: courseInfo.teacher_id,
 							isSilent: courseInfo.is_silent,
-							course:courseInfo
+							course: courseInfo
 						});
 					} else {
 						// 未开播提示
@@ -1034,11 +1023,11 @@
 					});
 				}
 			}
-			
-			function goBuy(goodsId,uid) {
+
+			function goBuy(goodsId, uid) {
 				launchMiniprogram(goodsId, uid);
 			}
-			
+
 			function toUserDetail(uid) {
 				openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
 					fid: uid

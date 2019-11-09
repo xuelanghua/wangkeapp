@@ -762,6 +762,7 @@
 			});
 
 			var chatId = 0,
+				currentNum = 0,
 				chatAvatar = '',
 				userInfo = getUserInfo(),
 				ws = null,
@@ -1036,16 +1037,10 @@
 							// message('发送内容不能为空!');
 							return;
 						}
-						// showKeyboard();
 						ui.boxMsgText.focus();
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
-						// send({
-						// 	sender: 'self',
-						// 	type: 'text',
-						// 	content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
-						// });
 						var msgContent = ui.boxMsgText.value.replace(/(\s*$)/g, "");
 						if (msgContent == '') {
 							ui.boxMsgText.value = '';
@@ -1057,7 +1052,6 @@
 						ws.send(JSON.stringify(chatData)); //向服务器发送消息
 						ui.boxMsgText.value = '';
 						mui.trigger(ui.boxMsgText, 'input', null);
-						// getRecordList();
 					} else if (ui.btnMsgType.classList.contains('mui-icon-mic')) {
 						ui.btnMsgType.classList.add('mui-icon-compose');
 						ui.btnMsgType.classList.remove('mui-icon-mic');
@@ -1065,18 +1059,15 @@
 						ui.boxMsgSound.style.display = 'block';
 						ui.boxMsgText.blur();
 						document.body.focus();
-						// getRecordList();
 					} else if (ui.btnMsgType.classList.contains('mui-icon-compose')) {
 						ui.btnMsgType.classList.add('mui-icon-mic');
 						ui.btnMsgType.classList.remove('mui-icon-compose');
 						ui.boxMsgSound.style.display = 'none';
 						ui.boxMsgText.style.display = 'block';
-						// showKeyboard();
 						ui.boxMsgText.focus();
 						setTimeout(function() {
 							ui.boxMsgText.focus();
 						}, 150);
-						// getRecordList();
 					}
 				}, false);
 
@@ -1090,11 +1081,6 @@
 							message(e.message);
 						}
 					})
-					// imageUpload(function(res) {
-					// 	chatData.type = 'image';
-					// 	chatData.content = res.url;
-					// 	ws.send(JSON.stringify(chatData));
-					// })
 				}, false);
 
 				var setSoundAlertVisable = function(show) {
@@ -1116,6 +1102,7 @@
 				var startTimestamp = null;
 				var stopTimestamp = null;
 				var stopTimer = null;
+
 				ui.boxMsgSound.addEventListener('hold', function(event) {
 					recordCancel = false;
 					if (stopTimer) clearTimeout(stopTimer);
@@ -1127,25 +1114,47 @@
 						plus.nativeUI.toast("不能获取录音对象");
 						return;
 					}
-					startTimestamp = (new Date()).getTime();
+					// startTimestamp = (new Date()).getTime();
 					recorder.record({
 						filename: "_doc/audio/",
 						format: "mp3"
 					}, function(path) {
-						if (recordCancel) return;
-						voiceUpload(path);
-						// send({
-						// 	sender: 'self',
-						// 	type: 'audio',
-						// 	content: path
-						// });
+						var file = path;
+						plus.io.getAudioInfo({
+							filePath: file,
+							success: function(res) {
+								var voiceTime = Math.round(res.duration);
+								if (voiceTime < 2 && !recordCancel) {
+									audio_tips.innerHTML = "录音时间太短";
+									ui.boxSoundAlert.classList.add('rprogress-sigh');
+									stopTimer = setTimeout(function() {
+										setSoundAlertVisable(false);
+									}, 800);
+									return false;
+								}
+								if (recordCancel) {
+									setSoundAlertVisable(false);
+									return false;
+								}
+								setSoundAlertVisable(false);
+								voiceUpload(file);
+							},
+							fail: function(error) {
+								if (!recordCancel) {
+									audio_tips.innerHTML = "录音时间太短";
+									ui.boxSoundAlert.classList.add('rprogress-sigh');
+									stopTimer = setTimeout(function() {
+										setSoundAlertVisable(false);
+									}, 800);
+								}
+							}
+						})
 					}, function(e) {
 						plus.nativeUI.toast("录音时出现异常: " + e.message);
 					});
 				}, false);
 
 				ui.body.addEventListener('drag', function(event) {
-					//console.log('drag');
 					if (Math.abs(event.detail.deltaY) > 50) {
 						if (!recordCancel) {
 							recordCancel = true;
@@ -1166,24 +1175,28 @@
 				}, false);
 
 				ui.boxMsgSound.addEventListener('release', function(event) {
-					if (audio_tips.classList.contains("cancel")) {
-						audio_tips.classList.remove("cancel");
-						audio_tips.innerHTML = "手指上划，取消发送";
-					}
-					//
-					stopTimestamp = (new Date()).getTime();
-					if (stopTimestamp - startTimestamp < MIN_SOUND_TIME) {
-						audio_tips.innerHTML = "录音时间太短";
-						ui.boxSoundAlert.classList.add('rprogress-sigh');
-						recordCancel = true;
-						stopTimer = setTimeout(function() {
-							setSoundAlertVisable(false);
-						}, 800);
-					} else {
-						setSoundAlertVisable(false);
-					}
+					// if (audio_tips.classList.contains("cancel")) {
+					// 	audio_tips.classList.remove("cancel");
+					// 	audio_tips.innerHTML = "手指上划，取消发送";
+					// }
+					// stopTimestamp = (new Date()).getTime();
+					// if (stopTimestamp - startTimestamp < MIN_SOUND_TIME) {
+					// 	audio_tips.innerHTML = "录音时间太短";
+					// 	ui.boxSoundAlert.classList.add('rprogress-sigh');
+					// 	recordCancel = true;
+					// 	stopTimer = setTimeout(function() {
+					// 		setSoundAlertVisable(false);
+					// 	}, 800);
+					// } else {
+					// 	setSoundAlertVisable(false);
+					// }
 					recorder.stop();
 				}, false);
+
+				ui.boxMsgSound.addEventListener("tap", function(e) {
+					e.preventDefault();
+				});
+
 				ui.boxMsgSound.addEventListener("touchstart", function(e) {
 					// console.log("start....");
 					e.preventDefault();
@@ -1330,7 +1343,6 @@
 						skip: skip,
 						limit: limit
 					}, function(res) {
-						logs(res);
 						cacheData('recorddata' + chatId, res.data);
 						if (res.errno == 0) {
 							if (loadMore) {
@@ -1453,6 +1465,7 @@
 
 				//文件上传
 				function voiceUpload(file) {
+					showload(0, 0, "发送中···", "rgba(0,0,0,0.5)")
 					var task = plus.uploader.createUpload($voiceUrl, {
 							method: "POST",
 							blocksize: 614400,
@@ -1460,26 +1473,17 @@
 						},
 						function(t, status) { //上传完成
 							if (status == 200) {
+								showload(1);
 								var res = JSON.parse(t.responseText);
 								if (res.errno == 1) {
 									message(res.message);
 								} else {
-									// 	var imgMsg = {
-									// 		sender: "self",
-									// 		content: res.data.path,
-									// 		type: "audio",
-									// 
-									// 	}
-									// 	send(imgMsg);
 									chatData.type = 'audio';
 									chatData.content = res.data.path;
 									ws.send(JSON.stringify(chatData));
-									// getRecordList();
-									// message("上传成功");
 								}
 							} else {
 								message('发送失败!');
-								// console.log("上传失败：" + status);
 							}
 						}
 					);

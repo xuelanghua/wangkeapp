@@ -590,6 +590,9 @@
 						var stopTimestamp = null;
 						var stopTimer = null;
 
+						// ui.boxMsgSound.addEventListener('tap', function(event) {
+						// 	e.preventDefault();
+						// })
 						ui.boxMsgSound.addEventListener('hold', function(event) {
 							recordCancel = false;
 							if (stopTimer) clearTimeout(stopTimer);
@@ -610,18 +613,32 @@
 								plus.io.getAudioInfo({
 									filePath: file,
 									success: function(res) {
-										voiceTime = Math.round(res.duration);
-										if (voiceTime < 2) {
-											message('录音小于2秒,请重新录制');
-											return;
+										var voiceTime = Math.round(res.duration);
+										if (voiceTime < 2 && !recordCancel) {
+											audio_tips.innerHTML = "录音时间太短";
+											ui.boxSoundAlert.classList.add('rprogress-sigh');
+											stopTimer=setTimeout(function() {
+												setSoundAlertVisable(false);
+											}, 800);
+											return false;
 										}
+										if (recordCancel) {
+											setSoundAlertVisable(false);
+											return false;
+										}
+										setSoundAlertVisable(false);
 										voiceUpload(file);
 									},
 									fail: function(error) {
-										message(error.message);
-										return;
+										if (!recordCancel) {
+											audio_tips.innerHTML = "录音时间太短";
+											ui.boxSoundAlert.classList.add('rprogress-sigh');
+											stopTimer=setTimeout(function() {
+												setSoundAlertVisable(false);
+											}, 800);
+										}
 									}
-								});
+								})
 							}, function(e) {
 								plus.nativeUI.toast("录音时出现异常: " + e.message);
 							});
@@ -652,21 +669,25 @@
 								audio_tips.classList.remove("cancel");
 								audio_tips.innerHTML = "手指上划，取消发送";
 							}
-							//
-							stopTimestamp = (new Date()).getTime();
-							if (stopTimestamp - startTimestamp < MIN_SOUND_TIME) {
-								audio_tips.innerHTML = "录音时间太短";
-								ui.boxSoundAlert.classList.add('rprogress-sigh');
-								recordCancel = true;
-								stopTimer = setTimeout(function() {
-									setSoundAlertVisable(false);
-								}, 800);
-							} else {
-								setSoundAlertVisable(false);
-							}
+							// stopTimestamp = (new Date()).getTime();
+							// if (stopTimestamp - startTimestamp < MIN_SOUND_TIME) {
+							// 	audio_tips.innerHTML = "录音时间太短";
+							// 	ui.boxSoundAlert.classList.add('rprogress-sigh');
+							// 	recordCancel = true;
+							// 	stopTimer = setTimeout(function() {
+							// 		setSoundAlertVisable(false);
+							// 	}, 800);
+							// } else {
+							// setSoundAlertVisable(false);
+							// }
+							// alert('leave')
 							recorder.stop();
 						}, false);
-
+						
+						ui.boxMsgSound.addEventListener("tap", function(e) {
+							e.preventDefault();
+						});
+						
 						ui.boxMsgSound.addEventListener("touchstart", function(e) {
 							e.preventDefault();
 						});
@@ -836,7 +857,7 @@
 						priority: 100
 					},
 					function(t, status) { //上传完成
-						// showload(1);
+						showload(1);
 						if (status == 200) {
 							var res = JSON.parse(t.responseText);
 							if (res.errno == 1) {
