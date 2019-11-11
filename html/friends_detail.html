@@ -392,8 +392,6 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script src="../js/Zepto.min.js"></script>
-		<script src="../js/mui.zoom.js"></script>
-		<script src="../js/mui.previewimage.js"></script>
 		<script type="text/javascript">
 			var mask = mui.createMask(function() {
 				document.querySelector(".affirm-share-card").style.display = "none";
@@ -575,8 +573,9 @@
 						// 预览图片
 						var self = plus.webview.currentWebview();
 						tid = self.aid;
-						var urls = muiCont.friendData.images;
 						mui('.mui-content').on('tap', '.preview-img', function() {
+							var urls = muiCont.friendData.images;
+							logs(urls);
 							var index = this.dataset.idx;
 							plus.nativeUI.previewImage(urls, {
 								current: index,
@@ -797,7 +796,8 @@
 					return false;
 				}
 				mask.close();
-				var img = muiCont.friendData.avatar || 'https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/global/user_default.jpg';
+				var img = muiCont.friendData.avatar ||
+					'https://bfwangke.oss-cn-shenzhen.aliyuncs.com/images/global/user_default.jpg';
 				// var img="https://cdn.wangkeapp.cn/images/6/2019/10/HDpujSUS788pS2U8YyUssjruPJjsl3.jpg";
 				var imgs = img.substring(img.lastIndexOf("/"));
 				var sd_path = "_downloads" + imgs;

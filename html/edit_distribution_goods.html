@@ -16,58 +16,66 @@
 				padding: 0.3rem 0.15rem 0.1rem;
 				flex-wrap: wrap;
 			}
-			
+
 			.goods-img-contianer .picture_display_chear {
 				margin-bottom: 0.2rem;
 			}
-			
+
 			.goods-img-contianer .add-goods-img {
 				margin-bottom: 0.2rem;
 			}
-			
+
 			.btn-section {
 				color: #FFFDEF;
 				justify-content: center;
 			}
-			input[disabled='disabled']{
+
+			input[disabled='disabled'] {
 				color: #999999;
 			}
-			.cause-conts{
+
+			.cause-conts {
 				color: #FF0000;
 				background-color: #FFFFFF;
 				margin: 0;
 				padding: 10px 15px;
 				text-align: justify;
 			}
-			.cause-conts span{
-				font-size:14px;
+
+			.cause-conts span {
+				font-size: 14px;
 			}
+
 			.choice-team-content .team-list::before {
-			  content: '';
-			  display: inline-block;
-			  width: 0.40rem;
-			  height: 0.34rem;
-			  position: absolute;
-			  background: url('../image/icon/draw-icon02.png') center center no-repeat;
-			  background-size: contain;
-			  right: 15px;
-			  top: 50%;
-			  margin-top: -10px;
+				content: '';
+				display: inline-block;
+				width: 0.40rem;
+				height: 0.34rem;
+				position: absolute;
+				background: url('../image/icon/draw-icon02.png') center center no-repeat;
+				background-size: contain;
+				right: 15px;
+				top: 50%;
+				margin-top: -10px;
 			}
+
 			.choice-team-content .team-list.active::before {
 				width: 0.40rem;
 				height: 0.34rem;
 			}
-			.team-header-img{
+
+			.team-header-img {
 				width: 0.56rem;
 				height: 0.56rem;
 				object-fit: cover;
 				margin-right: 10px;
 				border-radius: 3px;
 			}
+
 			.choice-team-content {
-			  padding-left: 0.2rem;
+				padding-left: 0.2rem;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -89,16 +97,18 @@
 				<span class="mui-icon mui-icon-clear" v-show="name" @tap="name=''"></span>
 			</div>
 			<div class="goods-img-contianer">
-				<div v-show="images" class="picture_display_chear" v-for="(img,i) in images" :key="i">
-					<img class="goods-img" @tap="previewImage(i)" :src="img" />
-					<span class="mui-close" @tap="delImg(i)">
-						<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
-					</span>
-				</div>
-				<div v-show="images.length<15" class="add-goods-img">
-					<span>添加</span>
-					<span>主图</span>
-				</div>
+				<draggable :options="options" v-model="images" style="display: flex;flex-wrap: wrap;" group="people">
+					<div v-show="images" class="picture_display_chear preview-img-cont" v-for="(img,i) in images" :key="i">
+						<img class="goods-img" @tap="previewImage(i)" :src="img" />
+						<span class="mui-close" @tap="delImg(i)">
+							<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
+						</span>
+					</div>
+					<div v-show="images.length<15" class="add-goods-img">
+						<span>添加</span>
+						<span>主图</span>
+					</div>
+				</draggable>
 			</div>
 			<div class="goods-img-desc">
 				精美的商品图片让商品脱颖而出
@@ -278,12 +288,19 @@
 		<!-- <script src="../js/upload.js"></script> -->
 		<script src="../js/choosemedia.js"></script>
 		<script src="../js/vue.min.js"></script>
+		<script src="../js/Sortable.min.js"></script>
+		<script src="../js/vuedraggable.umd.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
 			var goodsId = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
+					options: {
+						handle: ".preview-img-cont",
+						animation: 200,
+						scroll: true
+					},
 					name: '',
 					// 主图
 					images: [],
@@ -324,7 +341,7 @@
 					description: '',
 					edit_status: '未添加',
 					status: '',
-					remark:'',
+					remark: '',
 					sale_count: '',
 				},
 				created: function() {
@@ -367,7 +384,10 @@
 						// 添加主图
 						mui(".mui-content").on("tap", ".add-goods-img", function() {
 							document.activeElement.blur();
-							wangke.init({type: 'image', multiple: true});
+							wangke.init({
+								type: 'image',
+								multiple: true
+							});
 							wangke.chooseMedia(function(res) {
 								app.images.push(res.url);
 							}, function(e) {
@@ -376,6 +396,7 @@
 								}
 							})
 						})
+
 						function getTeamList() {
 							mui.post($ajaxUrl + 'team&action=my_team_list', {
 								token: userInfo.token
@@ -478,7 +499,9 @@
 			// 商品类型选择
 			mui(".mui-content").on("tap", ".goods-type", function() {
 				document.activeElement.blur();
-				var goods_type = new mui.PopPicker({layer: 2});
+				var goods_type = new mui.PopPicker({
+					layer: 2
+				});
 				goods_type.setData(app.goods_type_group);
 				if (app.type_p != 0) {
 					// goods_type.pickers[0].setSelectedValue(app.type_p, 1000);
@@ -742,7 +765,7 @@
 					success: function(res) {
 						logs(res);
 						var datas = res.data;
-						app.remark=datas.remark;
+						app.remark = datas.remark;
 						app.images = datas.images;
 						app.name = datas.name;
 						app.description = datas.content;

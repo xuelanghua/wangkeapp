@@ -8,14 +8,6 @@
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/vip-page.css" rel="stylesheet" />
 		<style type="text/css">
-			.issue-dynamics-container .picture_display .picture_display_chear:nth-child(4n) {
-			  margin-right: 0!important;
-			}
-			
-			.issue-dynamics-container .picture_display .picture_display_chear:nth-last-child(4),.picture_display_chear:nth-last-child(3),.picture_display_chear:nth-last-child(2),.picture_display_chear:nth-last-child(1) {
-			  margin-bottom: 0!important;
-			}
-			
 			.picture_display_chear img {
 				object-fit: cover;
 			}
@@ -35,7 +27,7 @@
 				/* background-color: #000000; */
 				position: relative;
 			}
-			
+
 			.video-container img {
 				width: 100%;
 				height: 200px;
@@ -49,7 +41,7 @@
 				right: 0;
 				top: -18px;
 			}
-			
+
 			img.player-btn {
 				width: 60px;
 				height: 60px;
@@ -59,9 +51,19 @@
 				-webkit-transform: translate(-50%, -50%);
 				transform: translate(-50%, -50%);
 			}
-			.issue-dynamics-container .picture_display .picture_display_chear{
+
+			.issue-dynamics-container .picture_display .picture_display_chear {
 				overflow: visible;
+				width: 30.3333%;
+				height: 2.1rem;
 			}
+
+			#add_pic img {
+				width: auto !important;
+				height: 100% !important;
+				margin: 0 auto;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -90,19 +92,21 @@
 			</div>
 			<div class="picture_display" v-if="video_src==''">
 				<div id="pic-container" style="line-height: 0;">
-					<div v-if="images" class="picture_display_chear" v-for="(img,i) in images" :key="i">
-						<img :src="img" data-preview-src="" @tap="previewImage(i)" />
-						<span class="mui-close" @tap="delImg(i)">
-							<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
-						</span>
-					</div>
-					<div v-show="images.length<9" class="picture_display_chear" id="add_pic">
-						<img src="../image/icon/upload-img-icon.jpg">
-					</div>
+					<draggable :options="options" v-model="images" style="display: flex;flex-wrap: wrap;" group="people">
+						<div v-if="images" class="picture_display_chear preview-img-cont" v-for="(img,i) in images" :key="i">
+							<img :src="img" data-preview-src="" @tap="previewImage(i)" />
+							<span class="mui-close" @tap="delImg(i)">
+								<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
+							</span>
+						</div>
+						<div v-show="images.length<9" class="picture_display_chear" id="add_pic">
+							<img src="../image/icon/upload-img-icon.jpg">
+						</div>
+					</draggable>
 				</div>
 			</div>
 			<div class="video-container" v-else @tap="videoPlayer(video_src)">
-				<img :src="video_src+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'" >
+				<img :src="video_src+'?spm=a2c4g.11186623.2.1.yjOb8V&x-oss-process=video/snapshot,t_100,f_jpg,m_fast'">
 				<img class="player-btn" src="../image/icon/video-player.png">
 				<span class="mui-icon mui-icon-clear" @tap.stop="clearChoice"></span>
 			</div>
@@ -111,7 +115,9 @@
 		<script src="../js/util.js"></script>
 		<!-- <script src="../js/media.js"></script> -->
 		<script src="../js/choosemedia.js"></script>
-		<script type="text/javascript" src="../js/vue.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/Sortable.min.js"></script>
+		<script src="../js/vuedraggable.umd.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
 			var app = new Vue({
@@ -121,7 +127,12 @@
 					issue_desc: '',
 					video_src: '',
 					is_video: 0,
-					submitStatus: true
+					submitStatus: true,
+					options: {
+						handle: ".preview-img-cont",
+						animation: 200,
+						scroll: true
+					},
 				},
 				created: function() {
 					// 初始化字体大小
@@ -157,12 +168,16 @@
 							return true;
 						}
 					});
-					
+
 					mui.plusReady(function() {
 						plus.navigator.setStatusBarStyle("dark");
 						//上传图片
 						mui(".mui-content").on("tap", "#add_pic", function() {
-							wangke.init({type: 'none', multiple: true, separate: true});
+							wangke.init({
+								type: 'none',
+								multiple: true,
+								separate: true
+							});
 							wangke.chooseMedia(function(res) {
 								if (res.type == 'video') {
 									app.is_video = 1;
@@ -220,6 +235,7 @@
 					})
 				}
 			})
+
 			function previewImage(idx) {
 				var urls = app.images;
 				plus.nativeUI.previewImage(urls, {
