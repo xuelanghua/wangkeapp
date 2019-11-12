@@ -131,6 +131,7 @@ var wangke = {
 			} else {
 				var filesList = e.files;
 				showload(false, false, '图片上传中...', "rgba(0,0,0,0.5)");
+				logs(filesList);
 				for (var i in filesList) {
 					w.files.push(e);
 					w.total++;
@@ -209,7 +210,7 @@ var wangke = {
 		var task = plus.uploader.createUpload(uploadUrl, {
 				method: "POST",
 				blocksize: 614400,
-				priority: 100
+				priority: 100 - w.total * 10
 			},
 			function(t, status) { //上传完成
 				if (status == 200) {

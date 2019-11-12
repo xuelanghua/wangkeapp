@@ -347,6 +347,7 @@
 			}
 
 			var ws = null;
+			var currentNum=0;
 			var chatData = null;
 			var userInfo = getUserInfo();
 			var MIN_SOUND_TIME = 800;
@@ -594,6 +595,14 @@
 						// 	e.preventDefault();
 						// })
 						ui.boxMsgSound.addEventListener('hold', function(event) {
+							currentNum++;
+							if (currentNum > 10) {
+								message('操作频繁,稍后重试!');
+								setTimeout(function() {
+									currentNum = 0;
+								}, 15000);
+								return;
+							}
 							recordCancel = false;
 							if (stopTimer) clearTimeout(stopTimer);
 							audio_tips.innerHTML = "手指上划，取消发送";
@@ -631,7 +640,7 @@
 									},
 									fail: function(error) {
 										if (!recordCancel) {
-											audio_tips.innerHTML = "录音时间太短";
+											audio_tips.innerHTML = "录音失败!";
 											ui.boxSoundAlert.classList.add('rprogress-sigh');
 											stopTimer=setTimeout(function() {
 												setSoundAlertVisable(false);
