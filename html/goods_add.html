@@ -353,81 +353,82 @@
 				padding: 5px;
 				margin-bottom: 0;
 			}
+			[v-cloak]{
+				display: none;
+			}
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">新增商品</h1>
-		</header>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+				<h1 class="mui-title">新增商品</h1>
+			</header>
 
-		<div class="mui-content">
-			<div class="mui-input-row" style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
-				<textarea class="please-input-title" name="name" rows="2" placeholder="请输入商品名称"></textarea>
-			</div>
-
-			<div class="chart">
-				<div id="pic-container">
-					<!-- <div class="picture_display_chear" id="add_pic">
-						<img src="../image/add.png">
-						<span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>
-					</div>
-					<div class="picture_display_chear" id="add_pic">
-						<img src="../image/add.png">
-						<span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>
-					</div> -->
-					<div class="add_chart" id="add_pic">
-						<div class="wenzi">添加<br />主图</div>
-					</div>
-					<input type="hidden" name="images" />
+			<div class="mui-content">
+				<div class="mui-input-row" style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
+					<textarea class="please-input-title" name="name" rows="2" placeholder="请输入商品名称"></textarea>
 				</div>
-			</div>
 
-			<div class="tips">
-				<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 -->
-				精美的商品图片可以让商品脱颖而出
-			</div>
-			
-			<div class="bian">
-				<div class="recommend">
-					<div class="mui-input-row">
-						<label>设为推荐</label>
-						<div class="mui-switch mui-switch-blue mui-active" id="recommend_switch">
-							<div class="mui-switch-handle"></div>
+				<div class="chart">
+					<draggable :options="options" v-model="img_group" style="display: flex;flex-wrap: wrap;" group="people">
+						<div class="picture_display_chear preview-img-cont" v-for="(img,index) in img_group" :key="index">
+							<img :src="img" style="object-fit: cover;">
+							<span class="mui-close" @tap="delImg(index)">
+								<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
+							</span>
+						</div>
+						<div class="add_chart" id="add_pic">
+							<div class="wenzi">添加<br />主图</div>
+						</div>
+					</draggable>
+				</div>
+
+				<div class="tips">
+					<!-- 精美的商品图片让商品脱颖而出，长按图片可拖拽调整顺序 -->
+					精美的商品图片可以让商品脱颖而出
+				</div>
+
+				<div class="bian">
+					<div class="recommend">
+						<div class="mui-input-row">
+							<label>设为推荐</label>
+							<div class="mui-switch mui-switch-blue mui-active" id="recommend_switch">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="tishi">推荐商品将在个人名片页进行展示</div>
+					</div>
+				</div>
+
+				<div class="bian">
+					<div class="choice" style="padding: 10px 0;padding-bottom" id="goods_type_pick">
+						<div class="mui-table-view-cell">
+							<span>商品类型</span>
+							<span class="fenli" id="goods_type">请选择</span>
+							<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
 						</div>
 					</div>
-					<div class="tishi">推荐商品将在个人名片页进行展示</div>
 				</div>
-			</div>
-			
-			<div class="bian">
-				<div class="choice" style="padding: 10px 0;padding-bottom" id="goods_type_pick">
-					<div class="mui-table-view-cell">
-						<span>商品类型</span>
-						<span class="fenli" id="goods_type">请选择</span>
-						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
-					</div>
-				</div>
-			</div>
 
-			<div class="bian" style="margin-top: 10px;">
-				<div class="choice">
-					<div class="mui-table-view-cell">
-						<span>价格</span>
-						<input type="number" name="price" placeholder="给商品定个好价格" />
+				<div class="bian" style="margin-top: 10px;">
+					<div class="choice">
+						<div class="mui-table-view-cell">
+							<span>价格</span>
+							<input type="number" name="price" placeholder="给商品定个好价格" />
+						</div>
+					</div>
+					<div class="choice1">
+						<div class="mui-table-view-cell">
+							<span>库存</span>
+							<input type="number" name="stock" placeholder="设置合理库存避免超卖" />
+						</div>
 					</div>
 				</div>
-				<div class="choice1">
-					<div class="mui-table-view-cell">
-						<span>库存</span>
-						<input type="number" name="stock" placeholder="设置合理库存避免超卖" />
-					</div>
-				</div>
-			</div>
 
-			<div style="background-color: #FFFFFF;padding-top: 20px;padding-bottom: 10px;" id="goods_spe">
-				<!-- <div class="add_choice">
+				<div style="background-color: #FFFFFF;padding-top: 20px;padding-bottom: 10px;" id="goods_spe">
+					<!-- <div class="add_choice">
 					<div class="choice" style="padding: 10px 0;">
 						<span>规格</span>
 						<input type="text" placeholder="尺寸,大小,颜色等" />
@@ -457,60 +458,61 @@
 					</div>
 					<img src="../image/add_choice.png">
 				</div> -->
-			</div>
+				</div>
 
-			<div class="adding_commodity_specifications" id="add_spec">
-				<span class="mui-pull-left">
-					<img src="../image/add_vew.png">
-				</span>
-				<span class="mui-pull-left" style="margin: 0 0 0 10px;">添加商品规格</span>
-				<div class="clearfix"></div>
-			</div>
+				<div class="adding_commodity_specifications" id="add_spec">
+					<span class="mui-pull-left">
+						<img src="../image/add_vew.png">
+					</span>
+					<span class="mui-pull-left" style="margin: 0 0 0 10px;">添加商品规格</span>
+					<div class="clearfix"></div>
+				</div>
 
-			<div class="bian">
-				<div class="choice">
-					<div class="mui-table-view-cell">
-						<span>销量</span>
-						<input type="number" name="sale_count" placeholder="设置商品的虚拟销量" />
+				<div class="bian">
+					<div class="choice">
+						<div class="mui-table-view-cell">
+							<span>销量</span>
+							<input type="number" name="sale_count" placeholder="设置商品的虚拟销量" />
+						</div>
+					</div>
+					<div class="choice1">
+						<div class="mui-table-view-cell">
+							<span>浏览量</span>
+							<input type="number" name="view_count" placeholder="设置商品的虚拟浏览量" />
+						</div>
+					</div>
+					<div class="choice">
+						<div class="mui-table-view-cell">
+							<span>排序值</span>
+							<input type="number" name="top" placeholder="倒序, 值越大排名越靠前" />
+						</div>
 					</div>
 				</div>
-				<div class="choice1">
-					<div class="mui-table-view-cell">
-						<span>浏览量</span>
-						<input type="number" name="view_count" placeholder="设置商品的虚拟浏览量" />
-					</div>
-				</div>
-				<div class="choice">
-					<div class="mui-table-view-cell">
-						<span>排序值</span>
-						<input type="number" name="top" placeholder="倒序, 值越大排名越靠前" />
-					</div>
-				</div>
-			</div>
 
-			<div class="bian" style="margin-top: 10px;">
-				<div class="choice">
-					<div class="mui-table-view-cell">
-						<span>运费</span>
-						<input type="number" name="freight" placeholder="不填则视为包邮" />
+				<div class="bian" style="margin-top: 10px;">
+					<div class="choice">
+						<div class="mui-table-view-cell">
+							<span>运费</span>
+							<input type="number" name="freight" placeholder="不填则视为包邮" />
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="bian">
-				<div class="choice" style="margin: 10px 0 80px 0; padding: 10px 0;" id="goods_detail">
-					<div class="mui-table-view-cell">
-						<span>商品图文描述</span>
-						<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
-						<p class="mui-pull-right" id="content_desc">未添加</p>
+				<div class="bian">
+					<div class="choice" style="margin: 10px 0 80px 0; padding: 10px 0;" id="goods_detail">
+						<div class="mui-table-view-cell">
+							<span>商品图文描述</span>
+							<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
+							<p class="mui-pull-right" id="content_desc">未添加</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="selection_function">
-				<div class="mui-pull-left upper_shelf form-submit" data-status="1">上架出售</div>
-				<div class="mui-pull-right warehouse form-submit" data-status="0">放入仓库</div>
-				<div class="clearfix"></div>
+				<div class="selection_function">
+					<div class="mui-pull-left upper_shelf form-submit" data-status="1">上架出售</div>
+					<div class="mui-pull-right warehouse form-submit" data-status="0">放入仓库</div>
+					<div class="clearfix"></div>
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
@@ -521,11 +523,10 @@
 		<script src="../js/util.js"></script>
 		<!-- <script src="../js/upload.js"></script> -->
 		<script src="../js/choosemedia.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/Sortable.min.js"></script>
+		<script src="../js/vuedraggable.umd.min.js"></script>
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: true
-			})
-
 			var flag = true;
 			var images = new Array();
 			var specId = 0;
@@ -538,12 +539,42 @@
 			var goodsTypeTitle = '';
 			var goodsType = '';
 			var userInfo = getUserInfo();
-			mui.plusReady(function() {
-				getGoodsType();
-				eventInit();
-				mui.previewImage();
+			var app = new Vue({
+				el: '#mui-content',
+				data: {
+					img_group: [
+						"https://cdn.wangkeapp.cn/images/6/2019/11/lF2H8Ny2cNYc4yZ22nZ8Ye87hlnqbn.jpg",
+						"https://cdn.wangkeapp.cn/images/6/2019/05/YMDM41iTmQMG2mIE4EqeP6q2e2ee41.jpg",
+						"https://cdn.wangkeapp.cn/images/6/2019/11/g4bay6buhglzbunU94ZmbGtNVuGgbu.jpg",
+						"https://cdn.wangkeapp.cn/images/6/2019/11/p9D2pjTD999Pp2Dz2T6NOefXmmEmS9.jpg",
+						"https://cdn.wangkeapp.cn/images/6/2019/11/gP664svwAw2zs4MV7S77C742PSVc9d.jpg",
+						"https://cdn.wangkeapp.cn/images/6/2019/11/vVL3llV80uh5euxy8hEAya3LuZOLaO.jpg",
+						"https://cdn.wangkeapp.cn/images/6/2019/11/Q6R5M1A56RQr6rarTlWz9LT9R6w5ra.jpg",
+						"https://cdn.wangkeapp.cn/images/6/2019/11/ohPsAVtp3kKwSuLiAiHAqkzZetTttW.jpg",
+						"https://cdn.wangkeapp.cn/images/6/2019/05/kz66G26GNrs2GsWBE2sG9GXYg3xEG2.jpg",
+					],
+					options: {
+						handle: ".preview-img-cont",
+						animation: 200,
+						scroll: true
+					},
+				},
+				methods:{
+					delImg:function(idx){
+						app.img_group.splice(idx,1);
+					}
+				},
+				mounted() {
+					mui.init({
+						swipeBack: true
+					})
+					mui.plusReady(function() {
+						getGoodsType();
+						eventInit();
+						mui.previewImage();
+					})
+				}
 			})
-
 			//事件初始化
 			function eventInit() {
 				//详情添加完毕监听
@@ -560,7 +591,7 @@
 				document.getElementById('goods_type_pick').addEventListener('tap', function() {
 					goodsTypePick();
 				})
-				
+
 				//推荐开关监听
 				document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
 					if (event.detail.isActive) {
@@ -583,114 +614,17 @@
 
 				//上传主图
 				document.getElementById('add_pic').addEventListener('tap', function() {
-					wangke.init({type: 'image', multiple: true});
+					wangke.init({
+						type: 'image',
+						multiple: true
+					});
 					wangke.chooseMedia(function(res) {
-						images.push(res.url);
-						var newImgDiv = document.createElement('div');
-						newImgDiv.classList.add('picture_display_chear');
-						var html = '<img src="' + res.url + '" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close" data-iamge="' + res.url + '"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-						newImgDiv.innerHTML = html;
-						document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-						});
-					}, function(e) {
-						if (e.code > 100) {
-							message(e.message);
-						}
-					})
-					
-					
-					// imageUpload(function(res) {
-					// 	images[imageId] = res.url;
-					// 	imageId++;
-					// 	var newImgDiv = document.createElement('div');
-					// 	newImgDiv.setAttribute('data-id', imageId);
-					// 	newImgDiv.classList.add('picture_display_chear');
-					// 	var html = '<img src="' + res.url +
-					// 		'" data-preview-src="" data-preview-group="1" style="object-fit: cover;" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-					// 	newImgDiv.innerHTML = html;
-					// 	document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-					// });
-				// })
-				// var ratio = 1 / 1;
-				// document.getElementById('add_pic').addEventListener('tap', function() {
-				// 	document.activeElement.blur();
-				// 	var editButtons = new Array();
-				// 	editButtons.push({
-				// 		title: "拍照上传",
-				// 		style: "default"
-				// 	});
-				// 	editButtons.push({
-				// 		title: "从相册选择",
-				// 		style: "default"
-				// 	});
-				// 	plus.nativeUI.actionSheet({
-				// 		cancel: "取消",
-				// 		buttons: editButtons
-				// 	}, function(e) {
-				// 		var index = e.index;
-				// 		switch (index) {
-				// 			case 1:
-				// 				getImage(ratio); //拍照
-				// 				break;
-				// 			case 2:
-				// 				galleryImage(ratio); //相册选择
-				// 				break;
-				// 		}
-				// 	});
-				// })
-				// // 拍照获取图片
-				// function getImage() {
-				// 	var camera = plus.camera.getCamera();
-				// 	camera.captureImage(function(e) {
-				// 		plus.io.resolveLocalFileSystemURL(e, function(entry) {
-				// 			cropperImg(entry.toLocalURL(), 'goods_add', ratio);
-				// 			// imageResize(entry.toLocalURL());
-				// 			// 其他操作,比如预览展示
-				// 		}, function(e) {
-				// 			console.log("读取拍照文件错误：" + e.message);
-				// 		});
-				// 	}, function(s) {
-				// 		console.log("error" + s);
-				// 	}, {
-				// 		filename: "_doc/camera/"
-				// 	})
-				// }
-				// // 从相册中选择图片 
-				// function galleryImage(cb) {
-				// 	// 从相册中选择图片
-				// 	plus.gallery.pick(function(e) {
-				// 		cropperImg(e, 'goods_add', ratio);
-				// 	}, function(e) {
-				// 		console.log("取消选择图片");
-				// 	}, {
-				// 		filter: "image",
-				// 		multiple: false,
-				// 		maximum: 5,
-				// 		system: false,
-				// 		onmaxed: function() {
-				// 			plus.nativeUI.alert('最多只能选择1张图片');
-				// 		}
-				// 	});
-				// }
-				// window.addEventListener('cropperSuccess', function(event) {
-				// 	images[imageId] = event.detail.image;
-				// 	imageId++;
-				// 	var newImgDiv = document.createElement('div');
-				// 	newImgDiv.setAttribute('data-id', imageId);
-				// 	newImgDiv.classList.add('picture_display_chear');
-				// 	var html = '<img src="' + event.detail.image +
-				// 		'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-				// 	newImgDiv.innerHTML = html;
-				// 	document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
-				// })
-				//删除主图 
-				mui('#pic-container').on('tap', '.mui-close', function() {
-					document.activeElement.blur();
-					var parentDiv = this.parentElement;
-					var image = this.dataset.image;
-					var imageIndex = images.indexOf(image);
-					images.splice(imageIndex, 1);
-					parentDiv.remove();
+						app.img_group.push(res.url);
+					});
+				}, function(e) {
+					if (e.code > 100) {
+						message(e.message);
+					}
 				})
 
 				document.getElementById('add_spec').addEventListener('tap', function() {
@@ -734,7 +668,7 @@
 						message('请填写商品名称!');
 						return;
 					}
-					if (images.length == 0) {
+					if (app.img_group.length == 0) {
 						message('请上传主图!');
 						return;
 					}
@@ -792,7 +726,7 @@
 					})
 					var submitData = {
 						name: goods_name,
-						images: images,
+						images: app.img_group,
 						recommend: recommend,
 						type: type,
 						type_p: type_p,

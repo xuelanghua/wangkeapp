@@ -233,12 +233,15 @@
 			}
 			
 			.picture_display{
-				margin-top: 10px;
-				padding: 0 0.625rem;
-				padding-bottom: 5px;
+				margin-top: 10px; 
+				padding: 0 10px 10px;
 				background-color: #FFFFFF;
+				transition: all 0.25s ease-in-out;
 			}
 			
+			.picture_display.active{
+				padding: 0 0.625rem 50px;
+			}
 			#pic-container {
 				display: flex;
 				flex-direction: row;
@@ -547,222 +550,268 @@
 				height: 100%;
 				object-fit: cover;
 			}
+			.finish-btn{
+				height: 46px;
+				text-align: center;
+				width: 100%;
+				position: fixed;
+				bottom: -50px;
+				left: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #FFFFFF;
+				z-index: 1046;
+				background-color: #2289FF;
+				box-shadow: 0 -2px 5px 0 rgba(0,0,0,0.2);
+				-webkit-transition: all 0.25s ease-in-out; 
+				transition: all 0.25s ease-in-out;
+			}
+			.finish-btn.active{
+				bottom:0;
+			}
+			.preview-img-cont.active img{
+				-webkit-transition: all 0.25s ease-in-out; 
+				transition: all 0.25s ease-in-out; 
+				border: 1px solid #2289FF;
+				box-sizing: border-box;
+				border-radius: 10px;
+			}
+			.img-demonstrate {
+				font-size: 16px;color:#333333;
+			}
+			.img-demonstrate .tips{
+				font-size: 12px;
+				color:#FF0000;
+				margin-left: 10px;
+			}
+			[v-cloak] {
+				display: none;
+			}
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav" style="background: #FFF;">
-			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-			<h1 class="mui-title">名片信息</h1>
-			<span class="mui-pull-right save-edit" id="submit">保存</span>
-		</header>
-
-		<div class="mui-content" style="padding-bottom: 25px;">
-			<div class="title">
-				<!-- 名片样式竖 -->
-				<div class="title_header" id="vertical">
-					<div class="title_chart">
-						<img class="member-avatar avatar-harp" src="../image/user_default.jpg">
-					</div>
-					<div class="news">
-						<h4 class="member-name">暂未填写</h4>
-						<p class="member-job">暂未填写</p>
-						<p class="member-company">暂未填写</p>
-					</div>
-				</div>
-
-				<!-- 名片样式横 -->
-				<div class="transverse_title_header" id="horizontal">
-					<img class="tu_chart" src="../image/position_ditu.png">
-					<div class="transverse_title_header_left mui-pull-left">
-						<div class="company member-company mui-ellipsis">暂未填写</div>
-						<div class="position">
-							<div style="margin: 2px 0 0 0.625rem;">
-								<div class="weitianx member-name">暂未填写</div>
-								<div style="margin-top: -4px;" class="member-job">暂未填写</div>
-							</div>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav" style="background: #FFF;">
+				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+				<h1 class="mui-title">名片信息</h1>
+				<span class="mui-pull-right save-edit" id="submit">保存</span>
+			</header>
+			<div class="mui-content">
+				<div class="title">
+					<!-- 名片样式竖 -->
+					<div class="title_header" id="vertical">
+						<div class="title_chart">
+							<img class="member-avatar avatar-harp" src="../image/user_default.jpg">
 						</div>
-						<div class="transverse_title_header_news">
-							<div class="title_header_news1">
-								<div class="news1_chart mui-pull-left">
-									<img src="../image/bosi1.png">
+						<div class="news">
+							<h4 class="member-name">暂未填写</h4>
+							<p class="member-job">暂未填写</p>
+							<p class="member-company">暂未填写</p>
+						</div>
+					</div>
+					<!-- 名片样式横 -->
+					<div class="transverse_title_header" id="horizontal">
+						<img class="tu_chart" src="../image/position_ditu.png">
+						<div class="transverse_title_header_left mui-pull-left">
+							<div class="company member-company mui-ellipsis">暂未填写</div>
+							<div class="position">
+								<div style="margin: 2px 0 0 0.625rem;">
+									<div class="weitianx member-name">暂未填写</div>
+									<div style="margin-top: -4px;" class="member-job">暂未填写</div>
 								</div>
-								<div class="mui-pull-left member-phone">暂未填写</div>
-								<div class="clearfix"></div>
 							</div>
-							<div class="title_header_news1">
-								<div class="news1_chart mui-pull-left">
-									<img src="../image/bosi2.png">
+							<div class="transverse_title_header_news">
+								<div class="title_header_news1">
+									<div class="news1_chart mui-pull-left">
+										<img src="../image/bosi1.png">
+									</div>
+									<div class="mui-pull-left member-phone">暂未填写</div>
+									<div class="clearfix"></div>
 								</div>
-								<div class="mui-pull-left member-email">暂未填写</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="title_header_news1 mui-ellipsis">
-								<div class="news1_chart mui-pull-left">
-									<img src="../image/bosi3.png">
+								<div class="title_header_news1">
+									<div class="news1_chart mui-pull-left">
+										<img src="../image/bosi2.png">
+									</div>
+									<div class="mui-pull-left member-email">暂未填写</div>
+									<div class="clearfix"></div>
 								</div>
-								<div class="mui-pull-left member-company-address mui-ellipsis-2">暂未填写</div>
-								<div class="clearfix"></div>
+								<div class="title_header_news1 mui-ellipsis">
+									<div class="news1_chart mui-pull-left">
+										<img src="../image/bosi3.png">
+									</div>
+									<div class="mui-pull-left member-company-address mui-ellipsis-2">暂未填写</div>
+									<div class="clearfix"></div>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="transverse_title_header_right mui-pull-right">
-						<img class="member-avatar" src="../image/user_default.jpg">
-					</div>
-					<div class="clearfix"></div>
-				</div>
-
-				<div class="style">名片样式</div>
-				<div class="style_chart">
-					<span data-style="vertical">
-						<img src="../image/shu.png" style="border-radius: 8px;" class="selected">
-					</span>
-					<span data-style="horizontal">
-						<img src="../image/heng.png" style="width: 80px;margin-left: 15px;border-radius: 8px;">
-					</span>
-				</div>
-			</div>
-			<div class="information">
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">头像</div>
-					<div class="mui-pull-right" id="headimgurl">
-						<div class="head_portrait_chart mui-pull-left">
-							<img class="member-avatar" src="../image/sound_recording_chart.png">
-						</div>
-						<input type="hidden" name="avatar" value="">
-						<div class="mui-icon mui-icon-forward mui-pull-right icon"></div>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">姓名</div>
-					<div class="mui-pull-right">
-						<input maxlength="10" type="text" name="name" value="" placeholder="暂未填写" />
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">职位</div>
-					<div class="mui-pull-right">
-						<input maxlength="20" type="text" name="job" value="" placeholder="暂未填写" />
-					</div>
-					<div class="clearfix"></div>
-				</div>
-			</div>
-
-			<div class="information">
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">手机号</div>
-					<div class="mui-pull-right">
-						<input maxlength="11" type="tel" name="phone" value="" placeholder="暂未填写" />
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">微信号</div>
-					<div class="mui-pull-right">
-						<input type="text" name="wechat" value="" placeholder="暂未填写" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" />
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">座机号</div>
-					<div class="mui-pull-right">
-						<input maxlength="13" type="tel" name="telephone" value="" placeholder="暂未填写" />
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">邮箱</div>
-					<div class="mui-pull-right">
-						<input type="email" name="email" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" value="" placeholder="暂未填写" />
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">公司</div>
-					<div class="mui-pull-right">
-						<input maxlength="13" type="text" name="company" value="" placeholder="暂未填写" />
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="head_portrait">
-					<div class="mui-pull-left head_portrait_name">公司地址</div>
-					<div class="mui-pull-right">
-						<input type="text" name="company_address" value="" placeholder="暂未填写" />
-					</div>
-					<div class="clearfix"></div>
-				</div>
-			</div>
-
-			<div class="personality">
-				<div class="personality_title">个性签名</div>
-				<div class="mui-input-row" style="margin: 10px 5px;">
-					<textarea maxlength="120" id="textarea" rows="3" name="desc" placeholder="个性签名"></textarea>
-				</div>
-				<div class="sound_recording">
-					<div>
-						<div class="mui-pull-left sound_recording_chart">
-							<img src="../image/sound_recording_chart.png" style="border-radius: 50%;" class="member-avatar">
-						</div>
-						<div class="voice-container">
-							<div class="sound_recording_content mui-pull-left" style="background-color: rgba(0, 0, 0, 0);">暂未录音</div>
-							<div class="sound_recording_content mui-pull-left hidden">
-								<div class="horn"></div>
-								<p class="mui-pull-right voice-time" style="margin-right: 0.625rem;">9</p>
-								<img class="play" src="../image/bofang.png">
-								<input type="hidden" name="voice" value="">
-								<input type="hidden" name="voice_time" value="">
-							</div>
+						<div class="transverse_title_header_right mui-pull-right">
+							<img class="member-avatar" src="../image/user_default.jpg">
 						</div>
 						<div class="clearfix"></div>
 					</div>
-					<button id="voice_record" class="hold_down">开始录音 按住说话</button>
-				</div>
-			</div>
-			<div class="video-recording">
-				<div class="personality_title">视频展示(视频大小限制10M以内)</div>
-				<div class="choose-video">
-					<span class="mui-navigate-right" id="again-updata">请选择</span>
-				</div>
-				<div class="video-container">
-					<!-- <video id="video" width="100%" height="200" src="" poster="" controls="controls" preload="auto"></video> -->
-					<div class="video-cover">
-						<img id="video_cover">
-						<img class="player-btn" src="../image/icon/video-player.png">
+
+					<div class="style">名片样式</div>
+					<div class="style_chart">
+						<span data-style="vertical">
+							<img src="../image/shu.png" style="border-radius: 8px;" class="selected">
+						</span>
+						<span data-style="horizontal">
+							<img src="../image/heng.png" style="width: 80px;margin-left: 15px;border-radius: 8px;">
+						</span>
 					</div>
 				</div>
-				<input type="hidden" name="my_video" value="">
-			</div>
-			<div class="picture_display">
-				<div class="personality_title">图片展示</div>
-				<div id="pic-container">
-					<div class="picture_display_chear" id="add_pic">
-						<img src="../image/add.png">
+				<div class="information">
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">头像</div>
+						<div class="mui-pull-right" id="headimgurl">
+							<div class="head_portrait_chart mui-pull-left">
+								<img class="member-avatar" src="../image/sound_recording_chart.png">
+							</div>
+							<input type="hidden" name="avatar" value="">
+							<div class="mui-icon mui-icon-forward mui-pull-right icon"></div>
+						</div>
+						<div class="clearfix"></div>
 					</div>
-					<input type="hidden" name="images" />
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">姓名</div>
+						<div class="mui-pull-right">
+							<input maxlength="10" type="text" name="name" value="" placeholder="暂未填写" />
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">职位</div>
+						<div class="mui-pull-right">
+							<input maxlength="20" type="text" name="job" value="" placeholder="暂未填写" />
+						</div>
+						<div class="clearfix"></div>
+					</div>
 				</div>
-			</div>
-			<!-- <button type="submit" class="preservation" id="submit">保存</button> -->
-			<div class="showArea">
-				<img src="../image/luyin.gif">
-				<div>松开结束录音</div>
+
+				<div class="information">
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">手机号</div>
+						<div class="mui-pull-right">
+							<input maxlength="11" type="tel" name="phone" value="" placeholder="暂未填写" />
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">微信号</div>
+						<div class="mui-pull-right">
+							<input type="text" name="wechat" value="" placeholder="暂未填写" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" />
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">座机号</div>
+						<div class="mui-pull-right">
+							<input maxlength="13" type="tel" name="telephone" value="" placeholder="暂未填写" />
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">邮箱</div>
+						<div class="mui-pull-right">
+							<input type="email" name="email" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" value="" placeholder="暂未填写" />
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">公司</div>
+						<div class="mui-pull-right">
+							<input maxlength="13" type="text" name="company" value="" placeholder="暂未填写" />
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="head_portrait">
+						<div class="mui-pull-left head_portrait_name">公司地址</div>
+						<div class="mui-pull-right">
+							<input type="text" name="company_address" value="" placeholder="暂未填写" />
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+
+				<div class="personality">
+					<div class="personality_title">个性签名</div>
+					<div class="mui-input-row" style="margin: 10px 5px;">
+						<textarea maxlength="120" id="textarea" rows="3" name="desc" placeholder="个性签名"></textarea>
+					</div>
+					<div class="sound_recording">
+						<div>
+							<div class="mui-pull-left sound_recording_chart">
+								<img src="../image/sound_recording_chart.png" style="border-radius: 50%;" class="member-avatar">
+							</div>
+							<div class="voice-container">
+								<div class="sound_recording_content mui-pull-left" style="background-color: rgba(0, 0, 0, 0);">暂未录音</div>
+								<div class="sound_recording_content mui-pull-left play-audio hidden">
+									<div class="horn"></div>
+									<p class="mui-pull-right voice-time" style="margin-right: 0.625rem;">9</p>
+									<img class="play" src="../image/bofang.png">
+									<input type="hidden" name="voice" value="">
+									<input type="hidden" name="voice_time" value="">
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<button id="voice_record" class="hold_down">开始录音 按住说话</button>
+					</div>
+				</div>
+				<div class="video-recording">
+					<div class="personality_title">视频展示(视频大小限制10M以内)</div>
+					<div class="choose-video">
+						<span class="mui-navigate-right" id="again-updata">请选择</span>
+					</div>
+					<div class="video-container" @tap="videoPlayer(video_url)">
+						<div class="video-cover">
+							<img id="video_cover">
+							<img class="player-btn" src="../image/icon/video-player.png">
+						</div>
+					</div>
+					<input type="hidden" name="my_video" value="">
+				</div>
+				<div class="picture_display" :class="isMove?'active':''">
+					<div class="personality_title img-demonstrate">
+						<span>图片展示</span>
+						<span class="tips">Tips:长按图片激活位置调整。</span>
+					</div>
+					<div id="pic-container">
+						<draggable :options="options" v-model="img_group" style="display: flex;flex-wrap: wrap;" group="people">
+							<div class="picture_display_chear preview-img-cont" :class="isMove?'active':''" v-for="(img,idx) in img_group"
+							 :key="idx">
+								<img :src="img" class="preview-img" :data-idx="idx">
+								<span v-show="!isMove" class="mui-close" @tap="delImg(idx)">
+									<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
+								</span>
+							</div>
+							<div class="picture_display_chear" id="add_pic">
+								<img src="../image/add.png">
+							</div>
+						</draggable>
+						<!-- <input type="hidden" name="images" /> -->
+					</div>
+				</div>
+				<!-- <button type="submit" class="preservation" id="submit">保存</button> -->
+				<div class="showArea">
+					<img src="../image/luyin.gif">
+					<div>松开结束录音</div>
+				</div>
+				<div class="finish-btn" :class="isMove?'active':''" @tap="finishMove">
+					完成
+				</div>
 			</div>
 		</div>
 	</body>
 	<script src="../js/mui.js"></script>
-	<script src="../js/mui.zoom.js"></script>
-	<script src="../js/mui.previewimage.js"></script>
 	<script src="../js/util.js"></script>
 	<script src="../js/choosemedia.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script src="../js/Sortable.min.js"></script>
+	<script src="../js/vuedraggable.umd.min.js"></script>
 	<script type="text/javascript">
-		mui.init({
-			swipeBack: false,
-			gestureConfig: {
-				hold: true, //默认为false，不监听
-				release: true //默认为false，不监听
-			}
-		})
 		var video_path = '',
 			cardType = 'cardType1',
 			voiceTime = 0,
@@ -771,12 +820,61 @@
 			imageId = 0,
 			images = new Array(),
 			submitFlag = true,
+			userInfo = {},
 			mask = mui.createMask();
-		mui.plusReady(function() {
-			userInfo = getUserInfo();
-			getMemberInfo();
-			eventInit();
-			mui.previewImage();
+
+		var app = new Vue({
+			el: "#mui-content",
+			data: {
+				video_url: '',
+				img_group: [],
+				isMove: false,
+				options: {
+					//.preview-img-cont
+					handle: ".preview",
+					animation: 200,
+					scroll: true
+				},
+			},
+			methods: {
+				delImg: function(idx) {
+					this.img_group.splice(idx, 1);
+				},
+				finishMove: function() {
+					app.options.handle = ".preview";
+					app.isMove = false;
+				}
+			},
+			mounted() {
+				var _this = this;
+				mui.init({
+					swipeBack: false,
+					gestureConfig: {
+						tap: true,
+						longtap: true,
+						drag: true,
+					},
+				})
+				mui.plusReady(function() {
+					userInfo = getUserInfo();
+					getMemberInfo();
+					eventInit();
+					// 图片预览
+					mui('.mui-content').on('tap', '.preview-img', function() {
+						var index = this.dataset.idx;
+						plus.nativeUI.previewImage(_this.img_group, {
+							current: index,
+							loop: true,
+							indicator: 'number',
+						});
+					});
+					// 长按启拖动排序
+					mui(".mui-content").on("longtap", ".preview-img-cont", function() {
+						app.options.handle = ".preview-img-cont";
+						app.isMove = true;
+					})
+				})
+			}
 		})
 
 		//事件初始化
@@ -789,6 +887,7 @@
 				})
 				document.querySelector('input[name=avatar]').value = event.detail.image;
 			})
+
 			mui('.style_chart').on('tap', 'span', function() {
 				var style = this.dataset.style;
 				this.children[0].classList.add('selected');
@@ -872,6 +971,7 @@
 					document.querySelector('.member-phone').innerText = '暂未填写';
 				}
 			})
+
 			document.querySelector('input[name=email]').addEventListener('change', function() {
 				if (this.value.length != 0) {
 					document.querySelector('.member-email').innerText = this.value;
@@ -879,6 +979,7 @@
 					document.querySelector('.member-email').innerText = '暂未填写';
 				}
 			})
+
 			document.querySelector('input[name=company_address]').addEventListener('change', function() {
 				if (this.value.length != 0) {
 					document.querySelector('.member-company-address').innerText = this.value;
@@ -900,18 +1001,30 @@
 			})
 
 			//播放录音
-			document.querySelector('.play').addEventListener('tap', function() {
-				document.querySelector('.play').src = '../image/play.gif';
+			var audio = document.createElement("audio"),
+				_s = false,
+				timer = null;
+			document.querySelector('.play-audio').addEventListener('tap', function() {
 				var voice = document.querySelector('input[name=voice]').value;
-				var audio = document.createElement("audio");
 				audio.src = voice;
-				audio.play();
-				console.log('voiceTime=' + voiceTime);
-				setTimeout(function() {
+				clearTimeout(timer);
+				timer = setTimeout(function() {
 					document.querySelector('.play').src = '../image/bofang.png';
+					_s = false;
 				}, voiceTime * 1000)
+				if (audio !== null) {
+					if (audio.paused && _s != true) {
+						_s = true;
+						audio.play();
+						document.querySelector('.play').src = '../image/play.gif';
+					} else {
+						audio.pause();
+						_s = false;
+						document.querySelector('.play').src = '../image/bofang.png';
+						clearTimeout(timer);
+					}
+				}
 			})
-
 
 			//上传图片
 			document.getElementById('add_pic').addEventListener('tap', function() {
@@ -920,15 +1033,7 @@
 					multiple: true
 				});
 				wangke.chooseMedia(function(res) {
-					images[imageId] = res.url;
-					imageId++;
-					var newImgDiv = document.createElement('div');
-					newImgDiv.setAttribute('data-id', imageId);
-					newImgDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + res.url +
-						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-					newImgDiv.innerHTML = html;
-					document.getElementById('pic-container').insertBefore(newImgDiv, document.getElementById('add_pic'));
+					app.img_group.push(res.url);
 				}, function(e) {
 					if (e.code > 100) {
 						message(e.message);
@@ -940,6 +1045,7 @@
 			mui('.mui-content').on('tap', '.choose-video', function() {
 				wangke.galleryImg('video', function(res) {
 					video_path = res.url;
+					app.video_url = res.url;
 					document.querySelector('.video-container').style.display = 'block';
 					document.querySelector('input[name=my_video]').value = res.filename;
 					document.getElementById("video_cover").src = res.url +
@@ -951,15 +1057,6 @@
 					}
 				})
 			})
-
-			//删除图片
-			mui('#pic-container').on('tap', '.mui-close', function() {
-				var parentDiv = this.parentElement;
-				var imgId = parentDiv.dataset.id;
-				parentDiv.remove();
-				delete images[imgId];
-			})
-
 			//提交表单
 			document.getElementById('submit').addEventListener('tap', function() {
 				var submitData = {
@@ -976,7 +1073,7 @@
 					voice: document.querySelector('input[name=voice]').value,
 					my_video: document.querySelector('input[name=my_video]').value,
 					voice_time: voiceTime,
-					images: images.filter(function(e) {
+					images: app.img_group.filter(function(e) {
 						return e != null
 					}).join(','),
 					card_type: cardType,
@@ -998,8 +1095,8 @@
 			showload(0);
 			mui.get($ajaxUrl + 'staff&action=card&token=' + userInfo.token, function(res) {
 				if (res.errno == 0) {
-					logs(res.data);
 					loadInfo(res.data);
+					app.video_url = res.data.my_video;
 				}
 				setTimeout(function() {
 					showload(1);
@@ -1082,17 +1179,7 @@
 			}
 
 			if (data.images.length != 0) {
-				images = data.images;
-				for (var i in data['images']) {
-					var newDiv = document.createElement('div');
-					newDiv.setAttribute('data-id', i);
-					newDiv.classList.add('picture_display_chear');
-					var html = '<img src="' + data.images[i] +
-						'" data-preview-src="" data-preview-group="1" /><span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>';
-					newDiv.innerHTML = html;
-					document.getElementById('pic-container').insertBefore(newDiv, document.getElementById('add_pic'));
-					imageId++;
-				}
+				app.img_group = data.images;
 			}
 		}
 
@@ -1158,7 +1245,7 @@
 						voiceUpload(file);
 					},
 					fail: function(error) {
-						message(error.message);
+						logs(error.message);
 						return;
 					}
 				});
@@ -1184,7 +1271,6 @@
 				function(t, status) { //上传完成
 					if (status == 200) {
 						var res = JSON.parse(t.responseText);
-						logs(res);
 						if (res.errno == 1) {
 							message(res.message);
 							showload(1);
@@ -1213,7 +1299,6 @@
 			submitFlag = false;
 			showload(0, 0, '数据处理中...', "rgba(0,0,0,0.5)");
 			mui.post($ajaxUrl + 'staff&action=cardEdit', data, function(res) {
-				logs(res);
 				if (res.errno == 0) {
 					message('修改成功!');
 					submitFlag = true;
