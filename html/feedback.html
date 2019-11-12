@@ -1,0 +1,295 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mui-bar {
+				background-color: #FFFFFF;
+			}
+
+			.feedback-container {
+				width: 6.86rem;
+				height: auto;
+				box-sizing: border-box;
+				background-color: #FFFFFF;
+				margin: 0.45rem auto 0;
+				border-radius: 5px;
+				padding: 0.25rem 0.2rem 0.5rem;
+			}
+
+			.item-cont {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.2rem 0 0.25rem;
+			}
+
+			h3 {
+				font-size: 0.3rem;
+				color: #333333;
+				margin: 0;
+				font-weight: normal;
+			}
+
+			.item-cont .item {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 1.5rem;
+				margin: 0 0.05rem;
+				background-color: #f2f2f2;
+				color: #333333;
+				line-height: 1;
+				height: 0.49rem;
+				font-size: 0.24rem;
+				border-radius: 40px;
+			}
+
+			.item-cont .item:first-of-type {
+				margin-left: 0;
+			}
+
+			.item-cont .item:last-of-type {
+				margin-right: 0;
+			}
+
+			.item-cont .item.active {
+				background-color: #2289FF;
+				color: #FFFFFF;
+			}
+
+			.feedback-inside {
+				position: relative;
+				padding: 0.18rem;
+				border: 1px solid #F2F2F2;
+			}
+
+			.phone-number {
+				margin-top: 0.3rem;
+				display: flex;
+				align-items: center;
+				font-size: 0.3rem;
+			}
+
+			.phone-number input {
+				border: none;
+				width: auto;
+				margin-bottom: 0;
+				padding: 0;
+				margin-left: 0.1rem;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.phone-number input::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.3rem;
+			}
+
+			.feedback-inside textarea {
+				padding: 0;
+				margin: 0;
+				border: none;
+				color: #333333;
+				font-size: 0.3rem;
+				margin-bottom: 0.4rem;
+			}
+
+			.feedback-inside textarea::-webkit-input-placeholder {
+				color: #999999;
+				font-size: 0.24rem;
+			}
+
+			.img-content {
+				display: flex;
+				align-items: center;
+			}
+
+			.img-content img,
+			.img-items {
+				width: 1.44rem;
+				height: 1.44rem;
+				padding: 0;
+				font-size: 0;
+				line-height: 0;
+				margin-right: 0.1rem;
+			}
+
+			.img-items img {
+				line-height: 0;
+				font-size: 0;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.img-items {
+				position: relative;
+			}
+
+			.img-items .mui-icon {
+				position: absolute;
+				top: -10px;
+				right: -6px;
+				font-size: 24px;
+				color: #ff0000;
+				z-index: 2;
+			}
+
+			.img-content .img-items:last-of-type {
+				padding-right: 0;
+			}
+
+			.submit {
+				width: 6.86rem;
+				height: 0.8rem;
+				background-color: #2289FF;
+				color: #FFFFFF;
+				font-size: 0.35rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0.5rem auto 0;
+				border-radius: 0.1rem;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+		<script>
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束	
+		</script>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">问题反馈</h1>
+			</header>
+			<div class="mui-content">
+				<div class="feedback-container">
+					<h3>问题反馈</h3>
+					<div class="item-cont">
+						<div class="item" @tap="changeCurrentIssue(issue.id)" :class="issue.id==current_issue?'active':''" v-for="(issue,index) in issue"
+						 :key="index">{{issue.name}}</div>
+					</div>
+					<div class="feedback-inside">
+						<textarea v-model="desc" rows="4" cols="" placeholder="请详细描述您遇到的问题或建议，上传相关页面截图方便我们更快解决问题哦~"></textarea>
+						<div class="img-content">
+							<div class="img-items" :data-index="index" v-for="(img,index) in images" :key="index"><img :src="img" alt=""><span
+								 :data-index="index" class="mui-icon mui-icon-close-filled"></span></div>
+							<img v-if="images.length<4" class="upload-btn" src="../image/icon/prepare-lessons06.png">
+						</div>
+					</div>
+					<div class="feedback-inside phone-number">
+						<label>手机号：</label><input v-model="phone_number" type="number" placeholder="请输入手机号">
+					</div>
+				</div>
+				<div class="submit">
+					提交
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/choosemedia.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					issue: [{
+						name: '功能异常',
+						id: 1
+					}, {
+						name: '体验问题',
+						id: 2
+					}, {
+						name: '新功能建议',
+						id: 3
+					}, {
+						name: '其他',
+						id: 4
+					}],
+					images: [],
+					current_issue: 1,
+					desc: '',
+					phone_number: ''
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					changeCurrentIssue: function(id) {
+						this.current_issue = id;
+					},
+				},
+				mounted: function() {
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						mui(".mui-content").on("tap", ".img-items img", function() {
+							var index = this.dataset.index;
+							plus.nativeUI.previewImage(app.images, {
+								current: index
+							})
+						})
+						mui(".mui-content").on("tap", ".mui-icon", function() {
+							var index = this.dataset.index;
+							app.images.splice(index, 1);
+						})
+						mui(".mui-content").on("tap", ".upload-btn", function() {
+							wangke.init({
+								type: 'image',
+								multiple: true
+							});
+							wangke.chooseMedia(function(res) {
+								app.images.push(res.url);
+							});
+						})
+						mui(".mui-content").on("tap", ".submit", function() {
+							document.activeElement.blur();
+							var datas = {
+								token: userInfo.token,
+								desc: app.desc,
+								type: app.current_issue,
+								phone: app.phone_number,
+								image: app.images
+							}
+							// logs(datas);
+							mui.post($ajaxUrl + '', datas, function(res) {
+								if(res.errno==0){
+									message("提交成功！");
+									mui.back();
+								}else{
+									message("提交失败，请稍后重试！");
+								}
+							}, 'json');
+						})
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>

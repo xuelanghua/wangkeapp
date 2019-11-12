@@ -87,6 +87,11 @@
 			</div>
 			<div class="segment">
 				<ul class="mui-table-view">
+					<li class="mui-table-view-cell feedback">
+						<span class="mui-navigate-right">
+							问题反馈
+						</span>
+					</li>
 					<li class="mui-table-view-cell clear-cache">
 						<span class="mui-navigate-right">
 							清理缓存
@@ -129,7 +134,7 @@
 			}, function(e) {
 				console.log("获取分享服务列表失败：" + e.message + " - " + e.code);
 			});
-			
+
 			var webveiw = plus.webview.all();
 			// logs(webviewName);
 			var webviewName = new Array();
@@ -143,15 +148,19 @@
 				userInfo = getUserInfo();
 				mui('#mobile')[0].innerHTML = userInfo.mobile;
 			})
-			
+
 			getCacheSize();
+
+			mui(".mui-content").on("tap", ".feedback", function(e) {
+				openPage('feedback.html','feedback','#ffffff');
+			})
 			
 			mui(".mui-content").on("tap", ".clear-cache", function(e) {
-				mui.confirm('确认清除缓存?','提示',['取消','确认'], function (e) {
+				mui.confirm('确认清除缓存?', '提示', ['取消', '确认'], function(e) {
 					if (e.index == 1) {
 						clearCache();
 					}
-				},'div')
+				}, 'div')
 			})
 
 			// 注销登录
@@ -167,7 +176,7 @@
 						title: "关闭旺客"
 					}];
 				}
-				
+
 				plus.nativeUI.actionSheet({
 					cancel: "取消",
 					buttons: btnArray
@@ -187,38 +196,38 @@
 									action: 'login_setting',
 								}, function(res) {
 									// getAppInfo(function(e) {
-										if (res.data.login_type == 2) {
-											for (var i = 0; i < wvs.length; i++) {
-												if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
-													continue;
-												} else {
-													plus.webview.close(wvs[i]);
-												}
+									if (res.data.login_type == 2) {
+										for (var i = 0; i < wvs.length; i++) {
+											if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+												continue;
+											} else {
+												plus.webview.close(wvs[i]);
 											}
-											curr.hide();
-											curr.close();
-											fnOpenWin('mobile_login.html', 'mobile_login', {
-												statusbar: {
-													background: '#2289FF'
-												}
-											}, '', 'slide-in-bottom');
-										} else {
-											for (var i = 0; i < wvs.length; i++) {
-												// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
-												if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
-													continue;
-												} else {
-													plus.webview.close(wvs[i]);
-												}
-											}
-											curr.hide();
-											curr.close();
-											fnOpenWin('login.html', 'login', {
-												statusbar: {
-													background: '#122c9a'
-												}
-											}, '', 'slide-in-bottom');
 										}
+										curr.hide();
+										curr.close();
+										fnOpenWin('mobile_login.html', 'mobile_login', {
+											statusbar: {
+												background: '#2289FF'
+											}
+										}, '', 'slide-in-bottom');
+									} else {
+										for (var i = 0; i < wvs.length; i++) {
+											// if (wvs[i].getURL() == curr.getURL() || wvs[i].id == 'H54F3E71F') {
+											if (wvs[i].id == curr.id || wvs[i].id == 'H54F3E71F') {
+												continue;
+											} else {
+												plus.webview.close(wvs[i]);
+											}
+										}
+										curr.hide();
+										curr.close();
+										fnOpenWin('login.html', 'login', {
+											statusbar: {
+												background: '#122c9a'
+											}
+										}, '', 'slide-in-bottom');
+									}
 									// })
 								}, 'json');
 							} else {
@@ -249,7 +258,7 @@
 			getAppInfo(function(e) {
 				mui('#app_version')[0].innerHTML = '版本号 ' + e.version;
 			})
-			
+
 			mui('#mobile')[0].innerHTML = userInfo.mobile;
 
 			mui(".setting-container").on("tap", ".change-num", function(e) {
@@ -264,42 +273,42 @@
 				openPage('about_wangke.html', 'about_wangke', '#f7f7f7', '')
 			})
 		})
-		
+
 		//注销所有登录授权认证服务
 		function authLogout() {
 			for (var i in auths) {
 				var s = auths[i];
 				if (s.authResult) {
-					s.logout(function(e){
+					s.logout(function(e) {
 						console.log("注销登录认证成功");
-					}, function(e){
+					}, function(e) {
 						console.log("注销登录认证失败");
 					});
 				}
 			}
 		}
-		
+
 		//以下是读取指定目录下子目录以及文件的大小的方法  
 		function getCacheSize() {
-		    plus.io.resolveLocalFileSystemURL('_doc/', function(entry) { //通过URL参数获取目录对象或文件对象  
-		        var fileSize = 0;
-		        var directoryReader = entry.createReader();
-		        directoryReader.readEntries(function(entries) {   //获取当前目录中的所有文件和子目录
-		            for(var i = 0; i < entries.length; i++) {
-		                if(entries[i].isFile) {
-		                    entries[i].file(function(file) {
-		                        fileSize += (file.size * 0.0009766);
-		                    }, function(e) {
-		                        logs(e.message);
-		                    });  
-		                } else {
-		                    entries[i].getMetadata(function(metadata) {
-		                        fileSize += (metadata.size * 0.0009766); //1字节=0.0009766kb
-		                    }, function() {
-		                        logs(e.message);
-		                    });
-		                }
-		            }
+			plus.io.resolveLocalFileSystemURL('_doc/', function(entry) { //通过URL参数获取目录对象或文件对象  
+				var fileSize = 0;
+				var directoryReader = entry.createReader();
+				directoryReader.readEntries(function(entries) { //获取当前目录中的所有文件和子目录
+					for (var i = 0; i < entries.length; i++) {
+						if (entries[i].isFile) {
+							entries[i].file(function(file) {
+								fileSize += (file.size * 0.0009766);
+							}, function(e) {
+								logs(e.message);
+							});
+						} else {
+							entries[i].getMetadata(function(metadata) {
+								fileSize += (metadata.size * 0.0009766); //1字节=0.0009766kb
+							}, function() {
+								logs(e.message);
+							});
+						}
+					}
 					setTimeout(function() {
 						fileSize = Math.ceil(fileSize);
 						if (fileSize > 1024) {
@@ -308,29 +317,29 @@
 							document.getElementById('clear_cache').innerText = fileSize + ' KB';
 						}
 					}, 500)
-		        }, function(e) {
-		            logs('文件读取失败!');  
-		        });  
-		    }, function(e) {  
-		        logs('文件路径读取失败!');  
-		    });  
-		}  
-		
+				}, function(e) {
+					logs('文件读取失败!');
+				});
+			}, function(e) {
+				logs('文件路径读取失败!');
+			});
+		}
+
 		//以下是清除缓存在指定目录中文件的方法
-		function clearCache() {  
-		    plus.io.resolveLocalFileSystemURL('_doc/', function(entry) {
-		        entry.removeRecursively(function(entry) { //递归删除其下的所有文件及子目录  
-		            mui.toast("缓存清理成功!");  
-		        }, function(e) {  
-		            logs(e.message);  
-		            mui.toast("缓存清理失败!");  
-		        });
-		        setTimeout(function() {  
-		            getCacheSize();
-		        }, 500);
-		    }, function(e) {  
-		        mui.toast('文件路径读取失败');  
-		    });  
+		function clearCache() {
+			plus.io.resolveLocalFileSystemURL('_doc/', function(entry) {
+				entry.removeRecursively(function(entry) { //递归删除其下的所有文件及子目录  
+					mui.toast("缓存清理成功!");
+				}, function(e) {
+					logs(e.message);
+					mui.toast("缓存清理失败!");
+				});
+				setTimeout(function() {
+					getCacheSize();
+				}, 500);
+			}, function(e) {
+				mui.toast('文件路径读取失败');
+			});
 		}
 	</script>
 </html>

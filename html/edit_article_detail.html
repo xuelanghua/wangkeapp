@@ -97,12 +97,27 @@
 	<script src="../plugins/jquery-3.1.1.slim.min.js"></script>
 	<script src="../plugins/eleditor/webuploader.min.js"></script>
 	<script src="../plugins/eleditor/Eleditor.min.js"></script>
+	<script src="../js/Sortable.min.js"></script>
 	<script type="text/javascript">
 		mui.init({
 			swipeBack: false
 		})
-
+		mui.plusReady(function() {
+			var wv = plus.webview.currentWebview();
+			wv.setStyle({
+				'scrollIndicator': 'auto'
+			});
+		});
 		var userInfo = getUserInfo();
+		new Sortable(document.getElementById('contentEditor'), {
+			delayOnTouchOnly: true,
+			delay: 0,
+			animation: 200,
+			touchStartThreshold: 0
+		});
+		// window.addEventListener("img").on("drag",function(){
+		// 	alert("撒地方可黄金");
+		// })
 		var contentEditor = new Eleditor({
 			el: '#contentEditor',
 			// upload: {
