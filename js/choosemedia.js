@@ -131,7 +131,6 @@ var wangke = {
 			} else {
 				var filesList = e.files;
 				showload(false, false, '图片上传中...', "rgba(0,0,0,0.5)");
-				logs(filesList);
 				for (var i in filesList) {
 					w.files.push(e);
 					w.total++;

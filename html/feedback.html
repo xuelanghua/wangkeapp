@@ -188,7 +188,7 @@
 						 :key="index">{{issue.name}}</div>
 					</div>
 					<div class="feedback-inside">
-						<textarea v-model="desc" rows="4" cols="" placeholder="请详细描述您遇到的问题或建议，上传相关页面截图方便我们更快解决问题哦~"></textarea>
+						<textarea v-model="content" rows="4" cols="" placeholder="请详细描述您遇到的问题或建议，上传相关页面截图方便我们更快解决问题哦~"></textarea>
 						<div class="img-content">
 							<div class="img-items" :data-index="index" v-for="(img,index) in images" :key="index"><img :src="img" alt=""><span
 								 :data-index="index" class="mui-icon mui-icon-close-filled"></span></div>
@@ -196,7 +196,7 @@
 						</div>
 					</div>
 					<div class="feedback-inside phone-number">
-						<label>手机号：</label><input v-model="phone_number" type="number" placeholder="请输入手机号">
+						<label>手机号：</label><input v-model="mobile" type="number" placeholder="请输入手机号">
 					</div>
 				</div>
 				<div class="submit">
@@ -228,8 +228,8 @@
 					}],
 					images: [],
 					current_issue: 1,
-					desc: '',
-					phone_number: ''
+					content: '',
+					mobile: ''
 				},
 				created: function() {
 					// 初始化字体大小
@@ -261,7 +261,8 @@
 						mui(".mui-content").on("tap", ".upload-btn", function() {
 							wangke.init({
 								type: 'image',
-								multiple: true
+								multiple: true,
+								maximum: 4
 							});
 							wangke.chooseMedia(function(res) {
 								app.images.push(res.url);
@@ -270,19 +271,30 @@
 						mui(".mui-content").on("tap", ".submit", function() {
 							document.activeElement.blur();
 							var datas = {
-								token: userInfo.token,
-								desc: app.desc,
+								uid: userInfo.id,
+								from: 'app',
 								type: app.current_issue,
-								phone: app.phone_number,
-								image: app.images
+								content: app.content,
+								mobile: app.mobile,
+								images: app.images
 							}
-							// logs(datas);
-							mui.post($ajaxUrl + '', datas, function(res) {
-								if(res.errno==0){
-									message("提交成功！");
-									mui.back();
-								}else{
-									message("提交失败，请稍后重试！");
+							if (datas.content == '') {
+								message('请输入反馈内容!');
+								return;
+							}
+							var reg = /^1[3456789]\d{9}$/;
+							if (datas.mobile != '' && !reg.test(datas.mobile)) {
+								message('手机号码输入格式有误!');
+								return;
+							}
+							mui.post($ajaxUrl + 'feedback', datas, function(res) {
+								if (res.errno == 0) {
+									message("反馈成功,谢谢您的反馈!");
+									setTimeout(function() {
+										mui.back();
+									}, 1500)
+								} else {
+									message(res.message);
 								}
 							}, 'json');
 						})
@@ -291,5 +303,4 @@
 			})
 		</script>
 	</body>
-
 </html>
