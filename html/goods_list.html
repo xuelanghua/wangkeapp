@@ -664,6 +664,7 @@
 <script src="../js/mui.js"></script>
 <script src="../js/util.js"></script>
 <script src="../js/vue.min.js"></script>
+<script src="../js/imageSelect.js"></script>
 <script type="text/javascript">
 	var userInfo = getUserInfo();
 	// 当前产品对象
@@ -733,7 +734,7 @@
 						color: '#2289FF',
 						height: '50px',
 						range: '100px',
-						offset: mui.os.ios ? '0px' : '-50px', 
+						offset: mui.os.ios ? '0px' : '-50px',
 						auto: false,
 						callback: function() {
 							mui('#goods_container').pullRefresh().refresh(true);
@@ -941,7 +942,7 @@
 			token: userInfo.token,
 			status: status,
 			goods_id: goods_id,
-			type: type 
+			type: type
 		}, function(res) {
 			if (res.errno == 0) {
 				skip = 1;
@@ -1019,43 +1020,45 @@
 			var imgDtask = plus.downloader.createDownload(img, {
 				method: 'GET'
 			}, function(d, status) {
-				if (status == 200) {
-					plus.zip.compressImage({
-							src: d.filename,
-							dst: d.filename,
-							overwrite: true,
-							width: '500px',
-							height: 'auto',
-							format: 'jpg',
-							quality: 90,
-							clip: {
-								width: "500px",
-								height: "400px"
-							}
-						},
-						function(e) {
-							imgpath = e.target;
-							if (imgpath) {
-								showload(1);
-								shareToMiniprogram({
-									title: cont,
-									content: cont,
-									thumbs: [imgpath],
-									miniProgram: {
-										id: 'gh_9fa5f42ab939',
-										path: '/longbing_card/pages/shop/detail/detail?id=' + goodsid + '&to_uid=' + userInfo.id,
-										webUrl: 'https://app.wangkeapp.cn/'
-									}
-								}, 'miniProgram');
-							}
-						},
-						function(error) {
-							showload(1);
-							logs("图片压缩失败！");
-						});
-				} else {
+				if (status != 200) {
+					showload(1);
+					message("图片处理失败，请重试！")
 					logs('保存失败')
+					return false;
 				}
+				plus.zip.compressImage({
+						src: d.filename,
+						dst: d.filename,
+						overwrite: true,
+						width: '500px',
+						height: 'auto',
+						format: 'jpg',
+						quality: 90,
+						clip: {
+							width: "500px",
+							height: "400px"
+						}
+					},
+					function(e) {
+						imgpath = e.target;
+						if (imgpath) {
+							showload(1);
+							shareToMiniprogram({
+								title: cont,
+								content: cont,
+								thumbs: [imgpath],
+								miniProgram: {
+									id: 'gh_9fa5f42ab939',
+									path: '/longbing_card/pages/shop/detail/detail?id=' + goodsid + '&to_uid=' + userInfo.id,
+									webUrl: 'https://app.wangkeapp.cn/'
+								}
+							}, 'miniProgram');
+						}
+					},
+					function(error) {
+						showload(1);
+						logs("图片压缩失败！");
+					});
 			});
 			imgDtask.start()
 		});
@@ -1070,7 +1073,6 @@
 	// 创建海报
 	function createPoster() {
 		mask.close();
-		// logs(app.on_sale_list[currentIdx]);
 		openPage("create_goods_poster.html", "create_goods_poster", "#F7F7F7", {
 			goodsId: app.on_sale_list[currentIdx].id
 		});

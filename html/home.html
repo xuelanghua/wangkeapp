@@ -86,7 +86,7 @@
 				font-size: 12px;
 				background-color: #f2f2f2;
 				overflow: hidden;
-				display: flex;
+				display: none;
 				align-items: center;
 				padding-right: 30px;
 			}
@@ -776,11 +776,12 @@
 						<div style="float: left;margin-left: 15px;">
 							<p>目标&任务</p>
 							<span style="color: #000;">释放小宇宙</span>
-						</div>
+						</div> 
 						<!-- <div class="heitiao" style="background-color: #05D6DF;">设置</div> -->
 					</div>
 				</div>
 			</div>
+			<!-- <h2 id="g_zip" style="margin-top: 40px;color: #000000;">图片压缩</h2> -->
 		</div>
 		<div class="code_container">
 			<div id="QR-code">
@@ -1186,9 +1187,8 @@
 					if (noticeLen > 1) {
 						scrollInit();
 					}
+					document.querySelector(".Notice").style.display = "flex"; // !important
 				} else {
-					document.querySelector(".Notice").style.background = "#FF0000";
-					document.querySelector(".Notice").style.display = "none"; // !important
 				}
 			}, 'json')
 		}
@@ -1300,5 +1300,8 @@
 				}
 			}
 		}
+		mui('body').on('tap','#g_zip',function(){
+			openPage('compressImage.html','compressImage',"#f7f7f7")
+		})
 	</script>
 </html>

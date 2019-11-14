@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../plugins/eleditor/base.css" rel="stylesheet" />
+		<link href="../css/animate.min.css" rel="stylesheet" />
 		<style>
 			*{
 				margin: 0;
@@ -80,6 +81,84 @@
 				text-align: center;
 				font-size: 16px;
 			}
+			
+			.drag-finish{
+				background-color: #2289FF;
+				height: 50px;
+				width: 100%;
+				align-items: center;
+				justify-content: center;
+				color: #FFFFFF;
+				font-size: 16px;
+				position: fixed;
+				z-index: 6;
+				bottom: -60px;
+				left: 0;
+				display: flex;
+				transition: all 0.25s ease-in-out;
+			}
+			.drag-finish.active{
+				bottom: 0;
+			}
+			.quick-tips{
+				position: fixed;
+				width: 92%;
+				height: auto;
+				border-radius: 20px;
+				background-color: #fff;
+				left: 4%;
+				bottom: 20px;
+				z-index: 12;
+				padding:20px 10px;
+				box-shadow: 0 0 5px 1px rgba(0,0,0,.3);
+				box-sizing: border-box;
+				-webkit-transition: all 0.25s ease-in-out;
+				transition: all 0.25s ease-in-out;
+				display: none;
+			}
+			.quick-tips .mui-text-center{
+				font-weight: normal;
+				font-size: 18px;
+				padding: 30px 0 50px; 
+			}
+			.quick-tips button{
+				border: none;
+				border-radius: 5px;
+				background-color: #2289ff;
+				width: 90%;
+				color: #FFFDEF;
+				height: 40px;
+				margin-left: 5%;
+				margin-bottom: 10px;
+			} 
+			.quick-tips button:active{
+				color: #ffffff;
+				background-color:#0477fb;
+			}
+			.mui-input-row.mui-checkbox{
+				display: flex;
+				align-items: center;
+				color: #999999;
+				width: 90%;
+				margin-left: 5%;
+				justify-content: flex-end;
+				overflow: hidden;
+			}
+			.mui-checkbox input[type='checkbox']{
+				position: relative;
+				top: auto;
+				right: auto;
+				-webkit-transform: scale(0.8);
+				transform: scale(0.8);
+			}
+			.mui-checkbox label{
+				display: inline-block;
+				padding: 0;
+				margin: 0;
+				font-size: 16px;
+				line-height: 1;
+				margin-top: 2px;
+			}
 		</style>
 	</head>
 
@@ -90,6 +169,15 @@
 			<div class="mui-pull-right" id="confirm">确定</div>
 		</header>
 		<div class="mui-content" id="contentEditor"></div>
+		<div class="drag-finish">完成</div>
+		<div class="quick-tips animated">
+			<h3 class="mui-text-center">长按图片可以激活拖动模式</h3>
+			<button type="button" class="iknow">知道了</button>
+			<div class="mui-input-row mui-checkbox">
+				<input name="checkbox" value="nver" type="checkbox">
+				<label>不再提示！</label>
+			</div>
+		</div>
 	</body>
 	<script src="../js/mui.js"></script>
 	<script src="../js/util.js"></script>
@@ -100,21 +188,25 @@
 	<script src="../js/Sortable.min.js"></script>
 	<script type="text/javascript">
 		mui.init({
-			swipeBack: false
+			swipeBack: false,
+			gestureConfig: {
+				longtap: true, //默认为false
+			}
 		})
-		mui.plusReady(function() {
-			var wv = plus.webview.currentWebview();
-			wv.setStyle({
-				'scrollIndicator': 'auto'
-			});
-		});
-		var userInfo = getUserInfo();
-		new Sortable(document.getElementById('contentEditor'), {
+		var options = {
 			delayOnTouchOnly: true,
 			delay: 0,
 			animation: 200,
-			touchStartThreshold: 0
-		});
+			touchStartThreshold: 0,
+		}
+		var sortableModel = null;
+		var userInfo = getUserInfo();
+		// new Sortable(document.getElementById('contentEditor'), {
+		// 	delayOnTouchOnly: true,
+		// 	delay: 0,
+		// 	animation: 200,
+		// 	touchStartThreshold: 0
+		// });
 		// window.addEventListener("img").on("drag",function(){
 		// 	alert("撒地方可黄金");
 		// })
@@ -161,7 +253,11 @@
 			],
 		});
 		mui.plusReady(function() {
-			var self = plus.webview.currentWebview();
+			var active = false,
+				naverShow = false,
+				isShow = getcache("articleTips"),
+				tips = document.querySelector(".quick-tips"),
+				self = plus.webview.currentWebview();
 			if (self.content.length != 0 && self.content != "<p class=\"Eleditor-placeholder Eleditor-active\">点击此处编辑内容</p>") {
 				var contents = self.content.replace("Eleditor-active", '');
 				document.getElementById('contentEditor').innerHTML = contents;
@@ -176,6 +272,40 @@
 				});
 				mui.back();
 			})
+			
+			if (!isShow) {
+				tips.style.display = "block";
+				tips.classList.add("bounceInUp");
+			}
+			document.getElementById("contentEditor").addEventListener("longtap", function() {
+				var el = document.getElementById('contentEditor');
+				if (!active) {
+					message("拖动模式已激活！");
+					active = true;
+					// sortableModel = new Sortable(el, options);
+					sortableModel = Sortable.create(el, options);
+					document.querySelector(".drag-finish").classList.add("active");
+				}
+			})
+			// 取消拖动模式
+			mui("body").on('tap', ".drag-finish", function() {
+				document.querySelector(".drag-finish").classList.remove("active");
+				// 销毁排序
+				sortableModel.destroy();
+				active = false;
+			})
+			mui('.mui-input-group').on('change', 'input', function() {
+				var value = this.checked ? "true" : "false";
+				this.previousElementSibling.innerText = "checked：" + value;
+			});
+			mui('.quick-tips').on('change', 'input', function() {
+				naverShow = this.checked ? "true" : "false";
+			});
+			// 知道了
+			mui('.quick-tips').on('tap', '.iknow', function() {
+				document.querySelector(".quick-tips").style.bottom = "-100%";
+				cacheData("articleTips", naverShow);
+			});
 		})
 	</script>
 </html>
