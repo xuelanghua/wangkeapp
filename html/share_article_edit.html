@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			body {
+				background-color: #f2f5f6;
+			}
+
+			.img-cont {
+				width: 100%;
+				height: auto;
+				padding: 15px;
+				background-color: #FFFFFF;
+				overflow: hidden;
+				margin-bottom: 15px;
+				position: relative;
+				box-sizing: border-box;
+				font-size: 16px;
+			}
+
+			.img-cont img {
+				width: 100%;
+				max-height: 240px;
+				object-fit: cover;
+			}
+
+			.img-cont textarea {
+				margin-bottom: 0;
+				border: none;
+				background-color: #f2f5f6;
+				padding: 5px;
+				margin-top: 10px;
+				font-size: 15px;
+			}
+
+			.mui-btn-blue {
+				height: 44px;
+				font-size: 16px;
+				width: 94%;
+				margin-left: 3%;
+				margin-top: 80px;
+				padding: 0;
+			}
+
+			.img-cont span {
+				color: #FFFFFF;
+				background-color: rgba(0, 0, 0, 0.6);
+				position: absolute;
+				right: 30px;
+				bottom: 30px;
+				border-radius: 3px;
+				padding: 3px 12px 2px;
+				font-size: 14px;
+				opacity: 0.8;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">修改文章</h1>
+			</header>
+			<div class="mui-content">
+				<div class="img-cont">
+					<img :src="thumb">
+					<span>替换封面</span>
+				</div>
+				<div class="img-cont">
+					<label for="">标题：</label>
+					<textarea v-model="title" rows="2" cols=""></textarea>
+				</div>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block" @tap="publishArticle">发布</button>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/choosemedia.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					thumb: '',
+					title: '',
+					content: ''
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					var _this = this;
+					mui.plusReady(function() {
+						plus.webview.currentWebview().opener().hide(); 
+						plus.webview.currentWebview().opener().close();
+						var selfwv = plus.webview.currentWebview();
+						_this.thumb = selfwv.res.data.cover;
+						_this.title = selfwv.res.data.title;
+						_this.content = selfwv.res.data.content_html;
+					})
+				}
+			})
+
+			function publishArticle() {
+				mui.post($ajaxUrl + 'article', {
+					action: "article_add",
+					token: userInfo.token,
+					title: app.title,
+					thumb: app.thumb,
+					content: app.content,
+				}, function(res) {
+					if (res.errno == 0) {
+						message('发布成功!', 'center');
+						setTimeout(function() {
+							openPage('my_article.html', 'my_article', '#f7f7f7', '');
+						}, 800)
+					} else {
+						message(res.message, 'center');
+					}
+				}, 'json');
+			}
+			mui('.img-cont').on('tap', 'span', function() {
+				document.activeElement.blur();
+				wangke.init({
+					type: 'image',
+					multiple: false,
+					separate: false
+				});
+				wangke.chooseMedia(function(res) {
+					app.thumb = res.url;
+				}, function(e) {
+					if (e.code > 100) {
+						message(e.message);
+					}
+				})
+			})
+		</script>
+	</body>
+
+</html>

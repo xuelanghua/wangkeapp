@@ -301,7 +301,9 @@
 					mui.plusReady(function() {
 						plus.webview.hide('article_operation', 'none');
 						plus.webview.close('article_operation', 'none');
-						// 去详情页
+						plus.webview.hide('share_article_edit', 'none');
+						plus.webview.close('share_article_edit', 'none');
+						// 去详情页 
 						mui(".mui-content").on('tap', '.mui-table-view-cell', function(e) {
 							var articleId = this.dataset.article;
 							var selectId = document.getElementById(this.id);
@@ -356,6 +358,13 @@
 						window.addEventListener('refreshArticle', function(event) {
 							getArticleList(false, true);
 						})
+						// 初始化字体大小
+						var viewport = document.documentElement.clientWidth;
+						if (viewport > 750) {
+							viewport = 750
+						}
+						document.documentElement.style.fontSize = viewport / 7.5 + "px";
+						// 初始化字体大小结束
 					})
 				},
 				methods: {

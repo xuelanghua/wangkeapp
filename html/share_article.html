@@ -7,45 +7,106 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style type="text/css">
+			body {
+				background-color: #f2f5f6;
+			}
+
+			.mui-content {
+				background-color: #f2f5f6;
+				min-height: 100vh;
+			}
+
 			.article-part1 {
-				padding: 0 0.2rem;
+				padding: 10px;
 				background-color: #ffffff;
-				margin-top: 0.2rem;
+				margin-top:10px;
 				position: relative;
+				width: 100%;
 			}
 
 			.article-title {
-				height: 45px;
+				border: none;
+				width: 100%;
+				line-height: 1.4;
 				border: none;
 				border-radius: 0;
 				margin: 0;
-				padding: 0;
-				padding-top: 15px;
+				padding: 10;
 			}
 
 			.bottom-operation {
 				display: flex;
 				justify-content: center;
-				padding: 0.5rem 0.2rem 1rem;
+				padding: 10px;
 			}
 
 			.bottom-operation button {
-				border-radius: 0.1rem;
+				border-radius: 5px;
 				background-color: #2289ff;
 				border-color: #2289ff;
-				height: 0.98rem;
+				height: 40px;
 				padding: 0;
+				font-size: 15px;
+			}
+
+			.tips-img {
+				width: 100%;
+				height: auto;
+			}
+
+			.tips-container {
+				position: fixed;
+				top: 30%;
+				left: 10%;
+				width: 80%;
+				border-radius: 8px;
+				z-index: 1045;
+				background-color: #FFFFFF;
+				display: none;
+			}
+
+			.logo-cont {
+				width: 45px;
+				height: 45px;
+				border-radius: 50%;
+				background-color: #FFFFFF;
+				padding: 8px;
+				box-sizing: border-box;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: -22.5px auto 0;
+				box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+			}
+
+			.logo-cont img {
+				width: 100%;
+				height: auto;
+			}
+			.mui-text-right {
+				padding-right: 10px;
+				line-height: 1;
+			}
+			.mui-text-right .mui-icon{
+				font-size: 32px;
+				margin-top: -40px; 
+				color: #AAAAAA;
+			}
+			.pth-url{
+				background-color: #f7f7f7;
+				width: 86%;
+				margin:30px 7%;
+				padding: 15px 10px;
+				overflow: hidden;
+				border-radius: 3px;
+				color: #888888;
+				line-height: 1;
+			}
+			.pth-url:last-of-type{
+				background-color: #2289FF;
+				color: #FFFFFF;
 			}
 		</style>
-		<script type="text/javascript">
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
-		</script>
 	</head>
 
 	<body>
@@ -55,10 +116,24 @@
 		</header>
 		<div class="mui-content">
 			<div class="article-part1">
-				<textarea class="article-title" rows="2" placeholder="请输入公众号文章链接"></textarea>
+				<input class="article-title" type="" name="" id="" value="" placeholder="请输入公众号文章链接" />
 			</div>
 			<div class="bottom-operation">
-				<button type="button" class="mui-btn mui-btn-primary mui-btn-block get-article">获取文章并发布</button>
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block get-article">获取文章</button>
+			</div>
+			<img class="tips-img" src="../image/2f.jpg" alt="">
+			<div class="tips-container" id="tips">
+				<div class="logo-cont">
+					<img src="../image/longew.png">
+				</div>
+				<p class="mui-text-right">
+					<span class="mui-icon mui-icon-closeempty"></span>
+				</p>
+				<h4 class="mui-text-center">检测到文章</h4>
+				<div class="pth-url mui-ellipsis" id="path_url"></div>
+				<div class="pth-url mui-ellipsis mui-text-center gain">
+					去获取
+				</div>
 			</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
@@ -66,6 +141,10 @@
 		<script type="text/javascript">
 			mui.init({
 				swipeBack: true
+			});
+			var mask = mui.createMask(function() {
+				return false;
+				document.getElementById("tips").style.display="none";
 			});
 			var userInfo = getUserInfo();
 			var content = '';
@@ -75,24 +154,29 @@
 			mui.plusReady(function() {
 				plus.webview.hide('article_operation', 'none');
 				plus.webview.close('article_operation', 'none');
-					
+
 				setInterval(function() {
-					var context = '';
+					var context = ''; 
 					context = getClipContex();
 					if (context != '' && context != null && typeof context != 'undefined') {
 						if (context.indexOf('mp.weixin.qq.com') != -1) {
 							// logs(context);
 							document.querySelector('.article-title').value = context;
+							document.getElementById("path_url").innerText=context;
+							document.getElementById("tips").style.display="block";
+							mask.show();
+							document.querySelector('.article-title').value = context;
 							clearClipContext();
 						}
 					}
-				}, 1000)
+				}, 500)
 				mui('.mui-content').on('tap', '.get-article', function() {
-					var uri = document.querySelector('textarea').value;
+					var uri = document.querySelector('.article-title').value;
 					if (uri == '' || uri.indexOf('mp.weixin.qq.com') == -1) {
 						message('请输入公众号文章链接');
 						return;
 					}
+					document.activeElement.blur();
 					showload('', '', '文章获取中···', 'rgba(0,0,0,0.5)');
 					mui.ajax($ajaxUrl + 'util', {
 						data: {
@@ -104,7 +188,10 @@
 						timeout: 120000, //超时时间设置为10秒；
 						success: function(res) {
 							if (res.errno == 0) {
-								publishArticle(res.data);
+								message('获取成功!', 'center');
+								openPage('share_article_edit.html', 'share_article_edit', '#f7f7f7', {
+									res:res
+								});
 							} else {
 								message(res.message);
 							}
@@ -129,39 +216,15 @@
 					// );
 				})
 			})
-
-			function publishArticle(articleInfo) {
-				mui.post($ajaxUrl + 'article', {
-					action: "article_add",
-					token: userInfo.token,
-					title: articleInfo.title,
-					thumb: articleInfo.cover,
-					content: articleInfo.content_html,
-				}, function(res) {
-					if (res.errno == 0) {
-						message('操作成功!', 'center');
-						setTimeout(function() {
-							plus.webview.currentWebview().hide();
-							plus.webview.currentWebview().close();
-							openPage('my_article.html', 'my_article', '#f7f7f7', '');
-						}, 1200)
-					} else {
-						message(res.message, 'center');
-					}
-				}, 'json');
-			}
-				
 			//获取剪贴板内容
 			function getClipContex() {
 				if (mui.os.ios) {
 					var UIPasteboard = plus.ios.importClass("UIPasteboard");
 					var generalPasteboard = UIPasteboard.generalPasteboard();
 					//获取文本内容:
-					
 					return generalPasteboard.plusCallMethod({
 						valueForPasteboardType: "public.utf8-plain-text"
 					});
-					
 					//设置剪贴板内容
 					generalPasteboard.plusCallMethod({
 						setValue: copy_content,
@@ -172,10 +235,10 @@
 					var main = plus.android.runtimeMainActivity();
 					var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
 					// plus.android.invoke(clip, "setText", copy_content);
-					return plus.android.invoke(clip,"getText");
+					return plus.android.invoke(clip, "getText");
 				}
 			}
-			
+
 			//清空剪贴板内容
 			function clearClipContext() {
 				if (mui.os.ios) {
@@ -187,9 +250,17 @@
 						forPasteboardType: "public.utf8-plain-text"
 					});
 				} else {
+					var context = plus.android.importClass("android.content.Context");
+					var main = plus.android.runtimeMainActivity();
+					var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
 					plus.android.invoke(clip, "setText", '');
 				}
 			}
+			mui('.tips-container').on('tap','.mui-icon,.gain',function(){
+				document.getElementById("tips").style.display="none";
+				mask._remove();
+			})
+			mui('.tips-container')[0].addEventListener("touchmove", mui.preventDefault);
 		</script>
 	</body>
 
