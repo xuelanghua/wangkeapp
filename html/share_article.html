@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>分享文章</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.article-part1 {
+				padding: 0 0.2rem;
+				background-color: #ffffff;
+				margin-top: 0.2rem;
+				position: relative;
+			}
+
+			.article-title {
+				height: 45px;
+				border: none;
+				border-radius: 0;
+				margin: 0;
+				padding: 0;
+				padding-top: 15px;
+			}
+
+			.bottom-operation {
+				display: flex;
+				justify-content: center;
+				padding: 0.5rem 0.2rem 1rem;
+			}
+
+			.bottom-operation button {
+				border-radius: 0.1rem;
+				background-color: #2289ff;
+				border-color: #2289ff;
+				height: 0.98rem;
+				padding: 0;
+			}
+		</style>
+		<script type="text/javascript">
+			// 初始化字体大小
+			var viewport = document.documentElement.clientWidth;
+			if (viewport > 750) {
+				viewport = 750
+			}
+			document.documentElement.style.fontSize = viewport / 7.5 + "px";
+			// 初始化字体大小结束
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
+			<h1 class="mui-title">转载文章</h1>
+		</header>
+		<div class="mui-content">
+			<div class="article-part1">
+				<textarea class="article-title" rows="2" placeholder="请输入公众号文章链接"></textarea>
+			</div>
+			<div class="bottom-operation">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block get-article">获取文章并发布</button>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			});
+			var userInfo = getUserInfo();
+			var content = '';
+			var title = '';
+			var thumb = '';
+			var articleId = 0;
+			mui.plusReady(function() {
+				plus.webview.hide('article_operation', 'none');
+				plus.webview.close('article_operation', 'none');
+					
+				setInterval(function() {
+					var context = '';
+					context = getClipContex();
+					if (context != '' && context != null && typeof context != 'undefined') {
+						if (context.indexOf('mp.weixin.qq.com') != -1) {
+							// logs(context);
+							document.querySelector('.article-title').value = context;
+							clearClipContext();
+						}
+					}
+				}, 1000)
+				mui('.mui-content').on('tap', '.get-article', function() {
+					var uri = document.querySelector('textarea').value;
+					if (uri == '' || uri.indexOf('mp.weixin.qq.com') == -1) {
+						message('请输入公众号文章链接');
+						return;
+					}
+					showload('', '', '文章获取中···', 'rgba(0,0,0,0.5)');
+					mui.ajax($ajaxUrl + 'util', {
+						data: {
+							action: 'crawl_article',
+							uri: uri
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 120000, //超时时间设置为10秒；
+						success: function(res) {
+							if (res.errno == 0) {
+								publishArticle(res.data);
+							} else {
+								message(res.message);
+							}
+							showload(1);
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(JSON.stringify(errorThrown));
+						}
+					});
+
+					// mui.post($ajaxUrl + 'util', {
+					// 		action: 'crawl_article',
+					// 		uri: uri
+					// 	}, function(res){
+					// 		if (res.errno == 0) {
+					// 			publishArticle(res.data);
+					// 		} else {
+					// 			message(res.message);
+					// 		}
+					// 		showload(1);
+					// 	},'json'
+					// );
+				})
+			})
+
+			function publishArticle(articleInfo) {
+				mui.post($ajaxUrl + 'article', {
+					action: "article_add",
+					token: userInfo.token,
+					title: articleInfo.title,
+					thumb: articleInfo.cover,
+					content: articleInfo.content_html,
+				}, function(res) {
+					if (res.errno == 0) {
+						message('操作成功!', 'center');
+						setTimeout(function() {
+							plus.webview.currentWebview().hide();
+							plus.webview.currentWebview().close();
+							openPage('my_article.html', 'my_article', '#f7f7f7', '');
+						}, 1200)
+					} else {
+						message(res.message, 'center');
+					}
+				}, 'json');
+			}
+				
+			//获取剪贴板内容
+			function getClipContex() {
+				if (mui.os.ios) {
+					var UIPasteboard = plus.ios.importClass("UIPasteboard");
+					var generalPasteboard = UIPasteboard.generalPasteboard();
+					//获取文本内容:
+					
+					return generalPasteboard.plusCallMethod({
+						valueForPasteboardType: "public.utf8-plain-text"
+					});
+					
+					//设置剪贴板内容
+					generalPasteboard.plusCallMethod({
+						setValue: copy_content,
+						forPasteboardType: "public.utf8-plain-text"
+					});
+				} else {
+					var context = plus.android.importClass("android.content.Context");
+					var main = plus.android.runtimeMainActivity();
+					var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
+					// plus.android.invoke(clip, "setText", copy_content);
+					return plus.android.invoke(clip,"getText");
+				}
+			}
+			
+			//清空剪贴板内容
+			function clearClipContext() {
+				if (mui.os.ios) {
+					var UIPasteboard = plus.ios.importClass("UIPasteboard");
+					var generalPasteboard = UIPasteboard.generalPasteboard();
+					//设置剪贴板内容
+					generalPasteboard.plusCallMethod({
+						setValue: '',
+						forPasteboardType: "public.utf8-plain-text"
+					});
+				} else {
+					plus.android.invoke(clip, "setText", '');
+				}
+			}
+		</script>
+	</body>
+
+</html>
