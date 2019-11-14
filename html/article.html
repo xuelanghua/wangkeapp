@@ -192,7 +192,8 @@
 					background: #333333 none repeat scroll 0% 0%;
 				}
 				#article_content img{
-					max-width: 100%;
+					max-width: 100% !important;
+					height: auto !important;
 				}
 		</style>
 	</head>
@@ -679,7 +680,7 @@
 				shares[t.id] = t;
 			}
 		}, function(e) {
-			alert("获取分享服务列表失败：" + e.message);
+			message("获取分享服务列表失败：" + e.message);
 		});
 	}
 
@@ -721,6 +722,7 @@
 			msg.pictures = [sharehrefImg.value];
 		}
 
+		logs(msg);
 		// 发送分享
 		if (sb.s.authenticated) {
 			//alert("---已授权---");
@@ -731,7 +733,6 @@
 				shareMessage(msg, sb.s);
 			}, function(e) {
 				alert("认证授权失败：" + e.code + " - " + e.message);
-
 			});
 		}
 	}
@@ -741,13 +742,52 @@
 	 * @param {plus.share.ShareService} s
 	 */
 	function shareMessage(msg, s) {
-		//alert(JSON.stringify(msg));
-		s.send(msg, function() {
-			//alert("分享到\""+s.description+"\"成功！ " );
-			share_success();
-		}, function(e) {
-			alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+		var imgpath = '';
+		var imgDtask = plus.downloader.createDownload(msg.thumbs[0], {
+			method: 'GET'
+		}, function(d, status) {
+			if (status == 200) {
+				plus.zip.compressImage({
+						src: d.filename,
+						dst: d.filename,
+						overwrite: true,
+						width: '300px',
+						height: 'auto',
+						format: 'jpg',
+						quality: 80,
+						clip: {
+							width: "300px",
+							height: "300px"
+						}
+					},
+					function(e) {
+						imgpath = e.target;
+						if (imgpath) {
+							msg.thumbs = [imgpath];
+							s.send(msg, function() {
+								//alert("分享到\""+s.description+"\"成功！ " );
+								share_success();
+							}, function(e) {
+								alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+							});
+						} else {
+							s.send(msg, function() {
+								//alert("分享到\""+s.description+"\"成功！ " );
+								share_success();
+							}, function(e) {
+								alert("分享到\"" + s.description + "\"失败: " + JSON.stringify(e));
+							});
+						}
+					},
+					function(error) {
+						logs("图片压缩失败！");
+					});
+			} else {
+				logs('保存失败')
+			}
 		});
+		imgDtask.start();
+		//alert(JSON.stringify(msg));
 	}
 	// 分析链接
 	function shareHref() {
