@@ -394,6 +394,7 @@
 		Uri = null,
 		main = null,
 		userInfo = getUserInfo();
+	var articleUid = 0;
 	mui.plusReady(function() {
 		// mui.showLoading("正在加载..", "div");
 		showload(false, false, '加载中...', "rgba(0,0,0,0.5)");
@@ -539,9 +540,9 @@
 			action: 'article_info',
 			id: article_id
 		}, function(data) {
-			//console.log(JSON.stringify(data));
-			//document.write(JSON.stringify(data));
+			logs(data);
 			if (data.errno == '0') {
+				articleUid = data.data.uid;
 				document.getElementById('article_top').innerHTML = data.data.title;
 				document.getElementById('article_title').innerHTML = data.data.title;
 				document.getElementById('article_author').innerHTML = data.data.author;
@@ -693,7 +694,12 @@
 	 */
 	function shareAction(sb, bh) {
 		if (!sb || !sb.s) {
-			alert("无效的分享服务！");
+			message("无效的分享服务！");
+			return;
+		}
+		
+		if (sb.s == 'APPTimeline') {
+			logs(sb);
 			return;
 		}
 
@@ -722,7 +728,6 @@
 			msg.pictures = [sharehrefImg.value];
 		}
 
-		logs(msg);
 		// 发送分享
 		if (sb.s.authenticated) {
 			//alert("---已授权---");
@@ -809,6 +814,11 @@
 			title: 'QQ',
 			s: ss
 		});
+		articleUid == userInfo.id && shareBts.push({
+			title: '好友动态',
+			s: 'APPTimeline'
+		});
+		
 		// 弹出分享列表
 		shareBts.length > 0 ? plus.nativeUI.actionSheet({
 			title: '分享链接',
