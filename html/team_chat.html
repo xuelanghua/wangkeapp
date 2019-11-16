@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
-
+<!-- 团队聊天 -->
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title></title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<!-- <link href="../css/mui.imageviewer.css" rel="stylesheet" /> -->
 		<link href="../css/team_chat.css" rel="stylesheet" />
 		<style>
 			.msg-item .msg-content{
@@ -265,6 +264,44 @@
 			.begins-inform{
 				max-width: 200px;
 			}
+			/* 操作菜单样式 */
+			.mui-backdrop.mui-active{
+				background-color: rgba(0,0,0,0);
+			}
+			.mui-table-view:before,.mui-table-view:after{
+				height: 0;
+			}
+			.mui-table-view-cell{
+				font-size: 14px;
+				color: #333333;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.mui-table-view-cell:after{
+				left: 0;
+			}
+			.mui-popover.mui-active{
+				/* min-width: 90px; */
+				box-shadow: 0 0 5px 0 rgba(0,0,0,0.1);
+			}
+			.mui-popover-arrow.mui-bottom{
+				transform: translateX(-25%);
+				-webkit-transform: translateX(-25%);
+			}
+			#inner-editor{
+				position: absolute !important;
+				z-index: -999 !important;
+				display: none !important;
+			}
+			.mui-table-view-cell:after{
+				background-color: #DDDDDD;
+			}
+			.del-btn,.copy-btn{
+				display: block;
+				min-width: 90px;
+				text-align: center;
+			}
 		</style>
 	</head>
 
@@ -290,10 +327,11 @@
 							<span :class="uid==list.uid ? 'self-name' : 'other-name'">{{list.user_name}}</span>
 							<img :class="uid==list.uid ? 'msg-user' : 'msg-user-img'" :src="list.user_avatar" @tap="toUserDetail(list.uid)"
 							 alt="" />
-							<div class="msg-content">
+							<div class="msg-content" :data-key = "index" :data-idx = "key" :id="'message'+list.id" :data-copytext="list.content" :data-sender="uid==list.uid?'self':'other'"
+							 :data-id="list.id" :data-types="list.message_type"  :data-ctime="list.create_time">
 								<div class="msg-content-arrow"></div>
 								<i v-if="list.message_type=='audio' && list.read_status==0&&uid!=list.uid" class="red-dot"></i>
-								<div v-if="list.message_type=='text'" class="msg-content-inner" v-html="list.content">
+								<div v-if="list.message_type=='text'" :data-content="list.content" class="msg-content-inner text-msg" v-html="list.content">
 									{{ list.content|| '&nbsp;&nbsp;' }}
 								</div>
 								<div class="begins-inform" v-else-if="list.message_type=='course'" @tap="goStreaming(list.content)">
@@ -327,6 +365,14 @@
 				</template>
 			</div>
 		</div>
+		<!-- 操作菜单 -->
+		<div id="middlePopover" class="mui-popover">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell copy-btn">复 制</li>
+				<li class="mui-table-view-cell recall-btn">撤 回</li>
+				<li class="mui-table-view-cell del-btn">删 除</li>
+			</ul>
+		</div>
 		<footer>
 			<div class="footer-left">
 				<i id="msg-image" class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
@@ -345,7 +391,6 @@
 			<div id="audio_tips" class="rsalert">手指上滑，取消发送</div>
 		</div>
 		<script src="../js/mui.min.js"></script>
-		<!-- <script src="../js/mui.imageViewer.js"></script> -->
 		<script src="../js/mui.zoom.js"></script>
 		<script src="../js/mui.previewimage.js"></script>
 		<script src="../js/arttmpl.js"></script>
@@ -397,7 +442,7 @@
 			var vm = new Vue({
 				el: '.mui-content',
 				data: {
-					chatList: {},
+					chatList: [],
 					uid: userInfo.id,
 					tid: 0,
 				},
@@ -655,7 +700,7 @@
 										if (voiceTime < 2 && !recordCancel) {
 											audio_tips.innerHTML = "录音时间太短";
 											ui.boxSoundAlert.classList.add('rprogress-sigh');
-											stopTimer=setTimeout(function() {
+											stopTimer = setTimeout(function() {
 												setSoundAlertVisable(false);
 											}, 800);
 											return false;
@@ -671,7 +716,7 @@
 										if (!recordCancel) {
 											audio_tips.innerHTML = "录音失败!";
 											ui.boxSoundAlert.classList.add('rprogress-sigh');
-											stopTimer=setTimeout(function() {
+											stopTimer = setTimeout(function() {
 												setSoundAlertVisable(false);
 											}, 800);
 										}
@@ -895,7 +940,6 @@
 
 			// 标记语音已读 
 			var priorId = null;
-
 			function readAudio(aid, idx, sign, status, msgType, msgContent) {
 				var _self = this;
 				if (msgType == 'audio') {
@@ -1042,6 +1086,120 @@
 					fid: uid
 				});
 			}
+
+			// 长按显示操作菜单
+			var copytext = '';
+			var types = '';
+			var isFocus = null;
+			var message_id = null;
+			var current_index=null;
+			var current_key=null;
+			var cTime=null;
+			// 获取原来的高度
+			var oglHeight = document.querySelector("body").offsetHeight;
+			//显示操作菜单
+			mui('.mui-content').on("longtap", ".msg-content", function() {
+				// plus.device.vibrate(50);
+				// 获取高度
+				var content = this.dataset.content;
+				var currentTime=new Date().getTime()/1000;
+				copytext = this.dataset.copytext;
+				types = this.dataset.types;
+				sender = this.dataset.sender;
+				message_id = this.dataset.id;
+				current_key=this.dataset.key;
+				current_index=this.dataset.idx;
+				cTime=this.dataset.ctime;
+				var tempHeight = document.querySelector("body").offsetHeight;
+				// 高度差
+				var gap = oglHeight - tempHeight;
+
+				if (types == "text") {
+					document.querySelector(".copy-btn").style.display = "flex";
+				} else {
+					document.querySelector(".copy-btn").style.display = "none";
+				}
+
+				if (sender == "self"&&currentTime-cTime<=120) {
+					document.querySelector(".recall-btn").style.display = "flex";
+				} else {
+					document.querySelector(".recall-btn").style.display = "none";
+				}
+				
+				if (gap < 55) {
+					mui('#middlePopover').popover('hide');
+					mui("#middlePopover").popover('toggle', document.getElementById(this.id));
+				} else {
+					plus.key.hideSoftKeybord();
+				}
+			})
+			// 复制单条聊天记录
+			mui(".mui-popover").on("tap", ".copy-btn", function() {
+				//判断是安卓还是ios
+				if (mui.os.ios) {
+					//ios
+					var UIPasteboard = plus.ios.importClass("UIPasteboard");
+					var generalPasteboard = UIPasteboard.generalPasteboard();
+					//设置/获取文本内容:
+					generalPasteboard.plusCallMethod({
+						setValue: copytext,
+						forPasteboardType: "public.utf8-plain-text"
+					});
+					generalPasteboard.plusCallMethod({
+						valueForPasteboardType: "public.utf8-plain-text"
+					});
+					message("复制成功");
+				} else {
+					//安卓
+					var context = plus.android.importClass("android.content.Context");
+					var main = plus.android.runtimeMainActivity();
+					var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
+					plus.android.invoke(clip, "setText", copytext);
+					message("复制成功");
+				}
+				mui('#middlePopover').popover('hide');
+			})
+			// 聊天记录撤回
+			mui(".mui-popover").on("tap", ".recall-btn", function() {
+				mui.post($ajaxUrl + 'team&action=cancel_message', {
+					token: userInfo.token,
+					message_id: message_id
+				}, function(res) {
+					// alert(JSON.stringify(res))
+					if (res.errno == 0) {
+						vm.chatList[current_key].splice(current_index,1);
+						if(vm.chatList[current_key].length<1){
+							delete vm.chatList[current_key]
+						}
+						message('撤回成功');
+					} else if (res.errno == 2) {
+						message("超过三分钟，无法撤回");
+					} else {
+						message(res.message);
+					}
+				}, 'json');
+				mui('#middlePopover').popover('hide');
+			})
+			// 删除单条聊天记录
+			mui(".mui-popover").on("tap", ".del-btn", function() {
+				mui.post($ajaxUrl + 'team&action=delete_message', {
+					token: userInfo.token,
+					message_id: message_id,
+					team_id: vm.tid,
+					type: 1,
+				}, function(res) {
+					if (res.errno == 0) {
+						vm.chatList[current_key].splice(current_index,1);
+						if(vm.chatList[current_key].length<1){
+							delete vm.chatList[current_key]
+						}
+						message('已删除');
+					} else {
+						message('删除失败，请稍后重试');
+					}
+				}, 'json');
+				mui('#middlePopover').popover('hide');
+			})
 		</script>
 	</body>
 

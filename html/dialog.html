@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+	<!-- 个人聊天 -->
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
@@ -1231,10 +1232,12 @@
 				// 	event.detail.gesture.preventDefault();
 				// }, false);
 				//点击消息列表，关闭键盘
-				ui.areaMsgList.addEventListener('tap', function(event) {
+				ui.areaMsgList.addEventListener('tap', function(e) {
 					// if (!focus) {
 					ui.boxMsgText.blur();
 					// }
+					// msgTextFocus();
+					e.preventDefault();
 				})
 				// 清除全部聊天记录
 				mui('.join-team-verify').on("tap", ".send-verify", function() {
@@ -1548,6 +1551,7 @@
 			var oglHeight = document.querySelector("body").offsetHeight;
 			//显示操作菜单
 			mui('.mui-content').on("longtap", ".msg-content", function() {
+				plus.device.vibrate(50);
 				// 获取高度
 				copytext = this.dataset.copytext;
 				types = this.dataset.types;
