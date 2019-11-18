@@ -38,6 +38,7 @@
 				left: 0;
 			}
 
+
 			.goods-img-groups {
 				padding: 0.4rem 0.2rem;
 				width: 100%;
@@ -274,21 +275,35 @@
 			.mui-table-view-cell:after {
 				background-color: #DDDDDD;
 			}
-
-			.team-list.active span {
-				display: inline-flex;
+			.team-list-container .team-list,.team-list-container .team-list.active{
 				position: relative;
+				width: 100%;
 			}
 
-			.team-list.active span:after {
+			.team-list-container .team-list span:after {
 				content: '';
 				display: inline-block;
 				width: 19px;
 				height: 20px;
 				position: absolute;
-				background: url('../image/icon/draw-icono.png')center center no-repeat;
+				background: url('../image/icon/draw-icon02.png') center center no-repeat;
 				background-size: contain;
-				right: -0.8rem;
+				right: 15px;
+				top: 50%;
+				margin-top: -10px;
+			}
+
+			.team-list-container .team-list.active span:after {
+				content: '';
+				display: inline-block;
+				width: 19px;
+				height: 20px;
+				position: absolute;
+				background: url('../image/icon/draw-icono.png') center center no-repeat;
+				background-size: contain;
+				right: 15px;
+				top: 50%;
+				margin-top: -10px;
 			}
 
 			.void-detail-container {
@@ -331,7 +346,20 @@
 			.tishi {
 				color: #999999;
 			}
-
+			.team-header-img {
+				width: 0.56rem;
+				height: 0.56rem;
+				object-fit: cover;
+				margin-right: 10px;
+				border-radius: 3px;
+			}
+			.team-list{
+				display: flex;
+				align-items: center;
+			}
+			.team-list-container .team-list.active span{
+				color: #F5CA3A;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -414,7 +442,7 @@
 				<h5>团队选择</h5>
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell team-list" v-for="(team,index) in team_info" :data-tid="team.id" :key="index">
-						<span>{{team.name}}</span>
+						<img class="team-header-img" :src="team.cover" alt=""><span>{{team.name}}</span>
 					</li>
 				</ul>
 			</div>

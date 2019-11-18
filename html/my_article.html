@@ -29,7 +29,7 @@
 				overflow: hidden;
 				flex-shrink: 0;
 				margin-right: 0.2rem;
-				
+
 			}
 
 			.article-img {
@@ -184,9 +184,11 @@
 			.mui-icon {
 				font-size: 16px;
 			}
-			.last-arrowright{
+
+			.last-arrowright {
 				margin-left: -14px;
 			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -260,7 +262,7 @@
 			mui.init({
 				swipeBack: false, //启用右滑关闭功能【一旦取值为false，左右触控滑动将会失效！】
 				pullRefresh: {
-					container: "#article_container", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+					container: "#mui-content", //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
 					up: {
 						height: 50,
 						auto: false,
@@ -404,26 +406,21 @@
 					logs(res);
 					if (res.errno == 0) {
 						if (up) {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
 							app.articles = app.articles.concat(res.data);
-						} else {
+						} else if(down){
+							app.articles = res.data;
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}else{
 							app.articles = res.data;
 						}
-						if (app.articles == '' || app.articles.length <= 0) {
-							app.articleStatus = false;
-						} else {
-							app.articleStatus = true;
-						}
+						app.articleStatus = true;
 					} else {
-						app.articleStatus = false;
-					}
-					if (!app.articleStatus && up) {
-						mui('#article_container').pullRefresh().endPullupToRefresh(true);
-					} else if (app.articleStatus && up) {
-						mui('#article_container').pullRefresh().endPullupToRefresh(false);
-					} else if (down) {
-						mui('#article_container').pullRefresh().endPulldownToRefresh();
-						if (app.articleStatus) {
-							mui('#article_container').pullRefresh().endPullupToRefresh(false);
+						if (app.skip == 1) {
+							app.articleStatus = false;
+						}
+						if (up) {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
 						}
 					}
 				}, 'json');

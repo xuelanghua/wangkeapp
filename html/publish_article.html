@@ -57,22 +57,22 @@
 			}
 
 			.add-sm-img {
-				width: 2.27rem;
-				height: 1.6rem;
+				width: 113.5px;
+				height: 80px;
 				border: 2px dashed #dddddd;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				color: #999999;
-				margin: 0.3rem 0;
-				font-size: 0.28rem;
+				margin: 15px 0;
+				font-size: 14px;
 				overflow: visible;
 			}
 
 			.updata-img-tips {
-				margin-bottom: 0.3rem;
+				margin-bottom: 15px;
 				color: #2289FF;
-				font-size: 0.28rem;
+				font-size: 14px;
 			}
 
 			.section-advertising {
@@ -151,7 +151,7 @@
 				border-radius: 0.1rem;
 				background-color: #2289ff;
 				border-color: #2289ff;
-				height: 0.98rem;
+				height: 42px;
 				padding: 0;
 			}
 
@@ -250,6 +250,7 @@
 			var title = '';
 			var thumb = '';
 			var articleId = 0;
+			var articlStatus = false;
 			mui.plusReady(function() {
 				var self = plus.webview.currentWebview();
 				if (self.articleId) {
@@ -293,6 +294,13 @@
 					title = document.querySelector('textarea').value;
 					articleAddSubmit();
 				})
+				// 初始化字体大小
+				var viewport = document.documentElement.clientWidth;
+				if (viewport > 750) {
+					viewport = 750
+				}
+				document.documentElement.style.fontSize = viewport / 7.5 + "px";
+				// 初始化字体大小结束
 			})
 
 			//添加文章提交
@@ -309,6 +317,10 @@
 					message('请添加文章内容!', 'center');
 					return;
 				}
+				if(articlStatus){
+					return false;
+				}
+				articlStatus=true;
 				mui.post($ajaxUrl + 'article', {
 					action: "article_add",
 					token: userInfo.token,
@@ -326,6 +338,7 @@
 							openPage('my_article.html','my_article','#f7f7f7','');
 						}, 1200)
 					} else {
+						articlStatus=false;
 						message(res.message, 'center');
 					}
 				}, 'json');
