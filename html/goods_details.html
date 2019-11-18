@@ -406,6 +406,7 @@
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
+					fid: '',
 					goods_id: '',
 					goods_detail: {
 						name: ''
@@ -413,7 +414,6 @@
 					images: [],
 					spec: [],
 					team_info: [],
-					user_info: {}
 				},
 				created: function() {
 					// 初始化字体大小
@@ -436,16 +436,15 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
+						app.fid = self.fid;
 						mui.post($ajaxUrl + 'search&action=goods_detail', {
 							token: userInfo.token,
 							goods_id: app.goods_id
 						}, function(res) {
-							logs(res);
 							if (res.errno == 0) {
 								app.goods_detail = res.data;
 								app.images = res.data.images;
 								app.spec = res.data.spec;
-								app.user_info = res.data.user_info
 								if (app.images.length > 1) {
 									setTimeout(function() {
 										swiperInint();
@@ -497,11 +496,11 @@
 				if (sign == 'detail') {
 					// 查看名片
 					openPage('friends_detail.html', 'friends_detail', '#f7f7f7', {
-						fid: app.user_info.uid
+						fid: app.fid
 					});
 				} else {
 					// 购买
-					launchMiniprogram(app.goods_id, app.user_info.uid);
+					launchMiniprogram(app.goods_id, app.fid);
 				}
 			})
 			// 打开个人详情
@@ -524,7 +523,7 @@
 						thumbs: [sd_path],
 						miniProgram: {
 							id: 'gh_9fa5f42ab939',
-							path: '/longbing_card/pages/shop/detail/detail?id=' + app.goods_detail.id + '&to_uid=' + userInfo.id,
+							path: '/longbing_card/pages/shop/detail/detail?id=' + app.goods_detail.id + '&to_uid=' + app.fid,
 							webUrl: 'https://app.wangkeapp.cn/'
 						}
 					}, 'miniProgram');
