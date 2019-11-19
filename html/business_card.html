@@ -26,7 +26,7 @@
 			}
 
 			.qr-code-body {
-				width: 90%;
+				width: 92%;
 				height: auto;
 				position: relative;
 				border-radius: 5px;
@@ -38,6 +38,7 @@
 				box-sizing: border-box;
 				background-color: #FFFFFF;
 				padding: 8px;
+				box-sizing: border-box; 
 			}
 
 			.operation-section {
@@ -257,6 +258,7 @@
 
 			.theme5 .qrimg {
 				width: 1.8rem;
+				height: 1.8rem;
 				bottom: 1rem;
 				right: 0.4rem;
 				position: absolute;
@@ -325,11 +327,18 @@
 			.theme4 .theme4-qrimg-cont {
 				margin-bottom: 10px;
 			}
-			.tips-container{
+
+			.tips-container {
 				color: #FFFFFF;
 				font-size: 12px;
 				padding-top: 12%;
 			}
+
+			.theme-body2 .qrimg-container {
+				height: 4.5rem;
+				margin-bottom: 10px;
+			}
+
 			[v-cloak] {
 				display: none;
 				transition: all 0.25 ease-in-out;
@@ -617,12 +626,12 @@
 						taintTest: true,
 					}).then(function(cvs) {
 						try {
-						 // 将canvas对象转化为image/png
-						  var imgUrl = cvs.toDataURL('image/jpeg',1);
-						  logs(imgUrl);
-						 } catch (err) {
-						   console.log(err)
-						 }
+							// 将canvas对象转化为image/png
+							var imgUrl = cvs.toDataURL('image/jpeg', 1);
+						} catch (err) {
+							console.log(err)
+						}
+						// logs(app.serial + 'codeImg');
 						baseImgFile(app.serial + 'codeImg', imgUrl, 100, function(i) {
 							imgPath = i.target;
 							if (tips) {
@@ -700,7 +709,7 @@
 				//刷新二维码
 				setInterval(function() {
 					refreshQrcode();
-				}, 10000); 
+				}, 10000);
 				//刷新二维码
 				function refreshQrcode() {
 					mui.post($ajaxUrl + 'userqrcode', {
@@ -771,7 +780,8 @@
 				}
 			}, 'json');
 		}
-		function changeTheme(){
+
+		function changeTheme() {
 			if (app.serial < 5) {
 				app.serial += 1;
 				app.card_text = app.resultStyle['card_text_' + app.serial];
