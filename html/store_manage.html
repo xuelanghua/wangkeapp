@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.store-manage {
+				padding: 15px;
+			}
+
+			div {
+				box-sizing: border-box;
+			}
+
+			.search-section {
+				display: flex;
+				align-items: center;
+				background-color: #FFFFFF;
+				border-radius: 5px;
+				width: 100%;
+				height: 35px;
+				margin-bottom: 11px;
+			}
+
+			.cancel-search {
+				font-size: 16px;
+				color: #333333;
+				display: inline-flex;
+				height: 100%;
+				padding: 0 5px;
+				align-items: center;
+				justify-content: center;
+				color: #999999;
+				line-height: 1;
+			}
+
+			.search-section input {
+				margin-bottom: 0;
+				flex-grow: 1;
+				width: auto;
+				padding: 0;
+				line-height: 1;
+				height: auto;
+				border: none;
+				border-left: 1px solid #DDDDDD;
+				padding-left: 10px;
+				border-radius: 0;
+				background-color: #FFFFFF;
+				text-align: left;
+				font-size: 16px;
+			}
+
+			.search-section input::-webkit-input-placeholder {
+				font-size: 14px;
+				color: #999999;
+			}
+
+			.search-section form {
+				flex-grow: 1;
+			}
+
+			.search-section .mui-icon {
+				margin: 0 5px;
+				font-size: 22px;
+				color: #999999;
+			}
+
+			.store-list {
+				background-color: #FFFFFF;
+				position: relative;
+				border-radius: 10px;
+				overflow: hidden;
+				margin: 10px 0;
+			}
+
+			.store-list-body {
+				padding: 10px;
+				overflow: hidden;
+				position: relative;
+			}
+
+			.store-list-body:before {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.store-title {
+				font-size: 15px;
+				color: #CC9C2D;
+				font-weight: normal;
+				line-height: 1.4;
+			}
+
+			.store-desc {
+				display: flex;
+				align-items: flex-start;
+				font-size: 12px;
+				color: #999999;
+				line-height: 1.6;
+				margin-top: 5px;
+			}
+
+			.store-desc-title {
+				flex-shrink: 0;
+			}
+
+			.store-desc-title img {
+				width: 10px;
+				margin-right: 5px;
+			}
+
+			.store-desc-inside {
+				flex-grow: 1;
+				word-wrap: wrap;
+			}
+
+			.store-list-footer {
+				overflow: hidden;
+				font-size: 15px;
+				color：#333333;
+				display: flex;
+				justify-content: space-between;
+				padding-right: 5px;
+				height: 47px;
+				padding-left: 15px;
+			}
+
+			.store-list-footer img {
+				width: 15px;
+				margin-right: 5px;
+			}
+
+			.store-footer-left,
+			.store-footer-right,
+			.store-footer-left div {
+				display: flex;
+				align-items: center;
+				height: 47px;
+			}
+
+			.store-list-footer .edit-store {
+				margin-right: 20px;
+			}
+
+			.store-footer-right .mui-switch {
+				-webkit-transform: scale(0.9);
+				transform: scale(0.9);
+			}
+
+			.store-footer-right .mui-switch.mui-active {
+				border-color: #e0bc20;
+				background-color: #ffd626;
+			}
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #333333;
+				margin-right: -5px;
+				font-size: 28px;
+				font-weight: 700;
+				color: #333333;
+			}
+
+			/* 禁用 */
+			.store-list.disabled {
+				opacity: 0.6;
+			}
+
+			.mui-bar {
+				background-color: #FFFFFF;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">门店管理</h1>
+				<div class="mui-pull-right mui-icon mui-icon-plusempty nav-right-btn"></div>
+			</header>
+			<div class="mui-content">
+				<div class="store-manage">
+					<div class="search-section">
+						<span class="mui-icon mui-icon-search"></span>
+						<i class="lin-sign"></i>
+						<form onsumit="return false">
+							<input id="search" v-model="key_words" type="search" placeholder="搜索门店">
+						</form>
+						<span class="cancel-search" v-show="is_search">取消</span>
+					</div>
+					<div class="store-list" v-for=" i in 6">
+						<div class="store-list-body">
+							<h4 class="store-title mui-ellipsis">星巴克昆明昌宏西路店星巴克昆明昌宏西路店星巴克昆明昌宏西路店星巴克昆明昌宏西路店星巴克昆明昌宏西路店星巴克昆明昌宏西路店星巴克昆明昌宏西路店星巴克昆明昌宏西路店星巴克昆明昌宏西路店</h4>
+							<div class="store-desc">
+								<div class="store-desc-title">
+									<img src="../image/icon/store-manage-icon-02.png">
+									<span>营业时间：</span>
+								</div>
+								<div class="store-desc-inside mui-clearfix">
+									<span class="mui-pull-left">周1、周2、周3、周3、周3、周3</span><span class="mui-pull-right">08:30-22:00</span>
+								</div>
+							</div>
+							<div class="store-desc">
+								<div class="store-desc-title">
+									<img src="../image/icon/store-manage-icon-03.png">
+									<span>电话：</span>
+								</div>
+								<div class="store-desc-inside">
+									1598888888
+								</div>
+							</div>
+							<div class="store-desc">
+								<div class="store-desc-title">
+									<img src="../image/icon/store-manage-icon-01.png">
+									<span>联系人：</span>
+								</div>
+								<div class="store-desc-inside">
+									小飞飞
+								</div>
+							</div>
+							<div class="store-desc">
+								<div class="store-desc-title">
+									<img src="../image/icon/store-manage-icon-04.png">
+									<span>地址：</span>
+								</div>
+								<div class="store-desc-inside">
+									云南昆明市官渡区昌宏西路120号市官渡区昌宏西 市官渡区昌宏西路1路120号
+								</div>
+							</div>
+						</div>
+						<div class="store-list-footer">
+							<div class="store-footer-left">
+								<div class="edit-store">
+									<img src="../image/icon/store-manage-icon-05.png" alt="">
+									<span>编辑</span>
+								</div>
+								<div class="del-store">
+									<img src="../image/icon/store-manage-icon-06.png" alt="">
+									<span>删除</span>
+								</div>
+							</div>
+							<div class="store-footer-right">
+								<div class="mui-switch" data-index="2">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					key_words: '',
+					is_search: false
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						// 监听搜索
+						document.getElementById("search").addEventListener("keypress", function(e) {
+							if (event.keyCode == "13") {
+								app.is_search = true
+								e.preventDefault();
+							} else {
+								// 点的不是搜索按钮
+							}
+						});
+						// document.getElementById("search").focus();
+						// plus.key.showSoftKeybord();
+					})
+				}
+			})
+			// 获取开关状态
+			mui('.mui-content').on('toggle', '.mui-switch', function(event) {
+				var index = this.dataset.index;
+				console.log(index);
+				//event.detail.isActive 可直接获取当前状态
+			})
+			mui('.mui-bar').on('tap', '.nav-right-btn', function() {
+				openPage("add_store.html", "add_store", "#ffffff")
+			})
+			mui('.mui-content').on('tap', '.cancel-search', function() {
+				app.key_words = '';
+				app.is_search = false;
+			})
+		</script>
+	</body>
+
+</html>
