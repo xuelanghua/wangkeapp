@@ -8,6 +8,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
 		<style type="text/css">
 			.save-edit {
 				background-color: #f5ca3a;
@@ -51,6 +52,7 @@
 				border: none;
 				font-size: 15px;
 				color: #333;
+				min-height: 50px;
 			}
 
 			.mui-table-view-cell .title {
@@ -222,6 +224,24 @@
 				background-color: #FFFFFF;
 			}
 
+			.part-line {
+				display: inline-block;
+				height: 1px;
+				width: 30px;
+				background-color: #DDDDDD;
+				margin: 0 5px;
+				border-radius: 2px;
+			}
+
+			.opening-time,
+			.closing-time {
+				display: inline-block;
+				width: 60px;
+				height: 50px;
+				line-height: 50px;
+				text-align: center;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -238,7 +258,7 @@
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell">
 						<span class="title">门店名称</span>
-						<input type="text" placeholder="请输入门店名称（18字以内）">
+						<input type="text" v-model="store_name" placeholder="请输入门店名称（18字以内）">
 					</li>
 					<li class="mui-table-view-cell" @tap="showModel">
 						<span class="title">营业日</span>
@@ -252,16 +272,18 @@
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="title">营业时间</span>
-						<span class="gray-tips">请选择</span>
+						<span class="opening-time" :class="opening_time=='请选择'?'gray-tips':''" @tap="choiceTimer('opening_time')">{{opening_time}}</span>
+						<span class="part-line"></span>
+						<span class="closing-time" :class="closing_time=='请选择'?'gray-tips':''" @tap="choiceTimer('closing_time')">{{closing_time}}</span>
 						<span class="mui-navigate-right"></span>
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="title">电话</span>
-						<input type="number" placeholder="输入客服电话">
+						<input type="number" v-model="phone" placeholder="输入客服电话">
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="title">联系人</span>
-						<input type="text" placeholder="输入联系人">
+						<input type="text" v-model="linkman" placeholder="输入联系人">
 					</li>
 					<li class="mui-table-view-cell" id="get_address">
 						<span class="title">选择地址</span>
@@ -271,10 +293,10 @@
 					</li>
 					<li class="mui-table-view-cell">
 						<span class="title">详细地址</span>
-						<input type="text" placeholder="填写详细地址">
+						<input v-model="address_detail" type="text" placeholder="填写详细地址">
 					</li>
 				</ul>
-				<button type="button" class="mui-btn mui-btn-warning mui-btn-block save-edit">保存</button>
+				<button type="button" class="mui-btn mui-btn-warning mui-btn-block save-edit" @tap="addStore">保存</button>
 			</div>
 			<!-- 营业时间弹窗 -->
 			<div class="business-hours" v-show="is_show">
@@ -297,6 +319,7 @@
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
@@ -346,7 +369,18 @@
 						en: 'weekday',
 						id: 7,
 						s: false
-					}]
+					}],
+					business_hours: [],
+					store_name: '',
+					opening_time: '请选择',
+					closing_time: '请选择',
+					linkman: '',
+					phone: '',
+					address: '云南省昆明市官渡区',
+					address_detail: '云南省昆明市官渡区昌宏西路高原明珠商务楼a座701',
+					longitude: '102.753138',
+					latitude: '24.986966',
+					shop_id: ''
 				},
 				methods: {
 					showModel: function() {
@@ -377,9 +411,23 @@
 				mounted: function() {
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
-						//plus.navigator.setStatusBarStyle("dark");
+						var datas = self.datas;
+						logs(datas); 
+						if (datas) {
+							app.store_name = datas.name
+							app.opening_time = datas.opening_time
+							app.closing_time = datas.closing_time
+							app.linkman = datas.linkman
+							app.phone = datas.phone
+							app.address = datas.address
+							app.address_detail = datas.address_detail
+							app.shop_id = datas.shop_id
+						}
 						mui('#mui-content').on('tap', '#get_address', function() {
 							// var choice_address = plus.webview.create("choice_address.html", "choice_address");
+							// choice_address.addEventListener('loaded', function() {
+							// 	choice_address.show('zoom-fade-out');
+							// })
 							var choice_address = plus.webview.create("choose_address.html", "choose_address");
 							choice_address.addEventListener('loaded', function() { 
 								choice_address.show('zoom-fade-out');
@@ -395,11 +443,91 @@
 				app.select_week = [];
 				for (var i = 0; i < app.week.length; i++) {
 					if (app.week[i].s) {
+						app.business_hours.push(app.week[i].id);
 						app.select_week.push(app.week[i]);
 					}
 				}
 				mask.close();
 			})
+			// 添加门店
+			function addStore() {
+				if (app.store_name == '') {
+					message("请输入门店名称！");
+					return false;
+				}
+				if (app.business_hours.length < 1) {
+					message("请选择营业时间！");
+					return false;
+				}
+				if (app.opening_time == '请选择') {
+					message("请选择开始营业时间！");
+					return false;
+				}
+				if (app.closing_time == '请选择') {
+					message("请选择结束营业时间！");
+					return false;
+				}
+				if (app.phone == '') {
+					message("请填电话！");
+					return false;
+				}
+				if (app.linkman == '') {
+					message("请填写联系人！");
+					return false;
+				}
+				if (app.address == '') {
+					message("请选择地址！");
+					return false;
+				}
+				if (app.address_detail == '') {
+					message("请填写详细地址！");
+					return false;
+				}
+				var datas = {
+					token: userInfo.token,
+					name: app.store_name,
+					business_hours: app.business_hours,
+					opening_time: app.opening_time,
+					closing_time: app.closing_time,
+					linkman: app.linkman,
+					phone: app.phone,
+					address: app.address,
+					address_detail: app.address_detail,
+					longitude: app.longitude,
+					latitude: app.latitude,
+					shop_id: app.shop_id //编辑传入门店id
+				}
+				mui.post($ajaxUrl + 'shop&action=add', datas, function(res) {
+					if (res.errno == 0) {
+						message("保存成功！");
+						setTimeout(function() {
+							mui.back();
+						}, 1000)
+					} else {
+						message(res.message);
+					}
+				}, 'json');
+			}
+			// alert(JSON.stringify(res));
+			var picker = null;
+
+			function choiceTimer(obj) {
+				if (picker) {
+					picker.show(function(rs) {
+						app[obj] = rs.value;
+						picker.dispose();
+						picker = null;
+					});
+				} else {
+					picker = new mui.DtPicker({
+						type: 'time'
+					});
+					picker.show(function(rs) {
+						app[obj] = rs.value;
+						// alert(JSON.stringify(rs))
+					});
+				}
+			}
 		</script>
 	</body>
 
