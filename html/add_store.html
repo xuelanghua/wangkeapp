@@ -378,25 +378,12 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						//plus.navigator.setStatusBarStyle("dark");
-						var map = null;
 						mui('#mui-content').on('tap', '#get_address', function() {
-							createMap()
+							var choice_address = plus.webview.create("choice_address.html", "choice_address");
+							choice_address.addEventListener('loaded', function() { 
+								choice_address.show('zoom-fade-out');
+							})
 						})
-						// 创建地图控件
-						function createMap() {
-							if (!map) {
-								map = plus.maps.create('map', {
-									top: '0px',
-									left: '0px',
-									width: '100%',
-									height: '50%',
-									position: 'static',
-									// zoomControls:true
-								});
-								plus.webview.currentWebview().append(map);
-								map.show()
-							}
-						}
 					})
 				}
 			})
