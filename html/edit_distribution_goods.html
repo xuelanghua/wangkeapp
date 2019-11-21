@@ -75,7 +75,110 @@
 			.choice-team-content {
 				padding-left: 0.2rem;
 			}
-
+			/* 20191121新增 */
+			.lan-switch {
+				-webkit-transform: scale(0.9);
+				transform: scale(0.9);
+			}
+			
+			.lan-switch {
+				position: relative;
+				display: block;
+				width: 74px;
+				height: 30px;
+				-webkit-transition-timing-function: ease-in-out;
+				transition-timing-function: ease-in-out;
+				-webkit-transition-duration: .2s;
+				transition-duration: .2s;
+				-webkit-transition-property: background-color, border;
+				transition-property: background-color, border;
+				border: 2px solid #ddd;
+				border-radius: 20px;
+				background-color: #fff;
+				background-clip: padding-box;
+			}
+			
+			.lan-switch:before {
+				font-size: 13px;
+				position: absolute;
+				top: 3px;
+				right: 11px;
+				content: 'Off';
+				text-transform: uppercase;
+				color: #999;
+			}
+			
+			.lan-switch.lan-active {
+				border-color: #e0bc20;
+				background-color: #ffd626;
+			}
+			
+			.lan-switch .lan-switch-handle {
+				position: absolute;
+				z-index: 1;
+				top: -1px;
+				left: -1px;
+				width: 28px;
+				height: 28px;
+				transition-duration: 0.2s;
+				transform: translate(0px, 0px);
+				-webkit-transition: .2s ease-in-out;
+				transition: .2s ease-in-out;
+				-webkit-transition-property: -webkit-transform, width, left;
+				transition-property: transform, width, left;
+				border-radius: 16px;
+				background-color: #fff;
+				background-clip: padding-box;
+				-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+				box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+			}
+			
+			.lan-switch.lan-active .lan-switch-handle {
+				-webkit-transform: translate(43px, 0);
+				transform: translate(43px, 0);
+			}
+			
+			.lan-switch.lan-active:before {
+				right: auto;
+				left: 15px;
+				content: 'On';
+				color: #fff;
+			}
+			
+			.new-headline {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			
+			.new-headline span {
+				color: #f5ca3a;
+				font-size: 0.3rem;
+			}
+			
+			.option-container .store-cont .store-items {
+				position: relative;
+				display: inline-flex;
+				background-color: #f2f2f2;
+				color: #999999;
+				font-size: 0.24rem;
+				padding: 3px 12px 1px;
+				border-radius: 5px;
+				margin: 10px 20px 10px 0;
+			}
+			
+			.option-container .store-cont {
+				padding-left: 15px;
+				padding-right: 0;
+				box-sizing: border-box;
+			}
+			
+			.store-items .mui-icon-close-filled {
+				color: #FF0000;
+				position: absolute;
+				right: -10px;
+				top: -10px;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -242,19 +345,48 @@
 							<span>添加商品规格</span>
 						</div>
 					</li>
-					<li class="mui-table-view-cell choice-express">
-						<span>快递<span class="sign">*</span></span>
-						<span class="mui-navigate-right cont-text mui-pull-right">
-							{{express_text}}
-						</span>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="mui-input-row">
-							<label>邮费</label>
-							<input type="number" v-model="freight" placeholder="0.00">
-							<span class="mui-icon mui-icon-clear" v-show="freight!=0" @tap="freight=''"></span>
+					<li class="mui-table-view-cell new-headline">
+						<span>快递配送</span>
+						<div class="lan-switch" :class="isDelivery==true?'lan-active':''" @tap="lanSwitch('isDelivery')">
+							<div class="lan-switch-handle"></div>
 						</div>
 					</li>
+					<div  v-show="isDelivery">
+						<li class="mui-table-view-cell choice-express">
+							<span>快递<span class="sign">*</span></span>
+							<span class="mui-navigate-right cont-text mui-pull-right">
+								{{express_text}}
+							</span>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="mui-input-row">
+								<label>邮费</label>
+								<input type="number" v-model="freight" placeholder="0.00">
+								<span class="mui-icon mui-icon-clear" v-show="freight!=0" @tap="freight=''"></span>
+							</div>
+						</li>
+					</div>
+				</ul>
+			</div>
+			<div class="option-container">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell new-headline">
+						<span>门店自提</span>
+						<div class="lan-switch" :class="bySelf==true?'lan-active':''" @tap="lanSwitch('bySelf')">
+							<div class="lan-switch-handle"></div>
+						</div>
+					</li>
+					<div v-show="bySelf">
+						<li class="mui-table-view-cell">
+							添加自提门店 <span class="mui-navigate-right cont-text mui-pull-right">请选择</span>
+						</li>
+						<li class="mui-table-view-cell store-cont" v-if="store_list.length>0">
+							<div class="store-items" v-for="(s,i) in store_list" :key="i">
+								{{overflowHide(s.name,10)}}
+								<span class="mui-icon mui-icon-close-filled" :data-index="i"></span>
+							</div>
+						</li>
+					</div>
 				</ul>
 			</div>
 			<div class="option-container">
@@ -343,6 +475,25 @@
 					status: '',
 					remark: '',
 					sale_count: '',
+					// 包邮以及自提
+					isDelivery: true,
+					bySelf: true,
+					store_list: [{
+						"id": "10",
+						"name": "益田啥啥啥",
+					},{
+						"id": "10",
+						"name": "益田啥啥啥益田啥啥啥益田啥啥啥益田啥啥啥",
+					},{
+						"id": "10",
+						"name": "挺好",
+					},{
+						"id": "10",
+						"name": "校花驾到",
+					},{
+						"id": "10",
+						"name": "吃醋吃过",
+					},]
 				},
 				created: function() {
 					// 初始化字体大小
@@ -358,6 +509,16 @@
 					delImg: function(idx) {
 						this.images.splice(idx, 1);
 						// logs(this.images);
+					},
+					lanSwitch: function(e, status) {
+						document.activeElement.blur();
+						if (status && app[e] == 0) {
+							app[e] = 1;
+						} else if (status && app[e] == 1) {
+							app[e] = 1;
+						} else {
+							app[e] = !app[e];
+						}
 					}
 				},
 				mounted: function() {
@@ -805,6 +966,11 @@
 				}
 				return flag;
 			}
+			// 删除选择的门店
+			mui(".mui-content").on('tap',".mui-icon-close-filled",function(){
+				var index=this.dataset.index;
+				app.store_list.splice(index,1);
+			})
 		</script>
 	</body>
 
