@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title></title>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			html,
+			body {
+				height: 100%;
+				background-color: transparent;
+			}
+
+			.mui-bar {
+				background-color: #FFFFFF;
+			}
+
+			.mui-content {
+				height: 100% !important;
+				/* padding-top: 60% !important; */
+				background-color: transparent;
+			}
+
+			.location-list {
+				position: absolute;
+				top: 60%;
+				background-color: #FFFFFF;
+				height: 40%;
+				width: 100%;
+				overflow-x: hidden;
+				overflow-y: scroll;
+			}
+
+			.mui-table-view:after {
+				opacity: 0.6;
+				left: 15px;
+			}
+
+			.mui-table-view-cell {
+				position: relative;
+			}
+
+			.mui-icon-checkmarkempty {
+				position: absolute;
+				right: 10px;
+				top: 0;
+				font-size: 42px;
+				color: #2289FF;
+				/* background-color: #007AFF; */
+			}
+			.cancel-btn {
+				/* position: absolute; */
+				/* top: 50px; */
+				/* left: 50px; */
+				width: 100%;
+				height: 100%;
+				/* height: 45px; */
+				font-size: 18px;
+				color: red;
+			}
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content" id="mui_content" v-cloak>
+			<div class="cancel-btn">取消</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: '#mui_content',
+				data: {
+					checkIndex: 0
+				},
+				methods: {
+					checkLocation: function(idx) {
+						this.checkIndex = idx;
+					}
+				},
+				mounted() {
+					var pullDirection = null,
+						skip = 1;
+					mui.init({
+						gestureConfig: {
+							tap: true,
+							doubletap: true,
+							longtap: true,
+							swipe: true,
+							drag: true,
+							hold: false,
+							release: false
+						},
+						pullRefresh: {
+							container: ".location-list",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									setTimeout(function() {
+										mui('.location-list').pullRefresh().endPullupToRefresh(false);
+									}, 1500);
+								}
+							}
+						}
+					});
+					mui.plusReady(function() {
+
+					})
+				}
+			})
+		</script>
+	</body>
+</html>
