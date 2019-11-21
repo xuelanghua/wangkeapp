@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mui-bar {
+				background-color: #fff;
+			}
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 16px;
+				color: #f5ca3a;
+				margin-right: -5px;
+			}
+
+			.store-list {
+				margin-left: 4%;
+				width: 92%;
+				background-color: #FFFFFF;
+				border-radius: 5px;
+				margin-top: 20px;
+				position: relative;
+				overflow: hidden;
+				padding: 10px;
+				box-sizing: border-box;
+			}
+
+			.store-list label {
+				padding: 0;
+			}
+
+			.mui-input-row.mui-checkbox {
+				display: flex;
+				align-items: center;
+				padding: 10px 0 15px;
+				overflow: visible;
+			}
+
+			.store-list .mui-checkbox input[type=checkbox] {
+				position: relative;
+				top: auto;
+				left: auto;
+				right: auto;
+				margin-top: -8px;
+			}
+
+			.mui-checkbox input[type=checkbox]:checked:before {
+				color: #f5ca3a;
+			}
+
+			.store-body {
+				display: flex;
+				align-items: flex-start;
+				font-size: 12px;
+				color: #999999;
+				line-height: 1.4;
+			}
+
+			.store-body .title {
+				flex-shrink: 0;
+				display: inline-flex;
+				align-items: center;
+			}
+
+			.store-body .title img {
+				height: 12px;
+				margin-right: 3px;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">选择门店</h1>
+				<div class="mui-pull-right nav-right-btn">
+					确定
+				</div>
+			</header>
+			<div class="mui-content">
+				<div class="store-list" v-for="(s,i) in 6">
+					<div class="mui-input-row mui-checkbox">
+						<label class="mui-ellipsis">云南万贤科技有限公司昌宏西路门店云南万贤科技有限公司昌宏西路门店</label>
+						<input name="checkbox" :value="i" type="checkbox">
+					</div>
+					<div class="store-body">
+						<div class="title">
+							<img src="../image/icon/store-manage-icon-04.png">地址：
+						</div>
+						<div class="address">云南昆明市官渡区昌宏西路120号市官渡区昌宏西市官渡区昌宏西路1路120号</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						beforeback: function() {
+							//plus.navigator.setStatusBarStyle("light");
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						//plus.navigator.setStatusBarStyle("dark");
+					})
+					mui('')
+				}
+			})
+		</script>
+	</body>
+
+</html>
