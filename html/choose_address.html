@@ -66,8 +66,9 @@
 			</div>
 			<div class="location-list">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell" v-for="(items,index) in 8" :key="index" @tap="checkLocation(index)">
-						地址{{index}}
+					<li class="mui-table-view-cell" v-for="(items,index) in addressList" :key="index" @tap="checkLocation(index)">
+						{{items.name}}
+						{{items.address}}
 						<span class="mui-icon mui-icon-checkmarkempty" v-show="checkIndex==index"></span>
 					</li>
 				</ul>
@@ -77,16 +78,22 @@
 		<script src="../js/util.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
 			var bMap = null;
 			var bMarker = null;
 			var bPoint = null;
 			var bSearch = null;
+			var bPosition = null;
 			var longitude = '';
 			var latitude = '';
+			var city = '';
+			var locationInfo = {};
+			var page = 1;
 			var app = new Vue({
 				el: '#mui_content',
 				data: {
-					checkIndex: 0
+					checkIndex: 0,
+					addressList: []
 				},
 				methods: {
 					checkLocation: function(idx) {
@@ -115,7 +122,7 @@
 								contentnomore: '没有更多数据了',
 								callback: function() {
 									pullDirection = "up";
-									skip += 1;
+									page++;
 									setTimeout(function() {
 										mui('.location-list').pullRefresh().endPullupToRefresh(false);
 									}, 1500);
@@ -138,7 +145,7 @@
 					})
 				}
 			})
-			
+
 			//创建地图
 			function createMap() {
 				bMap = new plus.maps.Map("bmap", {
@@ -150,27 +157,31 @@
 					zoom: 15
 				});
 				getCurrentLocation();
-				bMap.onstatuschanged = function(e) {
-					logs(e.center);
-					var center = e.center;
-					clearOverlays();
-					createOverlay(createMarker(createPoint(center.longitude, center.latitude), "../image/choice_address.png"));
-					searchNearby(center.longitude, center.latitude);
-				}
 			}
-			
+
 			//获取当前位置
 			function getCurrentLocation() {
 				bMap.getUserLocation(function(state, point) {
 					longitude = point.longitude;
 					latitude = point.latitude;
+					getCurrentLocationInfo(longitude, latitude);
 					bMap.centerAndZoom(createPoint(longitude, latitude), 15);
 					clearOverlays();
 					createOverlay(createMarker(createPoint(longitude, latitude), "../image/choice_address.png"));
-					searchNearby(longitude, latitude);
+					searchNearby(longitude, latitude, page);
+					
+					setTimeout(function() {
+						bMap.onstatuschanged = function(e) {
+							var center = e.center;
+							clearOverlays();
+							createOverlay(createMarker(createPoint(center.longitude, center.latitude), "../image/choice_address.png"));
+							page = 1;
+							searchNearby(center.longitude, center.latitude, page);
+						}
+					}, 500)
 				})
 			}
-			
+
 			//创建覆盖物
 			function createMarker(point, icon) {
 				if (!bMarker) {
@@ -181,9 +192,10 @@
 				bMarker.setIcon(icon);
 				return bMarker;
 			}
-			
+
 			//创建地图点
 			function createPoint(lng, lat) {
+				return new plus.maps.Point(lng, lat);
 				if (!bPoint) {
 					bPoint = new plus.maps.Point(lng, lat);
 				} else {
@@ -192,39 +204,82 @@
 				}
 				return bPoint;
 			}
-			
+
 			//添加覆盖物
 			function createOverlay(marker) {
 				setTimeout(function() {
 					bMap.addOverlay(marker);
 				}, 100)
 			}
-			
+
 			//清除覆盖物
 			function clearOverlays() {
 				bMap.clearOverlays();
 			}
 			
-			//搜索附近点
-			function searchNearby(lng, lat) {
-				if (!bSearch) {
-					bSearch = new plus.maps.Search(bMap);
-						bSearch.onPoiSearchComplete = function(state, result){
-							if ( state == 0 ) {
-								if ( result.currentNumber <= 0 ) {
-									logs( "没有检索到结果" );
-								}
-								// logs(result);
-								for(var i=0; i < result.currentNumber; i++){
-									var pos = result.getPosition(i);
-									logs(pos);
-								}
-							} else {
-								logs('检索失败!');
-							}
-						}
+			//获取坐标点信息
+			function getCurrentLocationInfo(lng, lat) {
+				if (!lng || !lat) { 
+					return;
 				}
-				bSearch.poiSearchNearBy("超市", createPoint(lng, lat), 1000);
+				mui.get($ajaxUrl + 'shop', {
+						action: 'coordinate_to_address',
+						token: userInfo.token,
+						longitude: lng,
+						latitude: lat
+					}, function(res){
+						if (res.errno == 0) {
+							locationInfo = res.data;
+							city = locationInfo.city;
+						}
+					},'json'
+				);
+			}
+
+			//搜索附近点
+			function searchNearby(lng, lat, page) {
+				if (lng.length==0||lat.length==0) {
+					return;
+				}
+				mui.post($ajaxUrl + 'shop', {
+						action: 'address_search',
+						token: userInfo.token,
+						type: 1,
+						longitude: lng,
+						latitude: lat,
+						current_longitude: longitude,
+						current_latitude: latitude,
+						page: page
+					}, function(res){
+						logs(res);
+						if (res.errno == 0) {
+							app.addressList = res.data;
+						}
+					}, 'json'
+				);
+			}
+			
+			//关键字搜索当前城市点
+			function searchByKeyword(keyword, city, page) {
+				if (keyword.length==0||city.length==0) {
+					return;
+				}
+				mui.post($ajaxUrl + 'shop', {
+						action: 'address_search',
+						token: userInfo.token,
+						type: 2,
+						longitude: lng,
+						latitude: lat,
+						keyword: keyword,
+						city: city,
+						page: page
+					}, function(res){
+						logs(res);
+						if (res.errno == 0) {
+							app.addressList = res.data;
+						}
+					}, 'json'
+				);
 			}
 		</script>
 	</body>
