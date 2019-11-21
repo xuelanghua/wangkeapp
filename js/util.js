@@ -110,7 +110,6 @@ function message(text, position) {
 	plus.nativeUI.toast(text, {
 		verticalAlign: position
 	});
-
 }
 
 //判断两个数据是否相等
