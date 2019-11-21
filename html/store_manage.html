@@ -251,6 +251,20 @@
 				background-color: #FFFFFF;
 			}
 
+			.void-data {
+				display: flex;
+				width: 100%;
+				padding-top: 50px;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				color: #f9f9f9;
+			}
+
+			.void-data img {
+				width: 50%;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -333,6 +347,10 @@
 							</div>
 						</div>
 					</div>
+					<div class="void-data" v-if="voidStatus">
+						<img src="../image/icon/void-data.png">
+						<p>空空如也~</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -349,7 +367,8 @@
 				data: {
 					key_words: '',
 					is_search: false,
-					store_list: []
+					store_list: [],
+					voidStatus: false
 				},
 				methods: {
 
@@ -431,6 +450,7 @@
 					keyword: app.key_words
 				}, function(res) {
 					if (res.errno == 0) {
+						app.voidStatus = false;
 						if (skip == 1) {
 							app.store_list = res.data;
 							if (pullDirection == "down") {
@@ -446,8 +466,9 @@
 						} else if (pullDirection == "down") {
 							mui('#mui-content').pullRefresh().endPulldownToRefresh();
 						}
-						if (app.key_words != '') {
-							app.store_list = []
+						if (app.key_words != '' || skip == 1) {
+							app.store_list = [];
+							app.voidStatus = true;
 						}
 					}
 				}, 'json');
@@ -455,7 +476,7 @@
 			// 编辑
 			mui('.mui-content').on('tap', '.edit-store', function() {
 				var index = this.dataset.index;
-				var datas=app.store_list[index];
+				var datas = app.store_list[index];
 				logs(datas);
 				openPage('add_store.html', 'add_store', '#fff', {
 					datas: datas
@@ -498,6 +519,10 @@
 					}
 				}, 'json')
 			}
+			window.addEventListener('reloadYourself', function() {
+				skip = 1;
+				getStore();
+			})
 		</script>
 	</body>
 

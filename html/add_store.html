@@ -262,12 +262,13 @@
 					</li>
 					<li class="mui-table-view-cell" @tap="showModel">
 						<span class="title">营业日</span>
-						<span v-if="select_week.length==0" class="gray-tips">请选择</span>
-						<span>
+						<span v-if="business_hours_text!=''">{{business_hours_text}}</span>
+						<span v-else-if="select_week.length>0">
 							<template v-for="(d,i) in select_week" :key="i">{{d.zh}}
 								<template v-if="i<select_week.length-1">、</template>
 							</template>
 						</span>
+						<span v-else class="gray-tips">请选择</span>
 						<span class="mui-navigate-right"></span>
 					</li>
 					<li class="mui-table-view-cell">
@@ -377,10 +378,11 @@
 					linkman: '',
 					phone: '',
 					address: '云南省昆明市官渡区',
-					address_detail: '云南省昆明市官渡区昌宏西路高原明珠商务楼a座701',
+					address_detail: '',
 					longitude: '102.753138',
 					latitude: '24.986966',
-					shop_id: ''
+					shop_id: '',
+					business_hours_text:''
 				},
 				methods: {
 					showModel: function() {
@@ -412,7 +414,6 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						var datas = self.datas;
-						logs(datas); 
 						if (datas) {
 							app.store_name = datas.name
 							app.opening_time = datas.opening_time
@@ -421,7 +422,9 @@
 							app.phone = datas.phone
 							app.address = datas.address
 							app.address_detail = datas.address_detail
-							app.shop_id = datas.shop_id
+							app.shop_id = datas.id
+							app.business_hours = datas.business_hours
+							app.business_hours_text = datas.business_hours_text
 						}
 						mui('#mui-content').on('tap', '#get_address', function() {
 							// var choice_address = plus.webview.create("choice_address.html", "choice_address");
@@ -441,11 +444,20 @@
 			})
 			mui('#mui-content').on('tap', '.mui-btn-blue', function() {
 				app.select_week = [];
+				app.business_hours=[];
+				app.business_hours_text='';
 				for (var i = 0; i < app.week.length; i++) {
 					if (app.week[i].s) {
 						app.business_hours.push(app.week[i].id);
 						app.select_week.push(app.week[i]);
 					}
+				}
+				if(app.business_hours.length==7){
+					app.business_hours_text='周一 至 周日';
+				}else if(app.business_hours.length==6&&app.business_hours[5]==6){
+					app.business_hours_text='周一 至 周六';
+				}else if(app.business_hours.length==5&&app.business_hours[4]==5){
+					app.business_hours_text='周一 至 周五';
 				}
 				mask.close();
 			})
@@ -501,8 +513,9 @@
 					if (res.errno == 0) {
 						message("保存成功！");
 						setTimeout(function() {
+							mui.fire(plus.webview.getWebviewById('store_manage'), 'reloadYourself');
 							mui.back();
-						}, 1000)
+						}, 500)
 					} else {
 						message(res.message);
 					}
