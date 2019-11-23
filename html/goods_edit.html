@@ -510,7 +510,7 @@
 			// 上架出售
 			mui(".mui-content").on("tap", ".putaway-btn", function() {
 				document.activeElement.blur();
-				app.status = 1;
+				// app.status = 1;
 				editDone();
 			})
 			
@@ -742,7 +742,7 @@
 			
 			// 打开门店选择
 			mui(".mui-content").on('tap', '.store-choice', function() {
-				openPage('store_choice.html', 'store_choice', '#fff');
+				openPage('store_choice.html', 'store_choice', '#fff', {storeList: app.store_list});
 			})
 			
 			// 接收选择的数据
@@ -760,9 +760,6 @@
 				}, function(res) {
 					logs(res);
 					if (res.errno == 0) {
-						setTimeout(function() {
-							showload(1);
-						}, 500)
 						app.name = res.data.name;
 						app.images = res.data.images;
 						app.recommend = res.data.recommend;
@@ -777,8 +774,8 @@
 						app.status = res.data.status;
 						app.description = res.data.content;
 						app.type_name = res.data.type_name;
-						app.isDelivery = res.data.express_status;
-						app.bySelf = res.data.pick_up_status;
+						app.isDelivery = res.data.express_status == 1 ? true : false;
+						app.bySelf = res.data.pick_up_status == 1 ? true : false;
 						app.store_list = res.data.store_list;
 						if (app.description) {
 							app.edit_status = '点击编辑';
@@ -788,6 +785,9 @@
 					} else {
 						message(res.message);
 					}
+					setTimeout(function() {
+						showload(1);
+					}, 500)
 				}, 'json')
 			}
 			
