@@ -224,28 +224,28 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>价格<span class="sign">*</span></label>
-							<input type="number" v-model="price" placeholder="给商品定个好价格">
+							<input type="number" v-model="price" placeholder="给商品定个好价格,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="price" @tap="price=''"></span>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>库存<span class="sign">*</span></label>
-							<input type="number" v-model="stock" placeholder="设置合理的库存避免超货">
+							<input type="number" v-model="stock" placeholder="设置合理的库存,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="stock" @tap="stock=''"></span>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>销量</label>
-							<input type="number" v-model="sale_count" placeholder="设置虚拟销量">
+							<input type="number" v-model="sale_count" placeholder="设置商品虚拟销量">
 							<span class="mui-icon mui-icon-clear" v-show="sale_count" @tap="sale_count=''"></span>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>浏览量</label>
-							<input type="number" v-model="view_count" placeholder="设置商品的虚拟浏览量">
+							<input type="number" v-model="view_count" placeholder="设置商品虚拟浏览量">
 							<span class="mui-icon mui-icon-clear" v-show="view_count" @tap="view_count=''"></span>
 						</div>
 					</li>
@@ -269,14 +269,14 @@
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>价格<span class="sign">*</span></label>
-										<input type="number" v-model="ls.price" placeholder="给商品定个好价格">
+										<input type="number" v-model.number="ls.price" placeholder="给商品定个好价格">
 										<span class="mui-icon mui-icon-clear" v-show="ls.price" @tap="ls.price=''"></span>
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>库存<span class="sign">*</span></label>
-										<input type="number" v-model="ls.stock" placeholder="设置合理的库存避免超货">
+										<input type="number" v-model="ls.stock" placeholder="设置合理的库存避免超卖">
 										<span class="mui-icon mui-icon-clear" v-show="ls.stock" @tap="ls.stock=''"></span>
 									</div>
 								</li>
@@ -302,7 +302,7 @@
 					</li>
 					<div v-show="isDelivery">
 						<li class="mui-table-view-cell choice-express">
-							<span>快递<span class="sign">*</span></span>
+							<span>默认快递<span class="sign">*</span></span>
 							<span class="mui-navigate-right cont-text mui-pull-right">
 								{{express_text}}
 							</span>
@@ -496,6 +496,11 @@
 					}
 				});
 			}
+			
+			mui('.mui-content').on('input', 'input[type=number]', function() {
+				logs(22222);
+				logs(this.value);
+			})
 			// 上架出售
 			mui(".mui-content").on("tap", ".putaway-btn", function() {
 				document.activeElement.blur();
@@ -610,21 +615,30 @@
 					app.edit_status = '未添加';
 				}
 			})
+			
 			// 提交编辑
 			function editDone() {
 				if (app.name.length < 1) {
+					logs('name' + app.name);
 					message("商品名称不能为空！");
 					return false;
 				}
 				if (app.images.length < 1) {
+					logs('images' + app.images);
 					message("商品主图不能为空！");
 					return false;
 				}
+				if (app.type_p == '' || app.type_p == 0) {
+					message("请选择商品类型！");
+					return false;
+				}
 				if (app.price <= 0) {
-					message("零售价格需大于0");
+					logs('price' + app.price);
+					message("零售价格为数字并且大于0");
 					return false;
 				}
 				if (app.stock < 1) {
+					logs('stock' + app.stock);
 					message("请添加库存");
 					return false;
 				}
@@ -653,6 +667,11 @@
 					app.freight = 0;
 					return false;
 				}
+				if (bySelf && store_list.lenght <= 0) {
+					
+				}
+				var shopIds = [];
+			
 
 				var datas = {
 					name: app.name,
@@ -669,8 +688,12 @@
 					freight: app.freight,
 					status: app.status,
 					content: app.description,
+					express_status: app.isDelivery ? 1 : 0,
+					pick_up_status: bySelf ? 1 : 0,
+					shop_ids: shopIds,
 				}
 				logs(datas);
+				return;
 				mui.post($ajaxUrl + 'goods', {
 					action: 'add',
 					token: userInfo.token,
