@@ -238,14 +238,16 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>销量</label>
-							<input type="number" v-model="sale_count" placeholder="设置商品虚拟销量">
+
+							<input type="number" v-model="sale_count" placeholder="设置商品虚拟销量,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="sale_count" @tap="sale_count=''"></span>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>浏览量</label>
-							<input type="number" v-model="view_count" placeholder="设置商品虚拟浏览量">
+
+							<input type="number" v-model="view_count" placeholder="设置商品虚拟浏览量,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="view_count" @tap="view_count=''"></span>
 						</div>
 					</li>
@@ -269,14 +271,14 @@
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>价格<span class="sign">*</span></label>
-										<input type="number" v-model.number="ls.price" placeholder="给商品定个好价格">
+										<input type="number" v-model.number="ls.price" placeholder="给商品定个好价格,仅允许输入数字">
 										<span class="mui-icon mui-icon-clear" v-show="ls.price" @tap="ls.price=''"></span>
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>库存<span class="sign">*</span></label>
-										<input type="number" v-model="ls.stock" placeholder="设置合理的库存避免超卖">
+										<input type="number" v-model="ls.stock" placeholder="设置合理的库存,仅允许输入数字">
 										<span class="mui-icon mui-icon-clear" v-show="ls.stock" @tap="ls.stock=''"></span>
 									</div>
 								</li>
@@ -406,7 +408,7 @@
 					sale_count: '',
 					// 包邮以及自提
 					isDelivery: true,
-					bySelf: true,
+					bySelf: false,
 					store_list: [{
 						"id": "10",
 						"name": "益田啥啥啥",
@@ -497,22 +499,20 @@
 				});
 			}
 			
-			mui('.mui-content').on('input', 'input[type=number]', function() {
-				logs(22222);
-				logs(this.value);
-			})
 			// 上架出售
 			mui(".mui-content").on("tap", ".putaway-btn", function() {
 				document.activeElement.blur();
 				app.status = 1;
 				editDone();
 			})
+			
 			// 放入仓库
 			mui(".mui-content").on("tap", ".the-warehouse", function() {
 				document.activeElement.blur();
 				app.status = 0;
 				editDone();
 			})
+			
 			// 商品类型选择
 			mui(".mui-content").on("tap", ".goods-type", function() {
 				document.activeElement.blur();
@@ -532,6 +532,7 @@
 					app.goods_type_text = items[0].text + '--' + items[1].text;
 				});
 			})
+			
 			// 名称 价格 库存
 			function creatSpec() {
 				var _spec = new Object();
@@ -540,15 +541,18 @@
 				_spec.stock = '';
 				return _spec;
 			}
+			
 			// 添加商品规格
 			mui(".mui-content").on("tap", ".add-specification-title", function() {
 				document.activeElement.blur();
 				app.spec.push(creatSpec());
 			})
+			
 			// 删除商品规格
 			function del_spec(idx) {
 				app.spec.splice(idx, 1);
 			}
+			
 			// 选择快递
 			mui(".mui-content").on("tap", ".choice-express", function() {
 				document.activeElement.blur();
@@ -566,6 +570,7 @@
 					})
 				});
 			})
+			
 			// 图文描述
 			mui(".mui-content").on("tap", ".edit-goods-detail", function() {
 				fnOpenWin('goods_detail.html', 'goods_detail', {
@@ -576,6 +581,7 @@
 					content: app.description
 				}, 'slide-in-right');
 			})
+			
 			// 商品类型
 			function getGoodsType() {
 				mui.post($ajaxUrl + 'goods', {
@@ -587,6 +593,7 @@
 					}
 				}, 'json');
 			}
+			
 			// 快递
 			function getExpressList() {
 				mui.post($ajaxUrl + 'util', {
@@ -606,6 +613,7 @@
 					}
 				}, 'json');
 			}
+			
 			//详情添加完毕监听
 			window.addEventListener('detailAdd', function(event) {
 				app.description = event.detail.content;
@@ -625,7 +633,11 @@
 				}
 				if (app.images.length < 1) {
 					logs('images' + app.images);
-					message("商品主图不能为空！");
+					message("请上传商品主图！");
+					return false;
+				}
+				if (app.type_p == '' || app.type_p == 0) {
+					message("请选择商品类型！");
 					return false;
 				}
 				if (app.type_p == '' || app.type_p == 0) {
@@ -634,49 +646,52 @@
 				}
 				if (app.price <= 0) {
 					logs('price' + app.price);
-					message("零售价格为数字并且大于0");
+					message("商品零售价格需为数字并大于0");
 					return false;
 				}
 				if (app.stock < 1) {
 					logs('stock' + app.stock);
-					message("请添加库存");
+					message("商品库存需为数字并大于0");
 					return false;
 				}
 				if (app.spec.length > 0) {
 					for (var i = 0; i < app.spec.length; i++) {
 						if (app.spec[i].name.length < 1) {
-							message("商品规格不能为空");
+							message("商品规格名称不能为空");
 							return false;
 						}
 						if (app.spec[i].price <= 0) {
-							message("零售价格需大于0");
+							message("商品规格零售价格需为数字并大于0");
 							return false;
 						}
 
 						if (app.spec[i].stock < 1) {
-							message("商品库存需大于0");
+							message("商品规格库存需为数字并大于0");
 							return false;
 						}
 					}
 				}
-				if (app.default_express < 1) {
-					message("请选择快递");
+				if (app.isDelivery && app.default_express < 1) {
+					message("请选择默认快递");
 					return false;
 				}
-				if (app.freight.length <= 0) {
+				if (app.isDelivery && app.freight.length <= 0) {
 					app.freight = 0;
+				}
+				if (app.bySelf && app.store_list.lenght <= 0) {
+					message("请选择自提门店");
 					return false;
 				}
-				if (bySelf && store_list.lenght <= 0) {
-					
-				}
+
 				var shopIds = [];
-			
+				for (var i in app.store_list) {
+					shopIds.push(app.store_list[i].id);
+				}
 
 				var datas = {
 					name: app.name,
 					images: app.images,
-					recommend: app.recommend,
+					recommend: app.recommend ? 1 : 0,
 					type: app.type,
 					type_p: app.type_p,
 					price: app.price,
@@ -688,10 +703,12 @@
 					freight: app.freight,
 					status: app.status,
 					content: app.description,
+					default_express: app.default_express,
 					express_status: app.isDelivery ? 1 : 0,
-					pick_up_status: bySelf ? 1 : 0,
+					pick_up_status: app.bySelf ? 1 : 0,
 					shop_ids: shopIds,
 				}
+				
 				logs(datas);
 				return;
 				mui.post($ajaxUrl + 'goods', {
@@ -710,6 +727,7 @@
 					}
 				}, 'json');
 			}
+			
 			// 删除选择的门店
 			mui(".mui-content").on('tap', ".mui-icon-close-filled", function() {
 				var index = this.dataset.index;
