@@ -261,7 +261,7 @@
 							<input type="number" v-model="settlement_price" placeholder="设置合理供货价,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="settlement_price" @tap="settlement_price=''"></span>
 						</div>
-						<p>结算价格是给分销商的供货价，分销商可以在此价格灵活设置活动价格</p>
+						<p>分销商拣货分销返佣时的结算价格</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
@@ -269,7 +269,7 @@
 							<input type="number" v-model="protect_price" placeholder="设置商品保护价格,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="protect_price" @tap="protect_price=''"></span>
 						</div>
-						<p>分销商不能低于此价格销售，不填则与结算价统一</p>
+						<p>分销商不能低于保护价格销售，不填则与供货价统一</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
@@ -377,7 +377,7 @@
 						</div>
 					</li>
 					<div v-show="bySelf">
-						<li class="mui-table-view-cell">
+						<li class="mui-table-view-cell store-choice">
 							添加自提门店 <span class="mui-navigate-right cont-text mui-pull-right">请选择</span>
 						</li>
 						<li class="mui-table-view-cell store-cont" v-if="store_list.length>0">
@@ -477,7 +477,7 @@
 					sale_count: '',
 					// 包邮以及自提
 					isDelivery: true,
-					bySelf: true,
+					bySelf: false,
 					store_list: []
 				},
 				created: function() {
@@ -700,6 +700,7 @@
 					})
 				});
 			})
+			
 			// 图文描述
 			mui(".mui-content").on("tap", ".edit-goods-detail", function() {
 				fnOpenWin('goods_detail.html', 'goods_detail', {
@@ -710,8 +711,8 @@
 					content: app.description
 				}, 'slide-in-right');
 			})
-			// 获取
-			// 商品类型
+			
+			// 获取商品类型
 			function getGoodsType() {
 				mui.post($ajaxUrl + 'goods', {
 					action: 'goods_category',
@@ -738,7 +739,8 @@
 					}
 				}, 'json');
 			}
-			// 快递
+			
+			// 获取快递列表
 			function getExpressList() {
 				mui.post($ajaxUrl + 'util', {
 					action: 'express_list'
@@ -757,6 +759,7 @@
 					}
 				}, 'json');
 			}
+			
 			//详情添加完毕监听
 			window.addEventListener('detailAdd', function(event) {
 				app.description = event.detail.content;
@@ -767,6 +770,7 @@
 					app.edit_status = '未添加';
 				}
 			})
+			
 			// 提交编辑
 			function editDone() {
 				if (app.name.length < 1) {
@@ -775,6 +779,10 @@
 				}
 				if (app.images.length < 1) {
 					message("请上传商品主图！");
+					return false;
+				}
+				if (app.type_p <= 0 || app.type_p == '') {
+					message("请选择商品类型");
 					return false;
 				}
 				if (app.settlement_price <= 0) {
@@ -878,7 +886,10 @@
 					freight: app.freight,
 					content: app.description,
 					team_ids: app.team_ids.join(','),
-					sale_count: app.sale_count
+					sale_count: app.sale_count,
+					express_status: app.isDelivery ? 1 : 0,
+					pick_up_status: app.bySelf ? 1 : 0,
+					shop_ids: shopIds,
 				}
 				mui.post($ajaxUrl + 'goods', {
 					action: 'edit_team_goods',
@@ -898,7 +909,7 @@
 					}
 				}, 'json');
 			}
-			// 编辑------
+			
 			/**
 			 * 获取商品规格
 			 */
@@ -928,7 +939,6 @@
 
 			//获取商品的信息
 			function getGoodInfo() {
-				// logs(goodsId);
 				var ajax_url = $ajaxUrl + 'goods';
 				mui.ajax(ajax_url, {
 					data: {
@@ -966,6 +976,9 @@
 						app.express_text = datas.express_name;
 						app.sale_count = datas.sale_count;
 						app.team_ids = datas.team_ids.split(","); //上次选的团队
+						app.isDelivery = datas.express_status == 1 ? true : false;
+						app.bySelf = datas.pick_up_status == 1 ? true : false;
+						app.store_list = datas.store_list;
 						getGoodsType();
 					},
 					error: function(xhr, type, errorThrown) {
@@ -986,6 +999,16 @@
 			mui(".mui-content").on('tap',".mui-icon-close-filled",function(){
 				var index=this.dataset.index;
 				app.store_list.splice(index,1);
+			})
+			
+			// 打开门店选择
+			mui(".mui-content").on('tap', '.store-choice', function() {
+				openPage('store_choice.html', 'store_choice', '#fff', {storeList: app.store_list});
+			})
+			
+			// 接收选择的数据
+			window.addEventListener('store', function(e) {
+				app.store_list = e.detail.store;
 			})
 		</script>
 	</body>

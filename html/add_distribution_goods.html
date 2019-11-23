@@ -247,7 +247,7 @@
 							<input type="number" v-model="settlement_price" placeholder="设置合理供货价,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="settlement_price" @tap="settlement_price=''"></span>
 						</div>
-						<p>结算价格是给分销商的供货价，分销商可以在此价格灵活设置活动价格</p>
+						<p>分销商拣货分销返佣时的结算价格</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
@@ -255,7 +255,7 @@
 							<input type="number" v-model="protect_price" placeholder="设置商品保护价格,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="protect_price" @tap="protect_price=''"></span>
 						</div>
-						<p>分销商不能低于此价格销售，不填则与结算价统一</p>
+						<p>分销商不能低于保护价格销售，不填则与供货价统一</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
@@ -463,7 +463,7 @@
 					sale_count: '',
 					// 包邮以及自提
 					isDelivery: true,
-					bySelf: true,
+					bySelf: false,
 					store_list: []
 				},
 				created: function() {
@@ -736,6 +736,10 @@
 					message("请上传商品主图！");
 					return false;
 				}
+				if (app.type_p <= 0 || app.type_p == '') {
+					message("请选择商品类型");
+					return false;
+				}
 				if (app.settlement_price <= 0) {
 					message("商品供货价格需为数字并大于0");
 					return false;
@@ -869,7 +873,7 @@
 
 			// 打开门店选择
 			mui(".mui-content").on('tap', '.store-choice', function() {
-				openPage('store_choice.html', 'store_choice', '#fff');
+				openPage('store_choice.html', 'store_choice', '#fff', {storeList: app.store_list});
 			})
 
 			// 接收选择的数据
