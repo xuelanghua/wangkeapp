@@ -235,7 +235,7 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>供货价<span class="sign">*</span></label>
-							<input type="number" v-model="settlement_price" placeholder="给商品定个好价格">
+							<input type="number" v-model="settlement_price" placeholder="设置合理供货价,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="settlement_price" @tap="settlement_price=''"></span>
 						</div>
 						<p>结算价格是给分销商的供货价，分销商可以在此价格灵活设置活动 价格</p>
@@ -243,7 +243,7 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>零售价格<span class="sign">*</span></label>
-							<input type="number" v-model="price" placeholder="设置合理零售价">
+							<input type="number" v-model="price" placeholder="给商品定个好价格,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="price" @tap="price=''"></span>
 						</div>
 						<p>市场参考零售价格</p>
@@ -251,7 +251,7 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>保护价格</label>
-							<input type="number" v-model="protect_price" placeholder="设置保护价避免滥价">
+							<input type="number" v-model="protect_price" placeholder="设置保护价格,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="protect_price" @tap="protect_price=''"></span>
 						</div>
 						<p>分销商不能低于此价格销售，不填则与结算价统一</p>
@@ -259,7 +259,7 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>库存<span class="sign">*</span></label>
-							<input type="number" v-model="stock" placeholder="设置合理的库存避免超货">
+							<input type="number" v-model="stock" placeholder="设置合理的库存,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="stock" @tap="stock=''"></span>
 						</div>
 					</li>
@@ -458,19 +458,19 @@
 					store_list: [{
 						"id": "10",
 						"name": "益田啥啥啥",
-					},{
+					}, {
 						"id": "10",
 						"name": "益田啥啥啥益田啥啥啥益田啥啥啥益田啥啥啥",
-					},{
+					}, {
 						"id": "10",
 						"name": "挺好",
-					},{
+					}, {
 						"id": "10",
 						"name": "校花驾到",
-					},{
+					}, {
 						"id": "10",
 						"name": "吃醋吃过",
-					},]
+					}, ]
 				},
 				created: function() {
 					// 初始化字体大小
@@ -487,8 +487,8 @@
 						this.images.splice(idx, 1);
 						logs(this.images);
 					},
-					lanSwitch:function(e){
-						app[e]=!app[e];
+					lanSwitch: function(e) {
+						app[e] = !app[e];
 						document.activeElement.blur();
 					}
 				},
@@ -832,18 +832,21 @@
 					}
 				}, 'json');
 			}
+			
 			// 删除选择的门店
-			mui(".mui-content").on('tap',".mui-icon-close-filled",function(){
-				var index=this.dataset.index;
-				app.store_list.splice(index,1);
+			mui(".mui-content").on('tap', ".mui-icon-close-filled", function() {
+				var index = this.dataset.index;
+				app.store_list.splice(index, 1);
 			})
+
 			// 打开门店选择
-			mui(".mui-content").on('tap','.store-choice',function(){
-				openPage('store_choice.html','store_choice','#fff');
+			mui(".mui-content").on('tap', '.store-choice', function() {
+				openPage('store_choice.html', 'store_choice', '#fff');
 			})
+
 			// 接收选择的数据
-			window.addEventListener('store',function(e){
-				app.store_list=e.detail.store;
+			window.addEventListener('store', function(e) {
+				app.store_list = e.detail.store;
 			})
 		</script>
 	</body>

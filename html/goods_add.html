@@ -328,7 +328,7 @@
 						</div>
 					</li>
 					<div v-show="bySelf">
-						<li class="mui-table-view-cell">
+						<li class="mui-table-view-cell store-choice">
 							添加自提门店 <span class="mui-navigate-right cont-text mui-pull-right">请选择</span>
 						</li>
 						<li class="mui-table-view-cell store-cont" v-if="store_list.length>0">
@@ -409,22 +409,7 @@
 					// 包邮以及自提
 					isDelivery: true,
 					bySelf: false,
-					store_list: [{
-						"id": "10",
-						"name": "益田啥啥啥",
-					}, {
-						"id": "10",
-						"name": "益田啥啥啥益田啥啥啥益田啥啥啥益田啥啥啥",
-					}, {
-						"id": "10",
-						"name": "挺好",
-					}, {
-						"id": "10",
-						"name": "校花驾到",
-					}, {
-						"id": "10",
-						"name": "吃醋吃过",
-					}, ]
+					store_list: []
 				},
 				created: function() {
 					// 初始化字体大小
@@ -710,7 +695,6 @@
 				}
 				
 				logs(datas);
-				return;
 				mui.post($ajaxUrl + 'goods', {
 					action: 'add',
 					token: userInfo.token,
@@ -732,6 +716,16 @@
 			mui(".mui-content").on('tap', ".mui-icon-close-filled", function() {
 				var index = this.dataset.index;
 				app.store_list.splice(index, 1);
+			})
+			
+			// 打开门店选择
+			mui(".mui-content").on('tap', '.store-choice', function() {
+				openPage('store_choice.html', 'store_choice', '#fff');
+			})
+			
+			// 接收选择的数据
+			window.addEventListener('store', function(e) {
+				app.store_list = e.detail.store;
 			})
 		</script>
 	</body>

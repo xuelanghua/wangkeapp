@@ -330,7 +330,7 @@
 						</div>
 					</li>
 					<div v-show="bySelf">
-						<li class="mui-table-view-cell">
+						<li class="mui-table-view-cell store-choice">
 							添加自提门店 <span class="mui-navigate-right cont-text mui-pull-right">请选择</span>
 						</li>
 						<li class="mui-table-view-cell store-cont" v-if="store_list.length>0">
@@ -439,7 +439,7 @@
 				methods: {
 					delImg: function(idx) {
 						this.images.splice(idx, 1);
-						logs(this.images);
+						// logs(this.images);
 					},
 					lanSwitch: function(e, status) {
 						document.activeElement.blur();
@@ -740,6 +740,16 @@
 				app.store_list.splice(index, 1);
 			})
 			
+			// 打开门店选择
+			mui(".mui-content").on('tap', '.store-choice', function() {
+				openPage('store_choice.html', 'store_choice', '#fff');
+			})
+			
+			// 接收选择的数据
+			window.addEventListener('store', function(e) {
+				app.store_list = e.detail.store;
+			})
+			
 			// 获取商品信息
 			function getGoodInfo() {
 				showload(0);
@@ -748,7 +758,7 @@
 					action: 'get_goods_by_id',
 					token: userInfo.token
 				}, function(res) {
-					// logs(res);
+					logs(res);
 					if (res.errno == 0) {
 						setTimeout(function() {
 							showload(1);
@@ -767,6 +777,9 @@
 						app.status = res.data.status;
 						app.description = res.data.content;
 						app.type_name = res.data.type_name;
+						app.isDelivery = res.data.express_status;
+						app.bySelf = res.data.pick_up_status;
+						app.store_list = res.data.store_list;
 						if (app.description) {
 							app.edit_status = '点击编辑';
 						} else {
