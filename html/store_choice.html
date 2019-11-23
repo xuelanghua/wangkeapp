@@ -80,6 +80,10 @@
 				margin-right: 3px;
 			}
 
+			.mui-bar-nav~.mui-content {
+				padding-bottom: 20px;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -96,16 +100,16 @@
 				</div>
 			</header>
 			<div class="mui-content">
-				<div class="store-list" v-for="(s,i) in 6">
+				<div class="store-list" v-for="(s,i) in store_list">
 					<div class="mui-input-row mui-checkbox">
-						<label class="mui-ellipsis">云南万贤科技有限公司昌宏西路门店云南万贤科技有限公司昌宏西路门店</label>
-						<input name="checkbox" :value="i" type="checkbox">
+						<label class="mui-ellipsis">{{s.name}}</label>
+						<input name="checkbox" :value="i" :data-index="i" type="checkbox">
 					</div>
 					<div class="store-body">
 						<div class="title">
 							<img src="../image/icon/store-manage-icon-04.png">地址：
 						</div>
-						<div class="address">云南昆明市官渡区昌宏西路120号市官渡区昌宏西市官渡区昌宏西路1路120号</div>
+						<div class="address">{{s.address_detail }}</div>
 					</div>
 				</div>
 			</div>
@@ -115,27 +119,108 @@
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
+			var skip = 1;
+			var pullDirection = '';
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-
+					store_list: [],
+					choice_store: [],
+					voidStatus: false
 				},
 				methods: {
 
 				},
 				mounted: function() {
 					mui.init({
-						beforeback: function() {
-							//plus.navigator.setStatusBarStyle("light");
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									getStore();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								offset: mui.os.ios ? '0px' : '-50px',
+								callback: function() {
+									pullDirection = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getStore();
+								}
+							}
 						}
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						//plus.navigator.setStatusBarStyle("dark");
+						getStore();
 					})
-					mui('')
+					// 选择
+					mui('.mui-content').on('change', 'input', function() {
+						var value = this.checked;
+						var index = this.dataset.index;
+						app.store_list[index].choice = value;
+					})
+					// 确认选择
+					mui('.mui-bar').on('tap', '.nav-right-btn', function() {
+						var store=[];
+						for (var i = 0; i < app.store_list.length; i++) {
+							if(app.store_list[i].choice){
+								store.push(app.store_list[i]);
+							}
+						}
+						mui.fire(plus.webview.getWebviewById('add_distribution_goods'), 'store',{
+							store:store
+						});
+						setTimeout(function(){
+							mui.back();
+						},500)
+					})
 				}
 			})
+			// 获取门店列表
+			function getStore() {
+				mui.post($ajaxUrl + 'shop&action=list', {
+					token: userInfo.token,
+					skip: skip,
+					keyword: ''
+				}, function(res) {
+					if (res.errno == 0) {
+						app.voidStatus = false;
+						var data = res.data;
+						for (var i = 0; i < data.length; i++) {
+							data[i].choice = false;
+						}
+						if (skip == 1) {
+							app.store_list = data;
+							if (pullDirection == "down") {
+								mui('#mui-content').pullRefresh().endPulldownToRefresh();
+							}
+						} else {
+							app.store_list = app.store_list.concat(data);
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						}
+					} else {
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+						if (skip == 1) {
+							app.voidStatus = true;
+						}
+					}
+				}, 'json');
+			}
 		</script>
 	</body>
 

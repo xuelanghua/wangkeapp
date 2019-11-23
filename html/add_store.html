@@ -288,8 +288,8 @@
 					</li>
 					<li class="mui-table-view-cell" id="get_address">
 						<span class="title">选择地址</span>
-						<span class="gray-tips">点击获取</span>
-						<span class="address">{{detail_address}}</span>
+						<span class="gray-tips" v-if="address==''">点击获取</span>
+						<span class="address">{{address}}</span>
 						<span class="mui-icon mui-icon-location-filled"></span>
 					</li>
 					<li class="mui-table-view-cell">
@@ -377,10 +377,10 @@
 					closing_time: '请选择',
 					linkman: '',
 					phone: '',
-					address: '云南省昆明市官渡区',
+					address: '',
 					address_detail: '',
-					longitude: '102.753138',
-					latitude: '24.986966',
+					longitude: '',
+					latitude: '',
 					shop_id: '',
 					business_hours_text:''
 				},
@@ -509,6 +509,8 @@
 					latitude: app.latitude,
 					shop_id: app.shop_id //编辑传入门店id
 				}
+				logs(datas);
+				return;
 				mui.post($ajaxUrl + 'shop&action=add', datas, function(res) {
 					if (res.errno == 0) {
 						message("保存成功！");
@@ -541,6 +543,13 @@
 					});
 				}
 			}
+			window.addEventListener('site',function(e){
+				var site=e.detail.site;
+				app.address=site.address;
+				app.address_detail=site.address_detail;
+				app.longitude=site.longitude;
+				app.latitude=site.latitude;
+			})
 		</script>
 	</body>
 
