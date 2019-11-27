@@ -1,0 +1,864 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<style type="text/css">
+			.order-detail-head {
+				position: relative;
+				background-color: #FFFFFF;
+				margin-bottom: 0.2rem;
+			}
+
+			.detail-head {
+				width: 100%;
+				height: 1.79rem;
+				background: url("../image/icon/order_details_await_sgoods_01.png") center top no-repeat;
+				background-size: cover;
+				display: flex;
+				align-items: center;
+				padding-left: 0.45rem;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.detail-head h3 {
+				font-size: 0.35rem;
+				color: #FFFFFF;
+				font-weight: normal;
+				margin-bottom: 0.23rem;
+			}
+
+			.detail-head p {
+				font-size: 0.3rem;
+				color: #FFFFFF;
+			}
+
+			.detail-head p span {
+				min-width: 2.6rem;
+				display: inline-block;
+				/* margin-right: 0.25rem; */
+			}
+
+			.address-info {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.2rem 0.24rem;
+				position: relative;
+			}
+
+			.address-info-right {
+				flex-grow: 1;
+				padding-left: 0.2rem;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.address-info:after {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				width: 100%;
+				height: 1px;
+				left: 0;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.address-info img {
+				width: 0.42rem;
+				height: auto;
+				flex-shrink: 0;
+			}
+
+			.address-info p {
+				margin-bottom: 0;
+				font-size: 0.26rem;
+			}
+
+			.address-top {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 0.1rem;
+			}
+
+			.address-top p {
+				flex-grow: 1;
+				color: #333333;
+				font-size: 0.3rem;
+				margin: 0;
+			}
+
+			.mui-btn-outlined {
+				height: 0.4rem;
+				width: 0.88rem;
+				line-height: 0.4rem;
+				padding: 0;
+				font-size: 0.2rem;
+				color: #999999;
+				border-radius: 0.12rem;
+			}
+
+			.mui-btn:enabled:active {
+				background-color: #DDDDDD;
+				color: #000000;
+			}
+
+			.customer-info {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 15px;
+				font-size: 0.28rem;
+			}
+
+			.customer-info img {
+				width: 0.8rem;
+				object-fit: cover;
+				height: 0.8rem;
+				margin-right: 0.32rem;
+				border-radius: 50%;
+			}
+
+			.customer-info div {
+				display: flex;
+				align-items: center;
+			}
+
+			.customer-info .mui-icon-arrowright {
+				font-size: 0.32rem;
+				color: #999999;
+				margin-left: 0.1rem;
+			}
+
+			.mini-card {
+				background-color: #FFFFFF;
+				margin-bottom: 0.2rem;
+			}
+
+			.mini-card .mui-table-view-cell {
+				padding: 0.2rem;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				display: none;
+			}
+
+			.mui-table-view-cell:after {
+				background-color: #DDDDDD;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+
+			.goods-info {
+				display: flex;
+				align-items: center;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.goods-info .goods-img {
+				position: relative;
+				overflow: hidden;
+				width: 1.39rem;
+				height: 1.39rem;
+				flex-shrink: 0;
+			}
+
+			.goods-info .goods-img img {
+				object-fit: cover;
+				width: 100%;
+				height: 100%;
+			}
+
+			.goods-info .goods-img span {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.2rem;
+				height: 0.32rem;
+				background-color: rgba(0, 0, 0, 0.5);
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				color: #FFFFFF;
+			}
+
+			.goods-desc {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				flex-grow: 1;
+				padding-left: 0.25rem;
+				height: 1.39rem;
+				overflow: hidden;
+			}
+
+			.goods-desc p {
+				max-width: 100%;
+				font-size: 0.28rem;
+				color: #333333;
+			}
+
+			.arguments-cont {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 0.3rem;
+				color: #333333;
+			}
+
+			.arguments-cont .mui-badge {
+				font-size: 0.24rem;
+				color: #999999;
+				background-color: #F2F2F2;
+				padding: 4px 8px;
+			}
+
+			.price-cont {
+				font-size: 0.24rem;
+				color: #333333;
+			}
+
+			.price-cont .price {
+				margin-right: 0.3rem;
+			}
+
+			.mini-list-btm {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.24rem;
+				color: #333333;
+				margin-top: 0.3rem;
+			}
+
+			.team-boss-name {
+				color: #999999;
+				margin-left: 0.1rem;
+			}
+
+			.royalty {
+				color: #999999;
+			}
+
+			.royalty span {
+				color: #F5CA3A;
+			}
+
+			.summary-container div {
+				font-size: 0.3rem;
+				color: #333333;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 0.2rem;
+			}
+
+			.summary-container .mui-table-view-cell div:last-of-type {
+				margin-bottom: 0;
+			}
+
+			.await-pay-sum {
+				color: #FF0000;
+			}
+
+			.net-profit-sum {
+				color: #CC9C2D;
+			}
+
+			.last-conatiner {
+				padding: 0.2rem;
+				padding-bottom: 1.1rem;
+				margin-bottom: 0;
+			}
+
+			.last-conatiner ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.last-conatiner li {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.24rem;
+				color: #999999;
+				margin-bottom: 0.2rem;
+			}
+
+			/* 如果是分销商 */
+			.team-name-cont {
+				font-size: 0.24rem;
+				color: #333333;
+			}
+
+			.deliver-goods-btn {
+				width: 100%;
+				background-color: #F5CA3A;
+				height: 1.1rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.3rem;
+				color: #FFFFFF;
+				position: fixed;
+				bottom: 0;
+				z-index: 99;
+			}
+
+			/* 发货窗口 */
+			.deliver-goods-model {
+				position: fixed;
+				z-index: 1045;
+				top: 25%;
+				width: 6.46rem;
+				padding-bottom: 30px;
+				left: 0.52rem;
+				margin: 0;
+				/* border: 1px solid #000000; */
+				border-radius: 0.1rem;
+				box-shadow: none;
+				display: none;
+			}
+
+			.mui-poppicker {
+				z-index: 1045;
+			}
+
+			.deliver-goods-model .mui-card-header {
+				justify-content: center;
+				height: 1.19rem;
+				font-size: 0.35rem;
+				color: #474747;
+				box-shadow: none;
+			}
+
+			.mui-card-header:after {
+				background-color: #DDDDDD;
+			}
+
+			.deliver-goods-model ul {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+
+			.mui-card-content-inner {
+				padding: 0 0.3rem;
+			}
+
+			.deliver-goods-model li {
+				margin: 0.5rem 0;
+				border-radius: 0.1rem;
+				background-color: #F2F2F2;
+				display: flex;
+				align-items: center;
+				height: 1rem;
+				padding: 0 0.2rem;
+				position: relative;
+			}
+
+			.deliver-goods-model .first-section {
+				justify-content: space-between;
+			}
+
+			.deliver-goods-model .second-section {
+				padding-right: 0;
+			}
+
+			.deliver-goods-model .ensure-deliver-goods {
+				font-size: 0.3rem;
+				background-color: #F5CA3A;
+				color: #FFFFFF;
+				justify-content: center;
+				margin-top: 80px;
+				margin-bottom: 0;
+				height: 44px;
+			}
+
+			.express-title {
+				color: #999999;
+				margin-right: 0.4rem;
+			}
+
+			.express-title.mui-navigate-right:after {
+				font-size: 0.36rem;
+				right: 0.2rem;
+			}
+
+			.deliver-goods-model span {
+				font-size: 0.3rem;
+				flex-shrink: 0;
+			}
+
+			.deliver-goods-model input {
+				margin: 0;
+				padding: 0;
+				height: 32px;
+				/* width: 3.6rem; */
+				flex-grow: 1;
+				font-size: 0.28rem;
+				margin: 0 0.2rem;
+				border: none;
+				background-color: transparent;
+			}
+
+			.deliver-goods-model .scan-btn {
+				height: 100%;
+				/* background-color: #0062CC; */
+				padding: 0 0.2rem;
+				display: inline-flex;
+				flex-shrink: 0;
+				align-items: center;
+				border-radius: 0.1rem;
+			}
+
+			.scan-btn img {
+				width: 0.36rem;
+				height: 0.36rem;
+			}
+
+			/* 联系队长 */
+			.mui-table-view-cell.contact-captain {
+				display: flex;
+				align-items: center;
+				position: relative;
+				padding: 0;
+				padding-right: 22px;
+				font-size: 15px;
+				color: #333333;
+				margin-top: 10px;
+				padding-top: 20px;
+			}
+
+			.mui-table-view-cell.contact-captain:before {
+				content: '';
+				position: absolute;
+				display: block;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.mui-table-view-cell.contact-captain .mui-navigate-right {
+				color: #999999;
+			}
+
+			.mui-table-view-cell.contact-captain .mui-navigate-right:after {
+				right: 0;
+				font-size: 20px;
+				top: 71%;
+			}
+
+			.contact-left-cont {
+				display: flex;
+				align-items: center;
+			}
+
+			.contact-left-cont img {
+				width: 20px !important;
+				height: auto;
+				margin-right: 8px;
+			}
+
+			.pt-sign {
+				width: 80px;
+				position: absolute;
+				top: -10px;
+				right: -10px;
+			}
+
+			.first-customer-info {
+				border-bottom: 1px solid #f2f2f2;
+			}
+
+			.first-customer-info img {
+				width: 17.5px;
+				height: 17.5px;
+				border-radius: 0;
+				margin-right: 10px;
+			}
+
+			.users-name {
+				margin-right: 10px;
+			}
+
+			.first-customer-info button {
+				width: 60px;
+				height: 24.5px;
+				padding: 0;
+				border: none;
+				background-color: #f5ca3a;
+				color: #fff;
+				font-size: 14px;
+				border-radius: 5px;
+			}
+
+			.first-customer-info button:enabled:active {
+				background-color: #f5ca3a;
+				color: #fff;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">订单详情</h1>
+		</header>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<div class="order-detail-head">
+				<div class="detail-head">
+					<div>
+						<h3>待核销</h3>
+						<!-- <h3>已核销</h3> -->
+					</div>
+					<img v-if="collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
+				</div>
+				<div class="customer-info first-customer-info">
+					<div>
+						<img src="../image/icon/order-detail-verify-call.png">
+						<span class="users-name">{{detail.user_name}}</span>
+						<span>13700696599</span>
+					</div>
+					<button data-phone="13700696591" class="call-btn">拨打</button>
+				</div>
+				<div class="customer-info">
+					<div>
+						<img :src="detail.user_avatar">
+						<span>{{detail.user_name}}</span>
+					</div>
+					<div @tap="contact(detail.user_id,detail.user_name,detail.user_avatar)">
+						<span>联系TA</span>
+						<span class="mui-icon mui-icon-arrowright"></span>
+					</div>
+				</div>
+			</div>
+			<div class="mini-card">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(goods,index) in goods_item" :key="index">
+						<div class="goods-info">
+							<div class="goods-img">
+								<img :src="goods.cover">
+								<span v-if="detail.team_order>0">分销商品</span>
+							</div>
+							<div class="goods-desc">
+								<p class="mui-ellipsis goods-title">{{goods.name}}</p>
+								<div class="arguments-cont">
+									<div v-if="goods.content" class="mui-badge">{{goods.content}}</div>
+									<div class="price-cont">
+										<span class="price">&yen;{{goods.price}}</span>
+										<span>x{{goods.number}}</span>
+									</div>
+								</div>
+								<div v-if="detail.team_order==1&&sales==2" class="team-name-cont">
+									<span v-if="goods.team_info.name" class="price">货源：{{goods.team_info.name}}</span>
+								</div>
+								<div v-if="detail.team_order==9&&sales==2" class="team-name-cont">
+									<span class="price">货源：旺客官方</span>
+								</div>
+							</div>
+						</div>
+						<div class="mini-list-btm" v-if="detail.team_order==1&&sales==1">
+							<div>分销商：{{goods.team_info.name}}<span class="team-boss-name">[{{detail.to_user_name}}]</span></div>
+							<div class="royalty">提成：<span>&yen;{{goods.commission}}</span></div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="mini-card">
+				<ul class="mui-table-view summary-container">
+					<li class="mui-table-view-cell">
+						<div>
+							<span v-if="goods_item">共{{goods_item.length}}件商品</span><span>&yen;{{detail.price}}</span>
+						</div>
+						<div>
+							<span>运费</span>
+							<span>
+								<template v-if="detail.freight>0">{{detail.freight}}</template>
+								<template v-else>包邮</template>
+							</span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div>
+							<span>实付款</span><span class="await-pay-sum">&yen;{{detail.total_price}}</span>
+						</div>
+						<div v-if="detail.team_order>0">
+							<!-- 队长 -->
+							<template v-if="sales==1">
+								<span>净收益</span>
+								<span class="net-profit-sum">&yen;{{detail.total_income}}</span>
+							</template>
+							<template v-else>
+								<span>提成</span>
+								<span class="net-profit-sum">&yen;{{detail.total_commission}}</span>
+							</template>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="mini-card last-conatiner">
+				<ul>
+					<li>
+						<span>订单编号：{{detail.out_trade_no}}</span>
+						<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun(detail.out_trade_no)">复制</button>
+					</li>
+					<li>
+						<span v-if="detail.type==1&&detail.collage_status==1">订单状态：待核销</span>
+						<span v-else>订单状态：已核销</span>
+					</li>
+					<li>
+						<span>下单时间：{{detail.create_time}}</span>
+					</li>
+					<li>
+						<span>付款时间：{{detail.pay_time}}</span>
+					</li>
+					<li class="mui-table-view-cell contact-captain" v-if="detail.team_order==1" @tap="contact(c.captain_uid,c.captain_name,c.captain_avatar)">
+						<div class="contact-left-cont">
+							<img src="../image/icon/contact-the-merchant.png" alt="">
+							<span>联系队长</span>
+						</div>
+						<span class="mui-navigate-right">{{c.captain_name}}</span>
+					</li>
+					<li class="mui-table-view-cell contact-captain" v-if="detail.team_order==9&&detail.service_info.uid>0" @tap="contact(detail.service_info.uid,detail.service_info.name+'(旺客客服)',detail.service_info.avatar)">
+						<div class="contact-left-cont">
+							<img src="../image/icon/contact-the-merchant.png" alt="">
+							<span>联系客服</span>
+						</div>
+						<span class="mui-navigate-right">{{detail.service_info.name}}</span>
+					</li>
+				</ul>
+			</div>
+			<!-- 发货窗口 -->
+			<div class="mui-card deliver-goods-model">
+				<div class="mui-card-header">核销</div>
+				<div class="mui-card-content">
+					<div class="mui-card-content-inner">
+						<ul>
+							<li class="second-section">
+								<span>核销码</span>
+								<input placeholder="请填写核销码" v-model="express_num" type="text">
+								<div class="scan-btn">
+									<img src="../image/icon/order_details_await_sgoods_02.png">
+								</div>
+							</li>
+							<li class="ensure-deliver-goods">
+								确认核销
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="deliver-goods-btn" v-if="(detail.team_order==0||(detail.team_order==1&&sales==1))&&(detail.type==0||detail.type==1&&detail.collage_status!=1)">
+				核销
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var mask = mui.createMask(function() {
+				document.querySelector(".deliver-goods-model").style.display = "none";
+			});
+			// 倒计时
+			var endtimer = "";
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					recipients: '',
+					phone: '',
+					address: '',
+					address_detail: '',
+					express_id: '',
+					express_name: '',
+					express_num: '',
+					order_id: '',
+					sales: '',
+					goods_item: [],
+					detail: {},
+					c: {},
+					collage_id: 0
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
+				},
+				methods: {
+					// 联系买家
+					contact: function(cid, chatName, avatar) {
+						if (cid == userInfo.id) {
+							message("不能和自己联系哟~");
+							return false;
+						}
+						openPage('dialog.html', 'dialog', '#f7f7f7', {
+							cid: cid,
+							chatName: chatName,
+							avatar: avatar,
+							barStyle: 'dark'
+						});
+					},
+					//  复制方法
+					copy_fun: function(copy) {
+						//判断是安卓还是ios
+						if (mui.os.ios) {
+							//ios
+							var UIPasteboard = plus.ios.importClass("UIPasteboard");
+							var generalPasteboard = UIPasteboard.generalPasteboard();
+							//设置/获取文本内容:
+							generalPasteboard.plusCallMethod({
+								setValue: copy,
+								forPasteboardType: "public.utf8-plain-text"
+							});
+							generalPasteboard.plusCallMethod({
+								valueForPasteboardType: "public.utf8-plain-text"
+							});
+							message("复制成功!");
+						} else {
+							//安卓
+							var context = plus.android.importClass("android.content.Context");
+							var main = plus.android.runtimeMainActivity();
+							var clip = main.getSystemService(context.CLIPBOARD_SERVICE);
+							plus.android.invoke(clip, "setText", copy);
+							message("复制成功!");
+						}
+					}
+				},
+				mounted: function() {
+					mui.init({
+						gestureConfig: {
+							longtap: true,
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						app.order_id = self.orderId;
+						app.sales = self.sales;
+						getDetailData();
+						// 拨打电话
+						mui('.mui-content').on('tap', '.call-btn', function() {
+							var phone=this.dataset.phone;
+							plus.device.dial(phone, true);
+						})
+					})
+				}
+			})
+			window.addEventListener('editAddressSuccess', function(event) {
+				// 更新订单信息
+				getDetailData();
+			});
+
+			// 发货
+			mui(".mui-content").on('tap', '.deliver-goods-btn', function() {
+				mask.show();
+				document.querySelector(".deliver-goods-model").style.display = "block";
+			})
+
+			// 确认发货
+			mui(".mui-content").on('tap', '.ensure-deliver-goods', function() {
+				if (app.express_num == '') {
+					message('请填写核销码！');
+					return false;
+				}
+				mask.close();
+				return false;
+				//发货
+				mui.post($ajaxUrl + 'order', {
+					action: 'express',
+					token: userInfo.token,
+					order_id: app.order_id,
+					express_id: app.express_id,
+					courier_number: app.express_num
+				}, function(res) {
+					if (res.errno == 0) {
+						message('发货成功!');
+						mui.fire(plus.webview.getWebviewById('order_list'), 'deliverSuccess');
+						setTimeout(function() {
+							mui.back();
+						}, 1500)
+					} else {
+						message(res.message);
+					}
+				}, 'json');
+			})
+
+			// 为了不让弹出滚动穿透
+			document.querySelector(".deliver-goods-model").addEventListener("touchmove", mui.preventDefault);
+
+			// 扫一扫
+			mui(".mui-content").on('tap', '.scan-btn', function() {
+				fnOpenWin('odd_scan.html', 'odd_scan', {
+					statusbar: {
+						background: '#000000'
+					}
+				}, '', 'slide-in-right')
+				setStatusBar('#000000', 'light');
+			})
+
+			// 监听扫码内容
+			window.addEventListener('doit', function(e) {
+				var cont = e.detail.content;
+				if (cont != '') {
+					app.express_num = cont;
+					message("扫码成功！");
+				} else {
+					setTimeout(function() {
+						plus.nativeUI.alert("扫码有误，请重新扫码！");
+					}, 500);
+				}
+			}, false);
+			// 详情资料
+			function getDetailData() {
+				mui.post($ajaxUrl + 'order&action=order_detail', {
+					token: userInfo.token,
+					order_id: app.order_id
+				}, function(res) {
+					logs(res);
+					var data = res.data;
+					if (res.errno == 0) {
+						app.detail = data;
+						app.recipients = data.name;
+						app.phone = data.phone;
+						app.address = data.address;
+						app.address_detail = data.address_detail;
+						app.goods_item = data.item;
+						app.c = data.item[0].team_info;
+						app.collage_id = data.collage_id;
+					} else {}
+				}, 'json');
+			}
+		</script>
+	</body>
+
+</html>

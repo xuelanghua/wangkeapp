@@ -13,6 +13,8 @@
 		<style type="text/css">
 			.mui-bar {
 				height: auto;
+				padding-right: 0;
+				padding-left: 0;
 			}
 
 			.mui-bar .mui-icon {
@@ -73,12 +75,13 @@
 				align-items: center;
 				height: 44px;
 				overflow: hidden;
-				/* padding-top: 10px; */
+				padding: 0 10px;
+				position: relative;
+				padding-top: 5px;
 			}
 
 			.mui-control-content {
 				background-color: transparent;
-				height: 89vh;
 			}
 
 			.mui-segmented-control-inverted {
@@ -87,20 +90,28 @@
 				height: 44px;
 			}
 
+			.mui-segmented-control.mui-scroll-wrapper .mui-scroll {
+				position: absolute;
+			}
+
 			.header-bottom {
-				/* margin-top: 5px; */
 				position: relative;
+				height: 44px;
 			}
 
 			.header-bottom .mui-control-item {
+				height: 44px;
 				font-size: 0.28rem;
-				touch-action: pan-y;
+				position: relative;
 				-webkit-transition: all 0.2s ease-in-out;
 				transition: all 0.2s ease-in-out;
+				border-bottom: 1px solid transparent;
+				margin-bottom: 1px;
 			}
 
-			.mui-segmented-control .mui-control-item {
+			.mui-bar .mui-segmented-control .mui-control-item {
 				line-height: 44px;
+				padding: 0 10px;
 			}
 
 			.mui-bar .mui-segmented-control {
@@ -122,6 +133,21 @@
 
 			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
 				color: #F5CA3A;
+			}
+
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active::after {
+				content: '';
+				position: absolute;
+				display: inline-block;
+				left: 0;
+				bottom: 0;
+				height: 2px;
+				width: 100%;
+				margin-left: 0;
+				background-color: #F5CA3A;
+				-webkit-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+				border-radius: 2px;
 			}
 
 			.order-list-groups {
@@ -545,11 +571,32 @@
 				-webkit-transition: display 0.5s ease-in-out;
 				transition: display 0.5s ease-in-out;
 			}
-			.pt-sign{
+
+			.pt-sign {
 				width: 41px;
 				position: absolute;
 				top: 8px;
 				right: 71px;
+			}
+
+			/* 如果是到店核销的商品 */
+			.mui-card-header.sales-header {
+				background: url('../image/order-list-card-head-bg.png')center center no-repeat;
+				background-size: cover;
+			}
+
+			.store-name {
+				display: flex;
+				align-items: center;
+				font-size: 14px;
+				color: #333333;
+				margin-bottom: 10px;
+			}
+
+			.store-name img {
+				width: 15px;
+				height: auto;
+				margin-right: 5px;
 			}
 
 			[v-cloak] {
@@ -584,23 +631,27 @@
 						<span class="mui-icon mui-icon-search show-search-btn" @tap="starSearch"></span>
 					</div>
 				</div>
-
 				<div class="header-bottom">
-					<div class="mui-segmented-control mui-segmented-control-inverted">
-						<a class="mui-control-item mui-active" data-sign="1" href="#item1mobile">
-							待付款({{wait_payment}})
-						</a>
-						<a class="mui-control-item" data-sign="2" href="#item2mobile">
-							待发货({{wait_deliver}})
-						</a>
-						<a class="mui-control-item" data-sign="3" href="#item3mobile">
-							已发货({{wait_confirm}})
-						</a>
-						<a class="mui-control-item" data-sign="4" href="#item4mobile">
-							已完成({{finish}})
-						</a>
+					<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+						<div class="mui-scroll">
+							<a class="mui-control-item mui-active" data-sign="1" href="#item1mobile">
+								待付款({{wait_payment}})
+							</a>
+							<a class="mui-control-item" data-sign="2" href="#item2mobile">
+								待发货({{wait_deliver}})
+							</a>
+							<a class="mui-control-item" data-sign="3" href="#item3mobile">
+								已发货({{wait_confirm}})
+							</a>
+							<a class="mui-control-item" data-sign="4" href="#item4mobile">
+								待核销({{wait_verify}})
+							</a>
+							<a class="mui-control-item" data-sign="5" href="#item5mobile">
+								已完成({{finish}})
+							</a>
+						</div>
 					</div>
-					<div id="slider_progressBar" class="slider-progressBar"></div>
+					<!-- <div id="slider_progressBar" class="slider-progressBar"></div> -->
 				</div>
 			</header>
 			<div class="mui-content">
@@ -614,7 +665,7 @@
 										<span class="user-name">{{al.user_name}}</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
-									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png" >
+									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
 									<span class="cancel-time">
 										<!-- <template v-if="countDown(al.over_time)>0">{{countDown(al.over_time)}}</template>
 										<template v-else>0</template> -->
@@ -686,7 +737,7 @@
 										<span class="user-name">{{al.user_name}}</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
-									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png" >
+									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
 									<span class="cancel-time">
 										已付款
 									</span>
@@ -762,7 +813,7 @@
 										<span class="user-name">{{al.user_name}}</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
-									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png" >
+									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
 									<span class="cancel-time">
 										已发货
 									</span>
@@ -824,15 +875,84 @@
 				</div>
 				<div id="item4mobile" class="mui-control-content">
 					<ul class="order-list-groups">
+						<li class="order-list" v-for="(al,idx) in await_verify" :key="idx">
+							<div class="mui-card">
+								<div class="mui-card-header sales-header">
+									<div class="flex-center" @tap="contact(al.user_id,al.user_name,al.user_avatar)">
+										<img class="user-head-img" :src="al.user_avatar">
+										<span class="user-name">{{al.user_name}}</span>
+										<span class="mui-icon mui-icon-arrowright"></span>
+									</div>
+									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
+									<span class="cancel-time">
+										已完成
+									</span>
+								</div>
+								<div class="mui-card-content">
+									<div class="mui-card-content-inner">
+										<div class="order-inside-list" v-for="(item,index) in al.item" :key="index" @tap="openOrderDetail('verify',al.id)">
+											<div class="inside-list-left">
+												<img :src="item.cover">
+												<div v-if="al.team_order==1" class="goods-type-sign">
+													分销商品
+												</div>
+											</div>
+											<div class="inside-list-right">
+												<p class="mui-ellipsis">{{item.name}}</p>
+												<div class="specification-cont">
+													<div class="specification-left">
+														{{item.content}}
+													</div>
+													<div class="specification-right">
+														<span>&yen;{{item.price}}</span>
+														<span>x&nbsp;{{item.number}}</span>
+													</div>
+												</div>
+												<div v-if="sales==1&&al.team_order==1" class="distribution-team">
+													分销商：{{item.team_info.name}}<span>[{{al.to_user_name}}]</span>
+												</div>
+												<div v-if="sales==2&&al.team_order==1" class="distribution-team">
+													货源：{{item.team_info.name}}
+												</div>
+												<div v-if="sales==2&&al.team_order==9" class="distribution-team">
+													货源：旺客官方
+												</div>
+											</div>
+										</div>
+										<div class="store-name"><img src="../image/icon/order-list-store-icon.png">门店：云南万贤科技</div>
+									</div>
+								</div>
+								<div class="mui-card-footer">
+									<div class="price-num">
+										<span v-if="al.item">共{{al.item.length}}件商品</span>
+										<span>实付款：&nbsp;&yen;{{al.total_price}}</span>
+									</div>
+									<div v-show="sales==1&&al.team_order==1" class="net-yield">
+										净收益：<span class="net-yield-number">&nbsp;&yen;{{al.income}}</span>
+									</div>
+									<div v-show="sales==2" class="net-yield">
+										提成：<span class="net-yield-number">&nbsp;&yen;{{al.commission}}</span>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div v-show="await_verify_status" class="void-list-container">
+						<img src="../image/icon/void-data.png">
+					</div>
+				</div>
+				<div id="item5mobile" class="mui-control-content">
+					<ul class="order-list-groups">
 						<li class="order-list" v-for="(al,idx) in finish_list" :key="idx">
 							<div class="mui-card">
+								<!-- 核销订单 sales-header -->
 								<div class="mui-card-header">
 									<div class="flex-center" @tap="contact(al.user_id,al.user_name,al.user_avatar)">
 										<img class="user-head-img" :src="al.user_avatar">
 										<span class="user-name">{{al.user_name}}</span>
 										<span class="mui-icon mui-icon-arrowright"></span>
 									</div>
-									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png" >
+									<img v-if="al.collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
 									<span class="cancel-time">
 										已完成
 									</span>
@@ -940,7 +1060,9 @@
 					await_sgoods: [],
 					send_after: [],
 					finish_list: [],
+					await_verify: [],
 					// 状态
+					await_verify_status: false,
 					await_list_status: false,
 					await_sgoods_status: false,
 					send_after_status: false,
@@ -949,6 +1071,7 @@
 					wait_payment: 0,
 					wait_deliver: 0,
 					wait_confirm: 0,
+					wait_verify: 0,
 					finish: 0,
 					// 发货相关
 					address_detail: '',
@@ -972,7 +1095,7 @@
 				methods: {
 					// 联系买家
 					contact: function(cid, chatName, avatar) {
-						if(cid==userInfo.id){
+						if (cid == userInfo.id) {
 							message("不能和自己联系哟~");
 							return false;
 						}
@@ -1011,6 +1134,11 @@
 							}, "zoom-fade-out")
 						} else if (type == "shipped") {
 							openPage('order_details_shipped.html', 'order_details_shipped', '#f7f7f7', {
+								orderId: id,
+								sales: app.sales
+							}, "zoom-fade-out")
+						} else if (type == "verify") {
+							openPage('order_details_verify.html', 'order_details_verify', '#f7f7f7', {
 								orderId: id,
 								sales: app.sales
 							}, "zoom-fade-out")
@@ -1103,7 +1231,7 @@
 			})
 			// 切换选项卡
 			mui('.mui-bar').on('tap', '.mui-control-item', function() {
-				document.getElementById("slider_progressBar").style.left = this.offsetLeft + 'px';
+				// document.getElementById("slider_progressBar").style.left = this.offsetLeft + 'px';
 				app.order_sign = this.dataset.sign;
 				mui('#mui-content').pullRefresh().refresh(true);
 				skip = 1;
@@ -1183,13 +1311,13 @@
 				}, '', 'slide-in-right')
 				setStatusBar('#000000', 'light');
 			})
-			
+
 			// 监听发货成功
 			window.addEventListener('deliverSuccess', function(e) {
 				getOrderNum();
 				getGoodsList();
 			}, false);
-			
+
 			// 监听扫码内容
 			window.addEventListener('doit', function(e) {
 				var cont = e.detail.content;
@@ -1219,6 +1347,7 @@
 
 			// 获取订单列表
 			function getGoodsList() {
+				console.log(app.order_sign)
 				mui.post($ajaxUrl + 'order&action=order_list', {
 					token: userInfo.token,
 					type: app.sales,
@@ -1227,7 +1356,7 @@
 					limit: 6,
 					goods_name: app.keyword
 				}, function(res) {
-					logs(res);
+					console.log(res);
 					if (res.errno == 0) {
 						if (skip == 1) {
 							if (app.order_sign == 1) {
@@ -1239,6 +1368,9 @@
 							} else if (app.order_sign == 3) {
 								app.send_after = res.data;
 								app.send_after_status = false;
+							} else if (app.order_sign == 4) {
+								app.await_verify = res.data;
+								app.await_verify_status = false;
 							} else {
 								app.finish_list = res.data;
 								app.finish_list_status = false;
@@ -1253,6 +1385,9 @@
 							} else if (app.order_sign == 3) {
 								app.send_after = app.send_after.concat(res.data);
 								app.send_after_status = false;
+							} else if (app.order_sign == 4) {
+								app.await_verify = app.send_after.concat(res.data);
+								app.await_verify_status = false;
 							} else {
 								app.finish_list = app.finish_list.concat(res.data);
 								app.finish_list_status = false;
@@ -1275,10 +1410,14 @@
 							} else if (app.order_sign == 3) {
 								app.send_after = [];
 								app.send_after_status = true;
-							} else { 
+							} else if (app.order_sign == 4) {
+								app.await_verify = [];
+								app.await_verify_status = true;
+							} else {
 								app.finish_list = [];
 								app.finish_list_status = true;
 							}
+
 						} else {
 
 						}
@@ -1301,8 +1440,9 @@
 						app.wait_payment = res.data.wait_payment;
 						app.wait_deliver = res.data.wait_deliver;
 						app.wait_confirm = res.data.wait_confirm;
+						app.wait_verify = res.data.wait_confirm;
 						app.finish = res.data.finish;
-					} else {}
+					}
 				}, 'json');
 			}
 			// 点击键盘的搜索
