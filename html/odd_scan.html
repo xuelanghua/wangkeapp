@@ -102,10 +102,7 @@
 
 			function onmarked(type, result, file) {
 				if (result) {
-					// logs(result);
-					// var path = plus.io.convertLocalFileSystemURL(file);
-					// document.getElementById("mask").style.display = "block";
-					// document.getElementById("mask").src = path;
+					logs(result);
 					var view = plus.webview.currentWebview().opener();
 					mui.fire(view, 'doit', {
 						content: result.replace(/\""/g, "")
@@ -125,7 +122,7 @@
 
 			function plusready() {
 				setTimeout(function() {
-					barcode = plus.barcode.create('barcode', [2, 8, 9, 10], {
+					barcode = plus.barcode.create('barcode', '', {
 						top: '44px',
 						left: '0px',
 						width: '100%',

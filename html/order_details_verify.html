@@ -535,8 +535,7 @@
 			<div class="order-detail-head">
 				<div class="detail-head">
 					<div>
-						<h3>待核销</h3>
-						<!-- <h3>已核销</h3> -->
+						<h3>{{detail.order_status == 0 ? '待核销' : '已核销'}}</h3>
 					</div>
 					<img v-if="collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
 				</div>
@@ -544,9 +543,9 @@
 					<div>
 						<img src="../image/icon/order-detail-verify-call.png">
 						<span class="users-name">{{detail.user_name}}</span>
-						<span>13700696599</span>
+						<span>{{phone}}</span>
 					</div>
-					<button data-phone="13700696591" class="call-btn">拨打</button>
+					<button :data-phone="phone" class="call-btn">拨打</button>
 				</div>
 				<div class="customer-info">
 					<div>
@@ -630,7 +629,7 @@
 						<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun(detail.out_trade_no)">复制</button>
 					</li>
 					<li>
-						<span v-if="detail.type==1&&detail.collage_status==1">订单状态：待核销</span>
+						<span v-if="detail.order_status==0">订单状态：待核销</span>
 						<span v-else>订单状态：已核销</span>
 					</li>
 					<li>
@@ -663,7 +662,7 @@
 						<ul>
 							<li class="second-section">
 								<span>核销码</span>
-								<input placeholder="请填写核销码" v-model="express_num" type="text">
+								<input placeholder="请填写核销码" v-model="code" type="text">
 								<div class="scan-btn">
 									<img src="../image/icon/order_details_await_sgoods_02.png">
 								</div>
@@ -675,12 +674,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="deliver-goods-btn" v-if="(detail.team_order==0||(detail.team_order==1&&sales==1))&&(detail.type==0||detail.type==1&&detail.collage_status!=1)">
+			<div class="deliver-goods-btn" v-if="detail.order_status==0&&sales==1">
 				核销
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/Base64.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
@@ -698,13 +698,13 @@
 					address_detail: '',
 					express_id: '',
 					express_name: '',
-					express_num: '',
 					order_id: '',
 					sales: '',
 					goods_item: [],
 					detail: {},
 					c: {},
-					collage_id: 0
+					collage_id: 0,
+					code: '',
 				},
 				created: function() {
 					// 初始化字体大小
@@ -763,12 +763,18 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
+						logs(self.code);
 						app.order_id = self.orderId;
 						app.sales = self.sales;
+						if (self.code) {
+							app.code = self.code;
+							mask.show();
+							document.querySelector(".deliver-goods-model").style.display = "block";
+						}
 						getDetailData();
 						// 拨打电话
 						mui('.mui-content').on('tap', '.call-btn', function() {
-							var phone=this.dataset.phone;
+							var phone = this.dataset.phone;
 							plus.device.dial(phone, true);
 						})
 					})
@@ -779,38 +785,39 @@
 				getDetailData();
 			});
 
-			// 发货
+			// 核销
 			mui(".mui-content").on('tap', '.deliver-goods-btn', function() {
 				mask.show();
 				document.querySelector(".deliver-goods-model").style.display = "block";
 			})
 
-			// 确认发货
+			// 确认核销
 			mui(".mui-content").on('tap', '.ensure-deliver-goods', function() {
-				if (app.express_num == '') {
+				if (app.code == '') {
 					message('请填写核销码！');
 					return false;
 				}
-				mask.close();
-				return false;
-				//发货
-				mui.post($ajaxUrl + 'order', {
-					action: 'express',
-					token: userInfo.token,
-					order_id: app.order_id,
-					express_id: app.express_id,
-					courier_number: app.express_num
-				}, function(res) {
-					if (res.errno == 0) {
-						message('发货成功!');
-						mui.fire(plus.webview.getWebviewById('order_list'), 'deliverSuccess');
-						setTimeout(function() {
-							mui.back();
-						}, 1500)
-					} else {
-						message(res.message);
+				plus.nativeUI.confirm('确认核销?', function(e) {
+					mask.close();
+					if (e.index == 0) {
+						mui.post($ajaxUrl + 'order', {
+							action: 'order_confirm',
+							token: userInfo.token,
+							order_id: app.order_id,
+							code: app.code
+						}, function(res) {
+							if (res.errno == 0) {
+								message('核销成功!');
+								mui.fire(plus.webview.getWebviewById('order_list'), 'deliverSuccess');
+								setTimeout(function() {
+									mui.back();
+								}, 1500)
+							} else {
+								message(res.message);
+							}
+						}, 'json');
 					}
-				}, 'json');
+				})
 			})
 
 			// 为了不让弹出滚动穿透
@@ -830,8 +837,8 @@
 			window.addEventListener('doit', function(e) {
 				var cont = e.detail.content;
 				if (cont != '') {
-					app.express_num = cont;
-					message("扫码成功！");
+					cont = parseUrl(decode64(cont));
+					app.code = cont.code;
 				} else {
 					setTimeout(function() {
 						plus.nativeUI.alert("扫码有误，请重新扫码！");
