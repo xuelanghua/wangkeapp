@@ -82,7 +82,9 @@
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
+		<script src="../js/Base64.js"></script>
 		<script type="text/javascript">
+			var userInfo = getUserInfo();
 			mui.init({
 				swipeBack: true,
 			});
@@ -159,10 +161,40 @@
 							}, 'json');
 						}
 					} else {
-						message('扫描失败!', 'center');
-						setTimeout(function() {
-							mui.back();
-						}, 1000)
+						var code = decode64(result);
+						if (code) {
+							var param = parseUrl(code);
+							var Sparam = JSON.stringify(param);
+							console.log(Sparam);
+							if (Sparam.indexOf('type') != -1) {
+								var type = param.type;
+								if (type == 'toOrderDetail') {
+									var uid = param.uid;
+									if (userInfo.id != uid) {
+										message('没有核销权限!', 'center');
+										setTimeout(function() {
+											mui.back();
+										}, 1000);
+										return;
+									}
+									plus.webview.currentWebview().hide();
+									plus.webview.currentWebview().close();
+									fnOpenWin('order_details_verify.html', 'order_details_verify', {
+										statusbar: {
+											background: '#FFF'
+										}
+									}, {
+										orderId: param.order_id,
+										code: param.code,
+									}, 'slide-in-right');
+								}
+							}
+						} else {
+							message('扫描失败!', 'center');
+							setTimeout(function() {
+								mui.back();
+							}, 1000)
+						}
 					}
 				} else {
 
