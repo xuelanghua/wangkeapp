@@ -652,7 +652,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="deliver-goods-btn" v-if="(detail.team_order==0||(detail.team_order==1&&sales==1))&&(detail.type==0||detail.type==1&&detail.collage_status!=1)">
+			<div class="deliver-goods-btn" v-if="detail.order_status == 0 && (detail.team_order==0||(detail.team_order>0&&sales==1))&&(detail.type==0||detail.type==1&&detail.collage_status!=1)">
 				发货
 			</div>
 		</div>
@@ -779,6 +779,7 @@
 
 			// 确认发货
 			mui(".mui-content").on('tap', '.ensure-deliver-goods', function() {
+				document.activeElement.blur();
 				if (app.express_id == '') {
 					message('请选择快递！');
 					return false;

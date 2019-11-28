@@ -323,12 +323,20 @@
 			
 			//跳转商品详情
 			function goodsDetail(gd) {
+				logs(gd);
 				var sales = (gd.team_order==0||gd.team_order>0&&gd.captain_uid==userInfo.id) ? 1 : 2;
 				if (gd.order_status == 0) {
-					openPage('order_details_await_sgoods.html', 'order_details_await_sgoods', '#f7f7f7', {
-						orderId: gd.id,
-						sales: sales
-					}, "zoom-fade-out")
+					if (gd.express_type != 2) {
+						openPage('order_details_await_sgoods.html', 'order_details_await_sgoods', '#f7f7f7', {
+							orderId: gd.id,
+							sales: sales
+						}, "zoom-fade-out")
+					} else {
+						openPage('order_details_verify.html', 'order_details_verify', '#f7f7f7', {
+							orderId: gd.id,
+							sales: sales
+						}, "zoom-fade-out")
+					}
 				} else if (gd.order_status == 1) {
 					message('订单已取消!');
 				} else {
