@@ -55,6 +55,120 @@
 				padding-left: 0.2rem;
 			}
 
+			/* 20191121新增 */
+			.lan-switch {
+				-webkit-transform: scale(0.9);
+				transform: scale(0.9);
+			}
+
+			.lan-switch {
+				position: relative;
+				display: block;
+				width: 74px;
+				height: 30px;
+				-webkit-transition-timing-function: ease-in-out;
+				transition-timing-function: ease-in-out;
+				-webkit-transition-duration: .2s;
+				transition-duration: .2s;
+				-webkit-transition-property: background-color, border;
+				transition-property: background-color, border;
+				border: 2px solid #ddd;
+				border-radius: 20px;
+				background-color: #fff;
+				background-clip: padding-box;
+			}
+
+			.lan-switch:before {
+				font-size: 13px;
+				position: absolute;
+				top: 3px;
+				right: 11px;
+				content: 'Off';
+				text-transform: uppercase;
+				color: #999;
+			}
+
+			.lan-switch.lan-active {
+				border-color: #e0bc20;
+				background-color: #ffd626;
+			}
+
+			.lan-switch .lan-switch-handle {
+				position: absolute;
+				z-index: 1;
+				top: -1px;
+				left: -1px;
+				width: 28px;
+				height: 28px;
+				transition-duration: 0.2s;
+				transform: translate(0px, 0px);
+				-webkit-transition: .2s ease-in-out;
+				transition: .2s ease-in-out;
+				-webkit-transition-property: -webkit-transform, width, left;
+				transition-property: transform, width, left;
+				border-radius: 16px;
+				background-color: #fff;
+				background-clip: padding-box;
+				-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+				box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+			}
+
+			.lan-switch.lan-active .lan-switch-handle {
+				-webkit-transform: translate(43px, 0);
+				transform: translate(43px, 0);
+			}
+
+			.lan-switch.lan-active:before {
+				right: auto;
+				left: 15px;
+				content: 'On';
+				color: #fff;
+			}
+
+			.new-headline {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.new-headline span {
+				color: #f5ca3a;
+				font-size: 0.3rem;
+			}
+
+			.option-container .store-cont .store-items {
+				position: relative;
+				display: inline-flex;
+				background-color: #f2f2f2;
+				color: #999999;
+				font-size: 0.24rem;
+				padding: 3px 12px 1px;
+				border-radius: 5px;
+				margin: 10px 20px 10px 0;
+			}
+
+			.option-container .store-cont {
+				padding-left: 15px;
+				padding-right: 0;
+				box-sizing: border-box;
+			}
+
+			.store-items .mui-icon-close-filled {
+				color: #FF0000;
+				position: absolute;
+				right: -10px;
+				top: -10px;
+			}
+
+			.btn-section {
+				position: relative;
+				margin-top: 30px;
+			}
+
+			.mui-bar-nav~.mui-content {
+				padding-bottom: 0;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -66,7 +180,7 @@
 			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
 			<h1 class="mui-title">添加分销商品</h1>
 		</header>
-		<div id="mui-content" class="mui-content " v-cloak>
+		<div id="mui-content" class="mui-content" v-cloak>
 			<div class="goods-title">
 				<textarea maxlength="120" v-model="name" placeholder="输入商品名称"></textarea>
 				<span class="mui-icon mui-icon-clear" v-show="name" @tap="name=''"></span>
@@ -130,38 +244,38 @@
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>供货价<span class="sign">*</span></label>
-							<input type="number" v-model="settlement_price" placeholder="给商品定个好价格">
+							<input type="number" v-model="settlement_price" placeholder="设置合理供货价,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="settlement_price" @tap="settlement_price=''"></span>
 						</div>
-						<p>结算价格是给分销商的供货价，分销商可以在此价格灵活设置活动 价格</p>
+						<p>分销商拣货分销返佣时的结算价格</p>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>保护价格</label>
+							<input type="number" v-model="protect_price" placeholder="设置商品保护价格,仅允许输入数字">
+							<span class="mui-icon mui-icon-clear" v-show="protect_price" @tap="protect_price=''"></span>
+						</div>
+						<p>分销商不能低于保护价格销售，不填则与供货价统一</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>零售价格<span class="sign">*</span></label>
-							<input type="number" v-model="price" placeholder="设置合理零售价">
+							<input type="number" v-model="price" placeholder="给商品定个好价格,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="price" @tap="price=''"></span>
 						</div>
 						<p>市场参考零售价格</p>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
-							<label>保护价格</label>
-							<input type="number" v-model="protect_price" placeholder="设置保护价避免滥价">
-							<span class="mui-icon mui-icon-clear" v-show="protect_price" @tap="protect_price=''"></span>
-						</div>
-						<p>分销商不能低于此价格销售，不填则与结算价统一</p>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="mui-input-row">
 							<label>库存<span class="sign">*</span></label>
-							<input type="number" v-model="stock" placeholder="设置合理的库存避免超货">
+							<input type="number" v-model="stock" placeholder="设置合理的库存,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="stock" @tap="stock=''"></span>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
 							<label>销量</label>
-							<input type="number" v-model="sale_count" placeholder="设置虚拟销量">
+							<input type="number" v-model="sale_count" placeholder="设置商品虚拟销量,仅允许输入数字">
 							<span class="mui-icon mui-icon-clear" v-show="sale_count" @tap="sale_count=''"></span>
 						</div>
 					</li>
@@ -178,28 +292,28 @@
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
 										<label>供货价格<span class="sign">*</span></label>
-										<input type="number" v-model="ls.settlement_price" placeholder="给商品定个好价格">
+										<input type="number" v-model="ls.settlement_price" placeholder="给商品定个好价格,仅允许输入数字">
 										<span class="mui-icon mui-icon-clear" v-show="ls.settlement_price" @tap="ls.settlement_price=''"></span>
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
-										<label>零售价格<span class="sign">*</span></label>
-										<input type="number" v-model="ls.price" placeholder="设置合理零售价">
-										<span class="mui-icon mui-icon-clear" v-show="ls.price" @tap="ls.price=''"></span>
-									</div>
-								</li>
-								<li class="mui-table-view-cell">
-									<div class="mui-input-row">
 										<label>保护价格</label>
-										<input type="number" v-model="ls.protect_price" placeholder="设置保护价避免滥价">
+										<input type="number" v-model="ls.protect_price" placeholder="设置商品保护价,仅允许输入数字">
 										<span class="mui-icon mui-icon-clear" v-show="ls.protect_price" @tap="ls.protect_price=''"></span>
 									</div>
 								</li>
 								<li class="mui-table-view-cell">
 									<div class="mui-input-row">
+										<label>零售价格<span class="sign">*</span></label>
+										<input type="number" v-model="ls.price" placeholder="设置合理零售价,仅允许输入数字">
+										<span class="mui-icon mui-icon-clear" v-show="ls.price" @tap="ls.price=''"></span>
+									</div>
+								</li>
+								<li class="mui-table-view-cell">
+									<div class="mui-input-row">
 										<label>库存<span class="sign">*</span></label>
-										<input type="number" v-model="ls.stock" placeholder="设置合理的库存避免超货">
+										<input type="number" v-model="ls.stock" placeholder="设置合理的库存,仅允许输入数字">
 										<span class="mui-icon mui-icon-clear" v-show="ls.stock" @tap="ls.stock=''"></span>
 									</div>
 								</li>
@@ -217,19 +331,48 @@
 							<span>添加商品规格</span>
 						</div>
 					</li>
-					<li class="mui-table-view-cell choice-express">
-						<span>快递<span class="sign">*</span></span>
-						<span class="mui-navigate-right cont-text mui-pull-right">
-							{{express_text}}
-						</span>
-					</li>
-					<li class="mui-table-view-cell">
-						<div class="mui-input-row">
-							<label>邮费</label>
-							<input type="number" v-model="freight" placeholder="0.00">
-							<span class="mui-icon mui-icon-clear" v-show="freight!=0" @tap="freight=''"></span>
+					<li class="mui-table-view-cell new-headline">
+						<span>快递配送</span>
+						<div class="lan-switch" :class="isDelivery==true?'lan-active':''" @tap="lanSwitch('isDelivery')">
+							<div class="lan-switch-handle"></div>
 						</div>
 					</li>
+					<div v-show="isDelivery">
+						<li class="mui-table-view-cell choice-express">
+							<span>快递<span class="sign">*</span></span>
+							<span class="mui-navigate-right cont-text mui-pull-right">
+								{{express_text}}
+							</span>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="mui-input-row">
+								<label>邮费</label>
+								<input type="number" v-model="freight" placeholder="0.00">
+								<span class="mui-icon mui-icon-clear" v-show="freight!=0" @tap="freight=''"></span>
+							</div>
+						</li>
+					</div>
+				</ul>
+			</div>
+			<div class="option-container">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell new-headline">
+						<span>门店自提</span>
+						<div class="lan-switch" :class="bySelf==true?'lan-active':''" @tap="lanSwitch('bySelf')">
+							<div class="lan-switch-handle"></div>
+						</div>
+					</li>
+					<div v-show="bySelf">
+						<li class="mui-table-view-cell store-choice">
+							添加自提门店 <span class="mui-navigate-right cont-text mui-pull-right">请选择</span>
+						</li>
+						<li class="mui-table-view-cell store-cont" v-if="store_list.length>0">
+							<div class="store-items" v-for="(s,i) in store_list" :key="i">
+								{{overflowHide(s.name,10)}}
+								<span class="mui-icon mui-icon-close-filled" :data-index="i"></span>
+							</div>
+						</li>
+					</div>
 				</ul>
 			</div>
 			<div class="option-container">
@@ -277,7 +420,7 @@
 					options: {
 						handle: ".preview-img-cont",
 						animation: 200,
-						scroll: true
+						scroll: true,
 					},
 					name: '',
 					// 主图
@@ -318,6 +461,10 @@
 					edit_status: '未添加',
 					status: '',
 					sale_count: '',
+					// 包邮以及自提
+					isDelivery: true,
+					bySelf: false,
+					store_list: []
 				},
 				created: function() {
 					// 初始化字体大小
@@ -333,6 +480,10 @@
 					delImg: function(idx) {
 						this.images.splice(idx, 1);
 						logs(this.images);
+					},
+					lanSwitch: function(e) {
+						app[e] = !app[e];
+						document.activeElement.blur();
 					}
 				},
 				mounted: function() {
@@ -526,7 +677,7 @@
 			mui(".mui-content").on("tap", ".edit-goods-detail", function() {
 				fnOpenWin('goods_detail.html', 'goods_detail', {
 					statusbar: {
-						background: '#f7f7f7'
+						background: '#fff'
 					}
 				}, {
 					content: app.description
@@ -582,19 +733,35 @@
 					return false;
 				}
 				if (app.images.length < 1) {
-					message("商品主图不能为空！");
+					message("请上传商品主图！");
+					return false;
+				}
+				if (app.type_p <= 0 || app.type_p == '') {
+					message("请选择商品类型");
 					return false;
 				}
 				if (app.settlement_price <= 0) {
-					message("供货价需大于0");
+					message("商品供货价格需为数字并大于0");
 					return false;
 				}
 				if (app.price <= 0) {
-					message("零售价格需大于0");
+					message("商品零售价格需为数字并大于0");
 					return false;
 				}
 				if (app.stock < 1) {
-					message("请添加库存");
+					message("商品库存需为数字并大于0");
+					return false;
+				}
+				if (app.settlement_price > app.price) {
+					message("商品供货价格不能大于商品零售价格");
+					return false;
+				}
+				if (app.protect_price > app.price) {
+					message("商品保护价格不能大于商品零售价格");
+					return false;
+				}
+				if (app.protect_price < app.settlement_price) {
+					message("商品保护价格不能大于商品供货价格");
 					return false;
 				}
 				if (app.protect_price <= 0) {
@@ -603,41 +770,60 @@
 				if (app.spec.length > 0) {
 					for (var i = 0; i < app.spec.length; i++) {
 						if (app.spec[i].name.length < 1) {
-							message("商品规格不能为空");
+							message("商品规格名称不能为空");
 							return false;
 						}
 						if (app.spec[i].settlement_price <= 0) {
-							message("供货价格需大于0");
+							message("商品规格供货价格需为数字并大于0");
 							return false;
 						}
 						if (app.spec[i].price <= 0) {
-							message("零售价格需大于0");
+							message("商品规格零售价格需为数字并大于0");
+							return false;
+						}
+						if (app.spec[i].stock < 1) {
+							message("商品规格库存需为数字并大于0");
+							return false;
+						}
+						if (app.spec[i].settlement_price > app.spec[i].price) {
+							message("商品规格供货价格不能大于商品规格零售价格");
+							return false;
+						}
+						if (app.spec[i].protect_price > app.spec[i].price) {
+							message("商品规格保护价格不能大于商品规格零售价格");
+							return false;
+						}
+						if (app.spec[i].protect_price < app.spec[i].settlement_price) {
+							message("商品规格保护价格不能大于商品规格供货价格");
 							return false;
 						}
 
-						if (app.spec[i].stock < 1) {
-							message("商品库存需大于0");
-							return false;
-						}
 						if (app.spec[i].protect_price <= 0) {
 							app.spec[i].protect_price = app.spec[i].settlement_price;
-							return false;
 						}
 					}
 				}
-				if (app.default_express < 1) {
-					message("请选择快递");
+				if (app.isDelivery && app.default_express < 1) {
+					message("请选择默认快递");
 					return false;
 				}
-				if (app.freight.length <= 0) {
+				if (app.isDelivery && app.freight.length <= 0) {
 					app.freight = 0;
+				}
+				if (app.bySelf && app.store_list.lenght <= 0) {
+					message("请选择自提门店");
+					return false;
+				}
+				if (app.team_ids.length < 1) {
+					message("请选择商品销售团队");
 					return false;
 				}
 
-				if (app.team_ids.length < 1) {
-					message("请选择可售团队");
-					return false;
+				var shopIds = [];
+				for (var i in app.store_list) {
+					shopIds.push(app.store_list[i].id);
 				}
+
 				var datas = {
 					name: app.name,
 					images: app.images,
@@ -656,7 +842,10 @@
 					content: app.description,
 					team_ids: app.team_ids.join(','),
 					status: app.status,
-					sale_count: app.sale_count
+					sale_count: app.sale_count,
+					express_status: app.isDelivery ? 1 : 0,
+					pick_up_status: app.bySelf ? 1 : 0,
+					shop_ids: shopIds,
 				}
 				mui.post($ajaxUrl + 'goods', {
 					action: 'add_team_goods',
@@ -675,6 +864,22 @@
 					}
 				}, 'json');
 			}
+
+			// 删除选择的门店
+			mui(".mui-content").on('tap', ".mui-icon-close-filled", function() {
+				var index = this.dataset.index;
+				app.store_list.splice(index, 1);
+			})
+
+			// 打开门店选择
+			mui(".mui-content").on('tap', '.store-choice', function() {
+				openPage('store_choice.html', 'store_choice', '#fff', {storeList: app.store_list});
+			})
+
+			// 接收选择的数据
+			window.addEventListener('store', function(e) {
+				app.store_list = e.detail.store;
+			})
 		</script>
 	</body>
 

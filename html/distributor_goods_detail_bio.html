@@ -10,10 +10,6 @@
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<link rel="stylesheet" href="../css/swiper.min.css">
 		<style type="text/css">
-			[v-cloak] {
-				display: none;
-			}
-
 			.goods-images {
 				width: 7.5rem;
 				height: 7.5rem;
@@ -276,12 +272,15 @@
 				max-width: 100% !important;
 				height: auto;
 			}
+
 			.goods-detail-container p {
 				line-height: 1.4;
 			}
-			.goods-detail-container div{
+
+			.goods-detail-container div {
 				line-height: 1.8;
 			}
+
 			.goods-detail-container img:first-of-type {
 				margin-top: 0;
 			}
@@ -301,6 +300,10 @@
 				font-size: 14px;
 				color: #999999;
 				margin-right: -10px;
+			}
+
+			[v-cloak] {
+				display: none;
 			}
 		</style>
 	</head>
@@ -365,7 +368,7 @@
 				<div id="content" v-html="goods_detail.content"></div>
 			</div>
 			<div class="bottom-section">
-				<div class="option-btn" data-type="edit">
+				<div class="option-btn" data-type="edit" v-if="goods_detail.status==0">
 					<img src="../image/icon/bottom-section-01.png" />
 					<span>编辑</span>
 				</div>
@@ -421,24 +424,25 @@
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
 						app.goods_id = self.gid;
-						mui.post($ajaxUrl + 'goods&action=goods_detail', {
-							token: userInfo.token,
-							goods_id: app.goods_id
-						}, function(res) {
-							if (res.errno == 0) {
-								app.goods_detail = res.data;
-								app.images = res.data.images;
-								app.spec = res.data.spec;
-								app.team_info = res.data.team_info;
-								if (app.images.length > 1) {
-									setTimeout(function() {
-										swiperInint();
-									}, 500);
-								}
-							} else {
+						getDetail();
+						// mui.post($ajaxUrl + 'goods&action=goods_detail', {
+						// 	token: userInfo.token,
+						// 	goods_id: app.goods_id
+						// }, function(res) {
+						// 	if (res.errno == 0) {
+						// 		app.goods_detail = res.data;
+						// 		app.images = res.data.images;
+						// 		app.spec = res.data.spec;
+						// 		app.team_info = res.data.team_info;
+						// 		if (app.images.length > 1) {
+						// 			setTimeout(function() {
+						// 				swiperInint();
+						// 			}, 500);
+						// 		}
+						// 	} else {
 
-							}
-						}, 'json');
+						// 	}
+						// }, 'json');
 
 						// 预览图片
 						// 长按保存到系统相册
@@ -448,22 +452,7 @@
 								current: index,
 								loop: true,
 								indicator: 'default',
-								onLongPress: function(event) {
-									// plus.nativeUI.confirm("保存图片到系统相册",function(e){
-									// 	if(e.index==0){
-									// 		showload('','','保存中···','rgba(0,0,0,0.5)');
-									// 		plus.gallery.save(event.url, function(){
-									// 			showload(1);
-									// 			plus.nativeUI.toast("保存成功!");
-									// 		}, function(){
-									// 			showload(1);
-									// 			plus.nativeUI.toast("保存失败!");
-									// 		} );
-									// 	}else{
-									// 		// plus.nativeUI.toast("取消");
-									// 	}
-									// });
-								}
+								onLongPress: function(event) {}
 							});
 						});
 					})
@@ -477,9 +466,11 @@
 				}
 			})
 
+			var swiper = null;
 			function swiperInint() {
-				var swiper = new Swiper('.swiper-container', {
+				swiper = new Swiper('.swiper-container', {
 					loop: true,
+					loop: false,
 					autoplay: {
 						delay: 3000,
 						stopOnLastSlide: false,
@@ -615,6 +606,11 @@
 			})
 			// 监听详情更改
 			window.addEventListener('doit', function() {
+				swiper = null;
+				getDetail();
+			}, false);
+
+			function getDetail() {
 				mui.post($ajaxUrl + 'goods&action=goods_detail', {
 					token: userInfo.token,
 					goods_id: app.goods_id
@@ -633,7 +629,7 @@
 
 					}
 				}, 'json');
-			}, false);
+			}
 		</script>
 	</body>
 

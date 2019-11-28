@@ -143,6 +143,7 @@
 				console.log("获取分享服务列表失败：" + e.message + " - " + e.code);
 			});
 			mui('.sk').on('tap', '.Obtain', function() {
+				document.activeElement.blur();
 				getVerifyCode();
 			})
 
@@ -261,7 +262,9 @@
 					updateUserInfo();
 					mui.fire(plus.webview.getWebviewById('H54F3E71F'), 'bindMobileSuccess');
 					setTimeout(function() {
+						plus.webview.hide('login');
 						plus.webview.close('login');
+						plus.webview.hide('mobile_bind');
 						plus.webview.close('mobile_bind');
 					}, 2000)
 				} else {

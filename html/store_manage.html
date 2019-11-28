@@ -1,0 +1,522 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.store-manage {
+				padding: 15px;
+			}
+
+			div {
+				box-sizing: border-box;
+			}
+
+			.search-section {
+				display: flex;
+				align-items: center;
+				background-color: #FFFFFF;
+				border-radius: 5px;
+				width: 100%;
+				height: 35px;
+				margin-bottom: 11px;
+			}
+
+			.cancel-search {
+				font-size: 16px;
+				color: #333333;
+				display: inline-flex;
+				height: 100%;
+				padding: 0 5px;
+				align-items: center;
+				justify-content: center;
+				color: #999999;
+				line-height: 1;
+			}
+
+			.search-section input {
+				margin-bottom: 0;
+				flex-grow: 1;
+				width: auto;
+				padding: 0;
+				line-height: 1;
+				height: auto;
+				border: none;
+				border-left: 1px solid #DDDDDD;
+				padding-left: 10px;
+				border-radius: 0;
+				background-color: #FFFFFF;
+				text-align: left;
+				font-size: 16px;
+			}
+
+			.search-section input::-webkit-input-placeholder {
+				padding-top: 4px;
+				font-size: 14px;
+				color: #999999;
+			}
+
+			.search-section form {
+				flex-grow: 1;
+			}
+
+			.search-section .mui-icon {
+				margin: 0 5px;
+				font-size: 22px;
+				color: #999999;
+			}
+
+			.store-list {
+				background-color: #FFFFFF;
+				position: relative;
+				border-radius: 10px;
+				overflow: hidden;
+				margin: 10px 0;
+			}
+
+			.store-list-body {
+				padding: 10px;
+				overflow: hidden;
+				position: relative;
+			}
+
+			.store-list-body:before {
+				content: '';
+				position: absolute;
+				display: block;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #DDDDDD;
+				transform: scaleY(0.5);
+				-webkit-transform: scaleY(0.5);
+			}
+
+			.store-title {
+				font-size: 15px;
+				color: #CC9C2D;
+				font-weight: normal;
+				line-height: 1.4;
+			}
+
+			.store-desc {
+				display: flex;
+				align-items: flex-start;
+				font-size: 12px;
+				color: #999999;
+				line-height: 1.6;
+				margin-top: 5px;
+			}
+
+			.store-desc-title {
+				flex-shrink: 0;
+			}
+
+			.store-desc-title img {
+				width: 10px;
+				margin-right: 5px;
+			}
+
+			.store-desc-inside {
+				flex-grow: 1;
+				word-wrap: wrap;
+			}
+
+			.store-list-footer {
+				overflow: hidden;
+				font-size: 15px;
+				color：#333333;
+				display: flex;
+				justify-content: space-between;
+				padding-right: 5px;
+				height: 47px;
+				padding-left: 15px;
+			}
+
+			.store-list-footer img {
+				width: 15px;
+				margin-right: 5px;
+			}
+
+			.store-footer-left,
+			.store-footer-right,
+			.store-footer-left div {
+				display: flex;
+				align-items: center;
+				height: 47px;
+			}
+
+			.store-list-footer .edit-store {
+				margin-right: 20px;
+			}
+
+			.store-footer-right .lan-switch {
+				-webkit-transform: scale(0.9);
+				transform: scale(0.9);
+			}
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 14px;
+				color: #333333;
+				margin-right: -5px;
+				font-size: 28px;
+				font-weight: 700;
+				color: #333333;
+			}
+
+			/* 禁用 */
+			.store-list.disabled {
+				opacity: 0.6;
+			}
+
+			.lan-switch {
+				position: relative;
+				display: block;
+				width: 74px;
+				height: 30px;
+				-webkit-transition-timing-function: ease-in-out;
+				transition-timing-function: ease-in-out;
+				-webkit-transition-duration: .2s;
+				transition-duration: .2s;
+				-webkit-transition-property: background-color, border;
+				transition-property: background-color, border;
+				border: 2px solid #ddd;
+				border-radius: 20px;
+				background-color: #fff;
+				background-clip: padding-box;
+			}
+
+			.lan-switch:before {
+				font-size: 13px;
+				position: absolute;
+				top: 3px;
+				right: 11px;
+				content: 'Off';
+				text-transform: uppercase;
+				color: #999;
+			}
+
+			.lan-switch.lan-active {
+				border-color: #e0bc20;
+				background-color: #ffd626;
+			}
+
+			.lan-switch .lan-switch-handle {
+				position: absolute;
+				z-index: 1;
+				top: -1px;
+				left: -1px;
+				width: 28px;
+				height: 28px;
+				transition-duration: 0.2s;
+				transform: translate(0px, 0px);
+				-webkit-transition: .2s ease-in-out;
+				transition: .2s ease-in-out;
+				-webkit-transition-property: -webkit-transform, width, left;
+				transition-property: transform, width, left;
+				border-radius: 16px;
+				background-color: #fff;
+				background-clip: padding-box;
+				-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+				box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+			}
+
+			.lan-switch.lan-active .lan-switch-handle {
+				-webkit-transform: translate(43px, 0);
+				transform: translate(43px, 0);
+			}
+
+			.lan-switch.lan-active:before {
+				right: auto;
+				left: 15px;
+				content: 'On';
+				color: #fff;
+			}
+			.mui-bar {
+				background-color: #FFFFFF;
+			}
+
+			.void-data {
+				display: flex;
+				width: 100%;
+				padding-top: 50px;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				color: #f9f9f9;
+			}
+
+			.void-data img {
+				width: 50%;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">门店管理</h1>
+				<div class="mui-pull-right mui-icon mui-icon-plusempty nav-right-btn"></div>
+			</header>
+			<div class="mui-content">
+				<div class="store-manage">
+					<div class="search-section">
+						<span class="mui-icon mui-icon-search"></span>
+						<i class="lin-sign"></i>
+						<form onsumit="return false">
+							<input id="search" v-model="key_words" type="search" placeholder="搜索门店">
+						</form>
+						<span class="cancel-search" v-show="is_search">取消</span>
+					</div>
+					<div class="store-list" :class="l.status!=1?'disabled':''" v-for="(l,index) in store_list" :key="index">
+						<div class="store-list-body">
+							<h4 class="store-title mui-ellipsis">{{l.name}}</h4>
+							<div class="store-desc">
+								<div class="store-desc-title">
+									<img src="../image/icon/store-manage-icon-02.png">
+									<span>营业时间：</span>
+								</div>
+								<div class="store-desc-inside mui-clearfix">
+									<span class="mui-pull-left">{{l.business_hours_text}}</span>
+									<span class="mui-pull-right">{{l.opening_time}}-{{l.closing_time}}</span>
+								</div>
+							</div>
+							<div class="store-desc">
+								<div class="store-desc-title">
+									<img src="../image/icon/store-manage-icon-03.png">
+									<span>电话：</span>
+								</div>
+								<div class="store-desc-inside">
+									{{l.phone}}
+								</div>
+							</div>
+							<div class="store-desc">
+								<div class="store-desc-title">
+									<img src="../image/icon/store-manage-icon-01.png">
+									<span>联系人：</span>
+								</div>
+								<div class="store-desc-inside">
+									{{l.linkman}}
+								</div>
+							</div>
+							<div class="store-desc">
+								<div class="store-desc-title">
+									<img src="../image/icon/store-manage-icon-04.png">
+									<span>地址：</span>
+								</div>
+								<div class="store-desc-inside">
+									{{l.address_detail}}
+								</div>
+							</div>
+						</div>
+						<div class="store-list-footer">
+							<div class="store-footer-left">
+								<div class="edit-store" :data-index="index">
+									<img src="../image/icon/store-manage-icon-05.png" alt="">
+									<span>编辑</span>
+								</div>
+								<div class="del-store" :data-index="index" :data-ids="l.id">
+									<img src="../image/icon/store-manage-icon-06.png" alt="">
+									<span>删除</span>
+								</div>
+							</div>
+							<div class="store-footer-right">
+								<div class="lan-switch" :class="l.status==1?'lan-active':''" :data-index="index" :data-ids="l.id">
+									<div class="lan-switch-handle"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="void-data" v-if="voidStatus">
+						<img src="../image/icon/void-data.png">
+						<p>空空如也~</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var skip = 1;
+			var store_list = [];
+			var pullDirection = '';
+			var userInfo = getUserInfo();
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					key_words: '',
+					is_search: false,
+					store_list: [],
+					voidStatus: false
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									getStore();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								offset: mui.os.ios ? '0px' : '-50px',
+								callback: function() {
+									pullDirection = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getStore();
+								}
+							}
+						}
+					});
+					mui.plusReady(function() {
+						getStore();
+						var self = plus.webview.currentWebview();
+						// 监听搜索
+						document.getElementById("search").addEventListener("keypress", function(e) {
+							if (event.keyCode == "13") {
+								store_list = app.store_list;
+								app.is_search = true;
+								skip = 1;
+								getStore();
+								e.preventDefault();
+							} else {
+								// 点的不是搜索按钮
+							}
+						});
+					})
+				}
+			})
+			// 添加门店
+			mui('.mui-bar').on('tap', '.nav-right-btn', function() {
+				openPage("add_store.html", "add_store", "#ffffff")
+			})
+			// 开关
+			mui('.mui-content').on('tap', '.lan-switch', function(event) {
+				var index = this.dataset.index;
+				var storeId = this.dataset.ids;
+				var status = app.store_list[index].status;
+				if (status == 1) {
+					storeOpction('0', storeId, index);
+				} else {
+					storeOpction('1', storeId, index);
+				}
+			})
+			// 取消搜索
+			mui('.mui-content').on('tap', '.cancel-search', function() {
+				app.key_words = '';
+				app.is_search = false;
+				app.store_list = store_list;
+				skip = 1;
+				getStore();
+			})
+			// 获取门店列表
+			function getStore() {
+				mui.post($ajaxUrl + 'shop&action=list', {
+					token: userInfo.token,
+					skip: skip,
+					keyword: app.key_words
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.voidStatus = false;
+						if (skip == 1) {
+							app.store_list = res.data;
+							if (pullDirection == "down") {
+								mui('#mui-content').pullRefresh().endPulldownToRefresh();
+							}
+						} else {
+							app.store_list = app.store_list.concat(res.data);
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						}
+					} else {
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+						if (app.key_words != '' || skip == 1) {
+							app.store_list = [];
+							app.voidStatus = true;
+						}
+					}
+				}, 'json');
+			}
+			// 编辑
+			mui('.mui-content').on('tap', '.edit-store', function() {
+				var index = this.dataset.index;
+				var datas = app.store_list[index];
+				logs(datas);
+				openPage('add_store.html', 'add_store', '#fff', {
+					datas: datas
+				})
+			})
+			// 删除
+			mui('.mui-content').on('tap', '.del-store', function() {
+				var index = this.dataset.index;
+				var storeId = this.dataset.ids;
+				var tips = '确认删除' + app.store_list[index].name + '吗？'
+				plus.nativeUI.confirm(tips, function(e) {
+					if (e.index == 1) {
+						// 取消
+						return false;
+					} else {
+						storeOpction('-1', storeId, index);
+					}
+				})
+			})
+			// 关闭
+			function storeOpction(status, id, index) {
+				mui.post($ajaxUrl + 'shop&action=change_status', {
+					token: userInfo.token,
+					shop_id: id,
+					status: status
+				}, function(res) {
+					if (res.errno == 0) {
+						if (status != '-1') {
+							app.$set(app.store_list[index], 'status', status);
+						} else {
+							app.store_list.splice(index, 1);
+						}
+					}
+					message(res.message);
+				}, 'json')
+			}
+			window.addEventListener('reloadYourself', function() {
+				skip = 1;
+				getStore();
+			})
+		</script>
+	</body>
+
+</html>

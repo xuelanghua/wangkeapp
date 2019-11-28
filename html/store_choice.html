@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.mui-bar {
+				background-color: #fff;
+			}
+
+			.nav-right-btn {
+				height: 44px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				z-index: 16;
+				font-size: 16px;
+				color: #f5ca3a;
+				margin-right: -5px;
+			}
+
+			.store-list {
+				margin-left: 4%;
+				width: 92%;
+				background-color: #FFFFFF;
+				border-radius: 5px;
+				margin-top: 20px;
+				position: relative;
+				overflow: hidden;
+				padding: 10px;
+				box-sizing: border-box;
+			}
+
+			.store-list label {
+				padding: 0;
+			}
+
+			.mui-input-row.mui-checkbox {
+				display: flex;
+				align-items: center;
+				padding: 10px 0 15px;
+				overflow: visible;
+			}
+
+			.store-list .mui-checkbox input[type=checkbox] {
+				position: relative;
+				top: auto;
+				left: auto;
+				right: auto;
+				margin-top: -8px;
+			}
+
+			.mui-checkbox input[type=checkbox]:checked:before {
+				color: #f5ca3a;
+			}
+
+			.store-body {
+				display: flex;
+				align-items: flex-start;
+				font-size: 12px;
+				color: #999999;
+				line-height: 1.4;
+			}
+
+			.store-body .title {
+				flex-shrink: 0;
+				display: inline-flex;
+				align-items: center;
+			}
+
+			.store-body .title img {
+				height: 12px;
+				margin-right: 3px;
+			}
+
+			.mui-bar-nav~.mui-content {
+				padding-bottom: 20px;
+			}
+
+			.void-data {
+				display: flex;
+				width: 100%;
+				padding-top: 50px;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				color: #f9f9f9;
+			}
+
+			.void-data img {
+				width: 50%;
+			}
+
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="mui-content" v-cloak>
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+				<h1 class="mui-title">选择门店</h1>
+				<div class="mui-pull-right nav-right-btn">
+					确定
+				</div>
+			</header>
+			<div class="mui-content">
+				<div class="store-list" v-for="(s,i) in store_list">
+					<div class="mui-input-row mui-checkbox">
+						<label class="mui-ellipsis">{{s.name}}</label>
+						<input name="checkbox" :value="i" :data-index="i" :checked="s.choice" type="checkbox">
+					</div>
+					<div class="store-body">
+						<div class="title">
+							<img src="../image/icon/store-manage-icon-04.png">地址：
+						</div>
+						<div class="address">{{s.address_detail }}</div>
+					</div>
+				</div>
+				<div class="void-data" v-if="voidStatus">
+					<img src="../image/icon/void-data.png">
+					<p>暂无可选择门店~</p>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var userInfo = getUserInfo();
+			var skip = 1;
+			var pullDirection = '';
+			var app = new Vue({
+				el: "#mui-content",
+				data: {
+					store_list: [],
+					selected_store: [],
+					voidStatus: false
+				},
+				methods: {
+
+				},
+				mounted: function() {
+					mui.init({
+						pullRefresh: {
+							container: "#mui-content",
+							up: {
+								height: 50,
+								auto: false,
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: function() {
+									pullDirection = "up";
+									skip += 1;
+									getStore();
+								}
+							},
+							down: {
+								style: 'circle',
+								color: '#2289FF',
+								offset: mui.os.ios ? '0px' : '-50px',
+								callback: function() {
+									pullDirection = "down";
+									mui('#mui-content').pullRefresh().refresh(true);
+									skip = 1;
+									getStore();
+								}
+							}
+						}
+					});
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						if (self.storeList) {
+							var storeList = self.storeList;
+							for (var i in storeList) {
+								app.selected_store.push(storeList[i].id);
+							}
+						}
+						//plus.navigator.setStatusBarStyle("dark");
+						getStore();
+					})
+					
+					// 选择
+					mui('.mui-content').on('change', 'input', function() {
+						var value = this.checked;
+						var index = this.dataset.index;
+						app.store_list[index].choice = value;
+					})
+					
+					// 确认选择
+					mui('.mui-bar').on('tap', '.nav-right-btn', function() {
+						if (app.voidStatus) {
+							return;
+						}
+						var store = [];
+						for (var i = 0; i < app.store_list.length; i++) {
+							if (app.store_list[i].choice) {
+								store.push(app.store_list[i]);
+							}
+						}
+						if (store.length == 0) {
+							message('请选择门店!');
+							return;
+						}
+						mui.fire(plus.webview.currentWebview().opener(), 'store', {
+							store: store
+						});
+						setTimeout(function() {
+							mui.back();
+						}, 500)
+					})
+				}
+			})
+			
+			// 获取门店列表
+			function getStore() {
+				mui.post($ajaxUrl + 'shop&action=list', {
+					token: userInfo.token,
+					skip: skip,
+					type: 'select',
+					keyword: ''
+				}, function(res) {
+					if (res.errno == 0) {
+						app.voidStatus = false;
+						var data = res.data;
+						for (var i = 0; i < data.length; i++) {
+							data[i].choice = false;
+							if (app.selected_store.indexOf(data[i].id) != -1) {
+								data[i].choice = true;
+							}
+						}
+						if (skip == 1) {
+							app.store_list = data;
+							if (pullDirection == "down") {
+								mui('#mui-content').pullRefresh().endPulldownToRefresh();
+							}
+						} else {
+							app.store_list = app.store_list.concat(data);
+							mui('#mui-content').pullRefresh().endPullupToRefresh(false);
+						}
+					} else {
+						if (pullDirection == "up") {
+							mui('#mui-content').pullRefresh().endPullupToRefresh(true);
+						} else if (pullDirection == "down") {
+							mui('#mui-content').pullRefresh().endPulldownToRefresh();
+						}
+						if (skip == 1) {
+							app.voidStatus = true;
+						}
+					}
+				}, 'json');
+			}
+		</script>
+	</body>
+
+</html>

@@ -119,7 +119,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				padding: 0.17rem 0.2rem;
+				padding: 15px;
 				font-size: 0.28rem;
 			}
 
@@ -329,7 +329,7 @@
 				z-index: 1045;
 				top: 25%;
 				width: 6.46rem;
-				height: 6.21rem;
+				padding-bottom: 30px;
 				left: 0.52rem;
 				margin: 0;
 				/* border: 1px solid #000000; */
@@ -388,8 +388,9 @@
 				background-color: #F5CA3A;
 				color: #FFFFFF;
 				justify-content: center;
-				margin-top: 0.7rem;
+				margin-top: 80px;
 				margin-bottom: 0;
+				height: 44px;
 			}
 
 			.express-title {
@@ -488,6 +489,37 @@
 				right: -10px;
 			}
 
+			.first-customer-info {
+				border-bottom: 1px solid #f2f2f2;
+			}
+
+			.first-customer-info img {
+				width: 17.5px;
+				height: 17.5px;
+				border-radius: 0;
+				margin-right: 10px;
+			}
+
+			.users-name {
+				margin-right: 10px;
+			}
+
+			.first-customer-info button {
+				width: 60px;
+				height: 24.5px;
+				padding: 0;
+				border: none;
+				background-color: #f5ca3a;
+				color: #fff;
+				font-size: 14px;
+				border-radius: 5px;
+			}
+
+			.first-customer-info button:enabled:active {
+				background-color: #f5ca3a;
+				color: #fff;
+			}
+
 			[v-cloak] {
 				display: none;
 			}
@@ -503,23 +535,17 @@
 			<div class="order-detail-head">
 				<div class="detail-head">
 					<div>
-						<h3>买家已付款</h3>
-						<p>请尽快发货</p>
+						<h3>{{detail.order_status == 0 ? '待核销' : '已核销'}}</h3>
 					</div>
 					<img v-if="collage_id>0" class="pt-sign" src="../image/icon/20191018_01.png">
 				</div>
-				<div class="address-info">
-					<img src="../image/icon/order-details-icon-02.png">
-					<div class="address-info-right">
-						<div class="address-top">
-							<p class="copy-text">
-								<span>{{recipients}}</span>
-								<span>{{phone}}</span>
-							</p>
-							<button type="button" class="mui-btn mui-btn-outlined modification-address">修改</button>
-						</div>
-						<p class="copy-text">{{address}}{{address_detail}}</p>
+				<div class="customer-info first-customer-info">
+					<div>
+						<img src="../image/icon/order-detail-verify-call.png">
+						<span class="users-name">{{detail.user_name}}</span>
+						<span>{{phone}}</span>
 					</div>
+					<button :data-phone="phone" class="call-btn">拨打</button>
 				</div>
 				<div class="customer-info">
 					<div>
@@ -603,8 +629,8 @@
 						<button type="button" class="mui-btn mui-btn-outlined" @tap="copy_fun(detail.out_trade_no)">复制</button>
 					</li>
 					<li>
-						<span v-if="detail.type==1&&detail.collage_status==1">订单状态：拼团中</span>
-						<span v-else>订单状态：已付款</span>
+						<span v-if="detail.order_status==0">订单状态：待核销</span>
+						<span v-else>订单状态：已核销</span>
 					</li>
 					<li>
 						<span>下单时间：{{detail.create_time}}</span>
@@ -630,36 +656,31 @@
 			</div>
 			<!-- 发货窗口 -->
 			<div class="mui-card deliver-goods-model">
-				<div class="mui-card-header">发货</div>
+				<div class="mui-card-header">核销</div>
 				<div class="mui-card-content">
 					<div class="mui-card-content-inner">
 						<ul>
-							<li class="first-section" id="express_company">
-								<span>选择快递</span>
-								<span class="express-title mui-navigate-right">{{express_name}}</span>
-							</li>
 							<li class="second-section">
-								<span>快递单号</span>
-								<input placeholder="请填写快递单号" v-model="express_num" type="text">
+								<span>核销码</span>
+								<input placeholder="请填写核销码" v-model="code" type="text">
 								<div class="scan-btn">
 									<img src="../image/icon/order_details_await_sgoods_02.png">
 								</div>
 							</li>
 							<li class="ensure-deliver-goods">
-								确认发货
+								确认核销
 							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
-			<div class="deliver-goods-btn" v-if="detail.order_status == 0 && (detail.team_order==0||(detail.team_order>0&&sales==1))&&(detail.type==0||detail.type==1&&detail.collage_status!=1)">
-				发货
+			<div class="deliver-goods-btn" v-if="detail.order_status==0&&sales==1">
+				核销
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
 		<script src="../js/util.js"></script>
-		<script src="../js/mui.picker.js"></script>
-		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/Base64.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script type="text/javascript">
 			var userInfo = getUserInfo();
@@ -667,7 +688,7 @@
 				document.querySelector(".deliver-goods-model").style.display = "none";
 			});
 			// 倒计时
-			var endtimer = "2019/07/26 17:51:00";
+			var endtimer = "";
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
@@ -677,13 +698,13 @@
 					address_detail: '',
 					express_id: '',
 					express_name: '',
-					express_num: '',
 					order_id: '',
 					sales: '',
 					goods_item: [],
 					detail: {},
 					c: {},
-					collage_id: 0
+					collage_id: 0,
+					code: '',
 				},
 				created: function() {
 					// 初始化字体大小
@@ -742,98 +763,65 @@
 					});
 					mui.plusReady(function() {
 						var self = plus.webview.currentWebview();
+						logs(self.code);
 						app.order_id = self.orderId;
 						app.sales = self.sales;
+						if (self.code) {
+							app.code = self.code;
+							mask.show();
+							document.querySelector(".deliver-goods-model").style.display = "block";
+						}
 						getDetailData();
+						// 拨打电话
+						mui('.mui-content').on('tap', '.call-btn', function() {
+							var phone = this.dataset.phone;
+							plus.device.dial(phone, true);
+						})
 					})
 				}
 			})
-			// 修改地址
-			mui(".mui-content").on('tap', '.modification-address', function() {
-				openPage('modification_of_receiving_address.html', 'modification_of_receiving_address', '#f7f7f7', {
-					orderId: app.order_id,
-					recipients: app.recipients,
-					phone: app.phone,
-					address: app.address,
-					address_detail: app.address_detail,
-				}, "zoom-fade-out")
-			})
-
-			// window.addEventListener('getaddress', function(event) {
-			// 	// 接收地址更改
-			// 	app.recipients = event.detail.recipients
-			// 	app.phone = event.detail.phone
-			// 	app.address_detail = event.detail.address_detail
-			// });
-
 			window.addEventListener('editAddressSuccess', function(event) {
 				// 更新订单信息
 				getDetailData();
 			});
 
-			// 发货
+			// 核销
 			mui(".mui-content").on('tap', '.deliver-goods-btn', function() {
 				mask.show();
 				document.querySelector(".deliver-goods-model").style.display = "block";
 			})
 
-			// 确认发货
+			// 确认核销
 			mui(".mui-content").on('tap', '.ensure-deliver-goods', function() {
-				document.activeElement.blur();
-				if (app.express_id == '') {
-					message('请选择快递！');
+				if (app.code == '') {
+					message('请填写核销码！');
 					return false;
 				}
-				if (app.express_num == '') {
-					message('请填写快递单号！');
-					return false;
-				}
-				mask.close();
-				//发货
-				mui.post($ajaxUrl + 'order', {
-					action: 'express',
-					token: userInfo.token,
-					order_id: app.order_id,
-					express_id: app.express_id,
-					courier_number: app.express_num
-				}, function(res) {
-					if (res.errno == 0) {
-						message('发货成功!');
-						mui.fire(plus.webview.getWebviewById('order_list'), 'deliverSuccess');
-						setTimeout(function() {
-							mui.back();
-						}, 1500)
-					} else {
-						message(res.message);
+				plus.nativeUI.confirm('确认核销?', function(e) {
+					mask.close();
+					if (e.index == 0) {
+						mui.post($ajaxUrl + 'order', {
+							action: 'order_confirm',
+							token: userInfo.token,
+							order_id: app.order_id,
+							code: app.code
+						}, function(res) {
+							if (res.errno == 0) {
+								message('核销成功!');
+								mui.fire(plus.webview.getWebviewById('order_list'), 'deliverSuccess');
+								setTimeout(function() {
+									mui.back();
+								}, 1500)
+							} else {
+								message(res.message);
+							}
+						}, 'json');
 					}
-				}, 'json');
+				})
 			})
 
 			// 为了不让弹出滚动穿透
 			document.querySelector(".deliver-goods-model").addEventListener("touchmove", mui.preventDefault);
-			// 选择物流公司
-			var userPicker = new mui.PopPicker();
-			mui(".mui-content").on('tap', '#express_company', function() {
-				document.activeElement.blur();
-				mui.post($ajaxUrl + 'util&action=express_list', {}, function(res) {
-					if (res.errno == 0) {
-						var data = res.data;
-						data.forEach(function(item) {
-							item.value = item.id;
-							item.text = item.e_name;
-							delete item.id;
-							delete item.e_name;
-						})
-						userPicker.setData(data);
-						userPicker.show(function(items) {
-							app.express_name = JSON.stringify(items[0].text).replace(/"/g, "");
-							app.express_id = items[0].value;
-						});
-					} else {
-
-					}
-				}, 'json');
-			})
 
 			// 扫一扫
 			mui(".mui-content").on('tap', '.scan-btn', function() {
@@ -849,27 +837,13 @@
 			window.addEventListener('doit', function(e) {
 				var cont = e.detail.content;
 				if (cont != '') {
-					app.express_num = cont;
-					message("扫码成功！");
+					cont = parseUrl(decode64(cont));
+					app.code = cont.code;
 				} else {
 					setTimeout(function() {
 						plus.nativeUI.alert("扫码有误，请重新扫码！");
 					}, 500);
 				}
-				// // 转数字
-				// var cont = parseInt(e.detail.content);
-				// // 判断是否为数字
-				// function myIsNaN(value) {
-				// 	return typeof value === 'number' && !isNaN(value);
-				// }
-				// if (myIsNaN(cont)) {
-				// 	app.express_num = cont;
-				// 	message("扫码成功！");
-				// } else {
-				// 	setTimeout(function() {
-				// 		plus.nativeUI.alert("扫码有误，请重新扫码！");
-				// 	}, 500);
-				// }
 			}, false);
 			// 详情资料
 			function getDetailData() {

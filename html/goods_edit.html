@@ -1,578 +1,491 @@
 <!doctype html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
-		<title>编辑商品</title>
+		<title></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<link href="../css/mui.css" rel="stylesheet" />
-		<link href="../css/mui.picker.css" rel="stylesheet" />
-		<link href="../css/mui.poppicker.css" rel="stylesheet" />
-		<style>
-			.clearfix{
-				clear: both;
-			}
-			.mui-bar{
-				background-color: #FFFFFF;
-			}
-			.mui-input-row{
-				padding-top: 10px;
-				background-color: #FFFFFF;
-			}
-			#textarea{
-				border: none;
-				border-radius: 0;
-				margin: 0 0 0 10px;
-				font-size: 14px;
-				padding: 0;
-			}
-			
-			.chart{
-				text-align: center;
-				padding: 15px 0 5px 12px;
-				background-color: #FFFFFF;
-			}
-			.add_chart{
-				width: 1.6rem;
-				height: 1.5rem;
-				font-size: 14px;
-				border:2px dashed #DDDDDD;
-				margin-bottom: 10px;
-			}
-			.wenzi{
-				margin-top: 25%;
-			}
-			
-			.tips{
-				font-size: 12px;
-				padding: 6px 10px;
-				color: #999999;
-			}
-			
-			.mui-table-view-cell{
-				position: initial;
-				font-size: 14px;
-				padding: 10px 0;
-				background-color: #FFFFFF;
-			}
-			.mui-table-view-cell .mui-icon{
-				margin-right: 10px;
-				color: #999999;
-			}
-			
-			.fenli{
-				margin-left: 15px;
-				color: #999999;
-			}
-			
-			.mui-navigate-right{
-				font-size: 14px;
-			}
-			.mui-table-view-cell p{
-				font-size: 14px;
-				margin-top: 2px;
-			}
-			.mui-table-view-cell input{
-				width: 80%;
-				margin: 0;
-				padding: 0 10px;
-				border: none;
-				font-size: 14px;
-			}
-			.adding_commodity_specifications{
-				font-size: 14px;
-				padding: 15px 0 10px 10px;
-			}
-			.adding_commodity_specifications img{
-				width: 16px;
-				margin-top: 2px;
-			}
-			
-			.recommend{
-				font-size: 12px;
-				border-bottom: 1px solid #F2F2F2;
-				padding-bottom: 15px;
-			}
-			.mui-switch-blue.mui-active{
-				background-color: #FFD626;
-				border: 2px solid #FFD626;
-			}
-			.mui-input-row{
-				margin: 0;
-			}
-			.mui-input-row label{
-				font-size: 14px;
-				margin-left: -15px;
-			}
-			.tishi{
-				color: #999999;
-			}
-			.choice,.choice1{
-				border-bottom: 1px solid #F2F2F2;
-			}
-			
-			.selection_function{
-				width: 100%;
-				text-align: center;
-				padding: 15px 0;
-				font-size: 15px;
-				position: fixed;
-				bottom: 0;
-				background-color: #F5CA3A;
-				color: #FFFFFF;
-			}
-			.upper_shelf{
-				width: 100%;
-			}
-			.warehouse{
-				width: 50%;
-				border-left: 1px solid #000000;
-			}
-			
-			.bian{
-				background-color: #FFFFFF;
-				padding-left: 10px;
-			}
-			.mui-table-view-cell > a:not(.mui-btn){
-				margin: 0;
-				padding: 0;
-			}
-			
-			.add_choice{
-				width: 92%;
-				padding: 0 10px;
-				margin-bottom: 10px;
-				font-size: 14px;
-				border: 1px solid #F2F2F2;
-				background-color: #FFFFFF;
-			}
-			.add_choice:last-child{
-				margin-bottom: 0px;
-			}
-			.choice input{
-				width: 80%;
-				margin: 0;
-				border: none;
-				font-size: 14px;
-			}
-			.add_choice img{
-				width: 25px;
-				float: right;
-				margin-top: -30%;
-				margin-right: -20px;
-				transform:rotate(180deg);
-			}
-			
-			#pic-container {
-				display: flex;
-				flex-direction: row;
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mui.picker.css">
+		<link rel="stylesheet" href="../css/mui.poppicker.css" />
+		<link rel="stylesheet" href="../css/add_distribution_goods.css">
+		<style type="text/css">
+			.goods-img-contianer {
+				padding: 0.3rem 0.15rem 0.1rem;
 				flex-wrap: wrap;
-				justify-content: flex-start;
 			}
-			
-			.picture_display_chear {
-				position: relative;
-				width: 1.58rem;
-				height: 1.5rem;
-				margin-right: 0.2rem;
+
+			.goods-img-contianer .picture_display_chear {
 				margin-bottom: 0.2rem;
 			}
-			
-			.picture_display_chear img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
+
+			.goods-img-contianer .add-goods-img {
+				margin-bottom: 0.2rem;
 			}
-			
-			.mui-close {
-				position: absolute!important;
-				top: -8px;
-				right: -8px;
-				display: block;
-				width: 20px;
-				height: 20px;
-				line-height: 18px;
-				background-color: #F00;
-				border-radius: 50%;
-				color: #FFF;
-				text-align: center;
-				z-index: 9;
-			}
-			
-			/* 图片预览 */
-			.mui-preview-image.mui-fullscreen {
-				position: fixed;
-				z-index: 20;
-				background-color: #000;
-			}
-			.mui-preview-header,
-			.mui-preview-footer {
+
+			.choice-team-content .team-list::before {
+				content: '';
+				display: inline-block;
+				width: 0.40rem;
+				height: 0.34rem;
 				position: absolute;
-				width: 100%;
-				left: 0;
-				z-index: 10;
-			}
-			.mui-preview-header {
-				height: 44px;
-				top: 0;
-			}
-			.mui-preview-footer {
-				height: 50px;
-				bottom: 0px;
-			}
-			.mui-preview-header .mui-preview-indicator {
-				display: block;
-				line-height: 25px;
-				color: #fff;
-				text-align: center;
-				margin: 15px auto 4;
-				width: 70px;
-				background-color: rgba(0, 0, 0, 0.4);
-				border-radius: 12px;
-				font-size: 16px;
-			}
-			.mui-preview-image {
-				display: none;
-				-webkit-animation-duration: 0.5s;
-				animation-duration: 0.5s;
-				-webkit-animation-fill-mode: both;
-				animation-fill-mode: both;
-			}
-			.mui-preview-image.mui-preview-in {
-				-webkit-animation-name: fadeIn;
-				animation-name: fadeIn;
-			}
-			.mui-preview-image.mui-preview-out {
-				background: none;
-				-webkit-animation-name: fadeOut;
-				animation-name: fadeOut;
-			}
-			.mui-preview-image.mui-preview-out .mui-preview-header,
-			.mui-preview-image.mui-preview-out .mui-preview-footer {
-				display: none;
-			}
-			.mui-zoom-scroller {
-				position: absolute;
-				display: -webkit-box;
-				display: -webkit-flex;
-				display: flex;
-				-webkit-box-align: center;
-				-webkit-align-items: center;
-				align-items: center;
-				-webkit-box-pack: center;
-				-webkit-justify-content: center;
-				justify-content: center;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				top: 0;
-				width: 100%;
-				height: 100%;
-				margin: 0;
-				-webkit-backface-visibility: hidden;
-			}
-			.mui-zoom {
-				-webkit-transform-style: preserve-3d;
-				transform-style: preserve-3d;
-			}
-			.mui-slider .mui-slider-group .mui-slider-item img {
-				width: auto;
-				height: auto;
-				max-width: 100%;
-				max-height: 100%;
-			}
-			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
-				width: 100%;
-			}
-			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
-				display: inline-table;
-			}
-			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
-				display: table-cell;
-				vertical-align: middle;
-			}
-			.mui-preview-loading {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				top: 0;
-				left: 0;
-				display: none;
-			}
-			.mui-preview-loading.mui-active {
-				display: block;
-			}
-			.mui-preview-loading .mui-spinner-white {
-				position: absolute;
+				background: url('../image/icon/draw-icon02.png') center center no-repeat;
+				background-size: contain;
+				right: 15px;
 				top: 50%;
-				left: 50%;
-				margin-left: -25px;
-				margin-top: -25px;
-				height: 50px;
-				width: 50px;
+				margin-top: -10px;
 			}
-			.mui-preview-image img.mui-transitioning {
-				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
-				transition: transform 0.5s ease, opacity 0.5s ease;
+
+			.choice-team-content .team-list.active::before {
+				width: 0.40rem;
+				height: 0.34rem;
 			}
-			@-webkit-keyframes fadeIn {
-				0% {
-					opacity: 0;
-				}
-				100% {
-					opacity: 1;
-				}
+
+			.team-header-img {
+				width: 0.56rem;
+				height: 0.56rem;
+				object-fit: cover;
+				margin-right: 10px;
+				border-radius: 3px;
 			}
-			@keyframes fadeIn {
-				0% {
-					opacity: 0;
-				}
-				100% {
-					opacity: 1;
-				}
+
+			.choice-team-content {
+				padding-left: 0.2rem;
 			}
-			@-webkit-keyframes fadeOut {
-				0% {
-					opacity: 1;
-				}
-				100% {
-					opacity: 0;
-				}
+
+			/* 20191121新增 */
+			.lan-switch {
+				-webkit-transform: scale(0.9);
+				transform: scale(0.9);
 			}
-			@keyframes fadeOut {
-				0% {
-					opacity: 1;
-				}
-				100% {
-					opacity: 0;
-				}
+
+			.lan-switch {
+				position: relative;
+				display: block;
+				width: 74px;
+				height: 30px;
+				-webkit-transition-timing-function: ease-in-out;
+				transition-timing-function: ease-in-out;
+				-webkit-transition-duration: .2s;
+				transition-duration: .2s;
+				-webkit-transition-property: background-color, border;
+				transition-property: background-color, border;
+				border: 2px solid #ddd;
+				border-radius: 20px;
+				background-color: #fff;
+				background-clip: padding-box;
 			}
-			.cause-conts{
+
+			.lan-switch:before {
+				font-size: 13px;
+				position: absolute;
+				top: 3px;
+				right: 11px;
+				content: 'Off';
+				text-transform: uppercase;
+				color: #999;
+			}
+
+			.lan-switch.lan-active {
+				border-color: #e0bc20;
+				background-color: #ffd626;
+			}
+
+			.lan-switch .lan-switch-handle {
+				position: absolute;
+				z-index: 1;
+				top: -1px;
+				left: -1px;
+				width: 28px;
+				height: 28px;
+				transition-duration: 0.2s;
+				transform: translate(0px, 0px);
+				-webkit-transition: .2s ease-in-out;
+				transition: .2s ease-in-out;
+				-webkit-transition-property: -webkit-transform, width, left;
+				transition-property: transform, width, left;
+				border-radius: 16px;
+				background-color: #fff;
+				background-clip: padding-box;
+				-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+				box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+			}
+
+			.lan-switch.lan-active .lan-switch-handle {
+				-webkit-transform: translate(43px, 0);
+				transform: translate(43px, 0);
+			}
+
+			.lan-switch.lan-active:before {
+				right: auto;
+				left: 15px;
+				content: 'On';
+				color: #fff;
+			}
+
+			.new-headline {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.new-headline span {
+				color: #f5ca3a;
+				font-size: 0.3rem;
+			}
+
+			.option-container .store-cont .store-items {
+				position: relative;
+				display: inline-flex;
+				background-color: #f2f2f2;
+				color: #999999;
+				font-size: 0.24rem;
+				padding: 3px 12px 1px;
+				border-radius: 5px;
+				margin: 10px 20px 10px 0;
+			}
+
+			.option-container .store-cont {
+				padding-left: 15px;
+				padding-right: 0;
+				box-sizing: border-box;
+			}
+
+			.store-items .mui-icon-close-filled {
 				color: #FF0000;
-				background-color: #FFFFFF;
-				margin: 0;
-				padding: 10px 15px;
-				text-align: justify;
-				display: none;
+				position: absolute;
+				right: -10px;
+				top: -10px;
 			}
-			.cause-conts span{
-				font-size:14px;
+
+			.mui-bar {
+				background-color: #fff;
 			}
-			textarea{
-				border: none;
+
+			.btn-section .putaway-btn {
+				width: 100%;
 			}
-			[v-cloak]{
+
+			[v-cloak] {
 				display: none;
 			}
 		</style>
-		<script type="text/javascript">
-			// 初始化字体大小
-			var viewport = document.documentElement.clientWidth;
-			if (viewport > 750) {
-				viewport = 750
-			}
-			document.documentElement.style.fontSize = viewport / 7.5 + "px";
-			// 初始化字体大小结束
-		</script>
 	</head>
+
 	<body>
-		<div id="mui-content" v-cloak>
-			<header class="mui-bar mui-bar-nav">
-				<div class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></div>
-				<h1 class="mui-title">编辑商品</h1>
-			</header>
-			<div class="mui-content">
-				<p id="cause_conts" class="cause-conts">
-					<span style="font-weight: 700;">未通过原因：</span><span id="cause_info"></span>
-				</p>
-				<!-- 商品id -->
-				<input type="hidden" id="goods_id" value="" />
-				<div class="mui-input-row" style="margin-top: 10px;border-bottom: 1px solid #F2F2F2;">
-					<textarea name="name" id="good_name" rows="2" placeholder="请输入商品名称"></textarea>
-				</div>
-				<div class="chart">
-					<div id="pic-container">
-						<!-- <div class="picture_display_chear" id="add_pic">
-						<img src="../image/add.png">
-						<span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">编辑商品</h1>
+		</header>
+		<div id="mui-content" class="mui-content " v-cloak>
+			<div class="goods-title">
+				<textarea maxlength="120" v-model="name" placeholder="输入商品名称"></textarea>
+				<span class="mui-icon mui-icon-clear" v-show="name" @tap="name=''"></span>
+			</div>
+			<div class="goods-img-contianer">
+				<draggable :options="options" v-model="images" style="display: flex;flex-wrap: wrap;" group="people">
+					<div v-show="images" class="picture_display_chear preview-img-cont" v-for="(img,i) in images" :key="i">
+						<img class="goods-img" @tap="previewImage(i)" :src="img" />
+						<span class="mui-close" @tap="delImg(i)">
+							<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
+						</span>
 					</div>
-					<div class="picture_display_chear" id="add_pic">
-						<img src="../image/add.png">
-						<span class="mui-close"><span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span></span>
-					</div> -->
-						<draggable :options="options" v-model="img_group" style="display: flex;flex-wrap: wrap;" group="people">
-							<div class="picture_display_chear preview-img-cont" v-for="(img,index) in img_group" :key="index">
-								<img :src="img" style="object-fit: cover;">
-								<span class="mui-close" @tap="delImg(index)">
-									<span class="mui-icon mui-icon-closeempty" style="font-size: 20px;"></span>
-								</span>
-							</div>
-							<div class="add_chart" id="add_pic">
-								<div class="wenzi">添加<br />主图</div>
-							</div>
-						</draggable>
+					<div v-show="images.length<15" class="add-goods-img">
+						<span>添加</span>
+						<span>主图</span>
 					</div>
-				</div>
-				<div class="tips">
-					精美的商品图片让商品脱颖而出,长按图片可拖拽调整顺序
-					<!-- 精美的商品图片可以让商品脱颖而出 -->
-				</div>
-				<div class="bian">
-					<div class="recommend">
+				</draggable>
+			</div>
+			<div class="goods-img-desc">
+				精美的商品图片让商品脱颖而出,长按图片可拖拽调整顺序
+			</div>
+			<div class="option-container">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<div class="flex-center">
+							<span>设为推荐</span>
+							<div class="lan-switch" :class="recommend==true?'lan-active':''" @tap="lanSwitch('recommend','1')">
+								<div class="lan-switch-handle"></div>
+							</div>
+						</div>
+						<p>
+							推荐商品将在个人名片页进行展示
+						</p>
+					</li>
+					<li class="mui-table-view-cell goods-type">
+						<span>商品类型<span class="sign">*</span></span>
+						<span class="mui-navigate-right cont-text mui-pull-right">
+							{{type_name}}
+						</span>
+					</li>
+				</ul>
+			</div>
+			<!-- 第二组 -->
+			<div class="option-container">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
-							<label>设为推荐</label>
-							<div class="mui-switch mui-switch-blue mui-active" id="recommend_switch">
-								<div class="mui-switch-handle"></div>
+							<label>价格<span class="sign">*</span></label>
+							<input type="number" v-model="price" placeholder="给商品定个好价格,仅允许输入数字">
+							<span class="mui-icon mui-icon-clear" v-show="price" @tap="price=''"></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>库存<span class="sign">*</span></label>
+							<input type="number" v-model="stock" placeholder="设置合理的库存,仅允许输入数字">
+							<span class="mui-icon mui-icon-clear" v-show="stock" @tap="stock=''"></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>销量</label>
+							<input type="number" v-model="sale_count" placeholder="设置商品虚拟销量,仅允许输入数字">
+							<span class="mui-icon mui-icon-clear" v-show="sale_count" @tap="sale_count=''"></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>浏览量</label>
+							<input type="number" v-model="view_count" placeholder="设置商品虚拟浏览量,仅允许输入数字">
+							<span class="mui-icon mui-icon-clear" v-show="view_count" @tap="view_count=''"></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>排序值</label>
+							<input type="number" v-model="top" placeholder="倒序，值越大排名越靠前">
+							<span class="mui-icon mui-icon-clear" v-show="top" @tap="top=''"></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell option-group-list" v-for="(ls,index) in spec" :key="index">
+						<div class="option-group">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell">
+									<div class="mui-input-row">
+										<label>规格<span class="sign">*</span></label>
+										<input type="text" v-model="ls.name" placeholder="尺寸、大小、颜色等">
+										<span class="mui-icon mui-icon-clear" v-show="ls.name" @tap="ls.name=''"></span>
+									</div>
+								</li>
+								<li class="mui-table-view-cell">
+									<div class="mui-input-row">
+										<label>价格<span class="sign">*</span></label>
+										<input type="number" v-model="ls.price" placeholder="给商品定个好价格,仅允许输入数字">
+										<span class="mui-icon mui-icon-clear" v-show="ls.price" @tap="ls.price=''"></span>
+									</div>
+								</li>
+								<li class="mui-table-view-cell">
+									<div class="mui-input-row">
+										<label>库存<span class="sign">*</span></label>
+										<input type="number" v-model="ls.stock" placeholder="设置合理的库存,仅允许输入数字">
+										<span class="mui-icon mui-icon-clear" v-show="ls.stock" @tap="ls.stock=''"></span>
+									</div>
+								</li>
+							</ul>
+							<div class="del-container" @tap="del_spec(index)">
+								<div class="del-btn">
+									<i></i>
+								</div>
 							</div>
 						</div>
-						<div class="tishi">推荐商品将在个人名片页进行展示</div>
-					</div>
-				</div>
-				<div class="bian">
-					<div class="choice" style="padding: 10px 0;padding-bottom" id="goods_type_pick">
-						<div class="mui-table-view-cell">
-							<span>商品类型</span>
-							<span class="fenli" id="goods_type"></span>
-							<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
+					</li>
+					<li>
+						<div class="add-specification-title">
+							<img src="../image/add_vew.png">
+							<span>添加商品规格</span>
 						</div>
-					</div>
-				</div>
-				<div class="bian" style="margin-top: 10px;">
-					<div class="choice">
-						<div class="mui-table-view-cell">
-							<span>价格</span>
-							<input type="number" name="price" placeholder="给商品定个好价格" id="good_price" />
+					</li>
+					<li class="mui-table-view-cell new-headline">
+						<span>快递配送</span>
+						<div class="lan-switch" :class="isDelivery==true?'lan-active':''" @tap="lanSwitch('isDelivery')">
+							<div class="lan-switch-handle"></div>
 						</div>
+					</li>
+					<div v-show="isDelivery">
+						<li class="mui-table-view-cell choice-express">
+							<span>快递<span class="sign">*</span></span>
+							<span class="mui-navigate-right cont-text mui-pull-right">
+								{{express_text}}
+							</span>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="mui-input-row">
+								<label>邮费</label>
+								<input type="number" v-model="freight" placeholder="0.00">
+								<span class="mui-icon mui-icon-clear" v-show="freight!=0" @tap="freight=''"></span>
+							</div>
+						</li>
 					</div>
-					<div class="choice1">
-						<div class="mui-table-view-cell">
-							<span>库存</span>
-							<input type="number" name="stock" placeholder="设置合理库存避免超卖" id="good_stock" />
+				</ul>
+			</div>
+			<div class="option-container">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell new-headline">
+						<span>门店自提</span>
+						<div class="lan-switch" :class="bySelf==true?'lan-active':''" @tap="lanSwitch('bySelf')">
+							<div class="lan-switch-handle"></div>
 						</div>
+					</li>
+					<div v-show="bySelf">
+						<li class="mui-table-view-cell store-choice">
+							添加自提门店 <span class="mui-navigate-right cont-text mui-pull-right">请选择</span>
+						</li>
+						<li class="mui-table-view-cell store-cont" v-if="store_list.length>0">
+							<div class="store-items" v-for="(s,i) in store_list" :key="i">
+								{{overflowHide(s.name,10)}}
+								<span class="mui-icon mui-icon-close-filled" :data-index="i"></span>
+							</div>
+						</li>
 					</div>
-				</div>
-				<div style="background-color: #FFFFFF;padding-top: 20px;padding-bottom: 10px;" id="goods_spe">
-					<!-- <div class="add_choice">
-					<div class="choice" style="padding: 10px 0;">
-						<span>规格</span>
-						<input type="text" placeholder="尺寸,大小,颜色等" />
-					</div>
-					<div class="choice" style="padding: 10px 0;">
-						<span>价格</span>
-						<input type="text" placeholder="给商品定个好价格" />
-					</div>
-					<div class="choice" style="padding: 10px 0;">
-						<span>库存</span>
-						<input type="text" placeholder="设置合理的库存避免超卖" />
-					</div>
-					<img src="../image/add_choice.png">
-				</div> -->
-				</div>
-				<div class="adding_commodity_specifications" id="add_spec">
-					<span class="mui-pull-left">
-						<img src="../image/add_vew.png">
-					</span>
-					<span class="mui-pull-left" style="margin: 0 0 0 10px;">添加商品规格</span>
-					<div class="clearfix"></div>
-				</div>
-				<div class="bian">
-					<div class="choice">
-						<div class="mui-table-view-cell">
-							<span>销量</span>
-							<input type="number" name="sale_count" placeholder="设置商品的虚拟销量" id="good_sale_count" />
-						</div>
-					</div>
-					<div class="choice1">
-						<div class="mui-table-view-cell">
-							<span>浏览量</span>
-							<input type="number" name="view_count" placeholder="设置商品的虚拟浏览量" id="good_view_count" />
-						</div>
-					</div>
-					<div class="choice">
-						<div class="mui-table-view-cell">
-							<span>排序值</span>
-							<input type="number" name="top" placeholder="倒序, 值越大排名越靠前" id="good_top" />
-						</div>
-					</div>
-				</div>
-				<div class="bian" style="margin-top: 10px;">
-					<div class="choice">
-						<div class="mui-table-view-cell">
-							<span>运费</span>
-							<input type="number" name="freight" placeholder="不填则视为包邮" id="good_freight" />
-						</div>
-					</div>
-				</div>
-				<div class="bian">
-					<div class="choice" style="margin: 10px 0 80px 0; padding: 10px 0;" id="goods_detail">
-						<div class="mui-table-view-cell">
-							<span>商品图文描述</span>
-							<div class="mui-icon mui-icon-arrowright mui-pull-right"></div>
-							<p class="mui-pull-right" id="content_desc">点击编辑</p>
-						</div>
-					</div>
-				</div>
-				<div class="selection_function">
-					<div class="mui-pull-left upper_shelf form-submit" data-status="1">完成修改</div>
-					<div class="clearfix"></div>
+				</ul>
+			</div>
+			<div class="option-container">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell edit-goods-detail">
+						<span>商品图文描述</span>
+						<span class="mui-navigate-right cont-text mui-pull-right">{{edit_status}}</span>
+					</li>
+				</ul>
+			</div>
+			<div class="btn-section">
+				<div class="putaway-btn">
+					完成修改
 				</div>
 			</div>
 		</div>
 		<script src="../js/mui.js"></script>
-		<script src="../js/Zepto.min.js"></script>
-		<script src="../js/mui.picker.js"></script>
-		<script src="../js/mui.poppicker.js"></script>
-		<script src="../js/mui.zoom.js"></script>
-		<script src="../js/mui.previewimage.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
 		<script src="../js/util.js"></script>
-		<!-- <script src="../js/upload.js"></script> -->
 		<script src="../js/choosemedia.js"></script>
+		<script src="../js/Zepto.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script src="../js/Sortable.min.js"></script>
 		<script src="../js/vuedraggable.umd.min.js"></script>
 		<script type="text/javascript">
-			var flag = true,
-				images = new Array(), //存储图片的数组
-				specId = 0,
-				spec = new Array(),
-				content = '',
-				recommend = 1,
-				type = 0,
-				type_index = 0,
-				type_p = 0,
-				type_p_index = 0,
-				status = 0,
-				goodsTypeTitle = '',
-				userInfo = getUserInfo(),
-				good_type_container = '', //分类数组容器
-				good_spec_container = '', //商品规格容器
-				goodsId = 0;
+			var userInfo = getUserInfo();
 			var app = new Vue({
 				el: "#mui-content",
 				data: {
-					img_group: [],
+					view_count: '',
 					options: {
 						handle: ".preview-img-cont",
 						animation: 200,
-						scroll: true
+						scroll: true,
 					},
+					name: '',
+					// 主图
+					images: [],
+					// 设为推荐
+					recommend: 0,
+					// 产品类型名称
+					type_name: '请选择',
+					goods_type_group: [],
+					// 产品类型
+					type_p: '',
+					type: '',
+					// 快递类型名称
+					express_text: '请选择',
+					// 快递类型
+					default_express: '',
+					express_group: [],
+					// 邮费
+					freight: '',
+					// 排序值
+					top: '',
+					// 零售价
+					price: '',
+					// 库存
+					stock: '',
+					// 新增规格
+					spec: [],
+					description: '',
+					edit_status: '未添加',
+					status: '',
+					sale_count: '',
+					// 包邮以及自提
+					isDelivery: true,
+					bySelf: false,
+					goods_id: 0,
+					store_list: [{
+						"id": "10",
+						"name": "益田啥啥啥",
+					}, {
+						"id": "10",
+						"name": "益田啥啥啥益田啥啥啥益田啥啥啥益田啥啥啥",
+					}, {
+						"id": "10",
+						"name": "挺好",
+					}, {
+						"id": "10",
+						"name": "校花驾到",
+					}, {
+						"id": "10",
+						"name": "吃醋吃过",
+					}, ]
+				},
+				created: function() {
+					// 初始化字体大小
+					var viewport = document.documentElement.clientWidth;
+					// console.log("created页面宽度：" + viewport);
+					if (viewport > 750) {
+						viewport = 750
+					}
+					document.documentElement.style.fontSize = viewport / 7.5 + "px";
+					// 初始化字体大小结束	
 				},
 				methods: {
 					delImg: function(idx) {
-						app.img_group.splice(idx, 1);
+						this.images.splice(idx, 1);
+						// logs(this.images);
+					},
+					lanSwitch: function(e, status) {
+						document.activeElement.blur();
+						if (status && app[e] == 0) {
+							app[e] = 1;
+						} else if (status && app[e] == 1) {
+							app[e] = 1;
+						} else {
+							app[e] = !app[e];
+						}
 					}
 				},
 				mounted: function() {
-					mui.init({
-						swipeBack: true
-					})
+					mui.init();
 					mui.plusReady(function() {
-						var wv = plus.webview.currentWebview();
-						goodsId = wv.goods_id;
-						getGoodSpec();
+						var self = plus.webview.currentWebview();
+						app.goods_id = self.goods_id;
+						// 获取商品详情
 						getGoodInfo();
-						eventInit();
-						mui.previewImage();
-						// 初始化字体大小
+						getGoodSpec();
+						getGoodsType();
+						// 获取快递列表
+						getExpressList();
+						// 添加主图
+						mui(".mui-content").on("tap", ".add-goods-img", function() {
+							document.activeElement.blur();
+							wangke.init({
+								type: 'image',
+								multiple: true
+							});
+							wangke.chooseMedia(function(res) {
+								app.images.push(res.url);
+							}, function(e) {
+								if (e.code > 100) {
+									message(e.message);
+								}
+							})
+						})
+						// 获取上次选择快递
+						var courier = null;
+						courier = getcache('courier');
+						if (courier) {
+							app.default_express = courier.value;
+							app.express_text = courier.text;
+						}
+						// 初始化两次防止页面乱
 						var viewport = document.documentElement.clientWidth;
 						if (viewport > 750) {
 							viewport = 750
@@ -582,391 +495,315 @@
 					})
 				}
 			})
-			//获取商品的信息
-			function getGoodInfo() {
-				showload(0);
-				var ajax_url = $ajaxUrl + 'goods';
-				mui.ajax(ajax_url, {
-					data: {
-						goods_id: goodsId,
-						action: 'get_goods_by_id',
-						token: userInfo.token
-					},
-					dataType: 'json',
-					type: 'post',
-					timeout: 10000,
-					success: function(ret) {
-						setTimeout(function() {
-							showload(1);
-						}, 500)
-						if (ret.errno) {
-							plus.nativeUI.alert(ret.message, function() {
-								mui.back();
-							})
-						}
-						logs(ret);
-						if (ret.data.check_status == 2) {
-							mui("#cause_info")[0].innerText = ret.data.remark;
-							mui("#cause_conts")[0].style.display = "block";
-						} else {
-							mui("#cause_conts")[0].style.display = "none";
-						}
-						//商品id
-						$('#goods_id').val(ret.data.id);
-						//商品名称
-						$('#good_name').val(ret.data.name);
-						//获取推荐值
-						recommend = ret.data.recommend;
-						//推荐状态为1 打开开关
-						if (recommend == 0) {
-							mui("#recommend_switch").switch().toggle();
-						}
-						//获取价格
-						$('#good_price').val(ret.data.price);
-						//获取库存
-						$('#good_stock').val(ret.data.stock);
-						//获取规格
-						for (var i = 0; i < good_spec_container.length; i++) {
-							var newImgDiv = document.createElement('div');
-							newImgDiv.classList.add('add_choice');
-							newImgDiv.dataset.specid = specId;
-							var html = '<div class="choice" style="padding: 10px 0;">';
-							html += '<span>规格</span>';
-							html += '<input type="text" placeholder="尺寸,大小,颜色等" value="' + good_spec_container[i].title + '" />';
-							html += '</div>';
-							html += '<div class="choice" style="padding: 10px 0;">';
-							html += '<span>价格</span>';
-							html += '<input type="number" placeholder="给商品定个好价格" value="' + good_spec_container[i].price + '" />';
-							html += '</div>';
-							html += '<div class="choice" style="padding: 10px 0;">';
-							html += '<span>库存</span>';
-							html += '<input type="number" placeholder="设置合理的库存避免超卖" value="' + good_spec_container[i].stock + '" />';
-							html += '</div>';
-							html += '<img src="../image/add_choice.png" class="spec-remove">';
-							newImgDiv.innerHTML = html;
-							document.getElementById('goods_spe').appendChild(newImgDiv);
-							specId++;
-						}
-						//获取销量
-						$('#good_sale_count').val(ret.data.sale_count);
-						//获取浏览量
-						$('#good_view_count').val(ret.data.view_count);
-						//获取排序
-						$('#good_top').val(ret.data.top);
-						//获取运费
-						$('#good_freight').val(ret.data.freight);
-						//获取图片链接 并读取原图片
-						// var img_url_str = ret.data.images;
-						// images = ret.data.images;
-						app.img_group=ret.data.images;
-						//获取商品类型
-						//设置商品类型id
-						type = ret.data.type;
-						type_p = ret.data.type_p;
-						//获取图文描述
-						//转换html实体
-						function htmlspecialchars_decode(str) {
-							str = str.replace(/&amp;/g, '&');
-							str = str.replace(/&lt;/g, '<');
-							str = str.replace(/&gt;/g, '>');
-							str = str.replace(/&quot;/g, "''");
-							str = str.replace(/&#039;/g, "'");
-							return str;
-						}
-						content = ret.data.content;
-						getGoodsType();
-					},
-					error: function(xhr, type, errorThrown) {
-						showload(1);
-						console.log(JSON.stringify('失败'));
-						console.log(JSON.stringify(errorThrown));
-					}
-				});
-			}
-			/**
-			 * 获取商品规格
-			 */
-			function getGoodSpec() {
-				var ajax_url = $ajaxUrl + 'goods';
-				mui.ajax(ajax_url, {
-					data: {
-						goods_id: goodsId,
-						action: 'get_good_spec_by_id',
-						token: userInfo.token
-					},
-					dataType: 'json',
-					type: 'post',
-					timeout: 10000,
-					success: function(ret) {
-						console.log(JSON.stringify(ret));
-						if (ret.errno == 0) {
-							good_spec_container = ret.data;
-						}
-					},
-					error: function(xhr, type, errorThrown) {
-						console.log(JSON.stringify('失败'));
-						console.log(JSON.stringify(errorThrown));
-					}
-				});
-			}
 
-			//事件初始化
-			function eventInit() {
-				//详情添加完毕监听
-				window.addEventListener('detailUpdate', function(event) {
-					content = event.detail.content;
-					if (content.length != 0) {
-						document.getElementById('content_desc').innerText = '点击编辑';
-					} else {
-						document.getElementById('content_desc').innerText = '点击编辑';
-					}
-				})
-				//商品分类选择监听
-				document.getElementById('goods_type_pick').addEventListener('tap', function() {
-					goodsTypePick();
-				})
-				//推荐开关监听
-				document.getElementById("recommend_switch").addEventListener("toggle", function(event) {
-					if (event.detail.isActive) {
-						recommend = 1;
-					} else {
-						recommend = 0;
-					}
-				})
-				//添加商品详情
-				mui('.mui-content').on('tap', '#goods_detail', function() {
-					fnOpenWin('goods_detail.html', 'goods_detail', {
-						statusbar: {
-							background: '#ffffff'
-						}
-					}, {
-						content: content
-					}, 'slide-in-right');
-				})
-				//上传主图
-				document.getElementById('add_pic').addEventListener('tap', function() {
-					document.activeElement.blur();
-					wangke.init({
-						type: 'image',
-						multiple: true
-					});
-					wangke.chooseMedia(function(res) {
-						app.img_group.push(res.url);
-					});
-				}, function(e) {
-					if (e.code > 100) {
-						message(e.message);
-					}
-				})
-				document.getElementById('add_spec').addEventListener('tap', function() {
-					var newImgDiv = document.createElement('div');
-					newImgDiv.classList.add('add_choice');
-					newImgDiv.dataset.specid = specId;
-					var html = '<div class="choice" style="padding: 10px 0;">';
-					html += '<span>规格</span>';
-					html += '<input type="text" placeholder="尺寸,大小,颜色等" />';
-					html += '</div>';
-					html += '<div class="choice" style="padding: 10px 0;">';
-					html += '<span>价格</span>';
-					html += '<input type="number" placeholder="给商品定个好价格" />';
-					html += '</div>';
-					html += '<div class="choice" style="padding: 10px 0;">';
-					html += '<span>库存</span>';
-					html += '<input type="number" placeholder="设置合理的库存避免超卖" />';
-					html += '</div>';
-					html += '<img src="../image/add_choice.png" class="spec-remove">';
-					newImgDiv.innerHTML = html;
-					document.getElementById('goods_spe').appendChild(newImgDiv);
-					specId++;
-				})
-				//移除规格
-				mui('.mui-content').on('tap', '.spec-remove', function() {
-					this.parentElement.remove();
-				})
-				//表单提交 上传商品
-				mui('.selection_function').on('tap', '.form-submit', function() {
-					document.activeElement.blur();
-					status = this.dataset.status;
-					var goods_id = document.querySelector('input[id=goods_id]').value;
-					var goods_name = document.querySelector('textarea[name=name]').value;
-					var goods_price = document.querySelector('input[name=price]').value;
-					var goods_stock = parseInt(document.querySelector('input[name=stock]').value);
-					var goods_sale = document.querySelector('input[name=sale_count]').value;
-					var goods_view = document.querySelector('input[name=view_count]').value;
-					var goods_top = document.querySelector('input[name=top]').value;
-					var goods_freight = document.querySelector('input[name=freight]').value;
-					if (goods_name.length == 0) {
-						message('请填写商品名称!');
-						return;
-					}
-					if (app.img_group.length == 0) {
-						message('请上传主图!');
-						return;
-					}
-					if (type_p == 0) {
-						message('请选择商品类型!');
-						return;
-					}
-					if (isNaN(goods_price) || goods_price.length == 0) {
-						message('请填写商品价格!');
-						return;
-					}
-					if (parseFloat(goods_price) < 0) {
-						message('商品价格填写有误!');
-						return;
-					}
-					if (isNaN(goods_stock) || goods_stock == 0) {
-						message('请填写商品库存!');
-						return;
-					}
-					if (goods_stock < 0) {
-						message('商品库存有误!');
-						return;
-					}
-					mui('.add_choice').each(function(index, object) {
-						var sid = object.dataset.specid;
-						var specName = object.children[0].children[1].value;
-						var specPrice = object.children[1].children[1].value;
-						var specStock = object.children[2].children[1].value;
-						if (specName.length == 0) {
-							message('请填写商品规格!');
-							return;
-						}
-						if (isNaN(specPrice)) {
-							message('请填写商品价格!');
-							return;
-						}
-						if (parseFloat(specPrice) < 0) {
-							message('商品价格填写有误!');
-							return;
-						}
-						if (isNaN(specStock)) {
-							message('请填写商品库存!');
-							return;
-						}
-						console.log(specStock);
-						if (parseInt(specStock) <= 0) {
-							message('商品库存填写有误!');
-							return;
-						}
-						var temp = {
-							name: specName,
-							price: parseFloat(specPrice),
-							stock: parseInt(specStock),
-						}
-						spec[sid] = temp;
-					})
-					var submitData = {
-						goods_id: goods_id,
-						name: goods_name,
-						images: app.img_group,
-						recommend: recommend,
-						type: type,
-						type_p: type_p,
-						price: goods_price,
-						stock: goods_stock,
-						spec: spec,
-						sale_count: goods_sale,
-						view_count: goods_view,
-						top: goods_top,
-						freight: goods_freight,
-						status: status,
-						content: content
-					}
-					formSubmit(submitData);
-				})
+			// 预览主图
+			function previewImage(idx) {
+				var urls = app.images;
+				plus.nativeUI.previewImage(urls, {
+					current: idx,
+					loop: true,
+					indicator: 'number',
+					onLongPress: function(event) {}
+				});
 			}
-			//获取商品分类
+			
+			// 上架出售
+			mui(".mui-content").on("tap", ".putaway-btn", function() {
+				document.activeElement.blur();
+				// app.status = 1;
+				editDone();
+			})
+			
+			// 放入仓库
+			mui(".mui-content").on("tap", ".the-warehouse", function() {
+				document.activeElement.blur();
+				app.status = 0;
+				editDone();
+			})
+			
+			// 商品类型选择
+			mui(".mui-content").on("tap", ".goods-type", function() {
+				document.activeElement.blur();
+				var goods_type = new mui.PopPicker({
+					layer: 2
+				});
+				goods_type.setData(app.goods_type_group);
+				if (app.type_p != 0) {
+					goods_type.pickers[0].setSelectedValue(app.type_p, 1000);
+				}
+				if (app.type != 0) {
+					goods_type.pickers[1].setSelectedValue(app.type, 1000);
+				}
+				goods_type.show(function(items) {
+					app.type_p = items[0].value;
+					app.type = items[1].value;
+					app.type_name = items[0].text + '--' + items[1].text;
+				});
+			})
+			
+			// 名称 价格 库存
+			function creatSpec() {
+				var _spec = new Object();
+				_spec.name = '';
+				_spec.price = '';
+				_spec.stock = '';
+				return _spec;
+			}
+			
+			// 添加商品规格
+			mui(".mui-content").on("tap", ".add-specification-title", function() {
+				document.activeElement.blur();
+				app.spec.push(creatSpec());
+			})
+			
+			// 删除商品规格
+			function del_spec(idx) {
+				app.spec.splice(idx, 1);
+			}
+			
+			// 选择快递
+			mui(".mui-content").on("tap", ".choice-express", function() {
+				document.activeElement.blur();
+				var express = new mui.PopPicker();
+				express.setData(app.express_group);
+				if (app.default_express != 0) {
+					express.pickers[0].setSelectedValue(app.default_express, 1000);
+				}
+				express.show(function(items) {
+					app.default_express = items[0].value;
+					app.express_text = items[0].text;
+					cacheData("courier", {
+						text: items[0].text,
+						value: items[0].value
+					})
+				});
+			})
+			
+			// 图文描述
+			mui(".mui-content").on("tap", ".edit-goods-detail", function() {
+				fnOpenWin('goods_detail.html', 'goods_detail', {
+					statusbar: {
+						background: '#ffffff'
+					}
+				}, {
+					content: app.description
+				}, 'slide-in-right');
+			})
+			
+			// 商品类型
 			function getGoodsType() {
 				mui.post($ajaxUrl + 'goods', {
 					action: 'goods_category',
 					token: userInfo.token
 				}, function(res) {
-					good_type_container = res.data;
 					if (res.errno == 0) {
-						goodsType = res.data;
-						for (var index in goodsType) {
-							if (goodsType[index].value == type_p) {
-								goodsTypeTitle = goodsType[index].text;
-								type_p_index = index;
-							}
-							if (goodsType[index].children) {
-								var chilren = goodsType[index].children;
-								for (var c in chilren) {
-									if (chilren[c].value == type) {
-										goodsTypeTitle += '--' + chilren[c].text;
-										type_index = c;
-										break;
-									}
-								}
-							}
-						}
-						// goodsTypeTitle = goodsType[0].text;
-						// type_p = goodsType[0].value;
-						// if (!goodsType[0].children) {
-						// 	type = goodsType[0].value;
-						// } else {
-						// 	goodsTypeTitle += '--' + goodsType[0].children[0].text;
-						// 	type = goodsType[0].children[0].value;
-						// }
+						app.goods_type_group = res.data;
 					}
-					document.getElementById('goods_type').innerText = goodsTypeTitle;
 				}, 'json');
 			}
-			//选择商品分类
-			function goodsTypePick() {
-				var picker = new mui.PopPicker({
-					layer: 2
-				});
-				picker.setData(goodsType);
-				if (type_p != 0) {
-					// picker.pickers[0].setSelectedValue(type_p, 1000);
-					picker.pickers[0].setSelectedIndex(type_p_index);
-				}
-				if (type != 0 && type != type_p) {
-					// picker.pickers[1].setSelectedValue(type, 2000);
-					picker.pickers[1].setSelectedIndex(type_index);
-				}
-				picker.show(function(selectItems) {
-					goodsTypeTitle = '';
-					goodsTypeTitle += selectItems[0].text;
-					type_p = selectItems[0].value;
-					if (selectItems[1].value != undefined) {
-						goodsTypeTitle += '--' + selectItems[1].text;
-						type = selectItems[1].value;
+			
+			// 快递
+			function getExpressList() {
+				mui.post($ajaxUrl + 'util', {
+					action: 'express_list'
+				}, function(res) {
+					if (res.errno == 0) {
+						data = res.data;
+						data.forEach(function(item) {
+							item.value = item.id;
+							item.text = item.e_name;
+							delete item.id;
+							delete item.e_name;
+						})
+						app.express_group = data;
 					} else {
-						type = selectItems[0].value;
+
 					}
-					document.getElementById('goods_type').innerText = goodsTypeTitle;
-				})
+				}, 'json');
 			}
-			//提交操作
-			function formSubmit(data) {
-				if (!flag) {
-					return;
+			
+			//详情添加完毕监听
+			window.addEventListener('detailUpdate', function(event) {
+				app.description = event.detail.content;
+				if (app.description.length != 0) {
+					app.edit_status = '点击编辑';
+				} else {
+					app.edit_status = '未添加';
 				}
-				showload(0);
-				flag = false;
+			})
+			
+			// 提交编辑
+			function editDone() {
+				if (app.name.length < 1) {
+					logs('name' + app.name);
+					message("商品名称不能为空！");
+					return false;
+				}
+				if (app.images.length < 1) {
+					logs('images' + app.images);
+					message("请上传商品主图！");
+					return false;
+				}
+				if (app.type_p == '' || app.type_p == 0) {
+					message("请选择商品类型！");
+					return false;
+				}
+				if (app.price <= 0) {
+					logs('price' + app.price);
+					message("商品零售价格需为数字并大于0");
+					return false;
+				}
+				if (app.stock < 1) {
+					logs('stock' + app.stock);
+					message("商品库存需为数字并大于0");
+					return false;
+				}
+				if (app.spec.length > 0) {
+					for (var i = 0; i < app.spec.length; i++) {
+						if (app.spec[i].name.length < 1) {
+							message("商品规格名称不能为空");
+							return false;
+						}
+						if (app.spec[i].price <= 0) {
+							message("商品规格零售价格需为数字并大于0");
+							return false;
+						}
+				
+						if (app.spec[i].stock < 1) {
+							message("商品规格库存需为数字并大于0");
+							return false;
+						}
+					}
+				}
+				if (app.isDelivery && app.default_express < 1) {
+					message("请选择默认快递");
+					return false;
+				}
+				if (app.isDelivery && app.freight.length <= 0) {
+					app.freight = 0;
+				}
+				if (app.bySelf && app.store_list.lenght <= 0) {
+					message("请选择自提门店");
+					return false;
+				}
+				var shopIds = [];
+				for (var i in app.store_list) {
+					shopIds.push(app.store_list[i].id);
+				}
+
+				var datas = {
+					goods_id: app.goods_id,
+					name: app.name,
+					images: app.images,
+					recommend: app.recommend ? 1 : 0,
+					type: app.type,
+					type_p: app.type_p,
+					price: app.price,
+					stock: app.stock,
+					spec: app.spec,
+					sale_count: app.sale_count,
+					view_count: app.view_count,
+					top: app.top,
+					freight: app.freight,
+					status: app.status,
+					content: app.description,
+					default_express: app.default_express,
+					express_status: app.isDelivery ? 1 : 0,
+					pick_up_status: app.bySelf ? 1 : 0,
+					shop_ids: shopIds,
+				}
+				logs(datas);
+				// 提交商品修改
 				mui.post($ajaxUrl + 'goods', {
 					action: 'update',
 					token: userInfo.token,
-					data: data
+					data: datas,
 				}, function(res) {
 					if (res.errno == 0) {
-						message('修改成功!');
+						message('修改成功！');
 						var opener = plus.webview.currentWebview().opener();
-						mui.fire(plus.webview.getWebviewById('goods_list'), 'goodsAddSuccess');
 						mui.fire(opener, 'doit');
+						mui.fire(plus.webview.getWebviewById('goods_list'), 'goodsAddSuccess');
+						mui.fire(plus.webview.getWebviewById('goods_list'), 'reloadYourself');
 						setTimeout(function() {
-							plus.webview.close('goods_edit');
+							mui.back();
 						}, 1000)
 					} else {
 						message(res.message);
-						flag = true;
 					}
-					showload(1);
 				}, 'json');
+			}
+			
+			// 删除选择的门店
+			mui(".mui-content").on('tap', ".mui-icon-close-filled", function() {
+				var index = this.dataset.index;
+				app.store_list.splice(index, 1);
+			})
+			
+			// 打开门店选择
+			mui(".mui-content").on('tap', '.store-choice', function() {
+				openPage('store_choice.html', 'store_choice', '#fff', {storeList: app.store_list});
+			})
+			
+			// 接收选择的数据
+			window.addEventListener('store', function(e) {
+				app.store_list = e.detail.store;
+			})
+			
+			// 获取商品信息
+			function getGoodInfo() {
+				showload(0);
+				mui.post($ajaxUrl + 'goods', {
+					goods_id: app.goods_id,
+					action: 'get_goods_by_id',
+					token: userInfo.token
+				}, function(res) {
+					logs(res);
+					if (res.errno == 0) {
+						app.name = res.data.name;
+						app.images = res.data.images;
+						app.recommend = res.data.recommend;
+						app.type = res.data.type;
+						app.type_p = res.data.type_p;
+						app.price = res.data.price;
+						app.stock = res.data.stock;
+						app.sale_count = res.data.sale_count;
+						app.view_count = res.data.view_count;
+						app.top = res.data.top;
+						app.freight = res.data.freight;
+						app.status = res.data.status;
+						app.description = res.data.content;
+						app.type_name = res.data.type_name;
+						app.isDelivery = res.data.express_status == 1 ? true : false;
+						app.bySelf = res.data.pick_up_status == 1 ? true : false;
+						app.store_list = res.data.store_list;
+						if (app.description) {
+							app.edit_status = '点击编辑';
+						} else {
+							app.edit_status = '未添加';
+						}
+					} else {
+						message(res.message);
+					}
+					setTimeout(function() {
+						showload(1);
+					}, 500)
+				}, 'json')
+			}
+			
+			// 获取商品规格
+			function getGoodSpec() {
+				mui.post($ajaxUrl + 'goods', {
+					token: userInfo.token,
+					goods_id: app.goods_id,
+					action: 'get_good_spec_by_id',
+				}, function(res) {
+					if (res.errno == 0) {
+						app.spec = res.data;
+					}
+				}, 'json')
 			}
 		</script>
 	</body>
+
 </html>
