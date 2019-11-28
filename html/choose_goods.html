@@ -323,7 +323,7 @@
 				width: 19px;
 				height: 20px;
 				position: absolute;
-				background: url('../image/icon/draw-icono.png')center center no-repeat;
+				background: url('../image/icon/draw-icono-01.png')center center no-repeat;
 				background-size: contain;
 				right: -25px;
 			}
@@ -594,9 +594,9 @@
 						<div class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<ul class="mui-table-view" id="team_list">
-									<!-- <li class="mui-table-view-cell team-list" v-for="i in 6">
-										<span>4646587</span>
-									</li> -->
+									<li class="mui-table-view-cell team-list" v-for="(t,i) in team_list" :data-tid="t.id" :key="i">
+										<span>{{t.name}}</span>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -692,6 +692,7 @@
 					isinput: false,
 					team: [],
 					goods_list: [],
+					team_list:[],
 					show_team_list: [],
 					void_tips: false,
 					goodsName: '',
@@ -845,10 +846,9 @@
 					token: userInfo.token,
 					type: 'all'
 				}, function(res) {
-					// logs(res);
 					if (res.errno == 0) {
 						var data = res.data;
-						var str = '';
+						app.team_list=res.data;
 						if (data.length > 0 && data.length <= 2) {
 							mui(".team-select")[0].style.height = "160px";
 						} else if (data.length >= 3) {
@@ -858,12 +858,6 @@
 							document.getElementById("team_list").innerHTML = '<div class="void-tips">' + '你还没有加入或者创建团队' + '</div>';
 							return false;
 						}
-						for (var i = 0; i < data.length; i++) {
-							str += '<li class="mui-table-view-cell team-list"' + 'data-tid="' + data[i].id + '">';
-							str += '<span>' + data[i].name + '</span>';
-							str += '</li>';
-						}
-						document.getElementById("team_list").innerHTML = str;
 					} else {
 						// plus.nativeUI.alert("添加商品前，请创建正式团队！", function() {
 						// 	mui.back();
