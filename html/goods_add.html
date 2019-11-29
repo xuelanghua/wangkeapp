@@ -611,6 +611,27 @@
 			
 			// 提交编辑
 			function editDone() {
+				var datas = {
+					name: app.name,
+					images: app.images,
+					recommend: app.recommend ? 1 : 0,
+					type: app.type,
+					type_p: app.type_p,
+					price: app.price,
+					stock: app.stock,
+					spec: app.spec,
+					sale_count: app.sale_count,
+					view_count: app.view_count,
+					top: app.top,
+					freight: app.freight,
+					status: app.status,
+					content: app.description,
+					default_express: app.default_express,
+					express_status: app.isDelivery ? 1 : 0,
+					pick_up_status: app.bySelf ? 1 : 0,
+					shop_ids: shopIds,
+				}
+				datas.price=checkNumber(datas.price);
 				if (app.name.length < 1) {
 					message("商品名称不能为空！");
 					return false;
@@ -627,7 +648,7 @@
 					message("请选择商品类型！");
 					return false;
 				}
-				if (app.price <= 0) {
+				if (datas.price <= 0) {
 					message("商品零售价格需为数字并大于0");
 					return false;
 				}
@@ -637,11 +658,12 @@
 				}
 				if (app.spec.length > 0) {
 					for (var i = 0; i < app.spec.length; i++) {
+						datas.spec[i].price=checkNumber(datas.spec[i].price);
 						if (app.spec[i].name.length < 1) {
 							message("商品规格名称不能为空");
 							return false;
 						}
-						if (app.spec[i].price <= 0) {
+						if (datas.spec[i].price <= 0) {
 							message("商品规格零售价格需为数字并大于0");
 							return false;
 						}
@@ -668,29 +690,6 @@
 				for (var i in app.store_list) {
 					shopIds.push(app.store_list[i].id);
 				}
-
-				var datas = {
-					name: app.name,
-					images: app.images,
-					recommend: app.recommend ? 1 : 0,
-					type: app.type,
-					type_p: app.type_p,
-					price: app.price,
-					stock: app.stock,
-					spec: app.spec,
-					sale_count: app.sale_count,
-					view_count: app.view_count,
-					top: app.top,
-					freight: app.freight,
-					status: app.status,
-					content: app.description,
-					default_express: app.default_express,
-					express_status: app.isDelivery ? 1 : 0,
-					pick_up_status: app.bySelf ? 1 : 0,
-					shop_ids: shopIds,
-				}
-				
-				logs(datas);
 				mui.post($ajaxUrl + 'goods', {
 					action: 'add',
 					token: userInfo.token,

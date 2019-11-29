@@ -1208,6 +1208,7 @@ mui('body').on('longtap', '.copy-text', function() {
 	})
 })
 
+// 价格格式化
 function checkNumber(num, type) {
 	if (num == '') {
 		return 0;
