@@ -260,6 +260,9 @@
 					})
 				
 					document.querySelector('#submit').addEventListener('tap', function() {
+						vm.redpacket_info.redpacket_fee = checkNumber(vm.redpacket_info.redpacket_fee, 'float');
+						vm.redpacket_info.redpacket_number = checkNumber(vm.redpacket_info.redpacket_number, 'int');
+						vm.redpacket_info.distance_verify = checkNumber(vm.redpacket_info.distance_verify, 'float');
 						if (!vm.flag) return;
 						if (isNaN(vm.redpacket_info.redpacket_fee)) {
 							plus.nativeUI.toast('请输入红包金额!');
