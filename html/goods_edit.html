@@ -409,22 +409,7 @@
 					isDelivery: true,
 					bySelf: false,
 					goods_id: 0,
-					store_list: [{
-						"id": "10",
-						"name": "益田啥啥啥",
-					}, {
-						"id": "10",
-						"name": "益田啥啥啥益田啥啥啥益田啥啥啥益田啥啥啥",
-					}, {
-						"id": "10",
-						"name": "挺好",
-					}, {
-						"id": "10",
-						"name": "校花驾到",
-					}, {
-						"id": "10",
-						"name": "吃醋吃过",
-					}, ]
+					store_list: []
 				},
 				created: function() {
 					// 初始化字体大小
@@ -634,6 +619,28 @@
 			
 			// 提交编辑
 			function editDone() {
+				var datas = {
+					goods_id: app.goods_id,
+					name: app.name,
+					images: app.images,
+					recommend: app.recommend ? 1 : 0,
+					type: app.type,
+					type_p: app.type_p,
+					price: app.price,
+					stock: app.stock,
+					spec: app.spec,
+					sale_count: app.sale_count,
+					view_count: app.view_count,
+					top: app.top,
+					freight: app.freight,
+					status: app.status,
+					content: app.description,
+					default_express: app.default_express,
+					express_status: app.isDelivery ? 1 : 0,
+					pick_up_status: app.bySelf ? 1 : 0,
+					shop_ids: shopIds,
+				}
+				datas.price=checkNumber(datas.price);
 				if (app.name.length < 1) {
 					logs('name' + app.name);
 					message("商品名称不能为空！");
@@ -648,7 +655,7 @@
 					message("请选择商品类型！");
 					return false;
 				}
-				if (app.price <= 0) {
+				if (datas.price <= 0) {
 					logs('price' + app.price);
 					message("商品零售价格需为数字并大于0");
 					return false;
@@ -660,6 +667,7 @@
 				}
 				if (app.spec.length > 0) {
 					for (var i = 0; i < app.spec.length; i++) {
+						datas.spec[i].price=checkNumber(datas.spec[i].price);
 						if (app.spec[i].name.length < 1) {
 							message("商品规格名称不能为空");
 							return false;
@@ -690,29 +698,6 @@
 				for (var i in app.store_list) {
 					shopIds.push(app.store_list[i].id);
 				}
-
-				var datas = {
-					goods_id: app.goods_id,
-					name: app.name,
-					images: app.images,
-					recommend: app.recommend ? 1 : 0,
-					type: app.type,
-					type_p: app.type_p,
-					price: app.price,
-					stock: app.stock,
-					spec: app.spec,
-					sale_count: app.sale_count,
-					view_count: app.view_count,
-					top: app.top,
-					freight: app.freight,
-					status: app.status,
-					content: app.description,
-					default_express: app.default_express,
-					express_status: app.isDelivery ? 1 : 0,
-					pick_up_status: app.bySelf ? 1 : 0,
-					shop_ids: shopIds,
-				}
-				logs(datas);
 				// 提交商品修改
 				mui.post($ajaxUrl + 'goods', {
 					action: 'update',

@@ -773,102 +773,6 @@
 			
 			// 提交编辑
 			function editDone() {
-				if (app.name.length < 1) {
-					message("商品名称不能为空！");
-					return false;
-				}
-				if (app.images.length < 1) {
-					message("请上传商品主图！");
-					return false;
-				}
-				if (app.type_p <= 0 || app.type_p == '') {
-					message("请选择商品类型");
-					return false;
-				}
-				if (app.settlement_price <= 0) {
-					message("商品供货价格需为数字并大于0");
-					return false;
-				}
-				if (app.price <= 0) {
-					message("商品零售价格需为数字并大于0");
-					return false;
-				}
-				if (app.stock < 1) {
-					message("商品库存需为数字并大于0");
-					return false;
-				}
-				if (app.settlement_price > app.price) {
-					message("商品供货价格不能大于商品零售价格");
-					return false;
-				}
-				if (app.protect_price > app.price) {
-					message("商品保护价格不能大于商品零售价格");
-					return false;
-				}
-				if (app.protect_price < app.settlement_price) {
-					message("商品保护价格不能大于商品供货价格");
-					return false;
-				}
-				if (app.protect_price <= 0) {
-					app.protect_price = app.settlement_price;
-				}
-				if (app.spec.length > 0) {
-					for (var i = 0; i < app.spec.length; i++) {
-						if (app.spec[i].name.length < 1) {
-							message("商品规格名称不能为空");
-							return false;
-						}
-						if (app.spec[i].settlement_price <= 0) {
-							message("商品规格供货价格需为数字并大于0");
-							return false;
-						}
-						if (app.spec[i].price <= 0) {
-							message("商品规格零售价格需为数字并大于0");
-							return false;
-						}
-						if (app.spec[i].stock < 1) {
-							message("商品规格库存需为数字并大于0");
-							return false;
-						}
-						if (app.spec[i].settlement_price > app.spec[i].price) {
-							message("商品规格供货价格不能大于商品规格零售价格");
-							return false;
-						}
-						if (app.spec[i].protect_price > app.spec[i].price) {
-							message("商品规格保护价格不能大于商品规格零售价格");
-							return false;
-						}
-						if (app.spec[i].protect_price < app.spec[i].settlement_price) {
-							message("商品规格保护价格不能大于商品规格供货价格");
-							return false;
-						}
-				
-						if (app.spec[i].protect_price <= 0) {
-							app.spec[i].protect_price = app.spec[i].settlement_price;
-						}
-					}
-				}
-				if (app.isDelivery && app.default_express < 1) {
-					message("请选择默认快递");
-					return false;
-				}
-				if (app.isDelivery && app.freight.length <= 0) {
-					app.freight = 0;
-				}
-				if (app.bySelf && app.store_list.lenght <= 0) {
-					message("请选择自提门店");
-					return false;
-				}
-				if (app.team_ids.length < 1) {
-					message("请选择商品销售团队");
-					return false;
-				}
-				
-				var shopIds = [];
-				for (var i in app.store_list) {
-					shopIds.push(app.store_list[i].id);
-				}
-				
 				var datas = {
 					name: app.name,
 					images: app.images,
@@ -891,13 +795,117 @@
 					pick_up_status: app.bySelf ? 1 : 0,
 					shop_ids: shopIds,
 				}
+				
+				datas.price =checkNumber(datas.price);
+				datas.freight = checkNumber(datas.freight);
+				datas.protect_price = checkNumber(datas.protect_price);
+				datas.settlement_price = checkNumber(datas.settlement_price);
+				if (datas.name.length < 1) {
+					message("商品名称不能为空！");
+					return false;
+				}
+				if (datas.images.length < 1) {
+					message("请上传商品主图！");
+					return false;
+				}
+				if (datas.type_p <= 0 || datas.type_p == '') {
+					message("请选择商品类型");
+					return false;
+				}
+				if (datas.settlement_price <= 0) {
+					message("商品供货价格需为数字并大于0");
+					return false;
+				}
+				if (datas.price <= 0) {
+					message("商品零售价格需为数字并大于0");
+					return false;
+				}
+				if (datas.stock < 1) {
+					message("商品库存需为数字并大于0");
+					return false;
+				}
+				if (datas.settlement_price > datas.price) {
+					message("商品供货价格不能大于商品零售价格");
+					return false;
+				}
+				if (datas.protect_price > datas.price) {
+					message("商品保护价格不能大于商品零售价格");
+					return false;
+				}
+				if (datas.protect_price < datas.settlement_price) {
+					message("商品保护价格不能小于商品供货价格");
+					return false;
+				}
+				if (datas.protect_price <= 0) {
+					datas.protect_price = datas.settlement_price;
+				}
+				if (datas.spec.length > 0) {
+					for (var i = 0; i < datas.spec.length; i++) {
+						datas.spec[i].price = checkNumber(datas.spec[i].price);
+						datas.spec[i].protect_price = checkNumber(datas.spec[i].protect_price);
+						datas.spec[i].settlement_price = checkNumber(datas.spec[i].settlement_price);
+						
+						if (datas.spec[i].name.length < 1) {
+							message("商品规格名称不能为空");
+							return false;
+						}
+						if (datas.spec[i].settlement_price <= 0) {
+							message("商品规格供货价格需为数字并大于0");
+							return false;
+						}
+						if (datas.spec[i].price <= 0) {
+							message("商品规格零售价格需为数字并大于0");
+							return false;
+						}
+						if (datas.spec[i].stock < 1) {
+							message("商品规格库存需为数字并大于0");
+							return false;
+						}
+						if (datas.spec[i].settlement_price > datas.spec[i].price) {
+							message("商品规格供货价格不能大于商品规格零售价格");
+							return false;
+						}
+						if (datas.spec[i].protect_price > datas.spec[i].price) {
+							message("商品规格保护价格不能大于商品规格零售价格");
+							return false;
+						}
+						if (datas.spec[i].protect_price < datas.spec[i].settlement_price) {
+							message("商品规格保护价格不能大于商品规格供货价格");
+							return false;
+						}
+				
+						if (datas.spec[i].protect_price <= 0) {
+							datas.spec[i].protect_price = datas.spec[i].settlement_price;
+						}
+					}
+				}
+				if (datas.isDelivery && datas.default_express < 1) {
+					message("请选择默认快递");
+					return false;
+				}
+				if (datas.isDelivery && datas.freight.length <= 0) {
+					datas.freight = 0;
+				}
+				if (datas.bySelf && datas.store_list.lenght <= 0) {
+					message("请选择自提门店");
+					return false;
+				}
+				if (datas.team_ids.length < 1) {
+					message("请选择商品销售团队");
+					return false;
+				}
+				
+				var shopIds = [];
+				for (var i in datas.store_list) {
+					shopIds.push(datas.store_list[i].id);
+				}
+				
 				mui.post($ajaxUrl + 'goods', {
 					action: 'edit_team_goods',
 					token: userInfo.token,
 					data: datas,
 					goods_id: goodsId
 				}, function(res) {
-					// logs(res);
 					if (res.errno == 0) {
 						message('修改成功！');
 						mui.fire(plus.webview.getWebviewById('warehouse_management'), 'reloadYourself');

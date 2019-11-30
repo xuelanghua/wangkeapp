@@ -503,7 +503,10 @@
 				display: block;
 				margin-bottom: 0.4rem;
 			}
-
+			.theme-body2 .qrimg-container {
+				height: 4rem;
+				margin-bottom: 10px;
+			}
 			[v-cloak] {
 				display: none;
 			}
@@ -725,7 +728,7 @@
 						}
 						//获取二维码图片
 						function getQrcodePic() {
-							// showload(0);
+							showload(0);
 							mui.post($ajaxUrl + 'userqrcode&action=current_qrcode', {
 								token: userInfo.token
 							}, function(res) {
@@ -746,14 +749,13 @@
 
 								}
 								// setTimeout(function() {
-								// 	showload(1);
+									showload(1);
 								// }, 1000)
 							}, 'json');
 						}
 						// 点击底部样式切换
 						mui(".theme-change").on('tap', '.mui-tab-item', function() {
 							app.imgtyp = this.dataset.imgtype;
-							// message(app.imgtyp);
 							if (app.imgtyp == '2' || app.imgtyp == '3') {
 								ratio = 900 / 599;
 							} else if (app.imgtyp == '5') {
@@ -899,6 +901,13 @@
 								app.signature3 = data.card_text_3;
 								app.signature4 = data.card_text_4;
 								app.signature5 = data.card_text_5;
+								if (app.imgtyp == '2' || app.imgtyp == '3') {
+									ratio = 900 / 599;
+								} else if (app.imgtyp == '5') {
+									ratio = 1496 / 2664;
+								} else {
+									ratio = 900 / 1440;
+								}
 							}
 						}, 'json');
 					}
